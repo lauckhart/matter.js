@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "SecondaryNetworkInterface",
-    classification: "utility",
+    tag: "deviceType", name: "SecondaryNetworkInterface", classification: "utility", xref: "device§2.8",
 
     details: "A Secondary Network Interface device provides an additional network interface supported by the Node, " +
         "supplementing the primary interface hosted by the Root Node endpoint." +
@@ -19,8 +18,6 @@ Resource.add({
         "endpoint, along with secondary interfaces on other endpoints. The priorities of these network " +
         "interfaces are determined by the order of their endpoints, where interfaces with smaller endpoint " +
         "numbers are higher priority.",
-
-    xref: "device§2.8",
 
     children: [
         { tag: "requirement", name: "NetworkCommissioning", xref: "device§2.8.3" },

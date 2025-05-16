@@ -13,13 +13,13 @@ export const OnOffLightSwitchDt = DeviceType(
     { name: "OnOffLightSwitch", id: 0x103 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 259, revision: 3 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 259, revision: 3 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "Identify", id: 0x3, element: "clientCluster", conformance: "M" }),
-    Requirement({ name: "Groups", id: 0x4, element: "clientCluster", conformance: "O" }),
-    Requirement({ name: "OnOff", id: 0x6, element: "clientCluster", conformance: "M" }),
-    Requirement({ name: "ScenesManagement", id: 0x62, element: "clientCluster", conformance: "P, O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "clientCluster" }),
+    Requirement({ name: "Groups", id: 0x4, conformance: "O", element: "clientCluster" }),
+    Requirement({ name: "OnOff", id: 0x6, conformance: "M", element: "clientCluster" }),
+    Requirement({ name: "ScenesManagement", id: 0x62, conformance: "P, O", element: "clientCluster" })
 );
 
 MatterDefinition.children.push(OnOffLightSwitchDt);

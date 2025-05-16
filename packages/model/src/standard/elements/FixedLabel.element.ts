@@ -17,7 +17,7 @@ export const FixedLabel = Cluster(
     { name: "FixedLabel", id: 0x40, type: "Label" },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "LabelList", id: 0x0, type: "list", default: [], conformance: "M", access: "R V", quality: "N" },
+        { name: "LabelList", id: 0x0, type: "list", access: "R V", conformance: "M", default: [], quality: "N" },
         Field({ name: "entry", type: "LabelStruct" })
     )
 );

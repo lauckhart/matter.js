@@ -20,28 +20,28 @@ export const TargetNavigator = Cluster(
     { name: "TargetNavigator", id: 0x505 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { name: "TargetList", id: 0x0, type: "list", conformance: "M", access: "R V" },
+        { name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "TargetInfoStruct" })
     ),
     Attribute({
-        name: "CurrentTarget", id: 0x1, type: "uint8",
-        default: 255, constraint: "desc", conformance: "O", access: "R V"
+        name: "CurrentTarget", id: 0x1, type: "uint8", access: "R V", conformance: "O", constraint: "desc",
+        default: 255
     }),
 
     Event(
-        { name: "TargetUpdated", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        { name: "TargetUpdated", id: 0x0, access: "V", conformance: "O", priority: "info" },
         Field(
             { name: "TargetList", id: 0x0, type: "list", conformance: "O" },
             Field({ name: "entry", type: "TargetInfoStruct" })
         ),
-        Field({ name: "CurrentTarget", id: 0x1, type: "uint8", default: 255, constraint: "desc", conformance: "O" }),
-        Field({ name: "Data", id: 0x2, type: "octstr", constraint: "max 900", conformance: "O" })
+        Field({ name: "CurrentTarget", id: 0x1, type: "uint8", conformance: "O", constraint: "desc", default: 255 }),
+        Field({ name: "Data", id: 0x2, type: "octstr", conformance: "O", constraint: "max 900" })
     ),
 
     Command(
         {
-            name: "NavigateTarget", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "NavigateTargetResponse"
+            name: "NavigateTarget", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "NavigateTargetResponse"
         },
         Field({ name: "Target", id: 0x0, type: "uint8", conformance: "M" }),
         Field({ name: "Data", id: 0x1, type: "string", conformance: "O" })
@@ -50,7 +50,7 @@ export const TargetNavigator = Cluster(
     Command(
         { name: "NavigateTargetResponse", id: 0x1, conformance: "M", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
-        Field({ name: "Data", id: 0x1, type: "string", constraint: "any", conformance: "O" })
+        Field({ name: "Data", id: 0x1, type: "string", conformance: "O", constraint: "any" })
     ),
 
     Datatype(
@@ -62,7 +62,7 @@ export const TargetNavigator = Cluster(
 
     Datatype(
         { name: "TargetInfoStruct", type: "struct" },
-        Field({ name: "Identifier", id: 0x0, type: "uint8", constraint: "max 254", conformance: "M" }),
+        Field({ name: "Identifier", id: 0x0, type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
     )
 );

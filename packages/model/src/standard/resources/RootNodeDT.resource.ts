@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "RootNode",
-    classification: "node",
+    tag: "deviceType", name: "RootNode", classification: "node", xref: "device§2.1",
 
     details: "This defines conformance for a root node endpoint (see System Model specification). This endpoint is " +
         "akin to a \"read me first\" endpoint that describes itself and the other endpoints that make up the " +
@@ -23,8 +22,6 @@ Resource.add({
         "    type." +
         "\n" +
         "  • Other device types with Node scope may be supported on the same endpoint as this device type.",
-
-    xref: "device§2.1",
 
     children: [
         { tag: "requirement", name: "BasicInformation", xref: "device§2.1.5" },

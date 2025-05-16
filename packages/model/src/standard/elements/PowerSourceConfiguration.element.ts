@@ -17,7 +17,7 @@ export const PowerSourceConfiguration = Cluster(
     { name: "PowerSourceConfiguration", id: 0x2e },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "Sources", id: 0x0, type: "list", constraint: "max 6", conformance: "M", access: "R V", quality: "N" },
+        { name: "Sources", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "max 6", quality: "N" },
         Field({ name: "entry", type: "endpoint-no" })
     )
 );

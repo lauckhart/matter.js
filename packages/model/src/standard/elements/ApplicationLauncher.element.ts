@@ -20,33 +20,33 @@ export const ApplicationLauncher = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "AP", constraint: "0", longName: "ApplicationPlatform" })
+        Field({ name: "AP", constraint: "0", title: "ApplicationPlatform" })
     ),
     Attribute(
-        { name: "CatalogList", id: 0x0, type: "list", conformance: "AP", access: "R V", quality: "N" },
+        { name: "CatalogList", id: 0x0, type: "list", access: "R V", conformance: "AP", quality: "N" },
         Field({ name: "entry", type: "uint16" })
     ),
     Attribute({
-        name: "CurrentApp", id: 0x1, type: "ApplicationEPStruct",
-        default: null, constraint: "desc", conformance: "O", access: "R V", quality: "X"
+        name: "CurrentApp", id: 0x1, type: "ApplicationEPStruct", access: "R V", conformance: "O",
+        constraint: "desc", default: null, quality: "X"
     }),
 
     Command(
         {
-            name: "LaunchApp", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "LauncherResponse"
+            name: "LaunchApp", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "LauncherResponse"
         },
-        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" }),
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP", constraint: "desc" }),
         Field({ name: "Data", id: 0x1, type: "octstr", conformance: "O" })
     ),
 
     Command(
-        { name: "StopApp", id: 0x1, conformance: "M", access: "O", direction: "request", response: "LauncherResponse" },
-        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" })
+        { name: "StopApp", id: 0x1, access: "O", conformance: "M", direction: "request", response: "LauncherResponse" },
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP", constraint: "desc" })
     ),
     Command(
-        { name: "HideApp", id: 0x2, conformance: "M", access: "O", direction: "request", response: "LauncherResponse" },
-        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" })
+        { name: "HideApp", id: 0x2, access: "O", conformance: "M", direction: "request", response: "LauncherResponse" },
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "AP", constraint: "desc" })
     ),
     Command(
         { name: "LauncherResponse", id: 0x3, conformance: "M", direction: "response" },

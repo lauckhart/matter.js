@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "Switch",
-    classification: "application", pics: "SWTCH",
+    tag: "cluster", name: "Switch", classification: "application", pics: "SWTCH", xref: "cluster§1.13",
 
     details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
         "by other devices." +
@@ -25,74 +24,58 @@ Resource.add({
         "interactions, and can perform actions based on this, for example by sending commands to perform an " +
         "action such as controlling a light or a window shade.",
 
-    xref: "cluster§1.13",
-
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§1.13.4",
+            tag: "attribute", name: "FeatureMap", xref: "cluster§1.13.4",
 
             children: [
                 {
-                    tag: "field", name: "LS",
-                    details: "This feature flag is for a switch that maintains its position after being pressed (or turned).",
-                    xref: "cluster§1.13.4.1"
+                    tag: "field", name: "LS", xref: "cluster§1.13.4.1",
+                    details: "This feature flag is for a switch that maintains its position after being pressed (or turned)."
                 },
-
                 {
-                    tag: "field", name: "MS",
+                    tag: "field", name: "MS", xref: "cluster§1.13.4.2",
                     details: "This feature flag is for a switch that does not maintain its position after being pressed (or " +
-                        "turned). After releasing, it goes back to its idle position.",
-                    xref: "cluster§1.13.4.2"
+                        "turned). After releasing, it goes back to its idle position."
                 },
-
                 {
-                    tag: "field", name: "MSR",
-                    details: "This feature flag is for a momentary switch that can distinguish and report release events.",
-                    xref: "cluster§1.13.4.3"
+                    tag: "field", name: "MSR", xref: "cluster§1.13.4.3",
+                    details: "This feature flag is for a momentary switch that can distinguish and report release events."
                 },
-
                 {
-                    tag: "field", name: "MSL",
+                    tag: "field", name: "MSL", xref: "cluster§1.13.4.4",
                     details: "This feature flag is for a momentary switch that can distinguish and report long presses from short " +
-                        "presses.",
-                    xref: "cluster§1.13.4.4"
+                        "presses."
                 },
-
                 {
-                    tag: "field", name: "MSM",
+                    tag: "field", name: "MSM", xref: "cluster§1.13.4.5",
                     details: "This feature flag is for a momentary switch that can distinguish and report double press and " +
-                        "potentially multiple presses with more events, such as triple press, etc.",
-                    xref: "cluster§1.13.4.5"
+                        "potentially multiple presses with more events, such as triple press, etc."
                 },
-
                 {
-                    tag: "field", name: "AS",
+                    tag: "field", name: "AS", xref: "cluster§1.13.4.6",
                     details: "This feature flag indicates simplified handling of events for multi-press-capable switches. See " +
-                        "Multi Press Details.",
-                    xref: "cluster§1.13.4.6"
+                        "Multi Press Details."
                 }
             ]
         },
 
         {
-            tag: "attribute", name: "NumberOfPositions",
+            tag: "attribute", name: "NumberOfPositions", xref: "cluster§1.13.5.1",
             details: "Indicates the maximum number of positions the switch has. Any kind of switch has a minimum of 2 " +
-                "positions. Also see Multi Position Details for the case NumberOfPositions>2.",
-            xref: "cluster§1.13.5.1"
+                "positions. Also see Multi Position Details for the case NumberOfPositions>2."
         },
 
         {
-            tag: "attribute", name: "CurrentPosition",
+            tag: "attribute", name: "CurrentPosition", xref: "cluster§1.13.5.2",
             details: "Indicates the position of the switch. The valid range is zero to NumberOfPositions - 1." +
                 "\n" +
                 "CurrentPosition value 0 shall be assigned to the default position of the switch: for example the " +
-                "\"open\" state of a rocker switch, or the \"idle\" state of a push button switch.",
-            xref: "cluster§1.13.5.2"
+                "\"open\" state of a rocker switch, or the \"idle\" state of a push button switch."
         },
 
         {
-            tag: "attribute", name: "MultiPressMax",
+            tag: "attribute", name: "MultiPressMax", xref: "cluster§1.13.5.3",
 
             details: "Indicates how many consecutive presses can be detected and reported by a momentary switch which " +
                 "supports multi-press (MSM feature flag set)." +
@@ -115,36 +98,30 @@ Resource.add({
                 "This approach avoids unintentionally causing intermediate actions where there is a very long " +
                 "sequence of presses beyond MultiPressMax that may be taken in account specially by switches (e.g. to " +
                 "trigger special behavior such as factory reset for which generating events towards the client is not " +
-                "appropriate).",
-
-            xref: "cluster§1.13.5.3"
+                "appropriate)."
         },
 
         {
-            tag: "event", name: "SwitchLatched",
+            tag: "event", name: "SwitchLatched", xref: "cluster§1.13.6.1",
             details: "This event shall be generated, when the latching switch is moved to a new position. It may have been " +
                 "delayed by debouncing within the switch.",
-            xref: "cluster§1.13.6.1",
             children: [{
-                tag: "field", name: "NewPosition",
-                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.",
-                xref: "cluster§1.13.6.1.1"
+                tag: "field", name: "NewPosition", xref: "cluster§1.13.6.1.1",
+                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move."
             }]
         },
 
         {
-            tag: "event", name: "InitialPress",
+            tag: "event", name: "InitialPress", xref: "cluster§1.13.6.2",
             details: "This event shall be generated, when the momentary switch starts to be pressed (after debouncing).",
-            xref: "cluster§1.13.6.2",
             children: [{
-                tag: "field", name: "NewPosition",
-                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                xref: "cluster§1.13.6.2.1"
+                tag: "field", name: "NewPosition", xref: "cluster§1.13.6.2.1",
+                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed."
             }]
         },
 
         {
-            tag: "event", name: "LongPress",
+            tag: "event", name: "LongPress", xref: "cluster§1.13.6.3",
 
             details: "This event shall be generated when the momentary switch has been pressed for a \"long\" time. The time " +
                 "interval constituting a \"long\" time is manufacturer-determined, since it depends on the switch " +
@@ -179,16 +156,14 @@ Resource.add({
                 "The rationale for this constraint is the ambiguity of interpretation of events when mixing long " +
                 "presses and multi-press events.",
 
-            xref: "cluster§1.13.6.3",
             children: [{
-                tag: "field", name: "NewPosition",
-                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                xref: "cluster§1.13.6.3.1"
+                tag: "field", name: "NewPosition", xref: "cluster§1.13.6.3.1",
+                details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed."
             }]
         },
 
         {
-            tag: "event", name: "ShortRelease",
+            tag: "event", name: "ShortRelease", xref: "cluster§1.13.6.4",
 
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all, " +
                 "since setting the Action Switch feature flag forbids the Momentary Switch ShortRelease (MSR) feature " +
@@ -207,50 +182,42 @@ Resource.add({
                 "\n" +
                 "  • Also see Section 1.13.7, “Sequence of generated events”.",
 
-            xref: "cluster§1.13.6.4",
-
             children: [{
-                tag: "field", name: "PreviousPosition",
+                tag: "field", name: "PreviousPosition", xref: "cluster§1.13.6.4.1",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
-                    "release.",
-                xref: "cluster§1.13.6.4.1"
+                    "release."
             }]
         },
 
         {
-            tag: "event", name: "LongRelease",
+            tag: "event", name: "LongRelease", xref: "cluster§1.13.6.5",
             details: "This event shall be generated, when the momentary switch has been released (after debouncing) and " +
                 "after having been pressed for a long time, i.e. this event shall be generated when the switch is " +
                 "released if a LongPress event has been generated since the previous InitialPress event. Also see " +
                 "Section 1.13.7, “Sequence of generated events”.",
-            xref: "cluster§1.13.6.5",
-
             children: [{
-                tag: "field", name: "PreviousPosition",
+                tag: "field", name: "PreviousPosition", xref: "cluster§1.13.6.5.1",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
-                    "release.",
-                xref: "cluster§1.13.6.5.1"
+                    "release."
             }]
         },
 
         {
-            tag: "event", name: "MultiPressOngoing",
+            tag: "event", name: "MultiPressOngoing", xref: "cluster§1.13.6.6",
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all. " +
                 "Otherwise, the following paragraphs describe the situations where this event is generated." +
                 "\n" +
                 "This event shall be generated to indicate how many times the momentary switch has been pressed in a " +
                 "multi-press sequence, during that sequence. See Multi Press Details below.",
-            xref: "cluster§1.13.6.6",
 
             children: [
                 {
-                    tag: "field", name: "NewPosition",
-                    details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                    xref: "cluster§1.13.6.6.1"
+                    tag: "field", name: "NewPosition", xref: "cluster§1.13.6.6.1",
+                    details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed."
                 },
 
                 {
-                    tag: "field", name: "CurrentNumberOfPressesCounted",
+                    tag: "field", name: "CurrentNumberOfPressesCounted", xref: "cluster§1.13.6.6.2",
 
                     details: "This field shall contain:" +
                         "\n" +
@@ -258,15 +225,13 @@ Resource.add({
                         "\n" +
                         "  • a value of 3 when the third press of a multi-press sequence has been detected," +
                         "\n" +
-                        "  • a value of N when the Nth press of a multi-press sequence has been detected.",
-
-                    xref: "cluster§1.13.6.6.2"
+                        "  • a value of N when the Nth press of a multi-press sequence has been detected."
                 }
             ]
         },
 
         {
-            tag: "event", name: "MultiPressComplete",
+            tag: "event", name: "MultiPressComplete", xref: "cluster§1.13.6.7",
 
             details: "This event shall be generated to indicate how many times the momentary switch has been pressed in a " +
                 "multi-press sequence, after it has been detected that the sequence has ended. See Multi Press " +
@@ -292,15 +257,13 @@ Resource.add({
                 "  • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has " +
                 "    ended)." +
                 "\n" +
-                "NOTE" +
+                "    > [!NOTE]" +
                 "\n" +
-                "The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
-                "switches using cluster revision 1 since such servers would not use this value of " +
-                "TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using the " +
-                "TotalNumberOfPressesCounted field taken into account since for values from 1 to MultiPressMax, the " +
-                "user action that led to the event was different depending on the count.",
-
-            xref: "cluster§1.13.6.7"
+                "    > The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
+                "      switches using cluster revision 1 since such servers would not use this value of " +
+                "      TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using " +
+                "      the TotalNumberOfPressesCounted field taken into account since for values from 1 to " +
+                "      MultiPressMax, the user action that led to the event was different depending on the count."
         }
     ]
 });

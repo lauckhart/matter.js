@@ -9,12 +9,10 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Refrigerator",
-    classification: "simple",
+    tag: "deviceType", name: "Refrigerator", classification: "simple", xref: "device§13.2",
     details: "A refrigerator represents a device that contains one or more cabinets that are capable of chilling " +
         "or freezing food. Examples of consumer products that may make use of this device type include " +
         "refrigerators, freezers, and wine coolers.",
-    xref: "device§13.2",
     children: [
         { tag: "requirement", name: "Identify", xref: "device§13.2.6" },
         { tag: "requirement", name: "RefrigeratorAndTemperatureControlledCabinetMode", xref: "device§13.2.6" },

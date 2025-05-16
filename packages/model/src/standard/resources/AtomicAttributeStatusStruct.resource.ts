@@ -9,20 +9,17 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "AtomicAttributeStatusStruct",
+    tag: "datatype", name: "AtomicAttributeStatusStruct", xref: "core§7.15.5",
     details: "This struct indicates the status of an attribute during an atomic write.",
-    xref: "core§7.15.5",
 
     children: [
         {
-            tag: "field", name: "AttributeId",
-            details: "This field shall indicate the ID of the attribute with the associated StatusCode.",
-            xref: "core§7.15.5.1"
+            tag: "field", name: "AttributeId", xref: "core§7.15.5.1",
+            details: "This field shall indicate the ID of the attribute with the associated StatusCode."
         },
         {
-            tag: "field", name: "StatusCode",
-            details: "This field shall indicate the atomic status of an attribute.",
-            xref: "core§7.15.5.2"
+            tag: "field", name: "StatusCode", xref: "core§7.15.5.2",
+            details: "This field shall indicate the atomic status of an attribute."
         }
     ]
 });

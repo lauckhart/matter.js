@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "list",
-    description: "List",
+    tag: "datatype", name: "list", description: "List", xref: "core§7.19.1.8",
 
     details: "A list is defined as a collection of entries of the same data type, with a finite count from 0 to " +
         "65534. A cluster specification may define further constraints on the maximum possible count. The " +
@@ -84,7 +83,5 @@ Resource.add({
         "  • For a read interaction on a list, fabric-filtering may be enabled." +
         "\n" +
         "  • For a read interaction on a list, with fabric-filtering disabled, the list shall be reported as " +
-        "    a full list with all entries.",
-
-    xref: "core§7.19.1.8"
+        "    a full list with all entries."
 });

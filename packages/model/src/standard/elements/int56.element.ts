@@ -9,5 +9,5 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DatatypeElement as Datatype } from "../../elements/index.js";
 
-export const int56 = Datatype({ name: "int56", isSeed: true, byteSize: 7, metatype: "integer" });
+export const int56 = Datatype({ name: "int56", byteSize: 7, isSeed: true, metatype: "integer" });
 MatterDefinition.children.push(int56);

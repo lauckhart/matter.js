@@ -9,16 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "AirQuality",
-    classification: "application", pics: "AIRQUAL",
+    tag: "cluster", name: "AirQuality", classification: "application", pics: "AIRQUAL",
+    xref: "cluster§2.9",
     details: "This cluster provides an interface to air quality classification using distinct levels with " +
         "human-readable labels.",
-    xref: "cluster§2.9",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§2.9.4",
+            tag: "attribute", name: "FeatureMap", xref: "cluster§2.9.4",
 
             children: [
                 { tag: "field", name: "FAIR", details: "Cluster supports the Fair air quality level" },
@@ -29,17 +27,15 @@ Resource.add({
         },
 
         {
-            tag: "attribute", name: "AirQuality",
-            details: "Indicates a value from AirQualityEnum that is indicative of the currently measured air quality.",
-            xref: "cluster§2.9.6.1"
+            tag: "attribute", name: "AirQuality", xref: "cluster§2.9.6.1",
+            details: "Indicates a value from AirQualityEnum that is indicative of the currently measured air quality."
         },
 
         {
-            tag: "datatype", name: "AirQualityEnum",
+            tag: "datatype", name: "AirQualityEnum", xref: "cluster§2.9.5.1",
             details: "The AirQualityEnum provides a representation of the quality of the analyzed air. It is up to the " +
                 "device manufacturer to determine the mapping between the measured values and their corresponding " +
                 "enumeration values.",
-            xref: "cluster§2.9.5.1",
 
             children: [
                 { tag: "field", name: "Unknown", description: "The air quality is unknown." },

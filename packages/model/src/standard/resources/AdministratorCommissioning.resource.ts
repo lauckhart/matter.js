@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "AdministratorCommissioning",
-    classification: "node", pics: "CADMIN",
+    tag: "cluster", name: "AdministratorCommissioning", classification: "node", pics: "CADMIN",
+    xref: "core§11.19",
 
     details: "This cluster is used to trigger a Node to allow a new Administrator to commission it. It defines " +
         "Attributes, Commands and Responses needed for this purpose." +
@@ -37,34 +37,29 @@ Resource.add({
         "\n" +
         "  • The attributes shall indicate the state of the node that is represented by the Bridged Node.",
 
-    xref: "core§11.19",
-
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.19.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.19.4",
             children: [{ tag: "field", name: "BC", details: "Node supports Basic Commissioning Method." }]
         },
 
         {
-            tag: "attribute", name: "WindowStatus",
+            tag: "attribute", name: "WindowStatus", xref: "core§11.19.7.1",
 
             details: "Indicates whether a new Commissioning window has been opened by an Administrator, using either the " +
                 "OpenCommissioningWindow command or the OpenBasicCommissioningWindow command." +
                 "\n" +
                 "This attribute shall revert to WindowNotOpen upon expiry of a commissioning window." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "An initial commissioning window is not opened using either the OpenCommissioningWindow command or " +
-                "the OpenBasicCommissioningWindow command, and therefore this attribute shall be set to WindowNotOpen " +
-                "on initial commissioning.",
-
-            xref: "core§11.19.7.1"
+                "> An initial commissioning window is not opened using either the OpenCommissioningWindow command or " +
+                "  the OpenBasicCommissioningWindow command, and therefore this attribute shall be set to " +
+                "  WindowNotOpen on initial commissioning."
         },
 
         {
-            tag: "attribute", name: "AdminFabricIndex",
+            tag: "attribute", name: "AdminFabricIndex", xref: "core§11.19.7.2",
 
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This may " +
@@ -73,13 +68,11 @@ Resource.add({
                 "If, during an open commissioning window, the fabric for the Administrator that opened the window is " +
                 "removed, then this attribute shall be set to null." +
                 "\n" +
-                "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
-
-            xref: "core§11.19.7.2"
+                "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null."
         },
 
         {
-            tag: "attribute", name: "AdminVendorId",
+            tag: "attribute", name: "AdminVendorId", xref: "core§11.19.7.3",
 
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "Vendor ID associated with the Fabric scoping of the Administrator that opened the window. This field " +
@@ -88,13 +81,11 @@ Resource.add({
                 "opened the window is removed from the node while the commissioning window is still open, this " +
                 "attribute shall NOT be updated." +
                 "\n" +
-                "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
-
-            xref: "core§11.19.7.3"
+                "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null."
         },
 
         {
-            tag: "command", name: "OpenCommissioningWindow",
+            tag: "command", name: "OpenCommissioningWindow", xref: "core§11.19.8.1",
 
             details: "This command is used by a current Administrator to instruct a Node to go into commissioning mode. " +
                 "The Enhanced Commissioning Method specifies a window of time during which an already commissioned " +
@@ -103,9 +94,8 @@ Resource.add({
                 "\n" +
                 "When the OpenCommissioningWindow command expires or commissioning completes, the Node shall remove " +
                 "the Passcode by deleting the PAKE passcode verifier as well as stop publishing the DNS-SD record " +
-                "corresponding to this command as described in Section 4.3.1, “Commissionable" +
-                "\n" +
-                "Node Discovery”. The commissioning into a new Fabric completes when the Node successfully receives a " +
+                "corresponding to this command as described in Section 4.3.1, “Commissionable Node Discovery”. The " +
+                "commissioning into a new Fabric completes when the Node successfully receives a " +
                 "CommissioningComplete command, see Section 5.5, “Commissioning Flows”." +
                 "\n" +
                 "The parameters for OpenCommissioningWindow command are as follows:" +
@@ -128,54 +118,47 @@ Resource.add({
                 "\n" +
                 "In case of any other parameter error, this command shall fail with a status code of COMMAND_INVALID.",
 
-            xref: "core§11.19.8.1",
-
             children: [
                 {
-                    tag: "field", name: "CommissioningTimeout",
+                    tag: "field", name: "CommissioningTimeout", xref: "core§11.19.8.1.1",
                     details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                         "allowed by the Node. This timeout value shall follow guidance as specified in the initial " +
                         "Announcement Duration. The CommissioningTimeout applies only to cessation of any announcements and " +
                         "to accepting of new commissioning sessions; it does not apply to abortion of connections, i.e., a " +
-                        "commissioning session SHOULD NOT abort prematurely upon expiration of this timeout.",
-                    xref: "core§11.19.8.1.1"
+                        "commissioning session SHOULD NOT abort prematurely upon expiration of this timeout."
                 },
 
                 {
-                    tag: "field", name: "PakePasscodeVerifier",
+                    tag: "field", name: "PakePasscodeVerifier", xref: "core§11.19.8.1.2",
 
-                    details: "This field shall specify an ephemeral PAKE passcode verifier (see Section 3.10, " +
-                        "“Password-Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be used for " +
-                        "this commissioning. The field is concatenation of two values (w0 || L) shall be " +
-                        "(CRYPTO_GROUP_SIZE_BYTES + CRYPTO_PUBLIC_KEY_SIZE_BYTES)-octets long as detailed in " +
-                        "Crypto_PAKEValues_Responder. It shall be derived from an ephemeral passcode (See PAKE). It shall be " +
-                        "deleted by the Node at the end of commissioning or expiration of the OpenCommissioningWindow " +
-                        "command, and shall be deleted by the existing Administrator after sending it to the Node(s).",
-
-                    xref: "core§11.19.8.1.2"
+                    details: "This field shall specify an ephemeral PAKE passcode verifier (see Section 3.10, “Password- " +
+                        "Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be used for this " +
+                        "commissioning. The field is concatenation of two values (w0 || L) shall be (CRYPTO_GROUP_SIZE_BYTES " +
+                        "+ CRYPTO_PUBLIC_KEY_SIZE_BYTES)-octets long as detailed in Crypto_PAKEValues_Responder. It shall be " +
+                        "derived from an ephemeral passcode (See PAKE). It shall be deleted by the Node at the end of " +
+                        "commissioning or expiration of the OpenCommissioningWindow command, and shall be deleted by the " +
+                        "existing Administrator after sending it to the Node(s)."
                 },
 
                 {
-                    tag: "field", name: "Discriminator",
+                    tag: "field", name: "Discriminator", xref: "core§11.19.8.1.3",
                     details: "This field shall be used by the Node as the long discriminator for DNS-SD advertisement (see " +
                         "Commissioning Discriminator) for discovery by the new Administrator. The new Administrator can find " +
                         "and filter DNS-SD records by long discriminator to locate and initiate commissioning with the " +
-                        "appropriate Node.",
-                    xref: "core§11.19.8.1.3"
+                        "appropriate Node."
                 },
 
                 {
-                    tag: "field", name: "Iterations",
+                    tag: "field", name: "Iterations", xref: "core§11.19.8.1.4",
                     details: "This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE " +
                         "passcode verifier to be used for this commissioning, which shall be sent by the Node to the new " +
                         "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The permitted " +
                         "range of values shall match the range specified in Section 3.9, “Password-Based Key Derivation " +
-                        "Function (PBKDF)”, within the definition of the Crypto_PBKDFParameterSet.",
-                    xref: "core§11.19.8.1.4"
+                        "Function (PBKDF)”, within the definition of the Crypto_PBKDFParameterSet."
                 },
 
                 {
-                    tag: "field", name: "Salt",
+                    tag: "field", name: "Salt", xref: "core§11.19.8.1.5",
 
                     details: "This field shall be used by the Node as the PAKE Salt associated with the ephemeral PAKE passcode " +
                         "verifier to be used for this commissioning, which shall be sent by the Node to the new " +
@@ -190,15 +173,13 @@ Resource.add({
                         "\n" +
                         "  • A commissioning window is open." +
                         "\n" +
-                        "  • There is an armed fail-safe timer.",
-
-                    xref: "core§11.19.8.1.5"
+                        "  • There is an armed fail-safe timer."
                 }
             ]
         },
 
         {
-            tag: "command", name: "OpenBasicCommissioningWindow",
+            tag: "command", name: "OpenBasicCommissioningWindow", xref: "core§11.19.8.2",
 
             details: "This command may be used by a current Administrator to instruct a Node to go into commissioning " +
                 "mode, if the node supports the Basic Commissioning Method. The Basic Commissioning Method specifies " +
@@ -219,10 +200,8 @@ Resource.add({
                 "CommissioningComplete command, see Section 5.5, “Commissioning Flows”. The new Administrator shall " +
                 "discover the Node on the IP network using DNS-based Service Discovery (DNS-SD) for commissioning.",
 
-            xref: "core§11.19.8.2",
-
             children: [{
-                tag: "field", name: "CommissioningTimeout",
+                tag: "field", name: "CommissioningTimeout", xref: "core§11.19.8.2.1",
 
                 details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                     "allowed by the Node. This timeout shall follow guidance as specified in the initial Announcement " +
@@ -235,14 +214,12 @@ Resource.add({
                     "\n" +
                     "  • A commissioning window is open." +
                     "\n" +
-                    "  • There is an armed fail-safe timer.",
-
-                xref: "core§11.19.8.2.1"
+                    "  • There is an armed fail-safe timer."
             }]
         },
 
         {
-            tag: "command", name: "RevokeCommissioning",
+            tag: "command", name: "RevokeCommissioning", xref: "core§11.19.8.3",
 
             details: "This command is used by a current Administrator to instruct a Node to revoke any active " +
                 "OpenCommissioningWindow or OpenBasicCommissioningWindow command. This is an idempotent command and " +
@@ -254,16 +231,12 @@ Resource.add({
                 "specific status code of WindowNotOpen." +
                 "\n" +
                 "If the commissioning window was open and the fail-safe was armed when this command is received, the " +
-                "device shall immediately expire the fail-safe and perform the cleanup steps outlined" +
-                "\n" +
-                "in Section 11.10.7.2.2, “Behavior on expiry of Fail-Safe timer”.",
-
-            xref: "core§11.19.8.3"
+                "device shall immediately expire the fail-safe and perform the cleanup steps outlined in Section " +
+                "11.10.7.2.2, “Behavior on expiry of Fail-Safe timer”."
         },
 
         {
-            tag: "datatype", name: "CommissioningWindowStatusEnum",
-            xref: "core§11.19.5.1",
+            tag: "datatype", name: "CommissioningWindowStatusEnum", xref: "core§11.19.5.1",
 
             children: [
                 { tag: "field", name: "WindowNotOpen", description: "Commissioning window not open" },
@@ -276,8 +249,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "StatusCodeEnum",
-            xref: "core§11.19.6.1",
+            tag: "datatype", name: "StatusCodeEnum", xref: "core§11.19.6.1",
 
             children: [
                 {

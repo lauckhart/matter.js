@@ -18,28 +18,28 @@ export const ApplicationBasic = Cluster(
     { name: "ApplicationBasic", id: 0x50d },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        name: "VendorName", id: 0x0, type: "string",
-        constraint: "max 32", conformance: "O", access: "R V", quality: "F"
+        name: "VendorName", id: 0x0, type: "string", access: "R V", conformance: "O", constraint: "max 32",
+        quality: "F"
     }),
-    Attribute({ name: "VendorId", id: 0x1, type: "vendor-id", conformance: "O", access: "R V", quality: "F" }),
+    Attribute({ name: "VendorId", id: 0x1, type: "vendor-id", access: "R V", conformance: "O", quality: "F" }),
     Attribute({
-        name: "ApplicationName", id: 0x2, type: "string",
-        constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "ApplicationName", id: 0x2, type: "string", access: "R V", conformance: "M",
+        constraint: "desc", quality: "F"
     }),
-    Attribute({ name: "ProductId", id: 0x3, type: "uint16", conformance: "O", access: "R V", quality: "F" }),
+    Attribute({ name: "ProductId", id: 0x3, type: "uint16", access: "R V", conformance: "O", quality: "F" }),
     Attribute({
-        name: "Application", id: 0x4, type: "ApplicationStruct",
-        constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "Application", id: 0x4, type: "ApplicationStruct", access: "R V", conformance: "M",
+        constraint: "desc", quality: "F"
     }),
     Attribute(
-        { name: "Status", id: 0x5, type: "ApplicationStatusEnum", constraint: "desc", conformance: "M", access: "R V" }
+        { name: "Status", id: 0x5, type: "ApplicationStatusEnum", access: "R V", conformance: "M", constraint: "desc" }
     ),
     Attribute({
-        name: "ApplicationVersion", id: 0x6, type: "string",
-        constraint: "max 32", conformance: "M", access: "R V", quality: "F"
+        name: "ApplicationVersion", id: 0x6, type: "string", access: "R V", conformance: "M",
+        constraint: "max 32", quality: "F"
     }),
     Attribute(
-        { name: "AllowedVendorList", id: 0x7, type: "list", conformance: "M", access: "R A", quality: "F" },
+        { name: "AllowedVendorList", id: 0x7, type: "list", access: "R A", conformance: "M", quality: "F" },
         Field({ name: "entry", type: "vendor-id" })
     ),
 

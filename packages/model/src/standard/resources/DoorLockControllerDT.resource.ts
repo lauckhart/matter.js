@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "DoorLockController",
-    classification: "simple",
+    tag: "deviceType", name: "DoorLockController", classification: "simple", xref: "device§8.2",
     details: "A Door Lock Controller is a device capable of controlling a door lock.",
-    xref: "device§8.2",
 
     children: [
         { tag: "requirement", name: "Groups", xref: "device§8.2.4" },

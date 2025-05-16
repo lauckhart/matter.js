@@ -24,8 +24,8 @@ export const RvcOperationalState = Cluster(
     Command({ name: "Resume", id: 0x3 }),
     Command({ name: "OperationalCommandResponse", id: 0x4 }),
     Command({
-        name: "GoHome", id: 0x80,
-        conformance: "O", access: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "GoHome", id: 0x80, access: "O", conformance: "O", direction: "request",
+        response: "OperationalCommandResponse"
     }),
 
     Datatype(

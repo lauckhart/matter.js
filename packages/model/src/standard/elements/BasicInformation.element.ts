@@ -19,95 +19,95 @@ export const BasicInformation = Cluster(
     { name: "BasicInformation", id: 0x28 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
     Attribute({
-        name: "DataModelRevision", id: 0x0, type: "uint16",
-        constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "DataModelRevision", id: 0x0, type: "uint16", access: "R V", conformance: "M",
+        constraint: "desc", quality: "F"
     }),
     Attribute({
-        name: "VendorName", id: 0x1, type: "string",
-        constraint: "max 32", conformance: "M", access: "R V", quality: "F"
+        name: "VendorName", id: 0x1, type: "string", access: "R V", conformance: "M", constraint: "max 32",
+        quality: "F"
     }),
-    Attribute({ name: "VendorId", id: 0x2, type: "vendor-id", conformance: "M", access: "R V", quality: "F" }),
+    Attribute({ name: "VendorId", id: 0x2, type: "vendor-id", access: "R V", conformance: "M", quality: "F" }),
     Attribute({
-        name: "ProductName", id: 0x3, type: "string",
-        constraint: "max 32", conformance: "M", access: "R V", quality: "F"
+        name: "ProductName", id: 0x3, type: "string", access: "R V", conformance: "M", constraint: "max 32",
+        quality: "F"
     }),
-    Attribute({ name: "ProductId", id: 0x4, type: "uint16", conformance: "M", access: "R V", quality: "F" }),
+    Attribute({ name: "ProductId", id: 0x4, type: "uint16", access: "R V", conformance: "M", quality: "F" }),
     Attribute({
-        name: "NodeLabel", id: 0x5, type: "string",
-        constraint: "max 32", conformance: "M", access: "RW VM", quality: "N"
+        name: "NodeLabel", id: 0x5, type: "string", access: "RW VM", conformance: "M", constraint: "max 32",
+        quality: "N"
     }),
     Attribute({
-        name: "Location", id: 0x6, type: "string",
-        default: "XX", constraint: "2", conformance: "M", access: "RW VA", quality: "N"
+        name: "Location", id: 0x6, type: "string", access: "RW VA", conformance: "M", constraint: "2",
+        default: "XX", quality: "N"
     }),
     Attribute(
-        { name: "HardwareVersion", id: 0x7, type: "uint16", default: 0, conformance: "M", access: "R V", quality: "F" }
+        { name: "HardwareVersion", id: 0x7, type: "uint16", access: "R V", conformance: "M", default: 0, quality: "F" }
     ),
     Attribute({
-        name: "HardwareVersionString", id: 0x8, type: "string",
-        constraint: "1 to 64", conformance: "M", access: "R V", quality: "F"
+        name: "HardwareVersionString", id: 0x8, type: "string", access: "R V", conformance: "M",
+        constraint: "1 to 64", quality: "F"
     }),
     Attribute({
-        name: "SoftwareVersion", id: 0x9, type: "uint32",
-        default: 0, constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "SoftwareVersion", id: 0x9, type: "uint32", access: "R V", conformance: "M",
+        constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
-        name: "SoftwareVersionString", id: 0xa, type: "string",
-        constraint: "1 to 64", conformance: "M", access: "R V", quality: "F"
+        name: "SoftwareVersionString", id: 0xa, type: "string", access: "R V", conformance: "M",
+        constraint: "1 to 64", quality: "F"
     }),
     Attribute({
-        name: "ManufacturingDate", id: 0xb, type: "string",
-        constraint: "8 to 16", conformance: "O", access: "R V", quality: "F"
+        name: "ManufacturingDate", id: 0xb, type: "string", access: "R V", conformance: "O",
+        constraint: "8 to 16", quality: "F"
     }),
     Attribute({
-        name: "PartNumber", id: 0xc, type: "string",
-        constraint: "max 32", conformance: "O", access: "R V", quality: "F"
+        name: "PartNumber", id: 0xc, type: "string", access: "R V", conformance: "O", constraint: "max 32",
+        quality: "F"
     }),
     Attribute({
-        name: "ProductUrl", id: 0xd, type: "string",
-        constraint: "max 256", conformance: "O", access: "R V", quality: "F"
+        name: "ProductUrl", id: 0xd, type: "string", access: "R V", conformance: "O", constraint: "max 256",
+        quality: "F"
     }),
     Attribute({
-        name: "ProductLabel", id: 0xe, type: "string",
-        constraint: "max 64", conformance: "O", access: "R V", quality: "F"
+        name: "ProductLabel", id: 0xe, type: "string", access: "R V", conformance: "O",
+        constraint: "max 64", quality: "F"
     }),
     Attribute({
-        name: "SerialNumber", id: 0xf, type: "string",
-        constraint: "max 32", conformance: "O", access: "R V", quality: "F"
+        name: "SerialNumber", id: 0xf, type: "string", access: "R V", conformance: "O",
+        constraint: "max 32", quality: "F"
     }),
     Attribute({
-        name: "LocalConfigDisabled", id: 0x10, type: "bool",
-        default: false, conformance: "O", access: "RW VM", quality: "N"
+        name: "LocalConfigDisabled", id: 0x10, type: "bool", access: "RW VM", conformance: "O",
+        default: false, quality: "N"
     }),
-    Attribute({ name: "Reachable", id: 0x11, type: "bool", default: true, conformance: "O", access: "R V" }),
-    Attribute({ name: "UniqueId", id: 0x12, type: "string", constraint: "max 32", conformance: "M", access: "R V", quality: "F" }),
+    Attribute({ name: "Reachable", id: 0x11, type: "bool", access: "R V", conformance: "O", default: true }),
+    Attribute({ name: "UniqueId", id: 0x12, type: "string", access: "R V", conformance: "M", constraint: "max 32", quality: "F" }),
     Attribute({
-        name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct",
-        conformance: "M", access: "R V", quality: "F"
-    }),
-    Attribute({
-        name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct",
-        conformance: "O", access: "R V", quality: "F"
+        name: "CapabilityMinima", id: 0x13, type: "CapabilityMinimaStruct", access: "R V", conformance: "M",
+        quality: "F"
     }),
     Attribute({
-        name: "SpecificationVersion", id: 0x15, type: "uint32",
-        default: 0, constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "ProductAppearance", id: 0x14, type: "ProductAppearanceStruct", access: "R V",
+        conformance: "O", quality: "F"
     }),
     Attribute({
-        name: "MaxPathsPerInvoke", id: 0x16, type: "uint16",
-        default: 1, constraint: "min 1", conformance: "M", access: "R V", quality: "F"
+        name: "SpecificationVersion", id: 0x15, type: "uint32", access: "R V", conformance: "M",
+        constraint: "desc", default: 0, quality: "F"
+    }),
+    Attribute({
+        name: "MaxPathsPerInvoke", id: 0x16, type: "uint16", access: "R V", conformance: "M",
+        constraint: "min 1", default: 1, quality: "F"
     }),
     Event(
-        { name: "StartUp", id: 0x0, conformance: "M", access: "V", priority: "critical" },
+        { name: "StartUp", id: 0x0, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" })
     ),
-    Event({ name: "ShutDown", id: 0x1, conformance: "O", access: "V", priority: "critical" }),
+    Event({ name: "ShutDown", id: 0x1, access: "V", conformance: "O", priority: "critical" }),
     Event(
-        { name: "Leave", id: 0x2, conformance: "O", access: "V", priority: "info" },
-        Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", constraint: "1 to 254", conformance: "M" })
+        { name: "Leave", id: 0x2, access: "V", conformance: "O", priority: "info" },
+        Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" })
     ),
     Event(
-        { name: "ReachableChanged", id: 0x3, conformance: "desc", access: "V", priority: "info" },
+        { name: "ReachableChanged", id: 0x3, access: "V", conformance: "desc", priority: "info" },
         Field({ name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M" })
     ),
 
@@ -153,8 +153,8 @@ export const BasicInformation = Cluster(
     ),
     Datatype(
         { name: "CapabilityMinimaStruct", type: "struct" },
-        Field({ name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", default: 3, constraint: "min 3", conformance: "M" }),
-        Field({ name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", default: 3, constraint: "min 3", conformance: "M" })
+        Field({ name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M", constraint: "min 3", default: 3 }),
+        Field({ name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M", constraint: "min 3", default: 3 })
     )
 );
 

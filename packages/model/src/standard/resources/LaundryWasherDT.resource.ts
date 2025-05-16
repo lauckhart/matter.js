@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "LaundryWasher",
-    classification: "simple",
+    tag: "deviceType", name: "LaundryWasher", classification: "simple", xref: "device§13.1",
     details: "A Laundry Washer represents a device that is capable of laundering consumer items. Any laundry " +
         "washer product may utilize this device type." +
         "\n" +
         "A Laundry Washer shall be composed of at least one endpoint with the Laundry Washer device type.",
-    xref: "device§13.1",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§13.1.4" },

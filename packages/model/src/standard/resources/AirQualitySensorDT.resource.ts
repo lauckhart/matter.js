@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "AirQualitySensor",
-    classification: "simple",
+    tag: "deviceType", name: "AirQualitySensor", classification: "simple", xref: "device§7.10",
     details: "This defines conformance for the Air Quality Sensor device type." +
         "\n" +
         "An air quality sensor is a device designed to monitor and measure various parameters related to the " +
         "quality of ambient air in indoor or outdoor environments.",
-    xref: "device§7.10",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§7.10.4" },

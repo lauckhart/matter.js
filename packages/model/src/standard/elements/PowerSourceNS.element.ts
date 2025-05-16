@@ -18,7 +18,7 @@ export const PowerSourceNs = SemanticNamespace(
     SemanticTag({ name: "Grid", id: 0x1 }),
     SemanticTag({ name: "Solar", id: 0x2 }),
     SemanticTag({ name: "Battery", id: 0x3 }),
-    SemanticTag({ name: "EV", id: 0x4 })
+    SemanticTag({ name: "Ev", id: 0x4 })
 );
 
 MatterDefinition.children.push(PowerSourceNs);

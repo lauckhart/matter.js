@@ -8,12 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "field-id",
-    description: "Field ID",
-    details: "An identifier that indicates a field defined in a struct." +
-        "\n" +
-        "Field IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +
-        "described in Data Model Types.",
-    xref: "core§7.19.2.28"
-});
+Resource.add({ tag: "datatype", name: "field-id", description: "Field ID", xref: "core§7.19.2" });

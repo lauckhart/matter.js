@@ -238,11 +238,11 @@ function installPreciseDetails(
             titleSuffix = tag;
         }
 
-        // We identify the detail section associated with a row using both "name" and "longName", optionally followed
+        // We identify the detail section associated with a row using both "name" and "title", optionally followed
         // by a suffix specific to the type of thing
         let detail: HtmlReference | undefined;
         let identifiedAs = "";
-        for (let identifier of [(record as { longName?: string }).longName, record.name]) {
+        for (let identifier of [(record as { title?: string }).title, record.name]) {
             if (identifier === undefined) {
                 continue;
             }

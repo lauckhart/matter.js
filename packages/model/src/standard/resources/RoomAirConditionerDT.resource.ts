@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "RoomAirConditioner",
-    classification: "simple",
+    tag: "deviceType", name: "RoomAirConditioner", classification: "simple", xref: "device§13.3",
     details: "This defines conformance to the Room Air Conditioner device type." +
         "\n" +
         "A Room Air Conditioner is a device with the primary function of controlling the air temperature in a " +
         "single room.",
-    xref: "device§13.3",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§13.3.6" },

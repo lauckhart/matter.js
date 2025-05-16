@@ -13,21 +13,21 @@ export const LaundryDryerDt = DeviceType(
     { name: "LaundryDryer", id: 0x7c },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 124, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 124, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "LaundryWasherMode", id: 0x51, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "StartUpMode", element: "attribute", conformance: "X" }),
-        Requirement({ name: "ONOFF", element: "feature", conformance: "X" })
+        { name: "LaundryWasherMode", id: 0x51, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "StartUpMode", conformance: "X", element: "attribute" }),
+        Requirement({ name: "ONOFF", conformance: "X", element: "feature" })
     ),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "DEADFRONTBEHAVIOR", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "DEADFRONTBEHAVIOR", conformance: "M", element: "feature" })
     ),
-    Requirement({ name: "LaundryDryerControls", id: 0x4a, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "TemperatureControl", id: 0x56, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "OperationalState", id: 0x60, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "LaundryDryerControls", id: 0x4a, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "TemperatureControl", id: 0x56, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "OperationalState", id: 0x60, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(LaundryDryerDt);

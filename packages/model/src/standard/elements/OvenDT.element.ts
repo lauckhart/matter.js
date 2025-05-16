@@ -13,9 +13,9 @@ export const OvenDt = DeviceType(
     { name: "Oven", id: 0x7b },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 123, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 123, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(OvenDt);

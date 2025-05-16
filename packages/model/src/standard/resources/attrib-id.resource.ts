@@ -8,12 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "attrib-id",
-    description: "Attribute ID",
-    details: "An identifier that indicates an attribute defined in a cluster specification." +
-        "\n" +
-        "Attribute IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +
-        "described in Data Model Types.",
-    xref: "core§7.19.2.27"
-});
+Resource.add({ tag: "datatype", name: "attrib-id", description: "Attribute ID", xref: "core§7.19.2" });

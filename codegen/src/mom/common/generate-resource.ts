@@ -25,14 +25,14 @@ export function generateResource(target: TsFile, element: Model): boolean {
 function addResource(target: Block, definition: Resource.Named) {
     const expr = target.expressions("{", "}");
 
-    const props = { ...definition } as Record<string, unknown>;
+    let props = { ...definition } as Record<string, unknown>;
 
     delete props.tag;
     delete props.name;
     delete props.discriminator;
     delete props.children;
 
-    const hasProps = !!Object.keys(props).length;
+    let hasProps = !!Object.keys(props).length;
     const hasChildren = !!definition.children?.length;
 
     if (!hasProps && !hasChildren) {
@@ -47,7 +47,17 @@ function addResource(target: Block, definition: Resource.Named) {
             identity.discriminator = discriminator;
         }
 
-        addProperties(expr, identity);
+        if (hasProps) {
+            props = {
+                ...identity,
+                ...Object.fromEntries(
+                    Object.entries(props).sort(([a], [b]) => a.localeCompare(b, "en", { sensitivity: "base" })),
+                ),
+            };
+        } else {
+            hasProps = true;
+            props = identity;
+        }
     }
 
     if (hasProps) {

@@ -22,108 +22,108 @@ export const ContentControl = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "ST", constraint: "0", longName: "ScreenTime" }),
-        Field({ name: "PM", constraint: "1", longName: "PinManagement" }),
-        Field({ name: "BU", constraint: "2", longName: "BlockUnrated" }),
-        Field({ name: "OCR", constraint: "3", longName: "OnDemandContentRating" }),
-        Field({ name: "SCR", constraint: "4", longName: "ScheduledContentRating" }),
-        Field({ name: "BC", constraint: "5", longName: "BlockChannels" }),
-        Field({ name: "BA", constraint: "6", longName: "BlockApplications" }),
-        Field({ name: "BTW", constraint: "7", longName: "BlockContentTimeWindow" })
+        Field({ name: "ST", constraint: "0", title: "ScreenTime" }),
+        Field({ name: "PM", constraint: "1", title: "PinManagement" }),
+        Field({ name: "BU", constraint: "2", title: "BlockUnrated" }),
+        Field({ name: "OCR", constraint: "3", title: "OnDemandContentRating" }),
+        Field({ name: "SCR", constraint: "4", title: "ScheduledContentRating" }),
+        Field({ name: "BC", constraint: "5", title: "BlockChannels" }),
+        Field({ name: "BA", constraint: "6", title: "BlockApplications" }),
+        Field({ name: "BTW", constraint: "7", title: "BlockContentTimeWindow" })
     ),
 
-    Attribute({ name: "Enabled", id: 0x0, type: "bool", conformance: "M", access: "R V" }),
+    Attribute({ name: "Enabled", id: 0x0, type: "bool", access: "R V", conformance: "M" }),
     Attribute(
-        { name: "OnDemandRatings", id: 0x1, type: "list", conformance: "OCR", access: "R V" },
+        { name: "OnDemandRatings", id: 0x1, type: "list", access: "R V", conformance: "OCR" },
         Field({ name: "entry", type: "RatingNameStruct" })
     ),
     Attribute({
-        name: "OnDemandRatingThreshold", id: 0x2, type: "string",
-        constraint: "max 8", conformance: "OCR", access: "R V"
+        name: "OnDemandRatingThreshold", id: 0x2, type: "string", access: "R V", conformance: "OCR",
+        constraint: "max 8"
     }),
     Attribute(
-        { name: "ScheduledContentRatings", id: 0x3, type: "list", conformance: "SCR", access: "R V" },
+        { name: "ScheduledContentRatings", id: 0x3, type: "list", access: "R V", conformance: "SCR" },
         Field({ name: "entry", type: "RatingNameStruct" })
     ),
     Attribute({
-        name: "ScheduledContentRatingThreshold", id: 0x4, type: "string",
-        constraint: "max 8", conformance: "SCR", access: "R V"
+        name: "ScheduledContentRatingThreshold", id: 0x4, type: "string", access: "R V", conformance: "SCR",
+        constraint: "max 8"
     }),
-    Attribute({ name: "ScreenDailyTime", id: 0x5, type: "elapsed-s", constraint: "max 86400", conformance: "ST", access: "R V" }),
+    Attribute({ name: "ScreenDailyTime", id: 0x5, type: "elapsed-s", access: "R V", conformance: "ST", constraint: "max 86400" }),
     Attribute({
-        name: "RemainingScreenTime", id: 0x6, type: "elapsed-s",
-        constraint: "max 86400", conformance: "ST", access: "R V"
+        name: "RemainingScreenTime", id: 0x6, type: "elapsed-s", access: "R V", conformance: "ST",
+        constraint: "max 86400"
     }),
-    Attribute({ name: "BlockUnrated", id: 0x7, type: "bool", conformance: "BU", access: "R V" }),
+    Attribute({ name: "BlockUnrated", id: 0x7, type: "bool", access: "R V", conformance: "BU" }),
     Attribute(
-        { name: "BlockChannelList", id: 0x8, type: "list", conformance: "BC", access: "R V" },
+        { name: "BlockChannelList", id: 0x8, type: "list", access: "R V", conformance: "BC" },
         Field({ name: "entry", type: "BlockChannelStruct" })
     ),
     Attribute(
-        { name: "BlockApplicationList", id: 0x9, type: "list", conformance: "BA", access: "R V" },
+        { name: "BlockApplicationList", id: 0x9, type: "list", access: "R V", conformance: "BA" },
         Field({ name: "entry", type: "AppInfoStruct" })
     ),
 
     Attribute(
         {
-            name: "BlockContentTimeWindow", id: 0xa, type: "list",
-            constraint: "max 7", conformance: "BTW", access: "R V"
+            name: "BlockContentTimeWindow", id: 0xa, type: "list", access: "R V", conformance: "BTW",
+            constraint: "max 7"
         },
         Field({ name: "entry", type: "TimeWindowStruct" })
     ),
 
-    Event({ name: "RemainingScreenTimeExpired", id: 0x0, conformance: "ST", access: "V", priority: "info" }),
-    Event({ name: "EnteringBlockContentTimeWindow", id: 0x1, conformance: "BTW", access: "V", priority: "info" }),
+    Event({ name: "RemainingScreenTimeExpired", id: 0x0, access: "V", conformance: "ST", priority: "info" }),
+    Event({ name: "EnteringBlockContentTimeWindow", id: 0x1, access: "V", conformance: "BTW", priority: "info" }),
     Command(
-        { name: "UpdatePin", id: 0x0, conformance: "PM", access: "M T", direction: "request", response: "status" },
-        Field({ name: "OldPin", id: 0x0, type: "string", constraint: "max 6", conformance: "M" }),
-        Field({ name: "NewPin", id: 0x1, type: "string", constraint: "max 6", conformance: "M" })
+        { name: "UpdatePin", id: 0x0, access: "M T", conformance: "PM", direction: "request", response: "status" },
+        Field({ name: "OldPin", id: 0x0, type: "string", conformance: "M", constraint: "max 6" }),
+        Field({ name: "NewPin", id: 0x1, type: "string", conformance: "M", constraint: "max 6" })
     ),
-    Command({ name: "ResetPin", id: 0x1, conformance: "PM", access: "A T", direction: "request", response: "ResetPinResponse" }),
+    Command({ name: "ResetPin", id: 0x1, access: "A T", conformance: "PM", direction: "request", response: "ResetPinResponse" }),
     Command(
         { name: "ResetPinResponse", id: 0x2, conformance: "PM", direction: "response" },
-        Field({ name: "PinCode", id: 0x0, type: "string", constraint: "max 6", conformance: "M" })
+        Field({ name: "PinCode", id: 0x0, type: "string", conformance: "M", constraint: "max 6" })
     ),
-    Command({ name: "Enable", id: 0x3, conformance: "M", access: "M T", direction: "request", response: "status" }),
-    Command({ name: "Disable", id: 0x4, conformance: "M", access: "M T", direction: "request", response: "status" }),
+    Command({ name: "Enable", id: 0x3, access: "M T", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "Disable", id: 0x4, access: "M T", conformance: "M", direction: "request", response: "status" }),
     Command(
-        { name: "AddBonusTime", id: 0x5, conformance: "ST", access: "O", direction: "request", response: "status" },
-        Field({ name: "PinCode", id: 0x0, type: "string", constraint: "max 6", conformance: "O" }),
-        Field({ name: "BonusTime", id: 0x1, type: "elapsed-s", default: 300, constraint: "desc", conformance: "M" })
+        { name: "AddBonusTime", id: 0x5, access: "O", conformance: "ST", direction: "request", response: "status" },
+        Field({ name: "PinCode", id: 0x0, type: "string", conformance: "O", constraint: "max 6" }),
+        Field({ name: "BonusTime", id: 0x1, type: "elapsed-s", conformance: "M", constraint: "desc", default: 300 })
     ),
 
     Command(
         {
-            name: "SetScreenDailyTime", id: 0x6,
-            conformance: "ST", access: "M", direction: "request", response: "status"
+            name: "SetScreenDailyTime", id: 0x6, access: "M", conformance: "ST", direction: "request",
+            response: "status"
         },
-        Field({ name: "ScreenTime", id: 0x0, type: "elapsed-s", constraint: "max 86400", conformance: "M" })
+        Field({ name: "ScreenTime", id: 0x0, type: "elapsed-s", conformance: "M", constraint: "max 86400" })
     ),
 
-    Command({ name: "BlockUnratedContent", id: 0x7, conformance: "BU", access: "M", direction: "request", response: "status" }),
+    Command({ name: "BlockUnratedContent", id: 0x7, access: "M", conformance: "BU", direction: "request", response: "status" }),
     Command({
-        name: "UnblockUnratedContent", id: 0x8,
-        conformance: "BU", access: "M", direction: "request", response: "status"
+        name: "UnblockUnratedContent", id: 0x8, access: "M", conformance: "BU", direction: "request",
+        response: "status"
     }),
 
     Command(
         {
-            name: "SetOnDemandRatingThreshold", id: 0x9,
-            conformance: "OCR", access: "M", direction: "request", response: "status"
+            name: "SetOnDemandRatingThreshold", id: 0x9, access: "M", conformance: "OCR", direction: "request",
+            response: "status"
         },
-        Field({ name: "Rating", id: 0x0, type: "string", constraint: "max 8", conformance: "M" })
+        Field({ name: "Rating", id: 0x0, type: "string", conformance: "M", constraint: "max 8" })
     ),
 
     Command(
         {
-            name: "SetScheduledContentRatingThreshold", id: 0xa,
-            conformance: "SCR", access: "M", direction: "request", response: "status"
+            name: "SetScheduledContentRatingThreshold", id: 0xa, access: "M", conformance: "SCR",
+            direction: "request", response: "status"
         },
-        Field({ name: "Rating", id: 0x0, type: "string", constraint: "max 8", conformance: "M" })
+        Field({ name: "Rating", id: 0x0, type: "string", conformance: "M", constraint: "max 8" })
     ),
 
     Command(
-        { name: "AddBlockChannels", id: 0xb, conformance: "BC", access: "M", direction: "request", response: "status" },
+        { name: "AddBlockChannels", id: 0xb, access: "M", conformance: "BC", direction: "request", response: "status" },
         Field(
             { name: "Channels", id: 0x0, type: "list", conformance: "M" },
             Field({ name: "entry", type: "BlockChannelStruct" })
@@ -132,8 +132,8 @@ export const ContentControl = Cluster(
 
     Command(
         {
-            name: "RemoveBlockChannels", id: 0xc,
-            conformance: "BC", access: "M", direction: "request", response: "status"
+            name: "RemoveBlockChannels", id: 0xc, access: "M", conformance: "BC", direction: "request",
+            response: "status"
         },
         Field(
             { name: "ChannelIndexes", id: 0x0, type: "list", conformance: "M" },
@@ -143,8 +143,8 @@ export const ContentControl = Cluster(
 
     Command(
         {
-            name: "AddBlockApplications", id: 0xd,
-            conformance: "BA", access: "M", direction: "request", response: "status"
+            name: "AddBlockApplications", id: 0xd, access: "M", conformance: "BA", direction: "request",
+            response: "status"
         },
         Field(
             { name: "Applications", id: 0x0, type: "list", conformance: "M" },
@@ -154,8 +154,8 @@ export const ContentControl = Cluster(
 
     Command(
         {
-            name: "RemoveBlockApplications", id: 0xe,
-            conformance: "BA", access: "M", direction: "request", response: "status"
+            name: "RemoveBlockApplications", id: 0xe, access: "M", conformance: "BA", direction: "request",
+            response: "status"
         },
         Field(
             { name: "Applications", id: 0x0, type: "list", conformance: "M" },
@@ -165,16 +165,16 @@ export const ContentControl = Cluster(
 
     Command(
         {
-            name: "SetBlockContentTimeWindow", id: 0xf,
-            conformance: "BTW", access: "M", direction: "request", response: "status"
+            name: "SetBlockContentTimeWindow", id: 0xf, access: "M", conformance: "BTW", direction: "request",
+            response: "status"
         },
         Field({ name: "TimeWindow", id: 0x0, type: "TimeWindowStruct", conformance: "M" })
     ),
 
     Command(
         {
-            name: "RemoveBlockContentTimeWindow", id: 0x10,
-            conformance: "BTW", access: "M", direction: "request", response: "status"
+            name: "RemoveBlockContentTimeWindow", id: 0x10, access: "M", conformance: "BTW",
+            direction: "request", response: "status"
         },
         Field(
             { name: "TimeWindowIndexes", id: 0x0, type: "list", conformance: "M" },
@@ -195,8 +195,8 @@ export const ContentControl = Cluster(
 
     Datatype(
         { name: "RatingNameStruct", type: "struct" },
-        Field({ name: "RatingName", id: 0x0, type: "string", constraint: "max 8", conformance: "M" }),
-        Field({ name: "RatingNameDesc", id: 0x1, type: "string", constraint: "max 64", conformance: "O" })
+        Field({ name: "RatingName", id: 0x0, type: "string", conformance: "M", constraint: "max 8" }),
+        Field({ name: "RatingNameDesc", id: 0x1, type: "string", conformance: "O", constraint: "max 64" })
     ),
 
     Datatype(
@@ -216,19 +216,19 @@ export const ContentControl = Cluster(
     Datatype(
         { name: "TimeWindowStruct", type: "struct" },
         Field({ name: "TimeWindowIndex", id: 0x0, type: "uint16", conformance: "M", quality: "X" }),
-        Field({ name: "DayOfWeek", id: 0x1, type: "DayOfWeekBitmap", constraint: "desc", conformance: "M" }),
+        Field({ name: "DayOfWeek", id: 0x1, type: "DayOfWeekBitmap", conformance: "M", constraint: "desc" }),
         Field(
-            { name: "TimePeriod", id: 0x2, type: "list", constraint: "desc", conformance: "M" },
+            { name: "TimePeriod", id: 0x2, type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "TimePeriodStruct" })
         )
     ),
 
     Datatype(
         { name: "TimePeriodStruct", type: "struct" },
-        Field({ name: "StartHour", id: 0x0, type: "uint8", constraint: "0 to 23", conformance: "M" }),
-        Field({ name: "StartMinute", id: 0x1, type: "uint8", constraint: "0 to 59", conformance: "M" }),
-        Field({ name: "EndHour", id: 0x2, type: "uint8", constraint: "0 to 23", conformance: "M" }),
-        Field({ name: "EndMinute", id: 0x3, type: "uint8", constraint: "0 to 59", conformance: "M" })
+        Field({ name: "StartHour", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 23" }),
+        Field({ name: "StartMinute", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 59" }),
+        Field({ name: "EndHour", id: 0x2, type: "uint8", conformance: "M", constraint: "0 to 23" }),
+        Field({ name: "EndMinute", id: 0x3, type: "uint8", conformance: "M", constraint: "0 to 59" })
     ),
 
     Datatype(

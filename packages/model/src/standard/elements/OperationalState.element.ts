@@ -22,59 +22,59 @@ export const OperationalState = Cluster(
 
     Attribute(
         {
-            name: "PhaseList", id: 0x0, type: "list",
-            constraint: "max 32[max 64]", conformance: "M", access: "R V", quality: "X"
+            name: "PhaseList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "max 32[max 64]", quality: "X"
         },
         Field({ name: "entry", type: "string" })
     ),
 
-    Attribute({ name: "CurrentPhase", id: 0x1, type: "uint8", constraint: "desc", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "CurrentPhase", id: 0x1, type: "uint8", access: "R V", conformance: "M", constraint: "desc", quality: "X" }),
     Attribute({
-        name: "CountdownTime", id: 0x2, type: "elapsed-s",
-        default: null, constraint: "max 259200", conformance: "O", access: "R V", quality: "X Q"
+        name: "CountdownTime", id: 0x2, type: "elapsed-s", access: "R V", conformance: "O",
+        constraint: "max 259200", default: null, quality: "X Q"
     }),
     Attribute(
-        { name: "OperationalStateList", id: 0x3, type: "list", constraint: "desc", conformance: "M", access: "R V" },
+        { name: "OperationalStateList", id: 0x3, type: "list", access: "R V", conformance: "M", constraint: "desc" },
         Field({ name: "entry", type: "OperationalStateStruct" })
     ),
-    Attribute({ name: "OperationalState", id: 0x4, type: "OperationalStateEnum", conformance: "M", access: "R V" }),
+    Attribute({ name: "OperationalState", id: 0x4, type: "OperationalStateEnum", access: "R V", conformance: "M" }),
     Attribute({
-        name: "OperationalError", id: 0x5, type: "ErrorStateStruct",
-        constraint: "desc", conformance: "M", access: "R V"
+        name: "OperationalError", id: 0x5, type: "ErrorStateStruct", access: "R V", conformance: "M",
+        constraint: "desc"
     }),
     Event(
-        { name: "OperationalError", id: 0x0, conformance: "M", access: "V", priority: "critical" },
+        { name: "OperationalError", id: 0x0, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "ErrorState", id: 0x0, type: "ErrorStateStruct", conformance: "M" })
     ),
 
     Event(
-        { name: "OperationCompletion", id: 0x1, conformance: "O", access: "V", priority: "info" },
+        { name: "OperationCompletion", id: 0x1, access: "V", conformance: "O", priority: "info" },
         Field({ name: "CompletionErrorCode", id: 0x0, type: "enum8", conformance: "M" }),
         Field({ name: "TotalOperationalTime", id: 0x1, type: "elapsed-s", conformance: "O", quality: "X" }),
         Field({ name: "PausedTime", id: 0x2, type: "elapsed-s", conformance: "O", quality: "X" })
     ),
 
     Command({
-        name: "Pause", id: 0x0,
-        conformance: "Resume, O", access: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "Pause", id: 0x0, access: "O", conformance: "Resume, O", direction: "request",
+        response: "OperationalCommandResponse"
     }),
     Command({
-        name: "Stop", id: 0x1,
-        conformance: "Start, O", access: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "Stop", id: 0x1, access: "O", conformance: "Start, O", direction: "request",
+        response: "OperationalCommandResponse"
     }),
     Command({
-        name: "Start", id: 0x2,
-        conformance: "O", access: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "Start", id: 0x2, access: "O", conformance: "O", direction: "request",
+        response: "OperationalCommandResponse"
     }),
     Command({
-        name: "Resume", id: 0x3,
-        conformance: "Pause, O", access: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "Resume", id: 0x3, access: "O", conformance: "Pause, O", direction: "request",
+        response: "OperationalCommandResponse"
     }),
 
     Command(
         {
-            name: "OperationalCommandResponse", id: 0x4,
-            conformance: "Pause | Stop | Start | Resume", access: "O", direction: "response"
+            name: "OperationalCommandResponse", id: 0x4, access: "O",
+            conformance: "Pause | Stop | Start | Resume", direction: "response"
         },
         Field({ name: "CommandResponseState", id: 0x0, type: "ErrorStateStruct", conformance: "M" })
     ),
@@ -89,8 +89,8 @@ export const OperationalState = Cluster(
 
     Datatype(
         { name: "OperationalStateStruct", type: "struct" },
-        Field({ name: "OperationalStateId", id: 0x0, type: "OperationalStateEnum", default: 0, conformance: "M" }),
-        Field({ name: "OperationalStateLabel", id: 0x1, type: "string", constraint: "max 64", conformance: "desc" })
+        Field({ name: "OperationalStateId", id: 0x0, type: "OperationalStateEnum", conformance: "M", default: 0 }),
+        Field({ name: "OperationalStateLabel", id: 0x1, type: "string", conformance: "desc", constraint: "max 64" })
     ),
 
     Datatype(
@@ -103,9 +103,9 @@ export const OperationalState = Cluster(
 
     Datatype(
         { name: "ErrorStateStruct", type: "struct" },
-        Field({ name: "ErrorStateID", id: 0x0, type: "ErrorStateEnum", default: 0, conformance: "M" }),
-        Field({ name: "ErrorStateLabel", id: 0x1, type: "string", constraint: "max 64", conformance: "desc" }),
-        Field({ name: "ErrorStateDetails", id: 0x2, type: "string", constraint: "max 64", conformance: "O" })
+        Field({ name: "ErrorStateId", id: 0x0, type: "ErrorStateEnum", conformance: "M", default: 0 }),
+        Field({ name: "ErrorStateLabel", id: 0x1, type: "string", conformance: "desc", constraint: "max 64" }),
+        Field({ name: "ErrorStateDetails", id: 0x2, type: "string", conformance: "O", constraint: "max 64" })
     )
 );
 

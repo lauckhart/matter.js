@@ -18,40 +18,38 @@ export const PressureMeasurement = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "EXT", constraint: "0", conformance: "O", longName: "Extended" })
+        Field({ name: "EXT", conformance: "O", constraint: "0", title: "Extended" })
     ),
     Attribute({
-        name: "MeasuredValue", id: 0x0, type: "int16",
-        constraint: "minMeasuredValue to maxMeasuredValue", conformance: "M", access: "R V", quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
+        constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P"
     }),
     Attribute({
-        name: "MinMeasuredValue", id: 0x1, type: "int16",
-        constraint: "max 32766", conformance: "M", access: "R V", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
+        constraint: "max 32766", quality: "X"
     }),
     Attribute({
-        name: "MaxMeasuredValue", id: 0x2, type: "int16",
-        constraint: "minMeasuredValue + 1 to 32767", conformance: "M", access: "R V", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
+        constraint: "minMeasuredValue + 1 to 32767", quality: "X"
     }),
-    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", default: 0, constraint: "max 2048", conformance: "O", access: "R V" }),
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O", constraint: "max 2048", default: 0 }),
     Attribute({
-        name: "ScaledValue", id: 0x10, type: "int16",
-        default: 0, constraint: "minScaledValue to maxScaledValue", conformance: "EXT", access: "R V",
-        quality: "X"
-    }),
-    Attribute({
-        name: "MinScaledValue", id: 0x11, type: "int16",
-        default: 0, constraint: "max 32766", conformance: "EXT", access: "R V", quality: "X"
+        name: "ScaledValue", id: 0x10, type: "int16", access: "R V", conformance: "EXT",
+        constraint: "minScaledValue to maxScaledValue", default: 0, quality: "X"
     }),
     Attribute({
-        name: "MaxScaledValue", id: 0x12, type: "int16",
-        default: 0, constraint: "minScaledValue + 1 to 32767", conformance: "EXT", access: "R V",
-        quality: "X"
+        name: "MinScaledValue", id: 0x11, type: "int16", access: "R V", conformance: "EXT",
+        constraint: "max 32766", default: 0, quality: "X"
     }),
     Attribute({
-        name: "ScaledTolerance", id: 0x13, type: "uint16",
-        default: 0, constraint: "max 2048", conformance: "[EXT]", access: "R V"
+        name: "MaxScaledValue", id: 0x12, type: "int16", access: "R V", conformance: "EXT",
+        constraint: "minScaledValue + 1 to 32767", default: 0, quality: "X"
     }),
-    Attribute({ name: "Scale", id: 0x14, type: "int8", default: 0, constraint: "min -127", conformance: "EXT", access: "R V" })
+    Attribute({
+        name: "ScaledTolerance", id: 0x13, type: "uint16", access: "R V", conformance: "[EXT]",
+        constraint: "max 2048", default: 0
+    }),
+    Attribute({ name: "Scale", id: 0x14, type: "int8", access: "R V", conformance: "EXT", constraint: "min -127", default: 0 })
 );
 
 MatterDefinition.children.push(PressureMeasurement);

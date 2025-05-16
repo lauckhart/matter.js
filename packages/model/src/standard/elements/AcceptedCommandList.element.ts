@@ -11,8 +11,8 @@ import { AttributeElement as Attribute, FieldElement as Field } from "../../elem
 
 export const AcceptedCommandList = Attribute(
     {
-        name: "AcceptedCommandList", id: 0xfff9, type: "list",
-        isSeed: true, conformance: "M", access: "R V", quality: "F"
+        name: "AcceptedCommandList", id: 0xfff9, type: "list", access: "R V", conformance: "M",
+        isSeed: true, quality: "F"
     },
     Field({ name: "entry", type: "command-id" })
 );

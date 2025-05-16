@@ -9,24 +9,21 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "locationdesc",
-    description: "Location Descriptor",
+    tag: "datatype", name: "locationdesc", description: "Location Descriptor", xref: "core§7.19.2.45",
     details: "This data type shall be represented by the following structure:",
-    xref: "core§7.19.2.45",
 
     children: [
         {
-            tag: "field", name: "LocationName",
+            tag: "field", name: "LocationName", xref: "core§7.19.2.45.1",
             details: "This field shall indicate the name of the location. For example, \"blue room\"." +
                 "\n" +
                 "If the location name is not user provided, the logic that generates it (clients, devices etc.) " +
                 "SHOULD utilize synthesized user-friendly, understandable, names for the location, rather than opaque " +
-                "values such as \"private\" or \"2fe7c241-a50a-4863-896e-c5878da5ed68\".",
-            xref: "core§7.19.2.45.1"
+                "values such as \"private\" or \"2fe7c241-a50a-4863-896e-c5878da5ed68\"."
         },
 
         {
-            tag: "field", name: "FloorNumber",
+            tag: "field", name: "FloorNumber", xref: "core§7.19.2.45.2",
 
             details: "This field shall indicate the level number. Negative values correspond to basement levels." +
                 "\n" +
@@ -51,28 +48,24 @@ Resource.add({
                 "devices, such as for grouping devices that are located on the same level. For example, an automation " +
                 "may be defined for all devices located at the basement level (floor number -1)." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "Handling complex level situations, such as half levels (side split houses), or the levels from an " +
-                "apartment building, is up to the client and/or user.",
-
-            xref: "core§7.19.2.45.2"
+                "> Handling complex level situations, such as half levels (side split houses), or the levels from an " +
+                "  apartment building, is up to the client and/or user."
         },
 
         {
-            tag: "field", name: "AreaType",
+            tag: "field", name: "AreaType", xref: "core§7.19.2.45.3",
 
             details: "This field shall be the ID of an area semantic tag, located within the Common Area Namespace. For " +
                 "example, this tag may indicate that the location refers to a bedroom." +
                 "\n" +
                 "If this field is null, that indicates that the area type information is not available." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "This field only indicates the type of the area. Multiple areas of the same type, such as bedrooms, " +
-                "may exist in a user’s home.",
-
-            xref: "core§7.19.2.45.3"
+                "> This field only indicates the type of the area. Multiple areas of the same type, such as bedrooms, " +
+                "  may exist in a user’s home."
         }
     ]
 });

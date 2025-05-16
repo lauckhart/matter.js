@@ -13,12 +13,12 @@ export const CooktopDt = DeviceType(
     { name: "Cooktop", id: 0x78 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 120, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 120, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "OFFONLY", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "OFFONLY", conformance: "M", element: "feature" })
     )
 );
 

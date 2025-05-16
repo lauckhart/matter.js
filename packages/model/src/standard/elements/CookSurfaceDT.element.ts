@@ -13,13 +13,13 @@ export const CookSurfaceDt = DeviceType(
     { name: "CookSurface", id: 0x77 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 119, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 119, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "TemperatureControl", id: 0x56, element: "serverCluster", conformance: "O.a+" }),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O.a+" }),
+    Requirement({ name: "TemperatureControl", id: 0x56, conformance: "O.a+", element: "serverCluster" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O.a+", element: "serverCluster" }),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "OFFONLY", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "OFFONLY", conformance: "M", element: "feature" })
     )
 );
 

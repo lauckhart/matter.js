@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "NetworkInfrastructureManager",
-    classification: "simple",
+    tag: "deviceType", name: "NetworkInfrastructureManager", classification: "simple",
+    xref: "device§15.2",
 
     details: "A Network Infrastructure Manager provides interfaces that allow for the management of the Wi-Fi, " +
         "Thread, and Ethernet networks underlying a Matter deployment, realizing the Star Network Topology " +
@@ -28,7 +28,6 @@ Resource.add({
         "Section 15.2.5.1, “Access Control MNGD Conformance”). Consequently, Commissioners of this device " +
         "type should be aware of this feature and its use.",
 
-    xref: "device§15.2",
     children: [
         { tag: "requirement", name: "WiFiNetworkManagement", xref: "device§15.2.4" },
         { tag: "requirement", name: "ThreadBorderRouterManagement", xref: "device§15.2.4" },

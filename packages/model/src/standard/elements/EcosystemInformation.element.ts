@@ -18,45 +18,45 @@ export const EcosystemInformation = Cluster(
     { name: "EcosystemInformation", id: 0x750 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "DeviceDirectory", id: 0x0, type: "list", conformance: "M", access: "R F M", quality: "N" },
+        { name: "DeviceDirectory", id: 0x0, type: "list", access: "R F M", conformance: "M", quality: "N" },
         Field({ name: "entry", type: "EcosystemDeviceStruct" })
     ),
     Attribute(
-        { name: "LocationDirectory", id: 0x1, type: "list", conformance: "M", access: "R F M", quality: "N" },
+        { name: "LocationDirectory", id: 0x1, type: "list", access: "R F M", conformance: "M", quality: "N" },
         Field({ name: "entry", type: "EcosystemLocationStruct" })
     ),
 
     Datatype(
         { name: "EcosystemDeviceStruct", type: "struct" },
-        Field({ name: "DeviceName", id: 0x0, type: "string", constraint: "max 64", conformance: "O", access: "S" }),
-        Field({ name: "DeviceNameLastEdit", id: 0x1, type: "epoch-us", default: 0, conformance: "desc", access: "S" }),
-        Field({ name: "BridgedEndpoint", id: 0x2, type: "endpoint-no", constraint: "desc", conformance: "desc", access: "S" }),
+        Field({ name: "DeviceName", id: 0x0, type: "string", access: "S", conformance: "O", constraint: "max 64" }),
+        Field({ name: "DeviceNameLastEdit", id: 0x1, type: "epoch-us", access: "S", conformance: "desc", default: 0 }),
+        Field({ name: "BridgedEndpoint", id: 0x2, type: "endpoint-no", access: "S", conformance: "desc", constraint: "desc" }),
         Field({
-            name: "OriginalEndpoint", id: 0x3, type: "endpoint-no",
-            constraint: "desc", conformance: "desc", access: "S"
+            name: "OriginalEndpoint", id: 0x3, type: "endpoint-no", access: "S", conformance: "desc",
+            constraint: "desc"
         }),
         Field(
-            { name: "DeviceTypes", id: 0x4, type: "list", constraint: "desc", conformance: "M", access: "S" },
+            { name: "DeviceTypes", id: 0x4, type: "list", access: "S", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "Descriptor.DeviceTypeStruct" })
         ),
 
         Field(
             {
-                name: "UniqueLocationIDs", id: 0x5, type: "list",
-                constraint: "max 64[max 64]", conformance: "M", access: "S"
+                name: "UniqueLocationIDs", id: 0x5, type: "list", access: "S", conformance: "M",
+                constraint: "max 64[max 64]"
             },
             Field({ name: "entry", type: "string" })
         ),
 
-        Field({ name: "UniqueLocationIDsLastEdit", id: 0x6, type: "epoch-us", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "UniqueLocationIDsLastEdit", id: 0x6, type: "epoch-us", access: "S", conformance: "M", default: 0 }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "EcosystemLocationStruct", type: "struct" },
-        Field({ name: "UniqueLocationId", id: 0x0, type: "string", constraint: "max 64", conformance: "M", access: "S" }),
-        Field({ name: "LocationDescriptor", id: 0x1, type: "locationdesc", conformance: "M", access: "S" }),
-        Field({ name: "LocationDescriptorLastEdit", id: 0x2, type: "epoch-us", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "UniqueLocationId", id: 0x0, type: "string", access: "S", conformance: "M", constraint: "max 64" }),
+        Field({ name: "LocationDescriptor", id: 0x1, type: "locationdesc", access: "S", conformance: "M" }),
+        Field({ name: "LocationDescriptorLastEdit", id: 0x2, type: "epoch-us", access: "S", conformance: "M", default: 0 }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );

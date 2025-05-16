@@ -16,12 +16,15 @@ import {
 export const LocalizationConfiguration = Cluster(
     { name: "LocalizationConfiguration", id: 0x2b },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
-    Attribute({ name: "ActiveLocale", id: 0x0, type: "string", constraint: "in SupportedLocales", access: "RW VM", quality: "N" }),
+    Attribute({
+        name: "ActiveLocale", id: 0x0, type: "string", access: "RW VM", conformance: "M",
+        constraint: "in SupportedLocales", quality: "N"
+    }),
 
     Attribute(
         {
-            name: "SupportedLocales", id: 0x1, type: "list",
-            constraint: "max 32[max 35]", conformance: "M", access: "R V", quality: "F"
+            name: "SupportedLocales", id: 0x1, type: "list", access: "R V", conformance: "M",
+            constraint: "max 32[max 35]", quality: "F"
         },
         Field({ name: "entry", type: "string" })
     )

@@ -9,35 +9,32 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "WiFiNetworkManagement",
-    classification: "application", pics: "WIFINM",
+    tag: "cluster", name: "WiFiNetworkManagement", classification: "application", pics: "WIFINM",
+    xref: "cluster§10.2",
     details: "This cluster provides an interface for getting information about the Wi-Fi network that a Network " +
         "Infrastructure Manager device type provides. Privileged nodes within the same fabric as a Network " +
         "Infrastructure Manager can use these interfaces to request information related to the Wi-Fi Network " +
         "such as SSID and Passphrase.",
-    xref: "cluster§10.2",
 
     children: [
         {
-            tag: "attribute", name: "Ssid",
+            tag: "attribute", name: "Ssid", xref: "cluster§10.2.4.1",
 
             details: "Indicates the SSID of the primary Wi-Fi network provided by this device." +
                 "\n" +
                 "A value of null shall indicate that no primary Wi-Fi network is available (e.g. because the Wi-Fi " +
                 "network has not yet been configured by the user)." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "The SSID in Wi-Fi is a collection of 1-32 bytes, the text encoding of which is not specified. " +
-                "Implementations must be careful to support transferring these byte strings without requiring a " +
-                "particular encoding. The most common encoding is UTF-8, however this is just a convention. Some " +
-                "configurations may use Latin-1 or other character sets.",
-
-            xref: "cluster§10.2.4.1"
+                "> The SSID in Wi-Fi is a collection of 1-32 bytes, the text encoding of which is not specified. " +
+                "  Implementations must be careful to support transferring these byte strings without requiring a " +
+                "  particular encoding. The most common encoding is UTF- 8, however this is just a convention. Some " +
+                "  configurations may use Latin-1 or other character sets."
         },
 
         {
-            tag: "attribute", name: "PassphraseSurrogate",
+            tag: "attribute", name: "PassphraseSurrogate", xref: "cluster§10.2.4.2",
 
             details: "This attribute shall contain an arbitrary numeric value; this value shall increase whenever the " +
                 "passphrase or PSK associated with the primary Wi-Fi network provided by this device changes." +
@@ -50,19 +47,15 @@ Resource.add({
                 "It is recommended that servers implement this attribute as either a timestamp or a counter. When " +
                 "implemented as a counter it SHOULD be initialized with a random value." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "The passphrase itself is not exposed as an attribute to avoid its unintentional retrieval or caching " +
-                "by clients that use wildcard reads or otherwise routinely read all available attributes. It can be " +
-                "retrieved using the NetworkPassphraseRequest" +
-                "\n" +
-                "command.",
-
-            xref: "cluster§10.2.4.2"
+                "> The passphrase itself is not exposed as an attribute to avoid its unintentional retrieval or " +
+                "  caching by clients that use wildcard reads or otherwise routinely read all available attributes. " +
+                "  It can be retrieved using the NetworkPassphraseRequest command."
         },
 
         {
-            tag: "command", name: "NetworkPassphraseRequest",
+            tag: "command", name: "NetworkPassphraseRequest", xref: "cluster§10.2.5.1",
 
             details: "This command is used to request the current WPA-Personal passphrase or PSK associated with the Wi-Fi " +
                 "network provided by this device." +
@@ -73,15 +66,12 @@ Resource.add({
                 "If no primary Wi-Fi network is available (the SSID attribute is null), the command shall be rejected " +
                 "with a status of INVALID_IN_STATE." +
                 "\n" +
-                "Otherwise a NetworkPassphraseResponse shall be generated.",
-
-            xref: "cluster§10.2.5.1"
+                "Otherwise a NetworkPassphraseResponse shall be generated."
         },
 
         {
-            tag: "command", name: "NetworkPassphraseResponse",
-            details: "This command shall be generated in response to a NetworkPassphraseRequest command.",
-            xref: "cluster§10.2.5.2"
+            tag: "command", name: "NetworkPassphraseResponse", xref: "cluster§10.2.5.2",
+            details: "This command shall be generated in response to a NetworkPassphraseRequest command."
         }
     ]
 });

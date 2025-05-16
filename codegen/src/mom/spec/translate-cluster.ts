@@ -236,9 +236,9 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             constraint: Alias(Integer, "bit", "id"),
             conformance: Optional(ConformanceCode),
             details: Optional(Alias(Str, "description", "summary")),
-            longName: Optional(Alias(Identifier, "feature", "name")),
+            title: Optional(Alias(Identifier, "feature", "name")),
 
-            // Must define after longName which uses the name column
+            // Must define after title which uses the name column
             name: Alias(UpperIdentifier, "code"),
 
             // We let Model handle translation to the proper type

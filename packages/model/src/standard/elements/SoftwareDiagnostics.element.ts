@@ -21,29 +21,29 @@ export const SoftwareDiagnostics = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "WTRMRK", constraint: "0", longName: "Watermarks" })
+        Field({ name: "WTRMRK", constraint: "0", title: "Watermarks" })
     ),
     Attribute(
-        { name: "ThreadMetrics", id: 0x0, type: "list", constraint: "max 64", conformance: "O", access: "R V" },
+        { name: "ThreadMetrics", id: 0x0, type: "list", access: "R V", conformance: "O", constraint: "max 64" },
         Field({ name: "entry", type: "ThreadMetricsStruct" })
     ),
-    Attribute({ name: "CurrentHeapFree", id: 0x1, type: "uint64", conformance: "O", access: "R V" }),
-    Attribute({ name: "CurrentHeapUsed", id: 0x2, type: "uint64", conformance: "O", access: "R V" }),
-    Attribute({ name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", conformance: "WTRMRK", access: "R V" }),
+    Attribute({ name: "CurrentHeapFree", id: 0x1, type: "uint64", access: "R V", conformance: "O" }),
+    Attribute({ name: "CurrentHeapUsed", id: 0x2, type: "uint64", access: "R V", conformance: "O" }),
+    Attribute({ name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", access: "R V", conformance: "WTRMRK" }),
 
     Event(
-        { name: "SoftwareFault", id: 0x0, conformance: "O", access: "V", priority: "info" },
-        Field({ name: "Id", id: 0x0, type: "uint64", default: 0, conformance: "M" }),
-        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 8", conformance: "O" }),
-        Field({ name: "FaultRecording", id: 0x2, type: "octstr", constraint: "max 1024", conformance: "O" })
+        { name: "SoftwareFault", id: 0x0, access: "V", conformance: "O", priority: "info" },
+        Field({ name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 }),
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8" }),
+        Field({ name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O", constraint: "max 1024" })
     ),
 
-    Command({ name: "ResetWatermarks", id: 0x0, conformance: "WTRMRK", access: "M", direction: "request", response: "status" }),
+    Command({ name: "ResetWatermarks", id: 0x0, access: "M", conformance: "WTRMRK", direction: "request", response: "status" }),
 
     Datatype(
         { name: "ThreadMetricsStruct", type: "struct" },
         Field({ name: "Id", id: 0x0, type: "uint64", conformance: "M" }),
-        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 8", conformance: "O" }),
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8" }),
         Field({ name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O" }),
         Field({ name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O" }),
         Field({ name: "StackSize", id: 0x4, type: "uint32", conformance: "O" })

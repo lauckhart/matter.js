@@ -13,23 +13,23 @@ export const RoomAirConditionerDt = DeviceType(
     { name: "RoomAirConditioner", id: 0x72 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 114, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 114, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "ScenesManagement", id: 0x62, element: "serverCluster", conformance: "P, O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "Groups", id: 0x4, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "ScenesManagement", id: 0x62, conformance: "P, O", element: "serverCluster" }),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "DEADFRONTBEHAVIOR", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "DEADFRONTBEHAVIOR", conformance: "M", element: "feature" })
     ),
-    Requirement({ name: "Thermostat", id: 0x201, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "FanControl", id: 0x202, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Thermostat", id: 0x201, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "FanControl", id: 0x202, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "ThermostatUserInterfaceConfiguration", id: 0x204, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "KeypadLockout", element: "attribute", conformance: "O" })
+        { name: "ThermostatUserInterfaceConfiguration", id: 0x204, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "KeypadLockout", conformance: "O", element: "attribute" })
     ),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "RelativeHumidityMeasurement", id: 0x405, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "RelativeHumidityMeasurement", id: 0x405, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(RoomAirConditionerDt);

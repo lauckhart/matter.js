@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Aggregator",
-    classification: "simple",
+    tag: "deviceType", name: "Aggregator", classification: "simple", xref: "device§11.2",
 
     details: "This device type aggregates endpoints as a collection. Clusters on the endpoint indicating this " +
         "device type provide functionality for the collection of descendant endpoints present in the " +
@@ -22,8 +21,6 @@ Resource.add({
         "When using this device type as a collection of bridged nodes, please see the \"Bridge\" section in the " +
         "System Model specification.",
 
-    xref: "device§11.2",
-
     children: [
         { tag: "requirement", name: "Actions", xref: "device§11.2.4" },
         { tag: "requirement", name: "Identify", xref: "device§11.2.4" },
@@ -32,8 +29,7 @@ Resource.add({
         {
             tag: "field", name: "conditions",
             children: [{
-                tag: "field", name: "FabricSynchronization",
-                description: "See description below.",
+                tag: "field", name: "FabricSynchronization", description: "See description below.",
                 xref: "device§11.2.3"
             }]
         }

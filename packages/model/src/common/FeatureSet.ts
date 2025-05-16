@@ -80,7 +80,7 @@ export namespace FeatureSet {
             featuresAvailable.add(feature.name);
             if (
                 supported?.has(feature.name.toLowerCase()) ||
-                (feature.longName && supported?.has(feature.longName.toLowerCase()))
+                (feature.title && supported?.has(feature.title.toLowerCase()))
             ) {
                 featuresSupported.add(feature.name);
             }

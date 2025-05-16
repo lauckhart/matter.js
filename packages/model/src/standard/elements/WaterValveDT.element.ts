@@ -13,12 +13,12 @@ export const WaterValveDt = DeviceType(
     { name: "WaterValve", id: 0x42 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 66, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 66, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "ValveConfigurationAndControl", id: 0x81, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "FlowMeasurement", id: 0x404, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "FlowMeasurement", id: 0x404, element: "clientCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "ValveConfigurationAndControl", id: 0x81, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, conformance: "O", element: "clientCluster" })
 );
 
 MatterDefinition.children.push(WaterValveDt);

@@ -21,52 +21,52 @@ export const ContentLauncher = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "CS", constraint: "0", longName: "ContentSearch" }),
-        Field({ name: "UP", constraint: "1", longName: "UrlPlayback" }),
-        Field({ name: "AS", constraint: "2", longName: "AdvancedSeek" }),
-        Field({ name: "TT", constraint: "3", longName: "TextTracks" }),
-        Field({ name: "AT", constraint: "4", longName: "AudioTracks" })
+        Field({ name: "CS", constraint: "0", title: "ContentSearch" }),
+        Field({ name: "UP", constraint: "1", title: "UrlPlayback" }),
+        Field({ name: "AS", constraint: "2", title: "AdvancedSeek" }),
+        Field({ name: "TT", constraint: "3", title: "TextTracks" }),
+        Field({ name: "AT", constraint: "4", title: "AudioTracks" })
     ),
 
     Attribute(
         {
-            name: "AcceptHeader", id: 0x0, type: "list",
-            default: [], constraint: "max 100[max 1024]", conformance: "UP", access: "R V", quality: "N"
+            name: "AcceptHeader", id: 0x0, type: "list", access: "R V", conformance: "UP",
+            constraint: "max 100[max 1024]", default: [], quality: "N"
         },
         Field({ name: "entry", type: "string" })
     ),
 
     Attribute({
-        name: "SupportedStreamingProtocols", id: 0x1, type: "SupportedProtocolsBitmap",
-        default: 0, conformance: "UP", access: "R V", quality: "N"
+        name: "SupportedStreamingProtocols", id: 0x1, type: "SupportedProtocolsBitmap", access: "R V",
+        conformance: "UP", default: 0, quality: "N"
     }),
 
     Command(
         {
-            name: "LaunchContent", id: 0x0,
-            conformance: "CS", access: "O", direction: "request", response: "LauncherResponse"
+            name: "LaunchContent", id: 0x0, access: "O", conformance: "CS", direction: "request",
+            response: "LauncherResponse"
         },
-        Field({ name: "Search", id: 0x0, type: "ContentSearchStruct", constraint: "desc", conformance: "M" }),
-        Field({ name: "AutoPlay", id: 0x1, type: "bool", constraint: "desc", conformance: "M" }),
+        Field({ name: "Search", id: 0x0, type: "ContentSearchStruct", conformance: "M", constraint: "desc" }),
+        Field({ name: "AutoPlay", id: 0x1, type: "bool", conformance: "M", constraint: "desc" }),
         Field({ name: "Data", id: 0x2, type: "string", conformance: "O" }),
         Field({ name: "PlaybackPreferences", id: 0x3, type: "PlaybackPreferencesStruct", conformance: "O" }),
-        Field({ name: "UseCurrentContext", id: 0x4, type: "bool", default: true, constraint: "desc", conformance: "O" })
+        Field({ name: "UseCurrentContext", id: 0x4, type: "bool", conformance: "O", constraint: "desc", default: true })
     ),
 
     Command(
         {
-            name: "LaunchUrl", id: 0x1,
-            conformance: "UP", access: "O", direction: "request", response: "LauncherResponse"
+            name: "LaunchUrl", id: 0x1, access: "O", conformance: "UP", direction: "request",
+            response: "LauncherResponse"
         },
-        Field({ name: "ContentUrl", id: 0x0, type: "string", constraint: "any", conformance: "M" }),
-        Field({ name: "DisplayString", id: 0x1, type: "string", constraint: "any", conformance: "O" }),
+        Field({ name: "ContentUrl", id: 0x0, type: "string", conformance: "M", constraint: "any" }),
+        Field({ name: "DisplayString", id: 0x1, type: "string", conformance: "O", constraint: "any" }),
         Field({
-            name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct",
-            constraint: "any", conformance: "O"
+            name: "BrandingInformation", id: 0x2, type: "BrandingInformationStruct", conformance: "O",
+            constraint: "any"
         }),
         Field({
-            name: "PlaybackPreferences", id: 0x3, type: "PlaybackPreferencesStruct",
-            constraint: "any", conformance: "O"
+            name: "PlaybackPreferences", id: 0x3, type: "PlaybackPreferencesStruct", conformance: "O",
+            constraint: "any"
         })
     ),
 
@@ -118,16 +118,16 @@ export const ContentLauncher = Cluster(
     ),
     Datatype(
         { name: "AdditionalInfoStruct", type: "struct" },
-        Field({ name: "Name", id: 0x0, type: "string", constraint: "max 256", conformance: "M" }),
-        Field({ name: "Value", id: 0x1, type: "string", constraint: "max 8192", conformance: "M" })
+        Field({ name: "Name", id: 0x0, type: "string", conformance: "M", constraint: "max 256" }),
+        Field({ name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 8192" })
     ),
 
     Datatype(
         { name: "ParameterStruct", type: "struct" },
         Field({ name: "Type", id: 0x0, type: "ParameterEnum", conformance: "M" }),
-        Field({ name: "Value", id: 0x1, type: "string", constraint: "max 1024", conformance: "M" }),
+        Field({ name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 1024" }),
         Field(
-            { name: "ExternalIdList", id: 0x2, type: "list", default: [], conformance: "O" },
+            { name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [] },
             Field({ name: "entry", type: "AdditionalInfoStruct" })
         )
     ),
@@ -149,19 +149,19 @@ export const ContentLauncher = Cluster(
 
     Datatype(
         { name: "StyleInformationStruct", type: "struct" },
-        Field({ name: "ImageUrl", id: 0x0, type: "string", constraint: "max 8192", conformance: "O" }),
-        Field({ name: "Color", id: 0x1, type: "string", constraint: "7, 9", conformance: "O" }),
+        Field({ name: "ImageUrl", id: 0x0, type: "string", conformance: "O", constraint: "max 8192" }),
+        Field({ name: "Color", id: 0x1, type: "string", conformance: "O", constraint: "7, 9" }),
         Field({ name: "Size", id: 0x2, type: "DimensionStruct", conformance: "O" })
     ),
 
     Datatype(
         { name: "BrandingInformationStruct", type: "struct" },
-        Field({ name: "ProviderName", id: 0x0, type: "string", constraint: "max 256", conformance: "M" }),
+        Field({ name: "ProviderName", id: 0x0, type: "string", conformance: "M", constraint: "max 256" }),
         Field({ name: "Background", id: 0x1, type: "StyleInformationStruct", conformance: "O" }),
         Field({ name: "Logo", id: 0x2, type: "StyleInformationStruct", conformance: "O" }),
         Field({ name: "ProgressBar", id: 0x3, type: "StyleInformationStruct", conformance: "O" }),
         Field({ name: "Splash", id: 0x4, type: "StyleInformationStruct", conformance: "O" }),
-        Field({ name: "WaterMark", id: 0x5, type: "StyleInformationStruct", conformance: "O" })
+        Field({ name: "Watermark", id: 0x5, type: "StyleInformationStruct", conformance: "O" })
     ),
 
     Datatype(
@@ -176,9 +176,9 @@ export const ContentLauncher = Cluster(
 
     Datatype(
         { name: "TrackPreferenceStruct", type: "struct" },
-        Field({ name: "LanguageCode", id: 0x0, type: "string", constraint: "max 32", conformance: "M" }),
+        Field({ name: "LanguageCode", id: 0x0, type: "string", conformance: "M", constraint: "max 32" }),
         Field(
-            { name: "Characteristics", id: 0x1, type: "list", default: null, conformance: "O", quality: "X" },
+            { name: "Characteristics", id: 0x1, type: "list", conformance: "O", default: null, quality: "X" },
             Field({ name: "entry", type: "MediaPlayback.CharacteristicEnum" })
         ),
         Field({ name: "AudioOutputIndex", id: 0x2, type: "uint8", conformance: "AT", quality: "X" })

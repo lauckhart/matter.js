@@ -20,27 +20,27 @@ export const EthernetNetworkDiagnostics = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "PKTCNT", constraint: "0", longName: "PacketCounts" }),
-        Field({ name: "ERRCNT", constraint: "1", longName: "ErrorCounts" })
+        Field({ name: "PKTCNT", constraint: "0", title: "PacketCounts" }),
+        Field({ name: "ERRCNT", constraint: "1", title: "ErrorCounts" })
     ),
     Attribute(
-        { name: "PhyRate", id: 0x0, type: "PHYRateEnum", default: null, conformance: "O", access: "R V", quality: "X" }
+        { name: "PhyRate", id: 0x0, type: "PHYRateEnum", access: "R V", conformance: "O", default: null, quality: "X" }
     ),
-    Attribute({ name: "FullDuplex", id: 0x1, type: "bool", default: null, conformance: "O", access: "R V", quality: "X" }),
-    Attribute({ name: "PacketRxCount", id: 0x2, type: "uint64", default: 0, conformance: "PKTCNT", access: "R V", quality: "C" }),
-    Attribute({ name: "PacketTxCount", id: 0x3, type: "uint64", default: 0, conformance: "PKTCNT", access: "R V", quality: "C" }),
+    Attribute({ name: "FullDuplex", id: 0x1, type: "bool", access: "R V", conformance: "O", default: null, quality: "X" }),
+    Attribute({ name: "PacketRxCount", id: 0x2, type: "uint64", access: "R V", conformance: "PKTCNT", default: 0, quality: "C" }),
+    Attribute({ name: "PacketTxCount", id: 0x3, type: "uint64", access: "R V", conformance: "PKTCNT", default: 0, quality: "C" }),
     Attribute(
-        { name: "TxErrCount", id: 0x4, type: "uint64", default: 0, conformance: "ERRCNT", access: "R V", quality: "C" }
+        { name: "TxErrCount", id: 0x4, type: "uint64", access: "R V", conformance: "ERRCNT", default: 0, quality: "C" }
     ),
-    Attribute({ name: "CollisionCount", id: 0x5, type: "uint64", default: 0, conformance: "ERRCNT", access: "R V", quality: "C" }),
-    Attribute({ name: "OverrunCount", id: 0x6, type: "uint64", default: 0, conformance: "ERRCNT", access: "R V", quality: "C" }),
-    Attribute({ name: "CarrierDetect", id: 0x7, type: "bool", default: null, conformance: "O", access: "R V", quality: "X C" }),
+    Attribute({ name: "CollisionCount", id: 0x5, type: "uint64", access: "R V", conformance: "ERRCNT", default: 0, quality: "C" }),
+    Attribute({ name: "OverrunCount", id: 0x6, type: "uint64", access: "R V", conformance: "ERRCNT", default: 0, quality: "C" }),
+    Attribute({ name: "CarrierDetect", id: 0x7, type: "bool", access: "R V", conformance: "O", default: null, quality: "X C" }),
     Attribute(
-        { name: "TimeSinceReset", id: 0x8, type: "uint64", default: 0, conformance: "O", access: "R V", quality: "C" }
+        { name: "TimeSinceReset", id: 0x8, type: "uint64", access: "R V", conformance: "O", default: 0, quality: "C" }
     ),
     Command({
-        name: "ResetCounts", id: 0x0,
-        conformance: "PKTCNT | ERRCNT", access: "M", direction: "request", response: "status"
+        name: "ResetCounts", id: 0x0, access: "M", conformance: "PKTCNT | ERRCNT", direction: "request",
+        response: "status"
     }),
 
     Datatype(

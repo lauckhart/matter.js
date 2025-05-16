@@ -21,111 +21,118 @@ export const LevelControl = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "OO", default: 1, constraint: "0", conformance: "O", longName: "OnOff" }),
-        Field({ name: "LT", default: 0, constraint: "1", conformance: "O", longName: "Lighting" }),
-        Field({ name: "FQ", default: 0, constraint: "2", conformance: "P", longName: "Frequency" })
+        Field({ name: "OO", conformance: "O", constraint: "0", default: 1, title: "OnOff" }),
+        Field({ name: "LT", conformance: "O", constraint: "1", default: 0, title: "Lighting" }),
+        Field({ name: "FQ", conformance: "P", constraint: "2", default: 0, title: "Frequency" })
     ),
 
     Attribute({
-        name: "CurrentLevel", id: 0x0, type: "uint8",
-        default: null, constraint: "minLevel to maxLevel", conformance: "M", access: "R V",
-        quality: "X N S Q"
+        name: "CurrentLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
+        constraint: "minLevel to maxLevel", default: null, quality: "X N S Q"
     }),
     Attribute(
-        { name: "RemainingTime", id: 0x1, type: "uint16", default: 0, conformance: "LT", access: "R V", quality: "Q" }
+        { name: "RemainingTime", id: 0x1, type: "uint16", access: "R V", conformance: "LT", default: 0, quality: "Q" }
     ),
     Attribute({
-        name: "MinLevel", id: 0x2, type: "uint8",
-        default: 1, constraint: "1 to 254", conformance: "[LT]", access: "R V"
+        name: "MinLevel", id: 0x2, type: "uint8", access: "R V", conformance: "[LT]",
+        constraint: "1 to 254", default: 1
     }),
     Attribute({
-        name: "MinLevel", id: 0x2, type: "uint8",
-        default: 0, constraint: "max 254", conformance: "[!LT]", access: "R V"
+        name: "MinLevel", id: 0x2, type: "uint8", access: "R V", conformance: "[!LT]",
+        constraint: "max 254", default: 0
     }),
     Attribute({
-        name: "MaxLevel", id: 0x3, type: "uint8",
-        default: 254, constraint: "minLevel to 254", conformance: "O", access: "R V"
+        name: "MaxLevel", id: 0x3, type: "uint8", access: "R V", conformance: "O",
+        constraint: "minLevel to 254", default: 254
     }),
     Attribute({
-        name: "CurrentFrequency", id: 0x4, type: "uint16",
-        default: 0, constraint: "minFrequency to maxFrequency", conformance: "FQ", access: "R V",
-        quality: "S P Q"
+        name: "CurrentFrequency", id: 0x4, type: "uint16", access: "R V", conformance: "FQ",
+        constraint: "minFrequency to maxFrequency", default: 0, quality: "S P Q"
     }),
-    Attribute({ name: "MinFrequency", id: 0x5, type: "uint16", default: 0, conformance: "FQ", access: "R V" }),
+    Attribute({ name: "MinFrequency", id: 0x5, type: "uint16", access: "R V", conformance: "FQ", default: 0 }),
     Attribute({
-        name: "MaxFrequency", id: 0x6, type: "uint16",
-        default: 0, constraint: "min minFrequency", conformance: "FQ", access: "R V"
+        name: "MaxFrequency", id: 0x6, type: "uint16", access: "R V", conformance: "FQ",
+        constraint: "min minFrequency", default: 0
     }),
-    Attribute({ name: "OnOffTransitionTime", id: 0x10, type: "uint16", default: 0, conformance: "O", access: "RW VO" }),
+    Attribute({ name: "OnOffTransitionTime", id: 0x10, type: "uint16", access: "RW VO", conformance: "O", default: 0 }),
     Attribute({
-        name: "OnLevel", id: 0x11, type: "uint8",
-        default: null, constraint: "minLevel to maxLevel", conformance: "M", access: "RW VO", quality: "X"
-    }),
-    Attribute({
-        name: "OnTransitionTime", id: 0x12, type: "uint16",
-        default: null, conformance: "O", access: "RW VO", quality: "X"
+        name: "OnLevel", id: 0x11, type: "uint8", access: "RW VO", conformance: "M",
+        constraint: "minLevel to maxLevel", default: null, quality: "X"
     }),
     Attribute({
-        name: "OffTransitionTime", id: 0x13, type: "uint16",
-        default: null, conformance: "O", access: "RW VO", quality: "X"
+        name: "OnTransitionTime", id: 0x12, type: "uint16", access: "RW VO", conformance: "O",
+        default: null, quality: "X"
     }),
     Attribute({
-        name: "DefaultMoveRate", id: 0x14, type: "uint8",
-        constraint: "min 1", conformance: "O", access: "RW VO", quality: "X"
+        name: "OffTransitionTime", id: 0x13, type: "uint16", access: "RW VO", conformance: "O",
+        default: null, quality: "X"
     }),
     Attribute({
-        name: "Options", id: 0xf, type: "OptionsBitmap",
-        default: 0, constraint: "desc", conformance: "M", access: "RW VO"
+        name: "DefaultMoveRate", id: 0x14, type: "uint8", access: "RW VO", conformance: "O",
+        constraint: "min 1", quality: "X"
     }),
     Attribute({
-        name: "StartUpCurrentLevel", id: 0x4000, type: "uint8",
-        constraint: "desc", conformance: "LT", access: "RW VM", quality: "X N"
+        name: "Options", id: 0xf, type: "OptionsBitmap", access: "RW VO", conformance: "M",
+        constraint: "desc", default: 0
+    }),
+    Attribute({
+        name: "StartUpCurrentLevel", id: 0x4000, type: "uint8", access: "RW VM", conformance: "LT",
+        constraint: "desc", quality: "X N"
     }),
 
     Command(
-        { name: "MoveToLevel", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" },
-        Field({ name: "Level", id: 0x0, type: "uint8", constraint: "max 254", conformance: "M" }),
+        { name: "MoveToLevel", id: 0x0, access: "O", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" }),
-        Field({ name: "OptionsMask", id: 0x2, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" }),
-        Field({ name: "OptionsOverride", id: 0x3, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" })
+        Field({ name: "OptionsMask", id: 0x2, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ name: "OptionsOverride", id: 0x3, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
-        { name: "Move", id: 0x1, conformance: "M", access: "O", direction: "request", response: "status" },
-        Field({ name: "MoveMode", id: 0x0, type: "MoveModeEnum", constraint: "desc", conformance: "M" }),
+        { name: "Move", id: 0x1, access: "O", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "MoveMode", id: 0x0, type: "MoveModeEnum", conformance: "M", constraint: "desc" }),
         Field({ name: "Rate", id: 0x1, type: "uint8", conformance: "M", quality: "X" }),
-        Field({ name: "OptionsMask", id: 0x2, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" }),
-        Field({ name: "OptionsOverride", id: 0x3, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" })
+        Field({ name: "OptionsMask", id: 0x2, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ name: "OptionsOverride", id: 0x3, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
-        { name: "Step", id: 0x2, conformance: "M", access: "O", direction: "request", response: "status" },
-        Field({ name: "StepMode", id: 0x0, type: "StepModeEnum", constraint: "desc", conformance: "M" }),
+        { name: "Step", id: 0x2, access: "O", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "StepMode", id: 0x0, type: "StepModeEnum", conformance: "M", constraint: "desc" }),
         Field({ name: "StepSize", id: 0x1, type: "uint8", conformance: "M" }),
         Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" }),
-        Field({ name: "OptionsMask", id: 0x3, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" }),
-        Field({ name: "OptionsOverride", id: 0x4, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" })
+        Field({ name: "OptionsMask", id: 0x3, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ name: "OptionsOverride", id: 0x4, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
-        { name: "Stop", id: 0x3, conformance: "M", access: "O", direction: "request", response: "status" },
-        Field({ name: "OptionsMask", id: 0x0, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" }),
-        Field({ name: "OptionsOverride", id: 0x1, type: "OptionsBitmap", default: 0, constraint: "desc", conformance: "M" })
+        { name: "Stop", id: 0x3, access: "O", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "OptionsMask", id: 0x0, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ name: "OptionsOverride", id: 0x1, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
     Command({
-        name: "MoveToLevelWithOnOff", id: 0x4, type: "MoveToLevel",
-        access: "O", direction: "request", response: "status"
+        name: "MoveToLevelWithOnOff", id: 0x4, type: "MoveToLevel", access: "O", conformance: "M",
+        direction: "request", response: "status"
     }),
-    Command({ name: "MoveWithOnOff", id: 0x5, type: "Move", access: "O", direction: "request", response: "status" }),
-    Command({ name: "StepWithOnOff", id: 0x6, type: "Step", access: "O", direction: "request", response: "status" }),
-    Command({ name: "StopWithOnOff", id: 0x7, type: "Stop", access: "O", direction: "request", response: "status" }),
+    Command({
+        name: "MoveWithOnOff", id: 0x5, type: "Move", access: "O", conformance: "M", direction: "request",
+        response: "status"
+    }),
+    Command({
+        name: "StepWithOnOff", id: 0x6, type: "Step", access: "O", conformance: "M", direction: "request",
+        response: "status"
+    }),
+    Command({
+        name: "StopWithOnOff", id: 0x7, type: "Stop", access: "O", conformance: "M", direction: "request",
+        response: "status"
+    }),
 
     Command(
         {
-            name: "MoveToClosestFrequency", id: 0x8,
-            conformance: "FQ", access: "O", direction: "request", response: "status"
+            name: "MoveToClosestFrequency", id: 0x8, access: "O", conformance: "FQ", direction: "request",
+            response: "status"
         },
-        Field({ name: "Frequency", id: 0x0, type: "uint16", default: 0, conformance: "M" })
+        Field({ name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 })
     ),
 
     Datatype(

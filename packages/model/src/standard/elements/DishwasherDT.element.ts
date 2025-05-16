@@ -13,21 +13,21 @@ export const DishwasherDt = DeviceType(
     { name: "Dishwasher", id: 0x75 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 117, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 117, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "DEADFRONTBEHAVIOR", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "DEADFRONTBEHAVIOR", conformance: "M", element: "feature" })
     ),
-    Requirement({ name: "TemperatureControl", id: 0x56, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "TemperatureControl", id: 0x56, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "DishwasherMode", id: 0x59, element: "serverCluster", conformance: "O" },
-        Requirement({ name: "StartUpMode", element: "attribute", conformance: "X" }),
-        Requirement({ name: "ONOFF", element: "feature", conformance: "X" })
+        { name: "DishwasherMode", id: 0x59, conformance: "O", element: "serverCluster" },
+        Requirement({ name: "StartUpMode", conformance: "X", element: "attribute" }),
+        Requirement({ name: "ONOFF", conformance: "X", element: "feature" })
     ),
-    Requirement({ name: "DishwasherAlarm", id: 0x5d, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "OperationalState", id: 0x60, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "DishwasherAlarm", id: 0x5d, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "OperationalState", id: 0x60, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(DishwasherDt);

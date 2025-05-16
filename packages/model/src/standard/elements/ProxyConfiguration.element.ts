@@ -18,21 +18,21 @@ export const ProxyConfiguration = Cluster(
     { name: "ProxyConfiguration", id: 0x42 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "ConfigurationList", id: 0x0, type: "list", default: [], conformance: "M", access: "RW", quality: "N" },
+        { name: "ConfigurationList", id: 0x0, type: "list", access: "RW", conformance: "M", default: [], quality: "N" },
         Field({ name: "entry", type: "ConfigurationStruct" })
     ),
 
     Datatype(
         { name: "ConfigurationStruct", type: "struct" },
         Field({
-            name: "ProxyAllNodes", id: 0x1, type: "bool",
-            default: false, constraint: "desc", conformance: "M", access: "RW"
+            name: "ProxyAllNodes", id: 0x1, type: "bool", access: "RW", conformance: "M", constraint: "desc",
+            default: false
         }),
 
         Field(
             {
-                name: "SourceList", id: 0x2, type: "list",
-                default: [], constraint: "desc", conformance: "M", access: "RW"
+                name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M", constraint: "desc",
+                default: []
             },
             Field({ name: "entry", type: "node-id" })
         )

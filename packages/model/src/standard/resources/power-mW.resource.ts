@@ -8,9 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "power-mW",
-    description: "Power",
-    details: "This type represents power measured in milliwatts.",
-    xref: "core§7.19.2.12"
-});
+Resource.add({ tag: "datatype", name: "power-mW", description: "Power", xref: "core§7.19.2" });

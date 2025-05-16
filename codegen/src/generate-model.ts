@@ -43,11 +43,14 @@ const args = await yargs(hideBin(process.argv))
     })
     .strict().argv;
 
-let revisionComponents = args.revision.split(".");
-if (revisionComponents.length > 2) {
-    revisionComponents = revisionComponents.slice(0, 2);
-    args.revision = revisionComponents.join(".");
+const revisionComponents = args.revision.split(".");
+if (revisionComponents.length > 3) {
+    revisionComponents.length = 3;
 }
+if (revisionComponents.length > 2 && revisionComponents[2] === "0") {
+    revisionComponents.length = 2;
+}
+args.revision = revisionComponents.join(".");
 
 function elementDiscriminatedName(element: Model) {
     const { name } = element;

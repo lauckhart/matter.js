@@ -18,13 +18,13 @@ export const Label = Cluster(
     { name: "Label" },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "LabelList", id: 0x0, type: "list", default: [], constraint: "derived", conformance: "M" },
+        { name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "derived", default: [] },
         Field({ name: "entry", type: "LabelStruct" })
     ),
     Datatype(
         { name: "LabelStruct", type: "struct" },
-        Field({ name: "Label", id: 0x0, type: "string", constraint: "max 16", conformance: "M" }),
-        Field({ name: "Value", id: 0x1, type: "string", constraint: "max 16", conformance: "M" })
+        Field({ name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16" }),
+        Field({ name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16" })
     )
 );
 

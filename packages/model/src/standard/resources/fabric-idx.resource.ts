@@ -8,13 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "fabric-idx",
-    description: "Fabric Index",
-    details: "This is an index that maps to a particular fabric on the node, see Fabric-Index. It is used for:" +
-        "\n" +
-        "  • the accessing fabric index of an interaction" +
-        "\n" +
-        "  • the FabricIndex global field in fabric-scoped data",
-    xref: "core§7.19.2.20"
-});
+Resource.add({ tag: "datatype", name: "fabric-idx", description: "Fabric Index", xref: "core§7.19.2" });

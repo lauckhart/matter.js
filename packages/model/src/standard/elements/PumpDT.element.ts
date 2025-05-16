@@ -13,21 +13,21 @@ export const PumpDt = DeviceType(
     { name: "Pump", id: 0x303 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 771, revision: 3 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 771, revision: 3 } ], element: "attribute" })
     ),
-    Requirement({ name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "PumpConfigurationAndControl", id: 0x200, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "LevelControl", id: 0x8, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "ScenesManagement", id: 0x62, element: "serverCluster", conformance: "P, O" }),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "PressureMeasurement", id: 0x403, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "FlowMeasurement", id: 0x404, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "clientCluster", conformance: "O" }),
-    Requirement({ name: "PressureMeasurement", id: 0x403, element: "clientCluster", conformance: "O" }),
-    Requirement({ name: "FlowMeasurement", id: 0x404, element: "clientCluster", conformance: "O" }),
-    Requirement({ name: "OccupancySensing", id: 0x406, element: "clientCluster", conformance: "O" })
+    Requirement({ name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "PumpConfigurationAndControl", id: 0x200, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "LevelControl", id: 0x8, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Groups", id: 0x4, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "ScenesManagement", id: 0x62, conformance: "P, O", element: "serverCluster" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "PressureMeasurement", id: 0x403, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O", element: "clientCluster" }),
+    Requirement({ name: "PressureMeasurement", id: 0x403, conformance: "O", element: "clientCluster" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, conformance: "O", element: "clientCluster" }),
+    Requirement({ name: "OccupancySensing", id: 0x406, conformance: "O", element: "clientCluster" })
 );
 
 MatterDefinition.children.push(PumpDt);

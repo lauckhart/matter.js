@@ -9,13 +9,12 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "Descriptor",
-    classification: "endpoint", pics: "DESC",
+    tag: "cluster", name: "Descriptor", classification: "endpoint", pics: "DESC", xref: "core§9.5",
 
-    details: "NOTE" +
+    details: "> [!NOTE]" +
         "\n" +
-        "The Descriptor cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
-        "describing a node, its endpoints and clusters." +
+        "> The Descriptor cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
+        "  describing a node, its endpoints and clusters." +
         "\n" +
         "This cluster describes an endpoint instance on the node, independently from other endpoints, but " +
         "also allows composition of endpoints to conform to complex device type patterns." +
@@ -26,56 +25,46 @@ Resource.add({
         "The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a " +
         "composed device type.",
 
-    xref: "core§9.5",
-
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§9.5.4",
-
+            tag: "attribute", name: "FeatureMap", xref: "core§9.5.4",
             children: [{
-                tag: "field", name: "TAGLIST",
+                tag: "field", name: "TAGLIST", xref: "core§9.5.4.1",
                 details: "See the Disambiguation section in the System Model spec for conformance requirements for this " +
-                    "feature and the corresponding attribute.",
-                xref: "core§9.5.4.1"
+                    "feature and the corresponding attribute."
             }]
         },
 
         {
-            tag: "attribute", name: "DeviceTypeList",
+            tag: "attribute", name: "DeviceTypeList", xref: "core§9.5.6.1",
 
             details: "This is a list of device types and corresponding revisions declaring endpoint conformance (see " +
                 "DeviceTypeStruct). At least one device type entry shall be present." +
                 "\n" +
                 "An endpoint shall conform to all device types listed in the DeviceTypeList. A cluster instance that " +
                 "is in common for more than one device type in the DeviceTypeList shall be supported as a shared " +
-                "cluster instance on the endpoint.",
-
-            xref: "core§9.5.6.1"
+                "cluster instance on the endpoint."
         },
 
         {
-            tag: "attribute", name: "ServerList",
-            details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance.",
-            xref: "core§9.5.6.2"
+            tag: "attribute", name: "ServerList", xref: "core§9.5.6.2",
+            details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance."
         },
         {
-            tag: "attribute", name: "ClientList",
-            details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance.",
-            xref: "core§9.5.6.3"
+            tag: "attribute", name: "ClientList", xref: "core§9.5.6.3",
+            details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance."
         },
 
         {
-            tag: "attribute", name: "PartsList",
+            tag: "attribute", name: "PartsList", xref: "core§9.5.6.4",
             details: "This attribute indicates composition of the device type instance. Device type instance composition " +
                 "shall include the endpoints in this list." +
                 "\n" +
-                "See Endpoint Composition for more information about which endpoints to include in this list.",
-            xref: "core§9.5.6.4"
+                "See Endpoint Composition for more information about which endpoints to include in this list."
         },
 
         {
-            tag: "attribute", name: "TagList",
+            tag: "attribute", name: "TagList", xref: "core§9.5.6.5",
 
             details: "This attribute shall be used to disambiguate sibling endpoints in certain situations, as defined in " +
                 "the Disambiguation section in the System Model specification. An example of such a situation might " +
@@ -95,30 +84,24 @@ Resource.add({
                 "\n" +
                 "A client may use the Label field of each SemanticTagStruct, if present in each structure, to " +
                 "indicate characteristics of an endpoint, or to augment what is provided in the TagID field of the " +
-                "same structure.",
-
-            xref: "core§9.5.6.5"
+                "same structure."
         },
 
         {
-            tag: "datatype", name: "DeviceTypeStruct",
+            tag: "datatype", name: "DeviceTypeStruct", xref: "core§9.5.5.1",
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                 "See the Data Model specification for more information.",
-            xref: "core§9.5.5.1",
 
             children: [
                 {
-                    tag: "field", name: "DeviceType",
+                    tag: "field", name: "DeviceType", xref: "core§9.5.5.1.1",
                     details: "This shall indicate the device type definition. The endpoint shall conform to the device type " +
-                        "definition and cluster specifications required by the device type.",
-                    xref: "core§9.5.5.1.1"
+                        "definition and cluster specifications required by the device type."
                 },
-
                 {
-                    tag: "field", name: "Revision",
+                    tag: "field", name: "Revision", xref: "core§9.5.5.1.2",
                     details: "This is the implemented revision of the device type definition. The endpoint shall conform to this " +
-                        "revision of the device type.",
-                    xref: "core§9.5.5.1.2"
+                        "revision of the device type."
                 }
             ]
         }

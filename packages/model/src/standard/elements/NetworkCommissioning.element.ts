@@ -21,65 +21,65 @@ export const NetworkCommissioning = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "WI", constraint: "0", conformance: "O.a", longName: "WiFiNetworkInterface" }),
-        Field({ name: "TH", constraint: "1", conformance: "O.a", longName: "ThreadNetworkInterface" }),
-        Field({ name: "ET", constraint: "2", conformance: "O.a", longName: "EthernetNetworkInterface" })
+        Field({ name: "WI", conformance: "O.a", constraint: "0", title: "WiFiNetworkInterface" }),
+        Field({ name: "TH", conformance: "O.a", constraint: "1", title: "ThreadNetworkInterface" }),
+        Field({ name: "ET", conformance: "O.a", constraint: "2", title: "EthernetNetworkInterface" })
     ),
 
-    Attribute({ name: "MaxNetworks", id: 0x0, type: "uint8", constraint: "min 1", conformance: "M", access: "R A", quality: "F" }),
+    Attribute({ name: "MaxNetworks", id: 0x0, type: "uint8", access: "R A", conformance: "M", constraint: "min 1", quality: "F" }),
 
     Attribute(
         {
-            name: "Networks", id: 0x1, type: "list",
-            default: [], constraint: "max maxNetworks", conformance: "M", access: "R A"
+            name: "Networks", id: 0x1, type: "list", access: "R A", conformance: "M",
+            constraint: "max maxNetworks", default: []
         },
         Field({ name: "entry", type: "NetworkInfoStruct" })
     ),
 
     Attribute({
-        name: "ScanMaxTimeSeconds", id: 0x2, type: "uint8",
-        constraint: "desc", conformance: "WI | TH", access: "R V", quality: "F"
+        name: "ScanMaxTimeSeconds", id: 0x2, type: "uint8", access: "R V", conformance: "WI | TH",
+        constraint: "desc", quality: "F"
     }),
     Attribute({
-        name: "ConnectMaxTimeSeconds", id: 0x3, type: "uint8",
-        constraint: "desc", conformance: "WI | TH", access: "R V", quality: "F"
+        name: "ConnectMaxTimeSeconds", id: 0x3, type: "uint8", access: "R V", conformance: "WI | TH",
+        constraint: "desc", quality: "F"
     }),
-    Attribute({ name: "InterfaceEnabled", id: 0x4, type: "bool", default: true, conformance: "M", access: "RW VA", quality: "N" }),
+    Attribute({ name: "InterfaceEnabled", id: 0x4, type: "bool", access: "RW VA", conformance: "M", default: true, quality: "N" }),
     Attribute({
-        name: "LastNetworkingStatus", id: 0x5, type: "NetworkCommissioningStatusEnum",
-        default: null, conformance: "M", access: "R A", quality: "X"
-    }),
-    Attribute({
-        name: "LastNetworkId", id: 0x6, type: "octstr",
-        default: null, constraint: "1 to 32", conformance: "M", access: "R A", quality: "X"
+        name: "LastNetworkingStatus", id: 0x5, type: "NetworkCommissioningStatusEnum", access: "R A",
+        conformance: "M", default: null, quality: "X"
     }),
     Attribute({
-        name: "LastConnectErrorValue", id: 0x7, type: "int32",
-        default: null, conformance: "M", access: "R A", quality: "X"
+        name: "LastNetworkId", id: 0x6, type: "octstr", access: "R A", conformance: "M",
+        constraint: "1 to 32", default: null, quality: "X"
+    }),
+    Attribute({
+        name: "LastConnectErrorValue", id: 0x7, type: "int32", access: "R A", conformance: "M",
+        default: null, quality: "X"
     }),
 
     Attribute(
         {
-            name: "SupportedWiFiBands", id: 0x8, type: "list",
-            constraint: "min 1", conformance: "WI", access: "R V", quality: "F"
+            name: "SupportedWiFiBands", id: 0x8, type: "list", access: "R V", conformance: "WI",
+            constraint: "min 1", quality: "F"
         },
         Field({ name: "entry", type: "WiFiBandEnum" })
     ),
 
     Attribute({
-        name: "SupportedThreadFeatures", id: 0x9, type: "ThreadCapabilitiesBitmap",
-        conformance: "TH", access: "R V", quality: "F"
+        name: "SupportedThreadFeatures", id: 0x9, type: "ThreadCapabilitiesBitmap", access: "R V",
+        conformance: "TH", quality: "F"
     }),
-    Attribute({ name: "ThreadVersion", id: 0xa, type: "uint16", conformance: "TH", access: "R V", quality: "F" }),
+    Attribute({ name: "ThreadVersion", id: 0xa, type: "uint16", access: "R V", conformance: "TH", quality: "F" }),
 
     Command(
         {
-            name: "ScanNetworks", id: 0x0,
-            conformance: "WI | TH", access: "A", direction: "request", response: "ScanNetworksResponse"
+            name: "ScanNetworks", id: 0x0, access: "A", conformance: "WI | TH", direction: "request",
+            response: "ScanNetworksResponse"
         },
         Field({
-            name: "Ssid", id: 0x0, type: "octstr",
-            default: null, constraint: "1 to 32", conformance: "[WI]", quality: "X"
+            name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: null,
+            quality: "X"
         }),
         Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
     ),
@@ -87,64 +87,64 @@ export const NetworkCommissioning = Cluster(
     Command(
         { name: "ScanNetworksResponse", id: 0x1, conformance: "WI | TH", direction: "response" },
         Field({
-            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
-            constraint: "desc", conformance: "M"
+            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
+            constraint: "desc"
         }),
-        Field({ name: "DebugText", id: 0x1, type: "string", constraint: "max 512", conformance: "O" }),
+        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512" }),
         Field(
-            { name: "WiFiScanResults", id: 0x2, type: "list", constraint: "desc", conformance: "WI" },
+            { name: "WiFiScanResults", id: 0x2, type: "list", conformance: "WI", constraint: "desc" },
             Field({ name: "entry", type: "WiFiInterfaceScanResultStruct" })
         ),
         Field(
-            { name: "ThreadScanResults", id: 0x3, type: "list", constraint: "desc", conformance: "TH" },
+            { name: "ThreadScanResults", id: 0x3, type: "list", conformance: "TH", constraint: "desc" },
             Field({ name: "entry", type: "ThreadInterfaceScanResultStruct" })
         )
     ),
 
     Command(
         {
-            name: "AddOrUpdateWiFiNetwork", id: 0x2,
-            conformance: "WI", access: "A", direction: "request", response: "NetworkConfigResponse"
+            name: "AddOrUpdateWiFiNetwork", id: 0x2, access: "A", conformance: "WI", direction: "request",
+            response: "NetworkConfigResponse"
         },
-        Field({ name: "Ssid", id: 0x0, type: "octstr", constraint: "max 32", conformance: "M" }),
-        Field({ name: "Credentials", id: 0x1, type: "octstr", constraint: "max 64", conformance: "M" }),
+        Field({ name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32" }),
+        Field({ name: "Credentials", id: 0x1, type: "octstr", conformance: "M", constraint: "max 64" }),
         Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
     ),
 
     Command(
         {
-            name: "AddOrUpdateThreadNetwork", id: 0x3,
-            conformance: "TH", access: "A", direction: "request", response: "NetworkConfigResponse"
+            name: "AddOrUpdateThreadNetwork", id: 0x3, access: "A", conformance: "TH", direction: "request",
+            response: "NetworkConfigResponse"
         },
-        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" }),
+        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" }),
         Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
     ),
 
     Command(
         {
-            name: "RemoveNetwork", id: 0x4,
-            conformance: "WI | TH", access: "A", direction: "request", response: "NetworkConfigResponse"
+            name: "RemoveNetwork", id: 0x4, access: "A", conformance: "WI | TH", direction: "request",
+            response: "NetworkConfigResponse"
         },
-        Field({ name: "NetworkId", id: 0x0, type: "octstr", constraint: "1 to 32", conformance: "M" }),
+        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
         Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
     ),
 
     Command(
         { name: "NetworkConfigResponse", id: 0x5, conformance: "WI | TH", direction: "response" },
         Field({
-            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum",
-            constraint: "desc", conformance: "M"
+            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
+            constraint: "desc"
         }),
-        Field({ name: "DebugText", id: 0x1, type: "string", constraint: "max 512", conformance: "O" }),
-        Field({ name: "NetworkIndex", id: 0x2, type: "uint8", constraint: "max maxNetworks - 1", conformance: "O" })
+        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512" }),
+        Field({ name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O", constraint: "max maxNetworks - 1" })
     ),
 
     Command(
         {
-            name: "ConnectNetwork", id: 0x6,
-            conformance: "WI | TH", access: "A", direction: "request", response: "ConnectNetworkResponse"
+            name: "ConnectNetwork", id: 0x6, access: "A", conformance: "WI | TH", direction: "request",
+            response: "ConnectNetworkResponse"
         },
-        Field({ name: "NetworkId", id: 0x0, type: "octstr", constraint: "1 to 32", conformance: "M" }),
+        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
         Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
     ),
 
@@ -157,11 +157,11 @@ export const NetworkCommissioning = Cluster(
 
     Command(
         {
-            name: "ReorderNetwork", id: 0x8,
-            conformance: "WI | TH", access: "A", direction: "request", response: "NetworkConfigResponse"
+            name: "ReorderNetwork", id: 0x8, access: "A", conformance: "WI | TH", direction: "request",
+            response: "NetworkConfigResponse"
         },
-        Field({ name: "NetworkId", id: 0x0, type: "octstr", constraint: "1 to 32", conformance: "M" }),
-        Field({ name: "NetworkIndex", id: 0x1, type: "uint8", constraint: "desc", conformance: "M" }),
+        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+        Field({ name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc" }),
         Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
     ),
 
@@ -212,15 +212,15 @@ export const NetworkCommissioning = Cluster(
 
     Datatype(
         { name: "NetworkInfoStruct", type: "struct" },
-        Field({ name: "NetworkId", id: 0x0, type: "octstr", constraint: "1 to 32", conformance: "M" }),
+        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
         Field({ name: "Connected", id: 0x1, type: "bool", conformance: "M" })
     ),
 
     Datatype(
         { name: "WiFiInterfaceScanResultStruct", type: "struct" },
         Field({ name: "Security", id: 0x0, type: "WiFiSecurityBitmap", conformance: "WI" }),
-        Field({ name: "Ssid", id: 0x1, type: "octstr", constraint: "max 32", conformance: "WI" }),
-        Field({ name: "Bssid", id: 0x2, type: "octstr", constraint: "6", conformance: "WI" }),
+        Field({ name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32" }),
+        Field({ name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6" }),
         Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "WI" }),
         Field({ name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]" }),
         Field({ name: "Rssi", id: 0x5, type: "int8", conformance: "[WI]" })
@@ -228,9 +228,9 @@ export const NetworkCommissioning = Cluster(
 
     Datatype(
         { name: "ThreadInterfaceScanResultStruct", type: "struct" },
-        Field({ name: "PanId", id: 0x0, type: "uint16", constraint: "max 65534", conformance: "TH" }),
+        Field({ name: "PanId", id: 0x0, type: "uint16", conformance: "TH", constraint: "max 65534" }),
         Field({ name: "ExtendedPanId", id: 0x1, type: "uint64", conformance: "TH" }),
-        Field({ name: "NetworkName", id: 0x2, type: "string", constraint: "1 to 16", conformance: "TH" }),
+        Field({ name: "NetworkName", id: 0x2, type: "string", conformance: "TH", constraint: "1 to 16" }),
         Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "TH" }),
         Field({ name: "Version", id: 0x4, type: "uint8", conformance: "TH" }),
         Field({ name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH" }),

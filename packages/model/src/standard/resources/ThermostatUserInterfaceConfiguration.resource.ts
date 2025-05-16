@@ -9,26 +9,23 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "ThermostatUserInterfaceConfiguration",
-    classification: "application", pics: "TSUIC",
+    tag: "cluster", name: "ThermostatUserInterfaceConfiguration", classification: "application",
+    pics: "TSUIC", xref: "cluster§4.5",
     details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, or " +
         "a thermostat controller device, that supports a keypad and LCD screen.",
-    xref: "cluster§4.5",
 
     children: [
         {
-            tag: "attribute", name: "TemperatureDisplayMode",
-            details: "Indicates the units of the temperature displayed on the thermostat screen.",
-            xref: "cluster§4.5.6.1"
+            tag: "attribute", name: "TemperatureDisplayMode", xref: "cluster§4.5.6.1",
+            details: "Indicates the units of the temperature displayed on the thermostat screen."
         },
         {
-            tag: "attribute", name: "KeypadLockout",
-            details: "Indicates the level of functionality that is available to the user via the keypad.",
-            xref: "cluster§4.5.6.2"
+            tag: "attribute", name: "KeypadLockout", xref: "cluster§4.5.6.2",
+            details: "Indicates the level of functionality that is available to the user via the keypad."
         },
 
         {
-            tag: "attribute", name: "ScheduleProgrammingVisibility",
+            tag: "attribute", name: "ScheduleProgrammingVisibility", xref: "cluster§4.5.6.3",
 
             details: "This attribute is used to hide the weekly schedule programming functionality or menu on a thermostat " +
                 "from a user to prevent local user programming of the weekly schedule. The schedule programming may " +
@@ -37,14 +34,11 @@ Resource.add({
                 "\n" +
                 "This attribute is designed to prevent local tampering with or disabling of schedules that may have " +
                 "been programmed by users or service providers via a more capable remote interface. The programming " +
-                "schedule shall continue to run even though it is not visible to the user locally at the thermostat.",
-
-            xref: "cluster§4.5.6.3"
+                "schedule shall continue to run even though it is not visible to the user locally at the thermostat."
         },
 
         {
-            tag: "datatype", name: "TemperatureDisplayModeEnum",
-            xref: "cluster§4.5.5.1",
+            tag: "datatype", name: "TemperatureDisplayModeEnum", xref: "cluster§4.5.5.1",
             children: [
                 { tag: "field", name: "Celsius", description: "Temperature displayed in °C" },
                 { tag: "field", name: "Fahrenheit", description: "Temperature displayed in °F" }
@@ -52,9 +46,8 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "KeypadLockoutEnum",
+            tag: "datatype", name: "KeypadLockoutEnum", xref: "cluster§4.5.5.2",
             details: "The interpretation of the various levels is device-dependent.",
-            xref: "cluster§4.5.5.2",
 
             children: [
                 { tag: "field", name: "NoLockout", description: "All functionality available to the user" },
@@ -67,8 +60,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "ScheduleProgrammingVisibilityEnum",
-            xref: "cluster§4.5.5.3",
+            tag: "datatype", name: "ScheduleProgrammingVisibilityEnum", xref: "cluster§4.5.5.3",
 
             children: [
                 {

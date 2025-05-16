@@ -54,10 +54,6 @@ export function MergedModel(
      * Merge the fields (excluding children) of a specific model.
      */
     function merge(variants: VariantDetail): Model {
-        if (variants.map.spec && (variants.map.spec.valueOf() as any)?.tag === undefined) {
-            debugger;
-            variants.map.spec.valueOf();
-        }
         const variantValues = Object.fromEntries(
             Object.entries(variants.map).map(([variantName, variant]) => [variantName, variant.valueOf()]),
         );

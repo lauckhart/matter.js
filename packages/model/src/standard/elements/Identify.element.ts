@@ -18,16 +18,16 @@ import {
 export const Identify = Cluster(
     { name: "Identify", id: 0x3 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 }),
-    Attribute({ name: "IdentifyTime", id: 0x0, type: "uint16", default: 0, conformance: "M", access: "RW VO" }),
-    Attribute({ name: "IdentifyType", id: 0x1, type: "IdentifyTypeEnum", constraint: "desc", conformance: "M", access: "R V" }),
+    Attribute({ name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW VO", conformance: "M", default: 0 }),
+    Attribute({ name: "IdentifyType", id: 0x1, type: "IdentifyTypeEnum", access: "R V", conformance: "M", constraint: "desc" }),
     Command(
-        { name: "Identify", id: 0x0, conformance: "M", access: "M", direction: "request", response: "status" },
+        { name: "Identify", id: 0x0, access: "M", conformance: "M", direction: "request", response: "status" },
         Field({ name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" })
     ),
     Command(
-        { name: "TriggerEffect", id: 0x40, conformance: "O", access: "M", direction: "request", response: "status" },
-        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", constraint: "desc", conformance: "M" }),
-        Field({ name: "EffectVariant", id: 0x1, type: "EffectVariantEnum", constraint: "desc", conformance: "M" })
+        { name: "TriggerEffect", id: 0x40, access: "M", conformance: "O", direction: "request", response: "status" },
+        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
+        Field({ name: "EffectVariant", id: 0x1, type: "EffectVariantEnum", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(

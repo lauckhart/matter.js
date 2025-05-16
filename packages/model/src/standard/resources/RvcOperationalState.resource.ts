@@ -9,11 +9,10 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "RvcOperationalState",
-    classification: "application", pics: "RVCOPSTATE",
+    tag: "cluster", name: "RvcOperationalState", classification: "application", pics: "RVCOPSTATE",
+    xref: "cluster§7.4",
     details: "This cluster is derived from the Operational State cluster and provides an interface for monitoring " +
         "the operational state of a robotic vacuum cleaner.",
-    xref: "cluster§7.4",
 
     children: [
         { tag: "command", name: "Pause", xref: "cluster§7.4.5" },
@@ -23,7 +22,7 @@ Resource.add({
         { tag: "command", name: "OperationalCommandResponse", xref: "cluster§7.4.5" },
 
         {
-            tag: "command", name: "GoHome",
+            tag: "command", name: "GoHome", xref: "cluster§7.4.5.1",
 
             details: "On receipt of this command, the device shall start seeking the charging dock, if possible in the " +
                 "current state of the device." +
@@ -41,13 +40,11 @@ Resource.add({
                 "  • The OperationalState attribute shall be set to SeekingCharger." +
                 "\n" +
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
-                "    NoError.",
-
-            xref: "cluster§7.4.5.1"
+                "    NoError."
         },
 
         {
-            tag: "datatype", name: "OperationalStateEnum",
+            tag: "datatype", name: "OperationalStateEnum", xref: "cluster§7.4.4.1",
 
             details: "The values defined herein are applicable to this derived cluster of Operational State only and are " +
                 "additional to the set of values defined in Operational State itself." +
@@ -69,8 +66,6 @@ Resource.add({
                 "OperationalCommandResponse command with an ErrorStateID of CommandInvalidInState but take no further " +
                 "action.",
 
-            xref: "cluster§7.4.4.1",
-
             children: [
                 { tag: "field", name: "Stopped", description: "The device is stopped" },
                 { tag: "field", name: "Running", description: "The device is operating" },
@@ -83,10 +78,9 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "ErrorStateEnum",
+            tag: "datatype", name: "ErrorStateEnum", xref: "cluster§7.4.4.2",
             details: "The values defined herein are applicable to this derived cluster of Operational State only and are " +
                 "additional to the set of values defined in Operational State itself.",
-            xref: "cluster§7.4.4.2",
 
             children: [
                 { tag: "field", name: "NoError", description: "The device is not in an error state" },

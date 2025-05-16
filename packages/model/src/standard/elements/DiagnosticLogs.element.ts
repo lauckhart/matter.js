@@ -21,18 +21,18 @@ export const DiagnosticLogs = Cluster(
 
     Command(
         {
-            name: "RetrieveLogsRequest", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "RetrieveLogsResponse"
+            name: "RetrieveLogsRequest", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "RetrieveLogsResponse"
         },
         Field({ name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M" }),
         Field({ name: "RequestedProtocol", id: 0x1, type: "TransferProtocolEnum", conformance: "M" }),
-        Field({ name: "TransferFileDesignator", id: 0x2, type: "string", constraint: "max 32", conformance: "O" })
+        Field({ name: "TransferFileDesignator", id: 0x2, type: "string", conformance: "O", constraint: "max 32" })
     ),
 
     Command(
         { name: "RetrieveLogsResponse", id: 0x1, conformance: "M", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
-        Field({ name: "LogContent", id: 0x1, type: "octstr", constraint: "max 1024", conformance: "M" }),
+        Field({ name: "LogContent", id: 0x1, type: "octstr", conformance: "M", constraint: "max 1024" }),
         Field({ name: "UtcTimeStamp", id: 0x2, type: "epoch-us", conformance: "O" }),
         Field({ name: "TimeSinceBoot", id: 0x3, type: "systime-us", conformance: "O" })
     ),

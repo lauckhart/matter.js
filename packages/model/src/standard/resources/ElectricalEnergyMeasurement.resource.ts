@@ -9,57 +9,50 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "ElectricalEnergyMeasurement",
-    classification: "application", pics: "EEM",
+    tag: "cluster", name: "ElectricalEnergyMeasurement", classification: "application", pics: "EEM",
+    xref: "cluster§2.12",
     details: "This cluster provides a mechanism for querying data about the electrical energy imported or provided " +
         "by the server.",
-    xref: "cluster§2.12",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§2.12.4",
+            tag: "attribute", name: "FeatureMap", xref: "cluster§2.12.4",
 
             children: [
                 {
-                    tag: "field", name: "IMPE",
-                    details: "The feature indicates the server is capable of measuring how much energy is imported by the server.",
-                    xref: "cluster§2.12.4.1"
+                    tag: "field", name: "IMPE", xref: "cluster§2.12.4.1",
+                    details: "The feature indicates the server is capable of measuring how much energy is imported by the server."
                 },
                 {
-                    tag: "field", name: "EXPE",
-                    details: "The feature indicates the server is capable of measuring how much energy is exported by the server.",
-                    xref: "cluster§2.12.4.2"
+                    tag: "field", name: "EXPE", xref: "cluster§2.12.4.2",
+                    details: "The feature indicates the server is capable of measuring how much energy is exported by the server."
                 },
 
                 {
-                    tag: "field", name: "CUME",
+                    tag: "field", name: "CUME", xref: "cluster§2.12.4.3",
                     details: "The feature indicates the server is capable of measuring how much energy has been imported or " +
                         "exported by the server over the device’s lifetime. This measurement may start from when a device’s " +
                         "firmware is updated to include this feature, when a device’s firmware is updated to correct " +
-                        "measurement errors, or when a device is factory reset.",
-                    xref: "cluster§2.12.4.3"
+                        "measurement errors, or when a device is factory reset."
                 },
 
                 {
-                    tag: "field", name: "PERE",
+                    tag: "field", name: "PERE", xref: "cluster§2.12.4.4",
                     details: "The feature indicates the server is capable of measuring how much energy has been imported or " +
                         "exported by the server during a certain period of time. The start and end times for measurement " +
-                        "periods shall be determined by the server, and may represent overlapping periods.",
-                    xref: "cluster§2.12.4.4"
+                        "periods shall be determined by the server, and may represent overlapping periods."
                 }
             ]
         },
 
         {
-            tag: "attribute", name: "Accuracy",
+            tag: "attribute", name: "Accuracy", xref: "cluster§2.12.6.1",
             details: "Indicates the accuracy of energy measurement by this server. The value of the MeasurementType field " +
-                "on this MeasurementAccuracyStruct shall be ElectricalEnergy.",
-            xref: "cluster§2.12.6.1"
+                "on this MeasurementAccuracyStruct shall be ElectricalEnergy."
         },
 
         {
-            tag: "attribute", name: "CumulativeEnergyImported",
+            tag: "attribute", name: "CumulativeEnergyImported", xref: "cluster§2.12.6.2",
 
             details: "Indicates the most recent measurement of cumulative energy imported by the server over the lifetime " +
                 "of the device, and the timestamp of when the measurement was recorded." +
@@ -73,13 +66,11 @@ Resource.add({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds." +
                 "\n" +
-                "If the cumulative energy imported cannot currently be determined, a value of null shall be returned.",
-
-            xref: "cluster§2.12.6.2"
+                "If the cumulative energy imported cannot currently be determined, a value of null shall be returned."
         },
 
         {
-            tag: "attribute", name: "CumulativeEnergyExported",
+            tag: "attribute", name: "CumulativeEnergyExported", xref: "cluster§2.12.6.3",
 
             details: "Indicates the most recent measurement of cumulative energy exported by the server over the lifetime " +
                 "of the device, and the timestamp of when the measurement was recorded." +
@@ -93,13 +84,11 @@ Resource.add({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds." +
                 "\n" +
-                "If the cumulative energy exported cannot currently be determined, a value of null shall be returned.",
-
-            xref: "cluster§2.12.6.3"
+                "If the cumulative energy exported cannot currently be determined, a value of null shall be returned."
         },
 
         {
-            tag: "attribute", name: "PeriodicEnergyImported",
+            tag: "attribute", name: "PeriodicEnergyImported", xref: "cluster§2.12.6.4",
 
             details: "Indicates the most recent measurement of energy imported by the server and the period during which " +
                 "it was measured." +
@@ -113,13 +102,11 @@ Resource.add({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds." +
                 "\n" +
-                "If the periodic energy imported cannot currently be determined, a value of null shall be returned.",
-
-            xref: "cluster§2.12.6.4"
+                "If the periodic energy imported cannot currently be determined, a value of null shall be returned."
         },
 
         {
-            tag: "attribute", name: "PeriodicEnergyExported",
+            tag: "attribute", name: "PeriodicEnergyExported", xref: "cluster§2.12.6.5",
 
             details: "Indicates the most recent measurement of energy exported by the server and the period during which " +
                 "it was measured." +
@@ -133,66 +120,55 @@ Resource.add({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds." +
                 "\n" +
-                "If the periodic energy exported cannot currently be determined, a value of null shall be returned.",
-
-            xref: "cluster§2.12.6.5"
+                "If the periodic energy exported cannot currently be determined, a value of null shall be returned."
         },
 
         {
-            tag: "attribute", name: "CumulativeEnergyReset",
-            details: "Indicates when cumulative measurements were most recently zero.",
-            xref: "cluster§2.12.6.6"
+            tag: "attribute", name: "CumulativeEnergyReset", xref: "cluster§2.12.6.6",
+            details: "Indicates when cumulative measurements were most recently zero."
         },
 
         {
-            tag: "event", name: "CumulativeEnergyMeasured",
+            tag: "event", name: "CumulativeEnergyMeasured", xref: "cluster§2.12.7.1",
             details: "This event shall be generated when the server takes a snapshot of the cumulative energy imported by " +
                 "the server, exported from the server, or both, but not more frequently than the rate mentioned in " +
                 "the description above of the related attribute.",
-            xref: "cluster§2.12.7.1",
 
             children: [
                 {
-                    tag: "field", name: "EnergyImported",
+                    tag: "field", name: "EnergyImported", xref: "cluster§2.12.7.1.1",
                     details: "This field shall be the value of CumulativeEnergyImported attribute at the timestamp indicated in " +
-                        "its EndTimestamp field, EndSystime field, or both.",
-                    xref: "cluster§2.12.7.1.1"
+                        "its EndTimestamp field, EndSystime field, or both."
                 },
-
                 {
-                    tag: "field", name: "EnergyExported",
+                    tag: "field", name: "EnergyExported", xref: "cluster§2.12.7.1.2",
                     details: "This field shall be the value of CumulativeEnergyExported attribute at the timestamp indicated in " +
-                        "its EndTimestamp field, EndSystime field, or both.",
-                    xref: "cluster§2.12.7.1.2"
+                        "its EndTimestamp field, EndSystime field, or both."
                 }
             ]
         },
 
         {
-            tag: "event", name: "PeriodicEnergyMeasured",
+            tag: "event", name: "PeriodicEnergyMeasured", xref: "cluster§2.12.7.2",
             details: "This event shall be generated when the server reaches the end of a reporting period for imported " +
                 "energy, exported energy, or both.",
-            xref: "cluster§2.12.7.2",
 
             children: [
                 {
-                    tag: "field", name: "EnergyImported",
+                    tag: "field", name: "EnergyImported", xref: "cluster§2.12.7.2.1",
                     details: "This field shall be the value of PeriodicEnergyImported attribute at the timestamp indicated in its " +
-                        "EndTimestamp field, EndSystime field, or both.",
-                    xref: "cluster§2.12.7.2.1"
+                        "EndTimestamp field, EndSystime field, or both."
                 },
-
                 {
-                    tag: "field", name: "EnergyExported",
+                    tag: "field", name: "EnergyExported", xref: "cluster§2.12.7.2.2",
                     details: "This field shall be the value of PeriodicEnergyExported attribute at the timestamp indicated in its " +
-                        "EndTimestamp field, EndSystime field, or both.",
-                    xref: "cluster§2.12.7.2.2"
+                        "EndTimestamp field, EndSystime field, or both."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "EnergyMeasurementStruct",
+            tag: "datatype", name: "EnergyMeasurementStruct", xref: "cluster§2.12.5.1",
 
             details: "This struct shall indicate the amount of energy measured during a given measurement period." +
                 "\n" +
@@ -204,11 +180,9 @@ Resource.add({
                 "had passed since boot for a given timestamp; this allows for client-side resolution of UTC time for " +
                 "previous reports that only included systime.",
 
-            xref: "cluster§2.12.5.1",
-
             children: [
                 {
-                    tag: "field", name: "Energy",
+                    tag: "field", name: "Energy", xref: "cluster§2.12.5.1.1",
 
                     details: "This field shall be the reported energy." +
                         "\n" +
@@ -218,13 +192,11 @@ Resource.add({
                         "\n" +
                         "If the EnergyMeasurementStruct represents periodic energy, then this shall represent the energy " +
                         "recorded during the period specified by either the StartTimestamp and EndTimestamp fields, the " +
-                        "period specified by the StartSystime and EndSystime fields, or both.",
-
-                    xref: "cluster§2.12.5.1.1"
+                        "period specified by the StartSystime and EndSystime fields, or both."
                 },
 
                 {
-                    tag: "field", name: "StartTimestamp",
+                    tag: "field", name: "StartTimestamp", xref: "cluster§2.12.5.1.2",
 
                     details: "This field shall indicate the timestamp in UTC of the beginning of the period during which the value " +
                         "of the Energy field was measured." +
@@ -236,13 +208,11 @@ Resource.add({
                         "\n" +
                         "Otherwise, if the server had not yet determined the time in UTC at or before the beginning of the " +
                         "measurement period, or does not have the capability of determining the time in UTC, this field shall " +
-                        "be omitted.",
-
-                    xref: "cluster§2.12.5.1.2"
+                        "be omitted."
                 },
 
                 {
-                    tag: "field", name: "EndTimestamp",
+                    tag: "field", name: "EndTimestamp", xref: "cluster§2.12.5.1.3",
 
                     details: "This field shall indicate the timestamp in UTC of the end of the period during which the value of " +
                         "the Energy field was measured." +
@@ -251,32 +221,28 @@ Resource.add({
                         "be indicated." +
                         "\n" +
                         "Otherwise, if the server had not yet determined the time in UTC by the end of the measurement " +
-                        "period, or does not have the capability of determining the time in UTC, this field shall be omitted.",
-
-                    xref: "cluster§2.12.5.1.3"
+                        "period, or does not have the capability of determining the time in UTC, this field shall be omitted."
                 },
 
                 {
-                    tag: "field", name: "StartSystime",
+                    tag: "field", name: "StartSystime", xref: "cluster§2.12.5.1.4",
 
                     details: "This field shall indicate the time elapsed since boot at the beginning of the period during which " +
                         "the value of the Energy field was measured." +
                         "\n" +
-                        "If this EnergyMeasurementStruct represents cumulative energy, this field shall be omitted. " +
-                        "Otherwise, if the server had not yet determined the time in UTC at the start of the measurement" +
+                        "If this EnergyMeasurementStruct represents cumulative energy, this field shall be omitted." +
                         "\n" +
+                        "Otherwise, if the server had not yet determined the time in UTC at the start of the measurement " +
                         "period, or does not have the capability of determining the time in UTC, this field shall be " +
                         "indicated." +
                         "\n" +
                         "Otherwise, if the server had determined the time in UTC at or before the beginning of the " +
                         "measurement period, this field may be omitted; if it is indicated, its value shall be the time " +
-                        "elapsed since boot at the UTC time indicated in StartTimestamp.",
-
-                    xref: "cluster§2.12.5.1.4"
+                        "elapsed since boot at the UTC time indicated in StartTimestamp."
                 },
 
                 {
-                    tag: "field", name: "EndSystime",
+                    tag: "field", name: "EndSystime", xref: "cluster§2.12.5.1.5",
 
                     details: "This field shall indicate the time elapsed since boot at the end of the period during which the " +
                         "value of the Energy field was measured." +
@@ -286,22 +252,19 @@ Resource.add({
                         "\n" +
                         "Otherwise, if the server had determined the time in UTC by the end of the measurement period, this " +
                         "field may be omitted; if it is indicated, its value shall be the time elapsed since boot at the UTC " +
-                        "time indicated in EndTimestamp.",
-
-                    xref: "cluster§2.12.5.1.5"
+                        "time indicated in EndTimestamp."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "CumulativeEnergyResetStruct",
+            tag: "datatype", name: "CumulativeEnergyResetStruct", xref: "cluster§2.12.5.2",
             details: "This struct shall represent the times at which cumulative measurements were last zero, either due to " +
                 "initialization of the device, or an internal reset of the cumulative value.",
-            xref: "cluster§2.12.5.2",
 
             children: [
                 {
-                    tag: "field", name: "ImportedResetTimestamp",
+                    tag: "field", name: "ImportedResetTimestamp", xref: "cluster§2.12.5.2.1",
 
                     details: "This field shall indicate the timestamp in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyImported attribute was most recently zero." +
@@ -314,13 +277,11 @@ Resource.add({
                         "determining the time in UTC, this field shall be omitted." +
                         "\n" +
                         "If the timestamp in UTC when the value of the Energy field on the CumulativeEnergyImported attribute " +
-                        "was most recently zero cannot currently be determined, a value of null shall be returned.",
-
-                    xref: "cluster§2.12.5.2.1"
+                        "was most recently zero cannot currently be determined, a value of null shall be returned."
                 },
 
                 {
-                    tag: "field", name: "ExportedResetTimestamp",
+                    tag: "field", name: "ExportedResetTimestamp", xref: "cluster§2.12.5.2.2",
 
                     details: "This field shall indicate the timestamp in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyExported attribute was most recently zero." +
@@ -333,13 +294,11 @@ Resource.add({
                         "determining the time in UTC, this field shall be omitted." +
                         "\n" +
                         "If the timestamp in UTC when the value of the Energy field on the CumulativeEnergyExported attribute " +
-                        "was most recently zero cannot currently be determined, a value of null shall be returned.",
-
-                    xref: "cluster§2.12.5.2.2"
+                        "was most recently zero cannot currently be determined, a value of null shall be returned."
                 },
 
                 {
-                    tag: "field", name: "ImportedResetSystime",
+                    tag: "field", name: "ImportedResetSystime", xref: "cluster§2.12.5.2.3",
 
                     details: "This field shall indicate the time elapsed since boot when the value of the Energy field on the " +
                         "CumulativeEnergyImported attribute was most recently zero." +
@@ -351,13 +310,11 @@ Resource.add({
                         "Otherwise, if the server had determined the time in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyImported attribute was most recently zero, this field may be omitted; if it is " +
                         "indicated, its value shall be the time elapsed since boot at the UTC time indicated in " +
-                        "ImportedResetTimestamp.",
-
-                    xref: "cluster§2.12.5.2.3"
+                        "ImportedResetTimestamp."
                 },
 
                 {
-                    tag: "field", name: "ExportedResetSystime",
+                    tag: "field", name: "ExportedResetSystime", xref: "cluster§2.12.5.2.4",
 
                     details: "This field shall indicate the time elapsed since boot when the value of the Energy field on the " +
                         "CumulativeEnergyExported attribute was most recently zero." +
@@ -369,9 +326,7 @@ Resource.add({
                         "Otherwise, if the server had determined the time in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyExported attribute was most recently zero, this field may be omitted; if it is " +
                         "indicated, its value shall be the time elapsed since boot at the UTC time indicated in " +
-                        "ImportedResetTimestamp.",
-
-                    xref: "cluster§2.12.5.2.4"
+                        "ImportedResetTimestamp."
                 }
             ]
         }

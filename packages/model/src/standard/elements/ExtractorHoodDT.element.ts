@@ -13,17 +13,17 @@ export const ExtractorHoodDt = DeviceType(
     { name: "ExtractorHood", id: 0x7a },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 122, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 122, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "HepaFilterMonitoring", id: 0x71, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "ActivatedCarbonFilterMonitoring", id: 0x72, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "HepaFilterMonitoring", id: 0x71, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "ActivatedCarbonFilterMonitoring", id: 0x72, conformance: "O", element: "serverCluster" }),
 
     Requirement(
-        { name: "FanControl", id: 0x202, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "ROCKING", element: "feature", conformance: "X" }),
-        Requirement({ name: "WIND", element: "feature", conformance: "X" }),
-        Requirement({ name: "AIRFLOWDIRECTION", element: "feature", conformance: "X" })
+        { name: "FanControl", id: 0x202, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "ROCKING", conformance: "X", element: "feature" }),
+        Requirement({ name: "WIND", conformance: "X", element: "feature" }),
+        Requirement({ name: "AIRFLOWDIRECTION", conformance: "X", element: "feature" })
     )
 );
 

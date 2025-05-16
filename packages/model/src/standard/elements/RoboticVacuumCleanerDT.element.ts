@@ -13,13 +13,13 @@ export const RoboticVacuumCleanerDt = DeviceType(
     { name: "RoboticVacuumCleaner", id: 0x74 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 116, revision: 3 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 116, revision: 3 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "RvcRunMode", id: 0x54, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "RvcCleanMode", id: 0x55, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "RvcOperationalState", id: 0x61, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "ServiceArea", id: 0x150, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "RvcRunMode", id: 0x54, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "RvcCleanMode", id: 0x55, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "RvcOperationalState", id: 0x61, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "ServiceArea", id: 0x150, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(RoboticVacuumCleanerDt);

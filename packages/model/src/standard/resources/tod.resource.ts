@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "tod",
-    description: "Time of day",
+    tag: "datatype", name: "tod", description: "Time of day", xref: "core§7.19.2",
     details: "Represents time without a date component.",
-    xref: "core§7.19.2.3",
 
     children: [
         { tag: "field", name: "hours", description: "Hour of the current day." },

@@ -19,48 +19,48 @@ export const ThreadNetworkDirectory = Cluster(
     { name: "ThreadNetworkDirectory", id: 0x453 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        name: "PreferredExtendedPanId", id: 0x0, type: "octstr",
-        default: null, constraint: "8", conformance: "M", access: "RW VM", quality: "X N"
+        name: "PreferredExtendedPanId", id: 0x0, type: "octstr", access: "RW VM", conformance: "M",
+        constraint: "8", default: null, quality: "X N"
     }),
 
     Attribute(
         {
-            name: "ThreadNetworks", id: 0x1, type: "list",
-            constraint: "max threadNetworkTableSize", conformance: "M", access: "R V", quality: "N"
+            name: "ThreadNetworks", id: 0x1, type: "list", access: "R V", conformance: "M",
+            constraint: "max threadNetworkTableSize", quality: "N"
         },
         Field({ name: "entry", type: "ThreadNetworkStruct" })
     ),
 
     Attribute({
-        name: "ThreadNetworkTableSize", id: 0x2, type: "uint8",
-        default: 10, constraint: "desc", conformance: "M", access: "R V", quality: "F"
+        name: "ThreadNetworkTableSize", id: 0x2, type: "uint8", access: "R V", conformance: "M",
+        constraint: "desc", default: 10, quality: "F"
     }),
     Command(
-        { name: "AddNetwork", id: 0x0, conformance: "M", access: "M T", direction: "request", response: "status" },
-        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
+        { name: "AddNetwork", id: 0x0, access: "M T", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" })
     ),
     Command(
-        { name: "RemoveNetwork", id: 0x1, conformance: "M", access: "M T", direction: "request", response: "status" },
-        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" })
+        { name: "RemoveNetwork", id: 0x1, access: "M T", conformance: "M", direction: "request", response: "status" },
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", conformance: "M", constraint: "8" })
     ),
 
     Command(
         {
-            name: "GetOperationalDataset", id: 0x2,
-            conformance: "M", access: "M", direction: "request", response: "OperationalDatasetResponse"
+            name: "GetOperationalDataset", id: 0x2, access: "M", conformance: "M", direction: "request",
+            response: "OperationalDatasetResponse"
         },
-        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" })
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", conformance: "M", constraint: "8" })
     ),
 
     Command(
         { name: "OperationalDatasetResponse", id: 0x3, conformance: "M", direction: "response" },
-        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
+        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" })
     ),
 
     Datatype(
         { name: "ThreadNetworkStruct", type: "struct" },
-        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" }),
-        Field({ name: "NetworkName", id: 0x1, type: "string", constraint: "1 to 16", conformance: "M" }),
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", conformance: "M", constraint: "8" }),
+        Field({ name: "NetworkName", id: 0x1, type: "string", conformance: "M", constraint: "1 to 16" }),
         Field({ name: "Channel", id: 0x2, type: "uint16", conformance: "M" }),
         Field({ name: "ActiveTimestamp", id: 0x3, type: "uint64", conformance: "M" })
     )

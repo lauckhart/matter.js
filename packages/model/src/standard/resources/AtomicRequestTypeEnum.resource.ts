@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "AtomicRequestTypeEnum",
-    xref: "core§7.15.4",
+    tag: "datatype", name: "AtomicRequestTypeEnum", xref: "core§7.15.4",
 
     children: [
         { tag: "field", name: "BeginWrite", description: "Begin an atomic write" },

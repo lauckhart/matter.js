@@ -9,37 +9,33 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "TemperatureMeasurement",
-    classification: "application", pics: "TMP",
+    tag: "cluster", name: "TemperatureMeasurement", classification: "application", pics: "TMP",
+    xref: "cluster§2.3",
     details: "This cluster provides an interface to temperature measurement functionality, including configuration " +
         "and provision of notifications of temperature measurements.",
-    xref: "cluster§2.3",
 
     children: [
         {
-            tag: "attribute", name: "MeasuredValue",
-            details: "Indicates the measured temperature. The null value indicates that the temperature is unknown.",
-            xref: "cluster§2.3.4.1"
+            tag: "attribute", name: "MeasuredValue", xref: "cluster§2.3.4.1",
+            details: "Indicates the measured temperature. The null value indicates that the temperature is unknown."
         },
 
         {
-            tag: "attribute", name: "MinMeasuredValue",
+            tag: "attribute", name: "MinMeasuredValue", xref: "cluster§2.3.4.2",
             details: "Indicates the minimum value of MeasuredValue that is capable of being measured. See Measured Value " +
                 "for more details." +
                 "\n" +
-                "The null value indicates that the value is not available.",
-            xref: "cluster§2.3.4.2"
+                "The null value indicates that the value is not available."
         },
 
         {
-            tag: "attribute", name: "MaxMeasuredValue",
+            tag: "attribute", name: "MaxMeasuredValue", xref: "cluster§2.3.4.3",
             details: "This attribute indicates the maximum value of MeasuredValue that is capable of being measured. See " +
                 "Measured Value for more details." +
                 "\n" +
-                "The null value indicates that the value is not available.",
-            xref: "cluster§2.3.4.3"
+                "The null value indicates that the value is not available."
         },
 
-        { tag: "attribute", name: "Tolerance", details: "See Measured Value.", xref: "cluster§2.3.4.4" }
+        { tag: "attribute", name: "Tolerance", xref: "cluster§2.3.4.4", details: "See Measured Value." }
     ]
 });

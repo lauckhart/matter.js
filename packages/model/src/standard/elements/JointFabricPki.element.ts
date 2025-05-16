@@ -21,25 +21,25 @@ export const JointFabricPki = Cluster(
 
     Command(
         {
-            name: "IcacsrRequest", id: 0x0,
-            conformance: "M", access: "A", direction: "request", response: "IcacsrResponse"
+            name: "IcacsrRequest", id: 0x0, access: "A", conformance: "M", direction: "request",
+            response: "IcacsrResponse"
         },
-        Field({ name: "Icacsr", id: 0x0, type: "octstr", constraint: "max 400", conformance: "M" })
+        Field({ name: "Icacsr", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" })
     ),
 
     Command(
-        { name: "IcacsrResponse", id: 0x1, conformance: "M", access: "A", direction: "response" },
+        { name: "IcacsrResponse", id: 0x1, access: "A", conformance: "M", direction: "response" },
         Field({ name: "StatusCode", id: 0x0, type: "IcacsrRequestStatusEnum", conformance: "M" }),
-        Field({ name: "Icac", id: 0x1, type: "octstr", constraint: "max 400", conformance: "O" })
+        Field({ name: "Icac", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400" })
     ),
     Command({
-        name: "TransferAnchorRequest", id: 0x2,
-        conformance: "M", access: "A", direction: "request", response: "TransferAnchorResponse"
+        name: "TransferAnchorRequest", id: 0x2, access: "A", conformance: "M", direction: "request",
+        response: "TransferAnchorResponse"
     }),
-    Command({ name: "TransferAnchorResponse", id: 0x3, conformance: "M", access: "A", direction: "response" }),
+    Command({ name: "TransferAnchorResponse", id: 0x3, access: "A", conformance: "M", direction: "response" }),
     Command({
-        name: "TransferAnchorComplete", id: 0x4,
-        conformance: "M", access: "A", direction: "request", response: "status"
+        name: "TransferAnchorComplete", id: 0x4, access: "A", conformance: "M", direction: "request",
+        response: "status"
     }),
 
     Datatype(

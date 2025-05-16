@@ -11,7 +11,7 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const locationdesc = Datatype(
     { name: "locationdesc", type: "struct", isSeed: true },
-    Field({ name: "LocationName", id: 0x0, type: "string", constraint: "max 128", conformance: "M" }),
+    Field({ name: "LocationName", id: 0x0, type: "string", conformance: "M", constraint: "max 128" }),
     Field({ name: "FloorNumber", id: 0x1, type: "int16", conformance: "M", quality: "X" }),
     Field({ name: "AreaType", id: 0x2, type: "tag", conformance: "M", quality: "X" })
 );

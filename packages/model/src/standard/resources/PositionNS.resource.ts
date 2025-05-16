@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "Position",
+    tag: "semanticNamespace", name: "Position", xref: "namespace§9",
 
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a position relative to the device (e.g. the temperature sensor in the top drawer of " +
@@ -27,7 +27,6 @@ Resource.add({
         "the item. Number words (e.g. \"one\", \"two\", etc.) shall NOT be used to describe the position of the " +
         "item. The first row/column shall use Label \"1\".",
 
-    xref: "namespace§9",
     children: [
         { tag: "semanticTag", name: "Row", description: "Numeric value provided in Label field" },
         { tag: "semanticTag", name: "Column", description: "Numeric value provided in Label field" }

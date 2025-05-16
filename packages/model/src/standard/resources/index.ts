@@ -128,7 +128,7 @@ import "./OperationalCredentials.resource.js";
 import "./AdministratorCommissioning.resource.js";
 import "./OtaSoftwareUpdateProvider.resource.js";
 import "./OtaSoftwareUpdateRequestor.resource.js";
-import "./JointFabricDatastoreCluster.resource.js";
+import "./JointFabricDatastore.resource.js";
 import "./JointFabricPki.resource.js";
 import "./CommissionerControl.resource.js";
 import "./MeasurementTypeEnum.resource.js";

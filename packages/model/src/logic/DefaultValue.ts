@@ -254,9 +254,7 @@ function decodeBitmap(model: ValueModel, value: number | bigint) {
     if (Model.types[ElementTag.Attribute] && model.id === FeatureMap.id) {
         // Special case for feature map; use the long name as the key rather than the name
         nameGenerator = (model: ValueModel) =>
-            (model as FieldModel).longName === undefined
-                ? camelize(model.name)
-                : camelize((model as FieldModel).longName!);
+            (model as FieldModel).title === undefined ? camelize(model.name) : camelize((model as FieldModel).title!);
     } else {
         nameGenerator = (model: ValueModel) => camelize(model.name);
     }

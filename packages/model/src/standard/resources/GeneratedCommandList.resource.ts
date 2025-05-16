@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "attribute", name: "GeneratedCommandList",
+    tag: "attribute", name: "GeneratedCommandList", xref: "core§7.13.5",
 
     details: "This attribute is a list of server generated commands. A server generated command is a server to " +
         "client command." +
@@ -22,7 +22,5 @@ Resource.add({
         "shall be indicated in the AcceptedCommandList attribute." +
         "\n" +
         "If any attribute on a server supports atomic writes, this attribute shall contain the command ID for " +
-        "AtomicResponse.",
-
-    xref: "core§7.13.5"
+        "AtomicResponse."
 });

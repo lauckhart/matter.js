@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "PumpController",
-    classification: "simple",
+    tag: "deviceType", name: "PumpController", classification: "simple", xref: "device§6.5",
     details: "A Pump Controller device is capable of configuring and controlling a Pump device.",
-    xref: "device§6.5",
 
     children: [
         { tag: "requirement", name: "OnOff", xref: "device§6.5.3" },

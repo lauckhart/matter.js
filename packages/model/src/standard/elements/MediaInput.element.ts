@@ -20,21 +20,21 @@ export const MediaInput = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "NU", constraint: "0", longName: "NameUpdates" })
+        Field({ name: "NU", constraint: "0", title: "NameUpdates" })
     ),
     Attribute(
-        { name: "InputList", id: 0x0, type: "list", conformance: "M", access: "R V" },
+        { name: "InputList", id: 0x0, type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "InputInfoStruct" })
     ),
-    Attribute({ name: "CurrentInput", id: 0x1, type: "uint8", conformance: "M", access: "R V" }),
+    Attribute({ name: "CurrentInput", id: 0x1, type: "uint8", access: "R V", conformance: "M" }),
     Command(
-        { name: "SelectInput", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" },
+        { name: "SelectInput", id: 0x0, access: "O", conformance: "M", direction: "request", response: "status" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" })
     ),
-    Command({ name: "ShowInputStatus", id: 0x1, conformance: "M", access: "O", direction: "request", response: "status" }),
-    Command({ name: "HideInputStatus", id: 0x2, conformance: "M", access: "O", direction: "request", response: "status" }),
+    Command({ name: "ShowInputStatus", id: 0x1, access: "O", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "HideInputStatus", id: 0x2, access: "O", conformance: "M", direction: "request", response: "status" }),
     Command(
-        { name: "RenameInput", id: 0x3, conformance: "NU", access: "M", direction: "request", response: "status" },
+        { name: "RenameInput", id: 0x3, access: "M", conformance: "NU", direction: "request", response: "status" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
         Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
     ),
@@ -58,7 +58,7 @@ export const MediaInput = Cluster(
     Datatype(
         { name: "InputInfoStruct", type: "struct" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
-        Field({ name: "InputType", id: 0x1, type: "InputTypeEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "InputType", id: 0x1, type: "InputTypeEnum", conformance: "M", constraint: "desc" }),
         Field({ name: "Name", id: 0x2, type: "string", conformance: "M" }),
         Field({ name: "Description", id: 0x3, type: "string", conformance: "M" })
     )

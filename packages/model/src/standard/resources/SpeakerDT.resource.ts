@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Speaker",
-    classification: "simple",
+    tag: "deviceType", name: "Speaker", classification: "simple", xref: "device§10.4",
 
     details: "This defines conformance to the Speaker device type. This feature controls the speaker volume of the " +
         "device." +
@@ -26,7 +25,6 @@ Resource.add({
         "cluster) was made in order to treat volume in a fashion consistent with lighting which also uses " +
         "these clusters and has matching functional requirements.",
 
-    xref: "device§10.4",
     children: [
         { tag: "requirement", name: "OnOff", xref: "device§10.4.4" },
         { tag: "requirement", name: "LevelControl", xref: "device§10.4.4" }

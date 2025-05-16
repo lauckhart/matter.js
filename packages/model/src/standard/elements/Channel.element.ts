@@ -21,108 +21,108 @@ export const Channel = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "CL", constraint: "0", longName: "ChannelList" }),
-        Field({ name: "LI", constraint: "1", longName: "LineupInfo" }),
-        Field({ name: "EG", constraint: "2", longName: "ElectronicGuide" }),
-        Field({ name: "RP", constraint: "3", longName: "RecordProgram" })
+        Field({ name: "CL", constraint: "0", title: "ChannelList" }),
+        Field({ name: "LI", constraint: "1", title: "LineupInfo" }),
+        Field({ name: "EG", constraint: "2", title: "ElectronicGuide" }),
+        Field({ name: "RP", constraint: "3", title: "RecordProgram" })
     ),
 
     Attribute(
-        { name: "ChannelList", id: 0x0, type: "list", default: [], conformance: "CL", access: "R V" },
+        { name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL", default: [] },
         Field({ name: "entry", type: "ChannelInfoStruct" })
     ),
     Attribute({
-        name: "Lineup", id: 0x1, type: "LineupInfoStruct",
-        default: null, constraint: "desc", conformance: "LI", access: "R V", quality: "X"
+        name: "Lineup", id: 0x1, type: "LineupInfoStruct", access: "R V", conformance: "LI",
+        constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
-        name: "CurrentChannel", id: 0x2, type: "ChannelInfoStruct",
-        default: null, constraint: "desc", conformance: "O", access: "R V", quality: "X"
+        name: "CurrentChannel", id: 0x2, type: "ChannelInfoStruct", access: "R V", conformance: "O",
+        constraint: "desc", default: null, quality: "X"
     }),
 
     Command(
         {
-            name: "ChangeChannel", id: 0x0,
-            conformance: "CL | LI", access: "O", direction: "request", response: "ChangeChannelResponse"
+            name: "ChangeChannel", id: 0x0, access: "O", conformance: "CL | LI", direction: "request",
+            response: "ChangeChannelResponse"
         },
         Field({ name: "Match", id: 0x0, type: "string", conformance: "M" })
     ),
 
     Command(
         { name: "ChangeChannelResponse", id: 0x1, conformance: "CL | LI", direction: "response" },
-        Field({ name: "Status", id: 0x0, type: "StatusEnum", constraint: "desc", conformance: "M" }),
-        Field({ name: "Data", id: 0x1, type: "string", constraint: "any", conformance: "O" })
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M", constraint: "desc" }),
+        Field({ name: "Data", id: 0x1, type: "string", conformance: "O", constraint: "any" })
     ),
 
     Command(
         {
-            name: "ChangeChannelByNumber", id: 0x2,
-            conformance: "M", access: "O", direction: "request", response: "status"
+            name: "ChangeChannelByNumber", id: 0x2, access: "O", conformance: "M", direction: "request",
+            response: "status"
         },
         Field({ name: "MajorNumber", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "MinorNumber", id: 0x1, type: "uint16", conformance: "M" })
     ),
 
     Command(
-        { name: "SkipChannel", id: 0x3, conformance: "M", access: "O", direction: "request", response: "status" },
+        { name: "SkipChannel", id: 0x3, access: "O", conformance: "M", direction: "request", response: "status" },
         Field({ name: "Count", id: 0x0, type: "int16", conformance: "M" })
     ),
 
     Command(
         {
-            name: "GetProgramGuide", id: 0x4,
-            conformance: "EG", access: "O", direction: "request", response: "ProgramGuideResponse"
+            name: "GetProgramGuide", id: 0x4, access: "O", conformance: "EG", direction: "request",
+            response: "ProgramGuideResponse"
         },
         Field({ name: "StartTime", id: 0x0, type: "epoch-s", conformance: "M" }),
         Field({ name: "EndTime", id: 0x1, type: "epoch-s", conformance: "M" }),
         Field(
-            { name: "ChannelList", id: 0x2, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "ChannelList", id: 0x2, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ChannelInfoStruct" })
         ),
-        Field({ name: "PageToken", id: 0x3, type: "PageTokenStruct", default: null, conformance: "O", quality: "X" }),
-        Field({ name: "RecordingFlag", id: 0x5, type: "RecordingFlagBitmap", default: null, conformance: "O", quality: "X" }),
+        Field({ name: "PageToken", id: 0x3, type: "PageTokenStruct", conformance: "O", default: null, quality: "X" }),
+        Field({ name: "RecordingFlag", id: 0x5, type: "RecordingFlagBitmap", conformance: "O", default: null, quality: "X" }),
         Field(
-            { name: "ExternalIdList", id: 0x6, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "ExternalIdList", id: 0x6, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ContentLauncher.AdditionalInfoStruct" })
         ),
-        Field({ name: "Data", id: 0x7, type: "octstr", constraint: "max 8092", conformance: "O" })
+        Field({ name: "Data", id: 0x7, type: "octstr", conformance: "O", constraint: "max 8092" })
     ),
 
     Command(
         { name: "ProgramGuideResponse", id: 0x5, conformance: "EG", direction: "response" },
         Field({ name: "Paging", id: 0x0, type: "ChannelPagingStruct", conformance: "M" }),
         Field(
-            { name: "ProgramList", id: 0x1, type: "list", default: [], conformance: "M" },
+            { name: "ProgramList", id: 0x1, type: "list", conformance: "M", default: [] },
             Field({ name: "entry", type: "ProgramStruct" })
         )
     ),
 
     Command(
         {
-            name: "RecordProgram", id: 0x6,
-            conformance: "RP & EG", access: "O", direction: "request", response: "status"
+            name: "RecordProgram", id: 0x6, access: "O", conformance: "RP & EG", direction: "request",
+            response: "status"
         },
-        Field({ name: "ProgramIdentifier", id: 0x0, type: "string", constraint: "max 255", conformance: "M" }),
+        Field({ name: "ProgramIdentifier", id: 0x0, type: "string", conformance: "M", constraint: "max 255" }),
         Field({ name: "ShouldRecordSeries", id: 0x1, type: "bool", conformance: "M" }),
         Field(
-            { name: "ExternalIdList", id: 0x2, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ContentLauncher.AdditionalInfoStruct" })
         ),
-        Field({ name: "Data", id: 0x3, type: "octstr", constraint: "max 8092", conformance: "O" })
+        Field({ name: "Data", id: 0x3, type: "octstr", conformance: "O", constraint: "max 8092" })
     ),
 
     Command(
         {
-            name: "CancelRecordProgram", id: 0x7,
-            conformance: "RP & EG", access: "O", direction: "request", response: "status"
+            name: "CancelRecordProgram", id: 0x7, access: "O", conformance: "RP & EG", direction: "request",
+            response: "status"
         },
-        Field({ name: "ProgramIdentifier", id: 0x0, type: "string", constraint: "max 255", conformance: "M" }),
+        Field({ name: "ProgramIdentifier", id: 0x0, type: "string", conformance: "M", constraint: "max 255" }),
         Field({ name: "ShouldRecordSeries", id: 0x1, type: "bool", conformance: "M" }),
         Field(
-            { name: "ExternalIdList", id: 0x2, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ContentLauncher.AdditionalInfoStruct" })
         ),
-        Field({ name: "Data", id: 0x3, type: "octstr", constraint: "max 8092", conformance: "O" })
+        Field({ name: "Data", id: 0x3, type: "octstr", conformance: "O", constraint: "max 8092" })
     ),
 
     Datatype(
@@ -165,79 +165,79 @@ export const Channel = Cluster(
         Field({ name: "OperatorName", id: 0x0, type: "string", conformance: "M" }),
         Field({ name: "LineupName", id: 0x1, type: "string", conformance: "O" }),
         Field({ name: "PostalCode", id: 0x2, type: "string", conformance: "O" }),
-        Field({ name: "LineupInfoType", id: 0x3, type: "LineupInfoTypeEnum", constraint: "desc", conformance: "M" })
+        Field({ name: "LineupInfoType", id: 0x3, type: "LineupInfoTypeEnum", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(
         { name: "ProgramStruct", type: "struct" },
-        Field({ name: "Identifier", id: 0x0, type: "string", constraint: "max 255", conformance: "M" }),
+        Field({ name: "Identifier", id: 0x0, type: "string", conformance: "M", constraint: "max 255" }),
         Field({ name: "Channel", id: 0x1, type: "ChannelInfoStruct", conformance: "M" }),
         Field({ name: "StartTime", id: 0x2, type: "epoch-s", conformance: "M" }),
         Field({ name: "EndTime", id: 0x3, type: "epoch-s", conformance: "M" }),
-        Field({ name: "Title", id: 0x4, type: "string", constraint: "max 255", conformance: "M" }),
-        Field({ name: "Subtitle", id: 0x5, type: "string", constraint: "max 255", conformance: "O" }),
-        Field({ name: "Description", id: 0x6, type: "string", constraint: "max 8192", conformance: "O" }),
+        Field({ name: "Title", id: 0x4, type: "string", conformance: "M", constraint: "max 255" }),
+        Field({ name: "Subtitle", id: 0x5, type: "string", conformance: "O", constraint: "max 255" }),
+        Field({ name: "Description", id: 0x6, type: "string", conformance: "O", constraint: "max 8192" }),
 
         Field(
             {
-                name: "AudioLanguages", id: 0x7, type: "list",
-                default: [], constraint: "max 10[max 50]", conformance: "O"
+                name: "AudioLanguages", id: 0x7, type: "list", conformance: "O", constraint: "max 10[max 50]",
+                default: []
             },
             Field({ name: "entry", type: "string" })
         ),
 
         Field(
-            { name: "Ratings", id: 0x8, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "Ratings", id: 0x8, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "string" })
         ),
-        Field({ name: "ThumbnailUrl", id: 0x9, type: "string", constraint: "max 8192", conformance: "O" }),
-        Field({ name: "PosterArtUrl", id: 0xa, type: "string", constraint: "max 8192", conformance: "O" }),
-        Field({ name: "DvbiUrl", id: 0xb, type: "string", constraint: "max 8192", conformance: "O" }),
-        Field({ name: "ReleaseDate", id: 0xc, type: "string", constraint: "max 30", conformance: "O" }),
-        Field({ name: "ParentalGuidanceText", id: 0xd, type: "string", constraint: "max 255", conformance: "O" }),
+        Field({ name: "ThumbnailUrl", id: 0x9, type: "string", conformance: "O", constraint: "max 8192" }),
+        Field({ name: "PosterArtUrl", id: 0xa, type: "string", conformance: "O", constraint: "max 8192" }),
+        Field({ name: "DvbiUrl", id: 0xb, type: "string", conformance: "O", constraint: "max 8192" }),
+        Field({ name: "ReleaseDate", id: 0xc, type: "string", conformance: "O", constraint: "max 30" }),
+        Field({ name: "ParentalGuidanceText", id: 0xd, type: "string", conformance: "O", constraint: "max 255" }),
         Field({ name: "RecordingFlag", id: 0xe, type: "RecordingFlagBitmap", conformance: "RP" }),
-        Field({ name: "SeriesInfo", id: 0xf, type: "SeriesInfoStruct", default: null, conformance: "O", quality: "X" }),
+        Field({ name: "SeriesInfo", id: 0xf, type: "SeriesInfoStruct", conformance: "O", default: null, quality: "X" }),
         Field(
-            { name: "CategoryList", id: 0x10, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "CategoryList", id: 0x10, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ProgramCategoryStruct" })
         ),
         Field(
-            { name: "CastList", id: 0x11, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "CastList", id: 0x11, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ProgramCastStruct" })
         ),
         Field(
-            { name: "ExternalIdList", id: 0x12, type: "list", default: [], constraint: "max 255", conformance: "O" },
+            { name: "ExternalIdList", id: 0x12, type: "list", conformance: "O", constraint: "max 255", default: [] },
             Field({ name: "entry", type: "ContentLauncher.AdditionalInfoStruct" })
         )
     ),
 
     Datatype(
         { name: "ProgramCategoryStruct", type: "struct" },
-        Field({ name: "Category", id: 0x0, type: "string", constraint: "max 256", conformance: "M" }),
-        Field({ name: "SubCategory", id: 0x1, type: "string", constraint: "max 256", conformance: "O" })
+        Field({ name: "Category", id: 0x0, type: "string", conformance: "M", constraint: "max 256" }),
+        Field({ name: "SubCategory", id: 0x1, type: "string", conformance: "O", constraint: "max 256" })
     ),
     Datatype(
         { name: "SeriesInfoStruct", type: "struct" },
-        Field({ name: "Season", id: 0x0, type: "string", constraint: "max 256", conformance: "M" }),
-        Field({ name: "Episode", id: 0x1, type: "string", constraint: "max 256", conformance: "M" })
+        Field({ name: "Season", id: 0x0, type: "string", conformance: "M", constraint: "max 256" }),
+        Field({ name: "Episode", id: 0x1, type: "string", conformance: "M", constraint: "max 256" })
     ),
     Datatype(
         { name: "ProgramCastStruct", type: "struct" },
-        Field({ name: "Name", id: 0x0, type: "string", constraint: "max 256", conformance: "M" }),
-        Field({ name: "Role", id: 0x1, type: "string", constraint: "max 256", conformance: "M" })
+        Field({ name: "Name", id: 0x0, type: "string", conformance: "M", constraint: "max 256" }),
+        Field({ name: "Role", id: 0x1, type: "string", conformance: "M", constraint: "max 256" })
     ),
 
     Datatype(
         { name: "PageTokenStruct", type: "struct" },
-        Field({ name: "Limit", id: 0x0, type: "uint16", default: 0, conformance: "O" }),
-        Field({ name: "After", id: 0x1, type: "string", constraint: "max 8192", conformance: "O" }),
-        Field({ name: "Before", id: 0x2, type: "string", constraint: "max 8192", conformance: "O" })
+        Field({ name: "Limit", id: 0x0, type: "uint16", conformance: "O", default: 0 }),
+        Field({ name: "After", id: 0x1, type: "string", conformance: "O", constraint: "max 8192" }),
+        Field({ name: "Before", id: 0x2, type: "string", conformance: "O", constraint: "max 8192" })
     ),
 
     Datatype(
         { name: "ChannelPagingStruct", type: "struct" },
-        Field({ name: "PreviousToken", id: 0x0, type: "PageTokenStruct", default: null, conformance: "O", quality: "X" }),
-        Field({ name: "NextToken", id: 0x1, type: "PageTokenStruct", default: null, conformance: "O", quality: "X" })
+        Field({ name: "PreviousToken", id: 0x0, type: "PageTokenStruct", conformance: "O", default: null, quality: "X" }),
+        Field({ name: "NextToken", id: 0x1, type: "PageTokenStruct", conformance: "O", default: null, quality: "X" })
     )
 );
 

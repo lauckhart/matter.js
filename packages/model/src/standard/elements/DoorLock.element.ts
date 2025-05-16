@@ -22,194 +22,197 @@ export const DoorLock = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "PIN", constraint: "0", conformance: "O", longName: "PinCredential" }),
-        Field({ name: "RID", constraint: "1", conformance: "O", longName: "RfidCredential" }),
-        Field({ name: "FGP", constraint: "2", conformance: "P, O", longName: "FingerCredentials" }),
-        Field({ name: "WDSCH", constraint: "4", conformance: "O", longName: "WeekDayAccessSchedules" }),
-        Field({ name: "DPS", constraint: "5", conformance: "O", longName: "DoorPositionSensor" }),
-        Field({ name: "FACE", constraint: "6", conformance: "P, O", longName: "FaceCredentials" }),
-        Field({ name: "COTA", constraint: "7", conformance: "O", longName: "CredentialOverTheAirAccess" }),
-        Field({ name: "USR", constraint: "8", conformance: "ALIRO, [PIN | RID | FGP | FACE]", longName: "User" }),
-        Field({ name: "YDSCH", constraint: "10", conformance: "O", longName: "YearDayAccessSchedules" }),
-        Field({ name: "HDSCH", constraint: "11", conformance: "O", longName: "HolidaySchedules" }),
-        Field({ name: "UBOLT", constraint: "12", conformance: "O", longName: "Unbolting" }),
-        Field({ name: "ALIRO", constraint: "13", conformance: "O", longName: "AliroProvisioning" }),
-        Field({ name: "ALBU", constraint: "14", conformance: "[ALIRO]", longName: "AliroBleuwb" })
+        Field({ name: "PIN", conformance: "O", constraint: "0", title: "PinCredential" }),
+        Field({ name: "RID", conformance: "O", constraint: "1", title: "RfidCredential" }),
+        Field({ name: "FGP", conformance: "P, O", constraint: "2", title: "FingerCredentials" }),
+        Field({ name: "WDSCH", conformance: "O", constraint: "4", title: "WeekDayAccessSchedules" }),
+        Field({ name: "DPS", conformance: "O", constraint: "5", title: "DoorPositionSensor" }),
+        Field({ name: "FACE", conformance: "P, O", constraint: "6", title: "FaceCredentials" }),
+        Field({ name: "COTA", conformance: "O", constraint: "7", title: "CredentialOverTheAirAccess" }),
+        Field({ name: "USR", conformance: "ALIRO, [PIN | RID | FGP | FACE]", constraint: "8", title: "User" }),
+        Field({ name: "YDSCH", conformance: "O", constraint: "10", title: "YearDayAccessSchedules" }),
+        Field({ name: "HDSCH", conformance: "O", constraint: "11", title: "HolidaySchedules" }),
+        Field({ name: "UBOLT", conformance: "O", constraint: "12", title: "Unbolting" }),
+        Field({ name: "ALIRO", conformance: "O", constraint: "13", title: "AliroProvisioning" }),
+        Field({ name: "ALBU", conformance: "[ALIRO]", constraint: "14", title: "AliroBleuwb" })
     ),
 
     Attribute({
-        name: "LockState", id: 0x0, type: "LockStateEnum",
-        constraint: "desc", conformance: "M", access: "R V", quality: "X P"
+        name: "LockState", id: 0x0, type: "LockStateEnum", access: "R V", conformance: "M",
+        constraint: "desc", quality: "X P"
     }),
-    Attribute({ name: "LockType", id: 0x1, type: "LockTypeEnum", constraint: "desc", conformance: "M", access: "R V" }),
-    Attribute({ name: "ActuatorEnabled", id: 0x2, type: "bool", conformance: "M", access: "R V" }),
+    Attribute({ name: "LockType", id: 0x1, type: "LockTypeEnum", access: "R V", conformance: "M", constraint: "desc" }),
+    Attribute({ name: "ActuatorEnabled", id: 0x2, type: "bool", access: "R V", conformance: "M" }),
     Attribute({
-        name: "DoorState", id: 0x3, type: "DoorStateEnum",
-        constraint: "desc", conformance: "DPS", access: "R V", quality: "X P"
+        name: "DoorState", id: 0x3, type: "DoorStateEnum", access: "R V", conformance: "DPS",
+        constraint: "desc", quality: "X P"
     }),
-    Attribute({ name: "DoorOpenEvents", id: 0x4, type: "uint32", conformance: "[DPS]", access: "RW VM" }),
-    Attribute({ name: "DoorClosedEvents", id: 0x5, type: "uint32", conformance: "[DPS]", access: "RW VM" }),
-    Attribute({ name: "OpenPeriod", id: 0x6, type: "uint16", conformance: "[DPS]", access: "RW VM" }),
+    Attribute({ name: "DoorOpenEvents", id: 0x4, type: "uint32", access: "RW VM", conformance: "[DPS]" }),
+    Attribute({ name: "DoorClosedEvents", id: 0x5, type: "uint32", access: "RW VM", conformance: "[DPS]" }),
+    Attribute({ name: "OpenPeriod", id: 0x6, type: "uint16", access: "RW VM", conformance: "[DPS]" }),
     Attribute({
-        name: "NumberOfTotalUsersSupported", id: 0x11, type: "uint16",
-        default: 0, conformance: "USR", access: "R V", quality: "F"
-    }),
-    Attribute({
-        name: "NumberOfPinUsersSupported", id: 0x12, type: "uint16",
-        default: 0, conformance: "PIN", access: "R V", quality: "F"
+        name: "NumberOfTotalUsersSupported", id: 0x11, type: "uint16", access: "R V", conformance: "USR",
+        default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfRfidUsersSupported", id: 0x13, type: "uint16",
-        default: 0, conformance: "RID", access: "R V", quality: "F"
+        name: "NumberOfPinUsersSupported", id: 0x12, type: "uint16", access: "R V", conformance: "PIN",
+        default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfWeekDaySchedulesSupportedPerUser", id: 0x14, type: "uint8",
-        default: 0, constraint: "max 253", conformance: "WDSCH", access: "R V", quality: "F"
+        name: "NumberOfRfidUsersSupported", id: 0x13, type: "uint16", access: "R V", conformance: "RID",
+        default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfYearDaySchedulesSupportedPerUser", id: 0x15, type: "uint8",
-        default: 0, constraint: "max 253", conformance: "YDSCH", access: "R V", quality: "F"
+        name: "NumberOfWeekDaySchedulesSupportedPerUser", id: 0x14, type: "uint8", access: "R V",
+        conformance: "WDSCH", constraint: "max 253", default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfHolidaySchedulesSupported", id: 0x16, type: "uint8",
-        default: 0, constraint: "max 253", conformance: "HDSCH", access: "R V", quality: "F"
-    }),
-    Attribute({ name: "MaxPinCodeLength", id: 0x17, type: "uint8", conformance: "PIN", access: "R V", quality: "F" }),
-    Attribute({ name: "MinPinCodeLength", id: 0x18, type: "uint8", conformance: "PIN", access: "R V", quality: "F" }),
-    Attribute({ name: "MaxRfidCodeLength", id: 0x19, type: "uint8", conformance: "RID", access: "R V", quality: "F" }),
-    Attribute({ name: "MinRfidCodeLength", id: 0x1a, type: "uint8", conformance: "RID", access: "R V", quality: "F" }),
-    Attribute({
-        name: "CredentialRulesSupport", id: 0x1b, type: "CredentialRulesBitmap",
-        default: 1, conformance: "USR", access: "R V", quality: "F"
+        name: "NumberOfYearDaySchedulesSupportedPerUser", id: 0x15, type: "uint8", access: "R V",
+        conformance: "YDSCH", constraint: "max 253", default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfCredentialsSupportedPerUser", id: 0x1c, type: "uint8",
-        default: 0, conformance: "USR", access: "R V", quality: "F"
+        name: "NumberOfHolidaySchedulesSupported", id: 0x16, type: "uint8", access: "R V",
+        conformance: "HDSCH", constraint: "max 253", default: 0, quality: "F"
+    }),
+    Attribute({ name: "MaxPinCodeLength", id: 0x17, type: "uint8", access: "R V", conformance: "PIN", quality: "F" }),
+    Attribute({ name: "MinPinCodeLength", id: 0x18, type: "uint8", access: "R V", conformance: "PIN", quality: "F" }),
+    Attribute({ name: "MaxRfidCodeLength", id: 0x19, type: "uint8", access: "R V", conformance: "RID", quality: "F" }),
+    Attribute({ name: "MinRfidCodeLength", id: 0x1a, type: "uint8", access: "R V", conformance: "RID", quality: "F" }),
+    Attribute({
+        name: "CredentialRulesSupport", id: 0x1b, type: "CredentialRulesBitmap", access: "R V",
+        conformance: "USR", default: 1, quality: "F"
     }),
     Attribute({
-        name: "Language", id: 0x21, type: "string",
-        constraint: "max 3", conformance: "O", access: "R[W] VM", quality: "P"
+        name: "NumberOfCredentialsSupportedPerUser", id: 0x1c, type: "uint8", access: "R V",
+        conformance: "USR", default: 0, quality: "F"
     }),
     Attribute({
-        name: "LedSettings", id: 0x22, type: "LEDSettingEnum",
-        default: 0, conformance: "O", access: "R[W] VM", quality: "P"
-    }),
-    Attribute({ name: "AutoRelockTime", id: 0x23, type: "uint32", conformance: "O", access: "R[W] VM", quality: "P" }),
-    Attribute({
-        name: "SoundVolume", id: 0x24, type: "SoundVolumeEnum",
-        default: 0, conformance: "O", access: "R[W] VM", quality: "P"
+        name: "Language", id: 0x21, type: "string", access: "R[W] VM", conformance: "O",
+        constraint: "max 3", quality: "P"
     }),
     Attribute({
-        name: "OperatingMode", id: 0x25, type: "OperatingModeEnum",
-        default: 0, constraint: "desc", conformance: "M", access: "R[W] VM", quality: "P"
+        name: "LedSettings", id: 0x22, type: "LEDSettingEnum", access: "R[W] VM", conformance: "O",
+        default: 0, quality: "P"
+    }),
+    Attribute({ name: "AutoRelockTime", id: 0x23, type: "uint32", access: "R[W] VM", conformance: "O", quality: "P" }),
+    Attribute({
+        name: "SoundVolume", id: 0x24, type: "SoundVolumeEnum", access: "R[W] VM", conformance: "O",
+        default: 0, quality: "P"
     }),
     Attribute({
-        name: "SupportedOperatingModes", id: 0x26, type: "OperatingModesBitmap",
-        default: 65526, conformance: "M", access: "R V", quality: "F"
+        name: "OperatingMode", id: 0x25, type: "OperatingModeEnum", access: "R[W] VM", conformance: "M",
+        constraint: "desc", default: 0, quality: "P"
     }),
     Attribute({
-        name: "DefaultConfigurationRegister", id: 0x27, type: "ConfigurationRegisterBitmap",
-        default: 0, conformance: "O", access: "R V", quality: "P"
+        name: "SupportedOperatingModes", id: 0x26, type: "OperatingModesBitmap", access: "R V",
+        conformance: "M", default: 65526, quality: "F"
     }),
     Attribute({
-        name: "EnableLocalProgramming", id: 0x28, type: "bool",
-        default: true, conformance: "O", access: "R[W] VA", quality: "P"
+        name: "DefaultConfigurationRegister", id: 0x27, type: "ConfigurationRegisterBitmap", access: "R V",
+        conformance: "O", default: 0, quality: "P"
     }),
     Attribute({
-        name: "EnableOneTouchLocking", id: 0x29, type: "bool",
-        default: true, conformance: "O", access: "RW VM", quality: "P"
+        name: "EnableLocalProgramming", id: 0x28, type: "bool", access: "R[W] VA", conformance: "O",
+        default: true, quality: "P"
     }),
     Attribute({
-        name: "EnableInsideStatusLed", id: 0x2a, type: "bool",
-        default: true, conformance: "O", access: "RW VM", quality: "P"
+        name: "EnableOneTouchLocking", id: 0x29, type: "bool", access: "RW VM", conformance: "O",
+        default: true, quality: "P"
     }),
     Attribute({
-        name: "EnablePrivacyModeButton", id: 0x2b, type: "bool",
-        default: true, conformance: "O", access: "RW VM", quality: "P"
+        name: "EnableInsideStatusLed", id: 0x2a, type: "bool", access: "RW VM", conformance: "O",
+        default: true, quality: "P"
+    }),
+    Attribute({
+        name: "EnablePrivacyModeButton", id: 0x2b, type: "bool", access: "RW VM", conformance: "O",
+        default: true, quality: "P"
     }),
     Attribute({
         name: "LocalProgrammingFeatures", id: 0x2c, type: "LocalProgrammingFeaturesBitmap",
-        default: 0, conformance: "O", access: "R[W] VA", quality: "P"
+        access: "R[W] VA", conformance: "O", default: 0, quality: "P"
     }),
     Attribute({
-        name: "WrongCodeEntryLimit", id: 0x30, type: "uint8",
-        constraint: "1 to 255", conformance: "PIN | RID", access: "R[W] VA", quality: "P"
+        name: "WrongCodeEntryLimit", id: 0x30, type: "uint8", access: "R[W] VA", conformance: "PIN | RID",
+        constraint: "1 to 255", quality: "P"
     }),
     Attribute({
-        name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8",
-        constraint: "1 to 255", conformance: "PIN | RID", access: "R[W] VA", quality: "P"
+        name: "UserCodeTemporaryDisableTime", id: 0x31, type: "uint8", access: "R[W] VA",
+        conformance: "PIN | RID", constraint: "1 to 255", quality: "P"
     }),
     Attribute({
-        name: "SendPinOverTheAir", id: 0x32, type: "bool",
-        default: true, conformance: "[!USR & PIN]", access: "R[W] VA", quality: "P"
-    }),
-    Attribute({ name: "RequirePinForRemoteOperation", id: 0x33, type: "bool", default: true, access: "R[W] VA", quality: "P" }),
-    Attribute({ name: "SecurityLevel", id: 0x34, default: "0", conformance: "D", access: "R V" }),
-    Attribute({
-        name: "ExpiringUserTimeout", id: 0x35, type: "uint16",
-        constraint: "1 to 2880", conformance: "[USR]", access: "R[W] VA", quality: "P"
+        name: "SendPinOverTheAir", id: 0x32, type: "bool", access: "R[W] VA", conformance: "[!USR & PIN]",
+        default: true, quality: "P"
     }),
     Attribute({
-        name: "AlarmMask", id: 0x40, type: "AlarmMaskBitmap",
-        default: 65535, conformance: "O", access: "RW VA", quality: "P"
+        name: "RequirePinForRemoteOperation", id: 0x33, type: "bool", access: "R[W] VA",
+        conformance: "COTA & PIN", default: true, quality: "P"
+    }),
+    Attribute({ name: "SecurityLevel", id: 0x34, access: "R V", conformance: "D", default: "0" }),
+    Attribute({
+        name: "ExpiringUserTimeout", id: 0x35, type: "uint16", access: "R[W] VA", conformance: "[USR]",
+        constraint: "1 to 2880", quality: "P"
     }),
     Attribute({
-        name: "AliroReaderVerificationKey", id: 0x80, type: "octstr",
-        default: null, constraint: "65", conformance: "ALIRO", access: "R A", quality: "X"
+        name: "AlarmMask", id: 0x40, type: "AlarmMaskBitmap", access: "RW VA", conformance: "O",
+        default: 65535, quality: "P"
     }),
     Attribute({
-        name: "AliroReaderGroupIdentifier", id: 0x81, type: "octstr",
-        default: null, constraint: "16", conformance: "ALIRO", access: "R A", quality: "X"
+        name: "AliroReaderVerificationKey", id: 0x80, type: "octstr", access: "R A", conformance: "ALIRO",
+        constraint: "65", default: null, quality: "X"
     }),
     Attribute({
-        name: "AliroReaderGroupSubIdentifier", id: 0x82, type: "octstr",
-        constraint: "16", conformance: "ALIRO", access: "R A", quality: "F"
+        name: "AliroReaderGroupIdentifier", id: 0x81, type: "octstr", access: "R A", conformance: "ALIRO",
+        constraint: "16", default: null, quality: "X"
+    }),
+    Attribute({
+        name: "AliroReaderGroupSubIdentifier", id: 0x82, type: "octstr", access: "R A",
+        conformance: "ALIRO", constraint: "16", quality: "F"
     }),
 
     Attribute(
         {
-            name: "AliroExpeditedTransactionSupportedProtocolVersions", id: 0x83, type: "list",
-            default: [], constraint: "max 16[2]", conformance: "ALIRO", access: "R A", quality: "F"
+            name: "AliroExpeditedTransactionSupportedProtocolVersions", id: 0x83, type: "list", access: "R A",
+            conformance: "ALIRO", constraint: "max 16[2]", default: [], quality: "F"
         },
         Field({ name: "entry", type: "octstr" })
     ),
 
     Attribute({
-        name: "AliroGroupResolvingKey", id: 0x84, type: "octstr",
-        default: null, constraint: "16", conformance: "ALBU", access: "R A", quality: "X"
+        name: "AliroGroupResolvingKey", id: 0x84, type: "octstr", access: "R A", conformance: "ALBU",
+        constraint: "16", default: null, quality: "X"
     }),
 
     Attribute(
         {
-            name: "AliroSupportedBleuwbProtocolVersions", id: 0x85, type: "list",
-            default: [], constraint: "max 16[2]", conformance: "ALBU", access: "R A", quality: "F"
+            name: "AliroSupportedBleuwbProtocolVersions", id: 0x85, type: "list", access: "R A",
+            conformance: "ALBU", constraint: "max 16[2]", default: [], quality: "F"
         },
         Field({ name: "entry", type: "octstr" })
     ),
 
     Attribute({
-        name: "AliroBleAdvertisingVersion", id: 0x86, type: "uint8",
-        default: 0, conformance: "ALBU", access: "R A", quality: "F"
+        name: "AliroBleAdvertisingVersion", id: 0x86, type: "uint8", access: "R A", conformance: "ALBU",
+        default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfAliroCredentialIssuerKeysSupported", id: 0x87, type: "uint16",
-        default: 0, conformance: "ALIRO", access: "R V", quality: "F"
+        name: "NumberOfAliroCredentialIssuerKeysSupported", id: 0x87, type: "uint16", access: "R V",
+        conformance: "ALIRO", default: 0, quality: "F"
     }),
     Attribute({
-        name: "NumberOfAliroEndpointKeysSupported", id: 0x88, type: "uint16",
-        default: 0, conformance: "ALIRO", access: "R V", quality: "F"
+        name: "NumberOfAliroEndpointKeysSupported", id: 0x88, type: "uint16", access: "R V",
+        conformance: "ALIRO", default: 0, quality: "F"
     }),
     Event(
-        { name: "DoorLockAlarm", id: 0x0, conformance: "M", access: "V", priority: "critical" },
+        { name: "DoorLockAlarm", id: 0x0, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "AlarmCode", id: 0x0, type: "AlarmCodeEnum", conformance: "M" })
     ),
     Event(
-        { name: "DoorStateChange", id: 0x1, conformance: "DPS", access: "V", priority: "critical" },
+        { name: "DoorStateChange", id: 0x1, access: "V", conformance: "DPS", priority: "critical" },
         Field({ name: "DoorState", id: 0x0, type: "DoorStateEnum", conformance: "M" })
     ),
 
     Event(
-        { name: "LockOperation", id: 0x2, conformance: "M", access: "V", priority: "critical" },
+        { name: "LockOperation", id: 0x2, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "LockOperationType", id: 0x0, type: "LockOperationTypeEnum", conformance: "M" }),
         Field({ name: "OperationSource", id: 0x1, type: "OperationSourceEnum", conformance: "M" }),
         Field({ name: "UserIndex", id: 0x2, type: "uint16", conformance: "M", quality: "X" }),
@@ -218,15 +221,15 @@ export const DoorLock = Cluster(
 
         Field(
             {
-                name: "Credentials", id: 0x5, type: "list",
-                constraint: "1 to numberOfCredentialsSupportedPerUser", conformance: "[USR]", quality: "X"
+                name: "Credentials", id: 0x5, type: "list", conformance: "[USR]",
+                constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X"
             },
             Field({ name: "entry", type: "CredentialStruct" })
         )
     ),
 
     Event(
-        { name: "LockOperationError", id: 0x3, conformance: "M", access: "V", priority: "critical" },
+        { name: "LockOperationError", id: 0x3, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "LockOperationType", id: 0x0, type: "LockOperationTypeEnum", conformance: "M" }),
         Field({ name: "OperationSource", id: 0x1, type: "OperationSourceEnum", conformance: "M" }),
         Field({ name: "OperationError", id: 0x2, type: "OperationErrorEnum", conformance: "M" }),
@@ -236,20 +239,20 @@ export const DoorLock = Cluster(
 
         Field(
             {
-                name: "Credentials", id: 0x6, type: "list",
-                constraint: "1 to numberOfCredentialsSupportedPerUser", conformance: "[USR]", quality: "X"
+                name: "Credentials", id: 0x6, type: "list", conformance: "[USR]",
+                constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X"
             },
             Field({ name: "entry", type: "CredentialStruct" })
         )
     ),
 
     Event(
-        { name: "LockUserChange", id: 0x4, conformance: "USR", access: "V", priority: "info" },
+        { name: "LockUserChange", id: 0x4, access: "V", conformance: "USR", priority: "info" },
         Field({ name: "LockDataType", id: 0x0, type: "LockDataTypeEnum", conformance: "M" }),
         Field({ name: "DataOperationType", id: 0x1, type: "DataOperationTypeEnum", conformance: "M" }),
         Field({
-            name: "OperationSource", id: 0x2, type: "OperationSourceEnum",
-            constraint: "aliro, unspecified, keypad, remote", conformance: "M"
+            name: "OperationSource", id: 0x2, type: "OperationSourceEnum", conformance: "M",
+            constraint: "aliro, unspecified, keypad, remote"
         }),
         Field({ name: "UserIndex", id: 0x3, type: "uint16", conformance: "M", quality: "X" }),
         Field({ name: "FabricIndex", id: 0x4, type: "fabric-idx", conformance: "M", quality: "X" }),
@@ -258,19 +261,19 @@ export const DoorLock = Cluster(
     ),
 
     Command(
-        { name: "LockDoor", id: 0x0, conformance: "M", access: "O T", direction: "request", response: "status" },
+        { name: "LockDoor", id: 0x0, access: "O T", conformance: "M", direction: "request", response: "status" },
         Field({ name: "PinCode", id: 0x0, type: "octstr", conformance: "[COTA & PIN]" })
     ),
     Command(
-        { name: "UnlockDoor", id: 0x1, conformance: "M", access: "O T", direction: "request", response: "status" },
+        { name: "UnlockDoor", id: 0x1, access: "O T", conformance: "M", direction: "request", response: "status" },
         Field({ name: "PinCode", id: 0x0, type: "octstr", conformance: "[COTA & PIN]" })
     ),
-    Command({ name: "Toggle", id: 0x2, conformance: "X", access: "O T", direction: "request", response: "status" }),
+    Command({ name: "Toggle", id: 0x2, access: "O T", conformance: "X", direction: "request", response: "status" }),
 
     Command(
         {
-            name: "UnlockWithTimeout", id: 0x3,
-            conformance: "O", access: "O T", direction: "request", response: "status"
+            name: "UnlockWithTimeout", id: 0x3, access: "O T", conformance: "O", direction: "request",
+            response: "status"
         },
         Field({ name: "Timeout", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "PinCode", id: 0x1, type: "octstr", conformance: "[COTA & PIN]" })
@@ -278,157 +281,156 @@ export const DoorLock = Cluster(
 
     Command(
         {
-            name: "SetPinCode", id: 0x5,
-            conformance: "!USR & PIN", access: "A T", direction: "request", response: "status"
+            name: "SetPinCode", id: 0x5, access: "A T", conformance: "!USR & PIN", direction: "request",
+            response: "status"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserStatus", id: 0x1, type: "UserStatusEnum",
-            default: 1, constraint: "desc", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M", constraint: "desc",
+            default: 1, quality: "X"
         }),
-        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", default: 0, conformance: "M", quality: "X" }),
+        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", conformance: "M", default: 0, quality: "X" }),
         Field({ name: "Pin", id: 0x3, type: "octstr", conformance: "M" })
     ),
 
     Command(
         {
-            name: "GetPinCode", id: 0x6,
-            conformance: "!USR & PIN", access: "A", direction: "request", response: "GetPinCodeResponse"
+            name: "GetPinCode", id: 0x6, access: "A", conformance: "!USR & PIN", direction: "request",
+            response: "GetPinCodeResponse"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "GetPinCodeResponse", id: 0x6, conformance: "!USR & PIN", direction: "response" },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserStatus", id: 0x1, type: "UserStatusEnum",
-            default: 0, constraint: "desc", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M", constraint: "desc",
+            default: 0, quality: "X"
         }),
-        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", constraint: "desc", conformance: "M", quality: "X" }),
+        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", conformance: "M", constraint: "desc", quality: "X" }),
         Field({ name: "PinCode", id: 0x3, type: "octstr", conformance: "M", quality: "X" })
     ),
 
     Command(
         {
-            name: "ClearPinCode", id: 0x7,
-            conformance: "!USR & PIN", access: "A T", direction: "request", response: "status"
+            name: "ClearPinCode", id: 0x7, access: "A T", conformance: "!USR & PIN", direction: "request",
+            response: "status"
         },
         Field({
-            name: "PinSlotIndex", id: 0x0, type: "uint16",
-            constraint: "1 to numberOfPinUsersSupported, 65534", conformance: "M"
+            name: "PinSlotIndex", id: 0x0, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfPinUsersSupported, 65534"
         })
     ),
 
     Command({
-        name: "ClearAllPinCodes", id: 0x8,
-        conformance: "!USR & PIN", access: "A T", direction: "request", response: "status"
+        name: "ClearAllPinCodes", id: 0x8, access: "A T", conformance: "!USR & PIN", direction: "request",
+        response: "status"
     }),
 
     Command(
         {
-            name: "SetUserStatus", id: 0x9,
-            conformance: "!USR & (PIN | RID | FGP)", access: "A", direction: "request", response: "status"
+            name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (PIN | RID | FGP)",
+            direction: "request", response: "status"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
-        Field({ name: "UserStatus", id: 0x1, type: "UserStatusEnum", constraint: "desc", conformance: "M" })
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         {
-            name: "GetUserStatus", id: 0xa,
-            conformance: "!USR & (PIN | RID | FGP)", access: "A", direction: "request",
-            response: "GetUserStatusResponse"
+            name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (PIN | RID | FGP)",
+            direction: "request", response: "GetUserStatusResponse"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "GetUserStatusResponse", id: 0xa, conformance: "!USR", direction: "response" },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({ name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M" })
     ),
 
     Command(
         {
-            name: "SetWeekDaySchedule", id: 0xb,
-            conformance: "WDSCH", access: "A", direction: "request", response: "status"
+            name: "SetWeekDaySchedule", id: 0xb, access: "A", conformance: "WDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "WeekDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser", conformance: "M"
+            name: "WeekDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
         Field({ name: "DaysMask", id: 0x2, type: "DaysMaskBitmap", conformance: "M" }),
-        Field({ name: "StartHour", id: 0x3, type: "uint8", constraint: "max 23", conformance: "M" }),
-        Field({ name: "StartMinute", id: 0x4, type: "uint8", constraint: "max 59", conformance: "M" }),
-        Field({ name: "EndHour", id: 0x5, type: "uint8", constraint: "max 23", conformance: "M" }),
-        Field({ name: "EndMinute", id: 0x6, type: "uint8", constraint: "max 59", conformance: "M" })
+        Field({ name: "StartHour", id: 0x3, type: "uint8", conformance: "M", constraint: "max 23" }),
+        Field({ name: "StartMinute", id: 0x4, type: "uint8", conformance: "M", constraint: "max 59" }),
+        Field({ name: "EndHour", id: 0x5, type: "uint8", conformance: "M", constraint: "max 23" }),
+        Field({ name: "EndMinute", id: 0x6, type: "uint8", conformance: "M", constraint: "max 59" })
     ),
 
     Command(
         {
-            name: "GetWeekDaySchedule", id: 0xc,
-            conformance: "WDSCH", access: "A", direction: "request", response: "GetWeekDayScheduleResponse"
+            name: "GetWeekDaySchedule", id: 0xc, access: "A", conformance: "WDSCH", direction: "request",
+            response: "GetWeekDayScheduleResponse"
         },
         Field({
-            name: "WeekDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser", conformance: "M"
+            name: "WeekDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         })
     ),
 
     Command(
         { name: "GetWeekDayScheduleResponse", id: 0xc, conformance: "WDSCH", direction: "response" },
         Field({
-            name: "WeekDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser", conformance: "M"
+            name: "WeekDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
-        Field({ name: "Status", id: 0x2, type: "status", default: 0, constraint: "desc", conformance: "M" }),
+        Field({ name: "Status", id: 0x2, type: "status", conformance: "M", constraint: "desc", default: 0 }),
         Field({ name: "DaysMask", id: 0x3, type: "DaysMaskBitmap", conformance: "O" }),
-        Field({ name: "StartHour", id: 0x4, type: "uint8", constraint: "max 23", conformance: "O" }),
-        Field({ name: "StartMinute", id: 0x5, type: "uint8", constraint: "max 59", conformance: "O" }),
-        Field({ name: "EndHour", id: 0x6, type: "uint8", constraint: "max 23", conformance: "O" }),
-        Field({ name: "EndMinute", id: 0x7, type: "uint8", constraint: "max 59", conformance: "O" })
+        Field({ name: "StartHour", id: 0x4, type: "uint8", conformance: "O", constraint: "max 23" }),
+        Field({ name: "StartMinute", id: 0x5, type: "uint8", conformance: "O", constraint: "max 59" }),
+        Field({ name: "EndHour", id: 0x6, type: "uint8", conformance: "O", constraint: "max 23" }),
+        Field({ name: "EndMinute", id: 0x7, type: "uint8", conformance: "O", constraint: "max 59" })
     ),
 
     Command(
         {
-            name: "ClearWeekDaySchedule", id: 0xd,
-            conformance: "WDSCH", access: "A", direction: "request", response: "status"
+            name: "ClearWeekDaySchedule", id: 0xd, access: "A", conformance: "WDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "WeekDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser, 254", conformance: "M"
+            name: "WeekDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfWeekDaySchedulesSupportedPerUser, 254"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         })
     ),
 
     Command(
         {
-            name: "SetYearDaySchedule", id: 0xe,
-            conformance: "YDSCH", access: "A", direction: "request", response: "status"
+            name: "SetYearDaySchedule", id: 0xe, access: "A", conformance: "YDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "YearDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser", conformance: "M"
+            name: "YearDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
         Field({ name: "LocalStartTime", id: 0x2, type: "epoch-s", conformance: "M" }),
         Field({ name: "LocalEndTime", id: 0x3, type: "epoch-s", conformance: "M" })
@@ -436,57 +438,57 @@ export const DoorLock = Cluster(
 
     Command(
         {
-            name: "GetYearDaySchedule", id: 0xf,
-            conformance: "YDSCH", access: "A", direction: "request", response: "GetYearDayScheduleResponse"
+            name: "GetYearDaySchedule", id: 0xf, access: "A", conformance: "YDSCH", direction: "request",
+            response: "GetYearDayScheduleResponse"
         },
         Field({
-            name: "YearDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser", conformance: "M"
+            name: "YearDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         })
     ),
 
     Command(
-        { name: "GetYearDayScheduleResponse", id: 0xf, direction: "response" },
+        { name: "GetYearDayScheduleResponse", id: 0xf, conformance: "YDSCH", direction: "response" },
         Field({
-            name: "YearDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser", conformance: "M"
+            name: "YearDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
-        Field({ name: "Status", id: 0x2, type: "status", default: 0, constraint: "desc" }),
-        Field({ name: "LocalStartTime", id: 0x3, type: "epoch-s" }),
-        Field({ name: "LocalEndTime", id: 0x4, type: "epoch-s" })
+        Field({ name: "Status", id: 0x2, type: "status", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ name: "LocalStartTime", id: 0x3, type: "epoch-s", conformance: "O" }),
+        Field({ name: "LocalEndTime", id: 0x4, type: "epoch-s", conformance: "O" })
     ),
 
     Command(
         {
-            name: "ClearYearDaySchedule", id: 0x10,
-            conformance: "YDSCH", access: "A", direction: "request", response: "status"
+            name: "ClearYearDaySchedule", id: 0x10, access: "A", conformance: "YDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "YearDayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser, 254", conformance: "M"
+            name: "YearDayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfYearDaySchedulesSupportedPerUser, 254"
         }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         })
     ),
 
     Command(
         {
-            name: "SetHolidaySchedule", id: 0x11,
-            conformance: "HDSCH", access: "A", direction: "request", response: "status"
+            name: "SetHolidaySchedule", id: 0x11, access: "A", conformance: "HDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "HolidayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfHolidaySchedulesSupported", conformance: "M"
+            name: "HolidayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfHolidaySchedulesSupported"
         }),
         Field({ name: "LocalStartTime", id: 0x1, type: "epoch-s", conformance: "M" }),
         Field({ name: "LocalEndTime", id: 0x2, type: "epoch-s", conformance: "M" }),
@@ -495,22 +497,22 @@ export const DoorLock = Cluster(
 
     Command(
         {
-            name: "GetHolidaySchedule", id: 0x12,
-            conformance: "HDSCH", access: "A", direction: "request", response: "GetHolidayScheduleResponse"
+            name: "GetHolidaySchedule", id: 0x12, access: "A", conformance: "HDSCH", direction: "request",
+            response: "GetHolidayScheduleResponse"
         },
         Field({
-            name: "HolidayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfHolidaySchedulesSupported", conformance: "M"
+            name: "HolidayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfHolidaySchedulesSupported"
         })
     ),
 
     Command(
         { name: "GetHolidayScheduleResponse", id: 0x12, conformance: "HDSCH", direction: "response" },
         Field({
-            name: "HolidayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfHolidaySchedulesSupported", conformance: "M"
+            name: "HolidayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfHolidaySchedulesSupported"
         }),
-        Field({ name: "Status", id: 0x1, type: "status", default: 0, constraint: "desc", conformance: "M" }),
+        Field({ name: "Status", id: 0x1, type: "status", conformance: "M", constraint: "desc", default: 0 }),
         Field({ name: "LocalStartTime", id: 0x2, type: "epoch-s", conformance: "O", quality: "X" }),
         Field({ name: "LocalEndTime", id: 0x3, type: "epoch-s", conformance: "O", quality: "X" }),
         Field({ name: "OperatingMode", id: 0x4, type: "OperatingModeEnum", conformance: "O", quality: "X" })
@@ -518,145 +520,141 @@ export const DoorLock = Cluster(
 
     Command(
         {
-            name: "ClearHolidaySchedule", id: 0x13,
-            conformance: "HDSCH", access: "A", direction: "request", response: "status"
+            name: "ClearHolidaySchedule", id: 0x13, access: "A", conformance: "HDSCH", direction: "request",
+            response: "status"
         },
         Field({
-            name: "HolidayIndex", id: 0x0, type: "uint8",
-            constraint: "1 to numberOfHolidaySchedulesSupported, 254", conformance: "M"
+            name: "HolidayIndex", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "1 to numberOfHolidaySchedulesSupported, 254"
         })
     ),
 
     Command(
         {
-            name: "SetUserType", id: 0x14,
-            conformance: "!USR & (PIN | RID | FGP)", access: "A", direction: "request", response: "status"
+            name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID | FGP)",
+            direction: "request", response: "status"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({ name: "UserType", id: 0x1, type: "UserTypeEnum", conformance: "M" })
     ),
 
     Command(
         {
-            name: "GetUserType", id: 0x15,
-            conformance: "!USR & (PIN | RID | FGP)", access: "A", direction: "request",
-            response: "GetUserTypeResponse"
+            name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID | FGP)",
+            direction: "request", response: "GetUserTypeResponse"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "GetUserTypeResponse", id: 0x15, conformance: "!USR", direction: "response" },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({ name: "UserType", id: 0x1, type: "UserTypeEnum", conformance: "M" })
     ),
 
     Command(
         {
-            name: "SetRfidCode", id: 0x16,
-            conformance: "!USR & RID", access: "A T", direction: "request", response: "status"
+            name: "SetRfidCode", id: 0x16, access: "A T", conformance: "!USR & RID", direction: "request",
+            response: "status"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserStatus", id: 0x1, type: "UserStatusEnum",
-            default: 1, constraint: "desc", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M", constraint: "desc",
+            default: 1, quality: "X"
         }),
         Field({
-            name: "UserType", id: 0x2, type: "UserTypeEnum",
-            default: 0, constraint: "desc", conformance: "M", quality: "X"
+            name: "UserType", id: 0x2, type: "UserTypeEnum", conformance: "M", constraint: "desc", default: 0,
+            quality: "X"
         }),
         Field({ name: "RfidCode", id: 0x3, type: "octstr", conformance: "M" })
     ),
 
     Command(
         {
-            name: "GetRfidCode", id: 0x17,
-            conformance: "!USR & RID", access: "A", direction: "request", response: "GetRfidCodeResponse"
+            name: "GetRfidCode", id: 0x17, access: "A", conformance: "!USR & RID", direction: "request",
+            response: "GetRfidCodeResponse"
         },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "GetRfidCodeResponse", id: 0x17, conformance: "!USR & RID", direction: "response" },
-        Field({ name: "UserId", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "UserId", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserStatus", id: 0x1, type: "UserStatusEnum",
-            default: 0, constraint: "desc", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x1, type: "UserStatusEnum", conformance: "M", constraint: "desc",
+            default: 0, quality: "X"
         }),
-        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", constraint: "desc", conformance: "M", quality: "X" }),
+        Field({ name: "UserType", id: 0x2, type: "UserTypeEnum", conformance: "M", constraint: "desc", quality: "X" }),
         Field({ name: "RfidCode", id: 0x3, type: "octstr", conformance: "M", quality: "X" })
     ),
 
     Command(
         {
-            name: "ClearRfidCode", id: 0x18,
-            conformance: "!USR & RID", access: "A T", direction: "request", response: "status"
+            name: "ClearRfidCode", id: 0x18, access: "A T", conformance: "!USR & RID", direction: "request",
+            response: "status"
         },
         Field({
-            name: "RfidSlotIndex", id: 0x0, type: "uint16",
-            constraint: "1 to numberOfRfidUsersSupported, 65534", conformance: "M"
+            name: "RfidSlotIndex", id: 0x0, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfRfidUsersSupported, 65534"
         })
     ),
 
     Command({
-        name: "ClearAllRfidCodes", id: 0x19,
-        conformance: "!USR & RID", access: "A T", direction: "request", response: "status"
+        name: "ClearAllRfidCodes", id: 0x19, access: "A T", conformance: "!USR & RID", direction: "request",
+        response: "status"
     }),
 
     Command(
-        { name: "SetUser", id: 0x1a, conformance: "USR", access: "A T", direction: "request", response: "status" },
-        Field({ name: "OperationType", id: 0x0, type: "DataOperationTypeEnum", constraint: "add, modify", conformance: "M" }),
+        { name: "SetUser", id: 0x1a, access: "A T", conformance: "USR", direction: "request", response: "status" },
+        Field({ name: "OperationType", id: 0x0, type: "DataOperationTypeEnum", conformance: "M", constraint: "add, modify" }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
-        Field({ name: "UserName", id: 0x2, type: "string", constraint: "max 10", conformance: "M", quality: "X" }),
-        Field({ name: "UserUniqueId", id: 0x3, type: "uint32", default: 4294967295, conformance: "M", quality: "X" }),
+        Field({ name: "UserName", id: 0x2, type: "string", conformance: "M", constraint: "max 10", quality: "X" }),
+        Field({ name: "UserUniqueId", id: 0x3, type: "uint32", conformance: "M", default: 4294967295, quality: "X" }),
         Field({
-            name: "UserStatus", id: 0x4, type: "UserStatusEnum",
-            default: 1, constraint: "occupiedEnabled, occupiedDisabled", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x4, type: "UserStatusEnum", conformance: "M",
+            constraint: "occupiedEnabled, occupiedDisabled", default: 1, quality: "X"
         }),
-
         Field({
-            name: "UserType", id: 0x5, type: "UserTypeEnum",
-            default: 0,
+            name: "UserType", id: 0x5, type: "UserTypeEnum", conformance: "M",
             constraint: "unrestrictedUser, nonAccessUser, forcedUser, disposableUser, expiringUser, scheduleRestrictedUser, remoteOnlyUser",
-            conformance: "M", quality: "X"
+            default: 0, quality: "X"
         }),
-
-        Field({ name: "CredentialRule", id: 0x6, type: "CredentialRuleEnum", default: 0, conformance: "M", quality: "X" })
+        Field({ name: "CredentialRule", id: 0x6, type: "CredentialRuleEnum", conformance: "M", default: 0, quality: "X" })
     ),
 
     Command(
         {
-            name: "GetUser", id: 0x1b,
-            conformance: "USR", access: "A", direction: "request", response: "GetUserResponse"
+            name: "GetUser", id: 0x1b, access: "A", conformance: "USR", direction: "request",
+            response: "GetUserResponse"
         },
         Field({
-            name: "UserIndex", id: 0x0, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x0, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         })
     ),
 
     Command(
         { name: "GetUserResponse", id: 0x1c, conformance: "USR", direction: "response" },
         Field({
-            name: "UserIndex", id: 0x0, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M"
+            name: "UserIndex", id: 0x0, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported"
         }),
-        Field({ name: "UserName", id: 0x1, type: "string", constraint: "max 10", conformance: "M", quality: "X" }),
-        Field({ name: "UserUniqueId", id: 0x2, type: "uint32", default: 0, conformance: "M", quality: "X" }),
-        Field({ name: "UserStatus", id: 0x3, type: "UserStatusEnum", default: 0, conformance: "M", quality: "X" }),
-        Field({ name: "UserType", id: 0x4, type: "UserTypeEnum", default: 0, conformance: "M", quality: "X" }),
+        Field({ name: "UserName", id: 0x1, type: "string", conformance: "M", constraint: "max 10", quality: "X" }),
+        Field({ name: "UserUniqueId", id: 0x2, type: "uint32", conformance: "M", default: 0, quality: "X" }),
+        Field({ name: "UserStatus", id: 0x3, type: "UserStatusEnum", conformance: "M", default: 0, quality: "X" }),
+        Field({ name: "UserType", id: 0x4, type: "UserTypeEnum", conformance: "M", default: 0, quality: "X" }),
         Field({
-            name: "CredentialRule", id: 0x5, type: "CredentialRuleEnum",
-            default: 0, constraint: "desc", conformance: "M", quality: "X"
+            name: "CredentialRule", id: 0x5, type: "CredentialRuleEnum", conformance: "M", constraint: "desc",
+            default: 0, quality: "X"
         }),
 
         Field(
             {
-                name: "Credentials", id: 0x6, type: "list",
-                constraint: "0 to numberOfCredentialsSupportedPerUser", conformance: "M", quality: "X"
+                name: "Credentials", id: 0x6, type: "list", conformance: "M",
+                constraint: "0 to numberOfCredentialsSupportedPerUser", quality: "X"
             },
             Field({ name: "entry", type: "CredentialStruct" })
         ),
@@ -664,58 +662,56 @@ export const DoorLock = Cluster(
         Field({ name: "CreatorFabricIndex", id: 0x7, type: "fabric-idx", conformance: "M", quality: "X" }),
         Field({ name: "LastModifiedFabricIndex", id: 0x8, type: "fabric-idx", conformance: "M", quality: "X" }),
         Field({
-            name: "NextUserIndex", id: 0x9, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M", quality: "X"
+            name: "NextUserIndex", id: 0x9, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported", quality: "X"
         })
     ),
 
     Command(
-        { name: "ClearUser", id: 0x1d, conformance: "USR", access: "A T", direction: "request", response: "status" },
+        { name: "ClearUser", id: 0x1d, access: "A T", conformance: "USR", direction: "request", response: "status" },
         Field({
-            name: "UserIndex", id: 0x0, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported, 65534", conformance: "M"
+            name: "UserIndex", id: 0x0, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported, 65534"
         })
     ),
 
     Command(
         {
-            name: "SetCredential", id: 0x22,
-            conformance: "USR", access: "A T", direction: "request", response: "SetCredentialResponse"
+            name: "SetCredential", id: 0x22, access: "A T", conformance: "USR", direction: "request",
+            response: "SetCredentialResponse"
         },
-        Field({ name: "OperationType", id: 0x0, type: "DataOperationTypeEnum", constraint: "add, modify", conformance: "M" }),
+        Field({ name: "OperationType", id: 0x0, type: "DataOperationTypeEnum", conformance: "M", constraint: "add, modify" }),
         Field({ name: "Credential", id: 0x1, type: "CredentialStruct", conformance: "M" }),
-        Field({ name: "CredentialData", id: 0x2, type: "octstr", constraint: "desc", conformance: "M" }),
+        Field({ name: "CredentialData", id: 0x2, type: "octstr", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserIndex", id: 0x3, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M", quality: "X"
+            name: "UserIndex", id: 0x3, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported", quality: "X"
         }),
         Field({
-            name: "UserStatus", id: 0x4, type: "UserStatusEnum",
-            default: 1, constraint: "occupiedEnabled, occupiedDisabled", conformance: "M", quality: "X"
+            name: "UserStatus", id: 0x4, type: "UserStatusEnum", conformance: "M",
+            constraint: "occupiedEnabled, occupiedDisabled", default: 1, quality: "X"
         }),
-
         Field({
-            name: "UserType", id: 0x5, type: "UserTypeEnum",
-            default: 0,
+            name: "UserType", id: 0x5, type: "UserTypeEnum", conformance: "M",
             constraint: "unrestrictedUser, programmingUser, nonAccessUser, forcedUser, disposableUser, expiringUser, remoteOnlyUser",
-            conformance: "M", quality: "X"
+            default: 0, quality: "X"
         })
     ),
 
     Command(
         { name: "SetCredentialResponse", id: 0x23, conformance: "USR", direction: "response" },
-        Field({ name: "Status", id: 0x0, type: "status", constraint: "desc", conformance: "M" }),
+        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            default: 0, constraint: "1 to numberOfTotalUsersSupported", conformance: "M", quality: "X"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported", default: 0, quality: "X"
         }),
-        Field({ name: "NextCredentialIndex", id: 0x2, type: "uint16", constraint: "desc", conformance: "O", quality: "X" })
+        Field({ name: "NextCredentialIndex", id: 0x2, type: "uint16", conformance: "O", constraint: "desc", quality: "X" })
     ),
 
     Command(
         {
-            name: "GetCredentialStatus", id: 0x24,
-            conformance: "USR", access: "A", direction: "request", response: "GetCredentialStatusResponse"
+            name: "GetCredentialStatus", id: 0x24, access: "A", conformance: "USR", direction: "request",
+            response: "GetCredentialStatusResponse"
         },
         Field({ name: "Credential", id: 0x0, type: "CredentialStruct", conformance: "M" })
     ),
@@ -724,42 +720,42 @@ export const DoorLock = Cluster(
         { name: "GetCredentialStatusResponse", id: 0x25, conformance: "USR", direction: "response" },
         Field({ name: "CredentialExists", id: 0x0, type: "bool", conformance: "M" }),
         Field({
-            name: "UserIndex", id: 0x1, type: "uint16",
-            constraint: "1 to numberOfTotalUsersSupported", conformance: "M", quality: "X"
+            name: "UserIndex", id: 0x1, type: "uint16", conformance: "M",
+            constraint: "1 to numberOfTotalUsersSupported", quality: "X"
         }),
         Field({ name: "CreatorFabricIndex", id: 0x2, type: "fabric-idx", conformance: "M", quality: "X" }),
         Field({ name: "LastModifiedFabricIndex", id: 0x3, type: "fabric-idx", conformance: "M", quality: "X" }),
-        Field({ name: "NextCredentialIndex", id: 0x4, type: "uint16", constraint: "desc", conformance: "O", quality: "X" }),
-        Field({ name: "CredentialData", id: 0x5, type: "octstr", constraint: "desc", conformance: "[ALIRO]", quality: "X" })
+        Field({ name: "NextCredentialIndex", id: 0x4, type: "uint16", conformance: "O", constraint: "desc", quality: "X" }),
+        Field({ name: "CredentialData", id: 0x5, type: "octstr", conformance: "[ALIRO]", constraint: "desc", quality: "X" })
     ),
 
     Command(
         {
-            name: "ClearCredential", id: 0x26,
-            conformance: "USR", access: "A T", direction: "request", response: "status"
+            name: "ClearCredential", id: 0x26, access: "A T", conformance: "USR", direction: "request",
+            response: "status"
         },
-        Field({ name: "Credential", id: 0x0, type: "CredentialStruct", constraint: "desc", conformance: "M", quality: "X" })
+        Field({ name: "Credential", id: 0x0, type: "CredentialStruct", conformance: "M", constraint: "desc", quality: "X" })
     ),
 
     Command(
-        { name: "UnboltDoor", id: 0x27, conformance: "UBOLT", access: "O T", direction: "request", response: "status" },
+        { name: "UnboltDoor", id: 0x27, access: "O T", conformance: "UBOLT", direction: "request", response: "status" },
         Field({ name: "PinCode", id: 0x0, type: "octstr", conformance: "[COTA & PIN]" })
     ),
 
     Command(
         {
-            name: "SetAliroReaderConfig", id: 0x28,
-            conformance: "ALIRO", access: "A T", direction: "request", response: "status"
+            name: "SetAliroReaderConfig", id: 0x28, access: "A T", conformance: "ALIRO", direction: "request",
+            response: "status"
         },
-        Field({ name: "SigningKey", id: 0x0, type: "octstr", constraint: "32", conformance: "M" }),
-        Field({ name: "VerificationKey", id: 0x1, type: "octstr", constraint: "65", conformance: "M" }),
-        Field({ name: "GroupIdentifier", id: 0x2, type: "octstr", constraint: "16", conformance: "M" }),
-        Field({ name: "GroupResolvingKey", id: 0x3, type: "octstr", constraint: "16", conformance: "ALBU" })
+        Field({ name: "SigningKey", id: 0x0, type: "octstr", conformance: "M", constraint: "32" }),
+        Field({ name: "VerificationKey", id: 0x1, type: "octstr", conformance: "M", constraint: "65" }),
+        Field({ name: "GroupIdentifier", id: 0x2, type: "octstr", conformance: "M", constraint: "16" }),
+        Field({ name: "GroupResolvingKey", id: 0x3, type: "octstr", conformance: "ALBU", constraint: "16" })
     ),
 
     Command({
-        name: "ClearAliroReaderConfig", id: 0x29,
-        conformance: "ALIRO", access: "A T", direction: "request", response: "status"
+        name: "ClearAliroReaderConfig", id: 0x29, access: "A T", conformance: "ALIRO", direction: "request",
+        response: "status"
     }),
 
     Datatype(
@@ -787,7 +783,7 @@ export const DoorLock = Cluster(
         Field({ name: "Privacy", constraint: "2" }),
         Field({ name: "NoRemoteLockUnlock", constraint: "3" }),
         Field({ name: "Passage", constraint: "4" }),
-        Field({ name: "AlwaysSet", constraint: "5 to 15", conformance: "M" })
+        Field({ name: "AlwaysSet", conformance: "M", constraint: "5 to 15" })
     ),
 
     Datatype(
@@ -997,7 +993,7 @@ export const DoorLock = Cluster(
     Datatype(
         { name: "CredentialStruct", type: "struct" },
         Field({ name: "CredentialType", id: 0x0, type: "CredentialTypeEnum", conformance: "M" }),
-        Field({ name: "CredentialIndex", id: 0x1, type: "uint16", default: 0, conformance: "M" })
+        Field({ name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: 0 })
     ),
     Datatype(
         { name: "StatusCodeEnum", type: "enum8" },

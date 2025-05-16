@@ -15,8 +15,12 @@ import {
 
 export const UserLabel = Cluster(
     { name: "UserLabel", id: 0x41, type: "Label" },
+
     Attribute(
-        { name: "LabelList", id: 0x0, type: "list", default: [], constraint: "min 0", access: "RW VM", quality: "N" },
+        {
+            name: "LabelList", id: 0x0, type: "list", access: "RW VM", conformance: "M", constraint: "min 0",
+            default: [], quality: "N"
+        },
         Field({ name: "entry", type: "LabelStruct" })
     )
 );

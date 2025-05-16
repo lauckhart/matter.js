@@ -19,12 +19,12 @@ export const ValidProxies = Cluster(
     { name: "ValidProxies", id: 0x44 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { name: "ValidProxyList", id: 0x0, type: "list", default: [], conformance: "M", access: "RW", quality: "N F" },
+        { name: "ValidProxyList", id: 0x0, type: "list", access: "RW", conformance: "M", default: [], quality: "N F" },
         Field({ name: "entry", type: "ValidProxyStruct" })
     ),
     Command({
-        name: "GetValidProxiesRequest", id: 0x0,
-        conformance: "M", access: "O", direction: "request", response: "GetValidProxiesResponse"
+        name: "GetValidProxiesRequest", id: 0x0, access: "O", conformance: "M", direction: "request",
+        response: "GetValidProxiesResponse"
     }),
 
     Command(
@@ -37,7 +37,7 @@ export const ValidProxies = Cluster(
 
     Datatype(
         { name: "ValidProxyStruct", type: "struct" },
-        Field({ name: "NodeId", id: 0x1, type: "node-id", conformance: "M", access: "RW" })
+        Field({ name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M" })
     )
 );
 

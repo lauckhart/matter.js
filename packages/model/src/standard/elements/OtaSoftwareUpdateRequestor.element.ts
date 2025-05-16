@@ -22,54 +22,54 @@ export const OtaSoftwareUpdateRequestor = Cluster(
 
     Attribute(
         {
-            name: "DefaultOtaProviders", id: 0x0, type: "list",
-            default: [], constraint: "desc", conformance: "M", access: "RW F VA", quality: "N"
+            name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA", conformance: "M",
+            constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "ProviderLocation" })
     ),
 
-    Attribute({ name: "UpdatePossible", id: 0x1, type: "bool", default: true, conformance: "M", access: "R V" }),
-    Attribute({ name: "UpdateState", id: 0x2, type: "UpdateStateEnum", default: 0, conformance: "M", access: "R V" }),
+    Attribute({ name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M", default: true }),
+    Attribute({ name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V", conformance: "M", default: 0 }),
     Attribute({
-        name: "UpdateStateProgress", id: 0x3, type: "uint8",
-        default: null, constraint: "0 to 100", conformance: "M", access: "R V", quality: "X"
+        name: "UpdateStateProgress", id: 0x3, type: "uint8", access: "R V", conformance: "M",
+        constraint: "0 to 100", default: null, quality: "X"
     }),
 
     Event(
-        { name: "StateTransition", id: 0x0, conformance: "M", access: "V", priority: "info" },
-        Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", default: 0, conformance: "M" }),
+        { name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info" },
+        Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0 }),
         Field({ name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" }),
         Field({ name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" }),
-        Field({ name: "TargetSoftwareVersion", id: 0x3, type: "uint32", default: null, conformance: "M", quality: "X" })
+        Field({ name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: null, quality: "X" })
     ),
 
     Event(
-        { name: "VersionApplied", id: 0x1, conformance: "M", access: "V", priority: "critical" },
+        { name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical" },
         Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
         Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" })
     ),
 
     Event(
-        { name: "DownloadError", id: 0x2, conformance: "M", access: "V", priority: "info" },
+        { name: "DownloadError", id: 0x2, access: "V", conformance: "M", priority: "info" },
         Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
         Field({ name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" }),
         Field({
-            name: "ProgressPercent", id: 0x2, type: "uint8",
-            default: null, constraint: "0 to 100", conformance: "M", quality: "X"
+            name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M", constraint: "0 to 100",
+            default: null, quality: "X"
         }),
-        Field({ name: "PlatformCode", id: 0x3, type: "int64", default: null, conformance: "M", quality: "X" })
+        Field({ name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null, quality: "X" })
     ),
 
     Command(
         {
-            name: "AnnounceOtaProvider", id: 0x0,
-            conformance: "O", access: "A", direction: "request", response: "status"
+            name: "AnnounceOtaProvider", id: 0x0, access: "A", conformance: "O", direction: "request",
+            response: "status"
         },
-        Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", conformance: "M", access: "F" }),
-        Field({ name: "VendorId", id: 0x1, type: "vendor-id", conformance: "M", access: "F" }),
-        Field({ name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", conformance: "M", access: "F" }),
-        Field({ name: "MetadataForNode", id: 0x3, type: "octstr", constraint: "max 512", conformance: "O", access: "F" }),
-        Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", conformance: "M", access: "F" }),
+        Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M" }),
+        Field({ name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M" }),
+        Field({ name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M" }),
+        Field({ name: "MetadataForNode", id: 0x3, type: "octstr", access: "F", conformance: "O", constraint: "max 512" }),
+        Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
@@ -104,8 +104,8 @@ export const OtaSoftwareUpdateRequestor = Cluster(
 
     Datatype(
         { name: "ProviderLocation", type: "struct" },
-        Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", conformance: "M", access: "F" }),
-        Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", conformance: "M", access: "F" }),
+        Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" }),
+        Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );

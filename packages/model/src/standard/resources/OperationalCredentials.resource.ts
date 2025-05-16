@@ -9,15 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "OperationalCredentials",
-    classification: "node", pics: "OPCREDS",
+    tag: "cluster", name: "OperationalCredentials", classification: "node", pics: "OPCREDS",
+    xref: "core§11.18",
     details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
         "well as manage the associated Fabrics.",
-    xref: "core§11.18",
 
     children: [
         {
-            tag: "attribute", name: "Nocs",
+            tag: "attribute", name: "Nocs", xref: "core§11.18.5.1",
 
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
                 "\n" +
@@ -26,33 +25,28 @@ Resource.add({
                 "\n" +
                 "Upon Factory Data Reset, this attribute shall be set to a default value of an empty list." +
                 "\n" +
-                "The number of entries in this list shall match the number of entries in the Fabrics attribute.",
-
-            xref: "core§11.18.5.1"
+                "The number of entries in this list shall match the number of entries in the Fabrics attribute."
         },
 
         {
-            tag: "attribute", name: "Fabrics",
+            tag: "attribute", name: "Fabrics", xref: "core§11.18.5.2",
 
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list " +
                 "of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
                 "\n" +
                 "Upon Factory Data Reset, this attribute shall be set to a default value of an empty list." +
                 "\n" +
-                "The number of entries in this list shall match the number of entries in the NOCs attribute.",
-
-            xref: "core§11.18.5.2"
+                "The number of entries in this list shall match the number of entries in the NOCs attribute."
         },
 
         {
-            tag: "attribute", name: "SupportedFabrics",
+            tag: "attribute", name: "SupportedFabrics", xref: "core§11.18.5.3",
             details: "This attribute contains the number of Fabrics that are supported by the device. This value is fixed " +
-                "for a particular device.",
-            xref: "core§11.18.5.3"
+                "for a particular device."
         },
 
         {
-            tag: "attribute", name: "CommissionedFabrics",
+            tag: "attribute", name: "CommissionedFabrics", xref: "core§11.18.5.4",
 
             details: "This attribute contains the number of Fabrics to which the device is currently commissioned. This " +
                 "attribute shall be equal to the following:" +
@@ -61,13 +55,11 @@ Resource.add({
                 "\n" +
                 "  • The number of entries in the Fabrics attribute." +
                 "\n" +
-                "Upon Factory Data Reset, this attribute shall be set to a default value of 0.",
-
-            xref: "core§11.18.5.4"
+                "Upon Factory Data Reset, this attribute shall be set to a default value of 0."
         },
 
         {
-            tag: "attribute", name: "TrustedRootCertificates",
+            tag: "attribute", name: "TrustedRootCertificates", xref: "core§11.18.5.5",
 
             details: "This attribute shall contain a read-only list of Trusted Root CA Certificates (RCAC) installed on " +
                 "the Node, as octet strings containing their Matter Certificate Encoding representation." +
@@ -82,32 +74,28 @@ Resource.add({
                 "be cross-referenced with the NOC or ICAC certificates that appear in the NOCs attribute for a given " +
                 "fabric." +
                 "\n" +
-                "Upon Factory Data Reset, this attribute shall be set to a default value whereby the list is empty.",
-
-            xref: "core§11.18.5.5"
+                "Upon Factory Data Reset, this attribute shall be set to a default value whereby the list is empty."
         },
 
         {
-            tag: "attribute", name: "CurrentFabricIndex",
+            tag: "attribute", name: "CurrentFabricIndex", xref: "core§11.18.5.6",
             details: "This attribute shall contain accessing fabric index." +
                 "\n" +
                 "This attribute is useful to contextualize Fabric-Scoped entries obtained from response commands or " +
                 "attribute reads, since a given Fabric may be referenced by a different Fabric Index locally on a " +
-                "remote Node.",
-            xref: "core§11.18.5.6"
+                "remote Node."
         },
 
         {
-            tag: "command", name: "AttestationRequest",
+            tag: "command", name: "AttestationRequest", xref: "core§11.18.6.1",
             details: "This command shall be generated to request the Attestation Information, in the form of an " +
                 "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a " +
                 "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
-                "shall be used in the computation of the Attestation Information.",
-            xref: "core§11.18.6.1"
+                "shall be used in the computation of the Attestation Information."
         },
 
         {
-            tag: "command", name: "AttestationResponse",
+            tag: "command", name: "AttestationResponse", xref: "core§11.18.6.2",
 
             details: "This command shall be generated in response to an Attestation Request command." +
                 "\n" +
@@ -117,46 +105,37 @@ Resource.add({
                 "See Section F.2, “Device Attestation Response test vector” for an example computation of an " +
                 "AttestationResponse.",
 
-            xref: "core§11.18.6.2",
-
             children: [
                 {
-                    tag: "field", name: "AttestationElements",
-                    details: "This field shall contain the octet string of the serialized attestation_elements_message.",
-                    xref: "core§11.18.6.2.1"
+                    tag: "field", name: "AttestationElements", xref: "core§11.18.6.2.1",
+                    details: "This field shall contain the octet string of the serialized attestation_elements_message."
                 },
-
                 {
-                    tag: "field", name: "AttestationSignature",
+                    tag: "field", name: "AttestationSignature", xref: "core§11.18.6.2.2",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
-                        "Section 11.18.4.7, “Attestation Information”.",
-                    xref: "core§11.18.6.2.2"
+                        "Section 11.18.4.7, “Attestation Information”."
                 }
             ]
         },
 
         {
-            tag: "command", name: "CertificateChainRequest",
+            tag: "command", name: "CertificateChainRequest", xref: "core§11.18.6.3",
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail " +
-                "with a Status Code of INVALID_COMMAND.",
-            xref: "core§11.18.6.3"
+                "with a Status Code of INVALID_COMMAND."
         },
 
         {
-            tag: "command", name: "CertificateChainResponse",
+            tag: "command", name: "CertificateChainResponse", xref: "core§11.18.6.4",
             details: "This command shall be generated in response to a CertificateChainRequest command.",
-            xref: "core§11.18.6.4",
-
             children: [{
-                tag: "field", name: "Certificate",
+                tag: "field", name: "Certificate", xref: "core§11.18.6.4.1",
                 details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
-                    "CertificateChainRequest command.",
-                xref: "core§11.18.6.4.1"
+                    "CertificateChainRequest command."
             }]
         },
 
         {
-            tag: "command", name: "CsrRequest",
+            tag: "command", name: "CsrRequest", xref: "core§11.18.6.5",
 
             details: "This command shall be generated to execute the Node Operational CSR Procedure and subsequently " +
                 "return the NOCSR Information, in the form of a CSRResponse Command." +
@@ -183,13 +162,11 @@ Resource.add({
                 "If the Node Operational Key Pair generated during processing of the Node Operational CSR Procedure " +
                 "is found to collide with an existing key pair already previously generated and installed, and that " +
                 "check had been executed, then this command shall fail with a FAILURE status code sent back to the " +
-                "initiator.",
-
-            xref: "core§11.18.6.5"
+                "initiator."
         },
 
         {
-            tag: "command", name: "CsrResponse",
+            tag: "command", name: "CsrResponse", xref: "core§11.18.6.6",
 
             details: "This command shall be generated in response to a CSRRequest Command." +
                 "\n" +
@@ -199,26 +176,21 @@ Resource.add({
                 "See Section F.3, “Node Operational CSR Response test vector” for an example computation of a " +
                 "CSRResponse.",
 
-            xref: "core§11.18.6.6",
-
             children: [
                 {
-                    tag: "field", name: "NocsrElements",
-                    details: "This field shall contain the octet string of the serialized nocsr_elements_message.",
-                    xref: "core§11.18.6.6.1"
+                    tag: "field", name: "NocsrElements", xref: "core§11.18.6.6.1",
+                    details: "This field shall contain the octet string of the serialized nocsr_elements_message."
                 },
-
                 {
-                    tag: "field", name: "AttestationSignature",
+                    tag: "field", name: "AttestationSignature", xref: "core§11.18.6.6.2",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
-                        "Section 11.18.4.9, “NOCSR Information”.",
-                    xref: "core§11.18.6.6.2"
+                        "Section 11.18.4.9, “NOCSR Information”."
                 }
             ]
         },
 
         {
-            tag: "command", name: "AddNoc",
+            tag: "command", name: "AddNoc", xref: "core§11.18.6.8",
 
             details: "This command shall add a new NOC chain to the device and commission a new Fabric association upon " +
                 "successful validation of all arguments and preconditions." +
@@ -231,11 +203,9 @@ Resource.add({
                 "A Commissioner or Administrator SHOULD issue this command after performing the Attestation " +
                 "Procedure.",
 
-            xref: "core§11.18.6.8",
-
             children: [
                 {
-                    tag: "field", name: "IpkValue",
+                    tag: "field", name: "IpkValue", xref: "core§11.18.6.8.1",
 
                     details: "This field shall contain the value of the Epoch Key for the Identity Protection Key (IPK) to set for " +
                         "the Fabric which is to be added. This is needed to bootstrap a necessary configuration value for " +
@@ -246,13 +216,11 @@ Resource.add({
                         "On successful execution of the AddNOC command, the side-effect of having provided this field shall " +
                         "be equivalent to having done a GroupKeyManagement cluster KeySetWrite command invocation using the " +
                         "newly joined fabric as the accessing fabric and with the following argument fields (assuming " +
-                        "KeySetWrite allowed a GroupKeySetID set to 0):",
-
-                    xref: "core§11.18.6.8.1"
+                        "KeySetWrite allowed a GroupKeySetID set to 0):"
                 },
 
                 {
-                    tag: "field", name: "CaseAdminSubject",
+                    tag: "field", name: "CaseAdminSubject", xref: "core§11.18.6.8.2",
 
                     details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the " +
                         "Access Control SubjectID shall be used to atomically add an Access Control Entry enabling that " +
@@ -261,23 +229,21 @@ Resource.add({
                         "\n" +
                         "The format of the new Access Control Entry, created from this, shall be:" +
                         "\n" +
-                        "NOTE" +
+                        "> [!NOTE]" +
                         "\n" +
-                        "Unless such an Access Control Entry is added atomically as described here, there would be no way for " +
-                        "the caller on its given Fabric to eventually add another Access Control Entry for CASE " +
-                        "authentication mode, to enable the new Administrator to administer the device, since the Fabric " +
-                        "Scoping of the Access Control List prevents the current Node from being able to write new entries " +
-                        "scoped to that Fabric, if the session is established from CASE. While a session established from " +
-                        "PASE does gain Fabric Scope of a newly-joined Fabric, this argument is made mandatory to provide " +
-                        "symmetry between both types of session establishment, both of which need to eventually add an " +
-                        "\"Administer Node over CASE\" Access Control Entry to finalize new Fabric configuration and " +
-                        "subsequently be able to call the CommissioningComplete command.",
-
-                    xref: "core§11.18.6.8.2"
+                        "> Unless such an Access Control Entry is added atomically as described here, there would be no way " +
+                        "  for the caller on its given Fabric to eventually add another Access Control Entry for CASE " +
+                        "  authentication mode, to enable the new Administrator to administer the device, since the Fabric " +
+                        "  Scoping of the Access Control List prevents the current Node from being able to write new entries " +
+                        "  scoped to that Fabric, if the session is established from CASE. While a session established from " +
+                        "  PASE does gain Fabric Scope of a newly-joined Fabric, this argument is made mandatory to provide " +
+                        "  symmetry between both types of session establishment, both of which need to eventually add an " +
+                        "  \"Administer Node over CASE\" Access Control Entry to finalize new Fabric configuration and " +
+                        "  subsequently be able to call the CommissioningComplete command."
                 },
 
                 {
-                    tag: "field", name: "AdminVendorId",
+                    tag: "field", name: "AdminVendorId", xref: "core§11.18.6.8.3",
 
                     details: "This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall " +
                         "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”." +
@@ -369,15 +335,13 @@ Resource.add({
                         "      Fabric just installed. This Administrator is the one listed in the CaseAdminSubject argument." +
                         "\n" +
                         "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
-                        "field matching the FabricIndex under which the new Node Operational Certificate (NOC) is scoped.",
-
-                    xref: "core§11.18.6.8.3"
+                        "field matching the FabricIndex under which the new Node Operational Certificate (NOC) is scoped."
                 }
             ]
         },
 
         {
-            tag: "command", name: "UpdateNoc",
+            tag: "command", name: "UpdateNoc", xref: "core§11.18.6.9",
 
             details: "This command shall replace the NOC and optional associated ICAC (if present) scoped under the " +
                 "accessing fabric upon successful validation of all arguments and preconditions. The new value shall " +
@@ -389,7 +353,7 @@ Resource.add({
                 "A Commissioner or Administrator SHOULD issue this command after performing the Attestation " +
                 "Procedure." +
                 "\n" +
-                "Effect When Received" +
+                "### Effect When Received" +
                 "\n" +
                 "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
                 "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
@@ -434,13 +398,11 @@ Resource.add({
                 "       that the response can be received by the Administrator invoking the command." +
                 "\n" +
                 "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
-                "field matching the FabricIndex under which the updated NOC is scoped.",
-
-            xref: "core§11.18.6.9"
+                "field matching the FabricIndex under which the updated NOC is scoped."
         },
 
         {
-            tag: "command", name: "NocResponse",
+            tag: "command", name: "NocResponse", xref: "core§11.18.6.10",
 
             details: "This command shall be generated in response to the following commands:" +
                 "\n" +
@@ -454,34 +416,28 @@ Resource.add({
                 "\n" +
                 "It provides status information about the success or failure of those commands.",
 
-            xref: "core§11.18.6.10",
-
             children: [
                 {
-                    tag: "field", name: "StatusCode",
-                    details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC.",
-                    xref: "core§11.18.6.10.1"
+                    tag: "field", name: "StatusCode", xref: "core§11.18.6.10.1",
+                    details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC."
                 },
-
                 {
-                    tag: "field", name: "FabricIndex",
+                    tag: "field", name: "FabricIndex", xref: "core§11.18.6.10.2",
                     details: "This field shall be present whenever StatusCode has a value of OK. If present, it shall contain the " +
-                        "Fabric Index of the Fabric last added, removed or updated.",
-                    xref: "core§11.18.6.10.2"
+                        "Fabric Index of the Fabric last added, removed or updated."
                 },
 
                 {
-                    tag: "field", name: "DebugText",
+                    tag: "field", name: "DebugText", xref: "core§11.18.6.10.3",
                     details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
                         "NOT be presented to user interfaces in any way. Its purpose is to help developers in troubleshooting " +
-                        "errors and the contents may go into logs or crash reports.",
-                    xref: "core§11.18.6.10.3"
+                        "errors and the contents may go into logs or crash reports."
                 }
             ]
         },
 
         {
-            tag: "command", name: "UpdateFabricLabel",
+            tag: "command", name: "UpdateFabricLabel", xref: "core§11.18.6.11",
 
             details: "This command shall be used by an Administrator to set the user-visible Label field for a given " +
                 "Fabric, as reflected by entries in the Fabrics attribute. An Administrator shall use this command to " +
@@ -496,14 +452,12 @@ Resource.add({
                 "used by Administrators to provide additional per-fabric context when operations such as RemoveFabric " +
                 "are considered or used.",
 
-            xref: "core§11.18.6.11",
-
             children: [{
-                tag: "field", name: "Label",
+                tag: "field", name: "Label", xref: "core§11.18.6.11.1",
 
                 details: "This field shall contain the label to set for the fabric associated with the current secure session." +
                     "\n" +
-                    "Effect on Receipt" +
+                    "### Effect on Receipt" +
                     "\n" +
                     "If the Label field is identical to a Label already in use by a Fabric within the Fabrics list that " +
                     "is not the accessing fabric, then an NOCResponse with a StatusCode of LabelConflict shall be " +
@@ -517,22 +471,18 @@ Resource.add({
                     "label update shall apply to the pending update state that will be reverted if fail-safe expires " +
                     "prior to a CommissioningComplete command. In other words, label updates apply to the state of the " +
                     "Fabrics Attribute as currently visible, even for an existing fabric currently in process of being " +
-                    "updated.",
-
-                xref: "core§11.18.6.11.1"
+                    "updated."
             }]
         },
 
         {
-            tag: "command", name: "RemoveFabric",
+            tag: "command", name: "RemoveFabric", xref: "core§11.18.6.12",
 
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                 "fabric-scoped data." +
                 "\n" +
                 "If the given Fabric being removed is the last one to reference a given Trusted Root CA Certificate " +
                 "stored in the Trusted Root Certificates list, then that Trusted Root Certificate shall be removed." +
-                "\n" +
-                "WARNING" +
                 "\n" +
                 "This command, if referring to an already existing Fabric not under the control of the invoking " +
                 "Administrator, shall ONLY be invoked after obtaining some form of explicit user consent through some " +
@@ -544,21 +494,19 @@ Resource.add({
                 "Domain’s party of the removal. Otherwise, users may only observe the removal of a Fabric association " +
                 "as persistently failing attempts to reach a Node operationally.",
 
-            xref: "core§11.18.6.12",
-
             children: [{
-                tag: "field", name: "FabricIndex",
+                tag: "field", name: "FabricIndex", xref: "core§11.18.6.12.1",
 
                 details: "This field shall contain the Fabric Index reference (see fabric-index) associated with the Fabric " +
                     "which is to be removed from the device." +
                     "\n" +
-                    "Effect on Receipt" +
+                    "### Effect on Receipt" +
                     "\n" +
                     "If the FabricIndex field does not match the FabricIndex of any entry within the Fabrics list, then " +
-                    "an NOCResponse with a StatusCode of InvalidFabricIndex shall be returned for the command and" +
+                    "an NOCResponse with a StatusCode of InvalidFabricIndex shall be returned for the command and there " +
+                    "shall NOT be any permanent changes to any device data." +
                     "\n" +
-                    "there shall NOT be any permanent changes to any device data. Otherwise, one of the following " +
-                    "outcomes shall occur:" +
+                    "Otherwise, one of the following outcomes shall occur:" +
                     "\n" +
                     "  1. If the FabricIndex matches the last remaining entry in the Fabrics list, then the device shall " +
                     "     delete all Matter related data on the node which was created since it was commissioned. This " +
@@ -590,14 +538,12 @@ Resource.add({
                     "     exchanges and interaction model constructs related to the Operational Identity under the given " +
                     "     Fabric shall also be removed. Since this operation involves the removal of the secure session " +
                     "     data that may underpin the current set of exchanges, the Node invoking the command SHOULD NOT " +
-                    "     expect a response before terminating its secure session with the target.",
-
-                xref: "core§11.18.6.12.1"
+                    "     expect a response before terminating its secure session with the target."
             }]
         },
 
         {
-            tag: "command", name: "AddTrustedRootCertificate",
+            tag: "command", name: "AddTrustedRootCertificate", xref: "core§11.18.6.13",
 
             details: "This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding " +
                 "representation, to the TrustedRootCertificates Attribute list and shall ensure the next AddNOC " +
@@ -610,10 +556,9 @@ Resource.add({
                 "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
                 "\n" +
                 "If a prior AddTrustedRootCertificate command was successfully invoked within the fail-safe timer " +
-                "period, which would cause the new invocation to add a second root certificate within a given fail-" +
-                "\n" +
-                "safe timer period, then this command shall fail with a CONSTRAINT_ERROR status code sent back to the " +
-                "initiator." +
+                "period, which would cause the new invocation to add a second root certificate within a given " +
+                "fail-safe timer period, then this command shall fail with a CONSTRAINT_ERROR status code sent back " +
+                "to the initiator." +
                 "\n" +
                 "If a prior UpdateNOC or AddNOC command was successfully executed within the fail-safe timer period, " +
                 "then this command shall fail with a CONSTRAINT_ERROR status code sent back to the initiator." +
@@ -624,16 +569,13 @@ Resource.add({
                 "initiator." +
                 "\n" +
                 "Note that the only method of removing a trusted root is by removing the Fabric that uses it as its " +
-                "root of trust using the RemoveFabric command.",
-
-            xref: "core§11.18.6.13"
+                "root of trust using the RemoveFabric command."
         },
 
         {
-            tag: "datatype", name: "CertificateChainTypeEnum",
+            tag: "datatype", name: "CertificateChainTypeEnum", xref: "core§11.18.4.2",
             details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from the " +
                 "device attestation certificate chain to transmit back to the client.",
-            xref: "core§11.18.4.2",
             children: [
                 { tag: "field", name: "DacCertificate", description: "Request the DER- encoded DAC certificate" },
                 { tag: "field", name: "PaiCertificate", description: "Request the DER- encoded PAI certificate" }
@@ -641,10 +583,9 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "NodeOperationalCertStatusEnum",
+            tag: "datatype", name: "NodeOperationalCertStatusEnum", xref: "core§11.18.4.3",
             details: "This enumeration is used by the NOCResponse common response command to convey detailed outcome of " +
                 "several of this cluster’s operations.",
-            xref: "core§11.18.4.3",
 
             children: [
                 { tag: "field", name: "Ok", description: "OK, no error" },
@@ -676,49 +617,43 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "NOCStruct",
+            tag: "datatype", name: "NOCStruct", xref: "core§11.18.4.4",
             details: "This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a " +
                 "given Node." +
                 "\n" +
                 "Note that the Trusted Root CA Certificate is not included in this structure. The roots are available " +
                 "in the TrustedRootCertificates attribute of the Node Operational Credentials cluster.",
-            xref: "core§11.18.4.4",
 
             children: [
                 {
-                    tag: "field", name: "Noc",
+                    tag: "field", name: "Noc", xref: "core§11.18.4.4.1",
                     details: "This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
-                        "Certificate Encoding.",
-                    xref: "core§11.18.4.4.1"
+                        "Certificate Encoding."
                 },
-
                 {
-                    tag: "field", name: "Icac",
+                    tag: "field", name: "Icac", xref: "core§11.18.4.4.2",
                     details: "This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
-                        "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null.",
-                    xref: "core§11.18.4.4.2"
+                        "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "FabricDescriptorStruct",
+            tag: "datatype", name: "FabricDescriptorStruct", xref: "core§11.18.4.5",
             details: "This structure encodes a Fabric Reference for a fabric within which a given Node is currently " +
                 "commissioned.",
-            xref: "core§11.18.4.5",
 
             children: [
                 {
-                    tag: "field", name: "RootPublicKey",
+                    tag: "field", name: "RootPublicKey", xref: "core§11.18.4.5.1",
                     details: "This field shall contain the public key for the trusted root that scopes the fabric referenced by " +
                         "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
                         "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of the " +
-                        "Matter Certificate Encoding for the root in the operational certificate chain.",
-                    xref: "core§11.18.4.5.1"
+                        "Matter Certificate Encoding for the root in the operational certificate chain."
                 },
 
                 {
-                    tag: "field", name: "VendorId",
+                    tag: "field", name: "VendorId", xref: "core§11.18.4.5.2",
 
                     details: "This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the " +
                         "creation of this FabricDescriptorStruct. The set of allowed values is defined in AdminVendorID." +
@@ -727,32 +662,27 @@ Resource.add({
                         "privileges on the Node." +
                         "\n" +
                         "Clients shall consider the VendorID field value to be untrustworthy until the NOC chain associated " +
-                        "with the fabric has passed the Vendor ID Validation Procedure against the associated RCAC.",
-
-                    xref: "core§11.18.4.5.2"
+                        "with the fabric has passed the Vendor ID Validation Procedure against the associated RCAC."
                 },
 
                 {
-                    tag: "field", name: "FabricId",
+                    tag: "field", name: "FabricId", xref: "core§11.18.4.5.3",
                     details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-fabric-id field from the operational certificate providing " +
-                        "the operational identity under this Fabric.",
-                    xref: "core§11.18.4.5.3"
+                        "the operational identity under this Fabric."
                 },
 
                 {
-                    tag: "field", name: "NodeId",
+                    tag: "field", name: "NodeId", xref: "core§11.18.4.5.4",
                     details: "This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-node-id field from the operational certificate providing " +
-                        "this operational identity.",
-                    xref: "core§11.18.4.5.4"
+                        "this operational identity."
                 },
 
                 {
-                    tag: "field", name: "Label",
+                    tag: "field", name: "Label", xref: "core§11.18.4.5.5",
                     details: "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
-                        "label is set by the UpdateFabricLabel command.",
-                    xref: "core§11.18.4.5.5"
+                        "label is set by the UpdateFabricLabel command."
                 }
             ]
         }

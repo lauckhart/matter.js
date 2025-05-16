@@ -21,64 +21,63 @@ export const IcdManagement = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "CIP", constraint: "0", conformance: "LITS, O", longName: "CheckInProtocolSupport" }),
-        Field({ name: "UAT", constraint: "1", conformance: "LITS, O", longName: "UserActiveModeTrigger" }),
-        Field({ name: "LITS", constraint: "2", conformance: "O", longName: "LongIdleTimeSupport" }),
-        Field({ name: "DSLS", constraint: "3", conformance: "[LITS]", longName: "DynamicSitLitSupport" })
+        Field({ name: "CIP", conformance: "LITS, O", constraint: "0", title: "CheckInProtocolSupport" }),
+        Field({ name: "UAT", conformance: "LITS, O", constraint: "1", title: "UserActiveModeTrigger" }),
+        Field({ name: "LITS", conformance: "O", constraint: "2", title: "LongIdleTimeSupport" }),
+        Field({ name: "DSLS", conformance: "[LITS]", constraint: "3", title: "DynamicSitLitSupport" })
     ),
 
     Attribute({
-        name: "IdleModeDuration", id: 0x0, type: "uint32",
-        default: 1, constraint: "1 to 64800", conformance: "M", access: "R V", quality: "F"
+        name: "IdleModeDuration", id: 0x0, type: "uint32", access: "R V", conformance: "M",
+        constraint: "1 to 64800", default: 1, quality: "F"
     }),
     Attribute({
-        name: "ActiveModeDuration", id: 0x1, type: "uint32",
-        default: 300, conformance: "M", access: "R V", quality: "F"
+        name: "ActiveModeDuration", id: 0x1, type: "uint32", access: "R V", conformance: "M", default: 300,
+        quality: "F"
     }),
     Attribute({
-        name: "ActiveModeThreshold", id: 0x2, type: "uint16",
-        default: 300, conformance: "M", access: "R V", quality: "F"
+        name: "ActiveModeThreshold", id: 0x2, type: "uint16", access: "R V", conformance: "M", default: 300,
+        quality: "F"
     }),
 
     Attribute(
         {
-            name: "RegisteredClients", id: 0x3, type: "list",
-            default: [], constraint: "desc", conformance: "CIP", access: "R F A", quality: "N"
+            name: "RegisteredClients", id: 0x3, type: "list", access: "R F A", conformance: "CIP",
+            constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "MonitoringRegistrationStruct" })
     ),
 
     Attribute(
-        { name: "IcdCounter", id: 0x4, type: "uint32", default: 0, conformance: "CIP", access: "R A", quality: "N C" }
+        { name: "IcdCounter", id: 0x4, type: "uint32", access: "R A", conformance: "CIP", default: 0, quality: "N C" }
     ),
     Attribute({
-        name: "ClientsSupportedPerFabric", id: 0x5, type: "uint16",
-        default: 1, constraint: "min 1", conformance: "CIP", access: "R V", quality: "F"
+        name: "ClientsSupportedPerFabric", id: 0x5, type: "uint16", access: "R V", conformance: "CIP",
+        constraint: "min 1", default: 1, quality: "F"
     }),
     Attribute({
-        name: "UserActiveModeTriggerHint", id: 0x6, type: "UserActiveModeTriggerBitmap",
-        default: 0, constraint: "desc", conformance: "UAT", access: "R V", quality: "F"
+        name: "UserActiveModeTriggerHint", id: 0x6, type: "UserActiveModeTriggerBitmap", access: "R V",
+        conformance: "UAT", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
-        name: "UserActiveModeTriggerInstruction", id: 0x7, type: "string",
-        constraint: "max 128", conformance: "desc", access: "R V", quality: "F"
+        name: "UserActiveModeTriggerInstruction", id: 0x7, type: "string", access: "R V",
+        conformance: "desc", constraint: "max 128", quality: "F"
     }),
-    Attribute({ name: "OperatingMode", id: 0x8, type: "OperatingModeEnum", conformance: "LITS", access: "R V" }),
+    Attribute({ name: "OperatingMode", id: 0x8, type: "OperatingModeEnum", access: "R V", conformance: "LITS" }),
     Attribute({
-        name: "MaximumCheckInBackoff", id: 0x9, type: "uint32",
-        default: 1, constraint: "idleModeDuration to 64800", conformance: "CIP", access: "R V",
-        quality: "F"
+        name: "MaximumCheckInBackoff", id: 0x9, type: "uint32", access: "R V", conformance: "CIP",
+        constraint: "idleModeDuration to 64800", default: 1, quality: "F"
     }),
 
     Command(
         {
-            name: "RegisterClient", id: 0x0,
-            conformance: "CIP", access: "F M", direction: "request", response: "RegisterClientResponse"
+            name: "RegisterClient", id: 0x0, access: "F M", conformance: "CIP", direction: "request",
+            response: "RegisterClientResponse"
         },
         Field({ name: "CheckInNodeId", id: 0x0, type: "node-id", conformance: "M" }),
         Field({ name: "MonitoredSubject", id: 0x1, type: "subject-id", conformance: "M" }),
-        Field({ name: "Key", id: 0x2, type: "octstr", constraint: "16", conformance: "M" }),
-        Field({ name: "VerificationKey", id: 0x3, type: "octstr", constraint: "16", conformance: "O" }),
+        Field({ name: "Key", id: 0x2, type: "octstr", conformance: "M", constraint: "16" }),
+        Field({ name: "VerificationKey", id: 0x3, type: "octstr", conformance: "O", constraint: "16" }),
         Field({ name: "ClientType", id: 0x4, type: "ClientTypeEnum", conformance: "M" })
     ),
 
@@ -89,24 +88,24 @@ export const IcdManagement = Cluster(
 
     Command(
         {
-            name: "UnregisterClient", id: 0x2,
-            conformance: "CIP", access: "F M", direction: "request", response: "status"
+            name: "UnregisterClient", id: 0x2, access: "F M", conformance: "CIP", direction: "request",
+            response: "status"
         },
         Field({ name: "CheckInNodeId", id: 0x0, type: "node-id", conformance: "M" }),
-        Field({ name: "VerificationKey", id: 0x1, type: "octstr", constraint: "16", conformance: "O" })
+        Field({ name: "VerificationKey", id: 0x1, type: "octstr", conformance: "O", constraint: "16" })
     ),
 
     Command(
         {
-            name: "StayActiveRequest", id: 0x3,
-            conformance: "LITS, O", access: "O", direction: "request", response: "StayActiveResponse"
+            name: "StayActiveRequest", id: 0x3, access: "O", conformance: "LITS, O", direction: "request",
+            response: "StayActiveResponse"
         },
         Field({ name: "StayActiveDuration", id: 0x0, type: "uint32", conformance: "M" })
     ),
 
     Command(
         { name: "StayActiveResponse", id: 0x4, conformance: "LITS, O", direction: "response" },
-        Field({ name: "PromisedActiveDuration", id: 0x0, type: "uint32", constraint: "desc", conformance: "M" })
+        Field({ name: "PromisedActiveDuration", id: 0x0, type: "uint32", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(
@@ -143,12 +142,12 @@ export const IcdManagement = Cluster(
 
     Datatype(
         { name: "MonitoringRegistrationStruct", type: "struct" },
-        Field({ name: "CheckInNodeId", id: 0x1, type: "node-id", conformance: "M", access: "S", quality: "N" }),
-        Field({ name: "MonitoredSubject", id: 0x2, type: "subject-id", conformance: "M", access: "S", quality: "N" }),
-        Field({ name: "Key", id: 0x3, conformance: "D", access: "F" }),
+        Field({ name: "CheckInNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M", quality: "N" }),
+        Field({ name: "MonitoredSubject", id: 0x2, type: "subject-id", access: "S", conformance: "M", quality: "N" }),
+        Field({ name: "Key", id: 0x3, access: "F", conformance: "D" }),
         Field({
-            name: "ClientType", id: 0x4, type: "ClientTypeEnum",
-            default: 0, conformance: "M", access: "S", quality: "N"
+            name: "ClientType", id: 0x4, type: "ClientTypeEnum", access: "S", conformance: "M", default: 0,
+            quality: "N"
         }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )

@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "EcosystemInformation",
-    classification: "endpoint", pics: "ECOINFO",
+    tag: "cluster", name: "EcosystemInformation", classification: "endpoint", pics: "ECOINFO",
+    xref: "core§9.18",
 
     details: "The Ecosystem Information Cluster provides extended device information for all the logical devices " +
         "represented by a Bridged Node. The Ecosystem Information Cluster presents the view of device name " +
@@ -41,114 +41,95 @@ Resource.add({
         "For the purposes of the Ecosystem Information Cluster section, an instance of the Ecosystem " +
         "Information Cluster will be referred to as an \"instance\".",
 
-    xref: "core§9.18",
-
     children: [
         {
-            tag: "attribute", name: "DeviceDirectory",
+            tag: "attribute", name: "DeviceDirectory", xref: "core§9.18.5.1",
             details: "This attribute shall contain the list of logical devices represented by a Bridged Node. Most of the " +
                 "time this will contain a single entry, but may grow with more complex device compositions (e.g. " +
-                "another bridge.)" +
-                "\n" +
-                "An empty list indicates that the information is not available.",
-            xref: "core§9.18.5.1"
+                "another bridge.) An empty list indicates that the information is not available."
         },
 
         {
-            tag: "attribute", name: "LocationDirectory",
+            tag: "attribute", name: "LocationDirectory", xref: "core§9.18.5.2",
 
             details: "This attribute shall contain the list of rooms, areas and groups associated with the DeviceDirectory " +
                 "entries, and shall NOT contain locations which are dynamically generated and removed by an " +
                 "ecosystem. (E.g. a location that is generated and removed based on the user being home is not " +
                 "permitted. However, an initially generated location name that does not quickly change is " +
-                "acceptable.)" +
+                "acceptable.) An empty list indicates that the information is not available." +
                 "\n" +
-                "An empty list indicates that the information is not available." +
-                "\n" +
-                "LocationDirectory entries shall be removed if there is no DeviceDirectory that references it.",
-
-            xref: "core§9.18.5.2"
+                "LocationDirectory entries shall be removed if there is no DeviceDirectory that references it."
         },
 
         {
-            tag: "datatype", name: "EcosystemDeviceStruct",
-            xref: "core§9.18.4.1",
+            tag: "datatype", name: "EcosystemDeviceStruct", xref: "core§9.18.4.1",
 
             children: [
                 {
-                    tag: "field", name: "DeviceName",
+                    tag: "field", name: "DeviceName", xref: "core§9.18.4.1.1",
                     details: "This field shall indicate the device’s name, which is provided externally if the user consents. (For " +
-                        "example, provided by the user in an ecosystem specific interface.)",
-                    xref: "core§9.18.4.1.1"
+                        "example, provided by the user in an ecosystem specific interface.)"
                 },
 
                 {
-                    tag: "field", name: "DeviceNameLastEdit",
+                    tag: "field", name: "DeviceNameLastEdit", xref: "core§9.18.4.1.2",
                     details: "This field shall be present and set if the DeviceName field is present." +
                         "\n" +
-                        "This field shall indicate the timestamp of when the DeviceName was last modified.",
-                    xref: "core§9.18.4.1.2"
+                        "This field shall indicate the timestamp of when the DeviceName was last modified."
                 },
 
                 {
-                    tag: "field", name: "BridgedEndpoint",
+                    tag: "field", name: "BridgedEndpoint", xref: "core§9.18.4.1.3",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on this Bridge." +
                         "\n" +
                         "This field shall be present and set to a valid endpoint if the device is accessible through the " +
-                        "bridge.",
-                    xref: "core§9.18.4.1.3"
+                        "bridge."
                 },
 
                 {
-                    tag: "field", name: "OriginalEndpoint",
+                    tag: "field", name: "OriginalEndpoint", xref: "core§9.18.4.1.4",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on the original " +
                         "device represented by this bridge’s Bridged Node. If this bridge is receiving the device from " +
                         "another bridge, then the OriginalEndpoint field value would be the same on both bridges. This field " +
                         "shall be present and set to a valid endpoint on the original device if that device is a Matter " +
-                        "device.",
-                    xref: "core§9.18.4.1.4"
+                        "device."
                 },
 
                 {
-                    tag: "field", name: "DeviceTypes",
+                    tag: "field", name: "DeviceTypes", xref: "core§9.18.4.1.5",
                     details: "This field shall indicate all of the DeviceTypes within the DeviceTypeList in the Descriptor Cluster " +
                         "associated with this EcosystemDeviceStruct entry." +
                         "\n" +
-                        "This field shall contain a list of valid device type ids.",
-                    xref: "core§9.18.4.1.5"
+                        "This field shall contain a list of valid device type ids."
                 },
 
                 {
-                    tag: "field", name: "UniqueLocationIDs",
+                    tag: "field", name: "UniqueLocationIDs", xref: "core§9.18.4.1.6",
                     details: "This field shall specify the EcosystemLocationStruct entries in the LocationDirectory attribute " +
-                        "associated with this EcosystemDeviceStruct.",
-                    xref: "core§9.18.4.1.6"
+                        "associated with this EcosystemDeviceStruct."
                 },
 
                 {
-                    tag: "field", name: "UniqueLocationIDsLastEdit",
+                    tag: "field", name: "UniqueLocationIDsLastEdit", xref: "core§9.18.4.1.7",
 
                     details: "This field shall indicate the timestamp of when the UniqueLocationIDs was last modified." +
                         "\n" +
-                        "NOTE" +
+                        "> [!NOTE]" +
                         "\n" +
-                        "If multiple server instances update the UniqueLocationIDs field at the same time, it is possible one " +
-                        "of the updates will be missed. This is considered an acceptable limitation to reduce the complexity " +
-                        "of the design. Since this is meant to be provided from user input, it is unlikely these signals " +
-                        "would be happening at one time.",
-
-                    xref: "core§9.18.4.1.7"
+                        "> If multiple server instances update the UniqueLocationIDs field at the same time, it is possible " +
+                        "  one of the updates will be missed. This is considered an acceptable limitation to reduce the " +
+                        "  complexity of the design. Since this is meant to be provided from user input, it is unlikely these " +
+                        "  signals would be happening at one time."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "EcosystemLocationStruct",
-            xref: "core§9.18.4.2",
+            tag: "datatype", name: "EcosystemLocationStruct", xref: "core§9.18.4.2",
 
             children: [
                 {
-                    tag: "field", name: "UniqueLocationId",
+                    tag: "field", name: "UniqueLocationId", xref: "core§9.18.4.2.1",
 
                     details: "This field shall indicate a unique identifier for a specific Ecosystem Information Cluster server " +
                         "instance representing the location independent of its LocationDescriptor field." +
@@ -165,36 +146,29 @@ Resource.add({
                         "assignment.)" +
                         "\n" +
                         "UniqueLocationID shall NOT be changed when the LocationDescriptor changes name, but still represents " +
-                        "the same location. (For example, the user renames a room.)" +
-                        "\n" +
-                        "UniqueLocationID shall be changed when LocationDescriptor changes as a result of another Ecosystem " +
-                        "Information Cluster server instance changing and the UniqueLocationID on the remote server instance " +
-                        "also changes." +
+                        "the same location. (For example, the user renames a room.) UniqueLocationID shall be changed when " +
+                        "LocationDescriptor changes as a result of another Ecosystem Information Cluster server instance " +
+                        "changing and the UniqueLocationID on the remote server instance also changes." +
                         "\n" +
                         "UniqueLocationID shall NOT be changed when LocationDescriptor changes as a result of another " +
                         "Ecosystem Information Cluster server instance changing and the UniqueLocationID on the remote server " +
-                        "instance does not change.",
-
-                    xref: "core§9.18.4.2.1"
+                        "instance does not change."
                 },
 
                 {
-                    tag: "field", name: "LocationDescriptor",
+                    tag: "field", name: "LocationDescriptor", xref: "core§9.18.4.2.2",
 
                     details: "This field shall indicate the location (e.g. living room, driveway) and associated metadata that is " +
                         "provided externally if the user consents. (For example, provided by the user in an ecosystem " +
                         "specific interface.)" +
                         "\n" +
                         "\"Location\" in this context is typically used by the user’s grouping into rooms, areas or other " +
-                        "logical groupings of how devices are used. So a device might be part of multiple such \"Locations\"s.",
-
-                    xref: "core§9.18.4.2.2"
+                        "logical groupings of how devices are used. So a device might be part of multiple such \"Locations\"s."
                 },
 
                 {
-                    tag: "field", name: "LocationDescriptorLastEdit",
-                    details: "This field shall indicate the timestamp of when the LocationDescriptor was last modified.",
-                    xref: "core§9.18.4.2.3"
+                    tag: "field", name: "LocationDescriptorLastEdit", xref: "core§9.18.4.2.3",
+                    details: "This field shall indicate the timestamp of when the LocationDescriptor was last modified."
                 }
             ]
         }

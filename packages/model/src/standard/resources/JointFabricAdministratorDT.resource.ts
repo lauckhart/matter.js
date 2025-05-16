@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "JointFabricAdministrator",
-    classification: "utility",
+    tag: "deviceType", name: "JointFabricAdministrator", classification: "utility", xref: "device§2.9",
 
     details: "A Joint Fabric Administrator device provides capabilities to manage the Joint Fabric Datastore and " +
         "issue an ICAC signed by the Joint Fabric Anchor Root CA." +
@@ -19,7 +18,6 @@ Resource.add({
         "Commissioning Method to be commissioned onto the Joint Fabric. Once commissioned, a client may " +
         "access the capabilities of the Joint Fabric Administrator.",
 
-    xref: "device§2.9",
     children: [
         { tag: "requirement", name: "JointFabricDatastore", xref: "device§2.9.4" },
         { tag: "requirement", name: "JointFabricPki", xref: "device§2.9.4" }

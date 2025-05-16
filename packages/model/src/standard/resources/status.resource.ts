@@ -9,31 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "status",
-    description: "Status Code",
-
-    details: "An enumeration value that means a success or error status. A status code is indicated as a response " +
-        "to an action in an interaction (see Interaction Model)." +
-        "\n" +
-        "A status code shall be one of:" +
-        "\n" +
-        "  • a common status code from the set defined in the Interaction Model status code table;" +
-        "\n" +
-        "  • a cluster status code that is scoped to a particular cluster." +
-        "\n" +
-        "The following table defines the enumeration ranges for status codes." +
-        "\n" +
-        "Status codes in an undefined range, or status codes undefined within a range are reserved and shall " +
-        "NOT be indicated.",
-
-    xref: "core§7.19.2.18",
+    tag: "datatype", name: "status", description: "Status Code", xref: "core§7.19.2",
 
     children: [
         { tag: "field", name: "Success", description: "Operation was successful.", xref: "core§8.10.1" },
         { tag: "field", name: "Failure", description: "Operation was not successful.", xref: "core§8.10.1" },
         {
-            tag: "field", name: "InvalidSubscription",
-            description: "Subscription ID is not active.",
+            tag: "field", name: "InvalidSubscription", description: "Subscription ID is not active.",
             xref: "core§8.10.1"
         },
         {
@@ -43,8 +25,7 @@ Resource.add({
         },
         {
             tag: "field", name: "UnsupportedEndpoint",
-            description: "The endpoint indicated is unsupported on the node.",
-            xref: "core§8.10.1"
+            description: "The endpoint indicated is unsupported on the node.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "InvalidAction",
@@ -58,7 +39,7 @@ Resource.add({
         },
         {
             tag: "field", name: "InvalidCommand",
-            description: "The cluster command is malformed, has missing fields, or fields with invalid values. Command not carried out.",
+            description: "The cluster command is malformed, has missing fields, or fields with invalid values.Command not carried out.",
             xref: "core§8.10.1"
         },
         {
@@ -72,24 +53,21 @@ Resource.add({
             xref: "core§8.10.1"
         },
         {
-            tag: "field", name: "UnsupportedWrite",
-            description: "Attempt to write a read-only attribute.",
+            tag: "field", name: "UnsupportedWrite", description: "Attempt to write a read-only attribute.",
             xref: "core§8.10.1"
         },
         {
             tag: "field", name: "ResourceExhausted",
-            description: "An action or operation failed due to insufficient available resources.INSUFFICIENT_SPACE is anobsolete name for this error code.",
+            description: "An action or operation failed due to insufficient available resources.",
             xref: "core§8.10.1"
         },
         {
             tag: "field", name: "NotFound",
-            description: "The indicated data field or entry could not be found.",
-            xref: "core§8.10.1"
+            description: "The indicated data field or entry could not be found.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "UnreportableAttribute",
-            description: "Reports cannot be issued for this attribute.",
-            xref: "core§8.10.1"
+            description: "Reports cannot be issued for this attribute.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "InvalidDataType",
@@ -97,24 +75,20 @@ Resource.add({
             xref: "core§8.10.1"
         },
         {
-            tag: "field", name: "UnsupportedRead",
-            description: "Attempt to read a write-only attribute.",
+            tag: "field", name: "UnsupportedRead", description: "Attempt to read a write-only attribute.",
             xref: "core§8.10.1"
         },
         {
             tag: "field", name: "DataVersionMismatch",
-            description: "Cluster instance data version did not match request path",
-            xref: "core§8.10.1"
+            description: "Cluster instance data version did not match request path", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "Timeout",
-            description: "The transaction was aborted due to time being exceeded.",
-            xref: "core§8.10.1"
+            description: "The transaction was aborted due to time being exceeded.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "UnsupportedNode",
-            description: "The node ID indicated is not supported on the node.",
-            xref: "core§8.10.1"
+            description: "The node ID indicated is not supported on the node.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "Busy",
@@ -128,8 +102,7 @@ Resource.add({
         },
         {
             tag: "field", name: "UnsupportedCluster",
-            description: "The cluster indicated is not supported on the endpoint.",
-            xref: "core§8.10.1"
+            description: "The cluster indicated is not supported on the endpoint.", xref: "core§8.10.1"
         },
         {
             tag: "field", name: "NoUpstreamSubscription",
@@ -173,12 +146,12 @@ Resource.add({
         },
         {
             tag: "field", name: "TermsAndConditionsChanged",
-            description: "The node requires updated TC acceptance. The user MAY be directed to visit the EnhancedSetupFlowMaintenanceUrl to complete this.",
+            description: "The node requires updated TC acceptance. The user MAY be directed to visit the EnhancedSetupFlowMaintenan ceUrl to complete this.",
             xref: "core§8.10.1"
         },
         {
             tag: "field", name: "MaintenanceRequired",
-            description: "The node requires the user to visit the EnhancedSetupFlowMaintenanceUrl for instructions on further action.",
+            description: "The node requires the user to visit the EnhancedSetupFlowMaintenan ceUrl for instructions on further action.",
             xref: "core§8.10.1"
         }
     ]

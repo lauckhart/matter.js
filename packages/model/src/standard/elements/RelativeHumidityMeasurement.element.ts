@@ -13,18 +13,18 @@ export const RelativeHumidityMeasurement = Cluster(
     { name: "RelativeHumidityMeasurement", id: 0x405 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute({
-        name: "MeasuredValue", id: 0x0, type: "uint16",
-        constraint: "minMeasuredValue to maxMeasuredValue", conformance: "M", access: "R V", quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
+        constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P"
     }),
     Attribute({
-        name: "MinMeasuredValue", id: 0x1, type: "uint16",
-        constraint: "max 9999", conformance: "M", access: "R V", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
+        constraint: "max 9999", quality: "X"
     }),
     Attribute({
-        name: "MaxMeasuredValue", id: 0x2, type: "uint16",
-        constraint: "minMeasuredValue + 1 to 10000", conformance: "M", access: "R V", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
+        constraint: "minMeasuredValue + 1 to 10000", quality: "X"
     }),
-    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", constraint: "max 2048", conformance: "O", access: "R V" })
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O", constraint: "max 2048" })
 );
 
 MatterDefinition.children.push(RelativeHumidityMeasurement);

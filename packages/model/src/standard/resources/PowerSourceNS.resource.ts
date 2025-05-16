@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "PowerSource",
+    tag: "semanticNamespace", name: "PowerSource", xref: "namespace§15",
     details: "The tags contained in this namespace are restricted for use in the power source domain and shall NOT " +
         "be used in any other domain or context.",
-    xref: "namespace§15",
 
     children: [
         {
@@ -23,29 +22,29 @@ Resource.add({
         {
             tag: "semanticTag", name: "Grid",
             description: "The Power Source cluster is related to power provided from the electrical grid",
-            details: "Power Source clusters with this tag shall implement the WIRED feature.",
-            xref: "namespace§15.1"
+            xref: "namespace§15.1",
+            details: "Power Source clusters with this tag shall implement the WIRED feature."
         },
 
         {
             tag: "semanticTag", name: "Solar",
             description: "The Power Source cluster is related to power provided from a solar panel array",
-            details: "Power Source clusters with this tag shall implement the WIRED feature.",
-            xref: "namespace§15.2"
+            xref: "namespace§15.2",
+            details: "Power Source clusters with this tag shall implement the WIRED feature."
         },
 
         {
             tag: "semanticTag", name: "Battery",
             description: "The Power Source cluster is related to power provided from a battery",
-            details: "Power Source clusters with this tag shall implement the BAT feature.",
-            xref: "namespace§15.3"
+            xref: "namespace§15.3",
+            details: "Power Source clusters with this tag shall implement the BAT feature."
         },
 
         {
-            tag: "semanticTag", name: "EV",
+            tag: "semanticTag", name: "Ev",
             description: "The Power Source cluster is related to power provided from an electric vehicle",
-            details: "Power Source clusters with this tag shall implement the BAT feature.",
-            xref: "namespace§15.4"
+            xref: "namespace§15.4",
+            details: "Power Source clusters with this tag shall implement the BAT feature."
         }
     ]
 });

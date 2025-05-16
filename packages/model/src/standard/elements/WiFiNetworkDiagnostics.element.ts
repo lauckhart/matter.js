@@ -21,66 +21,66 @@ export const WiFiNetworkDiagnostics = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "PKTCNT", constraint: "0", longName: "PacketCounts" }),
-        Field({ name: "ERRCNT", constraint: "1", longName: "ErrorCounts" })
+        Field({ name: "PKTCNT", constraint: "0", title: "PacketCounts" }),
+        Field({ name: "ERRCNT", constraint: "1", title: "ErrorCounts" })
     ),
     Attribute({
-        name: "Bssid", id: 0x0, type: "octstr",
-        default: null, constraint: "6", conformance: "M", access: "R V", quality: "X"
+        name: "Bssid", id: 0x0, type: "octstr", access: "R V", conformance: "M", constraint: "6",
+        default: null, quality: "X"
     }),
     Attribute({
-        name: "SecurityType", id: 0x1, type: "SecurityTypeEnum",
-        default: null, conformance: "M", access: "R V", quality: "X"
+        name: "SecurityType", id: 0x1, type: "SecurityTypeEnum", access: "R V", conformance: "M",
+        default: null, quality: "X"
     }),
     Attribute({
-        name: "WiFiVersion", id: 0x2, type: "WiFiVersionEnum",
-        default: null, conformance: "M", access: "R V", quality: "X"
+        name: "WiFiVersion", id: 0x2, type: "WiFiVersionEnum", access: "R V", conformance: "M",
+        default: null, quality: "X"
     }),
-    Attribute({ name: "ChannelNumber", id: 0x3, type: "uint16", default: null, conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "ChannelNumber", id: 0x3, type: "uint16", access: "R V", conformance: "M", default: null, quality: "X" }),
     Attribute({
-        name: "Rssi", id: 0x4, type: "int8",
-        default: null, constraint: "-120 to 0", conformance: "M", access: "R V", quality: "X C"
-    }),
-    Attribute({
-        name: "BeaconLostCount", id: 0x5, type: "uint32",
-        default: 0, conformance: "ERRCNT", access: "R V", quality: "X C"
+        name: "Rssi", id: 0x4, type: "int8", access: "R V", conformance: "M", constraint: "-120 to 0",
+        default: null, quality: "X C"
     }),
     Attribute({
-        name: "BeaconRxCount", id: 0x6, type: "uint32",
-        default: 0, conformance: "PKTCNT", access: "R V", quality: "X C"
+        name: "BeaconLostCount", id: 0x5, type: "uint32", access: "R V", conformance: "ERRCNT", default: 0,
+        quality: "X C"
     }),
     Attribute({
-        name: "PacketMulticastRxCount", id: 0x7, type: "uint32",
-        default: 0, conformance: "PKTCNT", access: "R V", quality: "X C"
+        name: "BeaconRxCount", id: 0x6, type: "uint32", access: "R V", conformance: "PKTCNT", default: 0,
+        quality: "X C"
     }),
     Attribute({
-        name: "PacketMulticastTxCount", id: 0x8, type: "uint32",
-        default: 0, conformance: "PKTCNT", access: "R V", quality: "X C"
+        name: "PacketMulticastRxCount", id: 0x7, type: "uint32", access: "R V", conformance: "PKTCNT",
+        default: 0, quality: "X C"
     }),
     Attribute({
-        name: "PacketUnicastRxCount", id: 0x9, type: "uint32",
-        default: 0, conformance: "PKTCNT", access: "R V", quality: "X C"
+        name: "PacketMulticastTxCount", id: 0x8, type: "uint32", access: "R V", conformance: "PKTCNT",
+        default: 0, quality: "X C"
     }),
     Attribute({
-        name: "PacketUnicastTxCount", id: 0xa, type: "uint32",
-        default: 0, conformance: "PKTCNT", access: "R V", quality: "X C"
+        name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V", conformance: "PKTCNT",
+        default: 0, quality: "X C"
     }),
-    Attribute({ name: "CurrentMaxRate", id: 0xb, type: "uint64", default: 0, conformance: "O", access: "R V", quality: "X C" }),
-    Attribute({ name: "OverrunCount", id: 0xc, type: "uint64", default: 0, conformance: "ERRCNT", access: "R V", quality: "X C" }),
+    Attribute({
+        name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V", conformance: "PKTCNT",
+        default: 0, quality: "X C"
+    }),
+    Attribute({ name: "CurrentMaxRate", id: 0xb, type: "uint64", access: "R V", conformance: "O", default: 0, quality: "X C" }),
+    Attribute({ name: "OverrunCount", id: 0xc, type: "uint64", access: "R V", conformance: "ERRCNT", default: 0, quality: "X C" }),
     Event(
-        { name: "Disconnection", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        { name: "Disconnection", id: 0x0, access: "V", conformance: "O", priority: "info" },
         Field({ name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M" })
     ),
     Event(
-        { name: "AssociationFailure", id: 0x1, conformance: "O", access: "V", priority: "info" },
+        { name: "AssociationFailure", id: 0x1, access: "V", conformance: "O", priority: "info" },
         Field({ name: "AssociationFailureCause", id: 0x0, type: "AssociationFailureCauseEnum", conformance: "M" }),
         Field({ name: "Status", id: 0x1, type: "uint16", conformance: "M" })
     ),
     Event(
-        { name: "ConnectionStatus", id: 0x2, conformance: "O", access: "V", priority: "info" },
+        { name: "ConnectionStatus", id: 0x2, access: "V", conformance: "O", priority: "info" },
         Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })
     ),
-    Command({ name: "ResetCounts", id: 0x0, conformance: "ERRCNT", access: "O", direction: "request", response: "status" }),
+    Command({ name: "ResetCounts", id: 0x0, access: "O", conformance: "ERRCNT", direction: "request", response: "status" }),
 
     Datatype(
         { name: "SecurityTypeEnum", type: "enum8" },
@@ -95,24 +95,20 @@ export const WiFiNetworkDiagnostics = Cluster(
     Datatype(
         { name: "WiFiVersionEnum", type: "enum8" },
         Field({
-            name: "A", id: 0x0,
-            conformance: "M",
-            longName: "Indicate the network interface is currently using 802.11a against the wireless access point."
+            name: "A", id: 0x0, conformance: "M",
+            title: "Indicate the network interface is currently using 802.11a against the wireless access point."
         }),
         Field({
-            name: "B", id: 0x1,
-            conformance: "M",
-            longName: "Indicate the network interface is currently using 802.11b against the wireless access point."
+            name: "B", id: 0x1, conformance: "M",
+            title: "Indicate the network interface is currently using 802.11b against the wireless access point."
         }),
         Field({
-            name: "G", id: 0x2,
-            conformance: "M",
-            longName: "Indicate the network interface is currently using 802.11g against the wireless access point."
+            name: "G", id: 0x2, conformance: "M",
+            title: "Indicate the network interface is currently using 802.11g against the wireless access point."
         }),
         Field({
-            name: "N", id: 0x3,
-            conformance: "M",
-            longName: "Indicate the network interface is currently using 802.11n against the wireless access point."
+            name: "N", id: 0x3, conformance: "M",
+            title: "Indicate the network interface is currently using 802.11n against the wireless access point."
         }),
         Field({ name: "Ac", id: 0x4, conformance: "M" }),
         Field({ name: "Ax", id: 0x5, conformance: "M" }),

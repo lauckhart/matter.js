@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "Number",
+    tag: "semanticNamespace", name: "Number", xref: "namespace§8",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
-        "association with a certain numeric feature of a device (e.g. a numeric input button).",
-    xref: "namespace§8"
+        "association with a certain numeric feature of a device (e.g. a numeric input button)."
 });

@@ -20,15 +20,15 @@ export const LaundryDryerControls = Cluster(
 
     Attribute(
         {
-            name: "SupportedDrynessLevels", id: 0x0, type: "list",
-            constraint: "1 to 4", conformance: "M", access: "R V"
+            name: "SupportedDrynessLevels", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "1 to 4"
         },
         Field({ name: "entry", type: "DrynessLevelEnum" })
     ),
 
     Attribute({
-        name: "SelectedDrynessLevel", id: 0x1, type: "DrynessLevelEnum",
-        constraint: "desc", conformance: "M", access: "RW VO", quality: "X"
+        name: "SelectedDrynessLevel", id: 0x1, type: "DrynessLevelEnum", access: "RW VO", conformance: "M",
+        constraint: "desc", quality: "X"
     }),
 
     Datatype(

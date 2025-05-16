@@ -21,31 +21,31 @@ export const WaterHeaterManagement = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "EM", constraint: "0", conformance: "O", longName: "EnergyManagement" }),
-        Field({ name: "TP", constraint: "1", conformance: "O", longName: "TankPercent" })
+        Field({ name: "EM", conformance: "O", constraint: "0", title: "EnergyManagement" }),
+        Field({ name: "TP", conformance: "O", constraint: "1", title: "TankPercent" })
     ),
     Attribute({
-        name: "HeaterTypes", id: 0x0, type: "WaterHeaterHeatSourceBitmap",
-        default: 0, conformance: "M", access: "R V", quality: "F"
+        name: "HeaterTypes", id: 0x0, type: "WaterHeaterHeatSourceBitmap", access: "R V", conformance: "M",
+        default: 0, quality: "F"
     }),
-    Attribute({ name: "HeatDemand", id: 0x1, type: "WaterHeaterHeatSourceBitmap", default: 0, conformance: "M", access: "R V" }),
-    Attribute({ name: "TankVolume", id: 0x2, type: "uint16", default: 0, conformance: "EM", access: "R V" }),
+    Attribute({ name: "HeatDemand", id: 0x1, type: "WaterHeaterHeatSourceBitmap", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "TankVolume", id: 0x2, type: "uint16", access: "R V", conformance: "EM", default: 0 }),
     Attribute({
-        name: "EstimatedHeatRequired", id: 0x3, type: "energy-mWh",
-        default: 0, constraint: "min 0", conformance: "EM", access: "R V"
+        name: "EstimatedHeatRequired", id: 0x3, type: "energy-mWh", access: "R V", conformance: "EM",
+        constraint: "min 0", default: 0
     }),
-    Attribute({ name: "TankPercentage", id: 0x4, type: "percent", default: 0, conformance: "TP", access: "R V" }),
-    Attribute({ name: "BoostState", id: 0x5, type: "BoostStateEnum", default: 0, conformance: "M", access: "R V" }),
+    Attribute({ name: "TankPercentage", id: 0x4, type: "percent", access: "R V", conformance: "TP", default: 0 }),
+    Attribute({ name: "BoostState", id: 0x5, type: "BoostStateEnum", access: "R V", conformance: "M", default: 0 }),
     Event(
-        { name: "BoostStarted", id: 0x0, conformance: "M", access: "V", priority: "info" },
+        { name: "BoostStarted", id: 0x0, access: "V", conformance: "M", priority: "info" },
         Field({ name: "BoostInfo", id: 0x0, type: "WaterHeaterBoostInfoStruct", conformance: "M" })
     ),
-    Event({ name: "BoostEnded", id: 0x1, conformance: "M", access: "V", priority: "info" }),
+    Event({ name: "BoostEnded", id: 0x1, access: "V", conformance: "M", priority: "info" }),
     Command(
-        { name: "Boost", id: 0x0, conformance: "M", access: "M", direction: "request", response: "status" },
+        { name: "Boost", id: 0x0, access: "M", conformance: "M", direction: "request", response: "status" },
         Field({ name: "BoostInfo", id: 0x0, type: "WaterHeaterBoostInfoStruct", conformance: "M" })
     ),
-    Command({ name: "CancelBoost", id: 0x1, conformance: "M", access: "M", direction: "request", response: "status" }),
+    Command({ name: "CancelBoost", id: 0x1, access: "M", conformance: "M", direction: "request", response: "status" }),
 
     Datatype(
         { name: "WaterHeaterHeatSourceBitmap", type: "map8" },
@@ -64,12 +64,12 @@ export const WaterHeaterManagement = Cluster(
 
     Datatype(
         { name: "WaterHeaterBoostInfoStruct", type: "struct" },
-        Field({ name: "Duration", id: 0x0, type: "elapsed-s", constraint: "min 1", conformance: "M" }),
-        Field({ name: "OneShot", id: 0x1, type: "bool", default: false, conformance: "[!TP], [TP].a-" }),
-        Field({ name: "EmergencyBoost", id: 0x2, type: "bool", default: false, conformance: "O" }),
-        Field({ name: "TemporarySetpoint", id: 0x3, type: "temperature", constraint: "desc", conformance: "O" }),
+        Field({ name: "Duration", id: 0x0, type: "elapsed-s", conformance: "M", constraint: "min 1" }),
+        Field({ name: "OneShot", id: 0x1, type: "bool", conformance: "[!TP], [TP].a-", default: false }),
+        Field({ name: "EmergencyBoost", id: 0x2, type: "bool", conformance: "O", default: false }),
+        Field({ name: "TemporarySetpoint", id: 0x3, type: "temperature", conformance: "O", constraint: "desc" }),
         Field({ name: "TargetPercentage", id: 0x4, type: "percent", conformance: "TargetReheat, [TP]" }),
-        Field({ name: "TargetReheat", id: 0x5, type: "percent", constraint: "max targetPercentage", conformance: "[TP].a-" })
+        Field({ name: "TargetReheat", id: 0x5, type: "percent", conformance: "[TP].a-", constraint: "max targetPercentage" })
     )
 );
 

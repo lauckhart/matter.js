@@ -13,24 +13,24 @@ export const AirQualitySensorDt = DeviceType(
     { name: "AirQualitySensor", id: 0x2c },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 44, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 44, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "AirQuality", id: 0x5b, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "RelativeHumidityMeasurement", id: 0x405, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "CarbonMonoxideConcentrationMeasurement", id: 0x40c, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "CarbonDioxideConcentrationMeasurement", id: 0x40d, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "NitrogenDioxideConcentrationMeasurement", id: 0x413, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "OzoneConcentrationMeasurement", id: 0x415, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "FormaldehydeConcentrationMeasurement", id: 0x42b, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "Pm1ConcentrationMeasurement", id: 0x42c, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "Pm25ConcentrationMeasurement", id: 0x42a, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "Pm10ConcentrationMeasurement", id: 0x42d, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "RadonConcentrationMeasurement", id: 0x42f, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "AirQuality", id: 0x5b, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "RelativeHumidityMeasurement", id: 0x405, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "CarbonMonoxideConcentrationMeasurement", id: 0x40c, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "CarbonDioxideConcentrationMeasurement", id: 0x40d, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "NitrogenDioxideConcentrationMeasurement", id: 0x413, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "OzoneConcentrationMeasurement", id: 0x415, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "FormaldehydeConcentrationMeasurement", id: 0x42b, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Pm1ConcentrationMeasurement", id: 0x42c, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Pm25ConcentrationMeasurement", id: 0x42a, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Pm10ConcentrationMeasurement", id: 0x42d, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "RadonConcentrationMeasurement", id: 0x42f, conformance: "O", element: "serverCluster" }),
     Requirement({
-        name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", id: 0x42e,
-        element: "serverCluster", conformance: "O"
+        name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", id: 0x42e, conformance: "O",
+        element: "serverCluster"
     })
 );
 

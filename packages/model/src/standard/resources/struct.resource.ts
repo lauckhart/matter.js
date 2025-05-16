@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "struct",
-    description: "Struct",
+    tag: "datatype", name: "struct", description: "Struct", xref: "core§7.19.1.9",
 
     details: "A struct is a sequence of fields of any data type. Individual fields are identified by a field ID of " +
         "unsigned integer, starting at 0 (zero), for the first field." +
@@ -67,7 +66,5 @@ Resource.add({
         "\n" +
         "  • For interactions on a fabric-scoped struct that report back data, fabric-sensitive struct fields " +
         "    shall NOT be indicated when reporting data back to the client, when the struct has an associated " +
-        "    fabric, and it is not the accessing fabric.",
-
-    xref: "core§7.19.1.9"
+        "    fabric, and it is not the accessing fabric."
 });

@@ -13,12 +13,12 @@ export const WakeOnLan = Cluster(
     { name: "WakeOnLan", id: 0x503 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        name: "MacAddress", id: 0x0, type: "string",
-        constraint: "max 12", conformance: "O", access: "R V", quality: "F"
+        name: "MacAddress", id: 0x0, type: "string", access: "R V", conformance: "O", constraint: "max 12",
+        quality: "F"
     }),
     Attribute({
-        name: "LinkLocalAddress", id: 0x1, type: "ipv6adr",
-        constraint: "desc", conformance: "O", access: "R V", quality: "F"
+        name: "LinkLocalAddress", id: 0x1, type: "ipv6adr", access: "R V", conformance: "O",
+        constraint: "desc", quality: "F"
     })
 );
 

@@ -20,30 +20,33 @@ export const AdministratorCommissioning = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "BC", constraint: "0", longName: "Basic" })
+        Field({ name: "BC", constraint: "0", title: "Basic" })
     ),
-    Attribute({ name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum", conformance: "M", access: "R V" }),
-    Attribute({ name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", conformance: "M", access: "R V", quality: "X" }),
-    Attribute({ name: "AdminVendorId", id: 0x2, type: "vendor-id", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "WindowStatus", id: 0x0, type: "CommissioningWindowStatusEnum", access: "R V", conformance: "M" }),
+    Attribute({ name: "AdminFabricIndex", id: 0x1, type: "fabric-idx", access: "R V", conformance: "M", quality: "X" }),
+    Attribute({ name: "AdminVendorId", id: 0x2, type: "vendor-id", access: "R V", conformance: "M", quality: "X" }),
 
     Command(
-        { name: "OpenCommissioningWindow", id: 0x0, access: "A T", direction: "request", response: "status" },
-        Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
-        Field({ name: "PakePasscodeVerifier", id: 0x1, type: "octstr", constraint: "97" }),
-        Field({ name: "Discriminator", id: 0x2, type: "uint16", constraint: "0 to 4095", conformance: "M" }),
-        Field({ name: "Iterations", id: 0x3, type: "uint32", constraint: "1000 to 100000", conformance: "M" }),
-        Field({ name: "Salt", id: 0x4, type: "octstr", constraint: "16 to 32", conformance: "M" })
+        {
+            name: "OpenCommissioningWindow", id: 0x0, access: "A T", conformance: "M", direction: "request",
+            response: "status"
+        },
+        Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ name: "PakePasscodeVerifier", id: 0x1, type: "octstr", conformance: "M", constraint: "97" }),
+        Field({ name: "Discriminator", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 4095" }),
+        Field({ name: "Iterations", id: 0x3, type: "uint32", conformance: "M", constraint: "1000 to 100000" }),
+        Field({ name: "Salt", id: 0x4, type: "octstr", conformance: "M", constraint: "16 to 32" })
     ),
 
     Command(
         {
-            name: "OpenBasicCommissioningWindow", id: 0x1,
-            conformance: "BC", access: "A T", direction: "request", response: "status"
+            name: "OpenBasicCommissioningWindow", id: 0x1, access: "A T", conformance: "BC",
+            direction: "request", response: "status"
         },
-        Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
-    Command({ name: "RevokeCommissioning", id: 0x2, conformance: "M", access: "A T", direction: "request", response: "status" }),
+    Command({ name: "RevokeCommissioning", id: 0x2, access: "A T", conformance: "M", direction: "request", response: "status" }),
 
     Datatype(
         { name: "CommissioningWindowStatusEnum", type: "enum8" },

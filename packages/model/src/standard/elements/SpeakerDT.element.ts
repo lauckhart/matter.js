@@ -13,10 +13,10 @@ export const SpeakerDt = DeviceType(
     { name: "Speaker", id: 0x22 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 34, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 34, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "LevelControl", id: 0x8, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "LevelControl", id: 0x8, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(SpeakerDt);

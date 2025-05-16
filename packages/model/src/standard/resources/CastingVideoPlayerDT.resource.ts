@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "CastingVideoPlayer",
-    classification: "simple",
+    tag: "deviceType", name: "CastingVideoPlayer", classification: "simple", xref: "device§10.3",
 
     details: "This defines conformance to the Casting Video Player device type." +
         "\n" +
@@ -26,8 +25,6 @@ Resource.add({
         "Please see Video Player Architecture for additional Casting Video Player requirements relating to " +
         "Video Player device endpoint composition, commissioning, feature representation in clusters, and UI " +
         "context.",
-
-    xref: "device§10.3",
 
     children: [
         { tag: "requirement", name: "OnOff", xref: "device§10.3.4" },
@@ -55,8 +52,7 @@ Resource.add({
                     xref: "device§10.3.3"
                 },
                 {
-                    tag: "field", name: "PhysicalInputs",
-                    description: "The device has physical inputs for media.",
+                    tag: "field", name: "PhysicalInputs", description: "The device has physical inputs for media.",
                     xref: "device§10.3.3"
                 }
             ]

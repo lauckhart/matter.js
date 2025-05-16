@@ -22,31 +22,31 @@ export const Actions = Cluster(
 
     Attribute(
         {
-            name: "ActionList", id: 0x0, type: "list",
-            default: [], constraint: "max 256", conformance: "M", access: "R V"
+            name: "ActionList", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "max 256",
+            default: []
         },
         Field({ name: "entry", type: "ActionStruct" })
     ),
 
     Attribute(
         {
-            name: "EndpointLists", id: 0x1, type: "list",
-            default: [], constraint: "max 256", conformance: "M", access: "R V"
+            name: "EndpointLists", id: 0x1, type: "list", access: "R V", conformance: "M",
+            constraint: "max 256", default: []
         },
         Field({ name: "entry", type: "EndpointListStruct" })
     ),
 
-    Attribute({ name: "SetupUrl", id: 0x2, type: "string", constraint: "max 512", conformance: "O", access: "R V" }),
+    Attribute({ name: "SetupUrl", id: 0x2, type: "string", access: "R V", conformance: "O", constraint: "max 512" }),
 
     Event(
-        { name: "StateChanged", id: 0x0, conformance: "M", access: "V", priority: "info" },
+        { name: "StateChanged", id: 0x0, access: "V", conformance: "M", priority: "info" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" }),
         Field({ name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" })
     ),
 
     Event(
-        { name: "ActionFailed", id: 0x1, conformance: "M", access: "V", priority: "info" },
+        { name: "ActionFailed", id: 0x1, access: "V", conformance: "M", priority: "info" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" }),
         Field({ name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" }),
@@ -54,15 +54,15 @@ export const Actions = Cluster(
     ),
 
     Command(
-        { name: "InstantAction", id: 0x0, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "InstantAction", id: 0x0, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
 
     Command(
         {
-            name: "InstantActionWithTransition", id: 0x1,
-            conformance: "desc", access: "O", direction: "request", response: "status"
+            name: "InstantActionWithTransition", id: 0x1, access: "O", conformance: "desc",
+            direction: "request", response: "status"
         },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
@@ -70,15 +70,15 @@ export const Actions = Cluster(
     ),
 
     Command(
-        { name: "StartAction", id: 0x2, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "StartAction", id: 0x2, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
 
     Command(
         {
-            name: "StartActionWithDuration", id: 0x3,
-            conformance: "desc", access: "O", direction: "request", response: "status"
+            name: "StartActionWithDuration", id: 0x3, access: "O", conformance: "desc", direction: "request",
+            response: "status"
         },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
@@ -86,20 +86,20 @@ export const Actions = Cluster(
     ),
 
     Command(
-        { name: "StopAction", id: 0x4, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "StopAction", id: 0x4, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
     Command(
-        { name: "PauseAction", id: 0x5, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "PauseAction", id: 0x5, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
 
     Command(
         {
-            name: "PauseActionWithDuration", id: 0x6,
-            conformance: "desc", access: "O", direction: "request", response: "status"
+            name: "PauseActionWithDuration", id: 0x6, access: "O", conformance: "desc", direction: "request",
+            response: "status"
         },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
@@ -107,20 +107,20 @@ export const Actions = Cluster(
     ),
 
     Command(
-        { name: "ResumeAction", id: 0x7, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "ResumeAction", id: 0x7, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
     Command(
-        { name: "EnableAction", id: 0x8, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "EnableAction", id: 0x8, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
 
     Command(
         {
-            name: "EnableActionWithDuration", id: 0x9,
-            conformance: "desc", access: "O", direction: "request", response: "status"
+            name: "EnableActionWithDuration", id: 0x9, access: "O", conformance: "desc", direction: "request",
+            response: "status"
         },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
@@ -128,15 +128,15 @@ export const Actions = Cluster(
     ),
 
     Command(
-        { name: "DisableAction", id: 0xa, conformance: "desc", access: "O", direction: "request", response: "status" },
+        { name: "DisableAction", id: 0xa, access: "O", conformance: "desc", direction: "request", response: "status" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
     ),
 
     Command(
         {
-            name: "DisableActionWithDuration", id: 0xb,
-            conformance: "desc", access: "O", direction: "request", response: "status"
+            name: "DisableActionWithDuration", id: 0xb, access: "O", conformance: "desc", direction: "request",
+            response: "status"
         },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
         Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
@@ -194,20 +194,20 @@ export const Actions = Cluster(
     Datatype(
         { name: "ActionStruct", type: "struct" },
         Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
-        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 128{32}", conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 128{32}" }),
         Field({ name: "Type", id: 0x2, type: "ActionTypeEnum", conformance: "M" }),
         Field({ name: "EndpointListId", id: 0x3, type: "uint16", conformance: "M" }),
-        Field({ name: "SupportedCommands", id: 0x4, type: "CommandBits", constraint: "0 to 4095", conformance: "M" }),
+        Field({ name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M", constraint: "0 to 4095" }),
         Field({ name: "State", id: 0x5, type: "ActionStateEnum", conformance: "M" })
     ),
 
     Datatype(
         { name: "EndpointListStruct", type: "struct" },
         Field({ name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M" }),
-        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 128{32}", conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 128{32}" }),
         Field({ name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M" }),
         Field(
-            { name: "Endpoints", id: 0x3, type: "list", constraint: "max 256", conformance: "M" },
+            { name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256" },
             Field({ name: "entry", type: "endpoint-no" })
         )
     )

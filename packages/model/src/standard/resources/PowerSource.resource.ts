@@ -9,18 +9,15 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "PowerSource",
-    classification: "node", pics: "PS",
+    tag: "cluster", name: "PowerSource", classification: "node", pics: "PS", xref: "core§11.7",
     details: "This cluster is used to describe the configuration and capabilities of a physical power source that " +
         "provides power to one or more endpoints on a node. In case the node has multiple power sources, each " +
         "shall be described by its own cluster instance. Each instance of this cluster may be associated with " +
         "one or more endpoints or the entire node.",
-    xref: "core§11.7",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.7.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.7.4",
 
             children: [
                 { tag: "field", name: "WIRED", details: "A wired power source" },
@@ -31,89 +28,76 @@ Resource.add({
         },
 
         {
-            tag: "attribute", name: "Status",
+            tag: "attribute", name: "Status", xref: "core§11.7.7.1",
             details: "Indicates the participation of this power source in providing power to the Node as specified in " +
-                "PowerSourceStatusEnum.",
-            xref: "core§11.7.7.1"
+                "PowerSourceStatusEnum."
         },
 
         {
-            tag: "attribute", name: "Order",
+            tag: "attribute", name: "Order", xref: "core§11.7.7.2",
 
             details: "Indicates the relative preference with which the Node will select this source to provide power. A " +
                 "source with a lower order shall be selected by the Node to provide power before any other source " +
                 "with a higher order, if the lower order source is available (see Status)." +
                 "\n" +
                 "Note, Order is read-only and therefore NOT intended to allow clients control over power source " +
-                "selection.",
-
-            xref: "core§11.7.7.2"
+                "selection."
         },
 
         {
-            tag: "attribute", name: "Description",
+            tag: "attribute", name: "Description", xref: "core§11.7.7.3",
             details: "This attribute shall provide a user-facing description of this source, used to distinguish it from " +
                 "other power sources, e.g. \"DC Power\", \"Primary Battery\" or \"Battery back-up\". This attribute shall " +
-                "NOT be used to convey information such as battery form factor, or chemistry.",
-            xref: "core§11.7.7.3"
+                "NOT be used to convey information such as battery form factor, or chemistry."
         },
 
         {
-            tag: "attribute", name: "WiredAssessedInputVoltage",
+            tag: "attribute", name: "WiredAssessedInputVoltage", xref: "core§11.7.7.4",
             details: "Indicates the assessed RMS or DC voltage currently provided by the hard-wired source, in mV " +
                 "(millivolts). A value of NULL shall indicate the Node is currently unable to assess the value. If " +
                 "the wired source is not connected, but the Node is still able to assess a value, then the assessed " +
-                "value may be reported.",
-            xref: "core§11.7.7.4"
+                "value may be reported."
         },
 
         {
-            tag: "attribute", name: "WiredAssessedInputFrequency",
+            tag: "attribute", name: "WiredAssessedInputFrequency", xref: "core§11.7.7.5",
             details: "Indicates the assessed frequency of the voltage, currently provided by the hard-wired source, in Hz. " +
                 "A value of NULL shall indicate the Node is currently unable to assess the value. If the wired source " +
                 "is not connected, but the Node is still able to assess a value, then the assessed value may be " +
-                "reported.",
-            xref: "core§11.7.7.5"
+                "reported."
         },
 
         {
-            tag: "attribute", name: "WiredCurrentType",
-            details: "Indicates the type of current the Node expects to be provided by the hard- wired source as specified " +
-                "in WiredCurrentTypeEnum.",
-            xref: "core§11.7.7.6"
+            tag: "attribute", name: "WiredCurrentType", xref: "core§11.7.7.6",
+            details: "Indicates the type of current the Node expects to be provided by the hard-wired source as specified " +
+                "in WiredCurrentTypeEnum."
         },
 
         {
-            tag: "attribute", name: "WiredAssessedCurrent",
-            details: "Indicates the assessed instantaneous current draw of the Node on the hard- wired source, in mA " +
+            tag: "attribute", name: "WiredAssessedCurrent", xref: "core§11.7.7.7",
+            details: "Indicates the assessed instantaneous current draw of the Node on the hard-wired source, in mA " +
                 "(milliamps). A value of NULL shall indicate the Node is currently unable to assess the value. If the " +
                 "wired source is not connected, but the Node is still able to assess a value, then the assessed value " +
-                "may be reported.",
-            xref: "core§11.7.7.7"
+                "may be reported."
         },
 
         {
-            tag: "attribute", name: "WiredNominalVoltage",
+            tag: "attribute", name: "WiredNominalVoltage", xref: "core§11.7.7.8",
             details: "Indicates the nominal voltage, printed as part of the Node’s regulatory compliance label in mV " +
-                "(millivolts), expected to be provided by the hard-wired source.",
-            xref: "core§11.7.7.8"
+                "(millivolts), expected to be provided by the hard-wired source."
         },
-
         {
-            tag: "attribute", name: "WiredMaximumCurrent",
+            tag: "attribute", name: "WiredMaximumCurrent", xref: "core§11.7.7.9",
             details: "Indicates the maximum current, printed as part of the Node’s regulatory compliance label in mA " +
-                "(milliamps), expected to be provided by the hard-wired source.",
-            xref: "core§11.7.7.9"
+                "(milliamps), expected to be provided by the hard-wired source."
+        },
+        {
+            tag: "attribute", name: "WiredPresent", xref: "core§11.7.7.10",
+            details: "Indicates if the Node detects that the hard-wired power source is properly connected."
         },
 
         {
-            tag: "attribute", name: "WiredPresent",
-            details: "Indicates if the Node detects that the hard-wired power source is properly connected.",
-            xref: "core§11.7.7.10"
-        },
-
-        {
-            tag: "attribute", name: "ActiveWiredFaults",
+            tag: "attribute", name: "ActiveWiredFaults", xref: "core§11.7.7.11",
 
             details: "Indicates the set of wired faults currently detected by the Node on this power source. This set is " +
                 "represented as a list of WiredFaultEnum. When the Node detects a fault has been raised, the " +
@@ -122,20 +106,17 @@ Resource.add({
                 "detects all conditions contributing to a fault have been cleared, the corresponding WiredFaultEnum " +
                 "value shall be removed from this list. An empty list shall indicate there are currently no active " +
                 "faults. The order of this list SHOULD have no significance. Clients interested in monitoring changes " +
-                "in active faults may subscribe to this attribute, or they may subscribe to WiredFaultChange.",
-
-            xref: "core§11.7.7.11"
+                "in active faults may subscribe to this attribute, or they may subscribe to WiredFaultChange."
         },
 
         {
-            tag: "attribute", name: "BatVoltage",
+            tag: "attribute", name: "BatVoltage", xref: "core§11.7.7.12",
             details: "Indicates the currently measured output voltage of the battery in mV (millivolts). A value of NULL " +
-                "shall indicate the Node is currently unable to assess the value.",
-            xref: "core§11.7.7.12"
+                "shall indicate the Node is currently unable to assess the value."
         },
 
         {
-            tag: "attribute", name: "BatPercentRemaining",
+            tag: "attribute", name: "BatPercentRemaining", xref: "core§11.7.7.13",
 
             details: "Indicates the estimated percentage of battery charge remaining until the battery will no longer be " +
                 "able to provide power to the Node. Values are expressed in half percent units, ranging from 0 to " +
@@ -148,13 +129,11 @@ Resource.add({
                 "\n" +
                 "  • When it changes from null to any other value and vice versa." +
                 "\n" +
-                "Since reporting consumes power, devices SHOULD be careful not to over-report.",
-
-            xref: "core§11.7.7.13"
+                "Since reporting consumes power, devices SHOULD be careful not to over-report."
         },
 
         {
-            tag: "attribute", name: "BatTimeRemaining",
+            tag: "attribute", name: "BatTimeRemaining", xref: "core§11.7.7.14",
 
             details: "Indicates the estimated time in seconds before the battery will no longer be able to provide power " +
                 "to the Node. A value of NULL shall indicate the Node is currently unable to assess the value." +
@@ -165,39 +144,34 @@ Resource.add({
                 "\n" +
                 "  • When it changes from null to any other value and vice versa." +
                 "\n" +
-                "Since reporting consumes power, devices SHOULD be careful not to over-report.",
-
-            xref: "core§11.7.7.14"
+                "Since reporting consumes power, devices SHOULD be careful not to over-report."
         },
 
         {
-            tag: "attribute", name: "BatChargeLevel",
+            tag: "attribute", name: "BatChargeLevel", xref: "core§11.7.7.15",
             details: "Indicates a coarse ranking of the charge level of the battery, used to indicate when intervention is " +
-                "required as specified in BatChargeLevelEnum.",
-            xref: "core§11.7.7.15"
+                "required as specified in BatChargeLevelEnum."
         },
 
         {
-            tag: "attribute", name: "BatReplacementNeeded",
+            tag: "attribute", name: "BatReplacementNeeded", xref: "core§11.7.7.16",
             details: "Indicates if the battery needs to be replaced. Replacement may be simple routine maintenance, such " +
                 "as with a single use, non-rechargeable cell. Replacement, however, may also indicate end of life, or " +
-                "serious fault with a rechargeable or even non-replaceable cell.",
-            xref: "core§11.7.7.16"
+                "serious fault with a rechargeable or even non-replaceable cell."
         },
 
         {
-            tag: "attribute", name: "BatReplaceability",
-            details: "Indicates the replaceability of the battery as specified in BatReplaceabilityEnum.",
-            xref: "core§11.7.7.17"
+            tag: "attribute", name: "BatReplaceability", xref: "core§11.7.7.17",
+            details: "This attribute shall indicate the replaceability of the battery as specified in " +
+                "BatReplaceabilityEnum."
         },
         {
-            tag: "attribute", name: "BatPresent",
-            details: "Indicates whether the Node detects that the batteries are properly installed.",
-            xref: "core§11.7.7.18"
+            tag: "attribute", name: "BatPresent", xref: "core§11.7.7.18",
+            details: "Indicates whether the Node detects that the batteries are properly installed."
         },
 
         {
-            tag: "attribute", name: "ActiveBatFaults",
+            tag: "attribute", name: "ActiveBatFaults", xref: "core§11.7.7.19",
 
             details: "Indicates the set of battery faults currently detected by the Node on this power source. This set is " +
                 "represented as a list of BatFaultEnum. When the Node detects a fault has been raised, the " +
@@ -206,69 +180,52 @@ Resource.add({
                 "detects all conditions contributing to a fault have been cleared, the corresponding BatFaultEnum " +
                 "value shall be removed from this list. An empty list shall indicate there are currently no active " +
                 "faults. The order of this list SHOULD have no significance. Clients interested in monitoring changes " +
-                "in active faults may subscribe to this attribute, or they may subscribe to Bat" +
-                "\n" +
-                "FaultChange.",
-
-            xref: "core§11.7.7.19"
+                "in active faults may subscribe to this attribute, or they may subscribe to BatFaultChange."
         },
 
         {
-            tag: "attribute", name: "BatReplacementDescription",
+            tag: "attribute", name: "BatReplacementDescription", xref: "core§11.7.7.20",
             details: "This attribute shall provide a user-facing description of this battery, which SHOULD contain " +
                 "information required to identify a replacement, such as form factor, chemistry or preferred " +
-                "manufacturer.",
-            xref: "core§11.7.7.20"
+                "manufacturer."
         },
 
         {
-            tag: "attribute", name: "BatCommonDesignation",
+            tag: "attribute", name: "BatCommonDesignation", xref: "core§11.7.7.21",
             details: "Indicates the ID of the common or colloquial designation of the battery, as specified in " +
-                "BatCommonDesignationEnum.",
-            xref: "core§11.7.7.21"
-        },
-
-        {
-            tag: "attribute", name: "BatAnsiDesignation",
-            details: "Indicates the string representing the ANSI designation for the battery as specified in ANSI C18.",
-            xref: "core§11.7.7.22"
+                "BatCommonDesignationEnum."
         },
         {
-            tag: "attribute", name: "BatIecDesignation",
-            details: "Indicates the string representing the IEC designation for the battery as specified in IEC 60086.",
-            xref: "core§11.7.7.23"
+            tag: "attribute", name: "BatAnsiDesignation", xref: "core§11.7.7.22",
+            details: "Indicates the string representing the ANSI designation for the battery as specified in ANSI C18."
         },
-
         {
-            tag: "attribute", name: "BatApprovedChemistry",
+            tag: "attribute", name: "BatIecDesignation", xref: "core§11.7.7.23",
+            details: "Indicates the string representing the IEC designation for the battery as specified in IEC 60086."
+        },
+        {
+            tag: "attribute", name: "BatApprovedChemistry", xref: "core§11.7.7.24",
             details: "Indicates the ID of the preferred chemistry of the battery source as specified in " +
-                "BatApprovedChemistryEnum.",
-            xref: "core§11.7.7.24"
+                "BatApprovedChemistryEnum."
         },
-
         {
-            tag: "attribute", name: "BatCapacity",
+            tag: "attribute", name: "BatCapacity", xref: "core§11.7.7.25",
             details: "Indicates the preferred minimum charge capacity rating in mAh of individual, user- or " +
-                "factory-serviceable battery cells or packs in the battery source.",
-            xref: "core§11.7.7.25"
+                "factory-serviceable battery cells or packs in the battery source."
         },
-
         {
-            tag: "attribute", name: "BatQuantity",
+            tag: "attribute", name: "BatQuantity", xref: "core§11.7.7.26",
             details: "Indicates the quantity of individual, user- or factory-serviceable battery cells or packs in the " +
-                "battery source.",
-            xref: "core§11.7.7.26"
+                "battery source."
         },
-
         {
-            tag: "attribute", name: "BatChargeState",
+            tag: "attribute", name: "BatChargeState", xref: "core§11.7.7.27",
             details: "Indicates the current state of the battery source with respect to charging as specified in " +
-                "BatChargeStateEnum.",
-            xref: "core§11.7.7.27"
+                "BatChargeStateEnum."
         },
 
         {
-            tag: "attribute", name: "BatTimeToFullCharge",
+            tag: "attribute", name: "BatTimeToFullCharge", xref: "core§11.7.7.28",
 
             details: "Indicates the estimated time in seconds before the battery source will be at full charge. A value of " +
                 "NULL shall indicate the Node is currently unable to assess the value." +
@@ -279,26 +236,21 @@ Resource.add({
                 "\n" +
                 "  • When it changes from null to any other value and vice versa." +
                 "\n" +
-                "Since reporting consumes power, devices SHOULD be careful not to over-report.",
-
-            xref: "core§11.7.7.28"
+                "Since reporting consumes power, devices SHOULD be careful not to over-report."
         },
 
         {
-            tag: "attribute", name: "BatFunctionalWhileCharging",
-            details: "Indicates whether the Node can remain operational while the battery source is charging.",
-            xref: "core§11.7.7.29"
+            tag: "attribute", name: "BatFunctionalWhileCharging", xref: "core§11.7.7.29",
+            details: "Indicates whether the Node can remain operational while the battery source is charging."
         },
-
         {
-            tag: "attribute", name: "BatChargingCurrent",
+            tag: "attribute", name: "BatChargingCurrent", xref: "core§11.7.7.30",
             details: "Indicates assessed current in mA (milliamps) presently supplied to charge the battery source. A " +
-                "value of NULL shall indicate the Node is currently unable to assess the value.",
-            xref: "core§11.7.7.30"
+                "value of NULL shall indicate the Node is currently unable to assess the value."
         },
 
         {
-            tag: "attribute", name: "ActiveBatChargeFaults",
+            tag: "attribute", name: "ActiveBatChargeFaults", xref: "core§11.7.7.31",
 
             details: "Indicates the set of charge faults currently detected by the Node on this power source. This set is " +
                 "represented as a list of BatChargeFaultEnum. When the Node detects a fault has been raised, the " +
@@ -308,13 +260,11 @@ Resource.add({
                 "BatChargeFaultEnum value shall be removed from this list. An empty list shall indicate there are " +
                 "currently no active faults. The order of this list SHOULD have no significance. Clients interested " +
                 "in monitoring changes in active faults may subscribe to this attribute, or they may subscribe to the " +
-                "BatFaultChange event.",
-
-            xref: "core§11.7.7.31"
+                "BatFaultChange event."
         },
 
         {
-            tag: "attribute", name: "EndpointList",
+            tag: "attribute", name: "EndpointList", xref: "core§11.7.7.32",
 
             details: "Indicates a list of endpoints that are powered by the source defined by this cluster. Multiple " +
                 "instances of this cluster may list the same endpoint, because it is possible for power for an " +
@@ -331,95 +281,76 @@ Resource.add({
                 "The above rules allow that some endpoints can have an unknown power source, and therefore would not " +
                 "be indicated by any instance of this cluster." +
                 "\n" +
-                "Empty list examples" +
-                "\n" +
                 "Typically, there is one power source for the node. Also common is mains power for the node with " +
                 "battery backup power for the node. In both these common cases, for each cluster instance described, " +
                 "the list is empty." +
-                "\n" +
-                "Populated list example" +
                 "\n" +
                 "A node has a mains power source with Order as 0 (zero), but some application endpoints (not all) " +
                 "have a battery back up source with Order as 1, which means this list is empty for the Power Source " +
                 "cluster associated with the mains power, because it indicates the entire node, but the Power Source " +
                 "cluster instance associated with the battery backup would list the endpoints that have a battery " +
-                "backup.",
-
-            xref: "core§11.7.7.32"
+                "backup."
         },
 
         {
-            tag: "event", name: "WiredFaultChange",
+            tag: "event", name: "WiredFaultChange", xref: "core§11.7.8.1",
             details: "The WiredFaultChange Event shall be generated when the set of wired faults currently detected by the " +
                 "Node on this wired power source changes. This event shall correspond to a change in value of " +
                 "ActiveWiredFaults.",
-            xref: "core§11.7.8.1",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per ActiveWiredFaults.",
-                    xref: "core§11.7.8.1.1"
+                    tag: "field", name: "Current", xref: "core§11.7.8.1.1",
+                    details: "This field shall represent the set of faults currently detected, as per ActiveWiredFaults."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.7.8.1.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveWiredFaults.",
-                    xref: "core§11.7.8.1.2"
+                        "ActiveWiredFaults."
                 }
             ]
         },
 
         {
-            tag: "event", name: "BatFaultChange",
+            tag: "event", name: "BatFaultChange", xref: "core§11.7.8.2",
             details: "The BatFaultChange Event shall be generated when the set of battery faults currently detected by the " +
                 "Node on this battery power source changes. This event shall correspond to a change in value of " +
                 "ActiveBatFaults.",
-            xref: "core§11.7.8.2",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per ActiveBatFaults.",
-                    xref: "core§11.7.8.2.1"
+                    tag: "field", name: "Current", xref: "core§11.7.8.2.1",
+                    details: "This field shall represent the set of faults currently detected, as per ActiveBatFaults."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.7.8.2.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveBatFaults.",
-                    xref: "core§11.7.8.2.2"
+                        "ActiveBatFaults."
                 }
             ]
         },
 
         {
-            tag: "event", name: "BatChargeFaultChange",
+            tag: "event", name: "BatChargeFaultChange", xref: "core§11.7.8.3",
             details: "The BatChargeFaultChange Event shall be generated when the set of charge faults currently detected " +
                 "by the Node on this battery power source changes. This event shall correspond to a change in value " +
                 "of ActiveBatChargeFaults.",
-            xref: "core§11.7.8.3",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults.",
-                    xref: "core§11.7.8.3.1"
+                    tag: "field", name: "Current", xref: "core§11.7.8.3.1",
+                    details: "This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.7.8.3.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveBatChargeFaults.",
-                    xref: "core§11.7.8.3.2"
+                        "ActiveBatChargeFaults."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "WiredFaultEnum",
-            xref: "core§11.7.6.1",
+            tag: "datatype", name: "WiredFaultEnum", xref: "core§11.7.6.1",
 
             children: [
                 {
@@ -438,8 +369,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatFaultEnum",
-            xref: "core§11.7.6.2",
+            tag: "datatype", name: "BatFaultEnum", xref: "core§11.7.6.2",
 
             children: [
                 {
@@ -458,8 +388,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatChargeFaultEnum",
-            xref: "core§11.7.6.3",
+            tag: "datatype", name: "BatChargeFaultEnum", xref: "core§11.7.6.3",
 
             children: [
                 {
@@ -510,8 +439,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "PowerSourceStatusEnum",
-            xref: "core§11.7.6.4",
+            tag: "datatype", name: "PowerSourceStatusEnum", xref: "core§11.7.6.4",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "Indicate the source status is not specified" },
@@ -531,8 +459,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "WiredCurrentTypeEnum",
-            xref: "core§11.7.6.5",
+            tag: "datatype", name: "WiredCurrentTypeEnum", xref: "core§11.7.6.5",
             children: [
                 { tag: "field", name: "Ac", description: "Indicates AC current" },
                 { tag: "field", name: "Dc", description: "Indicates DC current" }
@@ -540,8 +467,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatChargeLevelEnum",
-            xref: "core§11.7.6.6",
+            tag: "datatype", name: "BatChargeLevelEnum", xref: "core§11.7.6.6",
 
             children: [
                 { tag: "field", name: "Ok", description: "Charge level is nominal" },
@@ -557,8 +483,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatReplaceabilityEnum",
-            xref: "core§11.7.6.7",
+            tag: "datatype", name: "BatReplaceabilityEnum", xref: "core§11.7.6.7",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "The replaceability is unspecified or unknown." },
@@ -575,8 +500,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatCommonDesignationEnum",
-            xref: "core§11.7.6.8",
+            tag: "datatype", name: "BatCommonDesignationEnum", xref: "core§11.7.6.8",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "Common type is unknown or unspecified" },
@@ -657,8 +581,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatApprovedChemistryEnum",
-            xref: "core§11.7.6.9",
+            tag: "datatype", name: "BatApprovedChemistryEnum", xref: "core§11.7.6.9",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "Cell chemistry is unspecified or unknown" },
@@ -707,8 +630,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BatChargeStateEnum",
-            xref: "core§11.7.6.10",
+            tag: "datatype", name: "BatChargeStateEnum", xref: "core§11.7.6.10",
 
             children: [
                 { tag: "field", name: "Unknown", description: "Unable to determine the charging state" },

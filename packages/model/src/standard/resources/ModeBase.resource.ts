@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "ModeBase",
-    classification: "application", pics: "MODB",
+    tag: "cluster", name: "ModeBase", classification: "application", pics: "MODB", xref: "cluster§1.10",
 
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
         "one of several predefined values. For example, the light pattern of a disco ball, the mode of a " +
@@ -34,36 +33,29 @@ Resource.add({
         "An anonymous mode shall NOT replace the meaning of a standard mode tag, when one exists, for the " +
         "cluster purpose.",
 
-    xref: "cluster§1.10",
-
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§1.10.4",
-
+            tag: "attribute", name: "FeatureMap", xref: "cluster§1.10.4",
             children: [{
-                tag: "field", name: "DEPONOFF",
+                tag: "field", name: "DEPONOFF", xref: "cluster§1.10.4.1",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
-                    "same endpoint. See OnMode for more information.",
-                xref: "cluster§1.10.4.1"
+                    "same endpoint. See OnMode for more information."
             }]
         },
 
         {
-            tag: "attribute", name: "SupportedModes",
+            tag: "attribute", name: "SupportedModes", xref: "cluster§1.10.6.1",
 
             details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
                 "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
                 "ModeOptionStruct." +
                 "\n" +
                 "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
-                "have a unique value for the Label field.",
-
-            xref: "cluster§1.10.6.1"
+                "have a unique value for the Label field."
         },
 
         {
-            tag: "attribute", name: "CurrentMode",
+            tag: "attribute", name: "CurrentMode", xref: "cluster§1.10.6.2",
 
             details: "Indicates the current mode of the server." +
                 "\n" +
@@ -73,13 +65,11 @@ Resource.add({
                 "The value of this attribute may change at any time via an out-of-band interaction outside of the " +
                 "server, such as interactions with a user interface, via internal mode changes due to autonomously " +
                 "progressing through a sequence of operations, on system time-outs or idle delays, or via " +
-                "interactions coming from a fabric other than the one which last executed a ChangeToMode.",
-
-            xref: "cluster§1.10.6.2"
+                "interactions coming from a fabric other than the one which last executed a ChangeToMode."
         },
 
         {
-            tag: "attribute", name: "StartUpMode",
+            tag: "attribute", name: "StartUpMode", xref: "cluster§1.10.6.3",
 
             details: "Indicates the desired startup mode for the server when it is supplied with power." +
                 "\n" +
@@ -93,33 +83,28 @@ Resource.add({
                 "The value of this field shall match the Mode field of one of the entries in the SupportedModes " +
                 "attribute." +
                 "\n" +
-                "If this attribute is not implemented, or is set to the null value, it shall have no effect.",
-
-            xref: "cluster§1.10.6.3"
+                "If this attribute is not implemented, or is set to the null value, it shall have no effect."
         },
 
         {
-            tag: "attribute", name: "OnMode",
+            tag: "attribute", name: "OnMode", xref: "cluster§1.10.6.4",
 
             details: "Indicates whether the value of CurrentMode depends on the state of the On/Off cluster on the same " +
                 "endpoint. If this attribute is not present or is set to null, there is no dependency, otherwise the " +
                 "CurrentMode attribute shall depend on the OnOff attribute in the On/Off cluster" +
                 "\n" +
                 "The value of this field shall match the Mode field of one of the entries in the SupportedModes " +
-                "attribute.",
-
-            xref: "cluster§1.10.6.4"
+                "attribute."
         },
 
         {
-            tag: "command", name: "ChangeToMode",
+            tag: "command", name: "ChangeToMode", xref: "cluster§1.10.7.1",
             details: "This command is used to change device modes." +
                 "\n" +
                 "On receipt of this command the device shall respond with a ChangeToModeResponse command.",
-            xref: "cluster§1.10.7.1",
 
             children: [{
-                tag: "field", name: "NewMode",
+                tag: "field", name: "NewMode", xref: "cluster§1.10.7.1.1",
 
                 details: "If the NewMode field doesn’t match the Mode field of any entry of the SupportedModes list, the " +
                     "ChangeToModeResponse command’s Status field shall indicate UnsupportedMode and the StatusText field " +
@@ -142,29 +127,23 @@ Resource.add({
                     "\n" +
                     "If the NewMode field is the same as the value of the CurrentMode attribute the ChangeToModeResponse " +
                     "command shall have the Status field set to Success and the StatusText field may be supplied with a " +
-                    "human readable string or include an empty string.",
-
-                xref: "cluster§1.10.7.1.1"
+                    "human readable string or include an empty string."
             }]
         },
 
         {
-            tag: "command", name: "ChangeToModeResponse",
-            details: "This command is sent by the device on receipt of the ChangeToMode command. This command" +
-                "\n" +
-                "shall have the following data fields:",
-            xref: "cluster§1.10.7.2",
+            tag: "command", name: "ChangeToModeResponse", xref: "cluster§1.10.7.2",
+            details: "This command is sent by the device on receipt of the ChangeToMode command.",
             children: [{ tag: "field", name: "Status", xref: "cluster§1.10.7.2.1" }]
         },
 
         {
-            tag: "datatype", name: "ModeTagStruct",
+            tag: "datatype", name: "ModeTagStruct", xref: "cluster§1.10.5.1",
             details: "A Mode Tag is meant to be interpreted by the client for the purpose the cluster serves.",
-            xref: "cluster§1.10.5.1",
 
             children: [
                 {
-                    tag: "field", name: "MfgCode",
+                    tag: "field", name: "MfgCode", xref: "cluster§1.10.5.1.1",
 
                     details: "If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see " +
                         "Section 1.10.8, “Mode Namespace”)." +
@@ -175,42 +154,36 @@ Resource.add({
                         "The same manufacturer code and mode tag value in separate cluster instances are part of the same " +
                         "namespace and have the same meaning. For example: a manufacturer tag meaning \"pinch\" can be used " +
                         "both in a cluster whose purpose is to choose the amount of sugar, or in a cluster whose purpose is " +
-                        "to choose the amount of salt.",
-
-                    xref: "cluster§1.10.5.1.1"
+                        "to choose the amount of salt."
                 },
 
                 {
-                    tag: "field", name: "Value",
+                    tag: "field", name: "Value", xref: "cluster§1.10.5.1.2",
                     details: "This field shall indicate the mode tag within a mode tag namespace which is either manufacturer " +
-                        "specific or standard.",
-                    xref: "cluster§1.10.5.1.2"
+                        "specific or standard."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ModeOptionStruct",
+            tag: "datatype", name: "ModeOptionStruct", xref: "cluster§1.10.5.2",
             details: "This is a struct representing a possible mode of the server.",
-            xref: "cluster§1.10.5.2",
 
             children: [
                 {
-                    tag: "field", name: "Label",
+                    tag: "field", name: "Label", xref: "cluster§1.10.5.2.1",
                     details: "This field shall indicate readable text that describes the mode option, so that a client can provide " +
                         "it to the user to indicate what this option means. This field is meant to be readable and " +
-                        "understandable by the user.",
-                    xref: "cluster§1.10.5.2.1"
+                        "understandable by the user."
                 },
 
                 {
-                    tag: "field", name: "Mode",
-                    details: "This field is used to identify the mode option.",
-                    xref: "cluster§1.10.5.2.2"
+                    tag: "field", name: "Mode", xref: "cluster§1.10.5.2.2",
+                    details: "This field is used to identify the mode option."
                 },
 
                 {
-                    tag: "field", name: "ModeTags",
+                    tag: "field", name: "ModeTags", xref: "cluster§1.10.5.2.3",
 
                     details: "This field shall contain a list of tags that are associated with the mode option. This may be used " +
                         "by clients to determine the full or the partial semantics of a certain mode, depending on which tags " +
@@ -221,10 +194,9 @@ Resource.add({
                         "includes the mode tag values from that namespace." +
                         "\n" +
                         "Mode tags can help clients look for options that meet certain criteria, render the user interface, " +
-                        "use" +
-                        "\n" +
-                        "the mode in an automation, or to craft help text their voice-driven interfaces. A mode tag shall be " +
-                        "either a standard tag or a manufacturer specific tag, as defined in each ModeTagStruct list entry." +
+                        "use the mode in an automation, or to craft help text their voice-driven interfaces. A mode tag shall " +
+                        "be either a standard tag or a manufacturer specific tag, as defined in each ModeTagStruct list " +
+                        "entry." +
                         "\n" +
                         "A mode option may have more than one mode tag. A mode option may be associated with a mixture of " +
                         "standard and manufacturer specific mode tags. A mode option shall be associated with at least one " +
@@ -245,9 +217,7 @@ Resource.add({
                         "    a Delicate tag (standard, defined in the namespace of a Laundry Mode derived cluster)." +
                         "\n" +
                         "  • A mode that includes both a generic Quick tag (defined here), and Vacuum and Mop tags, (defined " +
-                        "    in the RVC Clean cluster that is a derivation of this cluster).",
-
-                    xref: "cluster§1.10.5.2.3"
+                        "    in the RVC Clean cluster that is a derivation of this cluster)."
                 }
             ]
         },

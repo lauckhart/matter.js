@@ -127,7 +127,7 @@ export * from "./OperationalCredentials.element.js";
 export * from "./AdministratorCommissioning.element.js";
 export * from "./OtaSoftwareUpdateProvider.element.js";
 export * from "./OtaSoftwareUpdateRequestor.element.js";
-export * from "./JointFabricDatastoreCluster.element.js";
+export * from "./JointFabricDatastore.element.js";
 export * from "./JointFabricPki.element.js";
 export * from "./CommissionerControl.element.js";
 export * from "./MeasurementTypeEnum.element.js";

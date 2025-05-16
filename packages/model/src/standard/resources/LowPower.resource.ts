@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "LowPower",
-    classification: "application", pics: "LOWPOWER",
+    tag: "cluster", name: "LowPower", classification: "application", pics: "LOWPOWER",
+    xref: "cluster§1.11",
 
     details: "This cluster provides an interface for managing low power mode on a device." +
         "\n" +
@@ -23,15 +23,13 @@ Resource.add({
         "The cluster server for Low Power is implemented by a device that supports a low power mode, such as " +
         "a TV, Set-top box, or Smart Speaker." +
         "\n" +
-        "NOTE" +
+        "> [!NOTE]" +
         "\n" +
-        "We have considered a “DisableLowPowerMode” command but have not added it due to suspected issues " +
-        "with energy consumption regulations. This can be added in the future.",
+        "> We have considered a “DisableLowPowerMode” command but have not added it due to suspected issues " +
+        "  with energy consumption regulations. This can be added in the future.",
 
-    xref: "cluster§1.11",
     children: [{
-        tag: "command", name: "Sleep",
-        details: "This command shall put the device into low power mode.",
-        xref: "cluster§1.11.4.1"
+        tag: "command", name: "Sleep", xref: "cluster§1.11.4.1",
+        details: "This command shall put the device into low power mode."
     }]
 });

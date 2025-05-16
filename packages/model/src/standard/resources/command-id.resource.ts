@@ -8,12 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "command-id",
-    description: "Command ID",
-    details: "An identifier that indicates a command defined in a cluster specification." +
-        "\n" +
-        "Command IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +
-        "described in Data Model Types.",
-    xref: "core§7.19.2.30"
-});
+Resource.add({ tag: "datatype", name: "command-id", description: "Command ID", xref: "core§7.19.2" });

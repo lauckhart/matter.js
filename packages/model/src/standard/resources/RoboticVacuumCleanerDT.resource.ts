@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "RoboticVacuumCleaner",
-    classification: "simple",
+    tag: "deviceType", name: "RoboticVacuumCleaner", classification: "simple", xref: "device§12.1",
     details: "This defines conformance for the Robotic Vacuum Cleaner device type.",
-    xref: "device§12.1",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§12.1.4" },

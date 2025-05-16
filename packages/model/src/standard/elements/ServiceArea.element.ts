@@ -21,74 +21,74 @@ export const ServiceArea = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "SELRUN", constraint: "0", longName: "SelectWhileRunning" }),
-        Field({ name: "PROG", constraint: "1", longName: "ProgressReporting" }),
-        Field({ name: "MAPS", constraint: "2", longName: "Maps" })
+        Field({ name: "SELRUN", constraint: "0", title: "SelectWhileRunning" }),
+        Field({ name: "PROG", constraint: "1", title: "ProgressReporting" }),
+        Field({ name: "MAPS", constraint: "2", title: "Maps" })
     ),
 
     Attribute(
-        { name: "SupportedAreas", id: 0x0, type: "list", constraint: "max 255", conformance: "M", access: "R V" },
+        { name: "SupportedAreas", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "max 255" },
         Field({ name: "entry", type: "AreaStruct" })
     ),
     Attribute(
-        { name: "SupportedMaps", id: 0x1, type: "list", constraint: "max 255", conformance: "MAPS", access: "R V" },
+        { name: "SupportedMaps", id: 0x1, type: "list", access: "R V", conformance: "MAPS", constraint: "max 255" },
         Field({ name: "entry", type: "MapStruct" })
     ),
 
     Attribute(
         {
-            name: "SelectedAreas", id: 0x2, type: "list",
-            default: [], constraint: "desc", conformance: "M", access: "R V"
+            name: "SelectedAreas", id: 0x2, type: "list", access: "R V", conformance: "M", constraint: "desc",
+            default: []
         },
         Field({ name: "entry", type: "uint32" })
     ),
 
     Attribute({
-        name: "CurrentArea", id: 0x3, type: "uint32",
-        default: null, constraint: "desc", conformance: "desc", access: "R V", quality: "X"
+        name: "CurrentArea", id: 0x3, type: "uint32", access: "R V", conformance: "desc",
+        constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
-        name: "EstimatedEndTime", id: 0x4, type: "epoch-s",
-        default: null, conformance: "[CurrentArea]", access: "R V", quality: "X Q"
+        name: "EstimatedEndTime", id: 0x4, type: "epoch-s", access: "R V", conformance: "[CurrentArea]",
+        default: null, quality: "X Q"
     }),
 
     Attribute(
         {
-            name: "Progress", id: 0x5, type: "list",
-            default: [], constraint: "max 255", conformance: "PROG", access: "R V"
+            name: "Progress", id: 0x5, type: "list", access: "R V", conformance: "PROG", constraint: "max 255",
+            default: []
         },
         Field({ name: "entry", type: "ProgressStruct" })
     ),
 
     Command(
         {
-            name: "SelectAreas", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "SelectAreasResponse"
+            name: "SelectAreas", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "SelectAreasResponse"
         },
         Field(
-            { name: "NewAreas", id: 0x0, type: "list", constraint: "desc", conformance: "M" },
+            { name: "NewAreas", id: 0x0, type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "uint32" })
         )
     ),
 
     Command(
-        { name: "SelectAreasResponse", id: 0x1, conformance: "M", access: "O", direction: "response" },
+        { name: "SelectAreasResponse", id: 0x1, access: "O", conformance: "M", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "SelectAreasStatus", conformance: "M" }),
-        Field({ name: "StatusText", id: 0x1, type: "string", constraint: "max 256", conformance: "M" })
+        Field({ name: "StatusText", id: 0x1, type: "string", conformance: "M", constraint: "max 256" })
     ),
 
     Command(
         {
-            name: "SkipArea", id: 0x2,
-            conformance: "desc", access: "O", direction: "request", response: "SkipAreaResponse"
+            name: "SkipArea", id: 0x2, access: "O", conformance: "desc", direction: "request",
+            response: "SkipAreaResponse"
         },
-        Field({ name: "SkippedArea", id: 0x0, type: "uint32", constraint: "desc", conformance: "M" })
+        Field({ name: "SkippedArea", id: 0x0, type: "uint32", conformance: "M", constraint: "desc" })
     ),
 
     Command(
-        { name: "SkipAreaResponse", id: 0x3, conformance: "SkipArea", access: "O", direction: "response" },
+        { name: "SkipAreaResponse", id: 0x3, access: "O", conformance: "SkipArea", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "SkipAreaStatus", conformance: "M" }),
-        Field({ name: "StatusText", id: 0x1, type: "string", constraint: "max 256", conformance: "M" })
+        Field({ name: "StatusText", id: 0x1, type: "string", conformance: "M", constraint: "max 256" })
     ),
     Datatype(
         { name: "LandmarkInfoStruct", type: "struct" },
@@ -103,13 +103,13 @@ export const ServiceArea = Cluster(
     Datatype(
         { name: "MapStruct", type: "struct" },
         Field({ name: "MapId", id: 0x0, type: "uint32", conformance: "M" }),
-        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 64", conformance: "M" })
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 64" })
     ),
 
     Datatype(
         { name: "AreaStruct", type: "struct" },
         Field({ name: "AreaId", id: 0x0, type: "uint32", conformance: "M" }),
-        Field({ name: "MapId", id: 0x1, type: "uint32", constraint: "desc", conformance: "M", quality: "X" }),
+        Field({ name: "MapId", id: 0x1, type: "uint32", conformance: "M", constraint: "desc", quality: "X" }),
         Field({ name: "AreaInfo", id: 0x2, type: "AreaInfoStruct", conformance: "M" })
     ),
 
@@ -118,7 +118,7 @@ export const ServiceArea = Cluster(
         Field({ name: "AreaId", id: 0x0, type: "uint32", conformance: "M" }),
         Field({ name: "Status", id: 0x1, type: "OperationalStatusEnum", conformance: "M" }),
         Field({ name: "TotalOperationalTime", id: 0x2, type: "elapsed-s", conformance: "O", quality: "X" }),
-        Field({ name: "EstimatedTime", id: 0x3, type: "elapsed-s", quality: "X" })
+        Field({ name: "EstimatedTime", id: 0x3, type: "elapsed-s", conformance: "O", quality: "X" })
     ),
 
     Datatype(

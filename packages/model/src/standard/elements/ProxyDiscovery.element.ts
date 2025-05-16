@@ -19,17 +19,17 @@ export const ProxyDiscovery = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
-        { name: "ProxyDiscoverRequest", id: 0x0, conformance: "M", access: "O", direction: "request" },
+        { name: "ProxyDiscoverRequest", id: 0x0, access: "O", conformance: "M", direction: "request" },
         Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
-        Field({ name: "NumAttributePaths", id: 0x1, type: "uint16", constraint: "desc", conformance: "M" }),
-        Field({ name: "NumEventPaths", id: 0x2, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "NumAttributePaths", id: 0x1, type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ name: "NumEventPaths", id: 0x2, type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "ProxyDiscoverResponse", id: 0x1, conformance: "M", direction: "response" },
         Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
-        Field({ name: "NumHopsToSource", id: 0x1, type: "uint16", constraint: "desc", conformance: "M" }),
-        Field({ name: "AvailableCapacity", id: 0x2, type: "uint16", constraint: "desc", conformance: "M" })
+        Field({ name: "NumHopsToSource", id: 0x1, type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ name: "AvailableCapacity", id: 0x2, type: "uint16", conformance: "M", constraint: "desc" })
     )
 );
 

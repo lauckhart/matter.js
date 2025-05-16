@@ -20,7 +20,7 @@ export const BridgedDeviceBasicInformation = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "BIS", constraint: "20", conformance: "O", longName: "BridgedIcdSupport" })
+        Field({ name: "BIS", conformance: "O", constraint: "20", title: "BridgedIcdSupport" })
     ),
     Attribute({ name: "DataModelRevision", id: 0x0, conformance: "X" }),
     Attribute({ name: "VendorName", id: 0x1, conformance: "O" }),
@@ -53,13 +53,13 @@ export const BridgedDeviceBasicInformation = Cluster(
     ),
     Event({ name: "ReachableChanged", id: 0x3, conformance: "M", priority: "critical" }),
     Event(
-        { name: "ActiveChanged", id: 0x80, conformance: "BIS", access: "V", priority: "info" },
-        Field({ name: "PromisedActiveDuration", id: 0x0, type: "uint32", constraint: "desc", conformance: "M" })
+        { name: "ActiveChanged", id: 0x80, access: "V", conformance: "BIS", priority: "info" },
+        Field({ name: "PromisedActiveDuration", id: 0x0, type: "uint32", conformance: "M", constraint: "desc" })
     ),
     Command(
-        { name: "KeepActive", id: 0x80, conformance: "BIS", access: "O", direction: "request", response: "status" },
+        { name: "KeepActive", id: 0x80, access: "O", conformance: "BIS", direction: "request", response: "status" },
         Field({ name: "StayActiveDuration", id: 0x0, type: "uint32", conformance: "M" }),
-        Field({ name: "TimeoutMs", id: 0x1, type: "uint32", constraint: "30000 to 3600000", conformance: "M" })
+        Field({ name: "TimeoutMs", id: 0x1, type: "uint32", conformance: "M", constraint: "30000 to 3600000" })
     )
 );
 

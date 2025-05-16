@@ -13,9 +13,9 @@ export const SolarPowerDt = DeviceType(
     { name: "SolarPower", id: 0x17 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 23, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 23, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(SolarPowerDt);

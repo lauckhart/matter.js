@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "ContentAppObserver",
-    classification: "application", pics: "APPOBSERVER",
+    tag: "cluster", name: "ContentAppObserver", classification: "application", pics: "APPOBSERVER",
+    xref: "cluster§6.12",
 
     details: "This cluster provides an interface for sending targeted commands to an Observer of a Content App on " +
         "a Video Player device such as a Streaming Media Player, Smart TV or Smart Screen." +
@@ -53,59 +53,49 @@ Resource.add({
         "Content App it does not recognize. A Content App SHOULD ignore the Data field values in responses " +
         "when the EncodingHint value is blank or not recognized.",
 
-    xref: "cluster§6.12",
-
     children: [
         {
-            tag: "command", name: "ContentAppMessage",
+            tag: "command", name: "ContentAppMessage", xref: "cluster§6.12.5.1",
             details: "Upon receipt, the data field may be parsed and interpreted. Message encoding is specific to the " +
                 "Content App. A Content App may when possible read attributes from the Basic Information Cluster on " +
                 "the Observer and use this to determine the Message encoding." +
                 "\n" +
                 "This command returns a ContentAppMessage Response.",
-            xref: "cluster§6.12.5.1",
 
             children: [
                 {
-                    tag: "field", name: "Data",
-                    details: "This field shall indicate content app-specific data.",
-                    xref: "cluster§6.12.5.1.1"
+                    tag: "field", name: "Data", xref: "cluster§6.12.5.1.1",
+                    details: "This field shall indicate content app-specific data."
                 },
                 {
-                    tag: "field", name: "EncodingHint",
-                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
-                    xref: "cluster§6.12.5.1.2"
+                    tag: "field", name: "EncodingHint", xref: "cluster§6.12.5.1.2",
+                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data."
                 }
             ]
         },
 
         {
-            tag: "command", name: "ContentAppMessageResponse",
+            tag: "command", name: "ContentAppMessageResponse", xref: "cluster§6.12.5.2",
             details: "This command shall be generated in response to ContentAppMessage command.",
-            xref: "cluster§6.12.5.2",
 
             children: [
                 {
-                    tag: "field", name: "Status",
-                    details: "This field shall indicate the status of the command which resulted in this response.",
-                    xref: "cluster§6.12.5.2.1"
+                    tag: "field", name: "Status", xref: "cluster§6.12.5.2.1",
+                    details: "This field shall indicate the status of the command which resulted in this response."
                 },
                 {
-                    tag: "field", name: "Data",
-                    details: "This optional field shall indicate content app-specific data.",
-                    xref: "cluster§6.12.5.2.2"
+                    tag: "field", name: "Data", xref: "cluster§6.12.5.2.2",
+                    details: "This optional field shall indicate content app-specific data."
                 },
                 {
-                    tag: "field", name: "EncodingHint",
-                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
-                    xref: "cluster§6.12.5.2.3"
+                    tag: "field", name: "EncodingHint", xref: "cluster§6.12.5.2.3",
+                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "StatusEnum",
-            xref: "cluster§6.12.4.1",
+            tag: "datatype", name: "StatusEnum", xref: "cluster§6.12.4.1",
 
             children: [
                 { tag: "field", name: "Success", description: "Command succeeded" },

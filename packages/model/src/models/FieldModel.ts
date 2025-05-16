@@ -14,7 +14,7 @@ import { ValueModel } from "./ValueModel.js";
 export class FieldModel extends PropertyModel<FieldElement> implements FieldElement {
     override tag: FieldElement.Tag = FieldElement.Tag;
 
-    longName?: string;
+    title?: string;
 
     get fabricSensitive() {
         return this.effectiveAccess.fabricSensitive;
@@ -49,12 +49,12 @@ export class FieldModel extends PropertyModel<FieldElement> implements FieldElem
     constructor(definition: Model.Definition<FieldModel>, ...children: Model.ChildDefinition<FieldModel>[]) {
         super(definition, ...children);
 
-        this.longName = definition.longName;
+        this.title = definition.title;
     }
 
     override toElement(omitResources = false, extra?: Record<string, unknown>) {
         return super.toElement(omitResources, {
-            longName: this.longName,
+            title: this.title,
             ...extra,
         });
     }

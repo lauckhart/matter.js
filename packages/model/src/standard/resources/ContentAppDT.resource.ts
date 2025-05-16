@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "ContentApp",
-    classification: "simple",
+    tag: "deviceType", name: "ContentApp", classification: "simple", xref: "device§10.5",
     details: "This defines conformance to the Content App device type." +
         "\n" +
         "A Content App is usually an application built by a Content Provider. A Casting Video Player with a " +
         "Content App Platform is able to launch Content Apps and represent these apps as separate endpoints.",
-    xref: "device§10.5",
 
     children: [
         { tag: "requirement", name: "Binding", xref: "device§10.5.4" },
@@ -32,8 +30,7 @@ Resource.add({
         {
             tag: "field", name: "conditions",
             children: [{
-                tag: "field", name: "ObserverClient",
-                description: "The node is a client for ContentAppObservers.",
+                tag: "field", name: "ObserverClient", description: "The node is a client for ContentAppObservers.",
                 xref: "device§10.5.3"
             }]
         }

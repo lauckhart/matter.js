@@ -21,37 +21,37 @@ export const OnOff = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "LT", constraint: "0", conformance: "[!OFFONLY]", longName: "Lighting" }),
-        Field({ name: "DF", constraint: "1", conformance: "[!OFFONLY]", longName: "DeadFrontBehavior" }),
-        Field({ name: "OFFONLY", constraint: "2", conformance: "[!LT | DF]", longName: "OffOnly" })
+        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0", title: "Lighting" }),
+        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1", title: "DeadFrontBehavior" }),
+        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2", title: "OffOnly" })
     ),
 
-    Attribute({ name: "OnOff", id: 0x0, type: "bool", default: false, conformance: "M", access: "R V", quality: "N S" }),
-    Attribute({ name: "GlobalSceneControl", id: 0x4000, type: "bool", default: true, conformance: "LT", access: "R V" }),
-    Attribute({ name: "OnTime", id: 0x4001, type: "uint16", default: 0, conformance: "LT", access: "RW VO" }),
-    Attribute({ name: "OffWaitTime", id: 0x4002, type: "uint16", default: 0, conformance: "LT", access: "RW VO" }),
+    Attribute({ name: "OnOff", id: 0x0, type: "bool", access: "R V", conformance: "M", default: false, quality: "N S" }),
+    Attribute({ name: "GlobalSceneControl", id: 0x4000, type: "bool", access: "R V", conformance: "LT", default: true }),
+    Attribute({ name: "OnTime", id: 0x4001, type: "uint16", access: "RW VO", conformance: "LT", default: 0 }),
+    Attribute({ name: "OffWaitTime", id: 0x4002, type: "uint16", access: "RW VO", conformance: "LT", default: 0 }),
     Attribute({
-        name: "StartUpOnOff", id: 0x4003, type: "StartUpOnOffEnum",
-        constraint: "desc", conformance: "LT", access: "RW VM", quality: "X N"
+        name: "StartUpOnOff", id: 0x4003, type: "StartUpOnOffEnum", access: "RW VM", conformance: "LT",
+        constraint: "desc", quality: "X N"
     }),
-    Command({ name: "Off", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" }),
-    Command({ name: "On", id: 0x1, conformance: "!OFFONLY", access: "O", direction: "request", response: "status" }),
-    Command({ name: "Toggle", id: 0x2, conformance: "!OFFONLY", access: "O", direction: "request", response: "status" }),
+    Command({ name: "Off", id: 0x0, access: "O", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "On", id: 0x1, access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
+    Command({ name: "Toggle", id: 0x2, access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
     Command(
-        { name: "OffWithEffect", id: 0x40, conformance: "LT", access: "O", direction: "request", response: "status" },
-        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", constraint: "desc", conformance: "M" }),
-        Field({ name: "EffectVariant", id: 0x1, type: "enum8", default: 0, constraint: "desc", conformance: "M" })
+        { name: "OffWithEffect", id: 0x40, access: "O", conformance: "LT", direction: "request", response: "status" },
+        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
+        Field({ name: "EffectVariant", id: 0x1, type: "enum8", conformance: "M", constraint: "desc", default: 0 })
     ),
     Command({
-        name: "OnWithRecallGlobalScene", id: 0x41,
-        conformance: "LT", access: "O", direction: "request", response: "status"
+        name: "OnWithRecallGlobalScene", id: 0x41, access: "O", conformance: "LT", direction: "request",
+        response: "status"
     }),
 
     Command(
-        { name: "OnWithTimedOff", id: 0x42, conformance: "LT", access: "O", direction: "request", response: "status" },
-        Field({ name: "OnOffControl", id: 0x0, type: "OnOffControlBitmap", constraint: "0 to 1", conformance: "M" }),
-        Field({ name: "OnTime", id: 0x1, type: "uint16", constraint: "max 65534", conformance: "M" }),
-        Field({ name: "OffWaitTime", id: 0x2, type: "uint16", constraint: "max 65534", conformance: "M" })
+        { name: "OnWithTimedOff", id: 0x42, access: "O", conformance: "LT", direction: "request", response: "status" },
+        Field({ name: "OnOffControl", id: 0x0, type: "OnOffControlBitmap", conformance: "M", constraint: "0 to 1" }),
+        Field({ name: "OnTime", id: 0x1, type: "uint16", conformance: "M", constraint: "max 65534" }),
+        Field({ name: "OffWaitTime", id: 0x2, type: "uint16", conformance: "M", constraint: "max 65534" })
     ),
 
     Datatype({ name: "OnOffControlBitmap", type: "map8" }, Field({ name: "AcceptOnlyWhenOn", constraint: "0" })),

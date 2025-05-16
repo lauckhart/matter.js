@@ -9,11 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "ColorDimmerSwitch",
-    classification: "simple",
+    tag: "deviceType", name: "ColorDimmerSwitch", classification: "simple", xref: "device§6.3",
     details: "A Color Dimmer Switch is a controller device that, when bound to a lighting device such as an " +
         "Extended Color Light, is capable of being used to adjust the color of the light being emitted.",
-    xref: "device§6.3",
 
     children: [
         { tag: "requirement", name: "Identify", discriminator: "M:serverCluster", xref: "device§6.3.4" },

@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "Identify",
-    classification: "endpoint", pics: "I",
+    tag: "cluster", name: "Identify", classification: "endpoint", pics: "I", xref: "cluster§1.2",
 
     details: "This cluster supports an endpoint identification state (e.g., flashing a light), that indicates to " +
         "an observer (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a " +
@@ -22,11 +21,9 @@ Resource.add({
         "may both share the same cluster instance and therefore identification state (e.g. single LED on the " +
         "node).",
 
-    xref: "cluster§1.2",
-
     children: [
         {
-            tag: "attribute", name: "IdentifyTime",
+            tag: "attribute", name: "IdentifyTime", xref: "cluster§1.2.5.1",
 
             details: "Indicates the remaining length of time, in seconds, that the endpoint will continue to identify " +
                 "itself." +
@@ -37,29 +34,25 @@ Resource.add({
                 "IdentifyTime attribute shall be decremented every second while in this state." +
                 "\n" +
                 "If this attribute reaches or is set to the value 0 then the device shall terminate its " +
-                "identification state.",
-
-            xref: "cluster§1.2.5.1"
+                "identification state."
         },
 
         {
-            tag: "attribute", name: "IdentifyType",
+            tag: "attribute", name: "IdentifyType", xref: "cluster§1.2.5.2",
             details: "Indicates how the identification state is presented to the user." +
                 "\n" +
                 "This attribute shall contain one of the values defined in IdentifyTypeEnum. The value None shall NOT " +
                 "be used if the device is capable of presenting its identification state using one of the other " +
-                "methods defined in IdentifyTypeEnum.",
-            xref: "cluster§1.2.5.2"
+                "methods defined in IdentifyTypeEnum."
         },
 
         {
-            tag: "command", name: "Identify",
-            details: "This command starts or stops the receiving device identifying itself.",
-            xref: "cluster§1.2.6.1"
+            tag: "command", name: "Identify", xref: "cluster§1.2.6.1",
+            details: "This command starts or stops the receiving device identifying itself."
         },
 
         {
-            tag: "command", name: "TriggerEffect",
+            tag: "command", name: "TriggerEffect", xref: "cluster§1.2.6.2",
 
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
                 "to allow an implementation to provide visual feedback to the user under certain circumstances such " +
@@ -68,35 +61,29 @@ Resource.add({
                 "feedback is useful but it is not the same as and does not replace the identify mechanism used during " +
                 "commissioning.",
 
-            xref: "cluster§1.2.6.2",
-
             children: [
                 {
-                    tag: "field", name: "EffectIdentifier",
+                    tag: "field", name: "EffectIdentifier", xref: "cluster§1.2.6.2.1",
 
                     details: "This field shall indicate the identify effect to use and shall contain one of the non-reserved " +
                         "values in EffectIdentifierEnum." +
                         "\n" +
                         "All values of the EffectIdentifierEnum shall be supported. Implementors may deviate from the example " +
                         "light effects in EffectIdentifierEnum, but they SHOULD indicate during testing how they handle each " +
-                        "effect.",
-
-                    xref: "cluster§1.2.6.2.1"
+                        "effect."
                 },
 
                 {
-                    tag: "field", name: "EffectVariant",
+                    tag: "field", name: "EffectVariant", xref: "cluster§1.2.6.2.2",
                     details: "This field shall indicate which variant of the effect, indicated in the EffectIdentifier field, " +
                         "SHOULD be triggered. If a device does not support the given variant, it shall use the default " +
-                        "variant. This field shall contain one of the values in EffectVariantEnum.",
-                    xref: "cluster§1.2.6.2.2"
+                        "variant. This field shall contain one of the values in EffectVariantEnum."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "IdentifyTypeEnum",
-            xref: "cluster§1.2.4.1",
+            tag: "datatype", name: "IdentifyTypeEnum", xref: "cluster§1.2.4.1",
 
             children: [
                 { tag: "field", name: "None", description: "No presentation." },
@@ -105,14 +92,13 @@ Resource.add({
                 { tag: "field", name: "Display", description: "Presentation will be visible on display screen." },
                 {
                     tag: "field", name: "Actuator",
-                    description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in- wall relay."
+                    description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "EffectIdentifierEnum",
-            xref: "cluster§1.2.4.2",
+            tag: "datatype", name: "EffectIdentifierEnum", xref: "cluster§1.2.4.2",
 
             children: [
                 { tag: "field", name: "Blink", description: "e.g., Light is turned on/off once." },
@@ -137,8 +123,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "EffectVariantEnum",
-            xref: "cluster§1.2.4.3",
+            tag: "datatype", name: "EffectVariantEnum", xref: "cluster§1.2.4.3",
             children: [{ tag: "field", name: "Default", description: "Indicates the default effect is used" }]
         }
     ]

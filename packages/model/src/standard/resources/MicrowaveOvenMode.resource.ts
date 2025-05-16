@@ -9,27 +9,24 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "MicrowaveOvenMode",
-    classification: "application", pics: "MWOM",
+    tag: "cluster", name: "MicrowaveOvenMode", classification: "application", pics: "MWOM",
+    xref: "cluster§8.12",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for microwave oven devices.",
-    xref: "cluster§8.12",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§8.12.4",
+            tag: "attribute", name: "FeatureMap", xref: "cluster§8.12.4",
             children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
 
         {
-            tag: "attribute", name: "SupportedModes",
+            tag: "attribute", name: "SupportedModes", xref: "cluster§8.12.5.1",
             details: "Exactly one entry in the SupportedModes attribute shall include the Normal mode tag in the ModeTags " +
                 "field." +
                 "\n" +
                 "The Normal and Defrost mode tags are mutually exclusive and shall NOT both be used together in a " +
-                "mode’s ModeTags.",
-            xref: "cluster§8.12.5.1"
+                "mode’s ModeTags."
         },
 
         { tag: "attribute", name: "CurrentMode", xref: "cluster§8.12.5" },
@@ -53,14 +50,12 @@ Resource.add({
                 { tag: "field", name: "Night", xref: "cluster§8.12.7.1" },
                 { tag: "field", name: "Day", xref: "cluster§8.12.7.1" },
                 {
-                    tag: "field", name: "Normal",
-                    details: "This is the normal mode of operation for general cooking of food.",
-                    xref: "cluster§8.12.7.1.1"
+                    tag: "field", name: "Normal", xref: "cluster§8.12.7.1.1",
+                    details: "This is the normal mode of operation for general cooking of food."
                 },
                 {
-                    tag: "field", name: "Defrost",
-                    details: "This is a mode optimized for defrosting food.",
-                    xref: "cluster§8.12.7.1.2"
+                    tag: "field", name: "Defrost", xref: "cluster§8.12.7.1.2",
+                    details: "This is a mode optimized for defrosting food."
                 }
             ]
         }

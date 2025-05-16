@@ -21,13 +21,13 @@ export const KeypadInput = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "NV", constraint: "0", longName: "NavigationKeyCodes" }),
-        Field({ name: "LK", constraint: "1", longName: "LocationKeys" }),
-        Field({ name: "NK", constraint: "2", longName: "NumberKeys" })
+        Field({ name: "NV", constraint: "0", title: "NavigationKeyCodes" }),
+        Field({ name: "LK", constraint: "1", title: "LocationKeys" }),
+        Field({ name: "NK", constraint: "2", title: "NumberKeys" })
     ),
 
     Command(
-        { name: "SendKey", id: 0x0, conformance: "M", access: "O", direction: "request", response: "SendKeyResponse" },
+        { name: "SendKey", id: 0x0, access: "O", conformance: "M", direction: "request", response: "SendKeyResponse" },
         Field({ name: "KeyCode", id: 0x0, type: "CecKeyCodeEnum", conformance: "M" })
     ),
     Command(

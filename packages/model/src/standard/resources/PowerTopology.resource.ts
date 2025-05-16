@@ -9,16 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "PowerTopology",
-    classification: "application", pics: "PWRTL",
+    tag: "cluster", name: "PowerTopology", classification: "application", pics: "PWRTL",
+    xref: "core§11.8",
     details: "The Power Topology Cluster provides a mechanism for expressing how power is flowing between " +
         "endpoints.",
-    xref: "core§11.8",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.8.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.8.4",
 
             children: [
                 {
@@ -38,18 +36,16 @@ Resource.add({
         },
 
         {
-            tag: "attribute", name: "AvailableEndpoints",
+            tag: "attribute", name: "AvailableEndpoints", xref: "core§11.8.5.1",
             details: "Indicates the list of endpoints capable of providing power to and/or consuming power from the " +
-                "endpoint hosting this server.",
-            xref: "core§11.8.5.1"
+                "endpoint hosting this server."
         },
 
         {
-            tag: "attribute", name: "ActiveEndpoints",
+            tag: "attribute", name: "ActiveEndpoints", xref: "core§11.8.5.2",
             details: "Indicates the current list of endpoints currently providing or consuming power to or from the " +
                 "endpoint hosting this server. This list shall be a subset of the value of the AvailableEndpoints " +
-                "attribute.",
-            xref: "core§11.8.5.2"
+                "attribute."
         }
     ]
 });

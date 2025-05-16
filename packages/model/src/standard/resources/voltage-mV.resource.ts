@@ -8,9 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "voltage-mV",
-    description: "Voltage",
-    details: "This type represents voltage measured in millivolts.",
-    xref: "core§7.19.2.14"
-});
+Resource.add({ tag: "datatype", name: "voltage-mV", description: "Voltage", xref: "core§7.19.2" });

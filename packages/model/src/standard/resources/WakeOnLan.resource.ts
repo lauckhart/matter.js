@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "WakeOnLan",
-    classification: "application", pics: "WAKEONLAN",
+    tag: "cluster", name: "WakeOnLan", classification: "application", pics: "WAKEONLAN",
+    xref: "cluster§1.12",
 
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On " +
         "LAN or Wake On Wireless LAN (WLAN) protocol (see [Wake On LAN])." +
@@ -39,32 +39,27 @@ Resource.add({
         "The cluster server for Wake on LAN or Wake on WLAN is implemented by a device that supports the Wake " +
         "on LAN/WLAN protocol, such as a TV, Set-top Box, or Smart Speaker.",
 
-    xref: "cluster§1.12",
-
     children: [
         {
-            tag: "attribute", name: "MacAddress",
+            tag: "attribute", name: "MacAddress", xref: "cluster§1.12.4.1",
             details: "Indicates the current MAC address of the device. Only 48-bit MAC Addresses shall be used for this " +
                 "attribute as required by the Wake on LAN protocol." +
                 "\n" +
                 "Format of this attribute shall be an upper-case hex-encoded string representing the hex address, " +
-                "like 12345678ABCD.",
-            xref: "cluster§1.12.4.1"
+                "like 12345678ABCD."
         },
 
         {
-            tag: "attribute", name: "LinkLocalAddress",
+            tag: "attribute", name: "LinkLocalAddress", xref: "cluster§1.12.4.2",
 
-            details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link- local addresses " +
-                "shall be used for this attribute." +
+            details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link-local addresses shall " +
+                "be used for this attribute." +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "Some companies may consider MAC Address to be protected data subject to PII handling considerations " +
-                "and will therefore choose not to include it or read it. The MAC Address can often be determined " +
-                "using ARP in IPv4 or NDP in IPv6.",
-
-            xref: "cluster§1.12.4.2"
+                "> Some companies may consider MAC Address to be protected data subject to PII handling " +
+                "  considerations and will therefore choose not to include it or read it. The MAC Address can often " +
+                "  be determined using ARP in IPv4 or NDP in IPv6."
         }
     ]
 });

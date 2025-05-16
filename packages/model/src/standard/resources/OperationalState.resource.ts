@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "OperationalState",
-    classification: "application", pics: "OPSTATE",
+    tag: "cluster", name: "OperationalState", classification: "application", pics: "OPSTATE",
+    xref: "cluster§1.14",
 
     details: "This cluster supports remotely monitoring and, where supported, changing the operational state of " +
         "any device where a state machine is a part of the operation." +
@@ -32,11 +32,9 @@ Resource.add({
         "\n" +
         "Additionally, this cluster provides events for monitoring the operational state of the device.",
 
-    xref: "cluster§1.14",
-
     children: [
         {
-            tag: "attribute", name: "PhaseList",
+            tag: "attribute", name: "PhaseList", xref: "cluster§1.14.5.1",
 
             details: "Indicates a list of names of different phases that the device can go through for the selected " +
                 "function or mode. The list may not be in sequence order. For example in a washing machine this could " +
@@ -44,27 +42,22 @@ Resource.add({
                 "may change when a different function or mode is selected." +
                 "\n" +
                 "A null value indicates that the device does not present phases during its operation. When this " +
-                "attribute’s value is null, the CurrentPhase attribute shall also be set to null.",
-
-            xref: "cluster§1.14.5.1"
+                "attribute’s value is null, the CurrentPhase attribute shall also be set to null."
         },
 
         {
-            tag: "attribute", name: "CurrentPhase",
+            tag: "attribute", name: "CurrentPhase", xref: "cluster§1.14.5.2",
 
             details: "This attribute represents the current phase of operation being performed by the server. This shall " +
-                "be the positional index representing the value from the set provided in the PhaseList Attribute," +
-                "\n" +
+                "be the positional index representing the value from the set provided in the PhaseList Attribute, " +
                 "where the first item in that list is an index of 0. Thus, this attribute shall have a maximum value " +
                 "that is \"length(PhaseList) - 1\"." +
                 "\n" +
-                "Null if the PhaseList attribute is null or if the PhaseList attribute is an empty list.",
-
-            xref: "cluster§1.14.5.2"
+                "Null if the PhaseList attribute is null or if the PhaseList attribute is an empty list."
         },
 
         {
-            tag: "attribute", name: "CountdownTime",
+            tag: "attribute", name: "CountdownTime", xref: "cluster§1.14.5.3",
 
             details: "Indicates the estimated time left before the operation is completed, in seconds." +
                 "\n" +
@@ -93,13 +86,11 @@ Resource.add({
                 "device state shall NOT be reported." +
                 "\n" +
                 "As this attribute is not being reported during a regular countdown, clients SHOULD NOT rely on the " +
-                "reporting of this attribute in order to keep track of the remaining duration.",
-
-            xref: "cluster§1.14.5.3"
+                "reporting of this attribute in order to keep track of the remaining duration."
         },
 
         {
-            tag: "attribute", name: "OperationalStateList",
+            tag: "attribute", name: "OperationalStateList", xref: "cluster§1.14.5.4",
 
             details: "This attribute describes the set of possible operational states that the device exposes. An " +
                 "operational state is a fundamental device state such as Running or Error. Details of the phase of a " +
@@ -108,39 +99,34 @@ Resource.add({
                 "All devices shall, at a minimum, expose the set of states matching the commands that are also " +
                 "supported by the cluster instance, in addition to Error. The set of possible device states are " +
                 "defined in the OperationalStateEnum. A device type requiring implementation of this cluster shall " +
-                "define the set of states that are applicable to that specific device type.",
-
-            xref: "cluster§1.14.5.4"
+                "define the set of states that are applicable to that specific device type."
         },
 
         {
-            tag: "attribute", name: "OperationalState",
+            tag: "attribute", name: "OperationalState", xref: "cluster§1.14.5.5",
             details: "This attribute specifies the current operational state of a device. This shall be populated with a " +
-                "valid OperationalStateID from the set of values in the OperationalStateList Attribute.",
-            xref: "cluster§1.14.5.5"
+                "valid OperationalStateID from the set of values in the OperationalStateList Attribute."
         },
 
         {
-            tag: "attribute", name: "OperationalError",
+            tag: "attribute", name: "OperationalError", xref: "cluster§1.14.5.6",
             details: "This attribute shall specify the details of any current error condition being experienced on the " +
                 "device when the OperationalState attribute is populated with Error. Please see ErrorStateStruct for " +
                 "general requirements on the population of this attribute." +
                 "\n" +
-                "When there is no error detected, this shall have an ErrorStateID of NoError.",
-            xref: "cluster§1.14.5.6"
+                "When there is no error detected, this shall have an ErrorStateID of NoError."
         },
 
         {
-            tag: "event", name: "OperationalError",
+            tag: "event", name: "OperationalError", xref: "cluster§1.14.7.1",
             details: "This event is generated when a reportable error condition is detected. A device that generates this " +
                 "event shall also set the OperationalState attribute to Error, indicating an error condition." +
                 "\n" +
-                "This event shall contain the following fields:",
-            xref: "cluster§1.14.7.1"
+                "This event shall contain the following fields:"
         },
 
         {
-            tag: "event", name: "OperationCompletion",
+            tag: "event", name: "OperationCompletion", xref: "cluster§1.14.7.2",
 
             details: "This event SHOULD be generated when the overall operation ends, successfully or otherwise. For " +
                 "example, the completion of a cleaning operation in a Robot Vacuum Cleaner, or the completion of a " +
@@ -152,42 +138,34 @@ Resource.add({
                 "\n" +
                 "This event shall contain the following fields:",
 
-            xref: "cluster§1.14.7.2",
-
             children: [
                 {
-                    tag: "field", name: "CompletionErrorCode",
+                    tag: "field", name: "CompletionErrorCode", xref: "cluster§1.14.7.2.1",
                     details: "This field provides an indication of the state at the end of the operation. This field shall have a " +
                         "value from the ErrorStateEnum set. A value of NoError indicates success, that is, no error has been " +
-                        "detected.",
-                    xref: "cluster§1.14.7.2.1"
+                        "detected."
                 },
 
                 {
-                    tag: "field", name: "TotalOperationalTime",
-
+                    tag: "field", name: "TotalOperationalTime", xref: "cluster§1.14.7.2.2",
                     details: "The total operational time, in seconds, from when the operation was started via an initial Start " +
-                        "command or autonomous/manual starting action, until the operation completed. This includes any time" +
-                        "\n" +
+                        "command or autonomous/manual starting action, until the operation completed. This includes any time " +
                         "spent while paused. There may be cases whereby the total operational time exceeds the maximum value " +
                         "that can be conveyed by this attribute, in such instances, this attribute shall be populated with " +
-                        "null.",
-
-                    xref: "cluster§1.14.7.2.2"
+                        "null."
                 },
 
                 {
-                    tag: "field", name: "PausedTime",
+                    tag: "field", name: "PausedTime", xref: "cluster§1.14.7.2.3",
                     details: "The total time spent in the paused state, in seconds. There may be cases whereby the total paused " +
                         "time exceeds the maximum value that can be conveyed by this attribute, in such instances, this " +
-                        "attribute shall be populated with null.",
-                    xref: "cluster§1.14.7.2.3"
+                        "attribute shall be populated with null."
                 }
             ]
         },
 
         {
-            tag: "command", name: "Pause",
+            tag: "command", name: "Pause", xref: "cluster§1.14.6.1",
 
             details: "This command shall be supported if the device supports remotely pausing the operation. If this " +
                 "command is supported, the Resume command shall also be supported." +
@@ -199,10 +177,9 @@ Resource.add({
                 "If this command is received when already in the Paused state the device shall respond with an " +
                 "OperationalCommandResponse command with an ErrorStateID of NoError but take no further action." +
                 "\n" +
-                "A device that receives this command in any state which is not Pause-compatible shall respond" +
-                "\n" +
-                "with an OperationalCommandResponse command with an ErrorStateID of CommandInvalidInState and shall " +
-                "take no further action." +
+                "A device that receives this command in any state which is not Pause-compatible shall respond with an " +
+                "OperationalCommandResponse command with an ErrorStateID of CommandInvalidInState and shall take no " +
+                "further action." +
                 "\n" +
                 "States are defined as Pause-compatible as follows:" +
                 "\n" +
@@ -225,13 +202,11 @@ Resource.add({
                 "\n" +
                 "The following table defines the compatibility of this cluster’s states with the Pause command." +
                 "\n" +
-                "### Table 3. Pause Compatibility",
-
-            xref: "cluster§1.14.6.1"
+                "### Table 3. Pause Compatibility"
         },
 
         {
-            tag: "command", name: "Stop",
+            tag: "command", name: "Stop", xref: "cluster§1.14.6.2",
 
             details: "This command shall be supported if the device supports remotely stopping the operation." +
                 "\n" +
@@ -252,13 +227,11 @@ Resource.add({
                 "  • The OperationalState attribute shall be set to Stopped." +
                 "\n" +
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
-                "    NoError.",
-
-            xref: "cluster§1.14.6.2"
+                "    NoError."
         },
 
         {
-            tag: "command", name: "Start",
+            tag: "command", name: "Start", xref: "cluster§1.14.6.3",
 
             details: "This command shall be supported if the device supports remotely starting the operation. If this " +
                 "command is supported, the 'Stop command shall also be supported." +
@@ -267,7 +240,7 @@ Resource.add({
                 "device is in an operational state from which it can be started. There may be either regulatory or " +
                 "manufacturer-imposed safety and security requirements that first necessitate some specific action at " +
                 "the device before a Start command can be honored. In such instances, a device shall respond with a " +
-                "status code of CommandInvalidInState if a Start command is received prior to the required on- device " +
+                "status code of CommandInvalidInState if a Start command is received prior to the required on-device " +
                 "action." +
                 "\n" +
                 "If this command is received when already in the Running state the device shall respond with an " +
@@ -282,13 +255,11 @@ Resource.add({
                 "  • The OperationalState attribute shall be set to Running." +
                 "\n" +
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
-                "    NoError.",
-
-            xref: "cluster§1.14.6.3"
+                "    NoError."
         },
 
         {
-            tag: "command", name: "Resume",
+            tag: "command", name: "Resume", xref: "cluster§1.14.6.4",
 
             details: "This command shall be supported if the device supports remotely resuming the operation. If this " +
                 "command is supported, the Pause command shall also be supported." +
@@ -326,13 +297,11 @@ Resource.add({
                 "    to entering the Paused state." +
                 "\n" +
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
-                "    NoError.",
-
-            xref: "cluster§1.14.6.4"
+                "    NoError."
         },
 
         {
-            tag: "command", name: "OperationalCommandResponse",
+            tag: "command", name: "OperationalCommandResponse", xref: "cluster§1.14.6.5",
 
             details: "This command shall be supported by an implementation if any of the other commands defined by this " +
                 "cluster are supported (i.e. listed in the AcceptedCommandList global attribute). This command shall " +
@@ -341,19 +310,16 @@ Resource.add({
                 "\n" +
                 "This command shall be generated in response to any of the Start, Stop, Pause, or Resume commands.",
 
-            xref: "cluster§1.14.6.5",
-
             children: [{
-                tag: "field", name: "CommandResponseState",
+                tag: "field", name: "CommandResponseState", xref: "cluster§1.14.6.5.1",
                 details: "This shall indicate the success or otherwise of the attempted command invocation. On a successful " +
                     "invocation of the attempted command, the ErrorStateID shall be populated with NoError. Please see " +
-                    "the individual command sections for additional specific requirements on population.",
-                xref: "cluster§1.14.6.5.1"
+                    "the individual command sections for additional specific requirements on population."
             }]
         },
 
         {
-            tag: "datatype", name: "OperationalStateEnum",
+            tag: "datatype", name: "OperationalStateEnum", xref: "cluster§1.14.4.1",
 
             details: "This type defines the set of known operational state values, and is derived from enum8. The " +
                 "following table defines the applicable ranges for values that are defined within this type. All " +
@@ -373,8 +339,6 @@ Resource.add({
                 "\n" +
                 "The following table defines the generally applicable states.",
 
-            xref: "cluster§1.14.4.1",
-
             children: [
                 { tag: "field", name: "Stopped", description: "The device is stopped" },
                 { tag: "field", name: "Running", description: "The device is operating" },
@@ -384,29 +348,26 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "OperationalStateStruct",
+            tag: "datatype", name: "OperationalStateStruct", xref: "cluster§1.14.4.2",
             details: "The OperationalStateStruct is used to indicate a possible state of the device.",
-            xref: "cluster§1.14.4.2",
 
             children: [
                 {
-                    tag: "field", name: "OperationalStateId",
-                    details: "This shall be populated with a value from the OperationalStateEnum.",
-                    xref: "cluster§1.14.4.2.1"
+                    tag: "field", name: "OperationalStateId", xref: "cluster§1.14.4.2.1",
+                    details: "This shall be populated with a value from the OperationalStateEnum."
                 },
 
                 {
-                    tag: "field", name: "OperationalStateLabel",
+                    tag: "field", name: "OperationalStateLabel", xref: "cluster§1.14.4.2.2",
                     details: "This field shall be present if the OperationalStateID is from the set reserved for Manufacturer " +
                         "Specific States, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
-                        "description of the operational state.",
-                    xref: "cluster§1.14.4.2.2"
+                        "description of the operational state."
                 }
             ]
         },
 
         {
-            tag: "datatype", name: "ErrorStateEnum",
+            tag: "datatype", name: "ErrorStateEnum", xref: "cluster§1.14.4.3",
 
             details: "This type defines the set of known operational error values, and is derived from enum8. The " +
                 "following table defines the applicable ranges for values that are defined within this type. All " +
@@ -414,8 +375,7 @@ Resource.add({
                 "specific to a certain Device Type or other modality shall be defined in a derived cluster of this " +
                 "cluster." +
                 "\n" +
-                "The derived cluster-specific error definitions shall NOT duplicate the general error definitions." +
-                "\n" +
+                "The derived cluster-specific error definitions shall NOT duplicate the general error definitions. " +
                 "That is, a derived cluster specification of this cluster cannot define errors with the same " +
                 "semantics as the general errors defined below." +
                 "\n" +
@@ -428,8 +388,6 @@ Resource.add({
                 "\n" +
                 "The set of ErrorStateID field values defined in each of the generic or derived Operational State " +
                 "cluster specifications is called ErrorState.",
-
-            xref: "cluster§1.14.4.3",
 
             children: [
                 { tag: "field", name: "NoError", description: "The device is not in an error state" },
@@ -449,31 +407,27 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "ErrorStateStruct",
-            xref: "cluster§1.14.4.4",
+            tag: "datatype", name: "ErrorStateStruct", xref: "cluster§1.14.4.4",
 
             children: [
                 {
-                    tag: "field", name: "ErrorStateID",
-                    details: "This shall be populated with a value from the ErrorStateEnum.",
-                    xref: "cluster§1.14.4.4.1"
+                    tag: "field", name: "ErrorStateId", xref: "cluster§1.14.4.4.1",
+                    details: "This shall be populated with a value from the ErrorStateEnum."
                 },
 
                 {
-                    tag: "field", name: "ErrorStateLabel",
+                    tag: "field", name: "ErrorStateLabel", xref: "cluster§1.14.4.4.2",
                     details: "This field shall be present if the ErrorStateID is from the set reserved for Manufacturer Specific " +
                         "Errors, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                         "description of the ErrorStateID; e.g. for a manufacturer specific ErrorStateID of \"0x80\" the " +
-                        "ErrorStateLabel may contain \"My special error\".",
-                    xref: "cluster§1.14.4.4.2"
+                        "ErrorStateLabel may contain \"My special error\"."
                 },
 
                 {
-                    tag: "field", name: "ErrorStateDetails",
+                    tag: "field", name: "ErrorStateDetails", xref: "cluster§1.14.4.4.3",
                     details: "This shall be a human-readable string that provides details about the error condition. As an " +
                         "example, if the ErrorStateID indicates that the device is a Robotic Vacuum that is stuck, the " +
-                        "ErrorStateDetails contains \"left wheel blocked\".",
-                    xref: "cluster§1.14.4.4.3"
+                        "ErrorStateDetails contains \"left wheel blocked\"."
                 }
             ]
         }

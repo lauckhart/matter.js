@@ -9,5 +9,5 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DatatypeElement as Datatype } from "../../elements/index.js";
 
-export const double = Datatype({ name: "double", isSeed: true, byteSize: 8, metatype: "float" });
+export const double = Datatype({ name: "double", byteSize: 8, isSeed: true, metatype: "float" });
 MatterDefinition.children.push(double);

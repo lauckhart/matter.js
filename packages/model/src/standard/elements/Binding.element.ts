@@ -20,18 +20,18 @@ export const Binding = Cluster(
 
     Attribute(
         {
-            name: "Binding", id: 0x0, type: "list",
-            default: [], constraint: "desc", conformance: "M", access: "RW F VM", quality: "N"
+            name: "Binding", id: 0x0, type: "list", access: "RW F VM", conformance: "M", constraint: "desc",
+            default: [], quality: "N"
         },
         Field({ name: "entry", type: "TargetStruct" })
     ),
 
     Datatype(
         { name: "TargetStruct", type: "struct" },
-        Field({ name: "Node", id: 0x1, type: "node-id", conformance: "Endpoint", access: "F" }),
-        Field({ name: "Group", id: 0x2, type: "group-id", constraint: "min 1", conformance: "!Endpoint", access: "F" }),
-        Field({ name: "Endpoint", id: 0x3, type: "endpoint-no", conformance: "!Group", access: "F" }),
-        Field({ name: "Cluster", id: 0x4, type: "cluster-id", conformance: "O", access: "F" }),
+        Field({ name: "Node", id: 0x1, type: "node-id", access: "F", conformance: "Endpoint" }),
+        Field({ name: "Group", id: 0x2, type: "group-id", access: "F", conformance: "!Endpoint", constraint: "min 1" }),
+        Field({ name: "Endpoint", id: 0x3, type: "endpoint-no", access: "F", conformance: "!Group" }),
+        Field({ name: "Cluster", id: 0x4, type: "cluster-id", access: "F", conformance: "O" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );

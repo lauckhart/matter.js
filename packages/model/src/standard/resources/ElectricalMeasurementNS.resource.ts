@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "ElectricalMeasurement",
+    tag: "semanticNamespace", name: "ElectricalMeasurement", xref: "namespace§12",
     details: "The tags contained in this namespace are restricted for use in the electrical measurement domain and " +
         "shall NOT be used in any other domain or context.",
-    xref: "namespace§12",
 
     children: [
         { tag: "semanticTag", name: "DC", description: "Indicates values measured for a DC load" },

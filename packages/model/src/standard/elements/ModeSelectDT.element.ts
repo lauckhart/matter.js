@@ -13,9 +13,9 @@ export const ModeSelectDt = DeviceType(
     { name: "ModeSelect", id: 0x27 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 39, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 39, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "ModeSelect", id: 0x50, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "ModeSelect", id: 0x50, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(ModeSelectDt);

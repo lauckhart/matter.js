@@ -128,7 +128,7 @@ export class ClusterModel extends ScopeModel<ClusterElement, ClusterModel.Child>
         }
 
         for (const feature of featureMap.children) {
-            const desc = feature.longName && camelize(feature.longName);
+            const desc = feature.title && camelize(feature.title);
             if (desc !== undefined && featureSet.has(desc)) {
                 feature.default = true;
                 featureSet.delete(desc);

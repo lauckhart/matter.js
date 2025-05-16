@@ -20,73 +20,73 @@ export const Switch = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "LS", constraint: "0", conformance: "O.a", longName: "LatchingSwitch" }),
-        Field({ name: "MS", constraint: "1", conformance: "O.a", longName: "MomentarySwitch" }),
-        Field({ name: "MSR", constraint: "2", conformance: "[MS & !AS]", longName: "MomentarySwitchRelease" }),
-        Field({ name: "MSL", constraint: "3", conformance: "[MS & (MSR | AS)]", longName: "MomentarySwitchLongPress" }),
-        Field({ name: "MSM", constraint: "4", conformance: "AS, [MS & MSR]", longName: "MomentarySwitchMultiPress" }),
-        Field({ name: "AS", constraint: "5", conformance: "[MS]", longName: "ActionSwitch" })
+        Field({ name: "LS", conformance: "O.a", constraint: "0", title: "LatchingSwitch" }),
+        Field({ name: "MS", conformance: "O.a", constraint: "1", title: "MomentarySwitch" }),
+        Field({ name: "MSR", conformance: "[MS & !AS]", constraint: "2", title: "MomentarySwitchRelease" }),
+        Field({ name: "MSL", conformance: "[MS & (MSR | AS)]", constraint: "3", title: "MomentarySwitchLongPress" }),
+        Field({ name: "MSM", conformance: "AS, [MS & MSR]", constraint: "4", title: "MomentarySwitchMultiPress" }),
+        Field({ name: "AS", conformance: "[MS]", constraint: "5", title: "ActionSwitch" })
     ),
 
     Attribute({
-        name: "NumberOfPositions", id: 0x0, type: "uint8",
-        default: 2, constraint: "min 2", conformance: "M", access: "R V", quality: "F"
+        name: "NumberOfPositions", id: 0x0, type: "uint8", access: "R V", conformance: "M",
+        constraint: "min 2", default: 2, quality: "F"
     }),
     Attribute({
-        name: "CurrentPosition", id: 0x1, type: "uint8",
-        default: 0, constraint: "max numberOfPositions - 1", conformance: "M", access: "R V", quality: "N"
+        name: "CurrentPosition", id: 0x1, type: "uint8", access: "R V", conformance: "M",
+        constraint: "max numberOfPositions - 1", default: 0, quality: "N"
     }),
     Attribute({
-        name: "MultiPressMax", id: 0x2, type: "uint8",
-        default: 2, constraint: "min 2", conformance: "MSM", access: "R V", quality: "F"
+        name: "MultiPressMax", id: 0x2, type: "uint8", access: "R V", conformance: "MSM",
+        constraint: "min 2", default: 2, quality: "F"
     }),
     Event(
-        { name: "SwitchLatched", id: 0x0, conformance: "LS", access: "V", priority: "info" },
-        Field({ name: "NewPosition", id: 0x0, type: "uint8", constraint: "0 to numberOfPositions - 1", conformance: "M" })
+        { name: "SwitchLatched", id: 0x0, access: "V", conformance: "LS", priority: "info" },
+        Field({ name: "NewPosition", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to numberOfPositions - 1" })
     ),
     Event(
-        { name: "InitialPress", id: 0x1, conformance: "MS", access: "V", priority: "info" },
-        Field({ name: "NewPosition", id: 0x0, type: "uint8", constraint: "0 to numberOfPositions - 1", conformance: "M" })
+        { name: "InitialPress", id: 0x1, access: "V", conformance: "MS", priority: "info" },
+        Field({ name: "NewPosition", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to numberOfPositions - 1" })
     ),
     Event(
-        { name: "LongPress", id: 0x2, conformance: "MSL", access: "V", priority: "info" },
-        Field({ name: "NewPosition", id: 0x0, type: "uint8", constraint: "0 to numberOfPositions - 1", conformance: "M" })
+        { name: "LongPress", id: 0x2, access: "V", conformance: "MSL", priority: "info" },
+        Field({ name: "NewPosition", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to numberOfPositions - 1" })
     ),
 
     Event(
-        { name: "ShortRelease", id: 0x3, conformance: "MSR", access: "V", priority: "info" },
+        { name: "ShortRelease", id: 0x3, access: "V", conformance: "MSR", priority: "info" },
         Field({
-            name: "PreviousPosition", id: 0x0, type: "uint8",
-            constraint: "0 to numberOfPositions - 1", conformance: "M"
+            name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "0 to numberOfPositions - 1"
         })
     ),
 
     Event(
-        { name: "LongRelease", id: 0x4, conformance: "MSL", access: "V", priority: "info" },
+        { name: "LongRelease", id: 0x4, access: "V", conformance: "MSL", priority: "info" },
         Field({
-            name: "PreviousPosition", id: 0x0, type: "uint8",
-            constraint: "0 to numberOfPositions - 1", conformance: "M"
+            name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "0 to numberOfPositions - 1"
         })
     ),
 
     Event(
-        { name: "MultiPressOngoing", id: 0x5, conformance: "MSM & !AS", access: "V", priority: "info" },
-        Field({ name: "NewPosition", id: 0x0, type: "uint8", constraint: "0 to numberOfPositions - 1", conformance: "M" }),
+        { name: "MultiPressOngoing", id: 0x5, access: "V", conformance: "MSM & !AS", priority: "info" },
+        Field({ name: "NewPosition", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to numberOfPositions - 1" }),
         Field({
-            name: "CurrentNumberOfPressesCounted", id: 0x1, type: "uint8",
-            constraint: "2 to multiPressMax", conformance: "M"
+            name: "CurrentNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
+            constraint: "2 to multiPressMax"
         })
     ),
 
     Event(
-        { name: "MultiPressComplete", id: 0x6, conformance: "MSM", access: "V", priority: "info" },
+        { name: "MultiPressComplete", id: 0x6, access: "V", conformance: "MSM", priority: "info" },
         Field({
-            name: "PreviousPosition", id: 0x0, type: "uint8",
-            constraint: "0 to numberOfPositions - 1", conformance: "M"
+            name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
+            constraint: "0 to numberOfPositions - 1"
         }),
         Field({
-            name: "TotalNumberOfPressesCounted", id: 0x1, type: "uint8",
-            constraint: "max multiPressMax", conformance: "M"
+            name: "TotalNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
+            constraint: "max multiPressMax"
         })
     )
 );

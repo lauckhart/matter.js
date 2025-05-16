@@ -33,26 +33,25 @@ export class Conformance extends Aspect<Conformance.Definition> {
 
         if (definition === undefined) {
             this.ast = { type: Conformance.Special.Empty };
-            return;
-        }
-
-        let ast: Conformance.Ast;
-        if (typeof definition === "string") {
-            ast = ParsedAst(this, definition);
-        } else if (Array.isArray(definition)) {
-            const asts = definition.map(def => ParsedAst(this, def));
-            if (asts.length === 1) {
-                ast = asts[0];
-            } else {
-                ast = {
-                    type: Conformance.Special.Group,
-                    param: asts,
-                };
-            }
         } else {
-            ast = definition.ast;
+            let ast: Conformance.Ast;
+            if (typeof definition === "string") {
+                ast = ParsedAst(this, definition);
+            } else if (Array.isArray(definition)) {
+                const asts = definition.map(def => ParsedAst(this, def));
+                if (asts.length === 1) {
+                    ast = asts[0];
+                } else {
+                    ast = {
+                        type: Conformance.Special.Group,
+                        param: asts,
+                    };
+                }
+            } else {
+                ast = definition.ast;
+            }
+            this.ast = ast;
         }
-        this.ast = ast;
 
         this.isEmpty = this.type === Conformance.Special.Empty;
 

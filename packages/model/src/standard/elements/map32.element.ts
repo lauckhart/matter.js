@@ -9,5 +9,5 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DatatypeElement as Datatype } from "../../elements/index.js";
 
-export const map32 = Datatype({ name: "map32", isSeed: true, byteSize: 4, metatype: "bitmap" });
+export const map32 = Datatype({ name: "map32", byteSize: 4, isSeed: true, metatype: "bitmap" });
 MatterDefinition.children.push(map32);

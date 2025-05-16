@@ -9,11 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "OnOffSensor",
-    classification: "simple",
+    tag: "deviceType", name: "OnOffSensor", classification: "simple", xref: "device§7.8",
     details: "An On/Off Sensor is a measurement and sensing device that, when bound to a lighting device such as a " +
         "Dimmable Light, is capable of being used to switch the device on or off.",
-    xref: "device§7.8",
 
     children: [
         { tag: "requirement", name: "Identify", discriminator: "M:serverCluster", xref: "device§7.8.4" },

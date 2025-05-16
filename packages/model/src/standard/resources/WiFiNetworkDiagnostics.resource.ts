@@ -9,18 +9,16 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "WiFiNetworkDiagnostics",
-    classification: "node", pics: "DGWIFI",
+    tag: "cluster", name: "WiFiNetworkDiagnostics", classification: "node", pics: "DGWIFI",
+    xref: "core§11.15",
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
         "that may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
         "Wi-Fi Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
         "potential Wi-Fi radio running on a Node.",
-    xref: "core§11.15",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.15.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.15.4",
 
             children: [
                 {
@@ -37,129 +35,104 @@ Resource.add({
         },
 
         {
-            tag: "attribute", name: "Bssid",
+            tag: "attribute", name: "Bssid", xref: "core§11.15.6.1",
             details: "The BSSID attribute shall indicate the BSSID for which the Wi-Fi network the Node is currently " +
-                "connected.",
-            xref: "core§11.15.6.1"
+                "connected."
         },
-
         {
-            tag: "attribute", name: "SecurityType",
-            details: "The SecurityType attribute shall indicate the current type of Wi-Fi security used.",
-            xref: "core§11.15.6.2"
+            tag: "attribute", name: "SecurityType", xref: "core§11.15.6.2",
+            details: "The SecurityType attribute shall indicate the current type of Wi-Fi security used."
         },
-
         {
-            tag: "attribute", name: "WiFiVersion",
+            tag: "attribute", name: "WiFiVersion", xref: "core§11.15.6.3",
             details: "The WiFiVersion attribute shall indicate the current 802.11 standard version in use by the Node, per " +
-                "the table below.",
-            xref: "core§11.15.6.3"
+                "the table below."
         },
-
         {
-            tag: "attribute", name: "ChannelNumber",
+            tag: "attribute", name: "ChannelNumber", xref: "core§11.15.6.4",
             details: "The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently " +
-                "operating on.",
-            xref: "core§11.15.6.4"
+                "operating on."
+        },
+        {
+            tag: "attribute", name: "Rssi", xref: "core§11.15.6.5",
+            details: "The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm."
         },
 
         {
-            tag: "attribute", name: "Rssi",
-            details: "The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.",
-            xref: "core§11.15.6.5"
-        },
-
-        {
-            tag: "attribute", name: "BeaconLostCount",
+            tag: "attribute", name: "BeaconLostCount", xref: "core§11.15.6.6",
             details: "The BeaconLostCount attribute shall indicate the count of the number of missed beacons the Node has " +
                 "detected. If the Node does not have an ability to count beacons expected and not received, this " +
-                "value may remain set to zero.",
-            xref: "core§11.15.6.6"
+                "value may remain set to zero."
         },
 
         {
-            tag: "attribute", name: "BeaconRxCount",
+            tag: "attribute", name: "BeaconRxCount", xref: "core§11.15.6.7",
             details: "The BeaconRxCount attribute shall indicate the count of the number of received beacons. The total " +
                 "number of expected beacons that could have been received during the interval since association " +
                 "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
-                "report count of beacons received, this value may remain set to zero.",
-            xref: "core§11.15.6.7"
+                "report count of beacons received, this value may remain set to zero."
         },
 
         {
-            tag: "attribute", name: "PacketMulticastRxCount",
+            tag: "attribute", name: "PacketMulticastRxCount", xref: "core§11.15.6.8",
             details: "The PacketMulticastRxCount attribute shall indicate the number of multicast packets received by the " +
-                "Node.",
-            xref: "core§11.15.6.8"
+                "Node."
         },
-
         {
-            tag: "attribute", name: "PacketMulticastTxCount",
+            tag: "attribute", name: "PacketMulticastTxCount", xref: "core§11.15.6.9",
             details: "The PacketMulticastTxCount attribute shall indicate the number of multicast packets transmitted by " +
-                "the Node.",
-            xref: "core§11.15.6.9"
+                "the Node."
         },
-
         {
-            tag: "attribute", name: "PacketUnicastRxCount",
+            tag: "attribute", name: "PacketUnicastRxCount", xref: "core§11.15.6.10",
             details: "The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the " +
-                "Node.",
-            xref: "core§11.15.6.10"
+                "Node."
         },
-
         {
-            tag: "attribute", name: "PacketUnicastTxCount",
+            tag: "attribute", name: "PacketUnicastTxCount", xref: "core§11.15.6.11",
             details: "The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the " +
-                "Node.",
-            xref: "core§11.15.6.11"
+                "Node."
         },
-
         {
-            tag: "attribute", name: "CurrentMaxRate",
+            tag: "attribute", name: "CurrentMaxRate", xref: "core§11.15.6.12",
             details: "The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in " +
-                "bits-per-second.",
-            xref: "core§11.15.6.12"
+                "bits-per-second."
         },
 
         {
-            tag: "attribute", name: "OverrunCount",
+            tag: "attribute", name: "OverrunCount", xref: "core§11.15.6.13",
             details: "The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, " +
                 "due to lack of buffer memory to retain all packets on the network interface. The OverrunCount " +
-                "attribute shall be reset to 0 upon a reboot of the Node.",
-            xref: "core§11.15.6.13"
+                "attribute shall be reset to 0 upon a reboot of the Node."
         },
 
         {
-            tag: "event", name: "Disconnection",
+            tag: "event", name: "Disconnection", xref: "core§11.15.8.1",
             details: "The Disconnection Event shall indicate that a Node’s Wi-Fi connection has been disconnected as a " +
                 "result of de-authenticated or dis-association and indicates the reason.",
-            xref: "core§11.15.8.1",
 
             children: [{
-                tag: "field", name: "ReasonCode",
+                tag: "field", name: "ReasonCode", xref: "core§11.15.8.1.1",
                 details: "This field shall contain the Reason Code field value for the Disassociation or Deauthentication " +
                     "event that caused the disconnection and the value shall align with Table 9-49 \"Reason codes\" of IEEE " +
-                    "802.11-2020.",
-                xref: "core§11.15.8.1.1"
+                    "802.11-2020."
             }]
         },
 
         {
-            tag: "event", name: "AssociationFailure",
+            tag: "event", name: "AssociationFailure", xref: "core§11.15.8.2",
             details: "The AssociationFailure event shall indicate that a Node has attempted to connect, or reconnect, to a " +
                 "Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all " +
                 "internal retries of its supplicant.",
-            xref: "core§11.15.8.2",
 
             children: [
                 {
-                    tag: "field", name: "AssociationFailureCause",
-                    details: "The Status field shall be set to a value from the AssociationFailureCauseEnum.",
-                    xref: "core§11.15.8.2.1"
+                    tag: "field", name: "AssociationFailureCause", xref: "core§11.15.8.2.1",
+                    details: "The Status field shall be set to a value from the AssociationFailureCauseEnum."
                 },
 
                 {
-                    tag: "field", name: "Status",
+                    tag: "field", name: "Status", xref: "core§11.15.8.2.2",
 
                     details: "The Status field shall be set to the Status Code value that was present in the last frame related to " +
                         "association where Status Code was not equal to zero and which caused the failure of a last trial " +
@@ -171,23 +144,20 @@ Resource.add({
                         "\n" +
                         "  • Authentication (Type 0, Subtype 11)" +
                         "\n" +
-                        "Table 9-50 \"Status codes\" of IEEE 802.11-2020 contains a description of all values possible.",
-
-                    xref: "core§11.15.8.2.2"
+                        "Table 9-50 \"Status codes\" of IEEE 802.11-2020 contains a description of all values possible."
                 }
             ]
         },
 
         {
-            tag: "event", name: "ConnectionStatus",
+            tag: "event", name: "ConnectionStatus", xref: "core§11.15.8.3",
             details: "The ConnectionStatus Event shall indicate that a Node’s connection status to a Wi-Fi network has " +
                 "changed. Connected, in this context, shall mean that a Node acting as a Wi-Fi station is " +
-                "successfully associated to a Wi-Fi Access Point.",
-            xref: "core§11.15.8.3"
+                "successfully associated to a Wi-Fi Access Point."
         },
 
         {
-            tag: "command", name: "ResetCounts",
+            tag: "command", name: "ResetCounts", xref: "core§11.15.7.1",
 
             details: "Reception of this command shall reset the following attributes to 0:" +
                 "\n" +
@@ -203,14 +173,11 @@ Resource.add({
                 "\n" +
                 "  • PacketUnicastTxCount" +
                 "\n" +
-                "This command has no associated data.",
-
-            xref: "core§11.15.7.1"
+                "This command has no associated data."
         },
 
         {
-            tag: "datatype", name: "SecurityTypeEnum",
-            xref: "core§11.15.5.1",
+            tag: "datatype", name: "SecurityTypeEnum", xref: "core§11.15.5.1",
 
             children: [
                 {
@@ -226,8 +193,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "WiFiVersionEnum",
-            xref: "core§11.15.5.2",
+            tag: "datatype", name: "WiFiVersionEnum", xref: "core§11.15.5.2",
 
             children: [
                 {
@@ -246,8 +212,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "AssociationFailureCauseEnum",
-            xref: "core§11.15.5.3",
+            tag: "datatype", name: "AssociationFailureCauseEnum", xref: "core§11.15.5.3",
 
             children: [
                 { tag: "field", name: "Unknown", description: "The reason for the failure is unknown." },
@@ -258,8 +223,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "ConnectionStatusEnum",
-            xref: "core§11.15.5.4",
+            tag: "datatype", name: "ConnectionStatusEnum", xref: "core§11.15.5.4",
             children: [
                 { tag: "field", name: "Connected", description: "Indicate the node is connected" },
                 { tag: "field", name: "NotConnected", description: "Indicate the node is not connected" }

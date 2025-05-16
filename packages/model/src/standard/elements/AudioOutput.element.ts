@@ -20,19 +20,19 @@ export const AudioOutput = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "NU", constraint: "0", longName: "NameUpdates" })
+        Field({ name: "NU", constraint: "0", title: "NameUpdates" })
     ),
     Attribute(
-        { name: "OutputList", id: 0x0, type: "list", conformance: "M", access: "R V" },
+        { name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "OutputInfoStruct" })
     ),
-    Attribute({ name: "CurrentOutput", id: 0x1, type: "uint8", conformance: "M", access: "R V" }),
+    Attribute({ name: "CurrentOutput", id: 0x1, type: "uint8", access: "R V", conformance: "M" }),
     Command(
-        { name: "SelectOutput", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" },
+        { name: "SelectOutput", id: 0x0, access: "O", conformance: "M", direction: "request", response: "status" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" })
     ),
     Command(
-        { name: "RenameOutput", id: 0x1, conformance: "NU", access: "M", direction: "request", response: "status" },
+        { name: "RenameOutput", id: 0x1, access: "M", conformance: "NU", direction: "request", response: "status" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
         Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
     ),
@@ -50,7 +50,7 @@ export const AudioOutput = Cluster(
     Datatype(
         { name: "OutputInfoStruct", type: "struct" },
         Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
-        Field({ name: "OutputType", id: 0x1, type: "OutputTypeEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "OutputType", id: 0x1, type: "OutputTypeEnum", conformance: "M", constraint: "desc" }),
         Field({ name: "Name", id: 0x2, type: "string", conformance: "M" })
     )
 );

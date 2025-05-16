@@ -20,52 +20,49 @@ export const ConcentrationMeasurement = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "MEA", constraint: "0", conformance: "O.a+", longName: "NumericMeasurement" }),
-        Field({ name: "LEV", constraint: "1", conformance: "O.a+", longName: "LevelIndication" }),
-        Field({ name: "MED", constraint: "2", conformance: "[LEV]", longName: "MediumLevel" }),
-        Field({ name: "CRI", constraint: "3", conformance: "[LEV]", longName: "CriticalLevel" }),
-        Field({ name: "PEA", constraint: "4", conformance: "[MEA]", longName: "PeakMeasurement" }),
-        Field({ name: "AVG", constraint: "5", conformance: "[MEA]", longName: "AverageMeasurement" })
+        Field({ name: "MEA", conformance: "O.a+", constraint: "0", title: "NumericMeasurement" }),
+        Field({ name: "LEV", conformance: "O.a+", constraint: "1", title: "LevelIndication" }),
+        Field({ name: "MED", conformance: "[LEV]", constraint: "2", title: "MediumLevel" }),
+        Field({ name: "CRI", conformance: "[LEV]", constraint: "3", title: "CriticalLevel" }),
+        Field({ name: "PEA", conformance: "[MEA]", constraint: "4", title: "PeakMeasurement" }),
+        Field({ name: "AVG", conformance: "[MEA]", constraint: "5", title: "AverageMeasurement" })
     ),
 
     Attribute({
-        name: "MeasuredValue", id: 0x0, type: "single",
-        default: null, constraint: "minMeasuredValue to maxMeasuredValue", conformance: "MEA",
-        access: "R V", quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "single", access: "R V", conformance: "MEA",
+        constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P"
     }),
     Attribute({
-        name: "MinMeasuredValue", id: 0x1, type: "single",
-        default: null, conformance: "MEA", access: "R V", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "single", access: "R V", conformance: "MEA", default: null,
+        quality: "X"
     }),
     Attribute({
-        name: "MaxMeasuredValue", id: 0x2, type: "single",
-        default: null, constraint: "min minMeasuredValue", conformance: "MEA", access: "R V", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "single", access: "R V", conformance: "MEA",
+        constraint: "min minMeasuredValue", default: null, quality: "X"
     }),
     Attribute({
-        name: "PeakMeasuredValue", id: 0x3, type: "single",
-        default: null, constraint: "minMeasuredValue to maxMeasuredValue", conformance: "PEA",
-        access: "R V", quality: "X P"
+        name: "PeakMeasuredValue", id: 0x3, type: "single", access: "R V", conformance: "PEA",
+        constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P"
     }),
     Attribute({
-        name: "PeakMeasuredValueWindow", id: 0x4, type: "elapsed-s",
-        default: 1, constraint: "max 604800", conformance: "PEA", access: "R V", quality: "P"
+        name: "PeakMeasuredValueWindow", id: 0x4, type: "elapsed-s", access: "R V", conformance: "PEA",
+        constraint: "max 604800", default: 1, quality: "P"
     }),
     Attribute({
-        name: "AverageMeasuredValue", id: 0x5, type: "single",
-        default: null, constraint: "minMeasuredValue to maxMeasuredValue", conformance: "AVG",
-        access: "R V", quality: "X P"
+        name: "AverageMeasuredValue", id: 0x5, type: "single", access: "R V", conformance: "AVG",
+        constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P"
     }),
     Attribute({
-        name: "AverageMeasuredValueWindow", id: 0x6, type: "elapsed-s",
-        default: 1, constraint: "max 604800", conformance: "AVG", access: "R V", quality: "P"
+        name: "AverageMeasuredValueWindow", id: 0x6, type: "elapsed-s", access: "R V", conformance: "AVG",
+        constraint: "max 604800", default: 1, quality: "P"
     }),
-    Attribute({ name: "Uncertainty", id: 0x7, type: "single", constraint: "ms", conformance: "[MEA]", access: "R V" }),
-    Attribute({ name: "MeasurementUnit", id: 0x8, type: "MeasurementUnitEnum", conformance: "MEA", access: "R V", quality: "F" }),
+    Attribute({ name: "Uncertainty", id: 0x7, type: "single", access: "R V", conformance: "[MEA]", constraint: "ms" }),
+    Attribute({ name: "MeasurementUnit", id: 0x8, type: "MeasurementUnitEnum", access: "R V", conformance: "MEA", quality: "F" }),
     Attribute({
-        name: "MeasurementMedium", id: 0x9, type: "MeasurementMediumEnum",
-        conformance: "M", access: "R V", quality: "F"
+        name: "MeasurementMedium", id: 0x9, type: "MeasurementMediumEnum", access: "R V", conformance: "M",
+        quality: "F"
     }),
-    Attribute({ name: "LevelValue", id: 0xa, type: "LevelValueEnum", default: 0, conformance: "LEV", access: "R V" }),
+    Attribute({ name: "LevelValue", id: 0xa, type: "LevelValueEnum", access: "R V", conformance: "LEV", default: 0 }),
 
     Datatype(
         { name: "MeasurementUnitEnum", type: "enum8" },

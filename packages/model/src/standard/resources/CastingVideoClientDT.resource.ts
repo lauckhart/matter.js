@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "CastingVideoClient",
-    classification: "simple",
+    tag: "deviceType", name: "CastingVideoClient", classification: "simple", xref: "device§10.6",
     details: "This defines conformance to the Casting Video Client device type." +
         "\n" +
         "A Casting Video Client is a client that can launch content on a Casting Video Player, for example, a " +
         "Smart Speaker or a Content Provider phone app.",
-    xref: "device§10.6",
 
     children: [
         { tag: "requirement", name: "OnOff", xref: "device§10.6.4" },

@@ -19,24 +19,24 @@ export const PowerTopology = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "NODE", constraint: "0", conformance: "O.a", longName: "NodeTopology" }),
-        Field({ name: "TREE", constraint: "1", conformance: "O.a", longName: "TreeTopology" }),
-        Field({ name: "SET", constraint: "2", conformance: "O.a", longName: "SetTopology" }),
-        Field({ name: "DYPF", constraint: "3", conformance: "[SET]", longName: "DynamicPowerFlow" })
+        Field({ name: "NODE", conformance: "O.a", constraint: "0", title: "NodeTopology" }),
+        Field({ name: "TREE", conformance: "O.a", constraint: "1", title: "TreeTopology" }),
+        Field({ name: "SET", conformance: "O.a", constraint: "2", title: "SetTopology" }),
+        Field({ name: "DYPF", conformance: "[SET]", constraint: "3", title: "DynamicPowerFlow" })
     ),
 
     Attribute(
         {
-            name: "AvailableEndpoints", id: 0x0, type: "list",
-            constraint: "max 20", conformance: "SET", access: "R V", quality: "F"
+            name: "AvailableEndpoints", id: 0x0, type: "list", access: "R V", conformance: "SET",
+            constraint: "max 20", quality: "F"
         },
         Field({ name: "entry", type: "endpoint-no" })
     ),
 
     Attribute(
         {
-            name: "ActiveEndpoints", id: 0x1, type: "list",
-            constraint: "max 20", conformance: "DYPF", access: "R V", quality: "N"
+            name: "ActiveEndpoints", id: 0x1, type: "list", access: "R V", conformance: "DYPF",
+            constraint: "max 20", quality: "N"
         },
         Field({ name: "entry", type: "endpoint-no" })
     )

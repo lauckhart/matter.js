@@ -13,12 +13,12 @@ export const EnergyEvseDt = DeviceType(
     { name: "EnergyEvse", id: 0x50c },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 1292, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 1292, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "EnergyEvse", id: 0x99, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "EnergyEvseMode", id: 0x9d, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "EnergyEvse", id: 0x99, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "EnergyEvseMode", id: 0x9d, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(EnergyEvseDt);

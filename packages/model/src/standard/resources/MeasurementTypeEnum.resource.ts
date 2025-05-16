@@ -9,8 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "MeasurementTypeEnum",
-    xref: "cluster§2.1.4.2",
+    tag: "datatype", name: "MeasurementTypeEnum", xref: "cluster§2.1.4.2",
 
     children: [
         { tag: "field", name: "Voltage", description: "Voltage in millivolts (mV)" },

@@ -9,35 +9,29 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "ProxyConfiguration",
-    classification: "node", pics: "PXCFG",
-    details: "This cluster provides a means for a proxy-capable device to be told the set of Nodes it shall proxy.",
+    tag: "cluster", name: "ProxyConfiguration", classification: "node", pics: "PXCFG",
     xref: "core§9.15.13",
+    details: "This cluster provides a means for a proxy-capable device to be told the set of Nodes it shall proxy.",
 
     children: [
         {
-            tag: "attribute", name: "ConfigurationList",
-            details: "List of proxy configurations. There shall NOT be multiple entries in this list for the same fabric.",
-            xref: "core§9.15.13.5.1"
+            tag: "attribute", name: "ConfigurationList", xref: "core§9.15.13.5.1",
+            details: "List of proxy configurations. There shall NOT be multiple entries in this list for the same fabric."
         },
 
         {
-            tag: "datatype", name: "ConfigurationStruct",
-            xref: "core§9.15.13.4.1",
+            tag: "datatype", name: "ConfigurationStruct", xref: "core§9.15.13.4.1",
 
             children: [
                 {
-                    tag: "field", name: "ProxyAllNodes",
+                    tag: "field", name: "ProxyAllNodes", xref: "core§9.15.13.4.1.1",
                     details: "This field shall be set to true to indicate to the proxy that it shall proxy all nodes. When true, " +
-                        "the SourceList attribute is ignored.",
-                    xref: "core§9.15.13.4.1.1"
+                        "the SourceList attribute is ignored."
                 },
-
                 {
-                    tag: "field", name: "SourceList",
+                    tag: "field", name: "SourceList", xref: "core§9.15.13.4.1.2",
                     details: "When ProxyAllNodes is false, this list contains the set of Node IDs of sources that this proxy shall " +
-                        "specifically proxy.",
-                    xref: "core§9.15.13.4.1.2"
+                        "specifically proxy."
                 }
             ]
         }

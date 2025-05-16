@@ -9,95 +9,80 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "IcdManagement",
-    classification: "node", pics: "ICDM",
+    tag: "cluster", name: "IcdManagement", classification: "node", pics: "ICDM", xref: "core§9.17",
     details: "ICD Management Cluster enables configuration of the ICD’s behavior and ensuring that listed clients " +
         "can be notified when an intermittently connected device, ICD, is available for communication." +
         "\n" +
         "The cluster implements the requirements of the Check-In Protocol that enables the ICD Check-In use " +
         "case.",
-    xref: "core§9.17",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§9.17.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§9.17.4",
 
             children: [
                 {
-                    tag: "field", name: "CIP",
+                    tag: "field", name: "CIP", xref: "core§9.17.4.1",
                     details: "When this feature is supported, the device shall support all the associated commands and attributes " +
-                        "to properly support the Check-In Protocol.",
-                    xref: "core§9.17.4.1"
+                        "to properly support the Check-In Protocol."
+                },
+                {
+                    tag: "field", name: "UAT", xref: "core§9.17.4.2",
+                    details: "This feature is supported if and only if the device has a user active mode trigger."
+                },
+                {
+                    tag: "field", name: "LITS", xref: "core§9.17.4.3",
+                    details: "This feature is supported if and only the device is a Long Idle Time ICD."
                 },
 
                 {
-                    tag: "field", name: "UAT",
-                    details: "This feature is supported if and only if the device has a user active mode trigger.",
-                    xref: "core§9.17.4.2"
-                },
-                {
-                    tag: "field", name: "LITS",
-                    details: "This feature is supported if and only the device is a Long Idle Time ICD.",
-                    xref: "core§9.17.4.3"
-                },
-
-                {
-                    tag: "field", name: "DSLS",
+                    tag: "field", name: "DSLS", xref: "core§9.17.4.4",
                     details: "This feature is supported if and only if the device can switch between SIT and LIT operating modes " +
                         "even if it has a valid registered client. See the dynamic SIT / LIT operating mode switching for " +
-                        "more details.",
-                    xref: "core§9.17.4.4"
+                        "more details."
                 }
             ]
         },
 
         {
-            tag: "attribute", name: "IdleModeDuration",
+            tag: "attribute", name: "IdleModeDuration", xref: "core§9.17.6.1",
             details: "Indicates the maximum interval in seconds the server can stay in idle mode. The IdleModeDuration " +
-                "shall NOT be smaller than the ActiveModeDuration.",
-            xref: "core§9.17.6.1"
+                "shall NOT be smaller than the ActiveModeDuration."
         },
 
         {
-            tag: "attribute", name: "ActiveModeDuration",
+            tag: "attribute", name: "ActiveModeDuration", xref: "core§9.17.6.2",
             details: "Indicates the minimum interval in milliseconds the server typically will stay in active mode after " +
                 "initial transition out of idle mode. The ActiveModeDuration does not include the " +
-                "ActiveModeThreshold.",
-            xref: "core§9.17.6.2"
+                "ActiveModeThreshold."
         },
 
         {
-            tag: "attribute", name: "ActiveModeThreshold",
+            tag: "attribute", name: "ActiveModeThreshold", xref: "core§9.17.6.3",
             details: "Indicates the minimum amount of time in milliseconds the server typically will stay active after " +
-                "network activity when in active mode.",
-            xref: "core§9.17.6.3"
+                "network activity when in active mode."
         },
 
         {
-            tag: "attribute", name: "RegisteredClients",
+            tag: "attribute", name: "RegisteredClients", xref: "core§9.17.6.4",
             details: "This attribute shall contain all clients registered to receive notification if their subscription is " +
                 "lost. The maximum number of entries that can be in the list shall be ClientsSupportedPerFabric for " +
                 "each fabric supported on the server, as indicated by the value of the SupportedFabrics attribute in " +
-                "the Operational Credentials cluster.",
-            xref: "core§9.17.6.4"
+                "the Operational Credentials cluster."
         },
 
         {
-            tag: "attribute", name: "IcdCounter",
-            details: "This attribute returns the value of the ICD Counter.",
-            xref: "core§9.17.6.5"
+            tag: "attribute", name: "IcdCounter", xref: "core§9.17.6.5",
+            details: "This attribute returns the value of the ICD Counter."
         },
-
         {
-            tag: "attribute", name: "ClientsSupportedPerFabric",
+            tag: "attribute", name: "ClientsSupportedPerFabric", xref: "core§9.17.6.6",
             details: "Indicates the maximum number of entries that the server is able to store for each fabric in the " +
-                "RegisteredClients attribute.",
-            xref: "core§9.17.6.6"
+                "RegisteredClients attribute."
         },
 
         {
-            tag: "attribute", name: "UserActiveModeTriggerHint",
+            tag: "attribute", name: "UserActiveModeTriggerHint", xref: "core§9.17.6.7",
 
             details: "Indicates which user action(s) will trigger the ICD to switch to Active mode. If the attribute " +
                 "indicates support for a trigger that is dependent on the UserActiveModeTriggerInstruction in the " +
@@ -111,13 +96,11 @@ Resource.add({
                 "\n" +
                 "### An ICD can indicate multiple ways of being put into Active Mode by setting multiple bits in the " +
                 "bitmap at the same time. However, a device shall NOT set more than one bit which has a dependency on " +
-                "the UserActiveModeTriggerInstruction attribute.",
-
-            xref: "core§9.17.6.7"
+                "the UserActiveModeTriggerInstruction attribute."
         },
 
         {
-            tag: "attribute", name: "UserActiveModeTriggerInstruction",
+            tag: "attribute", name: "UserActiveModeTriggerInstruction", xref: "core§9.17.6.8",
 
             details: "The meaning of the attribute is dependent upon the UserActiveModeTriggerHint attribute value, and " +
                 "the conformance is in indicated in the \"dependency\" column in UserActiveModeTriggerHint table. The " +
@@ -141,59 +124,49 @@ Resource.add({
                 "ResetButtonLightsBlink or SetupButtonLightsBlink), information on color of light may be made " +
                 "available via the UserActiveModeTriggerInstruction attribute. When using such color indication in " +
                 "the UserActiveModeTriggerInstruction attribute, the string shall consist of exactly 6 hexadecimal " +
-                "digits using the ASCII characters 0-F and encoding the RGB color value as used in HTML encodings.",
-
-            xref: "core§9.17.6.8"
+                "digits using the ASCII characters 0-F and encoding the RGB color value as used in HTML encodings."
         },
 
         {
-            tag: "attribute", name: "OperatingMode",
-            details: "Indicates the operating mode of the ICD as specified in the OperatingModeEnum." +
+            tag: "attribute", name: "OperatingMode", xref: "core§9.17.6.9",
+            details: "This attribute shall indicate the operating mode of the ICD as specified in the OperatingModeEnum." +
                 "\n" +
                 "  • If the ICD is operating as a LIT ICD, OperatingMode shall be LIT." +
                 "\n" +
-                "  • If the ICD is operating as a SIT ICD, OperatingMode shall be SIT.",
-            xref: "core§9.17.6.9"
+                "  • If the ICD is operating as a SIT ICD, OperatingMode shall be SIT."
         },
 
         {
-            tag: "attribute", name: "MaximumCheckInBackoff",
+            tag: "attribute", name: "MaximumCheckInBackoff", xref: "core§9.17.6.10",
             details: "Indicates the maximum time in seconds between two Check-In messages when back-off is active. The " +
                 "MaximumCheckInBackoff shall NOT be smaller than the IdleModeDuration." +
                 "\n" +
-                "If the MaximumCheckInBackoff is equal to the IdleModeDuration, it means the ICD does notback- off.",
-            xref: "core§9.17.6.10"
+                "If the MaximumCheckInBackoff is equal to the IdleModeDuration, it means the ICD does not back-off."
         },
 
         {
-            tag: "command", name: "RegisterClient",
+            tag: "command", name: "RegisterClient", xref: "core§9.17.7.1",
             details: "This command allows a client to register itself with the ICD to be notified when the device is " +
                 "available for communication.",
-            xref: "core§9.17.7.1",
 
             children: [
                 {
-                    tag: "field", name: "CheckInNodeId",
+                    tag: "field", name: "CheckInNodeId", xref: "core§9.17.7.1.1",
                     details: "This field shall provide the node ID to which a Check-In message will be sent if there are no active " +
-                        "subscriptions matching MonitoredSubject.",
-                    xref: "core§9.17.7.1.1"
+                        "subscriptions matching MonitoredSubject."
                 },
-
                 {
-                    tag: "field", name: "MonitoredSubject",
-                    details: "This field shall provide the monitored subject ID.",
-                    xref: "core§9.17.7.1.2"
+                    tag: "field", name: "MonitoredSubject", xref: "core§9.17.7.1.2",
+                    details: "This field shall provide the monitored subject ID."
                 },
-
                 {
-                    tag: "field", name: "Key",
+                    tag: "field", name: "Key", xref: "core§9.17.7.1.3",
                     details: "This field shall provide the shared secret between the client and the ICD to encrypt the Check-In " +
-                        "message.",
-                    xref: "core§9.17.7.1.3"
+                        "message."
                 },
 
                 {
-                    tag: "field", name: "VerificationKey",
+                    tag: "field", name: "VerificationKey", xref: "core§9.17.7.1.4",
 
                     details: "This field shall provide the verification key. The verification key represents the key already " +
                         "stored on the server. The verification key provided in this field shall be used by the server to " +
@@ -201,43 +174,37 @@ Resource.add({
                         "the verification key. The verification key shall be provided for clients with manage permissions. " +
                         "The verification key SHOULD NOT be provided by clients with administrator permissions for the server " +
                         "cluster. The verification key shall be ignored by the server if it is provided by a client with " +
-                        "administrator permissions for the server cluster.",
-
-                    xref: "core§9.17.7.1.4"
+                        "administrator permissions for the server cluster."
                 },
 
                 {
-                    tag: "field", name: "ClientType",
-                    details: "This field shall provide the client type of the client registering.",
-                    xref: "core§9.17.7.1.5"
+                    tag: "field", name: "ClientType", xref: "core§9.17.7.1.5",
+                    details: "This field shall provide the client type of the client registering."
                 }
             ]
         },
 
         {
-            tag: "command", name: "RegisterClientResponse",
+            tag: "command", name: "RegisterClientResponse", xref: "core§9.17.7.2",
             details: "This command shall be sent by the ICD Management Cluster server in response to a successful " +
-                "RegisterClient command.",
-            xref: "core§9.17.7.2"
+                "RegisterClient command."
         },
 
         {
-            tag: "command", name: "UnregisterClient",
+            tag: "command", name: "UnregisterClient", xref: "core§9.17.7.3",
             details: "This command allows a client to unregister itself with the ICD. Example: a client that is leaving " +
                 "the network (e.g. running on a phone which is leaving the home) can (and should) remove its " +
                 "subscriptions and send this UnregisterClient command before leaving to prevent the burden on the ICD " +
                 "of an absent client.",
-            xref: "core§9.17.7.3",
 
             children: [
                 {
-                    tag: "field", name: "CheckInNodeId",
-                    details: "This field shall provide the registered client node ID to remove from storage.",
-                    xref: "core§9.17.7.3.1"
+                    tag: "field", name: "CheckInNodeId", xref: "core§9.17.7.3.1",
+                    details: "This field shall provide the registered client node ID to remove from storage."
                 },
 
                 {
-                    tag: "field", name: "VerificationKey",
+                    tag: "field", name: "VerificationKey", xref: "core§9.17.7.3.2",
 
                     details: "This field shall provide the verification key associated with the CheckInNodeID to remove from " +
                         "storage. The verification key represents the key already stored on the server. The verification key " +
@@ -246,15 +213,13 @@ Resource.add({
                         "shall be provided for clients with manage permissions. The verification key SHOULD NOT be provided " +
                         "by clients with administrator permissions for the server cluster. The verification key shall be " +
                         "ignored by the server if it is provided by a client with administrator permissions for the server " +
-                        "cluster.",
-
-                    xref: "core§9.17.7.3.2"
+                        "cluster."
                 }
             ]
         },
 
         {
-            tag: "command", name: "StayActiveRequest",
+            tag: "command", name: "StayActiveRequest", xref: "core§9.17.7.4",
 
             details: "This command allows a client to request that the server stays in active mode for at least a given " +
                 "time duration (in milliseconds) from when this command is received." +
@@ -262,36 +227,27 @@ Resource.add({
                 "This StayActiveDuration may be longer than the ActiveModeThreshold value and would, typically, be " +
                 "used by the client to request the server to stay active and responsive for this period to allow a " +
                 "sequence of message exchanges during that period. The client may slightly overestimate the duration " +
-                "it wants the ICD to be active for, in order to account for network delays.",
-
-            xref: "core§9.17.7.4"
+                "it wants the ICD to be active for, in order to account for network delays."
         },
 
         {
-            tag: "command", name: "StayActiveResponse",
+            tag: "command", name: "StayActiveResponse", xref: "core§9.17.7.5",
             details: "This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain " +
                 "the computed duration (in milliseconds) that the ICD intends to stay active for.",
-            xref: "core§9.17.7.5",
 
             children: [{
-                tag: "field", name: "PromisedActiveDuration",
-
+                tag: "field", name: "PromisedActiveDuration", xref: "core§9.17.7.5.1",
                 details: "This field shall provide the actual duration that the ICD server can stay active from the time it " +
                     "receives the StayActiveRequest command." +
                     "\n" +
-                    "### Minimum Value for PromisedActiveDuration" +
-                    "\n" +
                     "The minimum value of the PromisedActiveDuration field shall be equal to either 30000 milliseconds or " +
-                    "StayActiveDuration (from the received StayActiveRequest command), whichever is smaller.",
-
-                xref: "core§9.17.7.5.1"
+                    "StayActiveDuration (from the received StayActiveRequest command), whichever is smaller."
             }]
         },
 
         {
-            tag: "datatype", name: "UserActiveModeTriggerBitmap",
+            tag: "datatype", name: "UserActiveModeTriggerBitmap", xref: "core§9.17.5.1",
             details: "See the UserActiveModeTriggerHint table for requirements associated to each bit.",
-            xref: "core§9.17.5.1",
 
             children: [
                 { tag: "field", name: "PowerCycle", description: "Power Cycle to transition the device to ActiveMode" },
@@ -363,8 +319,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "ClientTypeEnum",
-            xref: "core§9.17.5.1.1",
+            tag: "datatype", name: "ClientTypeEnum", xref: "core§9.17.5.1.1",
 
             children: [
                 {
@@ -379,8 +334,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "OperatingModeEnum",
-            xref: "core§9.17.5.2",
+            tag: "datatype", name: "OperatingModeEnum", xref: "core§9.17.5.2",
             children: [
                 { tag: "field", name: "Sit", description: "ICD is operating as a Short Idle Time ICD." },
                 { tag: "field", name: "Lit", description: "ICD is operating as a Long Idle Time ICD." }
@@ -388,19 +342,17 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "MonitoringRegistrationStruct",
-            xref: "core§9.17.5.3",
+            tag: "datatype", name: "MonitoringRegistrationStruct", xref: "core§9.17.5.3",
 
             children: [
                 {
-                    tag: "field", name: "CheckInNodeId",
+                    tag: "field", name: "CheckInNodeId", xref: "core§9.17.5.3.1",
                     details: "This field shall indicate the NodeID of the Node to which Check-In messages will be sent when the " +
-                        "MonitoredSubject is not subscribed.",
-                    xref: "core§9.17.5.3.1"
+                        "MonitoredSubject is not subscribed."
                 },
 
                 {
-                    tag: "field", name: "MonitoredSubject",
+                    tag: "field", name: "MonitoredSubject", xref: "core§9.17.5.3.2",
 
                     details: "This field shall indicate the monitored Subject ID. This field shall be used to determine if a " +
                         "particular client has an active subscription for the given entry. The MonitoredSubject, when it is a " +
@@ -417,19 +369,15 @@ Resource.add({
                         "For example, if the MonitoredSubject is Node ID 0x1111_2222_3333_AAAA, and one of the subscribers to " +
                         "the server on the entry’s associated fabric bears that Node ID, then the entry matches." +
                         "\n" +
-                        "Another example is if the MonitoredSubject has the value 0xFFFF_FFFD_AA12_0002, and one of the" +
-                        "\n" +
+                        "Another example is if the MonitoredSubject has the value 0xFFFF_FFFD_AA12_0002, and one of the " +
                         "subscribers to the server on the entry’s associated fabric bears the CASE Authenticated TAG value " +
-                        "0xAA12 and the version 0x0002 or higher within its NOC, then the entry matches.",
-
-                    xref: "core§9.17.5.3.2"
+                        "0xAA12 and the version 0x0002 or higher within its NOC, then the entry matches."
                 },
 
                 {
-                    tag: "field", name: "ClientType",
+                    tag: "field", name: "ClientType", xref: "core§9.17.5.4",
                     details: "This field shall indicate the client’s type to inform the ICD of the availability for communication " +
-                        "of the client.",
-                    xref: "core§9.17.5.4"
+                        "of the client."
                 }
             ]
         }

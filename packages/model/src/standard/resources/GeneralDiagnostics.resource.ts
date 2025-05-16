@@ -9,89 +9,78 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "GeneralDiagnostics",
-    classification: "node", pics: "DGGEN",
+    tag: "cluster", name: "GeneralDiagnostics", classification: "node", pics: "DGGEN",
+    xref: "core§11.12",
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
         "standardized diagnostics metrics that may be used by a Node to assist a user or Administrator in " +
         "diagnosing potential problems. The General Diagnostics Cluster attempts to centralize all metrics " +
         "that are broadly relevant to the majority of Nodes.",
-    xref: "core§11.12",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.12.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.12.4",
 
             children: [{
-                tag: "field", name: "DMTEST",
+                tag: "field", name: "DMTEST", xref: "core§11.12.4.1",
                 details: "This feature indicates support for extended Data Model testing commands, which are required in some " +
                     "situations." +
                     "\n" +
                     "This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster " +
-                    "has a value > 1.",
-                xref: "core§11.12.4.1"
+                    "has a value > 1."
             }]
         },
 
         {
-            tag: "attribute", name: "NetworkInterfaces",
+            tag: "attribute", name: "NetworkInterfaces", xref: "core§11.12.6.1",
             details: "The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network " +
-                "interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute.",
-            xref: "core§11.12.6.1"
+                "interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute."
         },
 
         {
-            tag: "attribute", name: "RebootCount",
+            tag: "attribute", name: "RebootCount", xref: "core§11.12.6.2",
             details: "The RebootCount attribute shall indicate a best-effort count of the number of times the Node has " +
                 "rebooted. The RebootCount attribute SHOULD be incremented each time the Node reboots. The " +
                 "RebootCount attribute shall NOT be incremented when a Node wakes from a low-power or sleep state. " +
-                "The RebootCount attribute shall only be reset to 0 upon a factory reset of the Node.",
-            xref: "core§11.12.6.2"
+                "The RebootCount attribute shall only be reset to 0 upon a factory reset of the Node."
         },
 
         {
-            tag: "attribute", name: "UpTime",
+            tag: "attribute", name: "UpTime", xref: "core§11.12.6.3",
             details: "The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, " +
                 "since the Node’s last reboot. This attribute SHOULD be incremented to account for the periods of " +
                 "time that a Node is in a low-power or sleep state. This attribute shall only be reset upon a device " +
                 "reboot. This attribute shall be based on the same System Time source as those used to fulfill any " +
-                "usage of the system-us and system-ms data types within the server.",
-            xref: "core§11.12.6.3"
+                "usage of the system-us and system-ms data types within the server."
         },
 
         {
-            tag: "attribute", name: "TotalOperationalHours",
+            tag: "attribute", name: "TotalOperationalHours", xref: "core§11.12.6.4",
             details: "The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of " +
                 "time, in hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be " +
                 "incremented to account for the periods of time that a Node is in a low-power or sleep state. The " +
-                "TotalOperationalHours attribute shall only be reset upon a factory reset of the Node.",
-            xref: "core§11.12.6.4"
+                "TotalOperationalHours attribute shall only be reset upon a factory reset of the Node."
         },
 
         {
-            tag: "attribute", name: "BootReason",
-            details: "The BootReason attribute shall indicate the reason for the Node’s most recent boot.",
-            xref: "core§11.12.6.5"
+            tag: "attribute", name: "BootReason", xref: "core§11.12.6.5",
+            details: "The BootReason attribute shall indicate the reason for the Node’s most recent boot."
         },
 
         {
-            tag: "attribute", name: "ActiveHardwareFaults",
+            tag: "attribute", name: "ActiveHardwareFaults", xref: "core§11.12.6.6",
 
             details: "The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate HardwareFaultEnum value shall be " +
                 "added to this list. This list shall NOT contain more than one instance of a specific " +
-                "HardwareFaultEnum value. When the Node detects that all conditions contributing to a fault has been" +
-                "\n" +
+                "HardwareFaultEnum value. When the Node detects that all conditions contributing to a fault has been " +
                 "cleared, the corresponding HardwareFaultEnum value shall be removed from this list. An empty list " +
                 "shall indicate there are currently no active faults. The order of this list SHOULD have no " +
                 "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
-                "attribute, or they may subscribe to HardwareFaultChange.",
-
-            xref: "core§11.12.6.6"
+                "attribute, or they may subscribe to HardwareFaultChange."
         },
 
         {
-            tag: "attribute", name: "ActiveRadioFaults",
+            tag: "attribute", name: "ActiveRadioFaults", xref: "core§11.12.6.7",
 
             details: "The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate RadioFaultEnum value shall be added " +
@@ -100,13 +89,11 @@ Resource.add({
                 "corresponding RadioFaultEnum value shall be removed from this list. An empty list shall indicate " +
                 "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
                 "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
-                "subscribe to RadioFaultChange.",
-
-            xref: "core§11.12.6.7"
+                "subscribe to RadioFaultChange."
         },
 
         {
-            tag: "attribute", name: "ActiveNetworkFaults",
+            tag: "attribute", name: "ActiveNetworkFaults", xref: "core§11.12.6.8",
 
             details: "The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate NetworkFaultEnum value shall be added " +
@@ -115,118 +102,98 @@ Resource.add({
                 "corresponding NetworkFaultEnum value shall be removed from this list. An empty list shall indicate " +
                 "there are currently no active faults. The order of this list SHOULD have no significance. Clients " +
                 "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
-                "subscribe to NetworkFaultChange.",
-
-            xref: "core§11.12.6.8"
+                "subscribe to NetworkFaultChange."
         },
 
         {
-            tag: "attribute", name: "TestEventTriggersEnabled",
+            tag: "attribute", name: "TestEventTriggersEnabled", xref: "core§11.12.6.9",
 
             details: "The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger " +
                 "configured. When this attribute is true, the Node has been configured with one or more test event " +
                 "triggers by virtue of the internally programmed EnableKey value (see TestEventTrigger) being set to " +
                 "a non-zero value. This attribute can be used by Administrators to detect if a device was " +
                 "inadvertently commissioned with test event trigger mode enabled, and take appropriate action (e.g. " +
-                "warn the user and/or offer to remove all fabrics on the Node).",
-
-            xref: "core§11.12.6.9"
+                "warn the user and/or offer to remove all fabrics on the Node)."
         },
 
         { tag: "attribute", name: "DoNotUse", xref: "core§11.12.6" },
 
         {
-            tag: "event", name: "HardwareFaultChange",
+            tag: "event", name: "HardwareFaultChange", xref: "core§11.12.8.1",
             details: "The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently " +
                 "detected by the Node.",
-            xref: "core§11.12.8.1",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per HardwareFaultEnum.",
-                    xref: "core§11.12.8.1.1"
+                    tag: "field", name: "Current", xref: "core§11.12.8.1.1",
+                    details: "This field shall represent the set of faults currently detected, as per HardwareFaultEnum."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.12.8.1.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "HardwareFaultEnum.",
-                    xref: "core§11.12.8.1.2"
+                        "HardwareFaultEnum."
                 }
             ]
         },
 
         {
-            tag: "event", name: "RadioFaultChange",
+            tag: "event", name: "RadioFaultChange", xref: "core§11.12.8.2",
             details: "The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by " +
                 "the Node.",
-            xref: "core§11.12.8.2",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per RadioFaultEnum.",
-                    xref: "core§11.12.8.2.1"
+                    tag: "field", name: "Current", xref: "core§11.12.8.2.1",
+                    details: "This field shall represent the set of faults currently detected, as per RadioFaultEnum."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.12.8.2.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "RadioFaultEnum.",
-                    xref: "core§11.12.8.2.2"
+                        "RadioFaultEnum."
                 }
             ]
         },
 
         {
-            tag: "event", name: "NetworkFaultChange",
+            tag: "event", name: "NetworkFaultChange", xref: "core§11.12.8.3",
             details: "The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected " +
                 "by the Node.",
-            xref: "core§11.12.8.3",
 
             children: [
                 {
-                    tag: "field", name: "Current",
-                    details: "This field shall represent the set of faults currently detected, as per NetworkFaultEnum.",
-                    xref: "core§11.12.8.3.1"
+                    tag: "field", name: "Current", xref: "core§11.12.8.3.1",
+                    details: "This field shall represent the set of faults currently detected, as per NetworkFaultEnum."
                 },
-
                 {
-                    tag: "field", name: "Previous",
+                    tag: "field", name: "Previous", xref: "core§11.12.8.3.2",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "NetworkFaultEnum.",
-                    xref: "core§11.12.8.3.2"
+                        "NetworkFaultEnum."
                 }
             ]
         },
 
         {
-            tag: "event", name: "BootReason",
+            tag: "event", name: "BootReason", xref: "core§11.12.8.4",
             details: "The BootReason Event shall indicate the reason that caused the device to start-up.",
-            xref: "core§11.12.8.4",
             children: [{
-                tag: "field", name: "BootReason",
-                details: "This field shall contain the reason for this BootReason event.",
-                xref: "core§11.12.8.4.1"
+                tag: "field", name: "BootReason", xref: "core§11.12.8.4.1",
+                details: "This field shall contain the reason for this BootReason event."
             }]
         },
 
         {
-            tag: "command", name: "TestEventTrigger",
+            tag: "command", name: "TestEventTrigger", xref: "core§11.12.7.1",
 
-            details: "This command shall be supported to provide a means for certification tests to trigger some test- " +
-                "plan-specific events, necessary to assist in automation of device interactions for some " +
+            details: "This command shall be supported to provide a means for certification tests to trigger some " +
+                "test-plan-specific events, necessary to assist in automation of device interactions for some " +
                 "certification test cases. This command shall NOT cause any changes to the state of the device that " +
                 "persist after the last fabric is removed." +
                 "\n" +
                 "The fields for the TestEventTrigger command are as follows:",
 
-            xref: "core§11.12.7.1",
-
             children: [
                 {
-                    tag: "field", name: "EnableKey",
+                    tag: "field", name: "EnableKey", xref: "core§11.12.7.1.1",
 
                     details: "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
                         "value chosen by the manufacturer and configured on the server using manufacturer-specific means, " +
@@ -241,13 +208,11 @@ Resource.add({
                         "\n" +
                         "In order to prevent unwittingly actuating a particular trigger, this command shall respond with a " +
                         "response status of CONSTRAINT_ERROR if the EnableKey field does not match the a-priori value " +
-                        "configured on the device.",
-
-                    xref: "core§11.12.7.1.1"
+                        "configured on the device."
                 },
 
                 {
-                    tag: "field", name: "EventTrigger",
+                    tag: "field", name: "EventTrigger", xref: "core§11.12.7.1.2",
 
                     details: "This field shall indicate the test or test mode which the client wants to trigger." +
                         "\n" +
@@ -258,8 +223,7 @@ Resource.add({
                         "Values of EventTrigger in the range 0xFFFF_FFFF_0000_0000 through 0xFFFF_FFFF_FFFF_FFFF are reserved " +
                         "for testing use by manufacturers and will not appear in CSA certification test literature." +
                         "\n" +
-                        "If the value of EventTrigger received is not supported by the receiving Node, this command shall" +
-                        "\n" +
+                        "If the value of EventTrigger received is not supported by the receiving Node, this command shall " +
                         "fail with a status code of INVALID_COMMAND." +
                         "\n" +
                         "Otherwise, if the EnableKey value matches the configured internal value for a particular Node, and " +
@@ -269,28 +233,24 @@ Resource.add({
                         "If no specific test event triggers are required to be supported by certification test requirements " +
                         "for the features that a given product will be certified against, this command may always fail with " +
                         "the INVALID_COMMAND status, equivalent to the situation of receiving an unknown EventTrigger, for " +
-                        "all possible EventTrigger values.",
-
-                    xref: "core§11.12.7.1.2"
+                        "all possible EventTrigger values."
                 }
             ]
         },
 
         {
-            tag: "command", name: "TimeSnapshot",
+            tag: "command", name: "TimeSnapshot", xref: "core§11.12.7.2",
 
             details: "This command may be used by a client to obtain a correlated view of both System Time, and, if " +
                 "currently synchronized and supported, \"wall clock time\" of the server. This can help clients " +
                 "establish time correlation between their concept of time and the server’s concept of time. This is " +
                 "especially useful when processing event histories where some events only contain System Time." +
                 "\n" +
-                "Upon command invocation, the server shall respond with a TimeSnapshotResponse.",
-
-            xref: "core§11.12.7.2"
+                "Upon command invocation, the server shall respond with a TimeSnapshotResponse."
         },
 
         {
-            tag: "command", name: "TimeSnapshotResponse",
+            tag: "command", name: "TimeSnapshotResponse", xref: "core§11.12.7.3",
 
             details: "This command shall be generated in response to a TimeSnapshot command." +
                 "\n" +
@@ -300,21 +260,18 @@ Resource.add({
                 "If the Time Synchronization cluster is supported by the node, the PosixTimeMs field shall NOT be " +
                 "null unless the UTCTime attribute in the Time Synchronization cluster is also null.",
 
-            xref: "core§11.12.7.3",
-
             children: [
                 {
-                    tag: "field", name: "SystemTimeMs",
+                    tag: "field", name: "SystemTimeMs", xref: "core§11.12.7.3.1",
                     details: "This shall indicate the current System Time in milliseconds (type system-ms), with the value taken " +
                         "at the time of processing of the TimeSnapshot command that generated this response." +
                         "\n" +
                         "The value shall be taken from the same clock which populates the Timestamp field in events when " +
-                        "using System Time for the field.",
-                    xref: "core§11.12.7.3.1"
+                        "using System Time for the field."
                 },
 
                 {
-                    tag: "field", name: "PosixTimeMs",
+                    tag: "field", name: "PosixTimeMs", xref: "core§11.12.7.3.2",
 
                     details: "This shall indicate the current time in POSIX Time in milliseconds, with the value taken from the " +
                         "same source that could populate the Timestamp field of events. This value shall only be null when " +
@@ -322,15 +279,13 @@ Resource.add({
                         "\n" +
                         "  • The node doesn’t support the Time Synchronization cluster." +
                         "\n" +
-                        "  • The node’s Time Synchronization cluster instance’s UTCTime attribute is null.",
-
-                    xref: "core§11.12.7.3.2"
+                        "  • The node’s Time Synchronization cluster instance’s UTCTime attribute is null."
                 }
             ]
         },
 
         {
-            tag: "command", name: "PayloadTestRequest",
+            tag: "command", name: "PayloadTestRequest", xref: "core§11.12.7.4",
 
             details: "This command provides a means for certification tests or manufacturer’s internal tests to validate " +
                 "particular command handling and encoding constraints by generating a response of a given size." +
@@ -341,27 +296,23 @@ Resource.add({
                 "\n" +
                 "The fields for the PayloadTestRequest command are as follows:",
 
-            xref: "core§11.12.7.4",
-
             children: [
                 {
-                    tag: "field", name: "EnableKey",
-                    details: "This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.",
-                    xref: "core§11.12.7.4.1"
+                    tag: "field", name: "EnableKey", xref: "core§11.12.7.4.1",
+                    details: "This field shall have the same meaning and usage as the TestEventTrigger EnableKey field."
                 },
                 {
-                    tag: "field", name: "Value",
-                    details: "This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.",
-                    xref: "core§11.12.7.4.2"
+                    tag: "field", name: "Value", xref: "core§11.12.7.4.2",
+                    details: "This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field."
                 },
 
                 {
-                    tag: "field", name: "Count",
+                    tag: "field", name: "Count", xref: "core§11.12.7.4.3",
 
                     details: "This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s " +
                         "Payload field." +
                         "\n" +
-                        "Effect upon receipt" +
+                        "### Effect upon receipt" +
                         "\n" +
                         "This command shall respond with a response status of CONSTRAINT_ERROR if either:" +
                         "\n" +
@@ -378,30 +329,24 @@ Resource.add({
                         "  • If Value is 0x55 and the Count is zero, then the PayloadTestResponse would have the Payload " +
                         "    field set to an empty octet string." +
                         "\n" +
-                        "  • If Value is 0xA5 and the Count is 10, the PayloadTestResponse would have the Payload field set" +
-                        "\n" +
-                        "to a content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 " +
-                        "representation would be paWlpaWlpaWlpQ==.",
-
-                    xref: "core§11.12.7.4.3"
+                        "  • If Value is 0xA5 and the Count is 10, the PayloadTestResponse would have the Payload field set " +
+                        "    to a content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 " +
+                        "    representation would be paWlpaWlpaWlpQ==."
                 }
             ]
         },
 
         {
-            tag: "command", name: "PayloadTestResponse",
+            tag: "command", name: "PayloadTestResponse", xref: "core§11.12.7.5",
             details: "This command is sent by the server on receipt of the PayloadTestRequest command.",
-            xref: "core§11.12.7.5",
             children: [{
-                tag: "field", name: "Payload",
-                details: "This field shall contain the computed response of the PayloadTestRequest command.",
-                xref: "core§11.12.7.5.1"
+                tag: "field", name: "Payload", xref: "core§11.12.7.5.1",
+                details: "This field shall contain the computed response of the PayloadTestRequest command."
             }]
         },
 
         {
-            tag: "datatype", name: "HardwareFaultEnum",
-            xref: "core§11.12.5.1",
+            tag: "datatype", name: "HardwareFaultEnum", xref: "core§11.12.5.1",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "The Node has encountered an unspecified fault." },
@@ -449,8 +394,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "RadioFaultEnum",
-            xref: "core§11.12.5.2",
+            tag: "datatype", name: "RadioFaultEnum", xref: "core§11.12.5.2",
 
             children: [
                 {
@@ -467,7 +411,7 @@ Resource.add({
                 },
                 {
                     tag: "field", name: "ThreadFault",
-                    description: "The Node has encountered a fault with its802.15.4 radio."
+                    description: "The Node has encountered a fault with its 802.15.4 radio."
                 },
                 { tag: "field", name: "NfcFault", description: "The Node has encountered a fault with its NFC radio." },
                 { tag: "field", name: "BleFault", description: "The Node has encountered a fault with its BLE radio." },
@@ -479,8 +423,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "NetworkFaultEnum",
-            xref: "core§11.12.5.3",
+            tag: "datatype", name: "NetworkFaultEnum", xref: "core§11.12.5.3",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "The Node has encountered an unspecified fault." },
@@ -500,8 +443,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "InterfaceTypeEnum",
-            xref: "core§11.12.5.4",
+            tag: "datatype", name: "InterfaceTypeEnum", xref: "core§11.12.5.4",
 
             children: [
                 { tag: "field", name: "Unspecified", description: "Indicates an interface of an unspecified type." },
@@ -513,8 +455,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "BootReasonEnum",
-            xref: "core§11.12.5.5",
+            tag: "datatype", name: "BootReasonEnum", xref: "core§11.12.5.5",
 
             children: [
                 {
@@ -549,72 +490,61 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "NetworkInterface",
+            tag: "datatype", name: "NetworkInterface", xref: "core§11.12.5.6",
             details: "This structure describes a network interface supported by the Node, as provided in the " +
                 "NetworkInterfaces attribute.",
-            xref: "core§11.12.5.6",
 
             children: [
                 {
-                    tag: "field", name: "Name",
+                    tag: "field", name: "Name", xref: "core§11.12.5.6.1",
                     details: "This field shall indicate a human-readable (displayable) name for the network interface, that is " +
-                        "different from all other interfaces.",
-                    xref: "core§11.12.5.6.1"
+                        "different from all other interfaces."
                 },
-
                 {
-                    tag: "field", name: "IsOperational",
+                    tag: "field", name: "IsOperational", xref: "core§11.12.5.6.2",
                     details: "This field shall indicate if the Node is currently advertising itself operationally on this network " +
-                        "interface and is capable of successfully receiving incoming traffic from other Nodes.",
-                    xref: "core§11.12.5.6.2"
+                        "interface and is capable of successfully receiving incoming traffic from other Nodes."
                 },
 
                 {
-                    tag: "field", name: "OffPremiseServicesReachableIPv4",
+                    tag: "field", name: "OffPremiseServicesReachableIPv4", xref: "core§11.12.5.6.3",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
-                        "whether it can reach them.",
-                    xref: "core§11.12.5.6.3"
+                        "whether it can reach them."
                 },
 
                 {
-                    tag: "field", name: "OffPremiseServicesReachableIPv6",
+                    tag: "field", name: "OffPremiseServicesReachableIPv6", xref: "core§11.12.5.6.4",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
-                        "whether it can reach them.",
-                    xref: "core§11.12.5.6.4"
+                        "whether it can reach them."
                 },
 
                 {
-                    tag: "field", name: "HardwareAddress",
-                    details: "This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network" +
-                        "\n" +
+                    tag: "field", name: "HardwareAddress", xref: "core§11.12.5.6.5",
+                    details: "This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network " +
                         "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
                         "the octstr shall be in wire byte order. For addresses values less than 64 bits, the first two bytes " +
-                        "shall be zero.",
-                    xref: "core§11.12.5.6.5"
+                        "shall be zero."
                 },
 
                 {
-                    tag: "field", name: "IPv4Addresses",
+                    tag: "field", name: "IPv4Addresses", xref: "core§11.12.5.6.6",
                     details: "This field shall provide a list of the IPv4 addresses that are currently assigned to the network " +
-                        "interface.",
-                    xref: "core§11.12.5.6.6"
+                        "interface."
                 },
 
                 {
-                    tag: "field", name: "IPv6Addresses",
+                    tag: "field", name: "IPv6Addresses", xref: "core§11.12.5.6.7",
                     details: "This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the " +
                         "network interface. This list shall include the Node’s link-local address and SHOULD include any " +
                         "assigned GUA and ULA addresses. This list shall NOT include any multicast group addresses to which " +
-                        "the Node is subscribed.",
-                    xref: "core§11.12.5.6.7"
+                        "the Node is subscribed."
                 },
 
                 {
-                    tag: "field", name: "Type",
-                    details: "This field shall indicate the type of the interface using the InterfaceTypeEnum.",
-                    xref: "core§11.12.5.6.8"
+                    tag: "field", name: "Type", xref: "core§11.12.5.6.8",
+                    details: "This field shall indicate the type of the interface using the InterfaceTypeEnum."
                 }
             ]
         }

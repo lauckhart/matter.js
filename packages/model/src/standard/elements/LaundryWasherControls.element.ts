@@ -19,23 +19,23 @@ export const LaundryWasherControls = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "SPIN", constraint: "0", conformance: "O.a+", longName: "Spin" }),
-        Field({ name: "RINSE", constraint: "1", conformance: "O.a+", longName: "Rinse" })
+        Field({ name: "SPIN", conformance: "O.a+", constraint: "0", title: "Spin" }),
+        Field({ name: "RINSE", conformance: "O.a+", constraint: "1", title: "Rinse" })
     ),
     Attribute(
-        { name: "SpinSpeeds", id: 0x0, type: "list", constraint: "max 16[max 64]", conformance: "SPIN", access: "R V" },
+        { name: "SpinSpeeds", id: 0x0, type: "list", access: "R V", conformance: "SPIN", constraint: "max 16[max 64]" },
         Field({ name: "entry", type: "string" })
     ),
     Attribute({
-        name: "SpinSpeedCurrent", id: 0x1, type: "uint8",
-        constraint: "max 15", conformance: "SPIN", access: "RW VO", quality: "X"
+        name: "SpinSpeedCurrent", id: 0x1, type: "uint8", access: "RW VO", conformance: "SPIN",
+        constraint: "max 15", quality: "X"
     }),
     Attribute({
-        name: "NumberOfRinses", id: 0x2, type: "NumberOfRinsesEnum",
-        default: 1, constraint: "desc", conformance: "RINSE", access: "RW VO"
+        name: "NumberOfRinses", id: 0x2, type: "NumberOfRinsesEnum", access: "RW VO", conformance: "RINSE",
+        constraint: "desc", default: 1
     }),
     Attribute(
-        { name: "SupportedRinses", id: 0x3, type: "list", constraint: "max 4", conformance: "RINSE", access: "R V" },
+        { name: "SupportedRinses", id: 0x3, type: "list", access: "R V", conformance: "RINSE", constraint: "max 4" },
         Field({ name: "entry", type: "NumberOfRinsesEnum" })
     ),
 

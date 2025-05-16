@@ -10,42 +10,36 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        tag: "cluster", name: "OtaSoftwareUpdateProvider",
-        classification: "node", pics: "OTAP",
+        tag: "cluster", name: "OtaSoftwareUpdateProvider", classification: "node", pics: "OTAP",
         xref: "core§11.20.6",
 
         children: [
             {
-                tag: "command", name: "QueryImage",
+                tag: "command", name: "QueryImage", xref: "core§11.20.6.5.1",
                 details: "Upon receipt, this command shall trigger an attempt to find an updated Software Image by the OTA " +
                     "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
-                xref: "core§11.20.6.5.1",
 
                 children: [
                     {
-                        tag: "field", name: "VendorId",
+                        tag: "field", name: "VendorId", xref: "core§11.20.6.5.1.1",
                         details: "The value shall be the Vendor ID applying to the OTA Requestor’s Node and shall match the value " +
-                            "reported by the Basic Information Cluster VendorID attribute.",
-                        xref: "core§11.20.6.5.1.1"
+                            "reported by the Basic Information Cluster VendorID attribute."
                     },
-
                     {
-                        tag: "field", name: "ProductId",
+                        tag: "field", name: "ProductId", xref: "core§11.20.6.5.1.2",
                         details: "The value shall be the Product ID applying to the OTA Requestor’s Node and shall match the value " +
-                            "reported by the Basic Information Cluster ProductID attribute.",
-                        xref: "core§11.20.6.5.1.2"
+                            "reported by the Basic Information Cluster ProductID attribute."
                     },
 
                     {
-                        tag: "field", name: "SoftwareVersion",
+                        tag: "field", name: "SoftwareVersion", xref: "core§11.20.6.5.1.3",
                         details: "The SoftwareVersion included in the request payload shall provide the value representing the current " +
                             "version running on the OTA Requestor invoking the command. This version shall be equal to the " +
-                            "Software Version attribute of the Basic Information Cluster.",
-                        xref: "core§11.20.6.5.1.3"
+                            "Software Version attribute of the Basic Information Cluster."
                     },
 
                     {
-                        tag: "field", name: "ProtocolsSupported",
+                        tag: "field", name: "ProtocolsSupported", xref: "core§11.20.6.5.1.4",
 
                         details: "This field shall contain a list of all download protocols supported by the OTA Requestor." +
                             "\n" +
@@ -59,39 +53,33 @@ Resource.add(
                             "selection” are followed." +
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” and Section 11.20.3.5, “Transfer of OTA Software " +
-                            "Update images” for more details about usage of this field.",
-
-                        xref: "core§11.20.6.5.1.4"
+                            "Update images” for more details about usage of this field."
                     },
 
                     {
-                        tag: "field", name: "HardwareVersion",
+                        tag: "field", name: "HardwareVersion", xref: "core§11.20.6.5.1.5",
                         details: "The value of this field, if present, shall contain the OTA Requestor’s hardware version, and shall " +
-                            "be equal to the HardwareVersion attribute of the Basic Information Cluster.",
-                        xref: "core§11.20.6.5.1.5"
+                            "be equal to the HardwareVersion attribute of the Basic Information Cluster."
                     },
 
                     {
-                        tag: "field", name: "Location",
-                        details: "The location, if present, shall provide the same value as the Basic Information Cluster Location" +
-                            "\n" +
+                        tag: "field", name: "Location", xref: "core§11.20.6.5.1.6",
+                        details: "The location, if present, shall provide the same value as the Basic Information Cluster Location " +
                             "attribute for the OTA Requestor as configured. This may be used by the OTA Provider logic to allow " +
-                            "per-region selection of the Software Image.",
-                        xref: "core§11.20.6.5.1.6"
+                            "per-region selection of the Software Image."
                     },
 
                     {
-                        tag: "field", name: "RequestorCanConsent",
+                        tag: "field", name: "RequestorCanConsent", xref: "core§11.20.6.5.1.7",
                         details: "This field shall be set to true by an OTA Requestor that is capable of obtaining user consent for " +
                             "OTA application by virtue of built-in user interface capabilities. Otherwise, it shall be false." +
                             "\n" +
                             "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
-                            "usage.",
-                        xref: "core§11.20.6.5.1.7"
+                            "usage."
                     },
 
                     {
-                        tag: "field", name: "MetadataForProvider",
+                        tag: "field", name: "MetadataForProvider", xref: "core§11.20.6.5.1.8",
 
                         details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
                             "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
@@ -115,35 +103,29 @@ Resource.add(
                             "externally agreed-upon policy whereby strictly correct additional MetadataForProvider is expected to " +
                             "fulfill the OTA Software Update process." +
                             "\n" +
-                            "Usage of the QueryImage Command" +
-                            "\n" +
                             "OTA Requestors shall send a QueryImage command to the OTA Provider to determine the availability of " +
                             "a new Software Image." +
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for full details about the OTA Software Update " +
-                            "Query flow which makes use of this command.",
-
-                        xref: "core§11.20.6.5.1.8"
+                            "Query flow which makes use of this command."
                     }
                 ]
             },
 
             {
-                tag: "command", name: "QueryImageResponse",
-                xref: "core§11.20.6.5.2",
+                tag: "command", name: "QueryImageResponse", xref: "core§11.20.6.5.2",
 
                 children: [
                     {
-                        tag: "field", name: "Status",
+                        tag: "field", name: "Status", xref: "core§11.20.6.5.2.1",
                         details: "This field shall contain the primary response regarding the availability of a Software Image." +
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for details about the possible values for this " +
-                            "field and their meaning.",
-                        xref: "core§11.20.6.5.2.1"
+                            "field and their meaning."
                     },
 
                     {
-                        tag: "field", name: "DelayedActionTime",
+                        tag: "field", name: "DelayedActionTime", xref: "core§11.20.6.5.2.2",
 
                         details: "This field shall convey the minimum time to wait, in seconds from the time of this response, before " +
                             "sending another QueryImage command or beginning a download from the OTA Provider. OTA Requestors " +
@@ -153,13 +135,11 @@ Resource.add(
                             "\n" +
                             "The DelayedActionTime field shall only be present if the Status field is set to Busy." +
                             "\n" +
-                            "See Section 11.20.3.2, “Querying the OTA Provider” for details about the rules regarding this field.",
-
-                        xref: "core§11.20.6.5.2.2"
+                            "See Section 11.20.3.2, “Querying the OTA Provider” for details about the rules regarding this field."
                     },
 
                     {
-                        tag: "field", name: "ImageUri",
+                        tag: "field", name: "ImageUri", xref: "core§11.20.6.5.2.3",
 
                         details: "This field, when present, shall contain a URI where the OTA Requestor SHOULD download a Software " +
                             "Image. The syntax of the ImageURI field shall follow the URI syntax as specified in RFC 3986." +
@@ -257,13 +237,11 @@ Resource.add(
                             "\n" +
                             "    ◦ Valid: https://example.domain:8466/software/image.bin" +
                             "\n" +
-                            "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow.",
-
-                        xref: "core§11.20.6.5.2.3"
+                            "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow."
                     },
 
                     {
-                        tag: "field", name: "SoftwareVersion",
+                        tag: "field", name: "SoftwareVersion", xref: "core§11.20.6.5.2.4",
 
                         details: "This field indicates the version of the image being provided to the OTA Requestor by the OTA " +
                             "Provider when the Status is UpdateAvailable." +
@@ -271,13 +249,11 @@ Resource.add(
                             "This field shall be present if it appears in a QueryImageResponse with a Status of UpdateAvailable." +
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
-                            "acceptable values.",
-
-                        xref: "core§11.20.6.5.2.4"
+                            "acceptable values."
                     },
 
                     {
-                        tag: "field", name: "SoftwareVersionString",
+                        tag: "field", name: "SoftwareVersionString", xref: "core§11.20.6.5.2.5",
 
                         details: "This field provides a string version of the image being provided to the OTA Requestor by the OTA " +
                             "Provider when the Status is UpdateAvailable." +
@@ -285,22 +261,19 @@ Resource.add(
                             "This field shall be present if it appears in a QueryImageResponse with a Status of UpdateAvailable." +
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
-                            "acceptable values.",
-
-                        xref: "core§11.20.6.5.2.5"
+                            "acceptable values."
                     },
 
                     {
-                        tag: "field", name: "UpdateToken",
+                        tag: "field", name: "UpdateToken", xref: "core§11.20.6.5.2.6",
                         details: "This optional field shall be present when the Status field contains UpdateAvailable." +
                             "\n" +
                             "See Section 11.20.3.6.1, “UpdateToken usage” for additional details about the generation and usage " +
-                            "of UpdateToken.",
-                        xref: "core§11.20.6.5.2.6"
+                            "of UpdateToken."
                     },
 
                     {
-                        tag: "field", name: "UserConsentNeeded",
+                        tag: "field", name: "UserConsentNeeded", xref: "core§11.20.6.5.2.7",
 
                         details: "This field, if present, shall only be interpreted if the OTA Requestor had previously indicated a " +
                             "value of True in the RequestorCanConsent field of the QueryImageRequest. This field, when present " +
@@ -308,13 +281,11 @@ Resource.add(
                             "to downloading the OTA Software Image." +
                             "\n" +
                             "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
-                            "usage.",
-
-                        xref: "core§11.20.6.5.2.7"
+                            "usage."
                     },
 
                     {
-                        tag: "field", name: "MetadataForRequestor",
+                        tag: "field", name: "MetadataForRequestor", xref: "core§11.20.6.5.2.8",
 
                         details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
                             "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
@@ -326,39 +297,31 @@ Resource.add(
                             "\n" +
                             "The data for this field does not exist in any Distributed Compliance Ledger record and SHOULD only " +
                             "be emitted by an OTA Provider with this additional knowledge if it has knowledge that the receiving " +
-                            "OTA Requestor may be able to use it.",
-
-                        xref: "core§11.20.6.5.2.8"
+                            "OTA Requestor may be able to use it."
                     }
                 ]
             },
 
             {
-                tag: "command", name: "ApplyUpdateRequest",
-                xref: "core§11.20.6.5.3",
+                tag: "command", name: "ApplyUpdateRequest", xref: "core§11.20.6.5.3",
 
                 children: [
                     {
-                        tag: "field", name: "UpdateToken",
+                        tag: "field", name: "UpdateToken", xref: "core§11.20.6.5.3.1",
                         details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”. " +
                             "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
-                            "scheduling of the application of Software Images by OTA Requestors.",
-                        xref: "core§11.20.6.5.3.1"
+                            "scheduling of the application of Software Images by OTA Requestors."
                     },
 
                     {
-                        tag: "field", name: "NewVersion",
+                        tag: "field", name: "NewVersion", xref: "core§11.20.6.5.3.2",
 
                         details: "The NewVersion field included in the request payload shall provide the SoftwareVersion value of the " +
                             "new Software Image which the OTA Requestor is ready to start applying. The OTA Provider may use this " +
                             "new version to track or record Software Image application by OTA Requestors." +
                             "\n" +
-                            "When Generated" +
-                            "\n" +
                             "The ApplyUpdateRequest Command shall be invoked by an OTA Requestor once it is ready to apply a " +
                             "previously downloaded Software Image." +
-                            "\n" +
-                            "Effect on Receipt" +
                             "\n" +
                             "Upon receipt of this command the OTA Provider shall respond with an Action field consistent with the " +
                             "next action the OTA Requestor should take, including any possible time delay." +
@@ -370,59 +333,48 @@ Resource.add(
                             "See Section 11.20.3.6, “Applying a software update” for a description of the flow in response to an " +
                             "OTA Provider receiving an invocation of this command." +
                             "\n" +
-                            "Handling Error Cases" +
-                            "\n" +
-                            "See Section 11.20.3.6, “Applying a software update” for all error-handling information.",
-
-                        xref: "core§11.20.6.5.3.2"
+                            "See Section 11.20.3.6, “Applying a software update” for all error-handling information."
                     }
                 ]
             },
 
             {
-                tag: "command", name: "ApplyUpdateResponse",
-                xref: "core§11.20.6.5.4",
+                tag: "command", name: "ApplyUpdateResponse", xref: "core§11.20.6.5.4",
 
                 children: [
                     {
-                        tag: "field", name: "Action",
+                        tag: "field", name: "Action", xref: "core§11.20.6.5.4.1",
                         details: "The Action field shall express the action that the OTA Provider requests from the OTA Requestor. See " +
                             "Section 11.20.3.6, “Applying a software update” for a description of the Action values provided in " +
-                            "response to an OTA Provider receiving an invocation of this command.",
-                        xref: "core§11.20.6.5.4.1"
+                            "response to an OTA Provider receiving an invocation of this command."
                     },
 
                     {
-                        tag: "field", name: "DelayedActionTime",
+                        tag: "field", name: "DelayedActionTime", xref: "core§11.20.6.5.4.2",
                         details: "The minimum time period the OTA Requestor shall wait before executing the Action, in seconds from " +
                             "receipt." +
                             "\n" +
                             "If this field has a value higher than 86400 seconds (24 hours), then the OTA Requestor may assume a " +
-                            "value of 86400, in order to reduce undue Software Image application delays.",
-                        xref: "core§11.20.6.5.4.2"
+                            "value of 86400, in order to reduce undue Software Image application delays."
                     }
                 ]
             },
 
             {
-                tag: "command", name: "NotifyUpdateApplied",
-                xref: "core§11.20.6.5.5",
+                tag: "command", name: "NotifyUpdateApplied", xref: "core§11.20.6.5.5",
 
                 children: [
                     {
-                        tag: "field", name: "UpdateToken",
-                        details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”.",
-                        xref: "core§11.20.6.5.5.1"
+                        tag: "field", name: "UpdateToken", xref: "core§11.20.6.5.5.1",
+                        details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”."
                     },
 
                     {
-                        tag: "field", name: "SoftwareVersion",
+                        tag: "field", name: "SoftwareVersion", xref: "core§11.20.6.5.5.2",
 
                         details: "The SoftwareVersion included in the request payload shall provide the same value as the " +
                             "SoftwareVersion attribute in the invoking OTA Requestor’s Basic Information Cluster, and SHOULD be " +
                             "consistent with the value representing a new version running on the Node invoking the command." +
-                            "\n" +
-                            "When Generated" +
                             "\n" +
                             "The NotifyUpdateApplied command SHOULD be invoked in the following two circumstances:" +
                             "\n" +
@@ -441,22 +393,17 @@ Resource.add(
                             "This command shall be considered optional and shall NOT result in reduced availability of the OTA " +
                             "Provider functionality if OTA Requestors never invoke this command." +
                             "\n" +
-                            "Effect on Receipt" +
-                            "\n" +
                             "An OTA Provider receiving an invocation of this command may log it internally." +
                             "\n" +
                             "On receiving this command, an OTA Provider may use the information to update its bookkeeping of " +
-                            "cached Software Images, or use it for other similar administrative purposes.",
-
-                        xref: "core§11.20.6.5.5.2"
+                            "cached Software Images, or use it for other similar administrative purposes."
                     }
                 ]
             },
 
             {
-                tag: "datatype", name: "StatusEnum",
+                tag: "datatype", name: "StatusEnum", xref: "core§11.20.6.4.1",
                 details: "See Section 11.20.3.2, “Querying the OTA Provider” for the semantics of these values.",
-                xref: "core§11.20.6.4.1",
 
                 children: [
                     {
@@ -479,10 +426,9 @@ Resource.add(
             },
 
             {
-                tag: "datatype", name: "ApplyUpdateActionEnum",
+                tag: "datatype", name: "ApplyUpdateActionEnum", xref: "core§11.20.6.4.2",
                 details: "See Section 11.20.3.6, “Applying a software update” for the semantics of the values. This " +
                     "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Action).",
-                xref: "core§11.20.6.4.2",
 
                 children: [
                     { tag: "field", name: "Proceed", description: "Apply the update." },
@@ -495,10 +441,9 @@ Resource.add(
             },
 
             {
-                tag: "datatype", name: "DownloadProtocolEnum",
+                tag: "datatype", name: "DownloadProtocolEnum", xref: "core§11.20.6.4.3",
                 details: "Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall NOT " +
                     "be supported, as there is no way to authenticate the involved participants.",
-                xref: "core§11.20.6.4.3",
 
                 children: [
                     { tag: "field", name: "BdxSynchronous", description: "Indicates support for synchronous BDX." },

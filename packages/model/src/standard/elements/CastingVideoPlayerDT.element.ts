@@ -17,25 +17,25 @@ export const CastingVideoPlayerDt = DeviceType(
     { name: "CastingVideoPlayer", id: 0x23 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 35, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 35, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "WakeOnLan", id: 0x503, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "Channel", id: 0x504, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "TargetNavigator", id: 0x505, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "MediaPlayback", id: 0x506, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "MediaInput", id: 0x507, element: "serverCluster", conformance: "PhysicalInputs" }),
-    Requirement({ name: "LowPower", id: 0x508, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "KeypadInput", id: 0x509, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "ContentLauncher", id: 0x50a, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "AudioOutput", id: 0x50b, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "WakeOnLan", id: 0x503, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Channel", id: 0x504, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "TargetNavigator", id: 0x505, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "MediaPlayback", id: 0x506, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "MediaInput", id: 0x507, conformance: "PhysicalInputs", element: "serverCluster" }),
+    Requirement({ name: "LowPower", id: 0x508, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "KeypadInput", id: 0x509, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "ContentLauncher", id: 0x50a, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "AudioOutput", id: 0x50b, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "ApplicationLauncher", id: 0x50c, element: "serverCluster", conformance: "ContentAppPlatform" },
-        Requirement({ name: "APPLICATIONPLATFORM", element: "feature", conformance: "M" })
+        { name: "ApplicationLauncher", id: 0x50c, conformance: "ContentAppPlatform", element: "serverCluster" },
+        Requirement({ name: "APPLICATIONPLATFORM", conformance: "M", element: "feature" })
     ),
-    Requirement({ name: "AccountLogin", id: 0x50e, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "ContentControl", id: 0x50f, element: "serverCluster", conformance: "P, O" }),
-    Requirement({ name: "Messages", id: 0x97, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "AccountLogin", id: 0x50e, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "ContentControl", id: 0x50f, conformance: "P, O", element: "serverCluster" }),
+    Requirement({ name: "Messages", id: 0x97, conformance: "O", element: "serverCluster" }),
     Field(
         { name: "conditions", type: "enum8" },
         Field({ name: "ContentAppPlatform" }),

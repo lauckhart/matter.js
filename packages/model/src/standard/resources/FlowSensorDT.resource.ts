@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "FlowSensor",
-    classification: "simple",
+    tag: "deviceType", name: "FlowSensor", classification: "simple", xref: "device§7.6",
     details: "A Flow Sensor device measures and reports the flow rate of a fluid.",
-    xref: "device§7.6",
     children: [
         { tag: "requirement", name: "FlowMeasurement", xref: "device§7.6.4" },
         { tag: "requirement", name: "Identify", xref: "device§7.6.4" }

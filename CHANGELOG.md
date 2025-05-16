@@ -37,7 +37,7 @@ The main work (all changes without a GitHub username in brackets in the below li
     - Enhancement: Model elements now instantiates with a reduced number of fields and object shapes to reduce memory usage and decrease the likelihood of megamorphic function deoptimization in runtimes with a JIT
     - Enhancement: We have optimized resolution of global datatypes in the Matter model.  This reduces startup for large nodes such as bridges with many devices
     - Enhancement: The serialized model now stores cross references as strings and parses as necessary
-    - Enhancement: FieldModel now contains a dedicated `longName` field to capture the full name of features
+    - Enhancement: FieldModel now contains a dedicated `title` field to capture the full name of features
 
 ## 0.13.0 (2025-04-28)
 

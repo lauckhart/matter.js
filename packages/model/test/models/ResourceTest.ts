@@ -16,8 +16,8 @@ const LandingGear = new ClusterModel({
     children: [
         FeatureMap.extend({
             children: [
-                { tag: "field", name: "M", longName: "Metric", constraint: "0" },
-                { tag: "field", name: "SAE", longName: "Imperial", constraint: "1" },
+                { tag: "field", name: "M", title: "Metric", constraint: "0" },
+                { tag: "field", name: "SAE", title: "Imperial", constraint: "1" },
             ],
         }),
         new AttributeModel({ id: 0, name: "Manufacturer", type: "string", conformance: "M" }),

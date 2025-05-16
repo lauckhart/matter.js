@@ -19,7 +19,7 @@ export const RvcCleanMode = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "DEPONOFF", constraint: "0", conformance: "X", longName: "OnOff" })
+        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", title: "OnOff" })
     ),
     Attribute({ name: "SupportedModes", id: 0x0 }),
     Attribute({ name: "CurrentMode", id: 0x1 }),

@@ -8,11 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "vendor-id",
-    description: "Vendor ID",
-    details: "A Vendor ID." +
-        "\n" +
-        "Vendor IDs may be used as a prefix in a Manufacturer Extensible Identifier format.",
-    xref: "core§7.19.2.24"
-});
+Resource.add({ tag: "datatype", name: "vendor-id", description: "Vendor ID", xref: "core§7.19.2" });

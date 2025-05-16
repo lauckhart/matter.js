@@ -17,21 +17,21 @@ export const ContentAppDt = DeviceType(
     { name: "ContentApp", id: 0x24 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 36, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 36, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "Binding", id: 0x1e, element: "serverCluster", conformance: "ObserverClient" }),
-    Requirement({ name: "Channel", id: 0x504, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "TargetNavigator", id: 0x505, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "MediaPlayback", id: 0x506, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "KeypadInput", id: 0x509, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "ContentLauncher", id: 0x50a, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Binding", id: 0x1e, conformance: "ObserverClient", element: "serverCluster" }),
+    Requirement({ name: "Channel", id: 0x504, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "TargetNavigator", id: 0x505, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "MediaPlayback", id: 0x506, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "KeypadInput", id: 0x509, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "ContentLauncher", id: 0x50a, conformance: "O", element: "serverCluster" }),
     Requirement(
-        { name: "ApplicationLauncher", id: 0x50c, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "APPLICATIONPLATFORM", element: "feature", conformance: "X" })
+        { name: "ApplicationLauncher", id: 0x50c, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "APPLICATIONPLATFORM", conformance: "X", element: "feature" })
     ),
-    Requirement({ name: "ApplicationBasic", id: 0x50d, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "AccountLogin", id: 0x50e, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "ContentAppObserver", id: 0x510, element: "clientCluster", conformance: "ObserverClient" }),
+    Requirement({ name: "ApplicationBasic", id: 0x50d, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "AccountLogin", id: 0x50e, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "ContentAppObserver", id: 0x510, conformance: "ObserverClient", element: "clientCluster" }),
     Field({ name: "conditions", type: "enum8" }, Field({ name: "ObserverClient" }))
 );
 

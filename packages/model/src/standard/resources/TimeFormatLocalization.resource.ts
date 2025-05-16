@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "TimeFormatLocalization",
-    classification: "node", pics: "LTIME",
+    tag: "cluster", name: "TimeFormatLocalization", classification: "node", pics: "LTIME",
+    xref: "core§11.4",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
         "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually or " +
@@ -20,12 +20,9 @@ Resource.add({
         "This cluster supports an interface to a Node. It provides attributes for determining and configuring " +
         "time and date formatting information that a Node shall utilize when conveying values to a user.",
 
-    xref: "core§11.4",
-
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "core§11.4.4",
+            tag: "attribute", name: "FeatureMap", xref: "core§11.4.4",
             children: [{
                 tag: "field", name: "CALFMT",
                 details: "The Node can be configured to use different calendar formats when conveying values to a user."
@@ -33,7 +30,7 @@ Resource.add({
         },
 
         {
-            tag: "attribute", name: "HourFormat",
+            tag: "attribute", name: "HourFormat", xref: "core§11.4.6.1",
 
             details: "Indicates the format that the Node is currently configured to use when conveying the hour unit of " +
                 "time." +
@@ -42,13 +39,11 @@ Resource.add({
                 "ActiveLocale attribute." +
                 "\n" +
                 "If UseActiveLocale, any unit implied through the ActiveLocale attribute is used as the hour format, " +
-                "and if ActiveLocale is not present, the hour format is unknown.",
-
-            xref: "core§11.4.6.1"
+                "and if ActiveLocale is not present, the hour format is unknown."
         },
 
         {
-            tag: "attribute", name: "ActiveCalendarType",
+            tag: "attribute", name: "ActiveCalendarType", xref: "core§11.4.6.2",
 
             details: "Indicates the calendar format that the Node is currently configured to use when conveying dates." +
                 "\n" +
@@ -56,23 +51,19 @@ Resource.add({
                 "ActiveLocale attribute." +
                 "\n" +
                 "If UseActiveLocale, any unit implied through the ActiveLocale attribute is used as the calendar " +
-                "type, and if ActiveLocale is not present, the calendar type is unknown.",
-
-            xref: "core§11.4.6.2"
+                "type, and if ActiveLocale is not present, the calendar type is unknown."
         },
 
         {
-            tag: "attribute", name: "SupportedCalendarTypes",
+            tag: "attribute", name: "SupportedCalendarTypes", xref: "core§11.4.6.3",
             details: "Indicates a list of CalendarTypeEnum values that are supported by the Node. The list shall NOT " +
                 "contain any duplicate entries. The ordering of items within the list SHOULD NOT express any meaning. " +
                 "The maximum length of the SupportedCalendarTypes list shall be equivalent to the number of " +
-                "enumerations within CalendarTypeEnum.",
-            xref: "core§11.4.6.3"
+                "enumerations within CalendarTypeEnum."
         },
 
         {
-            tag: "datatype", name: "HourFormatEnum",
-            xref: "core§11.4.5.1",
+            tag: "datatype", name: "HourFormatEnum", xref: "core§11.4.5.1",
             children: [
                 { tag: "field", name: "12Hr", description: "Time conveyed with a 12-hour clock" },
                 { tag: "field", name: "24Hr", description: "Time conveyed with a 24-hour clock" },
@@ -81,8 +72,7 @@ Resource.add({
         },
 
         {
-            tag: "datatype", name: "CalendarTypeEnum",
-            xref: "core§11.4.5.2",
+            tag: "datatype", name: "CalendarTypeEnum", xref: "core§11.4.5.2",
 
             children: [
                 { tag: "field", name: "Buddhist", description: "Dates conveyed using the Buddhist calendar" },

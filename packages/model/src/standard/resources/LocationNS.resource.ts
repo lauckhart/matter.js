@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "Location",
+    tag: "semanticNamespace", name: "Location", xref: "namespace§7",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a location of a device (e.g. an outdoor temperature sensor).",
-    xref: "namespace§7",
 
     children: [
         {

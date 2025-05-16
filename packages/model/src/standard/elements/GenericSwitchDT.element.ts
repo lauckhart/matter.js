@@ -13,10 +13,10 @@ export const GenericSwitchDt = DeviceType(
     { name: "GenericSwitch", id: 0xf },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 15, revision: 3 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 15, revision: 3 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "Switch", id: 0x3b, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "Switch", id: 0x3b, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(GenericSwitchDt);

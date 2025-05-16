@@ -21,18 +21,18 @@ export const ContentAppObserver = Cluster(
 
     Command(
         {
-            name: "ContentAppMessage", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "ContentAppMessageResponse"
+            name: "ContentAppMessage", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "ContentAppMessageResponse"
         },
-        Field({ name: "Data", id: 0x0, type: "string", constraint: "max 500", conformance: "M" }),
-        Field({ name: "EncodingHint", id: 0x1, type: "string", constraint: "max 100", conformance: "O" })
+        Field({ name: "Data", id: 0x0, type: "string", conformance: "M", constraint: "max 500" }),
+        Field({ name: "EncodingHint", id: 0x1, type: "string", conformance: "O", constraint: "max 100" })
     ),
 
     Command(
         { name: "ContentAppMessageResponse", id: 0x1, conformance: "M", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
-        Field({ name: "Data", id: 0x1, type: "string", constraint: "max 500", conformance: "O" }),
-        Field({ name: "EncodingHint", id: 0x2, type: "string", constraint: "max 100", conformance: "O" })
+        Field({ name: "Data", id: 0x1, type: "string", conformance: "O", constraint: "max 500" }),
+        Field({ name: "EncodingHint", id: 0x2, type: "string", conformance: "O", constraint: "max 100" })
     ),
 
     Datatype(

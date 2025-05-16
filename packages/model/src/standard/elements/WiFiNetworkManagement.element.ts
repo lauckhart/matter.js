@@ -18,20 +18,20 @@ export const WiFiNetworkManagement = Cluster(
     { name: "WiFiNetworkManagement", id: 0x451 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        name: "Ssid", id: 0x0, type: "octstr",
-        default: null, constraint: "1 to 32", conformance: "M", access: "R V", quality: "X N"
+        name: "Ssid", id: 0x0, type: "octstr", access: "R V", conformance: "M", constraint: "1 to 32",
+        default: null, quality: "X N"
     }),
     Attribute({
-        name: "PassphraseSurrogate", id: 0x1, type: "uint64",
-        default: null, conformance: "M", access: "R M", quality: "X N"
+        name: "PassphraseSurrogate", id: 0x1, type: "uint64", access: "R M", conformance: "M",
+        default: null, quality: "X N"
     }),
     Command({
-        name: "NetworkPassphraseRequest", id: 0x0,
-        conformance: "M", access: "M", direction: "request", response: "NetworkPassphraseResponse"
+        name: "NetworkPassphraseRequest", id: 0x0, access: "M", conformance: "M", direction: "request",
+        response: "NetworkPassphraseResponse"
     }),
     Command(
-        { name: "NetworkPassphraseResponse", id: 0x1, direction: "response" },
-        Field({ name: "Passphrase", id: 0x0, type: "octstr", constraint: "max 64", conformance: "M" })
+        { name: "NetworkPassphraseResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Passphrase", id: 0x0, type: "octstr", conformance: "M", constraint: "max 64" })
     )
 );
 

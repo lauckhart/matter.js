@@ -45,7 +45,7 @@ export function BitmapManager(owner: RootSupervisor, schema: Schema): ValueSuper
         if (schema.id === FeatureMap.id) {
             // We require special casing for feature maps because the spec code uses "feature" field from spec as name
             // and model uses "code".  The model should probably be inverted but we just special case for now
-            name = camelize((member as FieldModel).longName ?? member.name);
+            name = camelize((member as FieldModel).title ?? member.name);
         } else {
             name = camelize(member.name);
         }

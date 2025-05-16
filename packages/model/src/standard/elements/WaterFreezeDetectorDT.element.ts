@@ -13,14 +13,14 @@ export const WaterFreezeDetectorDt = DeviceType(
     { name: "WaterFreezeDetector", id: 0x41 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 65, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 65, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
     Requirement(
-        { name: "BooleanState", id: 0x45, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "StateChange", element: "event", conformance: "M" })
+        { name: "BooleanState", id: 0x45, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "StateChange", conformance: "M", element: "event" })
     ),
-    Requirement({ name: "BooleanStateConfiguration", id: 0x80, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "BooleanStateConfiguration", id: 0x80, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(WaterFreezeDetectorDt);

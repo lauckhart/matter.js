@@ -9,10 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "WaterLeakDetector",
-    classification: "simple",
+    tag: "deviceType", name: "WaterLeakDetector", classification: "simple", xref: "device§7.12",
     details: "This defines conformance to the Water Leak Detector device type.",
-    xref: "device§7.12",
     children: [
         { tag: "requirement", name: "Identify", xref: "device§7.12.4" },
         { tag: "requirement", name: "BooleanState", xref: "device§7.12.4" },

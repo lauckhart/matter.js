@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "attribute", name: "FeatureMap",
+    tag: "attribute", name: "FeatureMap", xref: "core§7.13.2",
 
     details: "Each instance of a cluster shall support this attribute." +
         "\n" +
@@ -17,9 +17,7 @@ Resource.add({
         "features. A cluster feature is a set of cluster elements that are mandatory or optional for a " +
         "defined feature of the cluster. If a cluster feature is supported by the cluster instance, then the " +
         "corresponding bit shall be set to 1, otherwise the bit shall be set to 0 (zero). All undefined bits " +
-        "in" +
-        "\n" +
-        "this attribute shall be set to 0 (zero)." +
+        "in this attribute shall be set to 0 (zero)." +
         "\n" +
         "The set of cluster elements that are designated as mandatory (M) are implicitly part of the " +
         "mandatory cluster feature set, and do not have a bit in the FeatureMap attribute." +
@@ -51,7 +49,5 @@ Resource.add({
         "For a cluster whose definition which does not define a FeatureMap, the server shall set this " +
         "attribute to 0 (zero)." +
         "\n" +
-        "Please see Feature Conformance for details on conformance.",
-
-    xref: "core§7.13.2"
+        "Please see Feature Conformance for details on conformance."
 });

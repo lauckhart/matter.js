@@ -13,32 +13,32 @@ export const DimmablePlugInUnitDt = DeviceType(
     { name: "DimmablePlugInUnit", id: 0x10b },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 267, revision: 4 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 267, revision: 4 } ], element: "attribute" })
     ),
     Requirement(
-        { name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "TriggerEffect", element: "command", conformance: "M" })
+        { name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "TriggerEffect", conformance: "M", element: "command" })
     ),
-    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Groups", id: 0x4, conformance: "M", element: "serverCluster" }),
     Requirement(
-        { name: "ScenesManagement", id: 0x62, element: "serverCluster", conformance: "P, M" },
-        Requirement({ name: "CopyScene", element: "command", conformance: "P, M" })
+        { name: "ScenesManagement", id: 0x62, conformance: "P, M", element: "serverCluster" },
+        Requirement({ name: "CopyScene", conformance: "P, M", element: "command" })
     ),
     Requirement(
-        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "LIGHTING", element: "feature", conformance: "M" })
+        { name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "LIGHTING", conformance: "M", element: "feature" })
     ),
 
     Requirement(
-        { name: "LevelControl", id: 0x8, element: "serverCluster", conformance: "M" },
-        Requirement({ name: "ONOFF", element: "feature", conformance: "M" }),
-        Requirement({ name: "LIGHTING", element: "feature", conformance: "M" }),
-        Requirement({ name: "CurrentLevel", element: "attribute", constraint: "1 to 254" }),
-        Requirement({ name: "MinLevel", element: "attribute", constraint: "1" }),
-        Requirement({ name: "MaxLevel", element: "attribute", constraint: "254" })
+        { name: "LevelControl", id: 0x8, conformance: "M", element: "serverCluster" },
+        Requirement({ name: "ONOFF", conformance: "M", element: "feature" }),
+        Requirement({ name: "LIGHTING", conformance: "M", element: "feature" }),
+        Requirement({ name: "CurrentLevel", constraint: "1 to 254", element: "attribute" }),
+        Requirement({ name: "MinLevel", constraint: "1", element: "attribute" }),
+        Requirement({ name: "MaxLevel", constraint: "254", element: "attribute" })
     ),
 
-    Requirement({ name: "OccupancySensing", id: 0x406, element: "clientCluster", conformance: "O" })
+    Requirement({ name: "OccupancySensing", id: 0x406, conformance: "O", element: "clientCluster" })
 );
 
 MatterDefinition.children.push(DimmablePlugInUnitDt);

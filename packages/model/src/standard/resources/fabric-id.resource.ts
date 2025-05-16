@@ -8,9 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "fabric-id",
-    description: "Fabric ID",
-    details: "A value to identify a fabric.",
-    xref: "core§7.19.2.19"
-});
+Resource.add({ tag: "datatype", name: "fabric-id", description: "Fabric ID", xref: "core§7.19.2" });

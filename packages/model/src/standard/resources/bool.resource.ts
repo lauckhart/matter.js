@@ -8,13 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "bool",
-    description: "Boolean",
-    details: "The Boolean type represents a logical value, either FALSE or TRUE." +
-        "\n" +
-        "  • FALSE shall be equivalent to the value 0 (zero)." +
-        "\n" +
-        "  • TRUE shall be equivalent to the value 1 (one).",
-    xref: "core§7.19.1.1"
-});
+Resource.add({ tag: "datatype", name: "bool", description: "Boolean", xref: "core§7.19.1" });

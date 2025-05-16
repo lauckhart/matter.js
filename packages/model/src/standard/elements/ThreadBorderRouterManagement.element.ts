@@ -19,50 +19,50 @@ export const ThreadBorderRouterManagement = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "PC", constraint: "0", conformance: "O", longName: "PanChange" })
+        Field({ name: "PC", conformance: "O", constraint: "0", title: "PanChange" })
     ),
     Attribute(
-        { name: "BorderRouterName", id: 0x0, type: "string", constraint: "1 to 63", conformance: "M", access: "R V" }
+        { name: "BorderRouterName", id: 0x0, type: "string", access: "R V", conformance: "M", constraint: "1 to 63" }
     ),
-    Attribute({ name: "BorderAgentId", id: 0x1, type: "octstr", constraint: "16", conformance: "M", access: "R V" }),
-    Attribute({ name: "ThreadVersion", id: 0x2, type: "uint16", conformance: "M", access: "R V", quality: "F" }),
-    Attribute({ name: "InterfaceEnabled", id: 0x3, type: "bool", default: false, conformance: "M", access: "R V", quality: "N" }),
+    Attribute({ name: "BorderAgentId", id: 0x1, type: "octstr", access: "R V", conformance: "M", constraint: "16" }),
+    Attribute({ name: "ThreadVersion", id: 0x2, type: "uint16", access: "R V", conformance: "M", quality: "F" }),
+    Attribute({ name: "InterfaceEnabled", id: 0x3, type: "bool", access: "R V", conformance: "M", default: false, quality: "N" }),
     Attribute({
-        name: "ActiveDatasetTimestamp", id: 0x4, type: "uint64",
-        default: 0, conformance: "M", access: "R V", quality: "X N"
+        name: "ActiveDatasetTimestamp", id: 0x4, type: "uint64", access: "R V", conformance: "M",
+        default: 0, quality: "X N"
     }),
     Attribute({
-        name: "PendingDatasetTimestamp", id: 0x5, type: "uint64",
-        default: 0, conformance: "M", access: "R V", quality: "X N"
+        name: "PendingDatasetTimestamp", id: 0x5, type: "uint64", access: "R V", conformance: "M",
+        default: 0, quality: "X N"
     }),
     Command({
-        name: "GetActiveDatasetRequest", id: 0x0,
-        conformance: "M", access: "M", direction: "request", response: "DatasetResponse"
+        name: "GetActiveDatasetRequest", id: 0x0, access: "M", conformance: "M", direction: "request",
+        response: "DatasetResponse"
     }),
     Command({
-        name: "GetPendingDatasetRequest", id: 0x1,
-        conformance: "M", access: "M", direction: "request", response: "DatasetResponse"
+        name: "GetPendingDatasetRequest", id: 0x1, access: "M", conformance: "M", direction: "request",
+        response: "DatasetResponse"
     }),
     Command(
         { name: "DatasetResponse", id: 0x2, conformance: "M", direction: "response" },
-        Field({ name: "Dataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
+        Field({ name: "Dataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" })
     ),
 
     Command(
         {
-            name: "SetActiveDatasetRequest", id: 0x3,
-            conformance: "M", access: "M T", direction: "request", response: "status"
+            name: "SetActiveDatasetRequest", id: 0x3, access: "M T", conformance: "M", direction: "request",
+            response: "status"
         },
-        Field({ name: "ActiveDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" }),
+        Field({ name: "ActiveDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" }),
         Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
     ),
 
     Command(
         {
-            name: "SetPendingDatasetRequest", id: 0x4,
-            conformance: "PC", access: "M T", direction: "request", response: "status"
+            name: "SetPendingDatasetRequest", id: 0x4, access: "M T", conformance: "PC", direction: "request",
+            response: "status"
         },
-        Field({ name: "PendingDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
+        Field({ name: "PendingDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254" })
     )
 );
 

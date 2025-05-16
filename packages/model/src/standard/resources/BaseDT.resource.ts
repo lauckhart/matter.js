@@ -9,9 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Base",
-    classification: "base",
-    xref: "device§1.1",
+    tag: "deviceType", name: "Base", classification: "base", xref: "device§1.1",
 
     children: [
         {
@@ -41,17 +39,14 @@ Resource.add({
                 },
                 {
                     tag: "field", name: "Sit",
-                    description: "The node is a short idle time intermittently connected device",
-                    xref: "device§1.1.4"
+                    description: "The node is a short idle time intermittently connected device", xref: "device§1.1.4"
                 },
                 {
                     tag: "field", name: "Lit",
-                    description: "The node is a long idle time intermittently connected device",
-                    xref: "device§1.1.4"
+                    description: "The node is a long idle time intermittently connected device", xref: "device§1.1.4"
                 },
                 {
-                    tag: "field", name: "Active",
-                    description: "The node is always able to communicate",
+                    tag: "field", name: "Active", description: "The node is always able to communicate",
                     xref: "device§1.1.4"
                 },
                 { tag: "field", name: "Node", xref: "device§1.1.5" },

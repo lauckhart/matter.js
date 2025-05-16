@@ -9,11 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Pump",
-    classification: "simple",
+    tag: "deviceType", name: "Pump", classification: "simple", xref: "device§5.5",
     details: "A Pump device is a pump that may have variable speed. It may have optional built-in sensors and a " +
         "regulation mechanism. It is typically used for pumping fluids like water.",
-    xref: "device§5.5",
 
     children: [
         { tag: "requirement", name: "OnOff", xref: "device§5.5.4" },

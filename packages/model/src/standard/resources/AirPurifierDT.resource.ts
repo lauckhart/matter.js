@@ -9,13 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "AirPurifier",
-    classification: "simple",
+    tag: "deviceType", name: "AirPurifier", classification: "simple", xref: "device§9.3",
     details: "An Air Purifier is a standalone device that is designed to clean the air in a room." +
         "\n" +
         "It is a device that has a fan to control the air speed while it is operating. Optionally, it can " +
         "report on the condition of its filters.",
-    xref: "device§9.3",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§9.3.5" },

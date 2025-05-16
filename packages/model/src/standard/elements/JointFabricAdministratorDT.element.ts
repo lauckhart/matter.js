@@ -13,10 +13,10 @@ export const JointFabricAdministratorDt = DeviceType(
     { name: "JointFabricAdministrator", id: 0x130 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 304, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 304, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "JointFabricDatastore", id: 0x752, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "JointFabricPki", id: 0x753, element: "serverCluster", conformance: "M" })
+    Requirement({ name: "JointFabricDatastore", id: 0x752, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "JointFabricPki", id: 0x753, conformance: "M", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(JointFabricAdministratorDt);

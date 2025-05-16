@@ -8,18 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({
-    tag: "datatype", name: "epoch-s",
-    description: "Epoch Time in seconds",
-
-    details: "This type has the same semantics as Epoch Time in Microseconds, except that:" +
-        "\n" +
-        "  • the value encodes an offset in seconds, rather than microseconds;" +
-        "\n" +
-        "  • the value is encoded as an unsigned 32-bit scalar, rather than 64-bit." +
-        "\n" +
-        "This type is employed where compactness of representation is important and where the resolution of " +
-        "seconds is still satisfactory.",
-
-    xref: "core§7.19.2.6"
-});
+Resource.add({ tag: "datatype", name: "epoch-s", description: "Epoch Time in seconds", xref: "core§7.19.2" });

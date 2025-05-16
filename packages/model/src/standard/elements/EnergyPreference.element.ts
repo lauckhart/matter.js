@@ -19,39 +19,39 @@ export const EnergyPreference = Cluster(
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "BALA", constraint: "0", conformance: "O.a+", longName: "EnergyBalance" }),
-        Field({ name: "LPMS", constraint: "1", conformance: "O.a+", longName: "LowPowerModeSensitivity" })
+        Field({ name: "BALA", conformance: "O.a+", constraint: "0", title: "EnergyBalance" }),
+        Field({ name: "LPMS", conformance: "O.a+", constraint: "1", title: "LowPowerModeSensitivity" })
     ),
 
     Attribute(
         {
-            name: "EnergyBalances", id: 0x0, type: "list",
-            constraint: "2 to 10", conformance: "BALA", access: "R V", quality: "F"
+            name: "EnergyBalances", id: 0x0, type: "list", access: "R V", conformance: "BALA",
+            constraint: "2 to 10", quality: "F"
         },
         Field({ name: "entry", type: "BalanceStruct" })
     ),
 
-    Attribute({ name: "CurrentEnergyBalance", id: 0x1, type: "uint8", conformance: "BALA", access: "RW VO", quality: "N" }),
+    Attribute({ name: "CurrentEnergyBalance", id: 0x1, type: "uint8", access: "RW VO", conformance: "BALA", quality: "N" }),
 
     Attribute(
         {
-            name: "EnergyPriorities", id: 0x2, type: "list",
-            constraint: "2", conformance: "BALA", access: "R V", quality: "F"
+            name: "EnergyPriorities", id: 0x2, type: "list", access: "R V", conformance: "BALA",
+            constraint: "2", quality: "F"
         },
         Field({ name: "entry", type: "EnergyPriorityEnum" })
     ),
 
     Attribute(
         {
-            name: "LowPowerModeSensitivities", id: 0x3, type: "list",
-            constraint: "2 to 10", conformance: "LPMS", access: "R V", quality: "F"
+            name: "LowPowerModeSensitivities", id: 0x3, type: "list", access: "R V", conformance: "LPMS",
+            constraint: "2 to 10", quality: "F"
         },
         Field({ name: "entry", type: "BalanceStruct" })
     ),
 
     Attribute({
-        name: "CurrentLowPowerModeSensitivity", id: 0x4, type: "uint8",
-        conformance: "LPMS", access: "RW VO", quality: "N"
+        name: "CurrentLowPowerModeSensitivity", id: 0x4, type: "uint8", access: "RW VO",
+        conformance: "LPMS", quality: "N"
     }),
 
     Datatype(
@@ -65,7 +65,7 @@ export const EnergyPreference = Cluster(
     Datatype(
         { name: "BalanceStruct", type: "struct" },
         Field({ name: "Step", id: 0x0, type: "percent", conformance: "M", quality: "F" }),
-        Field({ name: "Label", id: 0x1, type: "string", constraint: "max 64", conformance: "O", quality: "F" })
+        Field({ name: "Label", id: 0x1, type: "string", conformance: "O", constraint: "max 64", quality: "F" })
     )
 );
 

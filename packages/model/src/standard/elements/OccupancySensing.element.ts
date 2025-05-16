@@ -21,92 +21,77 @@ export const OccupancySensing = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "OTHER", constraint: "0", conformance: "O.a+", longName: "Other" }),
-        Field({ name: "PIR", constraint: "1", conformance: "O.a+", longName: "PassiveInfrared" }),
-        Field({ name: "US", constraint: "2", conformance: "O.a+", longName: "Ultrasonic" }),
-        Field({ name: "PHY", constraint: "3", conformance: "O.a+", longName: "PhysicalContact" }),
-        Field({ name: "AIR", constraint: "4", conformance: "O.a+", longName: "ActiveInfrared" }),
-        Field({ name: "RAD", constraint: "5", conformance: "O.a+", longName: "Radar" }),
-        Field({ name: "RFS", constraint: "6", conformance: "O.a+", longName: "RfSensing" }),
-        Field({ name: "VIS", constraint: "7", conformance: "O.a+", longName: "Vision" })
+        Field({ name: "OTHER", conformance: "O.a+", constraint: "0", title: "Other" }),
+        Field({ name: "PIR", conformance: "O.a+", constraint: "1", title: "PassiveInfrared" }),
+        Field({ name: "US", conformance: "O.a+", constraint: "2", title: "Ultrasonic" }),
+        Field({ name: "PHY", conformance: "O.a+", constraint: "3", title: "PhysicalContact" }),
+        Field({ name: "AIR", conformance: "O.a+", constraint: "4", title: "ActiveInfrared" }),
+        Field({ name: "RAD", conformance: "O.a+", constraint: "5", title: "Radar" }),
+        Field({ name: "RFS", conformance: "O.a+", constraint: "6", title: "RfSensing" }),
+        Field({ name: "VIS", conformance: "O.a+", constraint: "7", title: "Vision" })
     ),
 
     Attribute({
-        name: "Occupancy", id: 0x0, type: "OccupancyBitmap",
-        constraint: "0 to 1", conformance: "M", access: "R V", quality: "P"
+        name: "Occupancy", id: 0x0, type: "OccupancyBitmap", access: "R V", conformance: "M",
+        constraint: "0 to 1", quality: "P"
     }),
     Attribute({
-        name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum",
-        constraint: "desc", conformance: "M, D", access: "R V", quality: "F"
+        name: "OccupancySensorType", id: 0x1, type: "OccupancySensorTypeEnum", access: "R V",
+        conformance: "M, D", constraint: "desc", quality: "F"
     }),
     Attribute({
-        name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap",
-        constraint: "0 to 7", conformance: "M, D", access: "R V", quality: "F"
+        name: "OccupancySensorTypeBitmap", id: 0x2, type: "OccupancySensorTypeBitmap", access: "R V",
+        conformance: "M, D", constraint: "0 to 7", quality: "F"
     }),
-    Attribute({ name: "HoldTime", id: 0x3, type: "uint16", constraint: "desc", conformance: "O", access: "RW VM", quality: "N" }),
+    Attribute({ name: "HoldTime", id: 0x3, type: "uint16", access: "RW VM", conformance: "O", constraint: "desc", quality: "N" }),
     Attribute({
-        name: "HoldTimeLimits", id: 0x4, type: "HoldTimeLimitsStruct",
-        conformance: "HoldTime", access: "R V", quality: "F"
+        name: "HoldTimeLimits", id: 0x4, type: "HoldTimeLimitsStruct", access: "R V",
+        conformance: "HoldTime", quality: "F"
     }),
     Attribute({
-        name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16",
-        default: 0, conformance: "[HoldTime & (PIR | !PIR & !US & !PHY)], D", access: "RW VM", quality: "N"
+        name: "PirOccupiedToUnoccupiedDelay", id: 0x10, type: "uint16", access: "RW VM",
+        conformance: "[HoldTime & (PIR | !PIR & !US & !PHY)], D", default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16",
-        default: 0,
+        name: "PirUnoccupiedToOccupiedDelay", id: 0x11, type: "uint16", access: "RW VM",
         conformance: "HoldTime & (PIR | !PIR & !US & !PHY) & PirUnoccupiedToOccupiedThreshold, [HoldTime & (PIR | !PIR & !US & !PHY)], D",
-        access: "RW VM", quality: "N"
+        default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8",
-        default: 1, constraint: "1 to 254",
+        name: "PirUnoccupiedToOccupiedThreshold", id: 0x12, type: "uint8", access: "RW VM",
         conformance: "HoldTime & (PIR | !PIR & !US & !PHY) & PirUnoccupiedToOccupiedDelay, [HoldTime & (PIR | !PIR & !US & !PHY)], D",
-        access: "RW VM", quality: "N"
+        constraint: "1 to 254", default: 1, quality: "N"
     }),
-
     Attribute({
-        name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16",
-        default: 0, conformance: "[HoldTime & US], D", access: "RW VM", quality: "N"
+        name: "UltrasonicOccupiedToUnoccupiedDelay", id: 0x20, type: "uint16", access: "RW VM",
+        conformance: "[HoldTime & US], D", default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16",
-        default: 0,
+        name: "UltrasonicUnoccupiedToOccupiedDelay", id: 0x21, type: "uint16", access: "RW VM",
         conformance: "HoldTime & US & UltrasonicUnoccupiedToOccupiedThreshold, [HoldTime & US], D",
-        access: "RW VM", quality: "N"
+        default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8",
-        default: 1, constraint: "1 to 254",
+        name: "UltrasonicUnoccupiedToOccupiedThreshold", id: 0x22, type: "uint8", access: "RW VM",
         conformance: "HoldTime & US & UltrasonicUnoccupiedToOccupiedDelay, [HoldTime & US], D",
-        access: "RW VM", quality: "N"
+        constraint: "1 to 254", default: 1, quality: "N"
     }),
-
     Attribute({
-        name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16",
-        default: 0, conformance: "[HoldTime & PHY], D", access: "RW VM", quality: "N"
+        name: "PhysicalContactOccupiedToUnoccupiedDelay", id: 0x30, type: "uint16", access: "RW VM",
+        conformance: "[HoldTime & PHY], D", default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16",
-        default: 0,
+        name: "PhysicalContactUnoccupiedToOccupiedDelay", id: 0x31, type: "uint16", access: "RW VM",
         conformance: "HoldTime & PHY & PhysicalContactUnoccupiedToOccupiedThreshold, [HoldTime & PHY], D",
-        access: "RW VM", quality: "N"
+        default: 0, quality: "N"
     }),
-
     Attribute({
-        name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8",
-        default: 1, constraint: "1 to 254",
+        name: "PhysicalContactUnoccupiedToOccupiedThreshold", id: 0x32, type: "uint8", access: "RW VM",
         conformance: "HoldTime & PHY & PhysicalContactUnoccupiedToOccupiedDelay, [HoldTime & PHY], D",
-        access: "RW VM", quality: "N"
+        constraint: "1 to 254", default: 1, quality: "N"
     }),
-
     Event(
-        { name: "OccupancyChanged", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        { name: "OccupancyChanged", id: 0x0, access: "V", conformance: "O", priority: "info" },
         Field({ name: "Occupancy", id: 0x0, type: "OccupancyBitmap", conformance: "M" })
     ),
     Datatype({ name: "OccupancyBitmap", type: "map8" }, Field({ name: "Occupied", constraint: "0" })),
@@ -128,11 +113,11 @@ export const OccupancySensing = Cluster(
 
     Datatype(
         { name: "HoldTimeLimitsStruct", type: "struct" },
-        Field({ name: "HoldTimeMin", id: 0x0, type: "uint16", constraint: "min 1", conformance: "M" }),
-        Field({ name: "HoldTimeMax", id: 0x1, type: "uint16", constraint: "min holdTimeMin, min 10", conformance: "M" }),
+        Field({ name: "HoldTimeMin", id: 0x0, type: "uint16", conformance: "M", constraint: "min 1" }),
+        Field({ name: "HoldTimeMax", id: 0x1, type: "uint16", conformance: "M", constraint: "min holdTimeMin, min 10" }),
         Field({
-            name: "HoldTimeDefault", id: 0x2, type: "uint16",
-            constraint: "holdTimeMin to holdTimeMax", conformance: "M"
+            name: "HoldTimeDefault", id: 0x2, type: "uint16", conformance: "M",
+            constraint: "holdTimeMin to holdTimeMax"
         })
     )
 );

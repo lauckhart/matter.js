@@ -17,9 +17,9 @@ import {
 export const BooleanState = Cluster(
     { name: "BooleanState", id: 0x45 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
-    Attribute({ name: "StateValue", id: 0x0, type: "bool", conformance: "M", access: "R V", quality: "P" }),
+    Attribute({ name: "StateValue", id: 0x0, type: "bool", access: "R V", conformance: "M", quality: "P" }),
     Event(
-        { name: "StateChange", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        { name: "StateChange", id: 0x0, access: "V", conformance: "O", priority: "info" },
         Field({ name: "StateValue", id: 0x0, type: "bool", conformance: "M" })
     )
 );

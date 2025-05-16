@@ -13,12 +13,12 @@ export const SecondaryNetworkInterfaceDt = DeviceType(
     { name: "SecondaryNetworkInterface", id: 0x19 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 25, revision: 1 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 25, revision: 1 } ], element: "attribute" })
     ),
-    Requirement({ name: "NetworkCommissioning", id: 0x31, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "EthernetNetworkDiagnostics", id: 0x37, element: "serverCluster", conformance: "[Ethernet]" }),
-    Requirement({ name: "WiFiNetworkDiagnostics", id: 0x36, element: "serverCluster", conformance: "[Wi, Fi]" }),
-    Requirement({ name: "ThreadNetworkDiagnostics", id: 0x35, element: "serverCluster", conformance: "[Thread]" })
+    Requirement({ name: "NetworkCommissioning", id: 0x31, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "EthernetNetworkDiagnostics", id: 0x37, conformance: "[Ethernet]", element: "serverCluster" }),
+    Requirement({ name: "WiFiNetworkDiagnostics", id: 0x36, conformance: "[Wi, Fi]", element: "serverCluster" }),
+    Requirement({ name: "ThreadNetworkDiagnostics", id: 0x35, conformance: "[Thread]", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(SecondaryNetworkInterfaceDt);

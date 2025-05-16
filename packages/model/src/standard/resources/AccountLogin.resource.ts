@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "AccountLogin",
-    classification: "application", pics: "ALOGIN",
+    tag: "cluster", name: "AccountLogin", classification: "application", pics: "ALOGIN",
+    xref: "cluster§6.2",
 
     details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
         "example, a Content App running on a Video Player device, which is represented as an endpoint (see " +
@@ -33,31 +33,25 @@ Resource.add({
         "The cluster server for this cluster may be supported on each endpoint that represents a Content App " +
         "on a Video Player device." +
         "\n" +
-        "See Device Type Library document for details of how a Content App, represented as an endpoint on" +
-        "\n" +
-        "the Video Player device, may implement the cluster server for this cluster to simplify account login " +
-        "for its users.",
-
-    xref: "cluster§6.2",
+        "See Device Type Library document for details of how a Content App, represented as an endpoint on the " +
+        "Video Player device, may implement the cluster server for this cluster to simplify account login for " +
+        "its users.",
 
     children: [
         {
-            tag: "event", name: "LoggedOut",
+            tag: "event", name: "LoggedOut", xref: "cluster§6.2.5.1",
             details: "This event can be used by the Content App to indicate that the current user has logged out. In " +
                 "response to this event, the Fabric Admin shall remove access to this Content App by the specified " +
                 "Node. If no Node is provided, then the Fabric Admin shall remove access to all non-Admin Nodes.",
-            xref: "cluster§6.2.5.1",
-
             children: [{
-                tag: "field", name: "Node",
+                tag: "field", name: "Node", xref: "cluster§6.2.5.1.1",
                 details: "This field shall provide the Node ID corresponding to the user account that has logged out, if that " +
-                    "Node ID is available. If it is NOT available, this field shall NOT be present in the event.",
-                xref: "cluster§6.2.5.1.1"
+                    "Node ID is available. If it is NOT available, this field shall NOT be present in the event."
             }]
         },
 
         {
-            tag: "command", name: "GetSetupPin",
+            tag: "command", name: "GetSetupPin", xref: "cluster§6.2.4.1",
 
             details: "The purpose of this command is to determine if the active user account of the given Content App " +
                 "matches the active user account of a given Commissionee, and when it does, return a Setup PIN code " +
@@ -65,10 +59,9 @@ Resource.add({
                 "\n" +
                 "For example, a Video Player with a Content App Platform may invoke this command on one of its " +
                 "Content App endpoints to facilitate commissioning of a Phone App made by the same vendor as the " +
-                "Content App. If the accounts match, then the Content App may return a setup code that can be used" +
-                "\n" +
-                "by the Video Player to commission the Phone App without requiring the user to physically input a " +
-                "setup code." +
+                "Content App. If the accounts match, then the Content App may return a setup code that can be used by " +
+                "the Video Player to commission the Phone App without requiring the user to physically input a setup " +
+                "code." +
                 "\n" +
                 "The account match is determined by the Content App using a method which is outside the scope of this " +
                 "specification and will typically involve a central service which is in communication with both the " +
@@ -106,40 +99,34 @@ Resource.add({
                 "A Content App that supports this command shall ensure that the Temporary Account Identifier used by " +
                 "its clients is not valid for more than 10 minutes.",
 
-            xref: "cluster§6.2.4.1",
-
             children: [{
-                tag: "field", name: "TempAccountIdentifier",
+                tag: "field", name: "TempAccountIdentifier", xref: "cluster§6.2.4.1.1",
                 details: "This field shall specify the client’s Temporary Account Identifier. The length of this field shall " +
-                    "be at least 16 characters to protect the account holder against password guessing attacks.",
-                xref: "cluster§6.2.4.1.1"
+                    "be at least 16 characters to protect the account holder against password guessing attacks."
             }]
         },
 
         {
-            tag: "command", name: "GetSetupPinResponse",
+            tag: "command", name: "GetSetupPinResponse", xref: "cluster§6.2.4.2",
             details: "This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or " +
                 "null when the account identified in the request does not match the active account of the running " +
                 "Content App.",
-            xref: "cluster§6.2.4.2",
 
             children: [{
-                tag: "field", name: "SetupPin",
+                tag: "field", name: "SetupPin", xref: "cluster§6.2.4.2.1",
 
                 details: "This field shall provide the setup PIN code as a text string at least 8 characters in length or " +
                     "empty string to indicate that the accounts do not match." +
                     "\n" +
-                    "NOTE" +
+                    "> [!NOTE]" +
                     "\n" +
-                    "Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
-                    "minimum length.",
-
-                xref: "cluster§6.2.4.2.1"
+                    "> Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
+                    "  minimum length."
             }]
         },
 
         {
-            tag: "command", name: "Login",
+            tag: "command", name: "Login", xref: "cluster§6.2.4.3",
 
             details: "The purpose of this command is to allow the Content App to assume the user account of a given " +
                 "Commissionee by leveraging the Setup PIN code input by the user during the commissioning process." +
@@ -181,49 +168,39 @@ Resource.add({
                 "that supports this command shall ensure that the Temporary Account Identifier used by its clients is " +
                 "not valid for more than 10 minutes.",
 
-            xref: "cluster§6.2.4.3",
-
             children: [
                 {
-                    tag: "field", name: "TempAccountIdentifier",
-                    details: "This field shall specify the client’s temporary account identifier.",
-                    xref: "cluster§6.2.4.3.1"
+                    tag: "field", name: "TempAccountIdentifier", xref: "cluster§6.2.4.3.1",
+                    details: "This field shall specify the client’s temporary account identifier."
                 },
 
                 {
-                    tag: "field", name: "SetupPin",
+                    tag: "field", name: "SetupPin", xref: "cluster§6.2.4.3.2",
 
                     details: "This field shall provide the setup PIN code as a text string at least 8 characters in length." +
                         "\n" +
-                        "NOTE" +
+                        "> [!NOTE]" +
                         "\n" +
-                        "Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
-                        "minimum length.",
-
-                    xref: "cluster§6.2.4.3.2"
+                        "> Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
+                        "  minimum length."
                 },
 
                 {
-                    tag: "field", name: "Node",
+                    tag: "field", name: "Node", xref: "cluster§6.2.4.3.3",
                     details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content " +
-                        "App to keep track of Nodes which currently have access to it.",
-                    xref: "cluster§6.2.4.3.3"
+                        "App to keep track of Nodes which currently have access to it."
                 }
             ]
         },
 
         {
-            tag: "command", name: "Logout",
+            tag: "command", name: "Logout", xref: "cluster§6.2.4.4",
             details: "The purpose of this command is to instruct the Content App to clear the current user account. This " +
                 "command SHOULD be used by clients of a Content App to indicate the end of a user session.",
-            xref: "cluster§6.2.4.4",
-
             children: [{
-                tag: "field", name: "Node",
-                details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content" +
-                    "\n" +
-                    "App to keep track of Nodes which currently have access to it.",
-                xref: "cluster§6.2.4.4.1"
+                tag: "field", name: "Node", xref: "cluster§6.2.4.4.1",
+                details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content " +
+                    "App to keep track of Nodes which currently have access to it."
             }]
         }
     ]

@@ -18,20 +18,19 @@ export const IlluminanceMeasurement = Cluster(
     { name: "IlluminanceMeasurement", id: 0x400 },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute({
-        name: "MeasuredValue", id: 0x0, type: "uint16",
-        default: 0, constraint: "0, minMeasuredValue to maxMeasuredValue", conformance: "M", access: "R V",
-        quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
+        constraint: "0, minMeasuredValue to maxMeasuredValue", default: 0, quality: "X P"
     }),
     Attribute({
-        name: "MinMeasuredValue", id: 0x1, type: "uint16",
-        constraint: "1 to 65533", conformance: "M", access: "R V", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
+        constraint: "1 to 65533", quality: "X"
     }),
     Attribute({
-        name: "MaxMeasuredValue", id: 0x2, type: "uint16",
-        constraint: "min minMeasuredValue + 1", conformance: "M", access: "R V", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
+        constraint: "min minMeasuredValue + 1", quality: "X"
     }),
-    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", constraint: "max 2048", conformance: "O", access: "R V" }),
-    Attribute({ name: "LightSensorType", id: 0x4, type: "uint8", default: null, access: "R V", quality: "X" }),
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", access: "R V", conformance: "O", constraint: "max 2048" }),
+    Attribute({ name: "LightSensorType", id: 0x4, type: "uint8", access: "R V", conformance: "O", default: null, quality: "X" }),
     Datatype(
         { name: "LightSensorTypeEnum", type: "enum8" },
         Field({ name: "Photodiode", id: 0x0, conformance: "M" }),

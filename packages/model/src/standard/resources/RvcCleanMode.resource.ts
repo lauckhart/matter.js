@@ -9,37 +9,29 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "RvcCleanMode",
-    classification: "application", pics: "RVCCLEANM",
+    tag: "cluster", name: "RvcCleanMode", classification: "application", pics: "RVCCLEANM",
+    xref: "cluster§7.3",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for the cleaning type of robotic vacuum cleaner devices.",
-    xref: "cluster§7.3",
 
     children: [
         {
-            tag: "attribute", name: "FeatureMap",
-            xref: "cluster§7.3.4",
+            tag: "attribute", name: "FeatureMap", xref: "cluster§7.3.4",
             children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
-
         {
-            tag: "attribute", name: "SupportedModes",
+            tag: "attribute", name: "SupportedModes", xref: "cluster§7.3.6.1",
             details: "At least one entry in the SupportedModes attribute shall include the Vacuum and/or the Mop mode tag " +
-                "in the ModeTags field list.",
-            xref: "cluster§7.3.6.1"
+                "in the ModeTags field list."
         },
-
         { tag: "attribute", name: "CurrentMode", xref: "cluster§7.3.6" },
         { tag: "attribute", name: "StartUpMode", xref: "cluster§7.3.6" },
         { tag: "attribute", name: "OnMode", xref: "cluster§7.3.6" },
-
         {
-            tag: "datatype", name: "ModeOptionStruct",
+            tag: "datatype", name: "ModeOptionStruct", xref: "cluster§7.3.5.1",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
-                "ModeOptionStruct type. A blank field indicates no change.",
-            xref: "cluster§7.3.5.1"
+                "ModeOptionStruct type. A blank field indicates no change."
         },
-
         {
             tag: "datatype", name: "ModeChangeStatus",
             children: [{ tag: "field", name: "CleaningInProgress", xref: "cluster§7.3.7.1" }]
@@ -61,14 +53,12 @@ Resource.add({
                 { tag: "field", name: "Day", xref: "cluster§7.3.7.2" },
                 { tag: "field", name: "DeepClean", xref: "cluster§7.3.7.2" },
                 {
-                    tag: "field", name: "Vacuum",
-                    details: "The device’s vacuuming feature is enabled in this mode.",
-                    xref: "cluster§7.3.7.2.2"
+                    tag: "field", name: "Vacuum", xref: "cluster§7.3.7.2.2",
+                    details: "The device’s vacuuming feature is enabled in this mode."
                 },
                 {
-                    tag: "field", name: "Mop",
-                    details: "The device’s mopping feature is enabled in this mode.",
-                    xref: "cluster§7.3.7.2.3"
+                    tag: "field", name: "Mop", xref: "cluster§7.3.7.2.3",
+                    details: "The device’s mopping feature is enabled in this mode."
                 }
             ]
         }

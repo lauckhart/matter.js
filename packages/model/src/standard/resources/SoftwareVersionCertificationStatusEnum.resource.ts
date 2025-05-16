@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "SoftwareVersionCertificationStatusEnum",
+    tag: "datatype", name: "SoftwareVersionCertificationStatusEnum", xref: "core§11.23.8.2",
     details: "The values 0 through 2 shall correspond to the values 0 through 2 used in certification_type in the " +
         "Certification Declaration.",
-    xref: "core§11.23.8.2",
 
     children: [
         {

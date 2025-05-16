@@ -10,15 +10,14 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        tag: "cluster", name: "IlluminanceMeasurement",
-        classification: "application", pics: "ILL",
+        tag: "cluster", name: "IlluminanceMeasurement", classification: "application", pics: "ILL",
+        xref: "cluster§2.2",
         details: "The Illuminance Measurement cluster provides an interface to illuminance measurement functionality, " +
             "including configuration and provision of notifications of illuminance measurements.",
-        xref: "cluster§2.2",
 
         children: [
             {
-                tag: "attribute", name: "MeasuredValue",
+                tag: "attribute", name: "MeasuredValue", xref: "cluster§2.2.5.1",
 
                 details: "Indicates the illuminance in Lux (symbol lx) as follows:" +
                     "\n" +
@@ -33,37 +32,28 @@ Resource.add(
                     "\n" +
                     "  • null indicates that the illuminance measurement is invalid." +
                     "\n" +
-                    "The MeasuredValue attribute is updated continuously as new measurements are made.",
-
-                xref: "cluster§2.2.5.1"
+                    "The MeasuredValue attribute is updated continuously as new measurements are made."
             },
 
             {
-                tag: "attribute", name: "MinMeasuredValue",
+                tag: "attribute", name: "MinMeasuredValue", xref: "cluster§2.2.5.2",
                 details: "Indicates the minimum value of MeasuredValue that can be measured. A value of null indicates that " +
-                    "this attribute is not defined. See Measured Value for more details.",
-                xref: "cluster§2.2.5.2"
+                    "this attribute is not defined. See Measured Value for more details."
             },
-
             {
-                tag: "attribute", name: "MaxMeasuredValue",
+                tag: "attribute", name: "MaxMeasuredValue", xref: "cluster§2.2.5.3",
                 details: "Indicates the maximum value of MeasuredValue that can be measured. A value of null indicates that " +
-                    "this attribute is not defined. See Measured Value for more details.",
-                xref: "cluster§2.2.5.3"
+                    "this attribute is not defined. See Measured Value for more details."
             },
-
-            { tag: "attribute", name: "Tolerance", details: "See Measured Value.", xref: "cluster§2.2.5.4" },
-
+            { tag: "attribute", name: "Tolerance", xref: "cluster§2.2.5.4", details: "See Measured Value." },
             {
-                tag: "attribute", name: "LightSensorType",
+                tag: "attribute", name: "LightSensorType", xref: "cluster§2.2.5.5",
                 details: "Indicates the electronic type of the light sensor. This attribute shall be set to one of the " +
-                    "non-reserved values listed in LightSensorTypeEnum or null in case the sensor type is unknown.",
-                xref: "cluster§2.2.5.5"
+                    "non-reserved values listed in LightSensorTypeEnum or null in case the sensor type is unknown."
             },
 
             {
-                tag: "datatype", name: "LightSensorTypeEnum",
-                xref: "cluster§2.2.4.1",
+                tag: "datatype", name: "LightSensorTypeEnum", xref: "cluster§2.2.4.1",
                 children: [
                     { tag: "field", name: "Photodiode", description: "Indicates photodiode sensor type" },
                     { tag: "field", name: "Cmos", description: "Indicates CMOS sensor type" }

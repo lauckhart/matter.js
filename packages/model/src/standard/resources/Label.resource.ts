@@ -9,38 +9,32 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "cluster", name: "Label",
-    classification: "endpoint", pics: "LABEL",
+    tag: "cluster", name: "Label", classification: "endpoint", pics: "LABEL", xref: "core§9.7",
     details: "This cluster provides a feature to tag an endpoint with zero or more labels. This is a base cluster " +
         "that requires a derived cluster to create an instance.",
-    xref: "core§9.7",
 
     children: [
         {
-            tag: "attribute", name: "LabelList",
-            details: "This is a list of string tuples. Each entry is a LabelStruct.",
-            xref: "core§9.7.5.1"
+            tag: "attribute", name: "LabelList", xref: "core§9.7.5.1",
+            details: "This is a list of string tuples. Each entry is a LabelStruct."
         },
 
         {
-            tag: "datatype", name: "LabelStruct",
+            tag: "datatype", name: "LabelStruct", xref: "core§9.7.4.1",
             details: "This is a string tuple with strings that are user defined.",
-            xref: "core§9.7.4.1",
 
             children: [
                 {
-                    tag: "field", name: "Label",
+                    tag: "field", name: "Label", xref: "core§9.7.4.1.1",
                     details: "The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", \"group\", " +
-                        "\"direction\".",
-                    xref: "core§9.7.4.1.1"
+                        "\"direction\"."
                 },
 
                 {
-                    tag: "field", name: "Value",
+                    tag: "field", name: "Value", xref: "core§9.7.4.1.2",
                     details: "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
                         "have multiple instances. Label:Value examples: \"room\":\"bedroom 2\", \"orientation\":\"North\", " +
-                        "\"floor\":\"2\", \"direction\":\"up\"",
-                    xref: "core§9.7.4.1.2"
+                        "\"floor\":\"2\", \"direction\":\"up\""
                 }
             ]
         }

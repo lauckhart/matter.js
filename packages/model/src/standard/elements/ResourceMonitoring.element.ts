@@ -21,32 +21,32 @@ export const ResourceMonitoring = Cluster(
 
     Attribute(
         { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
-        Field({ name: "CON", constraint: "0", conformance: "O", longName: "Condition" }),
-        Field({ name: "WRN", constraint: "1", conformance: "O", longName: "Warning" }),
-        Field({ name: "REP", constraint: "2", conformance: "O", longName: "ReplacementProductList" })
+        Field({ name: "CON", conformance: "O", constraint: "0", title: "Condition" }),
+        Field({ name: "WRN", conformance: "O", constraint: "1", title: "Warning" }),
+        Field({ name: "REP", conformance: "O", constraint: "2", title: "ReplacementProductList" })
     ),
 
-    Attribute({ name: "Condition", id: 0x0, type: "percent", conformance: "CON", access: "R V" }),
+    Attribute({ name: "Condition", id: 0x0, type: "percent", access: "R V", conformance: "CON" }),
     Attribute({
-        name: "DegradationDirection", id: 0x1, type: "DegradationDirectionEnum",
-        constraint: "desc", conformance: "CON", access: "R V", quality: "F"
+        name: "DegradationDirection", id: 0x1, type: "DegradationDirectionEnum", access: "R V",
+        conformance: "CON", constraint: "desc", quality: "F"
     }),
-    Attribute({ name: "ChangeIndication", id: 0x2, type: "ChangeIndicationEnum", default: 0, conformance: "M", access: "R V" }),
-    Attribute({ name: "InPlaceIndicator", id: 0x3, type: "bool", conformance: "O", access: "R V" }),
+    Attribute({ name: "ChangeIndication", id: 0x2, type: "ChangeIndicationEnum", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "InPlaceIndicator", id: 0x3, type: "bool", access: "R V", conformance: "O" }),
     Attribute({
-        name: "LastChangedTime", id: 0x4, type: "epoch-s",
-        default: null, conformance: "O", access: "RW VO", quality: "X N"
+        name: "LastChangedTime", id: 0x4, type: "epoch-s", access: "RW VO", conformance: "O", default: null,
+        quality: "X N"
     }),
 
     Attribute(
         {
-            name: "ReplacementProductList", id: 0x5, type: "list",
-            constraint: "max 5", conformance: "REP", access: "R V", quality: "F"
+            name: "ReplacementProductList", id: 0x5, type: "list", access: "R V", conformance: "REP",
+            constraint: "max 5", quality: "F"
         },
         Field({ name: "entry", type: "ReplacementProductStruct" })
     ),
 
-    Command({ name: "ResetCondition", id: 0x0, conformance: "O", access: "O", direction: "request", response: "status" }),
+    Command({ name: "ResetCondition", id: 0x0, access: "O", conformance: "O", direction: "request", response: "status" }),
     Datatype(
         { name: "DegradationDirectionEnum", type: "enum8" },
         Field({ name: "Up", id: 0x0, conformance: "M" }),
@@ -72,10 +72,10 @@ export const ResourceMonitoring = Cluster(
     Datatype(
         { name: "ReplacementProductStruct", type: "struct" },
         Field({
-            name: "ProductIdentifierType", id: 0x0, type: "ProductIdentifierTypeEnum",
-            constraint: "desc", conformance: "M"
+            name: "ProductIdentifierType", id: 0x0, type: "ProductIdentifierTypeEnum", conformance: "M",
+            constraint: "desc"
         }),
-        Field({ name: "ProductIdentifierValue", id: 0x1, type: "string", constraint: "max 20", conformance: "M" })
+        Field({ name: "ProductIdentifierValue", id: 0x1, type: "string", conformance: "M", constraint: "max 20" })
     )
 );
 

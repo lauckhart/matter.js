@@ -18,118 +18,122 @@ import {
 export const OperationalCredentials = Cluster(
     { name: "OperationalCredentials", id: 0x3e },
     Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
+
     Attribute(
-        { name: "Nocs", id: 0x0, type: "list", constraint: "max supportedFabrics", access: "R F A", quality: "N C" },
+        {
+            name: "Nocs", id: 0x0, type: "list", access: "R F A", conformance: "M",
+            constraint: "max supportedFabrics", quality: "N C"
+        },
         Field({ name: "entry", type: "NOCStruct" })
     ),
 
     Attribute(
         {
-            name: "Fabrics", id: 0x1, type: "list",
-            constraint: "max supportedFabrics", conformance: "M", access: "R F V", quality: "N"
+            name: "Fabrics", id: 0x1, type: "list", access: "R F V", conformance: "M",
+            constraint: "max supportedFabrics", quality: "N"
         },
         Field({ name: "entry", type: "FabricDescriptorStruct" })
     ),
 
     Attribute({
-        name: "SupportedFabrics", id: 0x2, type: "uint8",
-        constraint: "5 to 254", conformance: "M", access: "R V", quality: "F"
+        name: "SupportedFabrics", id: 0x2, type: "uint8", access: "R V", conformance: "M",
+        constraint: "5 to 254", quality: "F"
     }),
     Attribute({
-        name: "CommissionedFabrics", id: 0x3, type: "uint8",
-        constraint: "max supportedFabrics", conformance: "M", access: "R V", quality: "N"
+        name: "CommissionedFabrics", id: 0x3, type: "uint8", access: "R V", conformance: "M",
+        constraint: "max supportedFabrics", quality: "N"
     }),
 
     Attribute(
         {
-            name: "TrustedRootCertificates", id: 0x4, type: "list",
-            constraint: "max supportedFabrics[max 400]", conformance: "M", access: "R V", quality: "N C"
+            name: "TrustedRootCertificates", id: 0x4, type: "list", access: "R V", conformance: "M",
+            constraint: "max supportedFabrics[max 400]", quality: "N C"
         },
         Field({ name: "entry", type: "octstr" })
     ),
 
-    Attribute({ name: "CurrentFabricIndex", id: 0x5, type: "fabric-idx", default: 0, access: "R V" }),
+    Attribute({ name: "CurrentFabricIndex", id: 0x5, type: "fabric-idx", access: "R V", conformance: "M", default: 0 }),
 
     Command(
         {
-            name: "AttestationRequest", id: 0x0,
-            conformance: "M", access: "A", direction: "request", response: "AttestationResponse"
+            name: "AttestationRequest", id: 0x0, access: "A", conformance: "M", direction: "request",
+            response: "AttestationResponse"
         },
-        Field({ name: "AttestationNonce", id: 0x0, type: "octstr", constraint: "32", conformance: "M" })
+        Field({ name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" })
     ),
 
     Command(
-        { name: "AttestationResponse", id: 0x1, direction: "response" },
-        Field({ name: "AttestationElements", id: 0x0, type: "octstr", constraint: "max 900" }),
-        Field({ name: "AttestationSignature", id: 0x1, type: "octstr", constraint: "64", conformance: "M" })
+        { name: "AttestationResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max 900" }),
+        Field({ name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64" })
     ),
 
     Command(
         {
-            name: "CertificateChainRequest", id: 0x2,
-            conformance: "M", access: "A", direction: "request", response: "CertificateChainResponse"
+            name: "CertificateChainRequest", id: 0x2, access: "A", conformance: "M", direction: "request",
+            response: "CertificateChainResponse"
         },
-        Field({ name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum", constraint: "desc", conformance: "M" })
+        Field({ name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { name: "CertificateChainResponse", id: 0x3, conformance: "M", direction: "response" },
-        Field({ name: "Certificate", id: 0x0, type: "octstr", constraint: "max 600", conformance: "M" })
+        Field({ name: "Certificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 600" })
     ),
     Command(
-        { name: "CsrRequest", id: 0x4, conformance: "M", access: "A", direction: "request", response: "CsrResponse" },
-        Field({ name: "CsrNonce", id: 0x0, type: "octstr", constraint: "32", conformance: "M" }),
-        Field({ name: "IsForUpdateNoc", id: 0x1, type: "bool", default: false, conformance: "O" })
+        { name: "CsrRequest", id: 0x4, access: "A", conformance: "M", direction: "request", response: "CsrResponse" },
+        Field({ name: "CsrNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" }),
+        Field({ name: "IsForUpdateNoc", id: 0x1, type: "bool", conformance: "O", default: false })
     ),
     Command(
-        { name: "CsrResponse", id: 0x5, direction: "response" },
-        Field({ name: "NocsrElements", id: 0x0, type: "octstr", constraint: "max 900" }),
-        Field({ name: "AttestationSignature", id: 0x1, type: "octstr", constraint: "64", conformance: "M" })
+        { name: "CsrResponse", id: 0x5, conformance: "M", direction: "response" },
+        Field({ name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max 900" }),
+        Field({ name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64" })
     ),
 
     Command(
-        { name: "AddNoc", id: 0x6, conformance: "M", access: "A", direction: "request", response: "NocResponse" },
-        Field({ name: "NocValue", id: 0x0, type: "octstr", constraint: "max 400", conformance: "M" }),
-        Field({ name: "IcacValue", id: 0x1, type: "octstr", constraint: "max 400", conformance: "O" }),
-        Field({ name: "IpkValue", id: 0x2, type: "octstr", constraint: "16", conformance: "M" }),
+        { name: "AddNoc", id: 0x6, access: "A", conformance: "M", direction: "request", response: "NocResponse" },
+        Field({ name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" }),
+        Field({ name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400" }),
+        Field({ name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16" }),
         Field({ name: "CaseAdminSubject", id: 0x3, type: "subject-id", conformance: "M" }),
         Field({ name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M" })
     ),
 
     Command(
-        { name: "UpdateNoc", id: 0x7, conformance: "M", access: "F A", direction: "request", response: "NocResponse" },
-        Field({ name: "NocValue", id: 0x0, type: "octstr", constraint: "max 400", conformance: "M", access: "F" }),
-        Field({ name: "IcacValue", id: 0x1, type: "octstr", constraint: "max 400", conformance: "O", access: "F" }),
+        { name: "UpdateNoc", id: 0x7, access: "F A", conformance: "M", direction: "request", response: "NocResponse" },
+        Field({ name: "NocValue", id: 0x0, type: "octstr", access: "F", conformance: "M", constraint: "max 400" }),
+        Field({ name: "IcacValue", id: 0x1, type: "octstr", access: "F", conformance: "O", constraint: "max 400" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Command(
         { name: "NocResponse", id: 0x8, conformance: "M", direction: "response" },
         Field({ name: "StatusCode", id: 0x0, type: "NodeOperationalCertStatusEnum", conformance: "M" }),
-        Field({ name: "FabricIndex", id: 0x1, type: "fabric-idx", constraint: "1 to 254", conformance: "O" }),
-        Field({ name: "DebugText", id: 0x2, type: "string", constraint: "max 128", conformance: "O" })
+        Field({ name: "FabricIndex", id: 0x1, type: "fabric-idx", conformance: "O", constraint: "1 to 254" }),
+        Field({ name: "DebugText", id: 0x2, type: "string", conformance: "O", constraint: "max 128" })
     ),
 
     Command(
         {
-            name: "UpdateFabricLabel", id: 0x9,
-            conformance: "M", access: "F A", direction: "request", response: "NocResponse"
+            name: "UpdateFabricLabel", id: 0x9, access: "F A", conformance: "M", direction: "request",
+            response: "NocResponse"
         },
-        Field({ name: "Label", id: 0x0, type: "string", constraint: "max 32", conformance: "M", access: "F" }),
+        Field({ name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Command(
-        { name: "RemoveFabric", id: 0xa, conformance: "M", access: "A", direction: "request", response: "NocResponse" },
-        Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", constraint: "1 to 254", conformance: "M" })
+        { name: "RemoveFabric", id: 0xa, access: "A", conformance: "M", direction: "request", response: "NocResponse" },
+        Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" })
     ),
 
     Command(
         {
-            name: "AddTrustedRootCertificate", id: 0xb,
-            conformance: "M", access: "A", direction: "request", response: "status"
+            name: "AddTrustedRootCertificate", id: 0xb, access: "A", conformance: "M", direction: "request",
+            response: "status"
         },
-        Field({ name: "RootCaCertificate", id: 0x0, type: "octstr", constraint: "max 400", conformance: "M" })
+        Field({ name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" })
     ),
 
     Datatype(
@@ -154,18 +158,18 @@ export const OperationalCredentials = Cluster(
 
     Datatype(
         { name: "NOCStruct", type: "struct" },
-        Field({ name: "Noc", id: 0x1, type: "octstr", constraint: "max 400", conformance: "M", access: "S" }),
-        Field({ name: "Icac", id: 0x2, type: "octstr", constraint: "max 400", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M", constraint: "max 400" }),
+        Field({ name: "Icac", id: 0x2, type: "octstr", access: "S", conformance: "M", constraint: "max 400", quality: "X" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "FabricDescriptorStruct", type: "struct" },
-        Field({ name: "RootPublicKey", id: 0x1, type: "octstr", constraint: "65", conformance: "M", access: "F" }),
-        Field({ name: "VendorId", id: 0x2, type: "vendor-id", constraint: "desc", conformance: "M", access: "F" }),
-        Field({ name: "FabricId", id: 0x3, type: "fabric-id", conformance: "M", access: "F" }),
-        Field({ name: "NodeId", id: 0x4, type: "node-id", conformance: "M", access: "F" }),
-        Field({ name: "Label", id: 0x5, type: "string", constraint: "max 32", conformance: "M", access: "F" }),
+        Field({ name: "RootPublicKey", id: 0x1, type: "octstr", access: "F", conformance: "M", constraint: "65" }),
+        Field({ name: "VendorId", id: 0x2, type: "vendor-id", access: "F", conformance: "M", constraint: "desc" }),
+        Field({ name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M" }),
+        Field({ name: "NodeId", id: 0x4, type: "node-id", access: "F", conformance: "M" }),
+        Field({ name: "Label", id: 0x5, type: "string", access: "F", conformance: "M", constraint: "max 32" }),
         Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );

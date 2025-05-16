@@ -13,12 +13,12 @@ export const DoorLockControllerDt = DeviceType(
     { name: "DoorLockController", id: 0xb },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 11, revision: 3 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 11, revision: 3 } ], element: "attribute" })
     ),
-    Requirement({ name: "Groups", id: 0x4, element: "clientCluster", conformance: "O" }),
-    Requirement({ name: "ScenesManagement", id: 0x62, element: "clientCluster", conformance: "P, O" }),
-    Requirement({ name: "TimeSynchronization", id: 0x38, element: "serverCluster", conformance: "O" }),
-    Requirement({ name: "DoorLock", id: 0x101, element: "clientCluster", conformance: "M" })
+    Requirement({ name: "Groups", id: 0x4, conformance: "O", element: "clientCluster" }),
+    Requirement({ name: "ScenesManagement", id: 0x62, conformance: "P, O", element: "clientCluster" }),
+    Requirement({ name: "TimeSynchronization", id: 0x38, conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "DoorLock", id: 0x101, conformance: "M", element: "clientCluster" })
 );
 
 MatterDefinition.children.push(DoorLockControllerDt);

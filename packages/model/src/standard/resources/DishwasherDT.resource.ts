@@ -9,12 +9,10 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Dishwasher",
-    classification: "simple",
+    tag: "deviceType", name: "Dishwasher", classification: "simple", xref: "device§13.5",
     details: "A dishwasher is a device that is generally installed in residential homes and is capable of washing " +
         "dishes, cutlery, and other items associate with food preparation and consumption. The device can be " +
         "permanently installed or portable and can have variety of filling and draining methods.",
-    xref: "device§13.5",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§13.5.4" },

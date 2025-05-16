@@ -21,40 +21,40 @@ export const OtaSoftwareUpdateProvider = Cluster(
 
     Command(
         {
-            name: "QueryImage", id: 0x0,
-            conformance: "M", access: "O", direction: "request", response: "QueryImageResponse"
+            name: "QueryImage", id: 0x0, access: "O", conformance: "M", direction: "request",
+            response: "QueryImageResponse"
         },
         Field({ name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" }),
         Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }),
         Field({ name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" }),
         Field(
-            { name: "ProtocolsSupported", id: 0x3, type: "list", constraint: "max 8", conformance: "M" },
+            { name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M", constraint: "max 8" },
             Field({ name: "entry", type: "DownloadProtocolEnum" })
         ),
         Field({ name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" }),
-        Field({ name: "Location", id: 0x5, type: "string", constraint: "2", conformance: "O" }),
-        Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", default: false, conformance: "O" }),
-        Field({ name: "MetadataForProvider", id: 0x7, type: "octstr", constraint: "max 512", conformance: "O" })
+        Field({ name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" }),
+        Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: false }),
+        Field({ name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
     ),
 
     Command(
         { name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response" },
         Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
         Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" }),
-        Field({ name: "ImageUri", id: 0x2, type: "string", constraint: "max 256", conformance: "O" }),
+        Field({ name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256" }),
         Field({ name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" }),
-        Field({ name: "SoftwareVersionString", id: 0x4, type: "string", constraint: "1 to 64", conformance: "O" }),
-        Field({ name: "UpdateToken", id: 0x5, type: "octstr", constraint: "8 to 32", conformance: "O" }),
-        Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", default: false, conformance: "O" }),
-        Field({ name: "MetadataForRequestor", id: 0x7, type: "octstr", constraint: "max 512", conformance: "O" })
+        Field({ name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64" }),
+        Field({ name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32" }),
+        Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: false }),
+        Field({ name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
     ),
 
     Command(
         {
-            name: "ApplyUpdateRequest", id: 0x2,
-            conformance: "M", access: "O", direction: "request", response: "ApplyUpdateResponse"
+            name: "ApplyUpdateRequest", id: 0x2, access: "O", conformance: "M", direction: "request",
+            response: "ApplyUpdateResponse"
         },
-        Field({ name: "UpdateToken", id: 0x0, type: "octstr", constraint: "8 to 32", conformance: "M" }),
+        Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
         Field({ name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" })
     ),
 
@@ -66,10 +66,10 @@ export const OtaSoftwareUpdateProvider = Cluster(
 
     Command(
         {
-            name: "NotifyUpdateApplied", id: 0x4,
-            conformance: "M", access: "O", direction: "request", response: "status"
+            name: "NotifyUpdateApplied", id: 0x4, access: "O", conformance: "M", direction: "request",
+            response: "status"
         },
-        Field({ name: "UpdateToken", id: 0x0, type: "octstr", constraint: "8 to 32", conformance: "M" }),
+        Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
         Field({ name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" })
     ),
 

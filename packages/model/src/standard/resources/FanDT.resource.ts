@@ -9,11 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "deviceType", name: "Fan",
-    classification: "simple",
+    tag: "deviceType", name: "Fan", classification: "simple", xref: "device§9.2",
     details: "A Fan device is typically standalone or mounted on a ceiling or wall and is used to circulate air in " +
         "a room.",
-    xref: "device§9.2",
 
     children: [
         { tag: "requirement", name: "Identify", xref: "device§9.2.5" },

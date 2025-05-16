@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "semanticNamespace", name: "AreaNamespace",
+    tag: "semanticNamespace", name: "AreaNamespace", xref: "namespace§13",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with an indoor or outdoor area of a home.",
-    xref: "namespace§13",
 
     children: [
         { tag: "semanticTag", name: "Bathroom", description: "Also known as Restroom" },

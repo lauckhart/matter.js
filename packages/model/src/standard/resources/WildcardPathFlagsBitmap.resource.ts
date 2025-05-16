@@ -9,10 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "datatype", name: "WildcardPathFlagsBitmap",
+    tag: "datatype", name: "WildcardPathFlagsBitmap", xref: "core§8.9.2.3",
     details: "The WildcardPathFlagsBitmap indicates flags that apply to the path, affecting wildcard expansion. " +
         "The following flags are defined:",
-    xref: "core§8.9.2.3",
 
     children: [
         {

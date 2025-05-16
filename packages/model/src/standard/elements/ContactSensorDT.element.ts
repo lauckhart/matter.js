@@ -13,11 +13,11 @@ export const ContactSensorDt = DeviceType(
     { name: "ContactSensor", id: 0x15 },
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 21, revision: 2 } ] })
+        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 21, revision: 2 } ], element: "attribute" })
     ),
-    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "BooleanState", id: 0x45, element: "serverCluster", conformance: "M" }),
-    Requirement({ name: "BooleanStateConfiguration", id: 0x80, element: "serverCluster", conformance: "O" })
+    Requirement({ name: "Identify", id: 0x3, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "BooleanState", id: 0x45, conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "BooleanStateConfiguration", id: 0x80, conformance: "O", element: "serverCluster" })
 );
 
 MatterDefinition.children.push(ContactSensorDt);

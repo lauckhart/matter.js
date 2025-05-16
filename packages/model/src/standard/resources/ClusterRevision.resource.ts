@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    tag: "attribute", name: "ClusterRevision",
+    tag: "attribute", name: "ClusterRevision", xref: "core§7.13.1",
 
     details: "The ClusterRevision attribute indicates the revision of the server cluster specification supported " +
         "by the cluster instance. An implementation of a cluster specification before the ClusterRevision " +
@@ -21,7 +21,5 @@ Resource.add({
         "new revision number incremented (by 1) from the last. The highest revision number in a cluster " +
         "specification’s Revision History is the revision number for the cluster specification. Therefore, a " +
         "ClusterRevision attribute value shall be the (highest) revision number of the cluster specification " +
-        "that has been implemented.",
-
-    xref: "core§7.13.1"
+        "that has been implemented."
 });
