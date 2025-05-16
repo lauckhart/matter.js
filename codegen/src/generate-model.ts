@@ -6,7 +6,7 @@
 
 // Generates the runtime Matter model
 
-import { InternalError, Logger } from "#general";
+import { decamelize, InternalError, Logger } from "#general";
 import { LocalMatter } from "#intermediate-models";
 import {
     AttributeModel,
@@ -63,6 +63,10 @@ function elementDiscriminatedName(element: Model) {
     return name;
 }
 
+function elementFilename(element: Model, type: "element" | "resource") {
+    return `${decamelize(elementDiscriminatedName(element))}.${type}`;
+}
+
 function elementIdentifierName(element: Model) {
     const name = elementDiscriminatedName(element);
     return camelize(name, name[0] < "a" || name[0] > "z");
@@ -71,7 +75,7 @@ function elementIdentifierName(element: Model) {
 function generateElementFile(element: Model) {
     logger.debug(element.name);
 
-    const file = new TsFile(`!elements/${elementDiscriminatedName(element)}.element`);
+    const file = new TsFile(`!elements/${elementFilename(element, "element")}`);
 
     file.addImport(`../MatterDefinition.js`, `MatterDefinition`);
     const exportName = elementIdentifierName(element);
@@ -91,8 +95,7 @@ function generateElementFile(element: Model) {
 function generateResourceFile(element: Model) {
     logger.debug(`${element.name} resources`);
 
-    const filename = elementDiscriminatedName(element);
-    const file = new TsFile(`!resources/${filename}.resource`);
+    const file = new TsFile(`!resources/${elementFilename(element, "resource")}`);
     if (!generateResource(file, element)) {
         return false;
     }
@@ -107,7 +110,7 @@ function generateResourceFile(element: Model) {
 function generateElementIndex(elements: Model[]) {
     const file = new TsFile(`!elements/definitions`);
     for (const element of elements) {
-        file.addReexport(`./${elementDiscriminatedName(element)}.element.js`);
+        file.addReexport(`./${elementFilename(element, "element")}.js`);
     }
 
     if (args.save) {
@@ -134,7 +137,7 @@ function generateResourceIndex(elements: Model[]) {
     const file = new TsFile(`!resources/index`);
     file.addImport("../elements/models.js");
     for (const element of elements) {
-        file.addImport(`./${elementDiscriminatedName(element)}.resource.js`);
+        file.addImport(`./${elementFilename(element, "resource")}.js`);
     }
 
     if (args.save) {
