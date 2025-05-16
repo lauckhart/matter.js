@@ -63,8 +63,10 @@ function elementDiscriminatedName(element: Model) {
     return name;
 }
 
+const assignedFilenames = new Map<Model, string>();
+
 function elementFilename(element: Model, type: "element" | "resource") {
-    return `${decamelize(elementDiscriminatedName(element))}.${type}`;
+    return `${assignedFilenames.get(element)}.${type}`;
 }
 
 function elementIdentifierName(element: Model) {
@@ -176,9 +178,47 @@ if (
     throw new InternalError("Model is missing key elements that would break codebase, aborting");
 }
 
+{
+    const nameMap = new Map<string, Model[]>();
+    for (const child of matter.children) {
+        const name = decamelize(child.name);
+        const entry = nameMap.get(name);
+        if (entry) {
+            entry.push(child);
+        } else {
+            nameMap.set(name, [child]);
+        }
+    }
+
+    for (const [name, models] of nameMap.entries()) {
+        if (models.length === 1) {
+            assignedFilenames.set(models[0], name);
+        } else {
+            for (const model of models) {
+                let suffix = model.tag as string;
+                switch (suffix) {
+                    case "deviceType":
+                        suffix = "device";
+                        break;
+
+                    case "semanticNamespace":
+                        suffix = "namespace";
+                        break;
+
+                    case "semanticTag":
+                        suffix = "tag";
+                        break;
+                }
+                assignedFilenames.set(model, `${name}-${suffix}`);
+            }
+        }
+    }
+}
+
 logger.info("remove matter model elements");
 if (args.save) {
     clean("!elements");
+    clean("!resources");
 }
 
 logger.info("generate matter model");
