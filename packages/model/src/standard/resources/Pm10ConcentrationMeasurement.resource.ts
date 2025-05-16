@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "Pm10ConcentrationMeasurement", tag: "cluster", pics: "PMKCONC" });
+Resource.add({ tag: "cluster", name: "Pm10ConcentrationMeasurement", pics: "PMKCONC" });

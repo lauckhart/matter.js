@@ -10,14 +10,14 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const WindowCoveringDt = DeviceType(
-    { id: 0x202, name: "WindowCovering", classification: "simple" },
+    { name: "WindowCovering", id: 0x202 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 514, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 514, revision: 3 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x4, name: "Groups", conformance: "Active, O", element: "serverCluster" }),
-    Requirement({ id: 0x102, name: "WindowCovering", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "Active, O" }),
+    Requirement({ name: "WindowCovering", id: 0x102, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(WindowCoveringDt);

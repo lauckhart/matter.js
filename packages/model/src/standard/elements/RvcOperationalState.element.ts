@@ -16,43 +16,43 @@ import {
 } from "../../elements/index.js";
 
 export const RvcOperationalState = Cluster(
-    { id: 0x61, name: "RvcOperationalState", type: "OperationalState" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
-    Command({ id: 0x0, name: "Pause" }),
-    Command({ id: 0x1, name: "Stop", conformance: "X" }),
-    Command({ id: 0x2, name: "Start", conformance: "X" }),
-    Command({ id: 0x3, name: "Resume" }),
-    Command({ id: 0x4, name: "OperationalCommandResponse" }),
+    { name: "RvcOperationalState", id: 0x61, type: "OperationalState" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
+    Command({ name: "Pause", id: 0x0 }),
+    Command({ name: "Stop", id: 0x1, conformance: "X" }),
+    Command({ name: "Start", id: 0x2, conformance: "X" }),
+    Command({ name: "Resume", id: 0x3 }),
+    Command({ name: "OperationalCommandResponse", id: 0x4 }),
     Command({
-        id: 0x80, name: "GoHome",
-        access: "O", conformance: "O", direction: "request", response: "OperationalCommandResponse"
+        name: "GoHome", id: 0x80,
+        conformance: "O", access: "O", direction: "request", response: "OperationalCommandResponse"
     }),
 
     Datatype(
         { name: "OperationalStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Stopped", conformance: "M" }),
-        Field({ id: 0x1, name: "Running", conformance: "M" }),
-        Field({ id: 0x2, name: "Paused", conformance: "M" }),
-        Field({ id: 0x3, name: "Error", conformance: "M" }),
-        Field({ id: 0x40, name: "SeekingCharger", conformance: "M" }),
-        Field({ id: 0x41, name: "Charging", conformance: "M" }),
-        Field({ id: 0x42, name: "Docked", conformance: "M" })
+        Field({ name: "Stopped", id: 0x0, conformance: "M" }),
+        Field({ name: "Running", id: 0x1, conformance: "M" }),
+        Field({ name: "Paused", id: 0x2, conformance: "M" }),
+        Field({ name: "Error", id: 0x3, conformance: "M" }),
+        Field({ name: "SeekingCharger", id: 0x40, conformance: "M" }),
+        Field({ name: "Charging", id: 0x41, conformance: "M" }),
+        Field({ name: "Docked", id: 0x42, conformance: "M" })
     ),
 
     Datatype(
         { name: "ErrorStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoError", conformance: "M" }),
-        Field({ id: 0x1, name: "UnableToStartOrResume", conformance: "M" }),
-        Field({ id: 0x2, name: "UnableToCompleteOperation", conformance: "M" }),
-        Field({ id: 0x3, name: "CommandInvalidInState", conformance: "M" }),
-        Field({ id: 0x40, name: "FailedToFindChargingDock", conformance: "M" }),
-        Field({ id: 0x41, name: "Stuck", conformance: "M" }),
-        Field({ id: 0x42, name: "DustBinMissing", conformance: "M" }),
-        Field({ id: 0x43, name: "DustBinFull", conformance: "M" }),
-        Field({ id: 0x44, name: "WaterTankEmpty", conformance: "M" }),
-        Field({ id: 0x45, name: "WaterTankMissing", conformance: "M" }),
-        Field({ id: 0x46, name: "WaterTankLidOpen", conformance: "M" }),
-        Field({ id: 0x47, name: "MopCleaningPadMissing", conformance: "M" })
+        Field({ name: "NoError", id: 0x0, conformance: "M" }),
+        Field({ name: "UnableToStartOrResume", id: 0x1, conformance: "M" }),
+        Field({ name: "UnableToCompleteOperation", id: 0x2, conformance: "M" }),
+        Field({ name: "CommandInvalidInState", id: 0x3, conformance: "M" }),
+        Field({ name: "FailedToFindChargingDock", id: 0x40, conformance: "M" }),
+        Field({ name: "Stuck", id: 0x41, conformance: "M" }),
+        Field({ name: "DustBinMissing", id: 0x42, conformance: "M" }),
+        Field({ name: "DustBinFull", id: 0x43, conformance: "M" }),
+        Field({ name: "WaterTankEmpty", id: 0x44, conformance: "M" }),
+        Field({ name: "WaterTankMissing", id: 0x45, conformance: "M" }),
+        Field({ name: "WaterTankLidOpen", id: 0x46, conformance: "M" }),
+        Field({ name: "MopCleaningPadMissing", id: 0x47, conformance: "M" })
     )
 );
 

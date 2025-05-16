@@ -9,15 +9,15 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "tod", tag: "datatype",
+    tag: "datatype", name: "tod",
     description: "Time of day",
     details: "Represents time without a date component.",
     xref: "core§7.19.2.3",
 
     children: [
-        { name: "hours", tag: "field", description: "Hour of the current day." },
-        { name: "minutes", tag: "field", description: "Minute of the current hour." },
-        { name: "seconds", tag: "field", description: "Second of the current minute." },
-        { name: "hundredths", tag: "field", description: "Hundredth of the current second." }
+        { tag: "field", name: "hours", description: "Hour of the current day." },
+        { tag: "field", name: "minutes", description: "Minute of the current hour." },
+        { tag: "field", name: "seconds", description: "Second of the current minute." },
+        { tag: "field", name: "hundredths", description: "Hundredth of the current second." }
     ]
 });

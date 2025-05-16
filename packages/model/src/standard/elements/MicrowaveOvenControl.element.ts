@@ -15,72 +15,72 @@ import {
 } from "../../elements/index.js";
 
 export const MicrowaveOvenControl = Cluster(
-    { id: 0x5f, name: "MicrowaveOvenControl" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "MicrowaveOvenControl", id: 0x5f },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PWRNUM", conformance: "O.a", constraint: "0", longName: "PowerAsNumber" }),
-        Field({ name: "WATTS", conformance: "P, O.a", constraint: "1", longName: "PowerInWatts" }),
-        Field({ name: "PWRLMTS", conformance: "[PWRNUM]", constraint: "2", longName: "PowerNumberLimits" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "PWRNUM", constraint: "0", conformance: "O.a", longName: "PowerAsNumber" }),
+        Field({ name: "WATTS", constraint: "1", conformance: "P, O.a", longName: "PowerInWatts" }),
+        Field({ name: "PWRLMTS", constraint: "2", conformance: "[PWRNUM]", longName: "PowerNumberLimits" })
     ),
 
     Attribute({
-        id: 0x0, name: "CookTime", type: "elapsed-s",
-        access: "R V", conformance: "M", constraint: "1 to maxCookTime", default: 30
+        name: "CookTime", id: 0x0, type: "elapsed-s",
+        default: 30, constraint: "1 to maxCookTime", conformance: "M", access: "R V"
     }),
     Attribute({
-        id: 0x1, name: "MaxCookTime", type: "elapsed-s",
-        access: "R V", conformance: "M", constraint: "1 to 86400", quality: "F"
+        name: "MaxCookTime", id: 0x1, type: "elapsed-s",
+        constraint: "1 to 86400", conformance: "M", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x2, name: "PowerSetting", type: "uint8", access: "R V", conformance: "PWRNUM", constraint: "desc" }),
+    Attribute({ name: "PowerSetting", id: 0x2, type: "uint8", constraint: "desc", conformance: "PWRNUM", access: "R V" }),
     Attribute({
-        id: 0x3, name: "MinPower", type: "uint8",
-        access: "R V", conformance: "PWRLMTS", constraint: "1 to 99", default: 10, quality: "F"
+        name: "MinPower", id: 0x3, type: "uint8",
+        default: 10, constraint: "1 to 99", conformance: "PWRLMTS", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x4, name: "MaxPower", type: "uint8",
-        access: "R V", conformance: "PWRLMTS", constraint: "minPower + 1 to 100", default: 100,
+        name: "MaxPower", id: 0x4, type: "uint8",
+        default: 100, constraint: "minPower + 1 to 100", conformance: "PWRLMTS", access: "R V",
         quality: "F"
     }),
     Attribute({
-        id: 0x5, name: "PowerStep", type: "uint8",
-        access: "R V", conformance: "PWRLMTS", constraint: "desc", default: 10, quality: "F"
+        name: "PowerStep", id: 0x5, type: "uint8",
+        default: 10, constraint: "desc", conformance: "PWRLMTS", access: "R V", quality: "F"
     }),
 
     Attribute(
         {
-            id: 0x6, name: "SupportedWatts", type: "list",
-            access: "R V", conformance: "P, WATTS", constraint: "1 to 10", quality: "F"
+            name: "SupportedWatts", id: 0x6, type: "list",
+            constraint: "1 to 10", conformance: "P, WATTS", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "uint16" })
     ),
 
-    Attribute({ id: 0x7, name: "SelectedWattIndex", type: "uint8", access: "R V", conformance: "P, WATTS", constraint: "desc" }),
-    Attribute({ id: 0x8, name: "WattRating", type: "uint16", access: "R V", conformance: "O", quality: "F" }),
+    Attribute({ name: "SelectedWattIndex", id: 0x7, type: "uint8", constraint: "desc", conformance: "P, WATTS", access: "R V" }),
+    Attribute({ name: "WattRating", id: 0x8, type: "uint16", conformance: "O", access: "R V", quality: "F" }),
 
     Command(
         {
-            id: 0x0, name: "SetCookingParameters",
-            access: "O", conformance: "M", direction: "request", response: "status"
+            name: "SetCookingParameters", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "CookMode", type: "uint8", conformance: "O.b+", constraint: "desc" }),
+        Field({ name: "CookMode", id: 0x0, type: "uint8", constraint: "desc", conformance: "O.b+" }),
         Field({
-            id: 0x1, name: "CookTime", type: "elapsed-s",
-            conformance: "O.b+", constraint: "1 to maxCookTime", default: 30
+            name: "CookTime", id: 0x1, type: "elapsed-s",
+            default: 30, constraint: "1 to maxCookTime", conformance: "O.b+"
         }),
         Field({
-            id: 0x2, name: "PowerSetting", type: "uint8",
-            conformance: "[PWRNUM].b+", constraint: "minPower to maxPower",
-            default: { type: "reference", name: "MaxPower" }
+            name: "PowerSetting", id: 0x2, type: "uint8",
+            default: { type: "reference", name: "MaxPower" }, constraint: "minPower to maxPower",
+            conformance: "[PWRNUM].b+"
         }),
-        Field({ id: 0x3, name: "WattSettingIndex", type: "uint8", conformance: "[WATTS].b+", constraint: "desc" }),
-        Field({ id: 0x4, name: "StartAfterSetting", type: "bool", conformance: "O", default: false })
+        Field({ name: "WattSettingIndex", id: 0x3, type: "uint8", constraint: "desc", conformance: "[WATTS].b+" }),
+        Field({ name: "StartAfterSetting", id: 0x4, type: "bool", default: false, conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "AddMoreTime", access: "O", conformance: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TimeToAdd", type: "elapsed-s", conformance: "M", constraint: "1 to maxCookTime" })
+        { name: "AddMoreTime", id: 0x1, conformance: "O", access: "O", direction: "request", response: "status" },
+        Field({ name: "TimeToAdd", id: 0x0, type: "elapsed-s", constraint: "1 to maxCookTime", conformance: "M" })
     )
 );
 

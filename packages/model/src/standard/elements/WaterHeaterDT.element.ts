@@ -10,18 +10,18 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const WaterHeaterDt = DeviceType(
-    { id: 0x50f, name: "WaterHeater", classification: "simple" },
+    { name: "WaterHeater", id: 0x50f },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 1295, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 1295, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
     Requirement(
-        { id: 0x201, name: "Thermostat", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "HEATING", conformance: "M", element: "feature" })
+        { name: "Thermostat", id: 0x201, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "HEATING", element: "feature", conformance: "M" })
     ),
-    Requirement({ id: 0x94, name: "WaterHeaterManagement", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x9e, name: "WaterHeaterMode", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "WaterHeaterManagement", id: 0x94, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "WaterHeaterMode", id: 0x9e, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(WaterHeaterDt);

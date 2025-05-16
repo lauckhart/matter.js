@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "FixedLabel", tag: "cluster",
+    tag: "cluster", name: "FixedLabel",
     classification: "endpoint", pics: "FLABEL",
 
     details: "This cluster is derived from the Label cluster and provides a feature for the device to tag an " +
@@ -34,5 +34,5 @@ Resource.add({
         "addition to) the Fixed Label cluster.",
 
     xref: "core§9.8",
-    children: [{ name: "LabelList", tag: "attribute", xref: "core§9.8.4" }]
+    children: [{ tag: "attribute", name: "LabelList", xref: "core§9.8.4" }]
 });

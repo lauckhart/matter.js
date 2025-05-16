@@ -14,10 +14,10 @@ import {
 } from "../../elements/index.js";
 
 export const FixedLabel = Cluster(
-    { id: 0x40, name: "FixedLabel", type: "Label" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "FixedLabel", id: 0x40, type: "Label" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0x0, name: "LabelList", type: "list", access: "R V", conformance: "M", default: [], quality: "N" },
+        { name: "LabelList", id: 0x0, type: "list", default: [], conformance: "M", access: "R V", quality: "N" },
         Field({ name: "entry", type: "LabelStruct" })
     )
 );

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "GeneralCommissioning", tag: "cluster",
+    tag: "cluster", name: "GeneralCommissioning",
     classification: "node", pics: "CGEN",
     details: "This cluster is used to manage basic commissioning lifecycle." +
         "\n" +
@@ -20,13 +20,13 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.10.4",
-            children: [{ name: "TC", tag: "field", details: "Supports Terms & Conditions acknowledgement" }]
+            children: [{ tag: "field", name: "TC", details: "Supports Terms & Conditions acknowledgement" }]
         },
 
         {
-            name: "Breadcrumb", tag: "attribute",
+            tag: "attribute", name: "Breadcrumb",
 
             details: "This attribute allows for the storage of a client-provided small payload which Administrators and " +
                 "Commissioners may write and then subsequently read, to keep track of their own progress. This may be " +
@@ -47,14 +47,14 @@ Resource.add({
         },
 
         {
-            name: "BasicCommissioningInfo", tag: "attribute",
+            tag: "attribute", name: "BasicCommissioningInfo",
             details: "This attribute shall describe critical parameters needed at the beginning of commissioning flow. See " +
                 "BasicCommissioningInfo for more information.",
             xref: "core§11.10.6.2"
         },
 
         {
-            name: "RegulatoryConfig", tag: "attribute",
+            tag: "attribute", name: "RegulatoryConfig",
             details: "Indicates the regulatory configuration for the product." +
                 "\n" +
                 "Note that the country code is part of Basic Information Cluster and therefore NOT listed on the " +
@@ -63,7 +63,7 @@ Resource.add({
         },
 
         {
-            name: "LocationCapability", tag: "attribute",
+            tag: "attribute", name: "LocationCapability",
 
             details: "LocationCapability is statically set by the manufacturer and indicates if this Node needs to be told " +
                 "an exact RegulatoryLocation. For example a Node which is \"Indoor Only\" would not be certified for " +
@@ -83,7 +83,7 @@ Resource.add({
         },
 
         {
-            name: "SupportsConcurrentConnection", tag: "attribute",
+            tag: "attribute", name: "SupportsConcurrentConnection",
             details: "Indicates whether this device supports \"concurrent connection flow\" commissioning mode (see Section " +
                 "5.5, “Commissioning Flows”). If false, the device only supports \"non-concurrent connection flow\" " +
                 "mode.",
@@ -91,7 +91,7 @@ Resource.add({
         },
 
         {
-            name: "TcAcceptedVersion", tag: "attribute",
+            tag: "attribute", name: "TcAcceptedVersion",
 
             details: "Indicates the last version of the T&Cs for which the device received user acknowledgements. On " +
                 "factory reset this field shall be reset to 0." +
@@ -105,7 +105,7 @@ Resource.add({
         },
 
         {
-            name: "TcMinRequiredVersion", tag: "attribute",
+            tag: "attribute", name: "TcMinRequiredVersion",
 
             details: "Indicates the minimum version of the texts presented by the Enhanced Setup Flow that need to be " +
                 "accepted by the user for this device. This attribute may change as the result of an OTA update." +
@@ -118,7 +118,7 @@ Resource.add({
         },
 
         {
-            name: "TcAcknowledgements", tag: "attribute",
+            tag: "attribute", name: "TcAcknowledgements",
 
             details: "Indicates the user’s response to the presented terms. Each bit position corresponds to a user " +
                 "response for the associated index of matching text, such that bit 0 (bit value 1) is for text index " +
@@ -135,7 +135,7 @@ Resource.add({
         },
 
         {
-            name: "TcAcknowledgementsRequired", tag: "attribute",
+            tag: "attribute", name: "TcAcknowledgementsRequired",
 
             details: "Indicates whether SetTCAcknowledgements is currently required to be called with the inclusion of " +
                 "mandatory terms accepted." +
@@ -157,7 +157,7 @@ Resource.add({
         },
 
         {
-            name: "TcUpdateDeadline", tag: "attribute",
+            tag: "attribute", name: "TcUpdateDeadline",
             details: "Indicates the System Time in seconds when any functionality limitations will begin due to a lack of " +
                 "acceptance of updated Terms and Conditions, as described in Section 5.7.4.5, “Presenting Updated " +
                 "Terms and Conditions”." +
@@ -167,7 +167,7 @@ Resource.add({
         },
 
         {
-            name: "ArmFailSafe", tag: "command",
+            tag: "command", name: "ArmFailSafe",
 
             details: "Success or failure of this command shall be communicated by the ArmFailSafeResponse command, unless " +
                 "some data model validations caused a failure status code to be issued during the processing of the " +
@@ -299,19 +299,19 @@ Resource.add({
         },
 
         {
-            name: "ArmFailSafeResponse", tag: "command",
+            tag: "command", name: "ArmFailSafeResponse",
             xref: "core§11.10.7.3",
 
             children: [
                 {
-                    name: "ErrorCode", tag: "field",
+                    tag: "field", name: "ErrorCode",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the ArmFailSafe command.",
                     xref: "core§11.10.7.3.1"
                 },
 
                 {
-                    name: "DebugText", tag: "field",
+                    tag: "field", name: "DebugText",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.3.2"
                 }
@@ -319,7 +319,7 @@ Resource.add({
         },
 
         {
-            name: "SetRegulatoryConfig", tag: "command",
+            tag: "command", name: "SetRegulatoryConfig",
 
             details: "This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value " +
                 "provided in the NewRegulatoryConfig field." +
@@ -357,19 +357,19 @@ Resource.add({
         },
 
         {
-            name: "SetRegulatoryConfigResponse", tag: "command",
+            tag: "command", name: "SetRegulatoryConfigResponse",
             xref: "core§11.10.7.5",
 
             children: [
                 {
-                    name: "ErrorCode", tag: "field",
+                    tag: "field", name: "ErrorCode",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the SetRegulatoryConfig command.",
                     xref: "core§11.10.7.5.1"
                 },
 
                 {
-                    name: "DebugText", tag: "field",
+                    tag: "field", name: "DebugText",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.5.2"
                 }
@@ -377,7 +377,7 @@ Resource.add({
         },
 
         {
-            name: "CommissioningComplete", tag: "command",
+            tag: "command", name: "CommissioningComplete",
 
             details: "This command has no data." +
                 "\n" +
@@ -445,19 +445,19 @@ Resource.add({
         },
 
         {
-            name: "CommissioningCompleteResponse", tag: "command",
+            tag: "command", name: "CommissioningCompleteResponse",
             xref: "core§11.10.7.7",
 
             children: [
                 {
-                    name: "ErrorCode", tag: "field",
+                    tag: "field", name: "ErrorCode",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the CommissioningComplete command.",
                     xref: "core§11.10.7.7.1"
                 },
 
                 {
-                    name: "DebugText", tag: "field",
+                    tag: "field", name: "DebugText",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.7.2"
                 }
@@ -465,21 +465,21 @@ Resource.add({
         },
 
         {
-            name: "SetTcAcknowledgements", tag: "command",
+            tag: "command", name: "SetTcAcknowledgements",
             details: "This command sets the user acknowledgements received in the Enhanced Setup Flow Terms & Conditions " +
                 "into the node.",
             xref: "core§11.10.7.8",
 
             children: [
                 {
-                    name: "TcVersion", tag: "field",
+                    tag: "field", name: "TcVersion",
                     details: "This field shall contain the version of the Enhanced Setup Flow Terms & Conditions that were " +
                         "presented to the user.",
                     xref: "core§11.10.7.8.1"
                 },
 
                 {
-                    name: "TcUserResponse", tag: "field",
+                    tag: "field", name: "TcUserResponse",
 
                     details: "This field shall contain the user responses to the Enhanced Setup Flow Terms & Conditions as a map " +
                         "where each bit set in the bitmap corresponds to an accepted term in the file located at " +
@@ -511,12 +511,12 @@ Resource.add({
         },
 
         {
-            name: "SetTcAcknowledgementsResponse", tag: "command",
+            tag: "command", name: "SetTcAcknowledgementsResponse",
             details: "This command is used to convey the result from SetTCAcknowledgements.",
             xref: "core§11.10.7.9",
 
             children: [{
-                name: "ErrorCode", tag: "field",
+                tag: "field", name: "ErrorCode",
                 details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                     "functional description of the SetTCAcknowledgements command.",
                 xref: "core§11.10.7.9.1"
@@ -524,63 +524,63 @@ Resource.add({
         },
 
         {
-            name: "CommissioningErrorEnum", tag: "datatype",
+            tag: "datatype", name: "CommissioningErrorEnum",
             details: "This enumeration is used by several response commands in this cluster to indicate particular errors.",
             xref: "core§11.10.5.1",
 
             children: [
-                { name: "Ok", tag: "field", description: "No error" },
+                { tag: "field", name: "Ok", description: "No error" },
                 {
-                    name: "ValueOutsideRange", tag: "field",
+                    tag: "field", name: "ValueOutsideRange",
                     description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration."
                 },
                 {
-                    name: "InvalidAuthentication", tag: "field",
+                    tag: "field", name: "InvalidAuthentication",
                     description: "Executed CommissioningComplete outside CASE session."
                 },
                 {
-                    name: "NoFailSafe", tag: "field",
+                    tag: "field", name: "NoFailSafe",
                     description: "Executed CommissioningComplete when there was no active Fail-Safe context."
                 },
                 {
-                    name: "BusyWithOtherAdmin", tag: "field",
+                    tag: "field", name: "BusyWithOtherAdmin",
                     description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context."
                 },
                 {
-                    name: "RequiredTcNotAccepted", tag: "field",
+                    tag: "field", name: "RequiredTcNotAccepted",
                     description: "One or more required TC features from the Enhanced Setup Flow were not accepted."
                 },
                 {
-                    name: "TcAcknowledgementsNotReceived", tag: "field",
+                    tag: "field", name: "TcAcknowledgementsNotReceived",
                     description: "No acknowledgements from the user for the TC features were received."
                 },
                 {
-                    name: "TcMinVersionNotMet", tag: "field",
+                    tag: "field", name: "TcMinVersionNotMet",
                     description: "The version of the TC features acknowledged by the user did not meet the minimum required version."
                 }
             ]
         },
 
         {
-            name: "RegulatoryLocationTypeEnum", tag: "datatype",
+            tag: "datatype", name: "RegulatoryLocationTypeEnum",
             details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
                 "possible radio usage.",
             xref: "core§11.10.5.2",
             children: [
-                { name: "Indoor", tag: "field", description: "Indoor only" },
-                { name: "Outdoor", tag: "field", description: "Outdoor only" },
-                { name: "IndoorOutdoor", tag: "field", description: "Indoor/Outdoor" }
+                { tag: "field", name: "Indoor", description: "Indoor only" },
+                { tag: "field", name: "Outdoor", description: "Outdoor only" },
+                { tag: "field", name: "IndoorOutdoor", description: "Indoor/Outdoor" }
             ]
         },
 
         {
-            name: "BasicCommissioningInfo", tag: "datatype",
+            tag: "datatype", name: "BasicCommissioningInfo",
             details: "This structure provides some constant values that may be of use to all commissioners.",
             xref: "core§11.10.5.3",
 
             children: [
                 {
-                    name: "FailSafeExpiryLengthSeconds", tag: "field",
+                    tag: "field", name: "FailSafeExpiryLengthSeconds",
                     details: "This field shall contain a conservative initial duration (in seconds) to set in the FailSafe for the " +
                         "commissioning flow to complete successfully. This may vary depending on the speed or sleepiness of " +
                         "the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field SHOULD " +
@@ -590,7 +590,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MaxCumulativeFailsafeSeconds", tag: "field",
+                    tag: "field", name: "MaxCumulativeFailsafeSeconds",
 
                     details: "This field shall contain a conservative value in seconds denoting the maximum total duration for " +
                         "which a fail safe timer can be re-armed. See Section 11.10.7.2.1, “Fail Safe Context”." +

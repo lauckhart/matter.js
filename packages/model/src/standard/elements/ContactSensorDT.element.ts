@@ -10,14 +10,14 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const ContactSensorDt = DeviceType(
-    { id: 0x15, name: "ContactSensor", classification: "simple" },
+    { name: "ContactSensor", id: 0x15 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 21, revision: 2 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 21, revision: 2 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x45, name: "BooleanState", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x80, name: "BooleanStateConfiguration", conformance: "O", element: "serverCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "BooleanState", id: 0x45, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "BooleanStateConfiguration", id: 0x80, element: "serverCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(ContactSensorDt);

@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "map16", tag: "datatype", description: "16-bit bitmap", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "map16", description: "16-bit bitmap", xref: "core§7.19.1" });

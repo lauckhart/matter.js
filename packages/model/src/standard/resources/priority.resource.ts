@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "priority", tag: "datatype",
+    tag: "datatype", name: "priority",
     description: "Priority",
     details: "This is an enumeration of priority used to tag events and possibly other data. The data type does " +
         "not define any particular ordering among the values. Specific uses of the data type may assign " +
@@ -17,13 +17,13 @@ Resource.add({
     xref: "core§7.19.2.17",
 
     children: [
-        { name: "Debug", tag: "field", description: "Information for engineering debugging/troubleshooting" },
+        { tag: "field", name: "Debug", description: "Information for engineering debugging/troubleshooting" },
         {
-            name: "Info", tag: "field",
+            tag: "field", name: "Info",
             description: "Information that either drives customer facing features or provides insights into device functions that are used to drive analytics use cases"
         },
         {
-            name: "Critical", tag: "field",
+            tag: "field", name: "Critical",
             description: "Information or notification that impacts safety, a critical function, or ongoing reliable operation of the node or application supported on an endpoint."
         }
     ]

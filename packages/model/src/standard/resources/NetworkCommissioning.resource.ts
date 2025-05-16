@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "NetworkCommissioning", tag: "cluster",
+        tag: "cluster", name: "NetworkCommissioning",
         classification: "node", pics: "CNET",
 
         details: "Network commissioning is part of the overall Node commissioning. The main goal of Network " +
@@ -31,17 +31,17 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "core§11.9.4",
                 children: [
-                    { name: "WI", tag: "field", details: "Wi-Fi related features" },
-                    { name: "TH", tag: "field", details: "Thread related features" },
-                    { name: "ET", tag: "field", details: "Ethernet related features" }
+                    { tag: "field", name: "WI", details: "Wi-Fi related features" },
+                    { tag: "field", name: "TH", details: "Thread related features" },
+                    { tag: "field", name: "ET", details: "Ethernet related features" }
                 ]
             },
 
             {
-                name: "MaxNetworks", tag: "attribute",
+                tag: "attribute", name: "MaxNetworks",
                 details: "This shall indicate the maximum number of network configuration entries that can be added, based on " +
                     "available device resources. The length of the Networks attribute shall be less than or equal to this " +
                     "value.",
@@ -49,7 +49,7 @@ Resource.add(
             },
 
             {
-                name: "Networks", tag: "attribute",
+                tag: "attribute", name: "Networks",
 
                 details: "Indicates the network configurations that are usable on the network interface represented by this " +
                     "cluster server instance." +
@@ -71,7 +71,7 @@ Resource.add(
             },
 
             {
-                name: "ScanMaxTimeSeconds", tag: "attribute",
+                tag: "attribute", name: "ScanMaxTimeSeconds",
                 details: "Indicates the maximum duration taken, in seconds, by the network interface on this cluster server " +
                     "instance to provide scan results." +
                     "\n" +
@@ -80,7 +80,7 @@ Resource.add(
             },
 
             {
-                name: "ConnectMaxTimeSeconds", tag: "attribute",
+                tag: "attribute", name: "ConnectMaxTimeSeconds",
 
                 details: "Indicates the maximum duration taken, in seconds, by the network interface on this cluster server " +
                     "instance to report a successful or failed network connection indication. This maximum time shall " +
@@ -93,7 +93,7 @@ Resource.add(
             },
 
             {
-                name: "InterfaceEnabled", tag: "attribute",
+                tag: "attribute", name: "InterfaceEnabled",
 
                 details: "Indicates whether the associated network interface is enabled or not. By default all network " +
                     "interfaces SHOULD be enabled during initial commissioning (InterfaceEnabled set to true)." +
@@ -115,7 +115,7 @@ Resource.add(
             },
 
             {
-                name: "LastNetworkingStatus", tag: "attribute",
+                tag: "attribute", name: "LastNetworkingStatus",
 
                 details: "Indicates the status of the last attempt either scan or connect to an operational network, using " +
                     "this interface, whether by invocation of the ConnectNetwork command or by autonomous connection " +
@@ -129,7 +129,7 @@ Resource.add(
             },
 
             {
-                name: "LastNetworkId", tag: "attribute",
+                tag: "attribute", name: "LastNetworkId",
 
                 details: "Indicates the NetworkID used in the last attempt to connect to an operational network, using this " +
                     "interface, whether by invocation of the ConnectNetwork command or by autonomous connection after " +
@@ -147,7 +147,7 @@ Resource.add(
             },
 
             {
-                name: "LastConnectErrorValue", tag: "attribute",
+                tag: "attribute", name: "LastConnectErrorValue",
 
                 details: "Indicates the ErrorValue used in the last failed attempt to connect to an operational network, using " +
                     "this interface, whether by invocation of the ConnectNetwork command or by autonomous connection " +
@@ -164,14 +164,14 @@ Resource.add(
             },
 
             {
-                name: "SupportedWiFiBands", tag: "attribute",
+                tag: "attribute", name: "SupportedWiFiBands",
                 details: "Indicates all the frequency bands supported by the Wi-Fi interface configured by the cluster " +
                     "instance.",
                 xref: "core§11.9.6.9"
             },
 
             {
-                name: "SupportedThreadFeatures", tag: "attribute",
+                tag: "attribute", name: "SupportedThreadFeatures",
 
                 details: "Indicates all of the Thread features supported by the Thread interface configured by the cluster " +
                     "instance." +
@@ -185,7 +185,7 @@ Resource.add(
             },
 
             {
-                name: "ThreadVersion", tag: "attribute",
+                tag: "attribute", name: "ThreadVersion",
                 details: "Indicates the Thread version supported by the Thread interface configured by the cluster instance." +
                     "\n" +
                     "The format shall match the value mapping found in the \"Version TLV\" section of Thread specification. " +
@@ -194,7 +194,7 @@ Resource.add(
             },
 
             {
-                name: "ScanNetworks", tag: "command",
+                tag: "command", name: "ScanNetworks",
 
                 details: "This command shall scan on the Cluster instance’s associated network interface for either of:" +
                     "\n" +
@@ -241,7 +241,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "Ssid", tag: "field",
+                        tag: "field", name: "Ssid",
                         details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
                             "Otherwise, if the field is absent, or if it is null, this shall indicate scanning of all BSSID in " +
                             "range. This field shall be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
@@ -249,7 +249,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Breadcrumb", tag: "field",
+                        tag: "field", name: "Breadcrumb",
                         details: "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
                             "General Commissioning cluster on success of the associated command. If the command fails, the " +
                             "Breadcrumb attribute in the General Commissioning cluster shall be left unchanged.",
@@ -259,7 +259,7 @@ Resource.add(
             },
 
             {
-                name: "ScanNetworksResponse", tag: "command",
+                tag: "command", name: "ScanNetworksResponse",
 
                 details: "This command shall contain the status of the last ScanNetworks command, and the associated scan " +
                     "results if the operation was successful." +
@@ -273,7 +273,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "NetworkingStatus", tag: "field",
+                        tag: "field", name: "NetworkingStatus",
 
                         details: "The NetworkingStatus field shall indicate the status of the last scan operation, taking one of these " +
                             "values:" +
@@ -294,7 +294,7 @@ Resource.add(
                     },
 
                     {
-                        name: "DebugText", tag: "field",
+                        tag: "field", name: "DebugText",
                         details: "This field, if present and non-empty, may contain error information which may be communicated to the " +
                             "user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
                             "troubleshooting errors and may go into logs or crash reports.",
@@ -302,7 +302,7 @@ Resource.add(
                     },
 
                     {
-                        name: "WiFiScanResults", tag: "field",
+                        tag: "field", name: "WiFiScanResults",
 
                         details: "If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list " +
                             "may be empty if none were found in range on the bands supported by the interface, or if directed " +
@@ -321,7 +321,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ThreadScanResults", tag: "field",
+                        tag: "field", name: "ThreadScanResults",
 
                         details: "If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list " +
                             "may be empty if none were found in range on the bands supported by the interface." +
@@ -341,7 +341,7 @@ Resource.add(
             },
 
             {
-                name: "AddOrUpdateWiFiNetwork", tag: "command",
+                tag: "command", name: "AddOrUpdateWiFiNetwork",
 
                 details: "This command shall be used to add or modify Wi-Fi network configurations." +
                     "\n" +
@@ -361,14 +361,14 @@ Resource.add(
 
                 children: [
                     {
-                        name: "Ssid", tag: "field",
+                        tag: "field", name: "Ssid",
                         details: "This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not " +
                             "supported by this cluster.",
                         xref: "core§11.9.7.3.1"
                     },
 
                     {
-                        name: "Credentials", tag: "field",
+                        tag: "field", name: "Credentials",
 
                         details: "Credentials is the passphrase or PSK for the network (if any is needed)." +
                             "\n" +
@@ -409,12 +409,12 @@ Resource.add(
                         xref: "core§11.9.7.3.2"
                     },
 
-                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.3.3" }
+                    { tag: "field", name: "Breadcrumb", details: "See Breadcrumb for usage.", xref: "core§11.9.7.3.3" }
                 ]
             },
 
             {
-                name: "AddOrUpdateThreadNetwork", tag: "command",
+                tag: "command", name: "AddOrUpdateThreadNetwork",
 
                 details: "This command shall be used to add or modify Thread network configurations." +
                     "\n" +
@@ -435,7 +435,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "OperationalDataset", tag: "field",
+                        tag: "field", name: "OperationalDataset",
                         details: "The OperationalDataset field shall contain the Thread Network Parameters, including channel, PAN ID, " +
                             "and Extended PAN ID." +
                             "\n" +
@@ -444,12 +444,12 @@ Resource.add(
                         xref: "core§11.9.7.4.1"
                     },
 
-                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.4.2" }
+                    { tag: "field", name: "Breadcrumb", details: "See Breadcrumb for usage.", xref: "core§11.9.7.4.2" }
                 ]
             },
 
             {
-                name: "RemoveNetwork", tag: "command",
+                tag: "command", name: "RemoveNetwork",
 
                 details: "This command shall remove the network configuration from the Cluster if there was already a network " +
                     "configuration with the same NetworkID. The relative order of the entries in the Networks" +
@@ -470,18 +470,18 @@ Resource.add(
 
                 children: [
                     {
-                        name: "NetworkId", tag: "field",
+                        tag: "field", name: "NetworkId",
                         details: "This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
                         xref: "core§11.9.7.6.1"
                     },
 
-                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.6.2" }
+                    { tag: "field", name: "Breadcrumb", details: "See Breadcrumb for usage.", xref: "core§11.9.7.6.2" }
                 ]
             },
 
             {
-                name: "NetworkConfigResponse", tag: "command",
+                tag: "command", name: "NetworkConfigResponse",
 
                 details: "This response command relates status information for some commands which require it as their " +
                     "response command. See each individual cluster server command for the situations that may cause a " +
@@ -498,7 +498,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "NetworkingStatus", tag: "field",
+                        tag: "field", name: "NetworkingStatus",
 
                         details: "The NetworkingStatus field shall indicate the status of the last operation attempting to modify the " +
                             "Networks attribute configuration, taking one of these values:" +
@@ -517,10 +517,10 @@ Resource.add(
                         xref: "core§11.9.7.7.1"
                     },
 
-                    { name: "DebugText", tag: "field", details: "See DebugText for usage.", xref: "core§11.9.7.7.2" },
+                    { tag: "field", name: "DebugText", details: "See DebugText for usage.", xref: "core§11.9.7.7.2" },
 
                     {
-                        name: "NetworkIndex", tag: "field",
+                        tag: "field", name: "NetworkIndex",
                         details: "When the NetworkingStatus is Success, this field shall be present. It shall contain the 0-based " +
                             "index of the entry in the Networks attribute that was last added, updated or removed successfully by " +
                             "the associated request command.",
@@ -530,7 +530,7 @@ Resource.add(
             },
 
             {
-                name: "ConnectNetwork", tag: "command",
+                tag: "command", name: "ConnectNetwork",
 
                 details: "This command shall attempt to connect to a network whose configuration was previously added by " +
                     "either the AddOrUpdateWiFiNetwork or AddOrUpdateThreadNetwork commands. Network is identified by its " +
@@ -614,18 +614,18 @@ Resource.add(
 
                 children: [
                     {
-                        name: "NetworkId", tag: "field",
+                        tag: "field", name: "NetworkId",
                         details: "This field shall contain the NetworkID for the entry used to configure the connection: the SSID for " +
                             "Wi-Fi and XPAN ID for Thread.",
                         xref: "core§11.9.7.8.1"
                     },
 
-                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.8.2" }
+                    { tag: "field", name: "Breadcrumb", details: "See Breadcrumb for usage.", xref: "core§11.9.7.8.2" }
                 ]
             },
 
             {
-                name: "ConnectNetworkResponse", tag: "command",
+                tag: "command", name: "ConnectNetworkResponse",
 
                 details: "Before generating a ConnectNetworkResponse, the server shall:" +
                     "\n" +
@@ -641,7 +641,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "NetworkingStatus", tag: "field",
+                        tag: "field", name: "NetworkingStatus",
 
                         details: "The NetworkingStatus field shall indicate the status of the last connection attempt, taking one of " +
                             "these values:" +
@@ -666,10 +666,10 @@ Resource.add(
                         xref: "core§11.9.7.9.1"
                     },
 
-                    { name: "DebugText", tag: "field", details: "See DebugText for usage.", xref: "core§11.9.7.9.2" },
+                    { tag: "field", name: "DebugText", details: "See DebugText for usage.", xref: "core§11.9.7.9.2" },
 
                     {
-                        name: "ErrorValue", tag: "field",
+                        tag: "field", name: "ErrorValue",
 
                         details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
                             "\n" +
@@ -697,28 +697,28 @@ Resource.add(
             },
 
             {
-                name: "ReorderNetwork", tag: "command",
+                tag: "command", name: "ReorderNetwork",
                 details: "This command shall set the specific order of the network configuration selected by its NetworkID in " +
                     "the Networks attribute to match the position given by NetworkIndex.",
                 xref: "core§11.9.7.10",
 
                 children: [
                     {
-                        name: "NetworkId", tag: "field",
+                        tag: "field", name: "NetworkId",
                         details: "This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
                         xref: "core§11.9.7.10.1"
                     },
 
                     {
-                        name: "NetworkIndex", tag: "field",
+                        tag: "field", name: "NetworkIndex",
                         details: "This field shall contain the 0-based index of the new desired position of the entry in the Networks " +
                             "attribute.",
                         xref: "core§11.9.7.10.2"
                     },
 
                     {
-                        name: "Breadcrumb", tag: "field",
+                        tag: "field", name: "Breadcrumb",
 
                         details: "See Breadcrumb for usage." +
                             "\n" +
@@ -775,22 +775,22 @@ Resource.add(
             },
 
             {
-                name: "WiFiSecurityBitmap", tag: "datatype",
+                tag: "datatype", name: "WiFiSecurityBitmap",
                 details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
                     "WiFiInterfaceScanResultStruct.",
                 xref: "core§11.9.5.1",
 
                 children: [
-                    { name: "Unencrypted", tag: "field", description: "Supports unencrypted Wi-Fi" },
-                    { name: "Wep", tag: "field", description: "Supports Wi-Fi using WEP security" },
-                    { name: "WpaPersonal", tag: "field", description: "Supports Wi-Fi using WPA-Personal security" },
-                    { name: "Wpa2Personal", tag: "field", description: "Supports Wi-Fi using WPA2-Personal security" },
-                    { name: "Wpa3Personal", tag: "field", description: "Supports Wi-Fi using WPA3-Personal security" }
+                    { tag: "field", name: "Unencrypted", description: "Supports unencrypted Wi-Fi" },
+                    { tag: "field", name: "Wep", description: "Supports Wi-Fi using WEP security" },
+                    { tag: "field", name: "WpaPersonal", description: "Supports Wi-Fi using WPA-Personal security" },
+                    { tag: "field", name: "Wpa2Personal", description: "Supports Wi-Fi using WPA2-Personal security" },
+                    { tag: "field", name: "Wpa3Personal", description: "Supports Wi-Fi using WPA3-Personal security" }
                 ]
             },
 
             {
-                name: "ThreadCapabilitiesBitmap", tag: "datatype",
+                tag: "datatype", name: "ThreadCapabilitiesBitmap",
 
                 details: "The ThreadCapabilitiesBitmap encodes the supported Thread features and capabilities of a Thread- " +
                     "enabled network interface." +
@@ -803,89 +803,89 @@ Resource.add(
 
                 children: [
                     {
-                        name: "IsBorderRouterCapable", tag: "field",
+                        tag: "field", name: "IsBorderRouterCapable",
                         description: "Thread Border Router functionality is present"
                     },
                     {
-                        name: "IsRouterCapable", tag: "field",
+                        tag: "field", name: "IsRouterCapable",
                         description: "Router mode is supported (interface could be in router or REED mode)"
                     },
                     {
-                        name: "IsSleepyEndDeviceCapable", tag: "field",
+                        tag: "field", name: "IsSleepyEndDeviceCapable",
                         description: "Sleepy end-device mode is supported"
                     },
                     {
-                        name: "IsFullThreadDevice", tag: "field",
+                        tag: "field", name: "IsFullThreadDevice",
                         description: "Device is a full Thread device (opposite of Minimal Thread Device)"
                     },
                     {
-                        name: "IsSynchronizedSleepyEndDeviceCapable", tag: "field",
+                        tag: "field", name: "IsSynchronizedSleepyEndDeviceCapable",
                         description: "Synchronized sleepy end-device mode is supported"
                     }
                 ]
             },
 
             {
-                name: "WiFiBandEnum", tag: "datatype",
+                tag: "datatype", name: "WiFiBandEnum",
                 details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
                     "WiFiInterfaceScanResultStruct.",
                 xref: "core§11.9.5.3",
 
                 children: [
-                    { name: "2G4", tag: "field", description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)" },
-                    { name: "3G65", tag: "field", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)" },
-                    { name: "5G", tag: "field", description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)" },
-                    { name: "6G", tag: "field", description: "6GHz - 5.925GHz to7.125GHz (802.11ax / Wi-Fi 6E)" },
-                    { name: "60G", tag: "field", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)" },
-                    { name: "1G", tag: "field", description: "Sub-1GHz - 755MHz to 931MHz (802.11ah)" }
+                    { tag: "field", name: "2G4", description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)" },
+                    { tag: "field", name: "3G65", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)" },
+                    { tag: "field", name: "5G", description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)" },
+                    { tag: "field", name: "6G", description: "6GHz - 5.925GHz to7.125GHz (802.11ax / Wi-Fi 6E)" },
+                    { tag: "field", name: "60G", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)" },
+                    { tag: "field", name: "1G", description: "Sub-1GHz - 755MHz to 931MHz (802.11ah)" }
                 ]
             },
 
             {
-                name: "NetworkCommissioningStatusEnum", tag: "datatype",
+                tag: "datatype", name: "NetworkCommissioningStatusEnum",
                 xref: "core§11.9.5.4",
 
                 children: [
-                    { name: "Success", tag: "field", description: "OK, no error" },
-                    { name: "OutOfRange", tag: "field", description: "Value Outside Range" },
-                    { name: "BoundsExceeded", tag: "field", description: "A collection would exceed its size limit" },
+                    { tag: "field", name: "Success", description: "OK, no error" },
+                    { tag: "field", name: "OutOfRange", description: "Value Outside Range" },
+                    { tag: "field", name: "BoundsExceeded", description: "A collection would exceed its size limit" },
                     {
-                        name: "NetworkIdNotFound", tag: "field",
+                        tag: "field", name: "NetworkIdNotFound",
                         description: "The NetworkID is not among the collection of added networks"
                     },
                     {
-                        name: "DuplicateNetworkId", tag: "field",
+                        tag: "field", name: "DuplicateNetworkId",
                         description: "The NetworkID is already among the collection of added networks"
                     },
-                    { name: "NetworkNotFound", tag: "field", description: "Cannot find AP: SSID Not found" },
+                    { tag: "field", name: "NetworkNotFound", description: "Cannot find AP: SSID Not found" },
                     {
-                        name: "RegulatoryError", tag: "field",
+                        tag: "field", name: "RegulatoryError",
                         description: "Cannot find AP: Mismatch on band/channels/regulatory domain/ 2.4GHz vs 5GHz"
                     },
                     {
-                        name: "AuthFailure", tag: "field",
+                        tag: "field", name: "AuthFailure",
                         description: "Cannot associate due to authentication failure"
                     },
                     {
-                        name: "UnsupportedSecurity", tag: "field",
+                        tag: "field", name: "UnsupportedSecurity",
                         description: "Cannot associate due to unsupported security mode"
                     },
-                    { name: "OtherConnectionFailure", tag: "field", description: "Other association failure" },
-                    { name: "Ipv6Failed", tag: "field", description: "Failure to generate an IPv6 address" },
-                    { name: "IpBindFailed", tag: "field", description: "Failure to bind Wi-Fi <-> IP interfaces" },
-                    { name: "UnknownError", tag: "field", description: "Unknown error" }
+                    { tag: "field", name: "OtherConnectionFailure", description: "Other association failure" },
+                    { tag: "field", name: "Ipv6Failed", description: "Failure to generate an IPv6 address" },
+                    { tag: "field", name: "IpBindFailed", description: "Failure to bind Wi-Fi <-> IP interfaces" },
+                    { tag: "field", name: "UnknownError", description: "Unknown error" }
                 ]
             },
 
             {
-                name: "NetworkInfoStruct", tag: "datatype",
+                tag: "datatype", name: "NetworkInfoStruct",
                 details: "NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks " +
                     "attribute.",
                 xref: "core§11.9.5.5",
 
                 children: [
                     {
-                        name: "NetworkId", tag: "field",
+                        tag: "field", name: "NetworkId",
 
                         details: "Every network is uniquely identified (for purposes of commissioning) by a NetworkID mapping to the " +
                             "following technology-specific properties:" +
@@ -916,7 +916,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Connected", tag: "field",
+                        tag: "field", name: "Connected",
                         details: "This field shall indicate the connected status of the associated network, where \"connected\" means " +
                             "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected for " +
                             "an Ethernet network).",
@@ -926,20 +926,20 @@ Resource.add(
             },
 
             {
-                name: "WiFiInterfaceScanResultStruct", tag: "datatype",
+                tag: "datatype", name: "WiFiInterfaceScanResultStruct",
                 details: "WiFiInterfaceScanResultStruct represents a single Wi-Fi network scan result.",
                 xref: "core§11.9.5.6",
 
                 children: [
                     {
-                        name: "WiFiBand", tag: "field",
+                        tag: "field", name: "WiFiBand",
                         details: "This field, if present, may be used to differentiate overlapping channel number values across " +
                             "different Wi-Fi frequency bands.",
                         xref: "core§11.9.5.6.1"
                     },
 
                     {
-                        name: "Rssi", tag: "field",
+                        tag: "field", name: "Rssi",
                         details: "This field, if present, shall denote the signal strength in dBm of the associated scan result.",
                         xref: "core§11.9.5.6.2"
                     }
@@ -947,11 +947,11 @@ Resource.add(
             },
 
             {
-                name: "ThreadInterfaceScanResultStruct", tag: "datatype",
+                tag: "datatype", name: "ThreadInterfaceScanResultStruct",
                 details: "ThreadInterfaceScanResultStruct represents a single Thread network scan result.",
                 xref: "core§11.9.5.7",
                 children: [{
-                    name: "ExtendedAddress", tag: "field",
+                    tag: "field", name: "ExtendedAddress",
                     details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
                     xref: "core§11.9.5.7.1"
                 }]

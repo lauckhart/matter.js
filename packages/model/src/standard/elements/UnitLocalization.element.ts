@@ -15,21 +15,21 @@ import {
 } from "../../elements/index.js";
 
 export const UnitLocalization = Cluster(
-    { id: 0x2d, name: "UnitLocalization" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "UnitLocalization", id: 0x2d },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "TEMP", constraint: "0", longName: "TemperatureUnit" })
     ),
     Attribute(
-        { id: 0x0, name: "TemperatureUnit", type: "TempUnitEnum", access: "RW VM", conformance: "TEMP", quality: "N" }
+        { name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", conformance: "TEMP", access: "RW VM", quality: "N" }
     ),
 
     Datatype(
         { name: "TempUnitEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Fahrenheit", conformance: "M" }),
-        Field({ id: 0x1, name: "Celsius", conformance: "M" }),
-        Field({ id: 0x2, name: "Kelvin", conformance: "M" })
+        Field({ name: "Fahrenheit", id: 0x0, conformance: "M" }),
+        Field({ name: "Celsius", id: 0x1, conformance: "M" }),
+        Field({ name: "Kelvin", id: 0x2, conformance: "M" })
     )
 );
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Model, Resource, ValueModel } from "#model";
+import { Model, Resource } from "#model";
 import { Block, TsFile } from "#util/TsFile.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
@@ -97,10 +97,7 @@ function generateResourceDefinition(element: Model): Resource.Named | undefined 
     }
 
     if (definition && (element.parent?.all(element.constructor as Model.Type, definition.name).length ?? 0) > 1) {
-        const conformance = (element as ValueModel).conformance;
-        if (conformance?.isEmpty === false) {
-            definition.discriminator = conformance.toString();
-        }
+        definition.discriminator = Resource.discriminatorFor(element);
     }
 
     return definition;

@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", tag: "cluster", pics: "TVOCCONC" });
+Resource.add({ tag: "cluster", name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", pics: "TVOCCONC" });

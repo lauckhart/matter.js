@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "namespace", tag: "datatype",
+    tag: "datatype", name: "namespace",
     description: "Namespace",
     details: "The Namespace type identifies the namespace used for a semantic tag.",
     xref: "core§7.19.2.43"

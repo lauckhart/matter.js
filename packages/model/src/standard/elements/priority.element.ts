@@ -11,9 +11,9 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const priority = Datatype(
     { name: "priority", type: "enum8", isSeed: true },
-    Field({ id: 0x0, name: "Debug" }),
-    Field({ id: 0x1, name: "Info" }),
-    Field({ id: 0x2, name: "Critical" })
+    Field({ name: "Debug", id: 0x0 }),
+    Field({ name: "Info", id: 0x1 }),
+    Field({ name: "Critical", id: 0x2 })
 );
 
 MatterDefinition.children.push(priority);

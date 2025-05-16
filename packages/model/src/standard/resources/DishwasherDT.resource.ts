@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Dishwasher", tag: "deviceType",
+    tag: "deviceType", name: "Dishwasher",
     classification: "simple",
     details: "A dishwasher is a device that is generally installed in residential homes and is capable of washing " +
         "dishes, cutlery, and other items associate with food preparation and consumption. The device can be " +
@@ -17,11 +17,11 @@ Resource.add({
     xref: "device§13.5",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§13.5.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§13.5.4" },
-        { name: "TemperatureControl", tag: "requirement", xref: "device§13.5.4" },
-        { name: "DishwasherMode", tag: "requirement", xref: "device§13.5.4" },
-        { name: "DishwasherAlarm", tag: "requirement", xref: "device§13.5.4" },
-        { name: "OperationalState", tag: "requirement", xref: "device§13.5.4" }
+        { tag: "requirement", name: "Identify", xref: "device§13.5.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§13.5.4" },
+        { tag: "requirement", name: "TemperatureControl", xref: "device§13.5.4" },
+        { tag: "requirement", name: "DishwasherMode", xref: "device§13.5.4" },
+        { tag: "requirement", name: "DishwasherAlarm", xref: "device§13.5.4" },
+        { tag: "requirement", name: "OperationalState", xref: "device§13.5.4" }
     ]
 });

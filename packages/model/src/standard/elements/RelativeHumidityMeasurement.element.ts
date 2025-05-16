@@ -10,21 +10,21 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster, AttributeElement as Attribute } from "../../elements/index.js";
 
 export const RelativeHumidityMeasurement = Cluster(
-    { id: 0x405, name: "RelativeHumidityMeasurement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "RelativeHumidityMeasurement", id: 0x405 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute({
-        id: 0x0, name: "MeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "uint16",
+        constraint: "minMeasuredValue to maxMeasuredValue", conformance: "M", access: "R V", quality: "X P"
     }),
     Attribute({
-        id: 0x1, name: "MinMeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "max 9999", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "uint16",
+        constraint: "max 9999", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x2, name: "MaxMeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "minMeasuredValue + 1 to 10000", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "uint16",
+        constraint: "minMeasuredValue + 1 to 10000", conformance: "M", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x3, name: "Tolerance", type: "uint16", access: "R V", conformance: "O", constraint: "max 2048" })
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", constraint: "max 2048", conformance: "O", access: "R V" })
 );
 
 MatterDefinition.children.push(RelativeHumidityMeasurement);

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Switch", tag: "cluster",
+    tag: "cluster", name: "Switch",
     classification: "application", pics: "SWTCH",
 
     details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
@@ -29,45 +29,45 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.13.4",
 
             children: [
                 {
-                    name: "LS", tag: "field",
+                    tag: "field", name: "LS",
                     details: "This feature flag is for a switch that maintains its position after being pressed (or turned).",
                     xref: "cluster§1.13.4.1"
                 },
 
                 {
-                    name: "MS", tag: "field",
+                    tag: "field", name: "MS",
                     details: "This feature flag is for a switch that does not maintain its position after being pressed (or " +
                         "turned). After releasing, it goes back to its idle position.",
                     xref: "cluster§1.13.4.2"
                 },
 
                 {
-                    name: "MSR", tag: "field",
+                    tag: "field", name: "MSR",
                     details: "This feature flag is for a momentary switch that can distinguish and report release events.",
                     xref: "cluster§1.13.4.3"
                 },
 
                 {
-                    name: "MSL", tag: "field",
+                    tag: "field", name: "MSL",
                     details: "This feature flag is for a momentary switch that can distinguish and report long presses from short " +
                         "presses.",
                     xref: "cluster§1.13.4.4"
                 },
 
                 {
-                    name: "MSM", tag: "field",
+                    tag: "field", name: "MSM",
                     details: "This feature flag is for a momentary switch that can distinguish and report double press and " +
                         "potentially multiple presses with more events, such as triple press, etc.",
                     xref: "cluster§1.13.4.5"
                 },
 
                 {
-                    name: "AS", tag: "field",
+                    tag: "field", name: "AS",
                     details: "This feature flag indicates simplified handling of events for multi-press-capable switches. See " +
                         "Multi Press Details.",
                     xref: "cluster§1.13.4.6"
@@ -76,14 +76,14 @@ Resource.add({
         },
 
         {
-            name: "NumberOfPositions", tag: "attribute",
+            tag: "attribute", name: "NumberOfPositions",
             details: "Indicates the maximum number of positions the switch has. Any kind of switch has a minimum of 2 " +
                 "positions. Also see Multi Position Details for the case NumberOfPositions>2.",
             xref: "cluster§1.13.5.1"
         },
 
         {
-            name: "CurrentPosition", tag: "attribute",
+            tag: "attribute", name: "CurrentPosition",
             details: "Indicates the position of the switch. The valid range is zero to NumberOfPositions - 1." +
                 "\n" +
                 "CurrentPosition value 0 shall be assigned to the default position of the switch: for example the " +
@@ -92,7 +92,7 @@ Resource.add({
         },
 
         {
-            name: "MultiPressMax", tag: "attribute",
+            tag: "attribute", name: "MultiPressMax",
 
             details: "Indicates how many consecutive presses can be detected and reported by a momentary switch which " +
                 "supports multi-press (MSM feature flag set)." +
@@ -121,30 +121,30 @@ Resource.add({
         },
 
         {
-            name: "SwitchLatched", tag: "event",
+            tag: "event", name: "SwitchLatched",
             details: "This event shall be generated, when the latching switch is moved to a new position. It may have been " +
                 "delayed by debouncing within the switch.",
             xref: "cluster§1.13.6.1",
             children: [{
-                name: "NewPosition", tag: "field",
+                tag: "field", name: "NewPosition",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.",
                 xref: "cluster§1.13.6.1.1"
             }]
         },
 
         {
-            name: "InitialPress", tag: "event",
+            tag: "event", name: "InitialPress",
             details: "This event shall be generated, when the momentary switch starts to be pressed (after debouncing).",
             xref: "cluster§1.13.6.2",
             children: [{
-                name: "NewPosition", tag: "field",
+                tag: "field", name: "NewPosition",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                 xref: "cluster§1.13.6.2.1"
             }]
         },
 
         {
-            name: "LongPress", tag: "event",
+            tag: "event", name: "LongPress",
 
             details: "This event shall be generated when the momentary switch has been pressed for a \"long\" time. The time " +
                 "interval constituting a \"long\" time is manufacturer-determined, since it depends on the switch " +
@@ -181,14 +181,14 @@ Resource.add({
 
             xref: "cluster§1.13.6.3",
             children: [{
-                name: "NewPosition", tag: "field",
+                tag: "field", name: "NewPosition",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                 xref: "cluster§1.13.6.3.1"
             }]
         },
 
         {
-            name: "ShortRelease", tag: "event",
+            tag: "event", name: "ShortRelease",
 
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all, " +
                 "since setting the Action Switch feature flag forbids the Momentary Switch ShortRelease (MSR) feature " +
@@ -210,7 +210,7 @@ Resource.add({
             xref: "cluster§1.13.6.4",
 
             children: [{
-                name: "PreviousPosition", tag: "field",
+                tag: "field", name: "PreviousPosition",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
                 xref: "cluster§1.13.6.4.1"
@@ -218,7 +218,7 @@ Resource.add({
         },
 
         {
-            name: "LongRelease", tag: "event",
+            tag: "event", name: "LongRelease",
             details: "This event shall be generated, when the momentary switch has been released (after debouncing) and " +
                 "after having been pressed for a long time, i.e. this event shall be generated when the switch is " +
                 "released if a LongPress event has been generated since the previous InitialPress event. Also see " +
@@ -226,7 +226,7 @@ Resource.add({
             xref: "cluster§1.13.6.5",
 
             children: [{
-                name: "PreviousPosition", tag: "field",
+                tag: "field", name: "PreviousPosition",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
                 xref: "cluster§1.13.6.5.1"
@@ -234,7 +234,7 @@ Resource.add({
         },
 
         {
-            name: "MultiPressOngoing", tag: "event",
+            tag: "event", name: "MultiPressOngoing",
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all. " +
                 "Otherwise, the following paragraphs describe the situations where this event is generated." +
                 "\n" +
@@ -244,13 +244,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "NewPosition", tag: "field",
+                    tag: "field", name: "NewPosition",
                     details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                     xref: "cluster§1.13.6.6.1"
                 },
 
                 {
-                    name: "CurrentNumberOfPressesCounted", tag: "field",
+                    tag: "field", name: "CurrentNumberOfPressesCounted",
 
                     details: "This field shall contain:" +
                         "\n" +
@@ -266,7 +266,7 @@ Resource.add({
         },
 
         {
-            name: "MultiPressComplete", tag: "event",
+            tag: "event", name: "MultiPressComplete",
 
             details: "This event shall be generated to indicate how many times the momentary switch has been pressed in a " +
                 "multi-press sequence, after it has been detected that the sequence has ended. See Multi Press " +

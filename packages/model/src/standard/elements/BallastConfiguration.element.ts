@@ -15,50 +15,50 @@ import {
 } from "../../elements/index.js";
 
 export const BallastConfiguration = Cluster(
-    { id: 0x301, name: "BallastConfiguration" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
+    { name: "BallastConfiguration", id: 0x301 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
     Attribute({
-        id: 0x0, name: "PhysicalMinLevel", type: "uint8",
-        access: "R V", conformance: "M", constraint: "1 to 254", default: 1
+        name: "PhysicalMinLevel", id: 0x0, type: "uint8",
+        default: 1, constraint: "1 to 254", conformance: "M", access: "R V"
     }),
     Attribute({
-        id: 0x1, name: "PhysicalMaxLevel", type: "uint8",
-        access: "R V", conformance: "M", constraint: "1 to 254", default: 254
+        name: "PhysicalMaxLevel", id: 0x1, type: "uint8",
+        default: 254, constraint: "1 to 254", conformance: "M", access: "R V"
     }),
-    Attribute({ id: 0x2, name: "BallastStatus", type: "BallastStatusBitmap", access: "R V", conformance: "O", default: 0 }),
+    Attribute({ name: "BallastStatus", id: 0x2, type: "BallastStatusBitmap", default: 0, conformance: "O", access: "R V" }),
     Attribute({
-        id: 0x10, name: "MinLevel", type: "uint8",
-        access: "RW VM", conformance: "M", constraint: "physicalMinLevel to maxLevel",
-        default: { type: "reference", name: "PhysicalMinLevel" }
+        name: "MinLevel", id: 0x10, type: "uint8",
+        default: { type: "reference", name: "PhysicalMinLevel" },
+        constraint: "physicalMinLevel to maxLevel", conformance: "M", access: "RW VM"
     }),
     Attribute({
-        id: 0x11, name: "MaxLevel", type: "uint8",
-        access: "RW VM", conformance: "M", constraint: "minLevel to physicalMaxLevel",
-        default: { type: "reference", name: "PhysicalMaxLevel" }
+        name: "MaxLevel", id: 0x11, type: "uint8",
+        default: { type: "reference", name: "PhysicalMaxLevel" },
+        constraint: "minLevel to physicalMaxLevel", conformance: "M", access: "RW VM"
     }),
-    Attribute({ id: 0x12, name: "PowerOnLevel", conformance: "D" }),
-    Attribute({ id: 0x13, name: "PowerOnFadeTime", conformance: "D" }),
-    Attribute({ id: 0x14, name: "IntrinsicBallastFactor", type: "uint8", access: "RW VM", conformance: "O", quality: "X" }),
+    Attribute({ name: "PowerOnLevel", id: 0x12, conformance: "D" }),
+    Attribute({ name: "PowerOnFadeTime", id: 0x13, conformance: "D" }),
+    Attribute({ name: "IntrinsicBallastFactor", id: 0x14, type: "uint8", conformance: "O", access: "RW VM", quality: "X" }),
     Attribute({
-        id: 0x15, name: "BallastFactorAdjustment", type: "uint8",
-        access: "RW VM", conformance: "O", constraint: "100 to ms", default: null, quality: "X"
+        name: "BallastFactorAdjustment", id: 0x15, type: "uint8",
+        default: null, constraint: "100 to ms", conformance: "O", access: "RW VM", quality: "X"
     }),
-    Attribute({ id: 0x20, name: "LampQuantity", type: "uint8", access: "R V", conformance: "M" }),
-    Attribute({ id: 0x30, name: "LampType", type: "string", access: "RW VM", conformance: "O", constraint: "max 16" }),
+    Attribute({ name: "LampQuantity", id: 0x20, type: "uint8", conformance: "M", access: "R V" }),
+    Attribute({ name: "LampType", id: 0x30, type: "string", constraint: "max 16", conformance: "O", access: "RW VM" }),
     Attribute(
-        { id: 0x31, name: "LampManufacturer", type: "string", access: "RW VM", conformance: "O", constraint: "max 16" }
+        { name: "LampManufacturer", id: 0x31, type: "string", constraint: "max 16", conformance: "O", access: "RW VM" }
     ),
     Attribute({
-        id: 0x32, name: "LampRatedHours", type: "uint24",
-        access: "RW VM", conformance: "O", default: null, quality: "X"
+        name: "LampRatedHours", id: 0x32, type: "uint24",
+        default: null, conformance: "O", access: "RW VM", quality: "X"
     }),
-    Attribute({ id: 0x33, name: "LampBurnHours", type: "uint24", access: "RW VM", conformance: "O", default: 0, quality: "X" }),
+    Attribute({ name: "LampBurnHours", id: 0x33, type: "uint24", default: 0, conformance: "O", access: "RW VM", quality: "X" }),
     Attribute(
-        { id: 0x34, name: "LampAlarmMode", type: "LampAlarmModeBitmap", access: "RW VM", conformance: "O", default: 0 }
+        { name: "LampAlarmMode", id: 0x34, type: "LampAlarmModeBitmap", default: 0, conformance: "O", access: "RW VM" }
     ),
     Attribute({
-        id: 0x35, name: "LampBurnHoursTripPoint", type: "uint24",
-        access: "RW VM", conformance: "O", default: null, quality: "X"
+        name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24",
+        default: null, conformance: "O", access: "RW VM", quality: "X"
     }),
     Datatype(
         { name: "BallastStatusBitmap", type: "map8" },

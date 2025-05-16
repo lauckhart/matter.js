@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OnOffLight", tag: "deviceType",
+    tag: "deviceType", name: "OnOffLight",
     classification: "simple",
     details: "The On/Off Light is a lighting device that is capable of being switched on or off by means of a " +
         "bound controller device such as an On/Off Light Switch or a Dimmer Switch. In addition, an on/off " +
@@ -17,11 +17,11 @@ Resource.add({
     xref: "device§4.1",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§4.1.4" },
-        { name: "Groups", tag: "requirement", xref: "device§4.1.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§4.1.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§4.1.4" },
-        { name: "LevelControl", tag: "requirement", xref: "device§4.1.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§4.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§4.1.4" },
+        { tag: "requirement", name: "Groups", xref: "device§4.1.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§4.1.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§4.1.4" },
+        { tag: "requirement", name: "LevelControl", xref: "device§4.1.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§4.1.4" }
     ]
 });

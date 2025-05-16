@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "bool", tag: "datatype",
+    tag: "datatype", name: "bool",
     description: "Boolean",
     details: "The Boolean type represents a logical value, either FALSE or TRUE." +
         "\n" +

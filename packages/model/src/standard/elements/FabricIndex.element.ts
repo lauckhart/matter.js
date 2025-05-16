@@ -10,7 +10,7 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { FieldElement as Field } from "../../elements/index.js";
 
 export const FabricIndex = Field({
-    id: 0xfe, name: "FabricIndex", type: "fabric-idx",
-    access: "R F V", conformance: "M", constraint: "1 to 254", isSeed: true
+    name: "FabricIndex", id: 0xfe, type: "fabric-idx",
+    isSeed: true, constraint: "1 to 254", conformance: "M", access: "R F V"
 });
 MatterDefinition.children.push(FabricIndex);

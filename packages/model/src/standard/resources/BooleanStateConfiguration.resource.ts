@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "BooleanStateConfiguration", tag: "cluster",
+        tag: "cluster", name: "BooleanStateConfiguration",
         classification: "application", pics: "BOOLCFG",
         details: "This cluster is used to configure a boolean sensor, including optional state change alarm features " +
             "and configuration of the sensitivity level associated with the sensor.",
@@ -18,15 +18,15 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§1.8.4",
 
                 children: [
-                    { name: "VIS", tag: "field", details: "Supports visual alarms" },
-                    { name: "AUD", tag: "field", details: "Supports audible alarms" },
+                    { tag: "field", name: "VIS", details: "Supports visual alarms" },
+                    { tag: "field", name: "AUD", details: "Supports audible alarms" },
 
                     {
-                        name: "SPRS", tag: "field",
+                        tag: "field", name: "SPRS",
 
                         details: "This feature shall indicate that the device is able to suppress the supported alarm modes, when the " +
                             "user acknowledges the alarm. This is intended to stop visual and/or audible alarms, when the user " +
@@ -49,12 +49,12 @@ Resource.add(
                         xref: "cluster§1.8.4.1"
                     },
 
-                    { name: "SENSLVL", tag: "field", details: "Supports ability to set sensor sensitivity" }
+                    { tag: "field", name: "SENSLVL", details: "Supports ability to set sensor sensitivity" }
                 ]
             },
 
             {
-                name: "CurrentSensitivityLevel", tag: "attribute",
+                tag: "attribute", name: "CurrentSensitivityLevel",
                 details: "Indicates the currently selected sensitivity level." +
                     "\n" +
                     "If a write interaction to this attribute contains an unsupported sensitivity value, a " +
@@ -63,7 +63,7 @@ Resource.add(
             },
 
             {
-                name: "SupportedSensitivityLevels", tag: "attribute",
+                tag: "attribute", name: "SupportedSensitivityLevels",
 
                 details: "Indicates the number of supported sensitivity levels by the device." +
                     "\n" +
@@ -78,13 +78,13 @@ Resource.add(
             },
 
             {
-                name: "DefaultSensitivityLevel", tag: "attribute",
+                tag: "attribute", name: "DefaultSensitivityLevel",
                 details: "Indicates the default sensitivity level selected by the manufacturer.",
                 xref: "cluster§1.8.6.3"
             },
 
             {
-                name: "AlarmsActive", tag: "attribute",
+                tag: "attribute", name: "AlarmsActive",
 
                 details: "Indicates which specific alarm modes on the server are currently active. When the sensor is no " +
                     "longer triggered, this attribute shall be set to the inactive state, by setting the bit to 0, for " +
@@ -101,7 +101,7 @@ Resource.add(
             },
 
             {
-                name: "AlarmsSuppressed", tag: "attribute",
+                tag: "attribute", name: "AlarmsSuppressed",
 
                 details: "Indicates which specific alarm modes on the server are currently suppressed. When the sensor is no " +
                     "longer triggered, this attribute shall be set to the unsuppressed state, by setting the bit to 0, " +
@@ -118,7 +118,7 @@ Resource.add(
             },
 
             {
-                name: "AlarmsEnabled", tag: "attribute",
+                tag: "attribute", name: "AlarmsEnabled",
 
                 details: "Indicates the alarm modes that will be emitted if the sensor is triggered. If an alarm mode is not " +
                     "supported, the bit indicating this alarm mode shall always be 0." +
@@ -133,7 +133,7 @@ Resource.add(
             },
 
             {
-                name: "AlarmsSupported", tag: "attribute",
+                tag: "attribute", name: "AlarmsSupported",
 
                 details: "Indicates the alarms supported by the sensor. A bit shall indicate whether the alarm mode is " +
                     "supported:" +
@@ -146,13 +146,13 @@ Resource.add(
             },
 
             {
-                name: "SensorFault", tag: "attribute",
+                tag: "attribute", name: "SensorFault",
                 details: "Indicates any faults registered by the device.",
                 xref: "cluster§1.8.6.8"
             },
 
             {
-                name: "AlarmsStateChanged", tag: "event",
+                tag: "event", name: "AlarmsStateChanged",
 
                 details: "This event shall be generated after any bits in the AlarmsActive and/or AlarmsSuppressed attributes " +
                     "change. This may occur in situations such as when internal processing by the server determines that " +
@@ -166,14 +166,14 @@ Resource.add(
 
                 children: [
                     {
-                        name: "AlarmsActive", tag: "field",
+                        tag: "field", name: "AlarmsActive",
                         details: "This field shall indicate the state of active alarm modes, as indicated by the AlarmsActive " +
                             "attribute, at the time the event was generated.",
                         xref: "cluster§1.8.8.1.1"
                     },
 
                     {
-                        name: "AlarmsSuppressed", tag: "field",
+                        tag: "field", name: "AlarmsSuppressed",
                         details: "This field shall indicate the state of suppressed alarm modes, as indicated by the AlarmsSuppressed " +
                             "attribute, at the time the event was generated.",
                         xref: "cluster§1.8.8.1.2"
@@ -182,12 +182,12 @@ Resource.add(
             },
 
             {
-                name: "SensorFault", tag: "event",
+                tag: "event", name: "SensorFault",
                 details: "This event shall be generated when the device registers or clears a fault.",
                 xref: "cluster§1.8.8.2",
 
                 children: [{
-                    name: "SensorFault", tag: "field",
+                    tag: "field", name: "SensorFault",
                     details: "This field shall indicate the value of the SensorFault attribute, at the time this event is " +
                         "generated.",
                     xref: "cluster§1.8.8.2.1"
@@ -195,21 +195,21 @@ Resource.add(
             },
 
             {
-                name: "SuppressAlarm", tag: "command",
+                tag: "command", name: "SuppressAlarm",
                 xref: "cluster§1.8.7.1",
                 children: [{
-                    name: "AlarmsToSuppress", tag: "field",
+                    tag: "field", name: "AlarmsToSuppress",
                     details: "This field shall indicate the alarm modes to suppress.",
                     xref: "cluster§1.8.7.1.1"
                 }]
             },
 
             {
-                name: "EnableDisableAlarm", tag: "command",
+                tag: "command", name: "EnableDisableAlarm",
                 xref: "cluster§1.8.7.2",
 
                 children: [{
-                    name: "AlarmsToEnableDisable", tag: "field",
+                    tag: "field", name: "AlarmsToEnableDisable",
                     details: "This field shall indicate the alarm modes to either enable or disable depending on the bit status, " +
                         "as specified for the AlarmsEnabled attribute.",
                     xref: "cluster§1.8.7.2.1"
@@ -217,18 +217,18 @@ Resource.add(
             },
 
             {
-                name: "AlarmModeBitmap", tag: "datatype",
+                tag: "datatype", name: "AlarmModeBitmap",
                 xref: "cluster§1.8.5.1",
                 children: [
-                    { name: "Visual", tag: "field", description: "Visual alarming" },
-                    { name: "Audible", tag: "field", description: "Audible alarming" }
+                    { tag: "field", name: "Visual", description: "Visual alarming" },
+                    { tag: "field", name: "Audible", description: "Audible alarming" }
                 ]
             },
 
             {
-                name: "SensorFaultBitmap", tag: "datatype",
+                tag: "datatype", name: "SensorFaultBitmap",
                 xref: "cluster§1.8.5.2",
-                children: [{ name: "GeneralFault", tag: "field", description: "Unspecified fault detected" }]
+                children: [{ tag: "field", name: "GeneralFault", description: "Unspecified fault detected" }]
             }
         ]
     }

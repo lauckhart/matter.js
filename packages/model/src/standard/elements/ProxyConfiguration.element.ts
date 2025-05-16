@@ -15,24 +15,24 @@ import {
 } from "../../elements/index.js";
 
 export const ProxyConfiguration = Cluster(
-    { id: 0x42, name: "ProxyConfiguration" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ProxyConfiguration", id: 0x42 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0x0, name: "ConfigurationList", type: "list", access: "RW", conformance: "M", default: [], quality: "N" },
+        { name: "ConfigurationList", id: 0x0, type: "list", default: [], conformance: "M", access: "RW", quality: "N" },
         Field({ name: "entry", type: "ConfigurationStruct" })
     ),
 
     Datatype(
         { name: "ConfigurationStruct", type: "struct" },
         Field({
-            id: 0x1, name: "ProxyAllNodes", type: "bool",
-            access: "RW", conformance: "M", constraint: "desc", default: false
+            name: "ProxyAllNodes", id: 0x1, type: "bool",
+            default: false, constraint: "desc", conformance: "M", access: "RW"
         }),
 
         Field(
             {
-                id: 0x2, name: "SourceList", type: "list",
-                access: "RW", conformance: "M", constraint: "desc", default: []
+                name: "SourceList", id: 0x2, type: "list",
+                default: [], constraint: "desc", conformance: "M", access: "RW"
             },
             Field({ name: "entry", type: "node-id" })
         )

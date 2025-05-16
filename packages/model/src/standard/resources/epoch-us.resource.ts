@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "epoch-us", tag: "datatype",
+        tag: "datatype", name: "epoch-us",
         description: "Epoch Time in microseconds",
 
         details: "This type represents an offset, in microseconds, from 0 hours, 0 minutes, 0 seconds, on the 1st of " +

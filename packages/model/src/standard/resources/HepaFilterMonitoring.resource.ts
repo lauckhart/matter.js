@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "HepaFilterMonitoring", tag: "cluster", pics: "HEPAFREMON" });
+Resource.add({ tag: "cluster", name: "HepaFilterMonitoring", pics: "HEPAFREMON" });

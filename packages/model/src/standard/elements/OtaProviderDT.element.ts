@@ -10,13 +10,13 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const OtaProviderDt = DeviceType(
-    { id: 0x14, name: "OtaProvider", classification: "utility" },
+    { name: "OtaProvider", id: 0x14 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 20, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 20, revision: 1 } ] })
     ),
-    Requirement({ id: 0x2a, name: "OtaSoftwareUpdateRequestor", conformance: "O", element: "clientCluster" }),
-    Requirement({ id: 0x29, name: "OtaSoftwareUpdateProvider", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "OtaSoftwareUpdateRequestor", id: 0x2a, element: "clientCluster", conformance: "O" }),
+    Requirement({ name: "OtaSoftwareUpdateProvider", id: 0x29, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(OtaProviderDt);

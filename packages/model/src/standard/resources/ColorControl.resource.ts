@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "ColorControl", tag: "cluster",
+        tag: "cluster", name: "ColorControl",
         classification: "application", pics: "CC",
 
         details: "This cluster provides an interface for changing the color of a light. Color is specified according " +
@@ -29,20 +29,20 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§3.2.4",
 
                 children: [
-                    { name: "HS", tag: "field", details: "Supports color specification via hue/saturation." },
-                    { name: "EHUE", tag: "field", details: "Enhanced hue is supported." },
-                    { name: "CL", tag: "field", details: "Color loop is supported." },
-                    { name: "XY", tag: "field", details: "Supports color specification via XY." },
-                    { name: "CT", tag: "field", details: "Supports specification of color temperature." }
+                    { tag: "field", name: "HS", details: "Supports color specification via hue/saturation." },
+                    { tag: "field", name: "EHUE", details: "Enhanced hue is supported." },
+                    { tag: "field", name: "CL", details: "Color loop is supported." },
+                    { tag: "field", name: "XY", details: "Supports color specification via XY." },
+                    { tag: "field", name: "CT", details: "Supports specification of color temperature." }
                 ]
             },
 
             {
-                name: "CurrentHue", tag: "attribute",
+                tag: "attribute", name: "CurrentHue",
 
                 details: "The CurrentHue attribute contains the current hue value of the light. It is updated as fast as " +
                     "practical during commands that change the hue." +
@@ -63,7 +63,7 @@ Resource.add(
             },
 
             {
-                name: "CurrentSaturation", tag: "attribute",
+                tag: "attribute", name: "CurrentSaturation",
 
                 details: "Indicates the current saturation value of the light. It is updated as fast as practical during " +
                     "commands that change the saturation." +
@@ -85,7 +85,7 @@ Resource.add(
             },
 
             {
-                name: "RemainingTime", tag: "attribute",
+                tag: "attribute", name: "RemainingTime",
 
                 details: "Indicates the time remaining, in 1/10ths of a second, until transitions due to the currently active " +
                     "command will be complete." +
@@ -108,7 +108,7 @@ Resource.add(
             },
 
             {
-                name: "CurrentX", tag: "attribute",
+                tag: "attribute", name: "CurrentX",
 
                 details: "Indicates the current value of the normalized chromaticity value x, as defined in the CIE xyY Color " +
                     "Space. It is updated as fast as practical during commands that change the color." +
@@ -129,7 +129,7 @@ Resource.add(
             },
 
             {
-                name: "CurrentY", tag: "attribute",
+                tag: "attribute", name: "CurrentY",
 
                 details: "Indicates the current value of the normalized chromaticity value y, as defined in the CIE xyY Color " +
                     "Space. It is updated as fast as practical during commands that change the color." +
@@ -150,20 +150,20 @@ Resource.add(
             },
 
             {
-                name: "DriftCompensation", tag: "attribute",
+                tag: "attribute", name: "DriftCompensation",
                 details: "Indicates what mechanism, if any, is in use for compensation for color/intensity drift over time.",
                 xref: "cluster§3.2.7.7"
             },
 
             {
-                name: "CompensationText", tag: "attribute",
+                tag: "attribute", name: "CompensationText",
                 details: "This attribute shall contain a textual indication of what mechanism, if any, is in use to compensate " +
                     "for color/intensity drift over time.",
                 xref: "cluster§3.2.7.8"
             },
 
             {
-                name: "ColorTemperatureMireds", tag: "attribute",
+                tag: "attribute", name: "ColorTemperatureMireds",
 
                 details: "Indicates a scaled inverse of the current value of the color temperature. The unit of " +
                     "ColorTemperatureMireds is the mired (micro reciprocal degree), a.k.a. mirek (micro reciprocal " +
@@ -189,7 +189,7 @@ Resource.add(
             },
 
             {
-                name: "ColorMode", tag: "attribute",
+                tag: "attribute", name: "ColorMode",
                 details: "Indicates which attributes are currently determining the color of the device." +
                     "\n" +
                     "The value of the ColorMode attribute cannot be written directly - it is set upon reception of any " +
@@ -198,7 +198,7 @@ Resource.add(
             },
 
             {
-                name: "Options", tag: "attribute",
+                tag: "attribute", name: "Options",
 
                 details: "Indicates a bitmap that determines the default behavior of some cluster commands. Each command that " +
                     "is dependent on the Options attribute shall first construct a temporary Options bitmap that is in " +
@@ -223,7 +223,7 @@ Resource.add(
             },
 
             {
-                name: "NumberOfPrimaries", tag: "attribute",
+                tag: "attribute", name: "NumberOfPrimaries",
 
                 details: "Indicates the number of color primaries implemented on this device. A value of null shall indicate " +
                     "that the number of primaries is unknown." +
@@ -237,7 +237,7 @@ Resource.add(
             },
 
             {
-                name: "Primary1X", tag: "attribute",
+                tag: "attribute", name: "Primary1X",
                 details: "Indicates the normalized chromaticity value x for this primary, as defined in the CIE xyY Color " +
                     "Space." +
                     "\n" +
@@ -247,7 +247,7 @@ Resource.add(
             },
 
             {
-                name: "Primary1Y", tag: "attribute",
+                tag: "attribute", name: "Primary1Y",
                 details: "Indicates the normalized chromaticity value y for this primary, as defined in the CIE xyY Color " +
                     "Space." +
                     "\n" +
@@ -257,7 +257,7 @@ Resource.add(
             },
 
             {
-                name: "Primary1Intensity", tag: "attribute",
+                tag: "attribute", name: "Primary1Intensity",
 
                 details: "Indicates a representation of the maximum intensity of this primary as defined in the Dimming Light " +
                     "Curve in the Ballast Configuration cluster (see Ballast Configuration Cluster), normalized such that " +
@@ -275,24 +275,24 @@ Resource.add(
                 xref: "cluster§3.2.7.27"
             },
 
-            { name: "Primary2X", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary2Y", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary2Intensity", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary3X", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary3Y", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary3Intensity", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary4X", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary4Y", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary4Intensity", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary5X", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary5Y", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary5Intensity", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary6X", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary6Y", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "Primary6Intensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary2X", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary2Y", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary2Intensity", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary3X", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary3Y", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary3Intensity", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary4X", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary4Y", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary4Intensity", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary5X", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary5Y", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary5Intensity", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary6X", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary6Y", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "Primary6Intensity", xref: "cluster§3.2.7" },
 
             {
-                name: "WhitePointX", tag: "attribute",
+                tag: "attribute", name: "WhitePointX",
                 details: "Indicates the normalized chromaticity value x, as defined in the CIE xyY Color Space, of the current " +
                     "white point of the device." +
                     "\n" +
@@ -302,7 +302,7 @@ Resource.add(
             },
 
             {
-                name: "WhitePointY", tag: "attribute",
+                tag: "attribute", name: "WhitePointY",
                 details: "Indicates the normalized chromaticity value y, as defined in the CIE xyY Color Space, of the current " +
                     "white point of the device." +
                     "\n" +
@@ -312,7 +312,7 @@ Resource.add(
             },
 
             {
-                name: "ColorPointRx", tag: "attribute",
+                tag: "attribute", name: "ColorPointRx",
                 details: "Indicates the normalized chromaticity value x, as defined in the CIE xyY Color Space, of the red " +
                     "color point of the device." +
                     "\n" +
@@ -322,7 +322,7 @@ Resource.add(
             },
 
             {
-                name: "ColorPointRy", tag: "attribute",
+                tag: "attribute", name: "ColorPointRy",
                 details: "Indicates the normalized chromaticity value y, as defined in the CIE xyY Color Space, of the red " +
                     "color point of the device." +
                     "\n" +
@@ -332,7 +332,7 @@ Resource.add(
             },
 
             {
-                name: "ColorPointRIntensity", tag: "attribute",
+                tag: "attribute", name: "ColorPointRIntensity",
 
                 details: "Indicates a representation of the relative intensity of the red color point as defined in the " +
                     "Dimming Light Curve in the Ballast Configuration cluster (see Ballast Configuration Cluster), " +
@@ -352,15 +352,15 @@ Resource.add(
                 xref: "cluster§3.2.7.33"
             },
 
-            { name: "ColorPointGx", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "ColorPointGy", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "ColorPointGIntensity", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "ColorPointBx", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "ColorPointBy", tag: "attribute", xref: "cluster§3.2.7" },
-            { name: "ColorPointBIntensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointGx", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointGy", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointGIntensity", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointBx", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointBy", xref: "cluster§3.2.7" },
+            { tag: "attribute", name: "ColorPointBIntensity", xref: "cluster§3.2.7" },
 
             {
-                name: "EnhancedCurrentHue", tag: "attribute",
+                tag: "attribute", name: "EnhancedCurrentHue",
 
                 details: "Indicates the non-equidistant steps along the CIE 1931 color triangle, and it provides 16-bits " +
                     "precision." +
@@ -382,7 +382,7 @@ Resource.add(
             },
 
             {
-                name: "EnhancedColorMode", tag: "attribute",
+                tag: "attribute", name: "EnhancedColorMode",
 
                 details: "Indicates which attributes are currently determining the color of the device." +
                     "\n" +
@@ -395,14 +395,14 @@ Resource.add(
             },
 
             {
-                name: "ColorLoopActive", tag: "attribute",
+                tag: "attribute", name: "ColorLoopActive",
                 details: "Indicates the current active status of the color loop. If this attribute has the value 0, the color " +
                     "loop shall NOT be active. If this attribute has the value 1, the color loop shall be active.",
                 xref: "cluster§3.2.7.14"
             },
 
             {
-                name: "ColorLoopDirection", tag: "attribute",
+                tag: "attribute", name: "ColorLoopDirection",
                 details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
                     "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
                     "EnhancedCurrentHue attribute shall be incremented.",
@@ -410,27 +410,27 @@ Resource.add(
             },
 
             {
-                name: "ColorLoopTime", tag: "attribute",
+                tag: "attribute", name: "ColorLoopTime",
                 details: "Indicates the number of seconds it shall take to perform a full color loop, i.e., to cycle all " +
                     "values of the EnhancedCurrentHue attribute (between 0 and 65534).",
                 xref: "cluster§3.2.7.16"
             },
 
             {
-                name: "ColorLoopStartEnhancedHue", tag: "attribute",
+                tag: "attribute", name: "ColorLoopStartEnhancedHue",
                 details: "Indicates the value of the EnhancedCurrentHue attribute from which the color loop shall be started.",
                 xref: "cluster§3.2.7.17"
             },
 
             {
-                name: "ColorLoopStoredEnhancedHue", tag: "attribute",
+                tag: "attribute", name: "ColorLoopStoredEnhancedHue",
                 details: "Indicates the value of the EnhancedCurrentHue attribute before the color loop was started. Once the " +
                     "color loop is complete, the EnhancedCurrentHue attribute shall be restored to this value.",
                 xref: "cluster§3.2.7.18"
             },
 
             {
-                name: "ColorCapabilities", tag: "attribute",
+                tag: "attribute", name: "ColorCapabilities",
                 details: "Indicates the color control capabilities of the device." +
                     "\n" +
                     "Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of " +
@@ -439,21 +439,21 @@ Resource.add(
 
                 children: [
                     {
-                        name: "HueSaturation", tag: "field",
+                        tag: "field", name: "HueSaturation",
                         description: "Supports color specification via hue/saturation."
                     },
-                    { name: "EnhancedHue", tag: "field", description: "Enhanced hue is supported." },
-                    { name: "ColorLoop", tag: "field", description: "Color loop is supported." },
-                    { name: "XY", tag: "field", description: "Supports color specification via XY." },
+                    { tag: "field", name: "EnhancedHue", description: "Enhanced hue is supported." },
+                    { tag: "field", name: "ColorLoop", description: "Color loop is supported." },
+                    { tag: "field", name: "XY", description: "Supports color specification via XY." },
                     {
-                        name: "ColorTemperature", tag: "field",
+                        tag: "field", name: "ColorTemperature",
                         description: "Supports color specification via color temperature."
                     }
                 ]
             },
 
             {
-                name: "ColorTempPhysicalMinMireds", tag: "attribute",
+                tag: "attribute", name: "ColorTempPhysicalMinMireds",
                 details: "Indicates the minimum mired value supported by the hardware. ColorTempPhysicalMinMireds corresponds " +
                     "to the maximum color temperature in kelvins supported by the hardware." +
                     "\n" +
@@ -462,7 +462,7 @@ Resource.add(
             },
 
             {
-                name: "ColorTempPhysicalMaxMireds", tag: "attribute",
+                tag: "attribute", name: "ColorTempPhysicalMaxMireds",
                 details: "Indicates the maximum mired value supported by the hardware. ColorTempPhysicalMaxMireds corresponds " +
                     "to the minimum color temperature in kelvins supported by the hardware." +
                     "\n" +
@@ -471,7 +471,7 @@ Resource.add(
             },
 
             {
-                name: "CoupleColorTempToLevelMinMireds", tag: "attribute",
+                tag: "attribute", name: "CoupleColorTempToLevelMinMireds",
 
                 details: "Indicates a lower bound on the value of the ColorTemperatureMireds attribute for the purposes of " +
                     "coupling the ColorTemperatureMireds attribute to the CurrentLevel attribute when the " +
@@ -493,7 +493,7 @@ Resource.add(
             },
 
             {
-                name: "StartUpColorTemperatureMireds", tag: "attribute",
+                tag: "attribute", name: "StartUpColorTemperatureMireds",
                 details: "Indicates the desired startup color temperature value the light shall use when it is supplied with " +
                     "power and this value shall be reflected in the ColorTemperatureMireds attribute. In addition, the " +
                     "ColorMode and EnhancedColorMode attributes shall be set to 2 (ColorTemperatureMireds). The values of " +
@@ -502,23 +502,23 @@ Resource.add(
             },
 
             {
-                name: "MoveToHue", tag: "command",
+                tag: "command", name: "MoveToHue",
                 xref: "cluster§3.2.8.4",
 
                 children: [
                     {
-                        name: "Hue", tag: "field",
+                        tag: "field", name: "Hue",
                         details: "This field shall indicate the hue to be moved to.",
                         xref: "cluster§3.2.8.4.1"
                     },
                     {
-                        name: "Direction", tag: "field",
+                        tag: "field", name: "Direction",
                         details: "This field shall indicate the movement direction.",
                         xref: "cluster§3.2.8.4.2"
                     },
 
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to move to the new " +
                             "hue.",
                         xref: "cluster§3.2.8.4.3"
@@ -527,18 +527,18 @@ Resource.add(
             },
 
             {
-                name: "MoveHue", tag: "command",
+                tag: "command", name: "MoveHue",
                 xref: "cluster§3.2.8.5",
 
                 children: [
                     {
-                        name: "MoveMode", tag: "field",
+                        tag: "field", name: "MoveMode",
                         details: "This field shall indicate the mode of movement.",
                         xref: "cluster§3.2.8.5.1"
                     },
 
                     {
-                        name: "Rate", tag: "field",
+                        tag: "field", name: "Rate",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s hue of one unit.",
                         xref: "cluster§3.2.8.5.2"
@@ -547,25 +547,25 @@ Resource.add(
             },
 
             {
-                name: "StepHue", tag: "command",
+                tag: "command", name: "StepHue",
                 xref: "cluster§3.2.8.6",
 
                 children: [
                     {
-                        name: "StepMode", tag: "field",
+                        tag: "field", name: "StepMode",
                         details: "This field shall indicate the mode of the step to be performed.",
                         xref: "cluster§3.2.8.6.1"
                     },
 
                     {
-                        name: "StepSize", tag: "field",
+                        tag: "field", name: "StepSize",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s hue.",
                         xref: "cluster§3.2.8.6.2"
                     },
 
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
 
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step." +
                             "\n" +
@@ -581,21 +581,21 @@ Resource.add(
                 ]
             },
 
-            { name: "MoveToSaturation", tag: "command", xref: "cluster§3.2.8.7" },
+            { tag: "command", name: "MoveToSaturation", xref: "cluster§3.2.8.7" },
 
             {
-                name: "MoveSaturation", tag: "command",
+                tag: "command", name: "MoveSaturation",
                 xref: "cluster§3.2.8.8",
 
                 children: [
                     {
-                        name: "MoveMode", tag: "field",
+                        tag: "field", name: "MoveMode",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.8.1"
                     },
 
                     {
-                        name: "Rate", tag: "field",
+                        tag: "field", name: "Rate",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s saturation of one unit.",
                         xref: "cluster§3.2.8.8.2"
@@ -604,25 +604,25 @@ Resource.add(
             },
 
             {
-                name: "StepSaturation", tag: "command",
+                tag: "command", name: "StepSaturation",
                 xref: "cluster§3.2.8.9",
 
                 children: [
                     {
-                        name: "StepMode", tag: "field",
+                        tag: "field", name: "StepMode",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.9.1"
                     },
 
                     {
-                        name: "StepSize", tag: "field",
+                        tag: "field", name: "StepSize",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s saturation.",
                         xref: "cluster§3.2.8.9.2"
                     },
 
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
 
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. " +
                             "A step is a change in the device’s saturation of Step size units." +
@@ -637,23 +637,23 @@ Resource.add(
                 ]
             },
 
-            { name: "MoveToHueAndSaturation", tag: "command", xref: "cluster§3.2.8.10" },
-            { name: "MoveToColor", tag: "command", xref: "cluster§3.2.8.11" },
+            { tag: "command", name: "MoveToHueAndSaturation", xref: "cluster§3.2.8.10" },
+            { tag: "command", name: "MoveToColor", xref: "cluster§3.2.8.11" },
 
             {
-                name: "MoveColor", tag: "command",
+                tag: "command", name: "MoveColor",
                 xref: "cluster§3.2.8.12",
 
                 children: [
                     {
-                        name: "RateX", tag: "field",
+                        tag: "field", name: "RateX",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentX attribute of one unit.",
                         xref: "cluster§3.2.8.12.1"
                     },
 
                     {
-                        name: "RateY", tag: "field",
+                        tag: "field", name: "RateY",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentY attribute of one unit.",
                         xref: "cluster§3.2.8.12.2"
@@ -662,38 +662,38 @@ Resource.add(
             },
 
             {
-                name: "StepColor", tag: "command",
+                tag: "command", name: "StepColor",
                 xref: "cluster§3.2.8.13",
 
                 children: [{
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
                     details: "The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color " +
                         "change.",
                     xref: "cluster§3.2.8.13.2"
                 }]
             },
 
-            { name: "MoveToColorTemperature", tag: "command", xref: "cluster§3.2.8.14" },
+            { tag: "command", name: "MoveToColorTemperature", xref: "cluster§3.2.8.14" },
 
             {
-                name: "EnhancedMoveToHue", tag: "command",
+                tag: "command", name: "EnhancedMoveToHue",
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue.",
                 xref: "cluster§3.2.8.15",
 
                 children: [
                     {
-                        name: "EnhancedHue", tag: "field",
+                        tag: "field", name: "EnhancedHue",
                         details: "This field shall indicate the target extended hue for the light.",
                         xref: "cluster§3.2.8.15.1"
                     },
                     {
-                        name: "Direction", tag: "field",
+                        tag: "field", name: "Direction",
                         details: "This field shall indicate the movement direction.",
                         xref: "cluster§3.2.8.15.2"
                     },
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
                         xref: "cluster§3.2.8.15.3"
                     }
@@ -701,19 +701,19 @@ Resource.add(
             },
 
             {
-                name: "EnhancedMoveHue", tag: "command",
+                tag: "command", name: "EnhancedMoveHue",
                 details: "This command allows the light to start a continuous transition starting from their current hue.",
                 xref: "cluster§3.2.8.16",
 
                 children: [
                     {
-                        name: "MoveMode", tag: "field",
+                        tag: "field", name: "MoveMode",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.16.1"
                     },
 
                     {
-                        name: "Rate", tag: "field",
+                        tag: "field", name: "Rate",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "extended hue of a device by one unit.",
                         xref: "cluster§3.2.8.16.2"
@@ -722,27 +722,27 @@ Resource.add(
             },
 
             {
-                name: "EnhancedStepHue", tag: "command",
+                tag: "command", name: "EnhancedStepHue",
                 details: "This command allows the light to be moved in a stepped transition from their current hue, resulting " +
                     "in a linear transition through XY space.",
                 xref: "cluster§3.2.8.17",
 
                 children: [
                     {
-                        name: "StepMode", tag: "field",
+                        tag: "field", name: "StepMode",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.17.1"
                     },
 
                     {
-                        name: "StepSize", tag: "field",
+                        tag: "field", name: "StepSize",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s enhanced hue.",
                         xref: "cluster§3.2.8.17.2"
                     },
 
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
 
                         details: "The field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
                             "the step. A step is a change to the device’s enhanced hue of a magnitude corresponding to the " +
@@ -759,24 +759,24 @@ Resource.add(
             },
 
             {
-                name: "EnhancedMoveToHueAndSaturation", tag: "command",
+                tag: "command", name: "EnhancedMoveToHueAndSaturation",
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue and from their current saturation to a target saturation.",
                 xref: "cluster§3.2.8.18",
 
                 children: [
                     {
-                        name: "EnhancedHue", tag: "field",
+                        tag: "field", name: "EnhancedHue",
                         details: "This field shall indicate the target extended hue for the light.",
                         xref: "cluster§3.2.8.18.1"
                     },
                     {
-                        name: "Saturation", tag: "field",
+                        tag: "field", name: "Saturation",
                         details: "This field shall indicate the saturation, as described in the MoveToHueAndSaturation command.",
                         xref: "cluster§3.2.8.18.2"
                     },
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
                         xref: "cluster§3.2.8.18.3"
                     }
@@ -784,31 +784,31 @@ Resource.add(
             },
 
             {
-                name: "ColorLoopSet", tag: "command",
+                tag: "command", name: "ColorLoopSet",
                 details: "This command allows a color loop to be activated such that the color light cycles through its range " +
                     "of hues.",
                 xref: "cluster§3.2.8.19",
 
                 children: [
                     {
-                        name: "UpdateFlags", tag: "field",
+                        tag: "field", name: "UpdateFlags",
                         details: "This field shall indicate which color loop attributes to update (from the values supplied in the " +
                             "other fields, see field descriptions below) before the color loop is started.",
                         xref: "cluster§3.2.8.19.1"
                     },
 
                     {
-                        name: "Action", tag: "field",
+                        tag: "field", name: "Action",
                         details: "This field shall indicate the action to take for the color loop.",
                         xref: "cluster§3.2.8.19.2"
                     },
                     {
-                        name: "Direction", tag: "field",
+                        tag: "field", name: "Direction",
                         details: "This field shall indicate the direction for the color loop.",
                         xref: "cluster§3.2.8.19.3"
                     },
                     {
-                        name: "Time", tag: "field",
+                        tag: "field", name: "Time",
                         details: "This field shall indicate the number of seconds over which to perform a full color loop.",
                         xref: "cluster§3.2.8.19.4"
                     }
@@ -816,7 +816,7 @@ Resource.add(
             },
 
             {
-                name: "StopMoveStep", tag: "command",
+                tag: "command", name: "StopMoveStep",
                 details: "This command is provided to allow MoveTo and Step commands to be stopped." +
                     "\n" +
                     "NOTE This automatically provides symmetry to the Level Control cluster." +
@@ -826,26 +826,26 @@ Resource.add(
             },
 
             {
-                name: "MoveColorTemperature", tag: "command",
+                tag: "command", name: "MoveColorTemperature",
                 details: "This command allows the color temperature of the light to be moved at a specified rate.",
                 xref: "cluster§3.2.8.21",
 
                 children: [
                     {
-                        name: "MoveMode", tag: "field",
+                        tag: "field", name: "MoveMode",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.21.1"
                     },
 
                     {
-                        name: "Rate", tag: "field",
+                        tag: "field", name: "Rate",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the color " +
                             "temperature of a device by one unit.",
                         xref: "cluster§3.2.8.21.2"
                     },
 
                     {
-                        name: "ColorTemperatureMinimumMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMinimumMireds",
 
                         details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                             "the color temperature in kelvins) for the current move operation" +
@@ -861,7 +861,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ColorTemperatureMaximumMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMaximumMireds",
 
                         details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                             "the color temperature in kelvins) for the current move operation" +
@@ -879,26 +879,26 @@ Resource.add(
             },
 
             {
-                name: "StepColorTemperature", tag: "command",
+                tag: "command", name: "StepColorTemperature",
                 details: "This command allows the color temperature of the light to be stepped with a specified step size.",
                 xref: "cluster§3.2.8.22",
 
                 children: [
                     {
-                        name: "StepMode", tag: "field",
+                        tag: "field", name: "StepMode",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.22.1"
                     },
 
                     {
-                        name: "StepSize", tag: "field",
+                        tag: "field", name: "StepSize",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s color temperature.",
                         xref: "cluster§3.2.8.22.2"
                     },
 
                     {
-                        name: "TransitionTime", tag: "field",
+                        tag: "field", name: "TransitionTime",
                         details: "This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
                             "the step. A step is a change to the device’s color temperature of a magnitude corresponding to the " +
                             "StepSize field.",
@@ -906,7 +906,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ColorTemperatureMinimumMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMinimumMireds",
 
                         details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                             "the color temperature in kelvins) for the current step operation" +
@@ -922,7 +922,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ColorTemperatureMaximumMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMaximumMireds",
 
                         details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                             "the color temperature in kelvins) for the current step operation" +
@@ -940,11 +940,11 @@ Resource.add(
             },
 
             {
-                name: "OptionsBitmap", tag: "datatype",
+                tag: "datatype", name: "OptionsBitmap",
                 xref: "cluster§3.2.6.2",
 
                 children: [{
-                    name: "ExecuteIfOff", tag: "field",
+                    tag: "field", name: "ExecuteIfOff",
                     description: "Dependency on On/Off cluster",
                     details: "This bit shall indicate if this cluster server instance has a dependency with the On/Off cluster.",
                     xref: "cluster§3.2.6.2.1"
@@ -952,13 +952,13 @@ Resource.add(
             },
 
             {
-                name: "UpdateFlagsBitmap", tag: "datatype",
+                tag: "datatype", name: "UpdateFlagsBitmap",
                 details: "This data type is derived from map8 and is used in the ColorLoopSet command.",
                 xref: "cluster§3.2.6.3",
 
                 children: [
                     {
-                        name: "UpdateAction", tag: "field",
+                        tag: "field", name: "UpdateAction",
                         description: "Device adheres to the associated action field.",
 
                         details: "This bit shall indicate whether the server adheres to the Action field in order to process the " +
@@ -972,7 +972,7 @@ Resource.add(
                     },
 
                     {
-                        name: "UpdateDirection", tag: "field",
+                        tag: "field", name: "UpdateDirection",
                         description: "Device updates the associated direction attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopDirection attribute with the " +
@@ -986,7 +986,7 @@ Resource.add(
                     },
 
                     {
-                        name: "UpdateTime", tag: "field",
+                        tag: "field", name: "UpdateTime",
                         description: "Device updates the associated time attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopTime attribute with the Time field." +
@@ -1000,7 +1000,7 @@ Resource.add(
                     },
 
                     {
-                        name: "UpdateStartHue", tag: "field",
+                        tag: "field", name: "UpdateStartHue",
                         description: "Device updates the associated start hue attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopStartEnhancedHue attribute with the " +
@@ -1017,128 +1017,128 @@ Resource.add(
             },
 
             {
-                name: "DriftCompensationEnum", tag: "datatype",
+                tag: "datatype", name: "DriftCompensationEnum",
                 xref: "cluster§3.2.6.4",
 
                 children: [
-                    { name: "None", tag: "field", description: "There is no compensation." },
+                    { tag: "field", name: "None", description: "There is no compensation." },
                     {
-                        name: "OtherOrUnknown", tag: "field",
+                        tag: "field", name: "OtherOrUnknown",
                         description: "The compensation is based on other or unknown mechanism."
                     },
                     {
-                        name: "TemperatureMonitoring", tag: "field",
+                        tag: "field", name: "TemperatureMonitoring",
                         description: "The compensation is based on temperature monitoring."
                     },
                     {
-                        name: "OpticalLuminanceMonitoringAndFeedback", tag: "field",
+                        tag: "field", name: "OpticalLuminanceMonitoringAndFeedback",
                         description: "The compensation is based on optical luminance monitoring and feedback."
                     },
                     {
-                        name: "OpticalColorMonitoringAndFeedback", tag: "field",
+                        tag: "field", name: "OpticalColorMonitoringAndFeedback",
                         description: "The compensation is based on optical color monitoring and feedback."
                     }
                 ]
             },
 
             {
-                name: "ColorModeEnum", tag: "datatype",
+                tag: "datatype", name: "ColorModeEnum",
                 xref: "cluster§3.2.6.5",
 
                 children: [
                     {
-                        name: "CurrentHueAndCurrentSaturation", tag: "field",
+                        tag: "field", name: "CurrentHueAndCurrentSaturation",
                         description: "The current hue and saturation attributes determine the color."
                     },
                     {
-                        name: "CurrentXAndCurrentY", tag: "field",
+                        tag: "field", name: "CurrentXAndCurrentY",
                         description: "The current X and Y attributes determine the color."
                     },
                     {
-                        name: "ColorTemperatureMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMireds",
                         description: "The color temperature attribute determines the color."
                     }
                 ]
             },
 
             {
-                name: "EnhancedColorModeEnum", tag: "datatype",
+                tag: "datatype", name: "EnhancedColorModeEnum",
                 xref: "cluster§3.2.6.6",
 
                 children: [
                     {
-                        name: "CurrentHueAndCurrentSaturation", tag: "field",
+                        tag: "field", name: "CurrentHueAndCurrentSaturation",
                         description: "The current hue and saturation attributes determine the color."
                     },
                     {
-                        name: "CurrentXAndCurrentY", tag: "field",
+                        tag: "field", name: "CurrentXAndCurrentY",
                         description: "The current X and Y attributes determine the color."
                     },
                     {
-                        name: "ColorTemperatureMireds", tag: "field",
+                        tag: "field", name: "ColorTemperatureMireds",
                         description: "The color temperature attribute determines the color."
                     },
                     {
-                        name: "EnhancedCurrentHueAndCurrentSaturation", tag: "field",
+                        tag: "field", name: "EnhancedCurrentHueAndCurrentSaturation",
                         description: "The enhanced current hue and saturation attributes determine the color."
                     }
                 ]
             },
 
             {
-                name: "DirectionEnum", tag: "datatype",
+                tag: "datatype", name: "DirectionEnum",
                 xref: "cluster§3.2.6.7",
 
                 children: [
-                    { name: "Shortest", tag: "field", description: "Shortest distance" },
-                    { name: "Longest", tag: "field", description: "Longest distance" },
-                    { name: "Up", tag: "field", description: "Up" },
-                    { name: "Down", tag: "field", description: "Down" }
+                    { tag: "field", name: "Shortest", description: "Shortest distance" },
+                    { tag: "field", name: "Longest", description: "Longest distance" },
+                    { tag: "field", name: "Up", description: "Up" },
+                    { tag: "field", name: "Down", description: "Down" }
                 ]
             },
 
             {
-                name: "MoveModeEnum", tag: "datatype",
+                tag: "datatype", name: "MoveModeEnum",
                 xref: "cluster§3.2.6.8",
                 children: [
-                    { name: "Stop", tag: "field", description: "Stop the movement" },
-                    { name: "Up", tag: "field", description: "Move in an upwards direction" },
-                    { name: "Down", tag: "field", description: "Move in a downwards direction" }
+                    { tag: "field", name: "Stop", description: "Stop the movement" },
+                    { tag: "field", name: "Up", description: "Move in an upwards direction" },
+                    { tag: "field", name: "Down", description: "Move in a downwards direction" }
                 ]
             },
 
             {
-                name: "StepModeEnum", tag: "datatype",
+                tag: "datatype", name: "StepModeEnum",
                 xref: "cluster§3.2.6.9",
                 children: [
-                    { name: "Up", tag: "field", description: "Step in an upwards direction" },
-                    { name: "Down", tag: "field", description: "Step in a downwards direction" }
+                    { tag: "field", name: "Up", description: "Step in an upwards direction" },
+                    { tag: "field", name: "Down", description: "Step in a downwards direction" }
                 ]
             },
 
             {
-                name: "ColorLoopActionEnum", tag: "datatype",
+                tag: "datatype", name: "ColorLoopActionEnum",
                 xref: "cluster§3.2.6.10",
 
                 children: [
-                    { name: "Deactivate", tag: "field", description: "De-activate the color loop." },
+                    { tag: "field", name: "Deactivate", description: "De-activate the color loop." },
                     {
-                        name: "ActivateFromColorLoopStartEnhancedHue", tag: "field",
+                        tag: "field", name: "ActivateFromColorLoopStartEnhancedHue",
                         description: "Activate the color loop from the value in the ColorLoopStartEnhancedHue field."
                     },
                     {
-                        name: "ActivateFromEnhancedCurrentHue", tag: "field",
+                        tag: "field", name: "ActivateFromEnhancedCurrentHue",
                         description: "Activate the color loop from the value of the EnhancedCurrentHue attribute."
                     }
                 ]
             },
 
             {
-                name: "ColorLoopDirectionEnum", tag: "datatype",
+                tag: "datatype", name: "ColorLoopDirectionEnum",
                 xref: "cluster§3.2.6.11",
                 children: [
-                    { name: "Decrement", tag: "field", description: "Decrement the hue in the color loop." },
-                    { name: "Increment", tag: "field", description: "Increment the hue in the color loop." }
+                    { tag: "field", name: "Decrement", description: "Decrement the hue in the color loop." },
+                    { tag: "field", name: "Increment", description: "Increment the hue in the color loop." }
                 ]
             }
         ]

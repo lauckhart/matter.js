@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "subject-id", tag: "datatype",
+    tag: "datatype", name: "subject-id",
     description: "A subject granted privileges to interact with a node.",
     details: "The Matter specifications do not define this formally as a global but the core specification " +
         "references it (as subject-id or SubjectID) from a number of different clusters."

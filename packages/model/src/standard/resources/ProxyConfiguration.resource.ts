@@ -9,32 +9,32 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ProxyConfiguration", tag: "cluster",
+    tag: "cluster", name: "ProxyConfiguration",
     classification: "node", pics: "PXCFG",
     details: "This cluster provides a means for a proxy-capable device to be told the set of Nodes it shall proxy.",
     xref: "core§9.15.13",
 
     children: [
         {
-            name: "ConfigurationList", tag: "attribute",
+            tag: "attribute", name: "ConfigurationList",
             details: "List of proxy configurations. There shall NOT be multiple entries in this list for the same fabric.",
             xref: "core§9.15.13.5.1"
         },
 
         {
-            name: "ConfigurationStruct", tag: "datatype",
+            tag: "datatype", name: "ConfigurationStruct",
             xref: "core§9.15.13.4.1",
 
             children: [
                 {
-                    name: "ProxyAllNodes", tag: "field",
+                    tag: "field", name: "ProxyAllNodes",
                     details: "This field shall be set to true to indicate to the proxy that it shall proxy all nodes. When true, " +
                         "the SourceList attribute is ignored.",
                     xref: "core§9.15.13.4.1.1"
                 },
 
                 {
-                    name: "SourceList", tag: "field",
+                    tag: "field", name: "SourceList",
                     details: "When ProxyAllNodes is false, this list contains the set of Node IDs of sources that this proxy shall " +
                         "specifically proxy.",
                     xref: "core§9.15.13.4.1.2"

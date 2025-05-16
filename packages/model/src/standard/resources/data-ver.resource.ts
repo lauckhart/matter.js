@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "data-ver", tag: "datatype",
+    tag: "datatype", name: "data-ver",
     description: "Data Version",
     details: "An unsigned number that indicates a Data Version Type.",
     xref: "core§7.19.2.34"

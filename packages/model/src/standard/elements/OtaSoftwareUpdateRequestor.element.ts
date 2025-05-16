@@ -17,96 +17,96 @@ import {
 } from "../../elements/index.js";
 
 export const OtaSoftwareUpdateRequestor = Cluster(
-    { id: 0x2a, name: "OtaSoftwareUpdateRequestor" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "OtaSoftwareUpdateRequestor", id: 0x2a },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
         {
-            id: 0x0, name: "DefaultOtaProviders", type: "list",
-            access: "RW F VA", conformance: "M", constraint: "desc", default: [], quality: "N"
+            name: "DefaultOtaProviders", id: 0x0, type: "list",
+            default: [], constraint: "desc", conformance: "M", access: "RW F VA", quality: "N"
         },
         Field({ name: "entry", type: "ProviderLocation" })
     ),
 
-    Attribute({ id: 0x1, name: "UpdatePossible", type: "bool", access: "R V", conformance: "M", default: true }),
-    Attribute({ id: 0x2, name: "UpdateState", type: "UpdateStateEnum", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "UpdatePossible", id: 0x1, type: "bool", default: true, conformance: "M", access: "R V" }),
+    Attribute({ name: "UpdateState", id: 0x2, type: "UpdateStateEnum", default: 0, conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x3, name: "UpdateStateProgress", type: "uint8",
-        access: "R V", conformance: "M", constraint: "0 to 100", default: null, quality: "X"
+        name: "UpdateStateProgress", id: 0x3, type: "uint8",
+        default: null, constraint: "0 to 100", conformance: "M", access: "R V", quality: "X"
     }),
 
     Event(
-        { id: 0x0, name: "StateTransition", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "PreviousState", type: "UpdateStateEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "NewState", type: "UpdateStateEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "Reason", type: "ChangeReasonEnum", conformance: "M" }),
-        Field({ id: 0x3, name: "TargetSoftwareVersion", type: "uint32", conformance: "M", default: null, quality: "X" })
+        { name: "StateTransition", id: 0x0, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", default: 0, conformance: "M" }),
+        Field({ name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" }),
+        Field({ name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" }),
+        Field({ name: "TargetSoftwareVersion", id: 0x3, type: "uint32", default: null, conformance: "M", quality: "X" })
     ),
 
     Event(
-        { id: 0x1, name: "VersionApplied", access: "V", conformance: "M", priority: "critical" },
-        Field({ id: 0x0, name: "SoftwareVersion", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "ProductId", type: "uint16", conformance: "M" })
+        { name: "VersionApplied", id: 0x1, conformance: "M", access: "V", priority: "critical" },
+        Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+        Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" })
     ),
 
     Event(
-        { id: 0x2, name: "DownloadError", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "SoftwareVersion", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "BytesDownloaded", type: "uint64", conformance: "M" }),
+        { name: "DownloadError", id: 0x2, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+        Field({ name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" }),
         Field({
-            id: 0x2, name: "ProgressPercent", type: "uint8",
-            conformance: "M", constraint: "0 to 100", default: null, quality: "X"
+            name: "ProgressPercent", id: 0x2, type: "uint8",
+            default: null, constraint: "0 to 100", conformance: "M", quality: "X"
         }),
-        Field({ id: 0x3, name: "PlatformCode", type: "int64", conformance: "M", default: null, quality: "X" })
+        Field({ name: "PlatformCode", id: 0x3, type: "int64", default: null, conformance: "M", quality: "X" })
     ),
 
     Command(
         {
-            id: 0x0, name: "AnnounceOtaProvider",
-            access: "A", conformance: "O", direction: "request", response: "status"
+            name: "AnnounceOtaProvider", id: 0x0,
+            conformance: "O", access: "A", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "ProviderNodeId", type: "node-id", access: "F", conformance: "M" }),
-        Field({ id: 0x1, name: "VendorId", type: "vendor-id", access: "F", conformance: "M" }),
-        Field({ id: 0x2, name: "AnnouncementReason", type: "AnnouncementReasonEnum", access: "F", conformance: "M" }),
-        Field({ id: 0x3, name: "MetadataForNode", type: "octstr", access: "F", conformance: "O", constraint: "max 512" }),
-        Field({ id: 0x4, name: "Endpoint", type: "endpoint-no", access: "F", conformance: "M" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", conformance: "M", access: "F" }),
+        Field({ name: "VendorId", id: 0x1, type: "vendor-id", conformance: "M", access: "F" }),
+        Field({ name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", conformance: "M", access: "F" }),
+        Field({ name: "MetadataForNode", id: 0x3, type: "octstr", constraint: "max 512", conformance: "O", access: "F" }),
+        Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", conformance: "M", access: "F" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "AnnouncementReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "SimpleAnnouncement", conformance: "M" }),
-        Field({ id: 0x1, name: "UpdateAvailable", conformance: "M" }),
-        Field({ id: 0x2, name: "UrgentUpdateAvailable", conformance: "M" })
+        Field({ name: "SimpleAnnouncement", id: 0x0, conformance: "M" }),
+        Field({ name: "UpdateAvailable", id: 0x1, conformance: "M" }),
+        Field({ name: "UrgentUpdateAvailable", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "UpdateStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x1, name: "Idle", conformance: "M" }),
-        Field({ id: 0x2, name: "Querying", conformance: "M" }),
-        Field({ id: 0x3, name: "DelayedOnQuery", conformance: "M" }),
-        Field({ id: 0x4, name: "Downloading", conformance: "M" }),
-        Field({ id: 0x5, name: "Applying", conformance: "M" }),
-        Field({ id: 0x6, name: "DelayedOnApply", conformance: "M" }),
-        Field({ id: 0x7, name: "RollingBack", conformance: "M" }),
-        Field({ id: 0x8, name: "DelayedOnUserConsent", conformance: "M" })
+        Field({ name: "Unknown", id: 0x0, conformance: "M" }),
+        Field({ name: "Idle", id: 0x1, conformance: "M" }),
+        Field({ name: "Querying", id: 0x2, conformance: "M" }),
+        Field({ name: "DelayedOnQuery", id: 0x3, conformance: "M" }),
+        Field({ name: "Downloading", id: 0x4, conformance: "M" }),
+        Field({ name: "Applying", id: 0x5, conformance: "M" }),
+        Field({ name: "DelayedOnApply", id: 0x6, conformance: "M" }),
+        Field({ name: "RollingBack", id: 0x7, conformance: "M" }),
+        Field({ name: "DelayedOnUserConsent", id: 0x8, conformance: "M" })
     ),
 
     Datatype(
         { name: "ChangeReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x1, name: "Success", conformance: "M" }),
-        Field({ id: 0x2, name: "Failure", conformance: "M" }),
-        Field({ id: 0x3, name: "TimeOut", conformance: "M" }),
-        Field({ id: 0x4, name: "DelayByProvider", conformance: "O" })
+        Field({ name: "Unknown", id: 0x0, conformance: "M" }),
+        Field({ name: "Success", id: 0x1, conformance: "M" }),
+        Field({ name: "Failure", id: 0x2, conformance: "M" }),
+        Field({ name: "TimeOut", id: 0x3, conformance: "M" }),
+        Field({ name: "DelayByProvider", id: 0x4, conformance: "O" })
     ),
 
     Datatype(
         { name: "ProviderLocation", type: "struct" },
-        Field({ id: 0x1, name: "ProviderNodeId", type: "node-id", access: "F", conformance: "M" }),
-        Field({ id: 0x2, name: "Endpoint", type: "endpoint-no", access: "F", conformance: "M" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", conformance: "M", access: "F" }),
+        Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", conformance: "M", access: "F" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );
 

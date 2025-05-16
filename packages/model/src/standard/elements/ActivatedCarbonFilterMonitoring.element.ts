@@ -10,6 +10,6 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster } from "../../elements/index.js";
 
 export const ActivatedCarbonFilterMonitoring = Cluster(
-    { id: 0x72, name: "ActivatedCarbonFilterMonitoring", type: "ResourceMonitoring" }
+    { name: "ActivatedCarbonFilterMonitoring", id: 0x72, type: "ResourceMonitoring" }
 );
 MatterDefinition.children.push(ActivatedCarbonFilterMonitoring);

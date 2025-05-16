@@ -9,13 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OtaSoftwareUpdateRequestor", tag: "cluster",
+    tag: "cluster", name: "OtaSoftwareUpdateRequestor",
     classification: "node", pics: "OTAR",
     xref: "core§11.20.7",
 
     children: [
         {
-            name: "DefaultOtaProviders", tag: "attribute",
+            tag: "attribute", name: "DefaultOtaProviders",
 
             details: "This field is a list of ProviderLocation whose entries shall be set by Administrators, either during " +
                 "Commissioning or at a later time, to set the ProviderLocation for the default OTA Provider Node to " +
@@ -31,7 +31,7 @@ Resource.add({
         },
 
         {
-            name: "UpdatePossible", tag: "attribute",
+            tag: "attribute", name: "UpdatePossible",
             details: "This field shall be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
                 "shall be set to False in case of any condition preventing update being possible, such as " +
                 "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
@@ -40,7 +40,7 @@ Resource.add({
         },
 
         {
-            name: "UpdateState", tag: "attribute",
+            tag: "attribute", name: "UpdateState",
             details: "This field shall reflect the current state of the OTA Requestor with regards to obtaining software " +
                 "updates. See Section 11.20.7.4.2, “UpdateStateEnum Type” for possible values." +
                 "\n" +
@@ -49,7 +49,7 @@ Resource.add({
         },
 
         {
-            name: "UpdateStateProgress", tag: "attribute",
+            tag: "attribute", name: "UpdateStateProgress",
 
             details: "This field shall reflect the percentage value of progress, relative to the current UpdateState, if " +
                 "applicable to the state." +
@@ -66,34 +66,34 @@ Resource.add({
         },
 
         {
-            name: "StateTransition", tag: "event",
+            tag: "event", name: "StateTransition",
             details: "This event shall be generated when a change of the UpdateState attribute occurs due to an OTA " +
                 "Requestor moving through the states necessary to query for updates.",
             xref: "core§11.20.7.7.1",
 
             children: [
                 {
-                    name: "PreviousState", tag: "field",
+                    tag: "field", name: "PreviousState",
                     details: "This field shall be set to the state that preceded the transition causing this event to be " +
                         "generated, if such a state existed. If no previous state exists, the value shall be Unknown.",
                     xref: "core§11.20.7.7.1.1"
                 },
 
                 {
-                    name: "NewState", tag: "field",
+                    tag: "field", name: "NewState",
                     details: "This field shall be set to the state now in effect through the transition causing this event to be " +
                         "generated.",
                     xref: "core§11.20.7.7.1.2"
                 },
 
                 {
-                    name: "Reason", tag: "field",
+                    tag: "field", name: "Reason",
                     details: "This field shall be set to the reason why this event was generated.",
                     xref: "core§11.20.7.7.1.3"
                 },
 
                 {
-                    name: "TargetSoftwareVersion", tag: "field",
+                    tag: "field", name: "TargetSoftwareVersion",
                     details: "This field shall be set to the target SoftwareVersion which is the subject of the operation, " +
                         "whenever the NewState is Downloading, Applying or RollingBack. Otherwise TargetSoftwareVersion shall " +
                         "be null.",
@@ -103,7 +103,7 @@ Resource.add({
         },
 
         {
-            name: "VersionApplied", tag: "event",
+            tag: "event", name: "VersionApplied",
             details: "This event shall be generated whenever a new version starts executing after being applied due to a " +
                 "software update. This event SHOULD be generated even if a software update was done using means " +
                 "outside of this cluster.",
@@ -111,14 +111,14 @@ Resource.add({
 
             children: [
                 {
-                    name: "SoftwareVersion", tag: "field",
+                    tag: "field", name: "SoftwareVersion",
                     details: "This field shall be set to the same value as the one available in the Software Version attribute of " +
                         "the Basic Information Cluster for the newly executing version.",
                     xref: "core§11.20.7.7.2.1"
                 },
 
                 {
-                    name: "ProductId", tag: "field",
+                    tag: "field", name: "ProductId",
                     details: "This field shall be set to the ProductID applying to the executing version, as reflected by the " +
                         "Basic Information Cluster. This can be used to detect a product updating its definition due to a " +
                         "large-scale functional update that may impact aspects of the product reflected in the DeviceModel " +
@@ -129,27 +129,27 @@ Resource.add({
         },
 
         {
-            name: "DownloadError", tag: "event",
+            tag: "event", name: "DownloadError",
             details: "This event shall be generated whenever an error occurs during OTA Requestor download operation.",
             xref: "core§11.20.7.7.3",
 
             children: [
                 {
-                    name: "SoftwareVersion", tag: "field",
+                    tag: "field", name: "SoftwareVersion",
                     details: "This field shall be set to the value of the SoftwareVersion being downloaded, matching the " +
                         "SoftwareVersion field of the QueryImageResponse that caused the failing download to take place.",
                     xref: "core§11.20.7.7.3.1"
                 },
 
                 {
-                    name: "BytesDownloaded", tag: "field",
+                    tag: "field", name: "BytesDownloaded",
                     details: "This field shall be set to the number of bytes that have been downloaded during the failing transfer " +
                         "that caused this event to be generated.",
                     xref: "core§11.20.7.7.3.2"
                 },
 
                 {
-                    name: "ProgressPercent", tag: "field",
+                    tag: "field", name: "ProgressPercent",
                     details: "This field shall be set to the nearest integer percent value reflecting how far within the transfer " +
                         "the failure occurred during the failing transfer that caused this event to be generated, unless the " +
                         "total length of the transfer is unknown, in which case it shall be null.",
@@ -157,7 +157,7 @@ Resource.add({
                 },
 
                 {
-                    name: "PlatformCode", tag: "field",
+                    tag: "field", name: "PlatformCode",
                     details: "This field SHOULD be set to some internal product-specific error code, closest in " +
                         "temporal/functional proximity to the failure that caused this event to be generated. Otherwise, it " +
                         "shall be null. This event field may be used for debugging purposes and no uniform definition exists " +
@@ -168,7 +168,7 @@ Resource.add({
         },
 
         {
-            name: "AnnounceOtaProvider", tag: "command",
+            tag: "command", name: "AnnounceOtaProvider",
             details: "This command may be invoked by Administrators to announce the presence of a particular OTA Provider." +
                 "\n" +
                 "This command shall be scoped to the accessing fabric." +
@@ -178,27 +178,27 @@ Resource.add({
 
             children: [
                 {
-                    name: "ProviderNodeId", tag: "field",
+                    tag: "field", name: "ProviderNodeId",
                     details: "This field shall contain the Node ID of a Node implementing the OTA Provider cluster server, on the " +
                         "accessing fabric.",
                     xref: "core§11.20.7.6.1.1"
                 },
 
                 {
-                    name: "VendorId", tag: "field",
+                    tag: "field", name: "VendorId",
                     details: "This field shall contain the assigned Vendor ID of the Node invoking this command, as it would " +
                         "appear in that Node’s Basic Information Cluster VendorID attribute.",
                     xref: "core§11.20.7.6.1.2"
                 },
 
                 {
-                    name: "AnnouncementReason", tag: "field",
+                    tag: "field", name: "AnnouncementReason",
                     details: "This field shall contain a value expressing the reason for the announcement.",
                     xref: "core§11.20.7.6.1.3"
                 },
 
                 {
-                    name: "MetadataForNode", tag: "field",
+                    tag: "field", name: "MetadataForNode",
 
                     details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
                         "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
@@ -213,7 +213,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Endpoint", tag: "field",
+                    tag: "field", name: "Endpoint",
 
                     details: "This field shall contain the endpoint number which has the OTA Provider device type and OTA Software " +
                         "Update Provider cluster server on the ProviderNodeID. This is provided to avoid having to do " +
@@ -262,12 +262,12 @@ Resource.add({
         },
 
         {
-            name: "AnnouncementReasonEnum", tag: "datatype",
+            tag: "datatype", name: "AnnouncementReasonEnum",
             xref: "core§11.20.7.4.1",
 
             children: [
                 {
-                    name: "SimpleAnnouncement", tag: "field",
+                    tag: "field", name: "SimpleAnnouncement",
                     description: "An OTA Provider is announcing its presence.",
                     details: "An OTA Provider is announcing its presence, but there is no implication that an OTA Requestor would " +
                         "have a new Software Image available if it queried immediately.",
@@ -275,7 +275,7 @@ Resource.add({
                 },
 
                 {
-                    name: "UpdateAvailable", tag: "field",
+                    tag: "field", name: "UpdateAvailable",
                     description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available.",
                     details: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software " +
                         "Image may be available. The details may only be obtained by executing a OTA Software Update Query " +
@@ -285,7 +285,7 @@ Resource.add({
                 },
 
                 {
-                    name: "UrgentUpdateAvailable", tag: "field",
+                    tag: "field", name: "UrgentUpdateAvailable",
                     description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently.",
 
                     details: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software " +
@@ -302,12 +302,12 @@ Resource.add({
         },
 
         {
-            name: "UpdateStateEnum", tag: "datatype",
+            tag: "datatype", name: "UpdateStateEnum",
             xref: "core§11.20.7.4.2",
 
             children: [
                 {
-                    name: "Unknown", tag: "field",
+                    tag: "field", name: "Unknown",
                     description: "Current state is not yet determined.",
                     details: "This value shall indicate that the current state is not yet determined. Nodes SHOULD attempt a " +
                         "better state reporting.",
@@ -315,7 +315,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Idle", tag: "field",
+                    tag: "field", name: "Idle",
                     description: "Indicate a Node not yet in the process of software update.",
                     details: "This value shall indicate a Node not yet in the process of software update, for example because it " +
                         "is awaiting the moment when a query will be made.",
@@ -323,7 +323,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Querying", tag: "field",
+                    tag: "field", name: "Querying",
                     description: "Indicate a Node in the process of querying an OTA Provider.",
                     details: "This value shall indicate a Node in the process of querying an OTA Provider with QueryImage command, " +
                         "including during the process of awaiting a response to that command.",
@@ -331,7 +331,7 @@ Resource.add({
                 },
 
                 {
-                    name: "DelayedOnQuery", tag: "field",
+                    tag: "field", name: "DelayedOnQuery",
                     description: "Indicate a Node waiting after a Busy response.",
                     details: "This value shall indicate a Node waiting because it received a prior QueryImageResponse with a " +
                         "Status field indicating Busy.",
@@ -339,14 +339,14 @@ Resource.add({
                 },
 
                 {
-                    name: "Downloading", tag: "field",
+                    tag: "field", name: "Downloading",
                     description: "Indicate a Node currently in the process of downloading a software update.",
                     details: "This value shall indicate a Node currently in the process of downloading a software update.",
                     xref: "core§11.20.7.4.2.5"
                 },
 
                 {
-                    name: "Applying", tag: "field",
+                    tag: "field", name: "Applying",
                     description: "Indicate a Node currently in the process of verifying and applying a software update.",
                     details: "This value shall indicate a Node currently in the process of verifying and applying a software " +
                         "update.",
@@ -354,7 +354,7 @@ Resource.add({
                 },
 
                 {
-                    name: "DelayedOnApply", tag: "field",
+                    tag: "field", name: "DelayedOnApply",
                     description: "Indicate a Node waiting caused by AwaitNextAction response.",
                     details: "This value shall indicate a Node waiting because it received a prior ApplyUpdateResponse with an " +
                         "Action field set to AwaitNextAction.",
@@ -362,7 +362,7 @@ Resource.add({
                 },
 
                 {
-                    name: "RollingBack", tag: "field",
+                    tag: "field", name: "RollingBack",
                     description: "Indicate a Node in the process of recovering to a previous version.",
                     details: "This value shall indicate a Node in the process of recovering to a previous version from a new " +
                         "version that was applied, but that could not remain in force, for reasons such as invalid data " +
@@ -372,40 +372,40 @@ Resource.add({
                 },
 
                 {
-                    name: "DelayedOnUserConsent", tag: "field",
+                    tag: "field", name: "DelayedOnUserConsent",
                     description: "Indicate a Node is capable of user consent."
                 }
             ]
         },
 
         {
-            name: "ChangeReasonEnum", tag: "datatype",
+            tag: "datatype", name: "ChangeReasonEnum",
             xref: "core§11.20.7.4.3",
 
             children: [
                 {
-                    name: "Unknown", tag: "field",
+                    tag: "field", name: "Unknown",
                     description: "The reason for a state change is unknown.",
                     details: "This value shall indicate that the reason for a state change is unknown.",
                     xref: "core§11.20.7.4.3.1"
                 },
 
                 {
-                    name: "Success", tag: "field",
+                    tag: "field", name: "Success",
                     description: "The reason for a state change is the success of a prior operation.",
                     details: "This value shall indicate that the reason for a state change is the success of a prior operation.",
                     xref: "core§11.20.7.4.3.2"
                 },
 
                 {
-                    name: "Failure", tag: "field",
+                    tag: "field", name: "Failure",
                     description: "The reason for a state change is the failure of a prior operation.",
                     details: "This value shall indicate that the reason for a state change is the failure of a prior operation.",
                     xref: "core§11.20.7.4.3.3"
                 },
 
                 {
-                    name: "TimeOut", tag: "field",
+                    tag: "field", name: "TimeOut",
                     description: "The reason for a state change is a time-out.",
                     details: "This value shall indicate that the reason for a state change is a time-out condition as determined " +
                         "by the OTA Requestor.",
@@ -413,7 +413,7 @@ Resource.add({
                 },
 
                 {
-                    name: "DelayByProvider", tag: "field",
+                    tag: "field", name: "DelayByProvider",
                     description: "The reason for a state change is a request by the OTA Provider to wait.",
                     details: "This value shall indicate that the reason for a state change is a request by the OTA Provider to " +
                         "await for a delay.",
@@ -423,20 +423,20 @@ Resource.add({
         },
 
         {
-            name: "ProviderLocation", tag: "datatype",
+            tag: "datatype", name: "ProviderLocation",
             details: "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
             xref: "core§11.20.7.4.4",
 
             children: [
                 {
-                    name: "ProviderNodeId", tag: "field",
+                    tag: "field", name: "ProviderNodeId",
                     details: "This field shall contain the Node ID of the OTA Provider to contact within the Fabric identified by " +
                         "the FabricIndex.",
                     xref: "core§11.20.7.4.4.1"
                 },
 
                 {
-                    name: "Endpoint", tag: "field",
+                    tag: "field", name: "Endpoint",
                     details: "This field shall contain the endpoint number which has the OTA Provider device type and OTA Software " +
                         "Update Provider cluster server on the ProviderNodeID. This is provided to avoid having to do " +
                         "discovery of the location of that endpoint by walking over all endpoints and checking their " +

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ServiceArea", tag: "cluster",
+    tag: "cluster", name: "ServiceArea",
     classification: "application", pics: "SEAR",
 
     details: "This cluster provides an interface for controlling the areas where a device should operate, for " +
@@ -31,24 +31,24 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.17.4",
 
             children: [
                 {
-                    name: "SELRUN", tag: "field",
+                    tag: "field", name: "SELRUN",
                     details: "This feature indicates whether this device allows changing the selected areas, by using the " +
                         "SelectAreas command, while operating.",
                     xref: "cluster§1.17.4.1"
                 },
 
-                { name: "PROG", tag: "field", details: "The device implements the progress reporting feature" },
-                { name: "MAPS", tag: "field", details: "The device has map support" }
+                { tag: "field", name: "PROG", details: "The device implements the progress reporting feature" },
+                { tag: "field", name: "MAPS", details: "The device has map support" }
             ]
         },
 
         {
-            name: "SupportedAreas", tag: "attribute",
+            tag: "attribute", name: "SupportedAreas",
 
             details: "This attribute shall contain the list of areas that can be included in the SelectedAreas attribute’s " +
                 "list. Each item in this list represents a unique area, as indicated by the AreaID field of " +
@@ -98,7 +98,7 @@ Resource.add({
         },
 
         {
-            name: "SupportedMaps", tag: "attribute",
+            tag: "attribute", name: "SupportedMaps",
 
             details: "This attribute shall contain the list of supported maps." +
                 "\n" +
@@ -151,7 +151,7 @@ Resource.add({
         },
 
         {
-            name: "SelectedAreas", tag: "attribute",
+            tag: "attribute", name: "SelectedAreas",
 
             details: "Indicates the set of areas where the device SHOULD attempt to operate." +
                 "\n" +
@@ -171,7 +171,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentArea", tag: "attribute",
+            tag: "attribute", name: "CurrentArea",
 
             details: "If the device is mobile, this attribute shall indicate the area where the device is currently " +
                 "located, regardless of whether it is operating or not, such as while traveling between areas." +
@@ -201,7 +201,7 @@ Resource.add({
         },
 
         {
-            name: "EstimatedEndTime", tag: "attribute",
+            tag: "attribute", name: "EstimatedEndTime",
 
             details: "Indicates the estimated Epoch time for completing operating at the area indicated by the CurrentArea " +
                 "attribute, in seconds." +
@@ -235,7 +235,7 @@ Resource.add({
         },
 
         {
-            name: "Progress", tag: "attribute",
+            tag: "attribute", name: "Progress",
 
             details: "Indicates the operating status at one or more areas. Each entry in this list shall have a unique " +
                 "value for the AreaID field." +
@@ -280,14 +280,14 @@ Resource.add({
         },
 
         {
-            name: "SelectAreas", tag: "command",
+            tag: "command", name: "SelectAreas",
             details: "This command is used to select a set of device areas, where the device is to operate." +
                 "\n" +
                 "On receipt of this command the device shall respond with a SelectAreasResponse command.",
             xref: "cluster§1.17.7.1",
 
             children: [{
-                name: "NewAreas", tag: "field",
+                tag: "field", name: "NewAreas",
 
                 details: "This field indicates which areas the device is to operate at." +
                     "\n" +
@@ -301,12 +301,12 @@ Resource.add({
         },
 
         {
-            name: "SelectAreasResponse", tag: "command",
+            tag: "command", name: "SelectAreasResponse",
             details: "This command is sent by the device on receipt of the SelectAreas command.",
             xref: "cluster§1.17.7.2",
 
             children: [{
-                name: "Status", tag: "field",
+                tag: "field", name: "Status",
 
                 details: "If the Status field is set to Success or UnsupportedArea, the server may use a non-empty string for " +
                     "the StatusText field to provide additional information. For example, if Status is set to Unsupport" +
@@ -323,7 +323,7 @@ Resource.add({
         },
 
         {
-            name: "SkipArea", tag: "command",
+            tag: "command", name: "SkipArea",
 
             details: "This command is used to skip the given area, and to attempt operating at other areas on the " +
                 "SupportedAreas attribute list." +
@@ -336,7 +336,7 @@ Resource.add({
             xref: "cluster§1.17.7.3",
 
             children: [{
-                name: "SkippedArea", tag: "field",
+                tag: "field", name: "SkippedArea",
                 details: "The SkippedArea field indicates the area to be skipped." +
                     "\n" +
                     "The SkippedArea field shall match an entry in the SupportedAreas list.",
@@ -345,12 +345,12 @@ Resource.add({
         },
 
         {
-            name: "SkipAreaResponse", tag: "command",
+            tag: "command", name: "SkipAreaResponse",
             details: "This command is sent by the device on receipt of the SkipArea command.",
             xref: "cluster§1.17.7.4",
 
             children: [{
-                name: "Status", tag: "field",
+                tag: "field", name: "Status",
 
                 details: "If the Status field is set to Success or InvalidAreaList, the server may use a non-empty string for " +
                     "the StatusText field to provide additional information. For example, if Status is set to " +
@@ -366,13 +366,13 @@ Resource.add({
         },
 
         {
-            name: "LandmarkInfoStruct", tag: "datatype",
+            tag: "datatype", name: "LandmarkInfoStruct",
             details: "The data from this structure indicates a landmark and position relative to the landmark.",
             xref: "cluster§1.17.5.1",
 
             children: [
                 {
-                    name: "LandmarkTag", tag: "field",
+                    tag: "field", name: "LandmarkTag",
                     details: "This field shall indicate that the area is associated with a landmark." +
                         "\n" +
                         "This field shall be the ID of a landmark semantic tag, located within the Common Landmark Namespace. " +
@@ -381,7 +381,7 @@ Resource.add({
                 },
 
                 {
-                    name: "RelativePositionTag", tag: "field",
+                    tag: "field", name: "RelativePositionTag",
 
                     details: "This field shall identify the position of the area relative to a landmark. This is a static " +
                         "description of a zone known to the server, and this field never reflects the device’s own proximity " +
@@ -401,7 +401,7 @@ Resource.add({
         },
 
         {
-            name: "AreaInfoStruct", tag: "datatype",
+            tag: "datatype", name: "AreaInfoStruct",
 
             details: "The data from this structure indicates the name and/or semantic data describing an area, as detailed " +
                 "below." +
@@ -441,7 +441,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "LocationInfo", tag: "field",
+                    tag: "field", name: "LocationInfo",
 
                     details: "This field shall indicate the name of the area, floor number and/or area type. A few examples are " +
                         "provided below." +
@@ -459,7 +459,7 @@ Resource.add({
                 },
 
                 {
-                    name: "LandmarkInfo", tag: "field",
+                    tag: "field", name: "LandmarkInfo",
 
                     details: "This field shall indicate an association with a landmark. A value of null indicates that the " +
                         "information is not available or known. For example, this may indicate that the area refers to a zone " +
@@ -476,19 +476,19 @@ Resource.add({
         },
 
         {
-            name: "MapStruct", tag: "datatype",
+            tag: "datatype", name: "MapStruct",
             details: "This is a struct representing a map.",
             xref: "cluster§1.17.5.3",
 
             children: [
                 {
-                    name: "MapId", tag: "field",
+                    tag: "field", name: "MapId",
                     details: "This field shall represent the map’s identifier.",
                     xref: "cluster§1.17.5.3.1"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "This field shall represent a human understandable map description. For example: \"Main Floor\", or " +
                         "\"Second Level\".",
                     xref: "cluster§1.17.5.3.2"
@@ -497,19 +497,19 @@ Resource.add({
         },
 
         {
-            name: "AreaStruct", tag: "datatype",
+            tag: "datatype", name: "AreaStruct",
             details: "This is a struct representing an area known to the server.",
             xref: "cluster§1.17.5.4",
 
             children: [
                 {
-                    name: "AreaId", tag: "field",
+                    tag: "field", name: "AreaId",
                     details: "This field shall represent the identifier of the area.",
                     xref: "cluster§1.17.5.4.1"
                 },
 
                 {
-                    name: "MapId", tag: "field",
+                    tag: "field", name: "MapId",
 
                     details: "This field shall indicate the map identifier which the area is associated with. A value of null " +
                         "indicates that the area is not associated with a map." +
@@ -522,7 +522,7 @@ Resource.add({
                 },
 
                 {
-                    name: "AreaInfo", tag: "field",
+                    tag: "field", name: "AreaInfo",
 
                     details: "This field shall contain data describing the area." +
                         "\n" +
@@ -540,27 +540,27 @@ Resource.add({
         },
 
         {
-            name: "ProgressStruct", tag: "datatype",
+            tag: "datatype", name: "ProgressStruct",
             details: "This is a struct indicating the progress.",
             xref: "cluster§1.17.5.5",
 
             children: [
                 {
-                    name: "AreaId", tag: "field",
+                    tag: "field", name: "AreaId",
                     details: "This field shall indicate the identifier of the area, and the identifier shall be an entry in the " +
                         "SupportedAreas attribute’s list.",
                     xref: "cluster§1.17.5.5.1"
                 },
 
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall indicate the operational status of the device regarding the area indicated by the " +
                         "AreaID field.",
                     xref: "cluster§1.17.5.5.2"
                 },
 
                 {
-                    name: "TotalOperationalTime", tag: "field",
+                    tag: "field", name: "TotalOperationalTime",
 
                     details: "This field shall indicate the total operational time, in seconds, from when the device started to " +
                         "operate at the area indicated by the AreaID field, until the operation finished, due to completion " +
@@ -577,7 +577,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EstimatedTime", tag: "field",
+                    tag: "field", name: "EstimatedTime",
 
                     details: "This field shall indicate the estimated time for the operation, in seconds, from when the device " +
                         "will start operating at the area indicated by the AreaID field, until the operation completes, " +
@@ -597,67 +597,67 @@ Resource.add({
         },
 
         {
-            name: "OperationalStatusEnum", tag: "datatype",
+            tag: "datatype", name: "OperationalStatusEnum",
             details: "The following table defines the status values.",
             xref: "cluster§1.17.5.6",
 
             children: [
                 {
-                    name: "Pending", tag: "field",
+                    tag: "field", name: "Pending",
                     description: "The device has not yet started operating at the given area, or has not finished operating at that area but it is not currently operating at the area"
                 },
-                { name: "Operating", tag: "field", description: "The device is currently operating at the given area" },
+                { tag: "field", name: "Operating", description: "The device is currently operating at the given area" },
                 {
-                    name: "Skipped", tag: "field",
+                    tag: "field", name: "Skipped",
                     description: "The device has skipped the given area, before or during operating at it, due to a SkipArea command, due an out of band command (e.g. from the vendor’s application), due to a vendor specific reason, such as a time limit used by the device, or due the device ending operating unsuccessfully"
                 },
                 {
-                    name: "Completed", tag: "field",
+                    tag: "field", name: "Completed",
                     description: "The device has completed operating at the given area"
                 }
             ]
         },
 
         {
-            name: "SelectAreasStatus", tag: "datatype",
+            tag: "datatype", name: "SelectAreasStatus",
             xref: "cluster§1.17.5.6.1",
 
             children: [
                 {
-                    name: "Success", tag: "field",
+                    tag: "field", name: "Success",
                     description: "Attempting to operate in the areas identified by the entries of the NewAreas field is allowed and possible. The SelectedAreas attribute is set to the value of the NewAreas field."
                 },
                 {
-                    name: "UnsupportedArea", tag: "field",
+                    tag: "field", name: "UnsupportedArea",
                     description: "The value of at least one of the entries of the NewAreas field doesn’t match any entries in the SupportedAreas attribute."
                 },
                 {
-                    name: "InvalidInMode", tag: "field",
+                    tag: "field", name: "InvalidInMode",
                     description: "The received request cannot be handled due to the current mode of the device."
                 },
                 {
-                    name: "InvalidSet", tag: "field",
+                    tag: "field", name: "InvalidSet",
                     description: "The set of values is invalid. For example, areas on different floors, that a robot knows it can’t reach on its own."
                 }
             ]
         },
 
         {
-            name: "SkipAreaStatus", tag: "datatype",
+            tag: "datatype", name: "SkipAreaStatus",
             xref: "cluster§1.17.5.6.2",
 
             children: [
                 {
-                    name: "Success", tag: "field",
+                    tag: "field", name: "Success",
                     description: "Skipping the area is allowed and possible, or the device was operating at the last available area and has stopped."
                 },
-                { name: "InvalidAreaList", tag: "field", description: "The SelectedAreas attribute is empty." },
+                { tag: "field", name: "InvalidAreaList", description: "The SelectedAreas attribute is empty." },
                 {
-                    name: "InvalidInMode", tag: "field",
+                    tag: "field", name: "InvalidInMode",
                     description: "The received request cannot be handled due to the current mode of the device. For example, the CurrentArea attribute is null or the device is not operating."
                 },
                 {
-                    name: "InvalidSkippedArea", tag: "field",
+                    tag: "field", name: "InvalidSkippedArea",
                     description: "The SkippedArea field doesn’t match an entry in the SupportedAreas list."
                 }
             ]

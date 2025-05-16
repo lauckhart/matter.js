@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "percent100ths", tag: "datatype", description: "Percentage units 0.01%", xref: "core§7.19.2" });
+Resource.add({ tag: "datatype", name: "percent100ths", description: "Percentage units 0.01%", xref: "core§7.19.2" });

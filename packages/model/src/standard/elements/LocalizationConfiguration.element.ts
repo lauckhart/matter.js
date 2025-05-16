@@ -14,14 +14,14 @@ import {
 } from "../../elements/index.js";
 
 export const LocalizationConfiguration = Cluster(
-    { id: 0x2b, name: "LocalizationConfiguration" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0x0, name: "ActiveLocale", type: "string", access: "RW VM", constraint: "in SupportedLocales", quality: "N" }),
+    { name: "LocalizationConfiguration", id: 0x2b },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
+    Attribute({ name: "ActiveLocale", id: 0x0, type: "string", constraint: "in SupportedLocales", access: "RW VM", quality: "N" }),
 
     Attribute(
         {
-            id: 0x1, name: "SupportedLocales", type: "list",
-            access: "R V", conformance: "M", constraint: "max 32[max 35]", quality: "F"
+            name: "SupportedLocales", id: 0x1, type: "list",
+            constraint: "max 32[max 35]", conformance: "M", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "string" })
     )

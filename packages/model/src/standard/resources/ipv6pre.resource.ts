@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ipv6pre", tag: "datatype",
+    tag: "datatype", name: "ipv6pre",
     description: "IPv6 Prefix",
 
     details: "The IPv6 prefix data type is derived from an octet string. The octets shall be encoded" +

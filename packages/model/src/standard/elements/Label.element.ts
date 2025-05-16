@@ -16,15 +16,15 @@ import {
 
 export const Label = Cluster(
     { name: "Label" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0x0, name: "LabelList", type: "list", conformance: "M", constraint: "derived", default: [] },
+        { name: "LabelList", id: 0x0, type: "list", default: [], constraint: "derived", conformance: "M" },
         Field({ name: "entry", type: "LabelStruct" })
     ),
     Datatype(
         { name: "LabelStruct", type: "struct" },
-        Field({ id: 0x0, name: "Label", type: "string", conformance: "M", constraint: "max 16" }),
-        Field({ id: 0x1, name: "Value", type: "string", conformance: "M", constraint: "max 16" })
+        Field({ name: "Label", id: 0x0, type: "string", constraint: "max 16", conformance: "M" }),
+        Field({ name: "Value", id: 0x1, type: "string", constraint: "max 16", conformance: "M" })
     )
 );
 

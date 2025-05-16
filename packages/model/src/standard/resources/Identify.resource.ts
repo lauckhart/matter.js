@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Identify", tag: "cluster",
+    tag: "cluster", name: "Identify",
     classification: "endpoint", pics: "I",
 
     details: "This cluster supports an endpoint identification state (e.g., flashing a light), that indicates to " +
@@ -26,7 +26,7 @@ Resource.add({
 
     children: [
         {
-            name: "IdentifyTime", tag: "attribute",
+            tag: "attribute", name: "IdentifyTime",
 
             details: "Indicates the remaining length of time, in seconds, that the endpoint will continue to identify " +
                 "itself." +
@@ -43,7 +43,7 @@ Resource.add({
         },
 
         {
-            name: "IdentifyType", tag: "attribute",
+            tag: "attribute", name: "IdentifyType",
             details: "Indicates how the identification state is presented to the user." +
                 "\n" +
                 "This attribute shall contain one of the values defined in IdentifyTypeEnum. The value None shall NOT " +
@@ -53,13 +53,13 @@ Resource.add({
         },
 
         {
-            name: "Identify", tag: "command",
+            tag: "command", name: "Identify",
             details: "This command starts or stops the receiving device identifying itself.",
             xref: "cluster§1.2.6.1"
         },
 
         {
-            name: "TriggerEffect", tag: "command",
+            tag: "command", name: "TriggerEffect",
 
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
                 "to allow an implementation to provide visual feedback to the user under certain circumstances such " +
@@ -72,7 +72,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "EffectIdentifier", tag: "field",
+                    tag: "field", name: "EffectIdentifier",
 
                     details: "This field shall indicate the identify effect to use and shall contain one of the non-reserved " +
                         "values in EffectIdentifierEnum." +
@@ -85,7 +85,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EffectVariant", tag: "field",
+                    tag: "field", name: "EffectVariant",
                     details: "This field shall indicate which variant of the effect, indicated in the EffectIdentifier field, " +
                         "SHOULD be triggered. If a device does not support the given variant, it shall use the default " +
                         "variant. This field shall contain one of the values in EffectVariantEnum.",
@@ -95,51 +95,51 @@ Resource.add({
         },
 
         {
-            name: "IdentifyTypeEnum", tag: "datatype",
+            tag: "datatype", name: "IdentifyTypeEnum",
             xref: "cluster§1.2.4.1",
 
             children: [
-                { name: "None", tag: "field", description: "No presentation." },
-                { name: "LightOutput", tag: "field", description: "Light output of a lighting product." },
-                { name: "VisibleIndicator", tag: "field", description: "Typically a small LED." },
-                { name: "Display", tag: "field", description: "Presentation will be visible on display screen." },
+                { tag: "field", name: "None", description: "No presentation." },
+                { tag: "field", name: "LightOutput", description: "Light output of a lighting product." },
+                { tag: "field", name: "VisibleIndicator", description: "Typically a small LED." },
+                { tag: "field", name: "Display", description: "Presentation will be visible on display screen." },
                 {
-                    name: "Actuator", tag: "field",
+                    tag: "field", name: "Actuator",
                     description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in- wall relay."
                 }
             ]
         },
 
         {
-            name: "EffectIdentifierEnum", tag: "datatype",
+            tag: "datatype", name: "EffectIdentifierEnum",
             xref: "cluster§1.2.4.2",
 
             children: [
-                { name: "Blink", tag: "field", description: "e.g., Light is turned on/off once." },
+                { tag: "field", name: "Blink", description: "e.g., Light is turned on/off once." },
                 {
-                    name: "Breathe", tag: "field",
+                    tag: "field", name: "Breathe",
                     description: "e.g., Light is turned on/off over 1 second and repeated 15 times."
                 },
                 {
-                    name: "Okay", tag: "field",
+                    tag: "field", name: "Okay",
                     description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
                 },
                 {
-                    name: "ChannelChange", tag: "field",
+                    tag: "field", name: "ChannelChange",
                     description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                 },
                 {
-                    name: "FinishEffect", tag: "field",
+                    tag: "field", name: "FinishEffect",
                     description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                 },
-                { name: "StopEffect", tag: "field", description: "Terminate the effect as soon as possible." }
+                { tag: "field", name: "StopEffect", description: "Terminate the effect as soon as possible." }
             ]
         },
 
         {
-            name: "EffectVariantEnum", tag: "datatype",
+            tag: "datatype", name: "EffectVariantEnum",
             xref: "cluster§1.2.4.3",
-            children: [{ name: "Default", tag: "field", description: "Indicates the default effect is used" }]
+            children: [{ tag: "field", name: "Default", description: "Indicates the default effect is used" }]
         }
     ]
 });

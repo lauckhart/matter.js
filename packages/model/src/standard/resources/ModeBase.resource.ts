@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ModeBase", tag: "cluster",
+    tag: "cluster", name: "ModeBase",
     classification: "application", pics: "MODB",
 
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
@@ -38,11 +38,11 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.10.4",
 
             children: [{
-                name: "DEPONOFF", tag: "field",
+                tag: "field", name: "DEPONOFF",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
                     "same endpoint. See OnMode for more information.",
                 xref: "cluster§1.10.4.1"
@@ -50,7 +50,7 @@ Resource.add({
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
 
             details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
                 "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
@@ -63,7 +63,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentMode", tag: "attribute",
+            tag: "attribute", name: "CurrentMode",
 
             details: "Indicates the current mode of the server." +
                 "\n" +
@@ -79,7 +79,7 @@ Resource.add({
         },
 
         {
-            name: "StartUpMode", tag: "attribute",
+            tag: "attribute", name: "StartUpMode",
 
             details: "Indicates the desired startup mode for the server when it is supplied with power." +
                 "\n" +
@@ -99,7 +99,7 @@ Resource.add({
         },
 
         {
-            name: "OnMode", tag: "attribute",
+            tag: "attribute", name: "OnMode",
 
             details: "Indicates whether the value of CurrentMode depends on the state of the On/Off cluster on the same " +
                 "endpoint. If this attribute is not present or is set to null, there is no dependency, otherwise the " +
@@ -112,14 +112,14 @@ Resource.add({
         },
 
         {
-            name: "ChangeToMode", tag: "command",
+            tag: "command", name: "ChangeToMode",
             details: "This command is used to change device modes." +
                 "\n" +
                 "On receipt of this command the device shall respond with a ChangeToModeResponse command.",
             xref: "cluster§1.10.7.1",
 
             children: [{
-                name: "NewMode", tag: "field",
+                tag: "field", name: "NewMode",
 
                 details: "If the NewMode field doesn’t match the Mode field of any entry of the SupportedModes list, the " +
                     "ChangeToModeResponse command’s Status field shall indicate UnsupportedMode and the StatusText field " +
@@ -149,22 +149,22 @@ Resource.add({
         },
 
         {
-            name: "ChangeToModeResponse", tag: "command",
+            tag: "command", name: "ChangeToModeResponse",
             details: "This command is sent by the device on receipt of the ChangeToMode command. This command" +
                 "\n" +
                 "shall have the following data fields:",
             xref: "cluster§1.10.7.2",
-            children: [{ name: "Status", tag: "field", xref: "cluster§1.10.7.2.1" }]
+            children: [{ tag: "field", name: "Status", xref: "cluster§1.10.7.2.1" }]
         },
 
         {
-            name: "ModeTagStruct", tag: "datatype",
+            tag: "datatype", name: "ModeTagStruct",
             details: "A Mode Tag is meant to be interpreted by the client for the purpose the cluster serves.",
             xref: "cluster§1.10.5.1",
 
             children: [
                 {
-                    name: "MfgCode", tag: "field",
+                    tag: "field", name: "MfgCode",
 
                     details: "If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see " +
                         "Section 1.10.8, “Mode Namespace”)." +
@@ -181,7 +181,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Value", tag: "field",
+                    tag: "field", name: "Value",
                     details: "This field shall indicate the mode tag within a mode tag namespace which is either manufacturer " +
                         "specific or standard.",
                     xref: "cluster§1.10.5.1.2"
@@ -190,13 +190,13 @@ Resource.add({
         },
 
         {
-            name: "ModeOptionStruct", tag: "datatype",
+            tag: "datatype", name: "ModeOptionStruct",
             details: "This is a struct representing a possible mode of the server.",
             xref: "cluster§1.10.5.2",
 
             children: [
                 {
-                    name: "Label", tag: "field",
+                    tag: "field", name: "Label",
                     details: "This field shall indicate readable text that describes the mode option, so that a client can provide " +
                         "it to the user to indicate what this option means. This field is meant to be readable and " +
                         "understandable by the user.",
@@ -204,13 +204,13 @@ Resource.add({
                 },
 
                 {
-                    name: "Mode", tag: "field",
+                    tag: "field", name: "Mode",
                     details: "This field is used to identify the mode option.",
                     xref: "cluster§1.10.5.2.2"
                 },
 
                 {
-                    name: "ModeTags", tag: "field",
+                    tag: "field", name: "ModeTags",
 
                     details: "This field shall contain a list of tags that are associated with the mode option. This may be used " +
                         "by clients to determine the full or the partial semantics of a certain mode, depending on which tags " +
@@ -253,26 +253,26 @@ Resource.add({
         },
 
         {
-            name: "ModeChangeStatus", tag: "datatype",
+            tag: "datatype", name: "ModeChangeStatus",
 
             children: [
                 {
-                    name: "Success", tag: "field",
+                    tag: "field", name: "Success",
                     description: "Switching to the mode indicated by the NewMode field is allowed and possible. The CurrentMode attribute is set to the value of the NewMode field.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
-                    name: "UnsupportedMode", tag: "field",
+                    tag: "field", name: "UnsupportedMode",
                     description: "The value of the NewMode field doesn’t match any entries in the SupportedModes attribute.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
-                    name: "GenericFailure", tag: "field",
+                    tag: "field", name: "GenericFailure",
                     description: "Generic failure code, indicating that switching to the mode indicated by the NewMode field is not allowed or not possible.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
-                    name: "InvalidInMode", tag: "field",
+                    tag: "field", name: "InvalidInMode",
                     description: "The received request cannot be handled due to the current mode of the device",
                     xref: "cluster§1.10.7.2.1.2"
                 }
@@ -280,19 +280,19 @@ Resource.add({
         },
 
         {
-            name: "ModeTag", tag: "datatype",
+            tag: "datatype", name: "ModeTag",
 
             children: [
-                { name: "Auto", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Quick", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Quiet", tag: "field", xref: "cluster§1.10.8" },
-                { name: "LowNoise", tag: "field", xref: "cluster§1.10.8" },
-                { name: "LowEnergy", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Vacation", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Min", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Max", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Night", tag: "field", xref: "cluster§1.10.8" },
-                { name: "Day", tag: "field", xref: "cluster§1.10.8" }
+                { tag: "field", name: "Auto", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Quick", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Quiet", xref: "cluster§1.10.8" },
+                { tag: "field", name: "LowNoise", xref: "cluster§1.10.8" },
+                { tag: "field", name: "LowEnergy", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Vacation", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Min", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Max", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Night", xref: "cluster§1.10.8" },
+                { tag: "field", name: "Day", xref: "cluster§1.10.8" }
             ]
         }
     ]

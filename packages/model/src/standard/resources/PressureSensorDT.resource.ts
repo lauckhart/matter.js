@@ -9,12 +9,12 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "PressureSensor", tag: "deviceType",
+    tag: "deviceType", name: "PressureSensor",
     classification: "simple",
     details: "A Pressure Sensor device measures and reports the pressure of a fluid.",
     xref: "device§7.5",
     children: [
-        { name: "PressureMeasurement", tag: "requirement", xref: "device§7.5.4" },
-        { name: "Identify", tag: "requirement", xref: "device§7.5.4" }
+        { tag: "requirement", name: "PressureMeasurement", xref: "device§7.5.4" },
+        { tag: "requirement", name: "Identify", xref: "device§7.5.4" }
     ]
 });

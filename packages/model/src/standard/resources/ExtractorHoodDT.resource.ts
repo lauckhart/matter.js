@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ExtractorHood", tag: "deviceType",
+    tag: "deviceType", name: "ExtractorHood",
     classification: "simple",
 
     details: "An Extractor Hood is a device that is generally installed above a cooking surface in residential " +
@@ -34,9 +34,9 @@ Resource.add({
     xref: "device§13.10",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§13.10.5" },
-        { name: "HepaFilterMonitoring", tag: "requirement", xref: "device§13.10.5" },
-        { name: "ActivatedCarbonFilterMonitoring", tag: "requirement", xref: "device§13.10.5" },
-        { name: "FanControl", tag: "requirement", xref: "device§13.10.5" }
+        { tag: "requirement", name: "Identify", xref: "device§13.10.5" },
+        { tag: "requirement", name: "HepaFilterMonitoring", xref: "device§13.10.5" },
+        { tag: "requirement", name: "ActivatedCarbonFilterMonitoring", xref: "device§13.10.5" },
+        { tag: "requirement", name: "FanControl", xref: "device§13.10.5" }
     ]
 });

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TargetNavigator", tag: "cluster",
+    tag: "cluster", name: "TargetNavigator",
     classification: "application", pics: "TGTNAV",
 
     details: "This cluster provides an interface for UX navigation within a set of targets on a device or " +
@@ -29,7 +29,7 @@ Resource.add({
 
     children: [
         {
-            name: "TargetList", tag: "attribute",
+            tag: "attribute", name: "TargetList",
             details: "Indicates a list of targets that can be navigated to within the experience presented to the user by " +
                 "the Endpoint (Video Player or Content App). The list shall NOT contain any entries with the same " +
                 "Identifier in the TargetInfoStruct object.",
@@ -37,7 +37,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentTarget", tag: "attribute",
+            tag: "attribute", name: "CurrentTarget",
             details: "Indicates the Identifier for the target which is currently in foreground on the corresponding " +
                 "Endpoint (Video Player or Content App), or 0xFF to indicate that no target is in the foreground." +
                 "\n" +
@@ -47,27 +47,27 @@ Resource.add({
         },
 
         {
-            name: "TargetUpdated", tag: "event",
+            tag: "event", name: "TargetUpdated",
             details: "This event shall be generated when there is a change in either the active target or the list of " +
                 "available targets or both.",
             xref: "cluster§6.11.7.1"
         },
 
         {
-            name: "NavigateTarget", tag: "command",
+            tag: "command", name: "NavigateTarget",
             details: "Upon receipt, this shall navigation the UX to the target identified.",
             xref: "cluster§6.11.6.1",
 
             children: [
                 {
-                    name: "Target", tag: "field",
+                    tag: "field", name: "Target",
                     details: "This field shall indicate the Identifier for the target for UX navigation. The Target shall be an " +
                         "Identifier value contained within one of the TargetInfoStruct objects in the TargetList attribute.",
                     xref: "cluster§6.11.6.1.1"
                 },
 
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall indicate Optional app-specific data.",
                     xref: "cluster§6.11.6.1.2"
                 }
@@ -75,18 +75,18 @@ Resource.add({
         },
 
         {
-            name: "NavigateTargetResponse", tag: "command",
+            tag: "command", name: "NavigateTargetResponse",
             details: "This command shall be generated in response to NavigateTarget command.",
             xref: "cluster§6.11.6.2",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall indicate the of the command.",
                     xref: "cluster§6.11.6.2.1"
                 },
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall indicate Optional app-specific data.",
                     xref: "cluster§6.11.6.2.2"
                 }
@@ -94,32 +94,32 @@ Resource.add({
         },
 
         {
-            name: "StatusEnum", tag: "datatype",
+            tag: "datatype", name: "StatusEnum",
             xref: "cluster§6.11.4.1",
 
             children: [
-                { name: "Success", tag: "field", description: "Command succeeded" },
+                { tag: "field", name: "Success", description: "Command succeeded" },
                 {
-                    name: "TargetNotFound", tag: "field",
+                    tag: "field", name: "TargetNotFound",
                     description: "Requested target was not found in the TargetList"
                 },
-                { name: "NotAllowed", tag: "field", description: "Target request is not allowed in current state." }
+                { tag: "field", name: "NotAllowed", description: "Target request is not allowed in current state." }
             ]
         },
 
         {
-            name: "TargetInfoStruct", tag: "datatype",
+            tag: "datatype", name: "TargetInfoStruct",
             details: "This indicates an object describing the navigable target.",
             xref: "cluster§6.11.4.2",
 
             children: [
                 {
-                    name: "Identifier", tag: "field",
+                    tag: "field", name: "Identifier",
                     details: "This field shall contain an unique id within the TargetList.",
                     xref: "cluster§6.11.4.2.1"
                 },
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "This field shall contain a name string for the TargetInfoStruct.",
                     xref: "cluster§6.11.4.2.2"
                 }

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "JointFabricAdministrator", tag: "deviceType",
+    tag: "deviceType", name: "JointFabricAdministrator",
     classification: "utility",
 
     details: "A Joint Fabric Administrator device provides capabilities to manage the Joint Fabric Datastore and " +
@@ -21,7 +21,7 @@ Resource.add({
 
     xref: "device§2.9",
     children: [
-        { name: "JointFabricDatastore", tag: "requirement", xref: "device§2.9.4" },
-        { name: "JointFabricPki", tag: "requirement", xref: "device§2.9.4" }
+        { tag: "requirement", name: "JointFabricDatastore", xref: "device§2.9.4" },
+        { tag: "requirement", name: "JointFabricPki", xref: "device§2.9.4" }
     ]
 });

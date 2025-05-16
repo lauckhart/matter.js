@@ -10,15 +10,15 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const SecondaryNetworkInterfaceDt = DeviceType(
-    { id: 0x19, name: "SecondaryNetworkInterface", classification: "utility" },
+    { name: "SecondaryNetworkInterface", id: 0x19 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 25, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 25, revision: 1 } ] })
     ),
-    Requirement({ id: 0x31, name: "NetworkCommissioning", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x37, name: "EthernetNetworkDiagnostics", conformance: "[Ethernet]", element: "serverCluster" }),
-    Requirement({ id: 0x36, name: "WiFiNetworkDiagnostics", conformance: "[Wi, Fi]", element: "serverCluster" }),
-    Requirement({ id: 0x35, name: "ThreadNetworkDiagnostics", conformance: "[Thread]", element: "serverCluster" })
+    Requirement({ name: "NetworkCommissioning", id: 0x31, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "EthernetNetworkDiagnostics", id: 0x37, element: "serverCluster", conformance: "[Ethernet]" }),
+    Requirement({ name: "WiFiNetworkDiagnostics", id: 0x36, element: "serverCluster", conformance: "[Wi, Fi]" }),
+    Requirement({ name: "ThreadNetworkDiagnostics", id: 0x35, element: "serverCluster", conformance: "[Thread]" })
 );
 
 MatterDefinition.children.push(SecondaryNetworkInterfaceDt);

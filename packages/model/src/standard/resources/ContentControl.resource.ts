@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ContentControl", tag: "cluster",
+    tag: "cluster", name: "ContentControl",
     classification: "application", pics: "CONCON",
 
     details: "This cluster is used for managing the content control (including \"parental control\") settings on a" +
@@ -26,28 +26,28 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§6.13.4",
 
             children: [
-                { name: "ST", tag: "field", details: "Supports managing screen time limits." },
+                { tag: "field", name: "ST", details: "Supports managing screen time limits." },
                 {
-                    name: "PM", tag: "field",
+                    tag: "field", name: "PM",
                     details: "Supports managing a PIN code which is used for restricting access to configuration of this feature."
                 },
-                { name: "BU", tag: "field", details: "Supports managing content controls for unrated content." },
+                { tag: "field", name: "BU", details: "Supports managing content controls for unrated content." },
                 {
-                    name: "OCR", tag: "field",
+                    tag: "field", name: "OCR",
                     details: "Supports managing content controls based upon rating threshold for on demand content."
                 },
                 {
-                    name: "SCR", tag: "field",
+                    tag: "field", name: "SCR",
                     details: "Supports managing content controls based upon rating threshold for scheduled content."
                 },
-                { name: "BC", tag: "field", details: "Supports managing a set of channels that are prohibited." },
-                { name: "BA", tag: "field", details: "Supports managing a set of applications that are prohibited." },
+                { tag: "field", name: "BC", details: "Supports managing a set of channels that are prohibited." },
+                { tag: "field", name: "BA", details: "Supports managing a set of applications that are prohibited." },
                 {
-                    name: "BTW", tag: "field",
+                    tag: "field", name: "BTW",
                     details: "Supports managing content controls based upon setting time window in which all contents and " +
                         "applications SHALL be blocked."
                 }
@@ -55,14 +55,14 @@ Resource.add({
         },
 
         {
-            name: "Enabled", tag: "attribute",
+            tag: "attribute", name: "Enabled",
             details: "Indicates whether the Content Control feature implemented on a media device is turned off (FALSE) or " +
                 "turned on (TRUE).",
             xref: "cluster§6.13.7.1"
         },
 
         {
-            name: "OnDemandRatings", tag: "attribute",
+            tag: "attribute", name: "OnDemandRatings",
 
             details: "This attribute shall provide the collection of ratings that are currently valid for this media " +
                 "device. The items should honor the metadata of the on-demand content (e.g. Movie) rating system for " +
@@ -80,7 +80,7 @@ Resource.add({
         },
 
         {
-            name: "OnDemandRatingThreshold", tag: "attribute",
+            tag: "attribute", name: "OnDemandRatingThreshold",
 
             details: "Indicates a threshold rating as a content filter which is compared with the rating for on-demand " +
                 "content. For example, if the on-demand content rating is greater than or equal to " +
@@ -98,7 +98,7 @@ Resource.add({
         },
 
         {
-            name: "ScheduledContentRatings", tag: "attribute",
+            tag: "attribute", name: "ScheduledContentRatings",
 
             details: "Indicates a collection of ratings which ScheduledContentRatingThreshold can be set to. The items " +
                 "should honor metadata of the scheduled content rating system for the country or region where the " +
@@ -115,7 +115,7 @@ Resource.add({
         },
 
         {
-            name: "ScheduledContentRatingThreshold", tag: "attribute",
+            tag: "attribute", name: "ScheduledContentRatingThreshold",
 
             details: "Indicates a threshold rating as a content filter which is used to compare with the rating for " +
                 "scheduled content. For example, if the scheduled content rating is greater than or equal to " +
@@ -132,14 +132,14 @@ Resource.add({
         },
 
         {
-            name: "ScreenDailyTime", tag: "attribute",
+            tag: "attribute", name: "ScreenDailyTime",
             details: "Indicates the amount of time (in seconds) which the User is allowed to spend watching TV within one " +
                 "day when the Content Control feature is activated.",
             xref: "cluster§6.13.7.6"
         },
 
         {
-            name: "RemainingScreenTime", tag: "attribute",
+            tag: "attribute", name: "RemainingScreenTime",
 
             details: "Indicates the remaining screen time (in seconds) which the User is allowed to spend watching TV for " +
                 "the current day when the Content Control feature is activated. When this value equals 0, the media " +
@@ -152,7 +152,7 @@ Resource.add({
         },
 
         {
-            name: "BlockUnrated", tag: "attribute",
+            tag: "attribute", name: "BlockUnrated",
 
             details: "Indicates whether the playback of unrated content is allowed when the Content Control feature is " +
                 "activated. If this attribute equals FALSE, then playback of unrated content shall be permitted. " +
@@ -166,18 +166,18 @@ Resource.add({
         },
 
         {
-            name: "BlockChannelList", tag: "attribute",
+            tag: "attribute", name: "BlockChannelList",
             details: "Indicates a set of channels that shall be blocked when the Content Control feature is activated.",
             xref: "cluster§6.13.7.9"
         },
         {
-            name: "BlockApplicationList", tag: "attribute",
+            tag: "attribute", name: "BlockApplicationList",
             details: "Indicates a set of applications that shall be blocked when the Content Control feature is activated.",
             xref: "cluster§6.13.7.10"
         },
 
         {
-            name: "BlockContentTimeWindow", tag: "attribute",
+            tag: "attribute", name: "BlockContentTimeWindow",
 
             details: "Indicates a set of periods during which the playback of content on media device shall be blocked " +
                 "when the Content Control feature is activated. The media device shall reject any request to play " +
@@ -190,20 +190,20 @@ Resource.add({
         },
 
         {
-            name: "RemainingScreenTimeExpired", tag: "event",
+            tag: "event", name: "RemainingScreenTimeExpired",
             details: "This event shall be generated when the RemainingScreenTime equals 0.",
             xref: "cluster§6.13.9.1"
         },
 
         {
-            name: "EnteringBlockContentTimeWindow", tag: "event",
+            tag: "event", name: "EnteringBlockContentTimeWindow",
             details: "This event shall be generated when entering a period of blocked content as configured in the " +
                 "BlockContentTimeWindow attribute.",
             xref: "cluster§6.13.9.2"
         },
 
         {
-            name: "UpdatePin", tag: "command",
+            tag: "command", name: "UpdatePin",
 
             details: "The purpose of this command is to update the PIN used for protecting configuration of the content " +
                 "control settings. Upon success, the old PIN shall no longer work." +
@@ -225,14 +225,14 @@ Resource.add({
 
             children: [
                 {
-                    name: "OldPin", tag: "field",
+                    tag: "field", name: "OldPin",
                     details: "This field shall specify the original PIN. Once the UpdatePIN command is performed successfully, it " +
                         "shall be invalid.",
                     xref: "cluster§6.13.8.1.1"
                 },
 
                 {
-                    name: "NewPin", tag: "field",
+                    tag: "field", name: "NewPin",
                     details: "This field shall indicate a new PIN for the Content Control feature.",
                     xref: "cluster§6.13.8.1.2"
                 }
@@ -240,7 +240,7 @@ Resource.add({
         },
 
         {
-            name: "ResetPin", tag: "command",
+            tag: "command", name: "ResetPin",
             details: "The purpose of this command is to reset the PIN." +
                 "\n" +
                 "If this command is executed successfully, a ResetPINResponse command with a new PIN shall be " +
@@ -249,18 +249,18 @@ Resource.add({
         },
 
         {
-            name: "ResetPinResponse", tag: "command",
+            tag: "command", name: "ResetPinResponse",
             details: "This command shall be generated in response to a ResetPIN command.",
             xref: "cluster§6.13.8.3",
             children: [{
-                name: "PinCode", tag: "field",
+                tag: "field", name: "PinCode",
                 details: "This field shall indicate a new PIN of the Content Control feature.",
                 xref: "cluster§6.13.8.3.1"
             }]
         },
 
         {
-            name: "Enable", tag: "command",
+            tag: "command", name: "Enable",
             details: "The purpose of this command is to turn on the Content Control feature on a media device." +
                 "\n" +
                 "Upon receipt of the Enable command, the media device shall set the Enabled attribute to TRUE.",
@@ -268,7 +268,7 @@ Resource.add({
         },
 
         {
-            name: "Disable", tag: "command",
+            tag: "command", name: "Disable",
             details: "The purpose of this command is to turn off the Content Control feature on a media device." +
                 "\n" +
                 "On receipt of the Disable command, the media device shall set the Enabled attribute to FALSE.",
@@ -276,7 +276,7 @@ Resource.add({
         },
 
         {
-            name: "AddBonusTime", tag: "command",
+            tag: "command", name: "AddBonusTime",
 
             details: "The purpose of this command is to add the extra screen time for the user." +
                 "\n" +
@@ -302,7 +302,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "PinCode", tag: "field",
+                    tag: "field", name: "PinCode",
 
                     details: "This field shall indicate the PIN." +
                         "\n" +
@@ -315,7 +315,7 @@ Resource.add({
                 },
 
                 {
-                    name: "BonusTime", tag: "field",
+                    tag: "field", name: "BonusTime",
                     details: "This field shall indicate the amount of extra time (in seconds) to increase RemainingScreenTime. " +
                         "This field shall NOT exceed the remaining time of this day.",
                     xref: "cluster§6.13.8.6.2"
@@ -324,7 +324,7 @@ Resource.add({
         },
 
         {
-            name: "SetScreenDailyTime", tag: "command",
+            tag: "command", name: "SetScreenDailyTime",
             details: "The purpose of this command is to set the ScreenDailyTime attribute." +
                 "\n" +
                 "Upon receipt of the SetScreenDailyTime command, the media device shall set the ScreenDailyTime " +
@@ -332,7 +332,7 @@ Resource.add({
             xref: "cluster§6.13.8.7",
 
             children: [{
-                name: "ScreenTime", tag: "field",
+                tag: "field", name: "ScreenTime",
                 details: "This field shall indicate the time (in seconds) which the User is allowed to spend watching TV on " +
                     "this media device within one day.",
                 xref: "cluster§6.13.8.7.1"
@@ -340,7 +340,7 @@ Resource.add({
         },
 
         {
-            name: "BlockUnratedContent", tag: "command",
+            tag: "command", name: "BlockUnratedContent",
             details: "The purpose of this command is to specify whether programs with no Content rating must be blocked by " +
                 "this media device." +
                 "\n" +
@@ -350,7 +350,7 @@ Resource.add({
         },
 
         {
-            name: "UnblockUnratedContent", tag: "command",
+            tag: "command", name: "UnblockUnratedContent",
             details: "The purpose of this command is to specify whether programs with no Content rating must be blocked by " +
                 "this media device." +
                 "\n" +
@@ -360,7 +360,7 @@ Resource.add({
         },
 
         {
-            name: "SetOnDemandRatingThreshold", tag: "command",
+            tag: "command", name: "SetOnDemandRatingThreshold",
             details: "The purpose of this command is to set the OnDemandRatingThreshold attribute." +
                 "\n" +
                 "Upon receipt of the SetOnDemandRatingThreshold command, the media device shall check if the Rating " +
@@ -369,7 +369,7 @@ Resource.add({
             xref: "cluster§6.13.8.10",
 
             children: [{
-                name: "Rating", tag: "field",
+                tag: "field", name: "Rating",
                 details: "This field indicates a threshold rating for filtering on-demand content. This field shall be set to " +
                     "one of the values present in the OnDemandRatings attribute",
                 xref: "cluster§6.13.8.10.1"
@@ -377,7 +377,7 @@ Resource.add({
         },
 
         {
-            name: "SetScheduledContentRatingThreshold", tag: "command",
+            tag: "command", name: "SetScheduledContentRatingThreshold",
             details: "The purpose of this command is to set ScheduledContentRatingThreshold attribute." +
                 "\n" +
                 "Upon receipt of the SetScheduledContentRatingThreshold command, the media device shall check if the " +
@@ -386,7 +386,7 @@ Resource.add({
             xref: "cluster§6.13.8.11",
 
             children: [{
-                name: "Rating", tag: "field",
+                tag: "field", name: "Rating",
                 details: "This field indicates a threshold rating for filtering scheduled content. This field shall be set to " +
                     "one of the values present in the ScheduledContentRatings attribute.",
                 xref: "cluster§6.13.8.11.1"
@@ -394,7 +394,7 @@ Resource.add({
         },
 
         {
-            name: "AddBlockChannels", tag: "command",
+            tag: "command", name: "AddBlockChannels",
 
             details: "The purpose of this command is to set BlockChannelList attribute." +
                 "\n" +
@@ -414,7 +414,7 @@ Resource.add({
             xref: "cluster§6.13.8.12",
 
             children: [{
-                name: "Channels", tag: "field",
+                tag: "field", name: "Channels",
                 details: "This field indicates a set of channels that shall be blocked when the Content Control feature is " +
                     "activated. This field shall be set to values present in ChannelList attribute in the Channel " +
                     "cluster. The BlockChannelIndex field passed in this command shall be NULL.",
@@ -423,7 +423,7 @@ Resource.add({
         },
 
         {
-            name: "RemoveBlockChannels", tag: "command",
+            tag: "command", name: "RemoveBlockChannels",
 
             details: "The purpose of this command is to remove channels from the BlockChannelList attribute." +
                 "\n" +
@@ -435,7 +435,7 @@ Resource.add({
             xref: "cluster§6.13.8.13",
 
             children: [{
-                name: "ChannelIndexes", tag: "field",
+                tag: "field", name: "ChannelIndexes",
                 details: "This field shall specify a set of indexes indicating Which channels shall be removed from the " +
                     "BlockChannelList attribute.",
                 xref: "cluster§6.13.8.13.1"
@@ -443,7 +443,7 @@ Resource.add({
         },
 
         {
-            name: "AddBlockApplications", tag: "command",
+            tag: "command", name: "AddBlockApplications",
 
             details: "The purpose of this command is to set applications to the BlockApplicationList attribute." +
                 "\n" +
@@ -463,7 +463,7 @@ Resource.add({
             xref: "cluster§6.13.8.14",
 
             children: [{
-                name: "Applications", tag: "field",
+                tag: "field", name: "Applications",
                 details: "This field indicates a set of applications that shall be blocked when the Content Control feature is " +
                     "activated.",
                 xref: "cluster§6.13.8.14.1"
@@ -471,7 +471,7 @@ Resource.add({
         },
 
         {
-            name: "RemoveBlockApplications", tag: "command",
+            tag: "command", name: "RemoveBlockApplications",
 
             details: "The purpose of this command is to remove applications from the BlockApplicationList attribute." +
                 "\n" +
@@ -483,7 +483,7 @@ Resource.add({
             xref: "cluster§6.13.8.15",
 
             children: [{
-                name: "Applications", tag: "field",
+                tag: "field", name: "Applications",
                 details: "This field indicates a set of applications which shall be removed from BlockApplicationList " +
                     "attribute.",
                 xref: "cluster§6.13.8.15.1"
@@ -491,7 +491,7 @@ Resource.add({
         },
 
         {
-            name: "SetBlockContentTimeWindow", tag: "command",
+            tag: "command", name: "SetBlockContentTimeWindow",
 
             details: "The purpose of this command is to set the BlockContentTimeWindow attribute." +
                 "\n" +
@@ -507,14 +507,14 @@ Resource.add({
 
             xref: "cluster§6.13.8.16",
             children: [{
-                name: "TimeWindow", tag: "field",
+                tag: "field", name: "TimeWindow",
                 details: "This field shall indicate a time window requested to set to the BlockContentTimeWindow attribute.",
                 xref: "cluster§6.13.8.16.1"
             }]
         },
 
         {
-            name: "RemoveBlockContentTimeWindow", tag: "command",
+            tag: "command", name: "RemoveBlockContentTimeWindow",
 
             details: "The purpose of this command is to remove the selected time windows from the BlockContentTimeWindow " +
                 "attribute." +
@@ -528,7 +528,7 @@ Resource.add({
             xref: "cluster§6.13.8.17",
 
             children: [{
-                name: "TimeWindowIndexes", tag: "field",
+                tag: "field", name: "TimeWindowIndexes",
                 details: "This field shall specify a set of time window indexes indicating which time windows will be removed " +
                     "from the BlockContentTimeWindow attribute.",
                 xref: "cluster§6.13.8.17.1"
@@ -536,27 +536,27 @@ Resource.add({
         },
 
         {
-            name: "DayOfWeekBitmap", tag: "datatype",
+            tag: "datatype", name: "DayOfWeekBitmap",
             xref: "cluster§6.13.5.1",
 
             children: [
-                { name: "Sunday", tag: "field", description: "Sunday" },
-                { name: "Monday", tag: "field", description: "Monday" },
-                { name: "Tuesday", tag: "field", description: "Tuesday" },
-                { name: "Wednesday", tag: "field", description: "Wednesday" },
-                { name: "Thursday", tag: "field", description: "Thursday" },
-                { name: "Friday", tag: "field", description: "Friday" },
-                { name: "Saturday", tag: "field", description: "Saturday" }
+                { tag: "field", name: "Sunday", description: "Sunday" },
+                { tag: "field", name: "Monday", description: "Monday" },
+                { tag: "field", name: "Tuesday", description: "Tuesday" },
+                { tag: "field", name: "Wednesday", description: "Wednesday" },
+                { tag: "field", name: "Thursday", description: "Thursday" },
+                { tag: "field", name: "Friday", description: "Friday" },
+                { tag: "field", name: "Saturday", description: "Saturday" }
             ]
         },
 
         {
-            name: "RatingNameStruct", tag: "datatype",
+            tag: "datatype", name: "RatingNameStruct",
             xref: "cluster§6.13.5.2",
 
             children: [
                 {
-                    name: "RatingName", tag: "field",
+                    tag: "field", name: "RatingName",
                     details: "This field shall indicate the name of the rating level of the applied rating system. The applied " +
                         "rating system is dependent upon the region or country where the Node has been provisioned, and may " +
                         "vary from one country to another.",
@@ -564,7 +564,7 @@ Resource.add({
                 },
 
                 {
-                    name: "RatingNameDesc", tag: "field",
+                    tag: "field", name: "RatingNameDesc",
                     details: "This field shall specify a human readable (displayable) description for RatingName.",
                     xref: "cluster§6.13.5.2.2"
                 }
@@ -572,19 +572,19 @@ Resource.add({
         },
 
         {
-            name: "BlockChannelStruct", tag: "datatype",
+            tag: "datatype", name: "BlockChannelStruct",
             xref: "cluster§6.13.5.3",
 
             children: [
                 {
-                    name: "BlockChannelIndex", tag: "field",
+                    tag: "field", name: "BlockChannelIndex",
                     details: "This field shall indicate a unique index value for a blocked channel. This value may be used to " +
                         "indicate one selected channel which will be removed from BlockChannelList attribute.",
                     xref: "cluster§6.13.5.3.1"
                 },
 
                 {
-                    name: "MajorNumber", tag: "field",
+                    tag: "field", name: "MajorNumber",
                     details: "This field shall indicate the channel major number value (for example, using ATSC format). When the " +
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
                         "256, respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
@@ -593,7 +593,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MinorNumber", tag: "field",
+                    tag: "field", name: "MinorNumber",
                     details: "This field shall indicate the channel minor number value (for example, using ATSC format). When the " +
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
                         "respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
@@ -602,7 +602,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Identifier", tag: "field",
+                    tag: "field", name: "Identifier",
                     details: "This field shall indicate the unique identifier for a specific channel. This field is optional, but " +
                         "SHOULD be provided when MajorNumber and MinorNumber are not available.",
                     xref: "cluster§6.13.5.3.4"
@@ -611,12 +611,12 @@ Resource.add({
         },
 
         {
-            name: "AppInfoStruct", tag: "datatype",
+            tag: "datatype", name: "AppInfoStruct",
             xref: "cluster§6.13.5.4",
 
             children: [
                 {
-                    name: "CatalogVendorId", tag: "field",
+                    tag: "field", name: "CatalogVendorId",
                     details: "This field shall indicate the CSA-issued vendor ID for the catalog. The DIAL registry shall use " +
                         "value 0x0000." +
                         "\n" +
@@ -626,7 +626,7 @@ Resource.add({
                 },
 
                 {
-                    name: "ApplicationId", tag: "field",
+                    tag: "field", name: "ApplicationId",
                     details: "This field shall indicate the application identifier, expressed as a string, such as \"PruneVideo\" or " +
                         "\"Company X\". This field shall be unique within a catalog.",
                     xref: "cluster§6.13.5.4.2"
@@ -635,24 +635,24 @@ Resource.add({
         },
 
         {
-            name: "TimeWindowStruct", tag: "datatype",
+            tag: "datatype", name: "TimeWindowStruct",
             xref: "cluster§6.13.5.5",
 
             children: [
                 {
-                    name: "TimeWindowIndex", tag: "field",
+                    tag: "field", name: "TimeWindowIndex",
                     details: "This field shall indicate a unique index of a specific time window. This value may be used to " +
                         "indicate a selected time window which will be removed from the BlockContentTimeWindow attribute.",
                     xref: "cluster§6.13.5.5.1"
                 },
 
                 {
-                    name: "DayOfWeek", tag: "field",
+                    tag: "field", name: "DayOfWeek",
                     details: "This field shall indicate a day of week.",
                     xref: "cluster§6.13.5.5.2"
                 },
                 {
-                    name: "TimePeriod", tag: "field",
+                    tag: "field", name: "TimePeriod",
                     details: "This field shall indicate one or more discrete time periods.",
                     xref: "cluster§6.13.5.5.3"
                 }
@@ -660,28 +660,28 @@ Resource.add({
         },
 
         {
-            name: "TimePeriodStruct", tag: "datatype",
+            tag: "datatype", name: "TimePeriodStruct",
             xref: "cluster§6.13.5.6",
 
             children: [
                 {
-                    name: "StartHour", tag: "field",
+                    tag: "field", name: "StartHour",
                     details: "This field shall indicate the starting hour.",
                     xref: "cluster§6.13.5.6.1"
                 },
                 {
-                    name: "StartMinute", tag: "field",
+                    tag: "field", name: "StartMinute",
                     details: "This field shall indicate the starting minute.",
                     xref: "cluster§6.13.5.6.2"
                 },
                 {
-                    name: "EndHour", tag: "field",
+                    tag: "field", name: "EndHour",
                     details: "This field shall indicate the ending hour. EndHour shall be equal to or greater than StartHour",
                     xref: "cluster§6.13.5.6.3"
                 },
 
                 {
-                    name: "EndMinute", tag: "field",
+                    tag: "field", name: "EndMinute",
                     details: "This field shall indicate the ending minute. If EndHour is equal to StartHour then EndMinute shall " +
                         "be greater than StartMinute. If the EndHour is equal to 23 and the EndMinute is equal to 59, all " +
                         "contents shall be blocked until 23:59:59.",
@@ -691,42 +691,42 @@ Resource.add({
         },
 
         {
-            name: "StatusCodeEnum", tag: "datatype",
+            tag: "datatype", name: "StatusCodeEnum",
             xref: "cluster§6.13.6.1",
 
             children: [
                 {
-                    name: "InvalidPinCode", tag: "field",
+                    tag: "field", name: "InvalidPinCode",
                     description: "Provided PIN Code does not match the current PIN code."
                 },
                 {
-                    name: "InvalidRating", tag: "field",
+                    tag: "field", name: "InvalidRating",
                     description: "Provided Rating is out of scope of the corresponding Rating list."
                 },
-                { name: "InvalidChannel", tag: "field", description: "Provided Channel(s) is invalid." },
-                { name: "ChannelAlreadyExist", tag: "field", description: "Provided Channel(s) already exists." },
+                { tag: "field", name: "InvalidChannel", description: "Provided Channel(s) is invalid." },
+                { tag: "field", name: "ChannelAlreadyExist", description: "Provided Channel(s) already exists." },
                 {
-                    name: "ChannelNotExist", tag: "field",
+                    tag: "field", name: "ChannelNotExist",
                     description: "Provided Channel(s) doesn’t exist in BlockChannelList attribute."
                 },
                 {
-                    name: "UnidentifiableApplication", tag: "field",
+                    tag: "field", name: "UnidentifiableApplication",
                     description: "Provided Application(s) is not identified."
                 },
                 {
-                    name: "ApplicationAlreadyExist", tag: "field",
+                    tag: "field", name: "ApplicationAlreadyExist",
                     description: "Provided Application(s) already exists."
                 },
                 {
-                    name: "ApplicationNotExist", tag: "field",
+                    tag: "field", name: "ApplicationNotExist",
                     description: "Provided Application(s) doesn’t exist in BlockApplicationList attribute."
                 },
                 {
-                    name: "TimeWindowAlreadyExist", tag: "field",
+                    tag: "field", name: "TimeWindowAlreadyExist",
                     description: "Provided time Window already exists in BlockContentTimeWindow attribute."
                 },
                 {
-                    name: "TimeWindowNotExist", tag: "field",
+                    tag: "field", name: "TimeWindowNotExist",
                     description: "Provided time window doesn’t exist in BlockContentTimeWindow attribute."
                 }
             ]

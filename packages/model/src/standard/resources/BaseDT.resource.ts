@@ -9,66 +9,66 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Base", tag: "deviceType",
+    tag: "deviceType", name: "Base",
     classification: "base",
     xref: "device§1.1",
 
     children: [
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
 
             children: [
-                { name: "Zha", tag: "field", description: "Zigbee Home Automation standard", xref: "device§1.1.3.1" },
-                { name: "Zse", tag: "field", description: "Zigbee Smart Energy standard", xref: "device§1.1.3.1" },
-                { name: "Gp", tag: "field", description: "Zigbee Green Power standard", xref: "device§1.1.3.1" },
-                { name: "Zigbee", tag: "field", description: "Zigbee standard", xref: "device§1.1.3.1" },
-                { name: "SuZi", tag: "field", description: "Zigbee PRO Sub-GHz standard", xref: "device§1.1.3.1" },
-                { name: "Matter", tag: "field", description: "Matter standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "Zha", description: "Zigbee Home Automation standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "Zse", description: "Zigbee Smart Energy standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "Gp", description: "Zigbee Green Power standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "Zigbee", description: "Zigbee standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "SuZi", description: "Zigbee PRO Sub-GHz standard", xref: "device§1.1.3.1" },
+                { tag: "field", name: "Matter", description: "Matter standard", xref: "device§1.1.3.1" },
                 {
-                    name: "LanguageLocale", tag: "field",
+                    tag: "field", name: "LanguageLocale",
                     description: "The node supports localization for conveying text to the user",
                     xref: "device§1.1.3.3"
                 },
                 {
-                    name: "TimeLocale", tag: "field",
+                    tag: "field", name: "TimeLocale",
                     description: "The node supports localization for conveying time to the user",
                     xref: "device§1.1.3.3"
                 },
                 {
-                    name: "UnitLocale", tag: "field",
+                    tag: "field", name: "UnitLocale",
                     description: "The node supports localization for conveying units of measure to the user",
                     xref: "device§1.1.3.3"
                 },
                 {
-                    name: "Sit", tag: "field",
+                    tag: "field", name: "Sit",
                     description: "The node is a short idle time intermittently connected device",
                     xref: "device§1.1.4"
                 },
                 {
-                    name: "Lit", tag: "field",
+                    tag: "field", name: "Lit",
                     description: "The node is a long idle time intermittently connected device",
                     xref: "device§1.1.4"
                 },
                 {
-                    name: "Active", tag: "field",
+                    tag: "field", name: "Active",
                     description: "The node is always able to communicate",
                     xref: "device§1.1.4"
                 },
-                { name: "Node", tag: "field", xref: "device§1.1.5" },
-                { name: "App", tag: "field", xref: "device§1.1.5" },
-                { name: "Simple", tag: "field", xref: "device§1.1.5" },
-                { name: "Dynamic", tag: "field", xref: "device§1.1.5" },
-                { name: "Composed", tag: "field", xref: "device§1.1.5" },
-                { name: "Client", tag: "field", xref: "device§1.1.6" },
-                { name: "Server", tag: "field", xref: "device§1.1.6" },
-                { name: "Duplicate", tag: "field", xref: "device§1.1.6" },
-                { name: "BridgedPowerSourceInfo", tag: "field", xref: "device§1.1.6" }
+                { tag: "field", name: "Node", xref: "device§1.1.5" },
+                { tag: "field", name: "App", xref: "device§1.1.5" },
+                { tag: "field", name: "Simple", xref: "device§1.1.5" },
+                { tag: "field", name: "Dynamic", xref: "device§1.1.5" },
+                { tag: "field", name: "Composed", xref: "device§1.1.5" },
+                { tag: "field", name: "Client", xref: "device§1.1.6" },
+                { tag: "field", name: "Server", xref: "device§1.1.6" },
+                { tag: "field", name: "Duplicate", xref: "device§1.1.6" },
+                { tag: "field", name: "BridgedPowerSourceInfo", xref: "device§1.1.6" }
             ]
         },
 
-        { name: "Descriptor", tag: "requirement", xref: "device§1.1.7" },
-        { name: "Binding", tag: "requirement", xref: "device§1.1.7" },
-        { name: "FixedLabel", tag: "requirement", xref: "device§1.1.7" },
-        { name: "UserLabel", tag: "requirement", xref: "device§1.1.7" }
+        { tag: "requirement", name: "Descriptor", xref: "device§1.1.7" },
+        { tag: "requirement", name: "Binding", xref: "device§1.1.7" },
+        { tag: "requirement", name: "FixedLabel", xref: "device§1.1.7" },
+        { tag: "requirement", name: "UserLabel", xref: "device§1.1.7" }
     ]
 });

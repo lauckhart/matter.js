@@ -9,14 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "locationdesc", tag: "datatype",
+    tag: "datatype", name: "locationdesc",
     description: "Location Descriptor",
     details: "This data type shall be represented by the following structure:",
     xref: "core§7.19.2.45",
 
     children: [
         {
-            name: "LocationName", tag: "field",
+            tag: "field", name: "LocationName",
             details: "This field shall indicate the name of the location. For example, \"blue room\"." +
                 "\n" +
                 "If the location name is not user provided, the logic that generates it (clients, devices etc.) " +
@@ -26,7 +26,7 @@ Resource.add({
         },
 
         {
-            name: "FloorNumber", tag: "field",
+            tag: "field", name: "FloorNumber",
 
             details: "This field shall indicate the level number. Negative values correspond to basement levels." +
                 "\n" +
@@ -60,7 +60,7 @@ Resource.add({
         },
 
         {
-            name: "AreaType", tag: "field",
+            tag: "field", name: "AreaType",
 
             details: "This field shall be the ID of an area semantic tag, located within the Common Area Namespace. For " +
                 "example, this tag may indicate that the location refers to a bedroom." +

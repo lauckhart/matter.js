@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "NitrogenDioxideConcentrationMeasurement", tag: "cluster", pics: "NDOCONC" });
+Resource.add({ tag: "cluster", name: "NitrogenDioxideConcentrationMeasurement", pics: "NDOCONC" });

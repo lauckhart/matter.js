@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "OzoneConcentrationMeasurement", tag: "cluster", pics: "OZCONC" });
+Resource.add({ tag: "cluster", name: "OzoneConcentrationMeasurement", pics: "OZCONC" });

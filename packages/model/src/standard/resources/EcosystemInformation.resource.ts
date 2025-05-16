@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "EcosystemInformation", tag: "cluster",
+    tag: "cluster", name: "EcosystemInformation",
     classification: "endpoint", pics: "ECOINFO",
 
     details: "The Ecosystem Information Cluster provides extended device information for all the logical devices " +
@@ -45,7 +45,7 @@ Resource.add({
 
     children: [
         {
-            name: "DeviceDirectory", tag: "attribute",
+            tag: "attribute", name: "DeviceDirectory",
             details: "This attribute shall contain the list of logical devices represented by a Bridged Node. Most of the " +
                 "time this will contain a single entry, but may grow with more complex device compositions (e.g. " +
                 "another bridge.)" +
@@ -55,7 +55,7 @@ Resource.add({
         },
 
         {
-            name: "LocationDirectory", tag: "attribute",
+            tag: "attribute", name: "LocationDirectory",
 
             details: "This attribute shall contain the list of rooms, areas and groups associated with the DeviceDirectory " +
                 "entries, and shall NOT contain locations which are dynamically generated and removed by an " +
@@ -71,19 +71,19 @@ Resource.add({
         },
 
         {
-            name: "EcosystemDeviceStruct", tag: "datatype",
+            tag: "datatype", name: "EcosystemDeviceStruct",
             xref: "core§9.18.4.1",
 
             children: [
                 {
-                    name: "DeviceName", tag: "field",
+                    tag: "field", name: "DeviceName",
                     details: "This field shall indicate the device’s name, which is provided externally if the user consents. (For " +
                         "example, provided by the user in an ecosystem specific interface.)",
                     xref: "core§9.18.4.1.1"
                 },
 
                 {
-                    name: "DeviceNameLastEdit", tag: "field",
+                    tag: "field", name: "DeviceNameLastEdit",
                     details: "This field shall be present and set if the DeviceName field is present." +
                         "\n" +
                         "This field shall indicate the timestamp of when the DeviceName was last modified.",
@@ -91,7 +91,7 @@ Resource.add({
                 },
 
                 {
-                    name: "BridgedEndpoint", tag: "field",
+                    tag: "field", name: "BridgedEndpoint",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on this Bridge." +
                         "\n" +
                         "This field shall be present and set to a valid endpoint if the device is accessible through the " +
@@ -100,7 +100,7 @@ Resource.add({
                 },
 
                 {
-                    name: "OriginalEndpoint", tag: "field",
+                    tag: "field", name: "OriginalEndpoint",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on the original " +
                         "device represented by this bridge’s Bridged Node. If this bridge is receiving the device from " +
                         "another bridge, then the OriginalEndpoint field value would be the same on both bridges. This field " +
@@ -110,7 +110,7 @@ Resource.add({
                 },
 
                 {
-                    name: "DeviceTypes", tag: "field",
+                    tag: "field", name: "DeviceTypes",
                     details: "This field shall indicate all of the DeviceTypes within the DeviceTypeList in the Descriptor Cluster " +
                         "associated with this EcosystemDeviceStruct entry." +
                         "\n" +
@@ -119,14 +119,14 @@ Resource.add({
                 },
 
                 {
-                    name: "UniqueLocationIDs", tag: "field",
+                    tag: "field", name: "UniqueLocationIDs",
                     details: "This field shall specify the EcosystemLocationStruct entries in the LocationDirectory attribute " +
                         "associated with this EcosystemDeviceStruct.",
                     xref: "core§9.18.4.1.6"
                 },
 
                 {
-                    name: "UniqueLocationIDsLastEdit", tag: "field",
+                    tag: "field", name: "UniqueLocationIDsLastEdit",
 
                     details: "This field shall indicate the timestamp of when the UniqueLocationIDs was last modified." +
                         "\n" +
@@ -143,12 +143,12 @@ Resource.add({
         },
 
         {
-            name: "EcosystemLocationStruct", tag: "datatype",
+            tag: "datatype", name: "EcosystemLocationStruct",
             xref: "core§9.18.4.2",
 
             children: [
                 {
-                    name: "UniqueLocationId", tag: "field",
+                    tag: "field", name: "UniqueLocationId",
 
                     details: "This field shall indicate a unique identifier for a specific Ecosystem Information Cluster server " +
                         "instance representing the location independent of its LocationDescriptor field." +
@@ -179,7 +179,7 @@ Resource.add({
                 },
 
                 {
-                    name: "LocationDescriptor", tag: "field",
+                    tag: "field", name: "LocationDescriptor",
 
                     details: "This field shall indicate the location (e.g. living room, driveway) and associated metadata that is " +
                         "provided externally if the user consents. (For example, provided by the user in an ecosystem " +
@@ -192,7 +192,7 @@ Resource.add({
                 },
 
                 {
-                    name: "LocationDescriptorLastEdit", tag: "field",
+                    tag: "field", name: "LocationDescriptorLastEdit",
                     details: "This field shall indicate the timestamp of when the LocationDescriptor was last modified.",
                     xref: "core§9.18.4.2.3"
                 }

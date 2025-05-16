@@ -15,28 +15,28 @@ import {
 } from "../../elements/index.js";
 
 export const LaundryDryerControls = Cluster(
-    { id: 0x4a, name: "LaundryDryerControls" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "LaundryDryerControls", id: 0x4a },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
         {
-            id: 0x0, name: "SupportedDrynessLevels", type: "list",
-            access: "R V", conformance: "M", constraint: "1 to 4"
+            name: "SupportedDrynessLevels", id: 0x0, type: "list",
+            constraint: "1 to 4", conformance: "M", access: "R V"
         },
         Field({ name: "entry", type: "DrynessLevelEnum" })
     ),
 
     Attribute({
-        id: 0x1, name: "SelectedDrynessLevel", type: "DrynessLevelEnum",
-        access: "RW VO", conformance: "M", constraint: "desc", quality: "X"
+        name: "SelectedDrynessLevel", id: 0x1, type: "DrynessLevelEnum",
+        constraint: "desc", conformance: "M", access: "RW VO", quality: "X"
     }),
 
     Datatype(
         { name: "DrynessLevelEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Low", conformance: "M" }),
-        Field({ id: 0x1, name: "Normal", conformance: "M" }),
-        Field({ id: 0x2, name: "Extra", conformance: "M" }),
-        Field({ id: 0x3, name: "Max", conformance: "M" })
+        Field({ name: "Low", id: 0x0, conformance: "M" }),
+        Field({ name: "Normal", id: 0x1, conformance: "M" }),
+        Field({ name: "Extra", id: 0x2, conformance: "M" }),
+        Field({ name: "Max", id: 0x3, conformance: "M" })
     )
 );
 

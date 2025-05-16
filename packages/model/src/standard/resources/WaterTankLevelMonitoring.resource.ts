@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "WaterTankLevelMonitoring", tag: "cluster", pics: "WTLREPMON" });
+Resource.add({ tag: "cluster", name: "WaterTankLevelMonitoring", pics: "WTLREPMON" });

@@ -11,21 +11,21 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const MeasurementTypeEnum = Datatype(
     { name: "MeasurementTypeEnum", type: "enum16" },
-    Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-    Field({ id: 0x1, name: "Voltage", conformance: "M" }),
-    Field({ id: 0x2, name: "ActiveCurrent", conformance: "M" }),
-    Field({ id: 0x3, name: "ReactiveCurrent", conformance: "M" }),
-    Field({ id: 0x4, name: "ApparentCurrent", conformance: "M" }),
-    Field({ id: 0x5, name: "ActivePower", conformance: "M" }),
-    Field({ id: 0x6, name: "ReactivePower", conformance: "M" }),
-    Field({ id: 0x7, name: "ApparentPower", conformance: "M" }),
-    Field({ id: 0x8, name: "RmsVoltage", conformance: "M" }),
-    Field({ id: 0x9, name: "RmsCurrent", conformance: "M" }),
-    Field({ id: 0xa, name: "RmsPower", conformance: "M" }),
-    Field({ id: 0xb, name: "Frequency", conformance: "M" }),
-    Field({ id: 0xc, name: "PowerFactor", conformance: "M" }),
-    Field({ id: 0xd, name: "NeutralCurrent", conformance: "M" }),
-    Field({ id: 0xe, name: "ElectricalEnergy", conformance: "M" })
+    Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+    Field({ name: "Voltage", id: 0x1, conformance: "M" }),
+    Field({ name: "ActiveCurrent", id: 0x2, conformance: "M" }),
+    Field({ name: "ReactiveCurrent", id: 0x3, conformance: "M" }),
+    Field({ name: "ApparentCurrent", id: 0x4, conformance: "M" }),
+    Field({ name: "ActivePower", id: 0x5, conformance: "M" }),
+    Field({ name: "ReactivePower", id: 0x6, conformance: "M" }),
+    Field({ name: "ApparentPower", id: 0x7, conformance: "M" }),
+    Field({ name: "RmsVoltage", id: 0x8, conformance: "M" }),
+    Field({ name: "RmsCurrent", id: 0x9, conformance: "M" }),
+    Field({ name: "RmsPower", id: 0xa, conformance: "M" }),
+    Field({ name: "Frequency", id: 0xb, conformance: "M" }),
+    Field({ name: "PowerFactor", id: 0xc, conformance: "M" }),
+    Field({ name: "NeutralCurrent", id: 0xd, conformance: "M" }),
+    Field({ name: "ElectricalEnergy", id: 0xe, conformance: "M" })
 );
 
 MatterDefinition.children.push(MeasurementTypeEnum);

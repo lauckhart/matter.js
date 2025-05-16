@@ -16,29 +16,29 @@ import {
 } from "../../elements/index.js";
 
 export const ContentAppObserver = Cluster(
-    { id: 0x510, name: "ContentAppObserver" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ContentAppObserver", id: 0x510 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
         {
-            id: 0x0, name: "ContentAppMessage",
-            access: "O", conformance: "M", direction: "request", response: "ContentAppMessageResponse"
+            name: "ContentAppMessage", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "ContentAppMessageResponse"
         },
-        Field({ id: 0x0, name: "Data", type: "string", conformance: "M", constraint: "max 500" }),
-        Field({ id: 0x1, name: "EncodingHint", type: "string", conformance: "O", constraint: "max 100" })
+        Field({ name: "Data", id: 0x0, type: "string", constraint: "max 500", conformance: "M" }),
+        Field({ name: "EncodingHint", id: 0x1, type: "string", constraint: "max 100", conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "ContentAppMessageResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "Data", type: "string", conformance: "O", constraint: "max 500" }),
-        Field({ id: 0x2, name: "EncodingHint", type: "string", conformance: "O", constraint: "max 100" })
+        { name: "ContentAppMessageResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+        Field({ name: "Data", id: 0x1, type: "string", constraint: "max 500", conformance: "O" }),
+        Field({ name: "EncodingHint", id: 0x2, type: "string", constraint: "max 100", conformance: "O" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Success", conformance: "M" }),
-        Field({ id: 0x1, name: "UnexpectedData", conformance: "M" })
+        Field({ name: "Success", id: 0x0, conformance: "M" }),
+        Field({ name: "UnexpectedData", id: 0x1, conformance: "M" })
     )
 );
 

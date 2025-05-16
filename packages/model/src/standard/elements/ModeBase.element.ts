@@ -17,79 +17,79 @@ import {
 
 export const ModeBase = Cluster(
     { name: "ModeBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "DEPONOFF", constraint: "0", longName: "OnOff" })
     ),
 
     Attribute(
         {
-            id: 0x0, name: "SupportedModes", type: "list",
-            access: "R V", conformance: "M", constraint: "2 to 255", quality: "F"
+            name: "SupportedModes", id: 0x0, type: "list",
+            constraint: "2 to 255", conformance: "M", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "ModeOptionStruct" })
     ),
 
-    Attribute({ id: 0x1, name: "CurrentMode", type: "uint8", access: "R V", conformance: "M", constraint: "desc", quality: "N" }),
+    Attribute({ name: "CurrentMode", id: 0x1, type: "uint8", constraint: "desc", conformance: "M", access: "R V", quality: "N" }),
     Attribute({
-        id: 0x2, name: "StartUpMode", type: "uint8",
-        access: "RW VO", conformance: "O", constraint: "desc", quality: "X N"
+        name: "StartUpMode", id: 0x2, type: "uint8",
+        constraint: "desc", conformance: "O", access: "RW VO", quality: "X N"
     }),
     Attribute({
-        id: 0x3, name: "OnMode", type: "uint8",
-        access: "RW VO", conformance: "DEPONOFF", constraint: "desc", default: null, quality: "X N"
+        name: "OnMode", id: 0x3, type: "uint8",
+        default: null, constraint: "desc", conformance: "DEPONOFF", access: "RW VO", quality: "X N"
     }),
 
     Command(
         {
-            id: 0x0, name: "ChangeToMode",
-            access: "O", conformance: "M", direction: "request", response: "ChangeToModeResponse"
+            name: "ChangeToMode", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "ChangeToModeResponse"
         },
-        Field({ id: 0x0, name: "NewMode", type: "uint8", conformance: "M", constraint: "desc" })
+        Field({ name: "NewMode", id: 0x0, type: "uint8", constraint: "desc", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "ChangeToModeResponse", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "ModeChangeStatus", constraint: "desc" }),
-        Field({ id: 0x1, name: "StatusText", type: "string", conformance: "[Status == Success], M", constraint: "max 64" })
+        { name: "ChangeToModeResponse", id: 0x1, direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "ModeChangeStatus", constraint: "desc" }),
+        Field({ name: "StatusText", id: 0x1, type: "string", constraint: "max 64", conformance: "[Status == Success], M" })
     ),
     Datatype(
         { name: "ModeTagStruct", type: "struct" },
-        Field({ id: 0x0, name: "MfgCode", type: "vendor-id", conformance: "O", constraint: "desc" }),
-        Field({ id: 0x1, name: "Value", type: "ModeTag" })
+        Field({ name: "MfgCode", id: 0x0, type: "vendor-id", constraint: "desc", conformance: "O" }),
+        Field({ name: "Value", id: 0x1, type: "ModeTag" })
     ),
 
     Datatype(
         { name: "ModeOptionStruct", type: "struct" },
-        Field({ id: 0x0, name: "Label", type: "string", conformance: "M", constraint: "max 64", quality: "F" }),
-        Field({ id: 0x1, name: "Mode", type: "uint8", conformance: "M", quality: "F" }),
+        Field({ name: "Label", id: 0x0, type: "string", constraint: "max 64", conformance: "M", quality: "F" }),
+        Field({ name: "Mode", id: 0x1, type: "uint8", conformance: "M", quality: "F" }),
         Field(
-            { id: 0x2, name: "ModeTags", type: "list", conformance: "M", constraint: "max 8", quality: "F" },
+            { name: "ModeTags", id: 0x2, type: "list", constraint: "max 8", conformance: "M", quality: "F" },
             Field({ name: "entry", type: "ModeTagStruct" })
         )
     ),
 
     Datatype(
         { name: "ModeChangeStatus", type: "enum8" },
-        Field({ id: 0x0, name: "Success" }),
-        Field({ id: 0x1, name: "UnsupportedMode" }),
-        Field({ id: 0x2, name: "GenericFailure" }),
-        Field({ id: 0x3, name: "InvalidInMode" })
+        Field({ name: "Success", id: 0x0 }),
+        Field({ name: "UnsupportedMode", id: 0x1 }),
+        Field({ name: "GenericFailure", id: 0x2 }),
+        Field({ name: "InvalidInMode", id: 0x3 })
     ),
 
     Datatype(
         { name: "ModeTag", type: "enum16" },
-        Field({ id: 0x0, name: "Auto" }),
-        Field({ id: 0x1, name: "Quick" }),
-        Field({ id: 0x2, name: "Quiet" }),
-        Field({ id: 0x3, name: "LowNoise" }),
-        Field({ id: 0x4, name: "LowEnergy" }),
-        Field({ id: 0x5, name: "Vacation" }),
-        Field({ id: 0x6, name: "Min" }),
-        Field({ id: 0x7, name: "Max" }),
-        Field({ id: 0x8, name: "Night" }),
-        Field({ id: 0x9, name: "Day" })
+        Field({ name: "Auto", id: 0x0 }),
+        Field({ name: "Quick", id: 0x1 }),
+        Field({ name: "Quiet", id: 0x2 }),
+        Field({ name: "LowNoise", id: 0x3 }),
+        Field({ name: "LowEnergy", id: 0x4 }),
+        Field({ name: "Vacation", id: 0x5 }),
+        Field({ name: "Min", id: 0x6 }),
+        Field({ name: "Max", id: 0x7 }),
+        Field({ name: "Night", id: 0x8 }),
+        Field({ name: "Day", id: 0x9 })
     )
 );
 

@@ -17,339 +17,339 @@ import {
 } from "../../elements/index.js";
 
 export const ThreadNetworkDiagnostics = Cluster(
-    { id: 0x35, name: "ThreadNetworkDiagnostics", quality: "K" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "ThreadNetworkDiagnostics", id: 0x35, quality: "K" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "PKTCNT", constraint: "0", longName: "PacketCounts" }),
         Field({ name: "ERRCNT", constraint: "1", longName: "ErrorCounts" }),
         Field({ name: "MLECNT", constraint: "2", longName: "MleCounts" }),
         Field({ name: "MACCNT", constraint: "3", longName: "MacCounts" })
     ),
 
-    Attribute({ id: 0x0, name: "Channel", type: "uint16", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({ id: 0x1, name: "RoutingRole", type: "RoutingRoleEnum", access: "R V", conformance: "M", quality: "X" }),
+    Attribute({ name: "Channel", id: 0x0, type: "uint16", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "RoutingRole", id: 0x1, type: "RoutingRoleEnum", conformance: "M", access: "R V", quality: "X" }),
     Attribute({
-        id: 0x2, name: "NetworkName", type: "string",
-        access: "R V", conformance: "M", constraint: "max 16", quality: "X"
+        name: "NetworkName", id: 0x2, type: "string",
+        constraint: "max 16", conformance: "M", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x3, name: "PanId", type: "uint16", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({ id: 0x4, name: "ExtendedPanId", type: "uint64", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({ id: 0x5, name: "MeshLocalPrefix", type: "ipv6pre", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({ id: 0x6, name: "OverrunCount", type: "uint64", access: "R V", conformance: "ERRCNT", default: 0, quality: "C" }),
+    Attribute({ name: "PanId", id: 0x3, type: "uint16", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "ExtendedPanId", id: 0x4, type: "uint64", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "MeshLocalPrefix", id: 0x5, type: "ipv6pre", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "OverrunCount", id: 0x6, type: "uint64", default: 0, conformance: "ERRCNT", access: "R V", quality: "C" }),
     Attribute(
-        { id: 0x7, name: "NeighborTable", type: "list", access: "R V", conformance: "M", default: [] },
+        { name: "NeighborTable", id: 0x7, type: "list", default: [], conformance: "M", access: "R V" },
         Field({ name: "entry", type: "NeighborTableStruct" })
     ),
     Attribute(
-        { id: 0x8, name: "RouteTable", type: "list", access: "R V", conformance: "M", default: [] },
+        { name: "RouteTable", id: 0x8, type: "list", default: [], conformance: "M", access: "R V" },
         Field({ name: "entry", type: "RouteTableStruct" })
     ),
-    Attribute({ id: 0x9, name: "PartitionId", type: "uint32", access: "R V", conformance: "M", quality: "X" }),
+    Attribute({ name: "PartitionId", id: 0x9, type: "uint32", conformance: "M", access: "R V", quality: "X" }),
     Attribute({
-        id: 0xa, name: "Weighting", type: "uint16",
-        access: "R V", conformance: "M", constraint: "max 255", quality: "X"
+        name: "Weighting", id: 0xa, type: "uint16",
+        constraint: "max 255", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0xb, name: "DataVersion", type: "uint16",
-        access: "R V", conformance: "M", constraint: "max 255", quality: "X"
+        name: "DataVersion", id: 0xb, type: "uint16",
+        constraint: "max 255", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0xc, name: "StableDataVersion", type: "uint16",
-        access: "R V", conformance: "M", constraint: "max 255", quality: "X"
+        name: "StableDataVersion", id: 0xc, type: "uint16",
+        constraint: "max 255", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0xd, name: "LeaderRouterId", type: "uint8",
-        access: "R V", conformance: "M", constraint: "max 62", quality: "X"
+        name: "LeaderRouterId", id: 0xd, type: "uint8",
+        constraint: "max 62", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0xe, name: "DetachedRoleCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "DetachedRoleCount", id: 0xe, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0xf, name: "ChildRoleCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "ChildRoleCount", id: 0xf, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x10, name: "RouterRoleCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "RouterRoleCount", id: 0x10, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x11, name: "LeaderRoleCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "LeaderRoleCount", id: 0x11, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x12, name: "AttachAttemptCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "AttachAttemptCount", id: 0x12, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x13, name: "PartitionIdChangeCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "PartitionIdChangeCount", id: 0x13, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x14, name: "BetterPartitionAttachAttemptCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "BetterPartitionAttachAttemptCount", id: 0x14, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x15, name: "ParentChangeCount", type: "uint16",
-        access: "R V", conformance: "[MLECNT]", default: 0, quality: "C"
+        name: "ParentChangeCount", id: 0x15, type: "uint16",
+        default: 0, conformance: "[MLECNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x16, name: "TxTotalCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxTotalCount", id: 0x16, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x17, name: "TxUnicastCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxUnicastCount", id: 0x17, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x18, name: "TxBroadcastCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxBroadcastCount", id: 0x18, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x19, name: "TxAckRequestedCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxAckRequestedCount", id: 0x19, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x1a, name: "TxAckedCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxAckedCount", id: 0x1a, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x1b, name: "TxNoAckRequestedCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxNoAckRequestedCount", id: 0x1b, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
-    Attribute({ id: 0x1c, name: "TxDataCount", type: "uint32", access: "R V", conformance: "[MACCNT]", default: 0, quality: "C" }),
+    Attribute({ name: "TxDataCount", id: 0x1c, type: "uint32", default: 0, conformance: "[MACCNT]", access: "R V", quality: "C" }),
     Attribute({
-        id: 0x1d, name: "TxDataPollCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
-    }),
-    Attribute({
-        id: 0x1e, name: "TxBeaconCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxDataPollCount", id: 0x1d, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x1f, name: "TxBeaconRequestCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxBeaconCount", id: 0x1e, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x20, name: "TxOtherCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxBeaconRequestCount", id: 0x1f, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x21, name: "TxRetryCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxOtherCount", id: 0x20, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x22, name: "TxDirectMaxRetryExpiryCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxRetryCount", id: 0x21, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x23, name: "TxIndirectMaxRetryExpiryCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxDirectMaxRetryExpiryCount", id: 0x22, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x24, name: "TxErrCcaCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxIndirectMaxRetryExpiryCount", id: 0x23, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x25, name: "TxErrAbortCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxErrCcaCount", id: 0x24, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x26, name: "TxErrBusyChannelCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxErrAbortCount", id: 0x25, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x27, name: "RxTotalCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "TxErrBusyChannelCount", id: 0x26, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x28, name: "RxUnicastCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxTotalCount", id: 0x27, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x29, name: "RxBroadcastCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
-    }),
-    Attribute({ id: 0x2a, name: "RxDataCount", type: "uint32", access: "R V", conformance: "[MACCNT]", default: 0, quality: "C" }),
-    Attribute({
-        id: 0x2b, name: "RxDataPollCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxUnicastCount", id: 0x28, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x2c, name: "RxBeaconCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxBroadcastCount", id: 0x29, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
+    }),
+    Attribute({ name: "RxDataCount", id: 0x2a, type: "uint32", default: 0, conformance: "[MACCNT]", access: "R V", quality: "C" }),
+    Attribute({
+        name: "RxDataPollCount", id: 0x2b, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x2d, name: "RxBeaconRequestCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxBeaconCount", id: 0x2c, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x2e, name: "RxOtherCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxBeaconRequestCount", id: 0x2d, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x2f, name: "RxAddressFilteredCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxOtherCount", id: 0x2e, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x30, name: "RxDestAddrFilteredCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxAddressFilteredCount", id: 0x2f, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x31, name: "RxDuplicatedCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxDestAddrFilteredCount", id: 0x30, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x32, name: "RxErrNoFrameCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxDuplicatedCount", id: 0x31, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x33, name: "RxErrUnknownNeighborCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxErrNoFrameCount", id: 0x32, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x34, name: "RxErrInvalidSrcAddrCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxErrUnknownNeighborCount", id: 0x33, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x35, name: "RxErrSecCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxErrInvalidSrcAddrCount", id: 0x34, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x36, name: "RxErrFcsCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
+        name: "RxErrSecCount", id: 0x35, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x37, name: "RxErrOtherCount", type: "uint32",
-        access: "R V", conformance: "[MACCNT]", default: 0, quality: "C"
-    }),
-    Attribute({ id: 0x38, name: "ActiveTimestamp", type: "uint64", access: "R V", conformance: "O", default: 0, quality: "X" }),
-    Attribute({ id: 0x39, name: "PendingTimestamp", type: "uint64", access: "R V", conformance: "O", default: 0, quality: "X" }),
-    Attribute({ id: 0x3a, name: "Delay", type: "uint32", access: "R V", conformance: "O", default: 0, quality: "X" }),
-    Attribute({ id: 0x3b, name: "SecurityPolicy", type: "SecurityPolicy", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({
-        id: 0x3c, name: "ChannelPage0Mask", type: "octstr",
-        access: "R V", conformance: "M", constraint: "4", quality: "X"
+        name: "RxErrFcsCount", id: 0x36, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
     }),
     Attribute({
-        id: 0x3d, name: "OperationalDatasetComponents", type: "OperationalDatasetComponents",
-        access: "R V", conformance: "M", quality: "X"
+        name: "RxErrOtherCount", id: 0x37, type: "uint32",
+        default: 0, conformance: "[MACCNT]", access: "R V", quality: "C"
+    }),
+    Attribute({ name: "ActiveTimestamp", id: 0x38, type: "uint64", default: 0, conformance: "O", access: "R V", quality: "X" }),
+    Attribute({ name: "PendingTimestamp", id: 0x39, type: "uint64", default: 0, conformance: "O", access: "R V", quality: "X" }),
+    Attribute({ name: "Delay", id: 0x3a, type: "uint32", default: 0, conformance: "O", access: "R V", quality: "X" }),
+    Attribute({ name: "SecurityPolicy", id: 0x3b, type: "SecurityPolicy", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({
+        name: "ChannelPage0Mask", id: 0x3c, type: "octstr",
+        constraint: "4", conformance: "M", access: "R V", quality: "X"
+    }),
+    Attribute({
+        name: "OperationalDatasetComponents", id: 0x3d, type: "OperationalDatasetComponents",
+        conformance: "M", access: "R V", quality: "X"
     }),
 
     Attribute(
         {
-            id: 0x3e, name: "ActiveNetworkFaultsList", type: "list",
-            access: "R V", conformance: "M", constraint: "max 4"
+            name: "ActiveNetworkFaultsList", id: 0x3e, type: "list",
+            constraint: "max 4", conformance: "M", access: "R V"
         },
         Field({ name: "entry", type: "NetworkFaultEnum" })
     ),
 
-    Attribute({ id: 0x3f, name: "ExtAddress", type: "uint64", access: "R V", conformance: "P, M", quality: "X" }),
-    Attribute({ id: 0x40, name: "Rloc16", type: "uint16", access: "R V", conformance: "P, M", quality: "X" }),
+    Attribute({ name: "ExtAddress", id: 0x3f, type: "uint64", conformance: "P, M", access: "R V", quality: "X" }),
+    Attribute({ name: "Rloc16", id: 0x40, type: "uint16", conformance: "P, M", access: "R V", quality: "X" }),
     Event(
-        { id: 0x0, name: "ConnectionStatus", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "ConnectionStatus", type: "ConnectionStatusEnum", conformance: "M" })
+        { name: "ConnectionStatus", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })
     ),
 
     Event(
-        { id: 0x1, name: "NetworkFaultChange", access: "V", conformance: "O", priority: "info" },
+        { name: "NetworkFaultChange", id: 0x1, conformance: "O", access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 4" },
+            { name: "Current", id: 0x0, type: "list", constraint: "max 4", conformance: "M" },
             Field({ name: "entry", type: "NetworkFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 4" },
+            { name: "Previous", id: 0x1, type: "list", constraint: "max 4", conformance: "M" },
             Field({ name: "entry", type: "NetworkFaultEnum" })
         )
     ),
 
-    Command({ id: 0x0, name: "ResetCounts", access: "M", conformance: "ERRCNT", direction: "request", response: "status" }),
+    Command({ name: "ResetCounts", id: 0x0, conformance: "ERRCNT", access: "M", direction: "request", response: "status" }),
 
     Datatype(
         { name: "NetworkFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "LinkDown", conformance: "M" }),
-        Field({ id: 0x2, name: "HardwareFailure", conformance: "M" }),
-        Field({ id: 0x3, name: "NetworkJammed", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "LinkDown", id: 0x1, conformance: "M" }),
+        Field({ name: "HardwareFailure", id: 0x2, conformance: "M" }),
+        Field({ name: "NetworkJammed", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "ConnectionStatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Connected", conformance: "M" }),
-        Field({ id: 0x1, name: "NotConnected", conformance: "M" })
+        Field({ name: "Connected", id: 0x0, conformance: "M" }),
+        Field({ name: "NotConnected", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "RoutingRoleEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "Unassigned", conformance: "M" }),
-        Field({ id: 0x2, name: "SleepyEndDevice", conformance: "M" }),
-        Field({ id: 0x3, name: "EndDevice", conformance: "M" }),
-        Field({ id: 0x4, name: "Reed", conformance: "M" }),
-        Field({ id: 0x5, name: "Router", conformance: "M" }),
-        Field({ id: 0x6, name: "Leader", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "Unassigned", id: 0x1, conformance: "M" }),
+        Field({ name: "SleepyEndDevice", id: 0x2, conformance: "M" }),
+        Field({ name: "EndDevice", id: 0x3, conformance: "M" }),
+        Field({ name: "Reed", id: 0x4, conformance: "M" }),
+        Field({ name: "Router", id: 0x5, conformance: "M" }),
+        Field({ name: "Leader", id: 0x6, conformance: "M" })
     ),
 
     Datatype(
         { name: "NeighborTableStruct", type: "struct" },
-        Field({ id: 0x0, name: "ExtAddress", type: "uint64", conformance: "M" }),
-        Field({ id: 0x1, name: "Age", type: "uint32", conformance: "M" }),
-        Field({ id: 0x2, name: "Rloc16", type: "uint16", conformance: "M" }),
-        Field({ id: 0x3, name: "LinkFrameCounter", type: "uint32", conformance: "M" }),
-        Field({ id: 0x4, name: "MleFrameCounter", type: "uint32", conformance: "M" }),
-        Field({ id: 0x5, name: "Lqi", type: "uint8", conformance: "M", constraint: "0 to 255" }),
+        Field({ name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" }),
+        Field({ name: "Age", id: 0x1, type: "uint32", conformance: "M" }),
+        Field({ name: "Rloc16", id: 0x2, type: "uint16", conformance: "M" }),
+        Field({ name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M" }),
+        Field({ name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M" }),
+        Field({ name: "Lqi", id: 0x5, type: "uint8", constraint: "0 to 255", conformance: "M" }),
         Field({
-            id: 0x6, name: "AverageRssi", type: "int8",
-            conformance: "M", constraint: "-128 to 0", default: null, quality: "X"
+            name: "AverageRssi", id: 0x6, type: "int8",
+            default: null, constraint: "-128 to 0", conformance: "M", quality: "X"
         }),
         Field({
-            id: 0x7, name: "LastRssi", type: "int8",
-            conformance: "M", constraint: "-128 to 0", default: null, quality: "X"
+            name: "LastRssi", id: 0x7, type: "int8",
+            default: null, constraint: "-128 to 0", conformance: "M", quality: "X"
         }),
-        Field({ id: 0x8, name: "FrameErrorRate", type: "uint8", conformance: "M", constraint: "0 to 100", default: 0 }),
-        Field({ id: 0x9, name: "MessageErrorRate", type: "uint8", conformance: "M", constraint: "0 to 100", default: 0 }),
-        Field({ id: 0xa, name: "RxOnWhenIdle", type: "bool", conformance: "M" }),
-        Field({ id: 0xb, name: "FullThreadDevice", type: "bool", conformance: "M" }),
-        Field({ id: 0xc, name: "FullNetworkData", type: "bool", conformance: "M" }),
-        Field({ id: 0xd, name: "IsChild", type: "bool", conformance: "M" })
+        Field({ name: "FrameErrorRate", id: 0x8, type: "uint8", default: 0, constraint: "0 to 100", conformance: "M" }),
+        Field({ name: "MessageErrorRate", id: 0x9, type: "uint8", default: 0, constraint: "0 to 100", conformance: "M" }),
+        Field({ name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M" }),
+        Field({ name: "FullThreadDevice", id: 0xb, type: "bool", conformance: "M" }),
+        Field({ name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M" }),
+        Field({ name: "IsChild", id: 0xd, type: "bool", conformance: "M" })
     ),
 
     Datatype(
         { name: "RouteTableStruct", type: "struct" },
-        Field({ id: 0x0, name: "ExtAddress", type: "uint64", conformance: "M" }),
-        Field({ id: 0x1, name: "Rloc16", type: "uint16", conformance: "M" }),
-        Field({ id: 0x2, name: "RouterId", type: "uint8", conformance: "M" }),
-        Field({ id: 0x3, name: "NextHop", type: "uint8", conformance: "M" }),
-        Field({ id: 0x4, name: "PathCost", type: "uint8", conformance: "M" }),
-        Field({ id: 0x5, name: "LqiIn", type: "uint8", conformance: "M" }),
-        Field({ id: 0x6, name: "LqiOut", type: "uint8", conformance: "M" }),
-        Field({ id: 0x7, name: "Age", type: "uint8", conformance: "M" }),
-        Field({ id: 0x8, name: "Allocated", type: "bool", conformance: "M" }),
-        Field({ id: 0x9, name: "LinkEstablished", type: "bool", conformance: "M" })
+        Field({ name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" }),
+        Field({ name: "Rloc16", id: 0x1, type: "uint16", conformance: "M" }),
+        Field({ name: "RouterId", id: 0x2, type: "uint8", conformance: "M" }),
+        Field({ name: "NextHop", id: 0x3, type: "uint8", conformance: "M" }),
+        Field({ name: "PathCost", id: 0x4, type: "uint8", conformance: "M" }),
+        Field({ name: "LqiIn", id: 0x5, type: "uint8", conformance: "M" }),
+        Field({ name: "LqiOut", id: 0x6, type: "uint8", conformance: "M" }),
+        Field({ name: "Age", id: 0x7, type: "uint8", conformance: "M" }),
+        Field({ name: "Allocated", id: 0x8, type: "bool", conformance: "M" }),
+        Field({ name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M" })
     ),
 
     Datatype(
         { name: "SecurityPolicy", type: "struct" },
-        Field({ id: 0x0, name: "RotationTime", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "Flags", type: "uint16", conformance: "M" })
+        Field({ name: "RotationTime", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "Flags", id: 0x1, type: "uint16", conformance: "M" })
     ),
 
     Datatype(
         { name: "OperationalDatasetComponents", type: "struct" },
-        Field({ id: 0x0, name: "ActiveTimestampPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x1, name: "PendingTimestampPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x2, name: "MasterKeyPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x3, name: "NetworkNamePresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x4, name: "ExtendedPanIdPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x5, name: "MeshLocalPrefixPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x6, name: "DelayPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x7, name: "PanIdPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x8, name: "ChannelPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0x9, name: "PskcPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0xa, name: "SecurityPolicyPresent", type: "bool", conformance: "M" }),
-        Field({ id: 0xb, name: "ChannelMaskPresent", type: "bool", conformance: "M" })
+        Field({ name: "ActiveTimestampPresent", id: 0x0, type: "bool", conformance: "M" }),
+        Field({ name: "PendingTimestampPresent", id: 0x1, type: "bool", conformance: "M" }),
+        Field({ name: "MasterKeyPresent", id: 0x2, type: "bool", conformance: "M" }),
+        Field({ name: "NetworkNamePresent", id: 0x3, type: "bool", conformance: "M" }),
+        Field({ name: "ExtendedPanIdPresent", id: 0x4, type: "bool", conformance: "M" }),
+        Field({ name: "MeshLocalPrefixPresent", id: 0x5, type: "bool", conformance: "M" }),
+        Field({ name: "DelayPresent", id: 0x6, type: "bool", conformance: "M" }),
+        Field({ name: "PanIdPresent", id: 0x7, type: "bool", conformance: "M" }),
+        Field({ name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M" }),
+        Field({ name: "PskcPresent", id: 0x9, type: "bool", conformance: "M" }),
+        Field({ name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M" }),
+        Field({ name: "ChannelMaskPresent", id: 0xb, type: "bool", conformance: "M" })
     )
 );
 

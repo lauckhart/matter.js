@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ipv6adr", tag: "datatype",
+    tag: "datatype", name: "ipv6adr",
     description: "IPv6 Address",
 
     details: "The IPv6 address data type is derived from an octet string. The octets shall correspond to the full " +

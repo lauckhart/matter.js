@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WiFiNetworkDiagnostics", tag: "cluster",
+    tag: "cluster", name: "WiFiNetworkDiagnostics",
     classification: "node", pics: "DGWIFI",
     details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
         "that may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
@@ -19,17 +19,17 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.15.4",
 
             children: [
                 {
-                    name: "PKTCNT", tag: "field",
+                    tag: "field", name: "PKTCNT",
                     details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
                         "interface."
                 },
                 {
-                    name: "ERRCNT", tag: "field",
+                    tag: "field", name: "ERRCNT",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception and " +
                         "transmission of packets on the Wi-Fi interface."
                 }
@@ -37,40 +37,40 @@ Resource.add({
         },
 
         {
-            name: "Bssid", tag: "attribute",
+            tag: "attribute", name: "Bssid",
             details: "The BSSID attribute shall indicate the BSSID for which the Wi-Fi network the Node is currently " +
                 "connected.",
             xref: "core§11.15.6.1"
         },
 
         {
-            name: "SecurityType", tag: "attribute",
+            tag: "attribute", name: "SecurityType",
             details: "The SecurityType attribute shall indicate the current type of Wi-Fi security used.",
             xref: "core§11.15.6.2"
         },
 
         {
-            name: "WiFiVersion", tag: "attribute",
+            tag: "attribute", name: "WiFiVersion",
             details: "The WiFiVersion attribute shall indicate the current 802.11 standard version in use by the Node, per " +
                 "the table below.",
             xref: "core§11.15.6.3"
         },
 
         {
-            name: "ChannelNumber", tag: "attribute",
+            tag: "attribute", name: "ChannelNumber",
             details: "The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently " +
                 "operating on.",
             xref: "core§11.15.6.4"
         },
 
         {
-            name: "Rssi", tag: "attribute",
+            tag: "attribute", name: "Rssi",
             details: "The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.",
             xref: "core§11.15.6.5"
         },
 
         {
-            name: "BeaconLostCount", tag: "attribute",
+            tag: "attribute", name: "BeaconLostCount",
             details: "The BeaconLostCount attribute shall indicate the count of the number of missed beacons the Node has " +
                 "detected. If the Node does not have an ability to count beacons expected and not received, this " +
                 "value may remain set to zero.",
@@ -78,7 +78,7 @@ Resource.add({
         },
 
         {
-            name: "BeaconRxCount", tag: "attribute",
+            tag: "attribute", name: "BeaconRxCount",
             details: "The BeaconRxCount attribute shall indicate the count of the number of received beacons. The total " +
                 "number of expected beacons that could have been received during the interval since association " +
                 "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
@@ -87,42 +87,42 @@ Resource.add({
         },
 
         {
-            name: "PacketMulticastRxCount", tag: "attribute",
+            tag: "attribute", name: "PacketMulticastRxCount",
             details: "The PacketMulticastRxCount attribute shall indicate the number of multicast packets received by the " +
                 "Node.",
             xref: "core§11.15.6.8"
         },
 
         {
-            name: "PacketMulticastTxCount", tag: "attribute",
+            tag: "attribute", name: "PacketMulticastTxCount",
             details: "The PacketMulticastTxCount attribute shall indicate the number of multicast packets transmitted by " +
                 "the Node.",
             xref: "core§11.15.6.9"
         },
 
         {
-            name: "PacketUnicastRxCount", tag: "attribute",
+            tag: "attribute", name: "PacketUnicastRxCount",
             details: "The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the " +
                 "Node.",
             xref: "core§11.15.6.10"
         },
 
         {
-            name: "PacketUnicastTxCount", tag: "attribute",
+            tag: "attribute", name: "PacketUnicastTxCount",
             details: "The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the " +
                 "Node.",
             xref: "core§11.15.6.11"
         },
 
         {
-            name: "CurrentMaxRate", tag: "attribute",
+            tag: "attribute", name: "CurrentMaxRate",
             details: "The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in " +
                 "bits-per-second.",
             xref: "core§11.15.6.12"
         },
 
         {
-            name: "OverrunCount", tag: "attribute",
+            tag: "attribute", name: "OverrunCount",
             details: "The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, " +
                 "due to lack of buffer memory to retain all packets on the network interface. The OverrunCount " +
                 "attribute shall be reset to 0 upon a reboot of the Node.",
@@ -130,13 +130,13 @@ Resource.add({
         },
 
         {
-            name: "Disconnection", tag: "event",
+            tag: "event", name: "Disconnection",
             details: "The Disconnection Event shall indicate that a Node’s Wi-Fi connection has been disconnected as a " +
                 "result of de-authenticated or dis-association and indicates the reason.",
             xref: "core§11.15.8.1",
 
             children: [{
-                name: "ReasonCode", tag: "field",
+                tag: "field", name: "ReasonCode",
                 details: "This field shall contain the Reason Code field value for the Disassociation or Deauthentication " +
                     "event that caused the disconnection and the value shall align with Table 9-49 \"Reason codes\" of IEEE " +
                     "802.11-2020.",
@@ -145,7 +145,7 @@ Resource.add({
         },
 
         {
-            name: "AssociationFailure", tag: "event",
+            tag: "event", name: "AssociationFailure",
             details: "The AssociationFailure event shall indicate that a Node has attempted to connect, or reconnect, to a " +
                 "Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all " +
                 "internal retries of its supplicant.",
@@ -153,13 +153,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "AssociationFailureCause", tag: "field",
+                    tag: "field", name: "AssociationFailureCause",
                     details: "The Status field shall be set to a value from the AssociationFailureCauseEnum.",
                     xref: "core§11.15.8.2.1"
                 },
 
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
 
                     details: "The Status field shall be set to the Status Code value that was present in the last frame related to " +
                         "association where Status Code was not equal to zero and which caused the failure of a last trial " +
@@ -179,7 +179,7 @@ Resource.add({
         },
 
         {
-            name: "ConnectionStatus", tag: "event",
+            tag: "event", name: "ConnectionStatus",
             details: "The ConnectionStatus Event shall indicate that a Node’s connection status to a Wi-Fi network has " +
                 "changed. Connected, in this context, shall mean that a Node acting as a Wi-Fi station is " +
                 "successfully associated to a Wi-Fi Access Point.",
@@ -187,7 +187,7 @@ Resource.add({
         },
 
         {
-            name: "ResetCounts", tag: "command",
+            tag: "command", name: "ResetCounts",
 
             details: "Reception of this command shall reset the following attributes to 0:" +
                 "\n" +
@@ -209,60 +209,60 @@ Resource.add({
         },
 
         {
-            name: "SecurityTypeEnum", tag: "datatype",
+            tag: "datatype", name: "SecurityTypeEnum",
             xref: "core§11.15.5.1",
 
             children: [
                 {
-                    name: "Unspecified", tag: "field",
+                    tag: "field", name: "Unspecified",
                     description: "Indicate the usage of an unspecified Wi-Fi security type"
                 },
-                { name: "None", tag: "field", description: "Indicate the usage of no Wi-Fi security" },
-                { name: "Wep", tag: "field", description: "Indicate the usage of WEP Wi-Fi security" },
-                { name: "Wpa", tag: "field", description: "Indicate the usage of WPA Wi-Fi security" },
-                { name: "Wpa2", tag: "field", description: "Indicate the usage of WPA2 Wi-Fi security" },
-                { name: "Wpa3", tag: "field", description: "Indicate the usage of WPA3 Wi-Fi security" }
+                { tag: "field", name: "None", description: "Indicate the usage of no Wi-Fi security" },
+                { tag: "field", name: "Wep", description: "Indicate the usage of WEP Wi-Fi security" },
+                { tag: "field", name: "Wpa", description: "Indicate the usage of WPA Wi-Fi security" },
+                { tag: "field", name: "Wpa2", description: "Indicate the usage of WPA2 Wi-Fi security" },
+                { tag: "field", name: "Wpa3", description: "Indicate the usage of WPA3 Wi-Fi security" }
             ]
         },
 
         {
-            name: "WiFiVersionEnum", tag: "datatype",
+            tag: "datatype", name: "WiFiVersionEnum",
             xref: "core§11.15.5.2",
 
             children: [
                 {
-                    name: "Ac", tag: "field",
+                    tag: "field", name: "Ac",
                     description: "Indicate the network interface is currently using 802.11ac against the wireless access point."
                 },
                 {
-                    name: "Ax", tag: "field",
+                    tag: "field", name: "Ax",
                     description: "Indicate the network interface is currently using 802.11ax against the wireless access point."
                 },
                 {
-                    name: "Ah", tag: "field",
+                    tag: "field", name: "Ah",
                     description: "Indicate the network interface is currently using 802.11ah against the wireless access point."
                 }
             ]
         },
 
         {
-            name: "AssociationFailureCauseEnum", tag: "datatype",
+            tag: "datatype", name: "AssociationFailureCauseEnum",
             xref: "core§11.15.5.3",
 
             children: [
-                { name: "Unknown", tag: "field", description: "The reason for the failure is unknown." },
-                { name: "AssociationFailed", tag: "field", description: "An error occurred during association." },
-                { name: "AuthenticationFailed", tag: "field", description: "An error occurred during authentication." },
-                { name: "SsidNotFound", tag: "field", description: "The specified SSID could not be found." }
+                { tag: "field", name: "Unknown", description: "The reason for the failure is unknown." },
+                { tag: "field", name: "AssociationFailed", description: "An error occurred during association." },
+                { tag: "field", name: "AuthenticationFailed", description: "An error occurred during authentication." },
+                { tag: "field", name: "SsidNotFound", description: "The specified SSID could not be found." }
             ]
         },
 
         {
-            name: "ConnectionStatusEnum", tag: "datatype",
+            tag: "datatype", name: "ConnectionStatusEnum",
             xref: "core§11.15.5.4",
             children: [
-                { name: "Connected", tag: "field", description: "Indicate the node is connected" },
-                { name: "NotConnected", tag: "field", description: "Indicate the node is not connected" }
+                { tag: "field", name: "Connected", description: "Indicate the node is connected" },
+                { tag: "field", name: "NotConnected", description: "Indicate the node is not connected" }
             ]
         }
     ]

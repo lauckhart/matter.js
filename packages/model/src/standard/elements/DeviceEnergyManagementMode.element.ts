@@ -15,34 +15,34 @@ import {
 } from "../../elements/index.js";
 
 export const DeviceEnergyManagementMode = Cluster(
-    { id: 0x9f, name: "DeviceEnergyManagementMode", type: "ModeBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "DeviceEnergyManagementMode", id: 0x9f, type: "ModeBase" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", longName: "OnOff" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "DEPONOFF", constraint: "0", conformance: "X", longName: "OnOff" })
     ),
-    Attribute({ id: 0x0, name: "SupportedModes" }),
-    Attribute({ id: 0x1, name: "CurrentMode" }),
-    Attribute({ id: 0x2, name: "StartUpMode", conformance: "X" }),
-    Attribute({ id: 0x3, name: "OnMode", conformance: "X" }),
+    Attribute({ name: "SupportedModes", id: 0x0 }),
+    Attribute({ name: "CurrentMode", id: 0x1 }),
+    Attribute({ name: "StartUpMode", id: 0x2, conformance: "X" }),
+    Attribute({ name: "OnMode", id: 0x3, conformance: "X" }),
     Datatype({ name: "ModeOptionStruct", type: "ModeOptionStruct" }),
 
     Datatype(
         { name: "ModeTag", type: "enum16" },
-        Field({ id: 0x0, name: "Auto" }),
-        Field({ id: 0x1, name: "Quick" }),
-        Field({ id: 0x2, name: "Quiet" }),
-        Field({ id: 0x3, name: "LowNoise" }),
-        Field({ id: 0x4, name: "LowEnergy" }),
-        Field({ id: 0x5, name: "Vacation" }),
-        Field({ id: 0x6, name: "Min" }),
-        Field({ id: 0x7, name: "Max" }),
-        Field({ id: 0x8, name: "Night" }),
-        Field({ id: 0x9, name: "Day" }),
-        Field({ id: 0x4000, name: "NoOptimization" }),
-        Field({ id: 0x4001, name: "DeviceOptimization" }),
-        Field({ id: 0x4002, name: "LocalOptimization" }),
-        Field({ id: 0x4003, name: "GridOptimization" })
+        Field({ name: "Auto", id: 0x0 }),
+        Field({ name: "Quick", id: 0x1 }),
+        Field({ name: "Quiet", id: 0x2 }),
+        Field({ name: "LowNoise", id: 0x3 }),
+        Field({ name: "LowEnergy", id: 0x4 }),
+        Field({ name: "Vacation", id: 0x5 }),
+        Field({ name: "Min", id: 0x6 }),
+        Field({ name: "Max", id: 0x7 }),
+        Field({ name: "Night", id: 0x8 }),
+        Field({ name: "Day", id: 0x9 }),
+        Field({ name: "NoOptimization", id: 0x4000 }),
+        Field({ name: "DeviceOptimization", id: 0x4001 }),
+        Field({ name: "LocalOptimization", id: 0x4002 }),
+        Field({ name: "GridOptimization", id: 0x4003 })
     )
 );
 

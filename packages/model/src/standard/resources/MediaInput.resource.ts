@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MediaInput", tag: "cluster",
+    tag: "cluster", name: "MediaInput",
     classification: "application", pics: "MEDIAINPUT",
 
     details: "This cluster provides an interface for controlling the Input Selector on a media device such as a " +
@@ -28,30 +28,30 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§6.9.4",
-            children: [{ name: "NU", tag: "field", details: "Supports updates to the input names" }]
+            children: [{ tag: "field", name: "NU", details: "Supports updates to the input names" }]
         },
         {
-            name: "InputList", tag: "attribute",
+            tag: "attribute", name: "InputList",
             details: "This attribute shall provide a list of the media inputs supported by the device.",
             xref: "cluster§6.9.6.1"
         },
         {
-            name: "CurrentInput", tag: "attribute",
+            tag: "attribute", name: "CurrentInput",
             details: "This attribute shall contain the value of the index field of the currently selected InputInfoStruct.",
             xref: "cluster§6.9.6.2"
         },
 
         {
-            name: "SelectInput", tag: "command",
+            tag: "command", name: "SelectInput",
             details: "Upon receipt, this command shall change the media input on the device to the input at a specific" +
                 "\n" +
                 "index in the Input List.",
             xref: "cluster§6.9.7.1",
 
             children: [{
-                name: "Index", tag: "field",
+                tag: "field", name: "Index",
                 details: "This field shall indicate the index field of the InputInfoStruct from the InputList attribute in " +
                     "which to change to.",
                 xref: "cluster§6.9.7.1.1"
@@ -59,57 +59,57 @@ Resource.add({
         },
 
         {
-            name: "ShowInputStatus", tag: "command",
+            tag: "command", name: "ShowInputStatus",
             details: "Upon receipt, this command shall display the active status of the input list on screen.",
             xref: "cluster§6.9.7.2"
         },
         {
-            name: "HideInputStatus", tag: "command",
+            tag: "command", name: "HideInputStatus",
             details: "Upon receipt, this command shall hide the input list from the screen.",
             xref: "cluster§6.9.7.3"
         },
 
         {
-            name: "RenameInput", tag: "command",
+            tag: "command", name: "RenameInput",
             details: "Upon receipt, this command shall rename the input at a specific index in the Input List. Updates to " +
                 "the input name shall appear in the device’s settings menus.",
             xref: "cluster§6.9.7.4"
         },
 
         {
-            name: "InputTypeEnum", tag: "datatype",
+            tag: "datatype", name: "InputTypeEnum",
             xref: "cluster§6.9.5.1",
             children: [
-                { name: "Internal", tag: "field", description: "Indicates content not coming from a physical input." }
+                { tag: "field", name: "Internal", description: "Indicates content not coming from a physical input." }
             ]
         },
 
         {
-            name: "InputInfoStruct", tag: "datatype",
+            tag: "datatype", name: "InputInfoStruct",
             details: "This contains information about an input.",
             xref: "cluster§6.9.5.2",
 
             children: [
                 {
-                    name: "Index", tag: "field",
+                    tag: "field", name: "Index",
                     details: "This field shall indicate the unique index into the list of Inputs.",
                     xref: "cluster§6.9.5.2.1"
                 },
                 {
-                    name: "InputType", tag: "field",
+                    tag: "field", name: "InputType",
                     details: "This field shall indicate the type of input",
                     xref: "cluster§6.9.5.2.2"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "This field shall indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be " +
                         "provided when known.",
                     xref: "cluster§6.9.5.2.3"
                 },
 
                 {
-                    name: "Description", tag: "field",
+                    tag: "field", name: "Description",
                     details: "This field shall indicate the user editable input description, such as “Living room Playstation”. " +
                         "This field may be blank, but SHOULD be provided when known.",
                     xref: "cluster§6.9.5.2.4"

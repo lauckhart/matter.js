@@ -9,14 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OccupancySensor", tag: "deviceType",
+    tag: "deviceType", name: "OccupancySensor",
     classification: "simple",
     details: "An Occupancy Sensor is a measurement and sensing device that is capable of measuring and reporting " +
         "the occupancy state in a designated area.",
     xref: "device§7.3",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§7.3.4" },
-        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.3.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§7.3.4" }
+        { tag: "requirement", name: "Identify", xref: "device§7.3.4" },
+        { tag: "requirement", name: "BooleanStateConfiguration", xref: "device§7.3.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§7.3.4" }
     ]
 });

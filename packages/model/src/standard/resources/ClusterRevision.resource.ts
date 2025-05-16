@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ClusterRevision", tag: "attribute",
+    tag: "attribute", name: "ClusterRevision",
 
     details: "The ClusterRevision attribute indicates the revision of the server cluster specification supported " +
         "by the cluster instance. An implementation of a cluster specification before the ClusterRevision " +

@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "ActivatedCarbonFilterMonitoring", tag: "cluster", pics: "ACFREMON" });
+Resource.add({ tag: "cluster", name: "ActivatedCarbonFilterMonitoring", pics: "ACFREMON" });

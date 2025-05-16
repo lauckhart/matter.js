@@ -10,17 +10,17 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const WaterFreezeDetectorDt = DeviceType(
-    { id: 0x41, name: "WaterFreezeDetector", classification: "simple" },
+    { name: "WaterFreezeDetector", id: 0x41 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 65, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 65, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
     Requirement(
-        { id: 0x45, name: "BooleanState", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "StateChange", conformance: "M", element: "event" })
+        { name: "BooleanState", id: 0x45, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "StateChange", element: "event", conformance: "M" })
     ),
-    Requirement({ id: 0x80, name: "BooleanStateConfiguration", conformance: "O", element: "serverCluster" })
+    Requirement({ name: "BooleanStateConfiguration", id: 0x80, element: "serverCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(WaterFreezeDetectorDt);

@@ -9,27 +9,27 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ElectricalMeasurement", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "ElectricalMeasurement",
     details: "The tags contained in this namespace are restricted for use in the electrical measurement domain and " +
         "shall NOT be used in any other domain or context.",
     xref: "namespace§12",
 
     children: [
-        { name: "DC", tag: "semanticTag", description: "Indicates values measured for a DC load" },
+        { tag: "semanticTag", name: "DC", description: "Indicates values measured for a DC load" },
         {
-            name: "AC", tag: "semanticTag",
+            tag: "semanticTag", name: "AC",
             description: "Indicates values measured for a single-phase AC load, or values measured for the collective load on a polyphase AC power supply"
         },
         {
-            name: "ACPhase1", tag: "semanticTag",
+            tag: "semanticTag", name: "ACPhase1",
             description: "Indicates values measured for an AC load on phase 1 of a polyphase power supply"
         },
         {
-            name: "ACPhase2", tag: "semanticTag",
+            tag: "semanticTag", name: "ACPhase2",
             description: "Indicates values measured for an AC load on phase 2 of a polyphase power supply"
         },
         {
-            name: "ACPhase3", tag: "semanticTag",
+            tag: "semanticTag", name: "ACPhase3",
             description: "Indicates values measured for an AC load on phase 3 of a polyphase power supply"
         }
     ]

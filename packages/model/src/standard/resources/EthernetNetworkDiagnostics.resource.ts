@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "EthernetNetworkDiagnostics", tag: "cluster",
+    tag: "cluster", name: "EthernetNetworkDiagnostics",
     classification: "node", pics: "DGETH",
     details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
         "metrics that may be used by a Node to assist a user or Administrator in diagnosing potential " +
@@ -19,17 +19,17 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.16.4",
 
             children: [
                 {
-                    name: "PKTCNT", tag: "field",
+                    tag: "field", name: "PKTCNT",
                     details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
                         "interface."
                 },
                 {
-                    name: "ERRCNT", tag: "field",
+                    tag: "field", name: "ERRCNT",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception and " +
                         "transmission of packets on the ethernet interface."
                 }
@@ -37,7 +37,7 @@ Resource.add({
         },
 
         {
-            name: "PhyRate", tag: "attribute",
+            tag: "attribute", name: "PhyRate",
             details: "The PHYRate attribute shall indicate the current nominal, usable speed at the top of the physical " +
                 "layer of the Node. A value of null shall indicate that the interface is not currently configured or " +
                 "operational.",
@@ -45,14 +45,14 @@ Resource.add({
         },
 
         {
-            name: "FullDuplex", tag: "attribute",
+            tag: "attribute", name: "FullDuplex",
             details: "The FullDuplex attribute shall indicate if the Node is currently utilizing the full-duplex operating " +
                 "mode. A value of null shall indicate that the interface is not currently configured or operational.",
             xref: "core§11.16.6.2"
         },
 
         {
-            name: "PacketRxCount", tag: "attribute",
+            tag: "attribute", name: "PacketRxCount",
             details: "The PacketRxCount attribute shall indicate the number of packets that have been received on the " +
                 "ethernet network interface. The PacketRxCount attribute shall be reset to 0 upon a reboot of the " +
                 "Node.",
@@ -60,7 +60,7 @@ Resource.add({
         },
 
         {
-            name: "PacketTxCount", tag: "attribute",
+            tag: "attribute", name: "PacketTxCount",
             details: "The PacketTxCount attribute shall indicate the number of packets that have been successfully " +
                 "transferred on the ethernet network interface. The PacketTxCount attribute shall be reset to 0 upon " +
                 "a reboot of the Node.",
@@ -68,7 +68,7 @@ Resource.add({
         },
 
         {
-            name: "TxErrCount", tag: "attribute",
+            tag: "attribute", name: "TxErrCount",
             details: "The TxErrCount attribute shall indicate the number of failed packet transmissions that have occurred " +
                 "on the ethernet network interface. The TxErrCount attribute shall be reset to 0 upon a reboot of the " +
                 "Node.",
@@ -76,7 +76,7 @@ Resource.add({
         },
 
         {
-            name: "CollisionCount", tag: "attribute",
+            tag: "attribute", name: "CollisionCount",
             details: "The CollisionCount attribute shall indicate the number of collisions that have occurred while " +
                 "attempting to transmit a packet on the ethernet network interface. The CollisionCount attribute " +
                 "shall be reset to 0 upon a reboot of the Node.",
@@ -84,7 +84,7 @@ Resource.add({
         },
 
         {
-            name: "OverrunCount", tag: "attribute",
+            tag: "attribute", name: "OverrunCount",
             details: "The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, " +
                 "due to lack of buffer memory to retain all packets on the ethernet network interface. The " +
                 "OverrunCount attribute shall be reset to 0 upon a reboot of the Node.",
@@ -92,7 +92,7 @@ Resource.add({
         },
 
         {
-            name: "CarrierDetect", tag: "attribute",
+            tag: "attribute", name: "CarrierDetect",
             details: "The CarrierDetect attribute shall indicate the value of the Carrier Detect control signal present on " +
                 "the ethernet network interface. A value of null shall indicate that the interface is not currently " +
                 "configured or operational.",
@@ -100,14 +100,14 @@ Resource.add({
         },
 
         {
-            name: "TimeSinceReset", tag: "attribute",
+            tag: "attribute", name: "TimeSinceReset",
             details: "The TimeSinceReset attribute shall indicate the duration of time, in minutes, that it has been since " +
                 "the ethernet network interface has reset for any reason.",
             xref: "core§11.16.6.9"
         },
 
         {
-            name: "ResetCounts", tag: "command",
+            tag: "command", name: "ResetCounts",
 
             details: "Reception of this command shall reset the following attributes to 0:" +
                 "\n" +
@@ -127,20 +127,20 @@ Resource.add({
         },
 
         {
-            name: "PHYRateEnum", tag: "datatype",
+            tag: "datatype", name: "PHYRateEnum",
             xref: "core§11.16.5.1",
 
             children: [
-                { name: "Rate10M", tag: "field", description: "PHY rate is 10Mbps" },
-                { name: "Rate100M", tag: "field", description: "PHY rate is 100Mbps" },
-                { name: "Rate1G", tag: "field", description: "PHY rate is 1Gbps" },
-                { name: "Rate25G", tag: "field", description: "PHY rate is 2.5Gbps" },
-                { name: "Rate5G", tag: "field", description: "PHY rate is 5Gbps" },
-                { name: "Rate10G", tag: "field", description: "PHY rate is 10Gbps" },
-                { name: "Rate40G", tag: "field", description: "PHY rate is 40Gbps" },
-                { name: "Rate100G", tag: "field", description: "PHY rate is 100Gbps" },
-                { name: "Rate200G", tag: "field", description: "PHY rate is 200Gbps" },
-                { name: "Rate400G", tag: "field", description: "PHY rate is 400Gbps" }
+                { tag: "field", name: "Rate10M", description: "PHY rate is 10Mbps" },
+                { tag: "field", name: "Rate100M", description: "PHY rate is 100Mbps" },
+                { tag: "field", name: "Rate1G", description: "PHY rate is 1Gbps" },
+                { tag: "field", name: "Rate25G", description: "PHY rate is 2.5Gbps" },
+                { tag: "field", name: "Rate5G", description: "PHY rate is 5Gbps" },
+                { tag: "field", name: "Rate10G", description: "PHY rate is 10Gbps" },
+                { tag: "field", name: "Rate40G", description: "PHY rate is 40Gbps" },
+                { tag: "field", name: "Rate100G", description: "PHY rate is 100Gbps" },
+                { tag: "field", name: "Rate200G", description: "PHY rate is 200Gbps" },
+                { tag: "field", name: "Rate400G", description: "PHY rate is 400Gbps" }
             ]
         }
     ]

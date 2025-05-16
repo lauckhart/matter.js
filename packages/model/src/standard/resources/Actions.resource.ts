@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "Actions", tag: "cluster",
+        tag: "cluster", name: "Actions",
         classification: "application", pics: "ACT",
 
         details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
@@ -52,21 +52,21 @@ Resource.add(
 
         children: [
             {
-                name: "ActionList", tag: "attribute",
+                tag: "attribute", name: "ActionList",
                 details: "The ActionList attribute holds the list of actions. Each entry shall have an unique ActionID, and " +
                     "its EndpointListID shall exist in the EndpointLists attribute.",
                 xref: "core§9.14.5.1"
             },
 
             {
-                name: "EndpointLists", tag: "attribute",
+                tag: "attribute", name: "EndpointLists",
                 details: "The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique " +
                     "EndpointListID.",
                 xref: "core§9.14.5.2"
             },
 
             {
-                name: "SetupUrl", tag: "attribute",
+                tag: "attribute", name: "SetupUrl",
 
                 details: "The SetupURL attribute (when provided) shall indicate a URL; its syntax shall follow the syntax as " +
                     "specified in RFC 1738, max. 512 ASCII characters and shall use the https scheme. The location " +
@@ -93,7 +93,7 @@ Resource.add(
             },
 
             {
-                name: "StateChanged", tag: "event",
+                tag: "event", name: "StateChanged",
 
                 details: "This event shall be generated when there is a change in the State of an ActionID during the " +
                     "execution of an action and the most recent command using that ActionID used an InvokeID data field." +
@@ -111,20 +111,20 @@ Resource.add(
 
                 children: [
                     {
-                        name: "ActionId", tag: "field",
+                        tag: "field", name: "ActionId",
                         details: "This field shall be set to the ActionID of the action which has changed state.",
                         xref: "core§9.14.7.1.1"
                     },
 
                     {
-                        name: "InvokeId", tag: "field",
+                        tag: "field", name: "InvokeId",
                         details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
                             "this ActionID.",
                         xref: "core§9.14.7.1.2"
                     },
 
                     {
-                        name: "NewState", tag: "field",
+                        tag: "field", name: "NewState",
                         details: "This field shall be set to state that the action has changed to.",
                         xref: "core§9.14.7.1.3"
                     }
@@ -132,7 +132,7 @@ Resource.add(
             },
 
             {
-                name: "ActionFailed", tag: "event",
+                tag: "event", name: "ActionFailed",
 
                 details: "This event shall be generated when there is some error which prevents the action from its normal " +
                     "planned execution and the most recent command using that ActionID used an InvokeID data field." +
@@ -164,25 +164,25 @@ Resource.add(
 
                 children: [
                     {
-                        name: "ActionId", tag: "field",
+                        tag: "field", name: "ActionId",
                         details: "This field shall be set to the ActionID of the action which encountered an error.",
                         xref: "core§9.14.7.2.1"
                     },
 
                     {
-                        name: "InvokeId", tag: "field",
+                        tag: "field", name: "InvokeId",
                         details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
                             "this ActionID.",
                         xref: "core§9.14.7.2.2"
                     },
 
                     {
-                        name: "NewState", tag: "field",
+                        tag: "field", name: "NewState",
                         details: "This field shall be set to state that the action is in at the time of generating the event.",
                         xref: "core§9.14.7.2.3"
                     },
                     {
-                        name: "Error", tag: "field",
+                        tag: "field", name: "Error",
                         details: "This field shall be set to indicate the reason for non-successful progress of the action.",
                         xref: "core§9.14.7.2.4"
                     }
@@ -190,7 +190,7 @@ Resource.add(
             },
 
             {
-                name: "InstantAction", tag: "command",
+                tag: "command", name: "InstantAction",
                 details: "This command triggers an action (state change) on the involved endpoints, in a \"fire and forget\" " +
                     "manner. Afterwards, the action’s state shall be Inactive." +
                     "\n" +
@@ -199,7 +199,7 @@ Resource.add(
             },
 
             {
-                name: "InstantActionWithTransition", tag: "command",
+                tag: "command", name: "InstantActionWithTransition",
 
                 details: "It is recommended that, where possible (e.g., it is not possible for attributes with Boolean data " +
                     "type), a gradual transition SHOULD take place from the old to the new state over this time period. " +
@@ -213,14 +213,14 @@ Resource.add(
 
                 xref: "core§9.14.6.2",
                 children: [{
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
                     details: "This field shall indicate the transition time in 1/10th of seconds.",
                     xref: "core§9.14.6.2.1"
                 }]
             },
 
             {
-                name: "StartAction", tag: "command",
+                tag: "command", name: "StartAction",
 
                 details: "This command triggers the commencement of an action on the involved endpoints. Afterwards, the " +
                     "action’s state shall be Active." +
@@ -235,7 +235,7 @@ Resource.add(
             },
 
             {
-                name: "StartActionWithDuration", tag: "command",
+                tag: "command", name: "StartActionWithDuration",
 
                 details: "This command triggers the commencement of an action on the involved endpoints, and shall change the " +
                     "action’s state to Active. After the specified Duration, the action will stop, and the action’s state " +
@@ -246,14 +246,14 @@ Resource.add(
 
                 xref: "core§9.14.6.4",
                 children: [{
-                    name: "Duration", tag: "field",
+                    tag: "field", name: "Duration",
                     details: "This field shall indicate the requested duration in seconds.",
                     xref: "core§9.14.6.4.1"
                 }]
             },
 
             {
-                name: "StopAction", tag: "command",
+                tag: "command", name: "StopAction",
                 details: "This command stops the ongoing action on the involved endpoints. Afterwards, the action’s state " +
                     "shall be Inactive." +
                     "\n" +
@@ -262,7 +262,7 @@ Resource.add(
             },
 
             {
-                name: "PauseAction", tag: "command",
+                tag: "command", name: "PauseAction",
                 details: "This command pauses an ongoing action, and shall change the action’s state to Paused." +
                     "\n" +
                     "Example: pause a dynamic lighting effect (the lights stay at their current color) which was " +
@@ -271,7 +271,7 @@ Resource.add(
             },
 
             {
-                name: "PauseActionWithDuration", tag: "command",
+                tag: "command", name: "PauseActionWithDuration",
 
                 details: "This command pauses an ongoing action, and shall change the action’s state to Paused. After the " +
                     "specified Duration, the ongoing action will be automatically resumed. which shall change the " +
@@ -288,14 +288,14 @@ Resource.add(
 
                 xref: "core§9.14.6.7",
                 children: [{
-                    name: "Duration", tag: "field",
+                    tag: "field", name: "Duration",
                     details: "This field shall indicate the requested duration in seconds.",
                     xref: "core§9.14.6.7.1"
                 }]
             },
 
             {
-                name: "ResumeAction", tag: "command",
+                tag: "command", name: "ResumeAction",
 
                 details: "This command resumes a previously paused action, and shall change the action’s state to Active." +
                     "\n" +
@@ -309,7 +309,7 @@ Resource.add(
             },
 
             {
-                name: "EnableAction", tag: "command",
+                tag: "command", name: "EnableAction",
                 details: "This command enables a certain action or automation. Afterwards, the action’s state shall be Active." +
                     "\n" +
                     "Example: enable a motion sensor to control the lights in an area.",
@@ -317,7 +317,7 @@ Resource.add(
             },
 
             {
-                name: "EnableActionWithDuration", tag: "command",
+                tag: "command", name: "EnableActionWithDuration",
 
                 details: "This command enables a certain action or automation, and shall change the action’s state to be " +
                     "Active. After the specified Duration, the action or automation will stop, and the action’s state " +
@@ -329,14 +329,14 @@ Resource.add(
 
                 xref: "core§9.14.6.10",
                 children: [{
-                    name: "Duration", tag: "field",
+                    tag: "field", name: "Duration",
                     details: "This field shall indicate the requested duration in seconds.",
                     xref: "core§9.14.6.10.1"
                 }]
             },
 
             {
-                name: "DisableAction", tag: "command",
+                tag: "command", name: "DisableAction",
                 details: "This command disables a certain action or automation, and shall change the action’s state to " +
                     "Inactive." +
                     "\n" +
@@ -345,7 +345,7 @@ Resource.add(
             },
 
             {
-                name: "DisableActionWithDuration", tag: "command",
+                tag: "command", name: "DisableActionWithDuration",
 
                 details: "This command disables a certain action or automation, and shall change the action’s state to " +
                     "Disabled. After the specified Duration, the action or automation will re-start, and the action’s " +
@@ -357,57 +357,57 @@ Resource.add(
 
                 xref: "core§9.14.6.12",
                 children: [{
-                    name: "Duration", tag: "field",
+                    tag: "field", name: "Duration",
                     details: "This field shall indicate the requested duration in seconds.",
                     xref: "core§9.14.6.12.1"
                 }]
             },
 
             {
-                name: "CommandBits", tag: "datatype",
+                tag: "datatype", name: "CommandBits",
                 details: "Note - The bit allocation of this bitmap shall follow the ID’s of the Commands of this cluster.",
                 xref: "core§9.14.4.1",
 
                 children: [
-                    { name: "InstantAction", tag: "field", description: "Indicate support for InstantAction command" },
+                    { tag: "field", name: "InstantAction", description: "Indicate support for InstantAction command" },
                     {
-                        name: "InstantActionWithTransition", tag: "field",
+                        tag: "field", name: "InstantActionWithTransition",
                         description: "Indicate support for InstantActionWithTransition command"
                     },
-                    { name: "StartAction", tag: "field", description: "Indicate support for StartAction command" },
+                    { tag: "field", name: "StartAction", description: "Indicate support for StartAction command" },
                     {
-                        name: "StartActionWithDuration", tag: "field",
+                        tag: "field", name: "StartActionWithDuration",
                         description: "Indicate support for StartActionWithDuration command"
                     },
-                    { name: "StopAction", tag: "field", description: "Indicate support for StopAction command" },
-                    { name: "PauseAction", tag: "field", description: "Indicate support for PauseAction command" },
+                    { tag: "field", name: "StopAction", description: "Indicate support for StopAction command" },
+                    { tag: "field", name: "PauseAction", description: "Indicate support for PauseAction command" },
                     {
-                        name: "PauseActionWithDuration", tag: "field",
+                        tag: "field", name: "PauseActionWithDuration",
                         description: "Indicate support for PauseActionWithDuration command"
                     },
-                    { name: "ResumeAction", tag: "field", description: "Indicate support for ResumeAction command" },
-                    { name: "EnableAction", tag: "field", description: "Indicate support for EnableAction command" },
+                    { tag: "field", name: "ResumeAction", description: "Indicate support for ResumeAction command" },
+                    { tag: "field", name: "EnableAction", description: "Indicate support for EnableAction command" },
                     {
-                        name: "EnableActionWithDuration", tag: "field",
+                        tag: "field", name: "EnableActionWithDuration",
                         description: "Indicate support for EnableActionWithDuration command"
                     },
-                    { name: "DisableAction", tag: "field", description: "Indicate support for DisableAction command" },
+                    { tag: "field", name: "DisableAction", description: "Indicate support for DisableAction command" },
                     {
-                        name: "DisableActionWithDuration", tag: "field",
+                        tag: "field", name: "DisableActionWithDuration",
                         description: "Indicate support for DisableActionWithDuration command"
                     }
                 ]
             },
 
             {
-                name: "ActionTypeEnum", tag: "datatype",
+                tag: "datatype", name: "ActionTypeEnum",
                 xref: "core§9.14.4.2",
 
                 children: [
-                    { name: "Other", tag: "field", description: "Use this only when none of the other values applies" },
+                    { tag: "field", name: "Other", description: "Use this only when none of the other values applies" },
 
                     {
-                        name: "Scene", tag: "field",
+                        tag: "field", name: "Scene",
                         description: "Bring the endpoints into a certain state",
 
                         details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
@@ -424,7 +424,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Sequence", tag: "field",
+                        tag: "field", name: "Sequence",
                         description: "A sequence of states with a certain time pattern",
                         details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
                             "a wake-up experience." +
@@ -434,7 +434,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Automation", tag: "field",
+                        tag: "field", name: "Automation",
                         description: "Control an automation (e.g. motion sensor controlling lights)",
                         details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can " +
                             "bee.g. started, stopped, paused, resumed. Example: see example 3.",
@@ -442,7 +442,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Exception", tag: "field",
+                        tag: "field", name: "Exception",
                         description: "Sequence that will run when something doesn’t happen",
                         details: "Indicates some action which the server will execute when a certain condition (which normally does " +
                             "not happen) is not met." +
@@ -453,7 +453,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Notification", tag: "field",
+                        tag: "field", name: "Notification",
                         description: "Use the endpoints to send a message to user",
                         details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user." +
                             "\n" +
@@ -463,7 +463,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Alarm", tag: "field",
+                        tag: "field", name: "Alarm",
                         description: "Higher priority notification",
                         details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
                             "Type=Notification would not override)." +
@@ -475,41 +475,41 @@ Resource.add(
             },
 
             {
-                name: "ActionStateEnum", tag: "datatype",
+                tag: "datatype", name: "ActionStateEnum",
                 details: "Note that some of these states are applicable only for certain actions, as determined by their " +
                     "SupportedCommands.",
                 xref: "core§9.14.4.3",
 
                 children: [
-                    { name: "Inactive", tag: "field", description: "The action is not active" },
-                    { name: "Active", tag: "field", description: "The action is active" },
-                    { name: "Paused", tag: "field", description: "The action has been paused" },
-                    { name: "Disabled", tag: "field", description: "The action has been disabled" }
+                    { tag: "field", name: "Inactive", description: "The action is not active" },
+                    { tag: "field", name: "Active", description: "The action is active" },
+                    { tag: "field", name: "Paused", description: "The action has been paused" },
+                    { tag: "field", name: "Disabled", description: "The action has been disabled" }
                 ]
             },
 
             {
-                name: "ActionErrorEnum", tag: "datatype",
+                tag: "datatype", name: "ActionErrorEnum",
                 xref: "core§9.14.4.4",
 
                 children: [
-                    { name: "Unknown", tag: "field", description: "Other reason not listed in the row(s) below" },
+                    { tag: "field", name: "Unknown", description: "Other reason not listed in the row(s) below" },
                     {
-                        name: "Interrupted", tag: "field",
+                        tag: "field", name: "Interrupted",
                         description: "The action was interrupted by another command or interaction"
                     }
                 ]
             },
 
             {
-                name: "EndpointListTypeEnum", tag: "datatype",
+                tag: "datatype", name: "EndpointListTypeEnum",
                 details: "The Room and Zone values are provided for the cases where a user (or the system on behalf of the " +
                     "user) has created logical grouping of the endpoints (e.g. bridged devices) based on location.",
                 xref: "core§9.14.4.5",
 
                 children: [
                     {
-                        name: "Other", tag: "field",
+                        tag: "field", name: "Other",
                         description: "Another group of endpoints",
                         details: "This value is provided for the case of an endpoint list which is tied specifically to this action " +
                             "i.e. not independently created by the user. For Type=Other the Name may be empty. A Matter " +
@@ -519,7 +519,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Room", tag: "field",
+                        tag: "field", name: "Room",
                         description: "User-configured group of endpoints where an endpoint can be in only one room",
                         details: "Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical " +
                             "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping concept " +
@@ -530,7 +530,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Zone", tag: "field",
+                        tag: "field", name: "Zone",
                         description: "User-configured group of endpoints where an endpoint can be in any number of zones",
 
                         details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
@@ -548,19 +548,19 @@ Resource.add(
             },
 
             {
-                name: "ActionStruct", tag: "datatype",
+                tag: "datatype", name: "ActionStruct",
                 details: "This data type holds the details of a single action, and contains the data fields below.",
                 xref: "core§9.14.4.6",
 
                 children: [
                     {
-                        name: "ActionId", tag: "field",
+                        tag: "field", name: "ActionId",
                         details: "This field shall provide an unique identifier used to identify an action.",
                         xref: "core§9.14.4.6.1"
                     },
 
                     {
-                        name: "Name", tag: "field",
+                        tag: "field", name: "Name",
                         details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
                             "associated with this action. This can be used for identifying the action to the user by the client. " +
                             "Example: \"my colorful scene\".",
@@ -568,7 +568,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Type", tag: "field",
+                        tag: "field", name: "Type",
                         details: "This field shall indicate the type of action. The value of Type of an action, along with its " +
                             "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
                             "such action. See ActionTypeEnum for details and examples.",
@@ -576,14 +576,14 @@ Resource.add(
                     },
 
                     {
-                        name: "EndpointListId", tag: "field",
+                        tag: "field", name: "EndpointListId",
                         details: "This field shall provide a reference to the associated endpoint list, which specifies the endpoints " +
                             "on this Node which will be impacted by this ActionID.",
                         xref: "core§9.14.4.6.4"
                     },
 
                     {
-                        name: "SupportedCommands", tag: "field",
+                        tag: "field", name: "SupportedCommands",
                         details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are supported " +
                             "for this particular action, with a bit set to 1 for each supported command according to the table " +
                             "below. Other bits shall be set to 0.",
@@ -591,7 +591,7 @@ Resource.add(
                     },
 
                     {
-                        name: "State", tag: "field",
+                        tag: "field", name: "State",
                         details: "This field shall indicate the current state of this action.",
                         xref: "core§9.14.4.6.6"
                     }
@@ -599,20 +599,20 @@ Resource.add(
             },
 
             {
-                name: "EndpointListStruct", tag: "datatype",
+                tag: "datatype", name: "EndpointListStruct",
                 details: "This data type holds the details of a single endpoint list, which relates to a set of endpoints that " +
                     "have some logical relation, and contains the data fields below.",
                 xref: "core§9.14.4.7",
 
                 children: [
                     {
-                        name: "EndpointListId", tag: "field",
+                        tag: "field", name: "EndpointListId",
                         details: "This field shall provide an unique identifier used to identify the endpoint list.",
                         xref: "core§9.14.4.7.1"
                     },
 
                     {
-                        name: "Name", tag: "field",
+                        tag: "field", name: "Name",
                         details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
                             "associated with the set of endpoints in this list. This can be used for identifying the action to " +
                             "the user by the client. Example: \"living room\".",
@@ -620,12 +620,12 @@ Resource.add(
                     },
 
                     {
-                        name: "Type", tag: "field",
+                        tag: "field", name: "Type",
                         details: "This field shall indicate the type of endpoint list, see EndpointListTypeEnum.",
                         xref: "core§9.14.4.7.3"
                     },
                     {
-                        name: "Endpoints", tag: "field",
+                        tag: "field", name: "Endpoints",
                         details: "This field shall provide a list of endpoint numbers.",
                         xref: "core§9.14.4.7.4"
                     }

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "epoch-s", tag: "datatype",
+    tag: "datatype", name: "epoch-s",
     description: "Epoch Time in seconds",
 
     details: "This type has the same semantics as Epoch Time in Microseconds, except that:" +

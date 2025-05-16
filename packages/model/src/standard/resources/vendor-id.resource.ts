@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "vendor-id", tag: "datatype",
+    tag: "datatype", name: "vendor-id",
     description: "Vendor ID",
     details: "A Vendor ID." +
         "\n" +

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "BridgedNode", tag: "deviceType",
+    tag: "deviceType", name: "BridgedNode",
     classification: "utility",
     details: "This defines conformance for a Bridged Node root endpoint. This endpoint is akin to a \"read me " +
         "first\" endpoint that describes itself and any other endpoints that make up the Bridged Node. A " +
@@ -18,16 +18,16 @@ Resource.add({
     xref: "device§2.5",
 
     children: [
-        { name: "BridgedDeviceBasicInformation", tag: "requirement", xref: "device§2.5.5" },
-        { name: "PowerSourceConfiguration", tag: "requirement", xref: "device§2.5.5" },
-        { name: "PowerSource", tag: "requirement", xref: "device§2.5.5" },
-        { name: "EcosystemInformation", tag: "requirement", xref: "device§2.5.5" },
-        { name: "AdministratorCommissioning", tag: "requirement", xref: "device§2.5.5" },
+        { tag: "requirement", name: "BridgedDeviceBasicInformation", xref: "device§2.5.5" },
+        { tag: "requirement", name: "PowerSourceConfiguration", xref: "device§2.5.5" },
+        { tag: "requirement", name: "PowerSource", xref: "device§2.5.5" },
+        { tag: "requirement", name: "EcosystemInformation", xref: "device§2.5.5" },
+        { tag: "requirement", name: "AdministratorCommissioning", xref: "device§2.5.5" },
 
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
             children: [{
-                name: "FabricSynchronizedNode", tag: "field",
+                tag: "field", name: "FabricSynchronizedNode",
                 description: "See description below.",
                 xref: "device§2.5.3"
             }]

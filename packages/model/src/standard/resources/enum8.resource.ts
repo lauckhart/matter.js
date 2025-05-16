@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "enum8", tag: "datatype", description: "8-bit enumeration", xref: "core§7.19.2" });
+Resource.add({ tag: "datatype", name: "enum8", description: "8-bit enumeration", xref: "core§7.19.2" });

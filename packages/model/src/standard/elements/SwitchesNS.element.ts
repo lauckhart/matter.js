@@ -13,16 +13,16 @@ import {
 } from "../../elements/index.js";
 
 export const SwitchesNs = SemanticNamespace(
-    { id: 0x43, name: "Switches" },
-    SemanticTag({ id: 0x0, name: "On" }),
-    SemanticTag({ id: 0x1, name: "Off" }),
-    SemanticTag({ id: 0x2, name: "Toggle" }),
-    SemanticTag({ id: 0x3, name: "Up" }),
-    SemanticTag({ id: 0x4, name: "Down" }),
-    SemanticTag({ id: 0x5, name: "Next" }),
-    SemanticTag({ id: 0x6, name: "Previous" }),
-    SemanticTag({ id: 0x7, name: "Enter/OK/Select" }),
-    SemanticTag({ id: 0x8, name: "Custom" })
+    { name: "Switches", id: 0x43 },
+    SemanticTag({ name: "On", id: 0x0 }),
+    SemanticTag({ name: "Off", id: 0x1 }),
+    SemanticTag({ name: "Toggle", id: 0x2 }),
+    SemanticTag({ name: "Up", id: 0x3 }),
+    SemanticTag({ name: "Down", id: 0x4 }),
+    SemanticTag({ name: "Next", id: 0x5 }),
+    SemanticTag({ name: "Previous", id: 0x6 }),
+    SemanticTag({ name: "Enter/OK/Select", id: 0x7 }),
+    SemanticTag({ name: "Custom", id: 0x8 })
 );
 
 MatterDefinition.children.push(SwitchesNs);

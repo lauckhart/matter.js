@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "FabricIndex", tag: "field",
+    tag: "field", name: "FabricIndex",
 
     details: "This field shall be present for fabric-scoped data. This field does not have to be defined " +
         "explicitly in the field table for fabric-scoped data." +

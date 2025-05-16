@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "uint56", tag: "datatype", description: "Unsigned 56-bit integer", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "uint56", description: "Unsigned 56-bit integer", xref: "core§7.19.1" });

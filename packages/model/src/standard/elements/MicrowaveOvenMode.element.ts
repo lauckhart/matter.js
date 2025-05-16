@@ -16,33 +16,33 @@ import {
 } from "../../elements/index.js";
 
 export const MicrowaveOvenMode = Cluster(
-    { id: 0x5e, name: "MicrowaveOvenMode", type: "ModeBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "MicrowaveOvenMode", id: 0x5e, type: "ModeBase" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", longName: "OnOff" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "DEPONOFF", constraint: "0", conformance: "X", longName: "OnOff" })
     ),
-    Attribute({ id: 0x0, name: "SupportedModes" }),
-    Attribute({ id: 0x1, name: "CurrentMode" }),
-    Attribute({ id: 0x2, name: "StartUpMode", conformance: "X" }),
-    Attribute({ id: 0x3, name: "OnMode", conformance: "X" }),
-    Command({ id: 0x0, name: "ChangeToMode", conformance: "X" }),
-    Command({ id: 0x1, name: "ChangeToModeResponse", conformance: "X" }),
+    Attribute({ name: "SupportedModes", id: 0x0 }),
+    Attribute({ name: "CurrentMode", id: 0x1 }),
+    Attribute({ name: "StartUpMode", id: 0x2, conformance: "X" }),
+    Attribute({ name: "OnMode", id: 0x3, conformance: "X" }),
+    Command({ name: "ChangeToMode", id: 0x0, conformance: "X" }),
+    Command({ name: "ChangeToModeResponse", id: 0x1, conformance: "X" }),
 
     Datatype(
         { name: "ModeTag", type: "enum16" },
-        Field({ id: 0x0, name: "Auto" }),
-        Field({ id: 0x1, name: "Quick" }),
-        Field({ id: 0x2, name: "Quiet" }),
-        Field({ id: 0x3, name: "LowNoise" }),
-        Field({ id: 0x4, name: "LowEnergy" }),
-        Field({ id: 0x5, name: "Vacation" }),
-        Field({ id: 0x6, name: "Min" }),
-        Field({ id: 0x7, name: "Max" }),
-        Field({ id: 0x8, name: "Night" }),
-        Field({ id: 0x9, name: "Day" }),
-        Field({ id: 0x4000, name: "Normal" }),
-        Field({ id: 0x4001, name: "Defrost" })
+        Field({ name: "Auto", id: 0x0 }),
+        Field({ name: "Quick", id: 0x1 }),
+        Field({ name: "Quiet", id: 0x2 }),
+        Field({ name: "LowNoise", id: 0x3 }),
+        Field({ name: "LowEnergy", id: 0x4 }),
+        Field({ name: "Vacation", id: 0x5 }),
+        Field({ name: "Min", id: 0x6 }),
+        Field({ name: "Max", id: 0x7 }),
+        Field({ name: "Night", id: 0x8 }),
+        Field({ name: "Day", id: 0x9 }),
+        Field({ name: "Normal", id: 0x4000 }),
+        Field({ name: "Defrost", id: 0x4001 })
     )
 );
 

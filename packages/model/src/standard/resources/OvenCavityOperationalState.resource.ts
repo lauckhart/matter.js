@@ -9,17 +9,17 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OvenCavityOperationalState", tag: "cluster",
+    tag: "cluster", name: "OvenCavityOperationalState",
     classification: "application", pics: "OVENOPSTATE",
     details: "This cluster is derived from the Operational State cluster and provides an interface for monitoring " +
         "the operational state of an oven.",
     xref: "cluster§8.10",
 
     children: [
-        { name: "Pause", tag: "command", xref: "cluster§8.10.5" },
-        { name: "Stop", tag: "command", xref: "cluster§8.10.5" },
-        { name: "Start", tag: "command", xref: "cluster§8.10.5" },
-        { name: "Resume", tag: "command", xref: "cluster§8.10.5" },
-        { name: "OperationalCommandResponse", tag: "command", xref: "cluster§8.10.5" }
+        { tag: "command", name: "Pause", xref: "cluster§8.10.5" },
+        { tag: "command", name: "Stop", xref: "cluster§8.10.5" },
+        { tag: "command", name: "Start", xref: "cluster§8.10.5" },
+        { tag: "command", name: "Resume", xref: "cluster§8.10.5" },
+        { tag: "command", name: "OperationalCommandResponse", xref: "cluster§8.10.5" }
     ]
 });

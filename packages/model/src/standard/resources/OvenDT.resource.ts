@@ -9,11 +9,11 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Oven", tag: "deviceType",
+    tag: "deviceType", name: "Oven",
     classification: "simple",
     details: "An oven represents a device that contains one or more cabinets, and optionally a single cooktop, " +
         "that are all capable of heating food. Examples of consumer products implementing this device type " +
         "include ovens, wall ovens, convection ovens, etc.",
     xref: "device§13.9",
-    children: [{ name: "Identify", tag: "requirement", xref: "device§13.9.6" }]
+    children: [{ tag: "requirement", name: "Identify", xref: "device§13.9.6" }]
 });

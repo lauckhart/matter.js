@@ -10,23 +10,23 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const MicrowaveOvenDt = DeviceType(
-    { id: 0x79, name: "MicrowaveOven", classification: "simple" },
+    { name: "MicrowaveOven", id: 0x79 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 121, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 121, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
     Requirement(
-        { id: 0x60, name: "OperationalState", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "CountdownTime", conformance: "M", element: "attribute" })
+        { name: "OperationalState", id: 0x60, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "CountdownTime", element: "attribute", conformance: "M" })
     ),
     Requirement(
-        { id: 0x202, name: "FanControl", conformance: "O", element: "serverCluster" },
-        Requirement({ name: "WIND", conformance: "X", element: "feature" }),
-        Requirement({ name: "AIRFLOWDIRECTION", conformance: "X", element: "feature" })
+        { name: "FanControl", id: 0x202, element: "serverCluster", conformance: "O" },
+        Requirement({ name: "WIND", element: "feature", conformance: "X" }),
+        Requirement({ name: "AIRFLOWDIRECTION", element: "feature", conformance: "X" })
     ),
-    Requirement({ id: 0x5e, name: "MicrowaveOvenMode", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x5f, name: "MicrowaveOvenControl", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "MicrowaveOvenMode", id: 0x5e, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "MicrowaveOvenControl", id: 0x5f, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(MicrowaveOvenDt);

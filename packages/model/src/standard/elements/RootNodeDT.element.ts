@@ -14,42 +14,42 @@ import {
 } from "../../elements/index.js";
 
 export const RootNodeDt = DeviceType(
-    { id: 0x16, name: "RootNode", classification: "node" },
+    { name: "RootNode", id: 0x16 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 22, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 22, revision: 3 } ] })
     ),
-    Requirement({ id: 0x28, name: "BasicInformation", conformance: "M", element: "serverCluster", quality: "I" }),
+    Requirement({ name: "BasicInformation", id: 0x28, element: "serverCluster", conformance: "M", quality: "I" }),
     Requirement(
-        { id: 0x1f, name: "AccessControl", conformance: "M", element: "serverCluster", quality: "I" },
-        Requirement({ name: "MNGD", conformance: "[ManagedAclAllowed]", constraint: "desc", element: "feature" })
+        { name: "AccessControl", id: 0x1f, element: "serverCluster", conformance: "M", quality: "I" },
+        Requirement({ name: "MNGD", element: "feature", constraint: "desc", conformance: "[ManagedAclAllowed]" })
     ),
     Requirement(
-        { id: 0x2e, name: "PowerSourceConfiguration", conformance: "O, D", element: "serverCluster", quality: "I" }
+        { name: "PowerSourceConfiguration", id: 0x2e, element: "serverCluster", conformance: "O, D", quality: "I" }
     ),
-    Requirement({ id: 0x38, name: "TimeSynchronization", conformance: "O", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x3f, name: "GroupKeyManagement", conformance: "M", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x30, name: "GeneralCommissioning", conformance: "M", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x31, name: "NetworkCommissioning", conformance: "!CustomNetworkConfig", element: "serverCluster" }),
-    Requirement({ id: 0x3c, name: "AdministratorCommissioning", conformance: "M", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x3e, name: "OperationalCredentials", conformance: "M", element: "serverCluster", quality: "I" }),
+    Requirement({ name: "TimeSynchronization", id: 0x38, element: "serverCluster", conformance: "O", quality: "I" }),
+    Requirement({ name: "GroupKeyManagement", id: 0x3f, element: "serverCluster", conformance: "M", quality: "I" }),
+    Requirement({ name: "GeneralCommissioning", id: 0x30, element: "serverCluster", conformance: "M", quality: "I" }),
+    Requirement({ name: "NetworkCommissioning", id: 0x31, element: "serverCluster", conformance: "!CustomNetworkConfig" }),
+    Requirement({ name: "AdministratorCommissioning", id: 0x3c, element: "serverCluster", conformance: "M", quality: "I" }),
+    Requirement({ name: "OperationalCredentials", id: 0x3e, element: "serverCluster", conformance: "M", quality: "I" }),
     Requirement({
-        id: 0x2b, name: "LocalizationConfiguration",
-        conformance: "LanguageLocale", element: "serverCluster", quality: "I"
+        name: "LocalizationConfiguration", id: 0x2b,
+        element: "serverCluster", conformance: "LanguageLocale", quality: "I"
     }),
     Requirement(
-        { id: 0x2c, name: "TimeFormatLocalization", conformance: "TimeLocale", element: "serverCluster", quality: "I" }
+        { name: "TimeFormatLocalization", id: 0x2c, element: "serverCluster", conformance: "TimeLocale", quality: "I" }
     ),
-    Requirement({ id: 0x2d, name: "UnitLocalization", conformance: "UnitLocale", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x33, name: "GeneralDiagnostics", conformance: "M", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x32, name: "DiagnosticLogs", conformance: "O", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x34, name: "SoftwareDiagnostics", conformance: "O", element: "serverCluster", quality: "I" }),
-    Requirement({ id: 0x37, name: "EthernetNetworkDiagnostics", conformance: "[Ethernet]", element: "serverCluster" }),
-    Requirement({ id: 0x36, name: "WiFiNetworkDiagnostics", conformance: "[Wi, Fi]", element: "serverCluster" }),
-    Requirement({ id: 0x35, name: "ThreadNetworkDiagnostics", conformance: "[Thread]", element: "serverCluster" }),
+    Requirement({ name: "UnitLocalization", id: 0x2d, element: "serverCluster", conformance: "UnitLocale", quality: "I" }),
+    Requirement({ name: "GeneralDiagnostics", id: 0x33, element: "serverCluster", conformance: "M", quality: "I" }),
+    Requirement({ name: "DiagnosticLogs", id: 0x32, element: "serverCluster", conformance: "O", quality: "I" }),
+    Requirement({ name: "SoftwareDiagnostics", id: 0x34, element: "serverCluster", conformance: "O", quality: "I" }),
+    Requirement({ name: "EthernetNetworkDiagnostics", id: 0x37, element: "serverCluster", conformance: "[Ethernet]" }),
+    Requirement({ name: "WiFiNetworkDiagnostics", id: 0x36, element: "serverCluster", conformance: "[Wi, Fi]" }),
+    Requirement({ name: "ThreadNetworkDiagnostics", id: 0x35, element: "serverCluster", conformance: "[Thread]" }),
     Requirement(
-        { id: 0x46, name: "IcdManagement", conformance: "SIT | LIT", element: "serverCluster", quality: "I" },
-        Requirement({ name: "LONGIDLETIMESUPPORT", conformance: "LIT", element: "feature" })
+        { name: "IcdManagement", id: 0x46, element: "serverCluster", conformance: "SIT | LIT", quality: "I" },
+        Requirement({ name: "LONGIDLETIMESUPPORT", element: "feature", conformance: "LIT" })
     ),
     Field(
         { name: "conditions", type: "enum8" },

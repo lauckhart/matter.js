@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OvenMode", tag: "cluster",
+    tag: "cluster", name: "OvenMode",
     classification: "application", pics: "OTCCM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for oven devices.",
@@ -17,86 +17,86 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§8.11.4",
-            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+            children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
             details: "At least one entry in the SupportedModes attribute shall include the Bake mode tag in the ModeTags " +
                 "field list.",
             xref: "cluster§8.11.6.1"
         },
 
-        { name: "CurrentMode", tag: "attribute", xref: "cluster§8.11.6" },
-        { name: "StartUpMode", tag: "attribute", xref: "cluster§8.11.6" },
-        { name: "OnMode", tag: "attribute", xref: "cluster§8.11.6" },
+        { tag: "attribute", name: "CurrentMode", xref: "cluster§8.11.6" },
+        { tag: "attribute", name: "StartUpMode", xref: "cluster§8.11.6" },
+        { tag: "attribute", name: "OnMode", xref: "cluster§8.11.6" },
 
         {
-            name: "ModeOptionStruct", tag: "datatype",
+            tag: "datatype", name: "ModeOptionStruct",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
             xref: "cluster§8.11.5.1"
         },
 
         {
-            name: "ModeTag", tag: "datatype",
+            tag: "datatype", name: "ModeTag",
 
             children: [
-                { name: "Auto", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Quick", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Quiet", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "LowNoise", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "LowEnergy", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Vacation", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Min", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Max", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Night", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "Day", tag: "field", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Auto", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Quick", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Quiet", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "LowNoise", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "LowEnergy", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Vacation", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Min", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Max", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Night", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "Day", xref: "cluster§8.11.7.1" },
                 {
-                    name: "Bake", tag: "field",
+                    tag: "field", name: "Bake",
                     details: "This mode sets the device into baking mode for baking food items.",
                     xref: "cluster§8.11.7.1.1"
                 },
 
                 {
-                    name: "Convection", tag: "field",
+                    tag: "field", name: "Convection",
                     details: "This mode sets the device into convection mode which creates an airflow within the device during the " +
                         "cooking duration.",
                     xref: "cluster§8.11.7.1.2"
                 },
 
                 {
-                    name: "Grill", tag: "field",
+                    tag: "field", name: "Grill",
                     details: "This mode sets the device into grill mode for grilling food items. This is the same as Broil for " +
                         "many regions.",
                     xref: "cluster§8.11.7.1.3"
                 },
 
                 {
-                    name: "Roast", tag: "field",
+                    tag: "field", name: "Roast",
                     details: "This mode sets the device into roast mode for roasting food items.",
                     xref: "cluster§8.11.7.1.4"
                 },
                 {
-                    name: "Clean", tag: "field",
+                    tag: "field", name: "Clean",
                     details: "This mode sets the device into cleaning mode to clean the internal components of the appliance.",
                     xref: "cluster§8.11.7.1.5"
                 },
-                { name: "ConvectionBake", tag: "field", xref: "cluster§8.11.7.1" },
-                { name: "ConvectionRoast", tag: "field", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "ConvectionBake", xref: "cluster§8.11.7.1" },
+                { tag: "field", name: "ConvectionRoast", xref: "cluster§8.11.7.1" },
                 {
-                    name: "Warming", tag: "field",
+                    tag: "field", name: "Warming",
                     details: "This mode sets the device into a warming mode which begins warming the cavity.",
                     xref: "cluster§8.11.7.1.8"
                 },
                 {
-                    name: "Proofing", tag: "field",
+                    tag: "field", name: "Proofing",
                     details: "This mode sets the device into proofing mode which creates an environment ready for proofing.",
                     xref: "cluster§8.11.7.1.9"
                 },
-                { name: "Steam", tag: "field", xref: "cluster§8.11.7.1" }
+                { tag: "field", name: "Steam", xref: "cluster§8.11.7.1" }
             ]
         }
     ]

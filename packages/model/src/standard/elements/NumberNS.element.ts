@@ -13,18 +13,18 @@ import {
 } from "../../elements/index.js";
 
 export const NumberNs = SemanticNamespace(
-    { id: 0x7, name: "Number" },
-    SemanticTag({ id: 0x0, name: "Zero" }),
-    SemanticTag({ id: 0x1, name: "One" }),
-    SemanticTag({ id: 0x2, name: "Two" }),
-    SemanticTag({ id: 0x3, name: "Three" }),
-    SemanticTag({ id: 0x4, name: "Four" }),
-    SemanticTag({ id: 0x5, name: "Five" }),
-    SemanticTag({ id: 0x6, name: "Six" }),
-    SemanticTag({ id: 0x7, name: "Seven" }),
-    SemanticTag({ id: 0x8, name: "Eight" }),
-    SemanticTag({ id: 0x9, name: "Nine" }),
-    SemanticTag({ id: 0xa, name: "Ten" })
+    { name: "Number", id: 0x7 },
+    SemanticTag({ name: "Zero", id: 0x0 }),
+    SemanticTag({ name: "One", id: 0x1 }),
+    SemanticTag({ name: "Two", id: 0x2 }),
+    SemanticTag({ name: "Three", id: 0x3 }),
+    SemanticTag({ name: "Four", id: 0x4 }),
+    SemanticTag({ name: "Five", id: 0x5 }),
+    SemanticTag({ name: "Six", id: 0x6 }),
+    SemanticTag({ name: "Seven", id: 0x7 }),
+    SemanticTag({ name: "Eight", id: 0x8 }),
+    SemanticTag({ name: "Nine", id: 0x9 }),
+    SemanticTag({ name: "Ten", id: 0xa })
 );
 
 MatterDefinition.children.push(NumberNs);

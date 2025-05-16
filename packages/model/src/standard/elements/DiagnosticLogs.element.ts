@@ -16,47 +16,47 @@ import {
 } from "../../elements/index.js";
 
 export const DiagnosticLogs = Cluster(
-    { id: 0x32, name: "DiagnosticLogs" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "DiagnosticLogs", id: 0x32 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
         {
-            id: 0x0, name: "RetrieveLogsRequest",
-            access: "O", conformance: "M", direction: "request", response: "RetrieveLogsResponse"
+            name: "RetrieveLogsRequest", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "RetrieveLogsResponse"
         },
-        Field({ id: 0x0, name: "Intent", type: "IntentEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "RequestedProtocol", type: "TransferProtocolEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "TransferFileDesignator", type: "string", conformance: "O", constraint: "max 32" })
+        Field({ name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M" }),
+        Field({ name: "RequestedProtocol", id: 0x1, type: "TransferProtocolEnum", conformance: "M" }),
+        Field({ name: "TransferFileDesignator", id: 0x2, type: "string", constraint: "max 32", conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "RetrieveLogsResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "LogContent", type: "octstr", conformance: "M", constraint: "max 1024" }),
-        Field({ id: 0x2, name: "UtcTimeStamp", type: "epoch-us", conformance: "O" }),
-        Field({ id: 0x3, name: "TimeSinceBoot", type: "systime-us", conformance: "O" })
+        { name: "RetrieveLogsResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+        Field({ name: "LogContent", id: 0x1, type: "octstr", constraint: "max 1024", conformance: "M" }),
+        Field({ name: "UtcTimeStamp", id: 0x2, type: "epoch-us", conformance: "O" }),
+        Field({ name: "TimeSinceBoot", id: 0x3, type: "systime-us", conformance: "O" })
     ),
 
     Datatype(
         { name: "IntentEnum", type: "enum8" },
-        Field({ id: 0x0, name: "EndUserSupport", conformance: "M" }),
-        Field({ id: 0x1, name: "NetworkDiag", conformance: "M" }),
-        Field({ id: 0x2, name: "CrashLogs", conformance: "M" })
+        Field({ name: "EndUserSupport", id: 0x0, conformance: "M" }),
+        Field({ name: "NetworkDiag", id: 0x1, conformance: "M" }),
+        Field({ name: "CrashLogs", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Success", conformance: "M" }),
-        Field({ id: 0x1, name: "Exhausted", conformance: "M" }),
-        Field({ id: 0x2, name: "NoLogs", conformance: "M" }),
-        Field({ id: 0x3, name: "Busy", conformance: "M" }),
-        Field({ id: 0x4, name: "Denied", conformance: "M" })
+        Field({ name: "Success", id: 0x0, conformance: "M" }),
+        Field({ name: "Exhausted", id: 0x1, conformance: "M" }),
+        Field({ name: "NoLogs", id: 0x2, conformance: "M" }),
+        Field({ name: "Busy", id: 0x3, conformance: "M" }),
+        Field({ name: "Denied", id: 0x4, conformance: "M" })
     ),
 
     Datatype(
         { name: "TransferProtocolEnum", type: "enum8" },
-        Field({ id: 0x0, name: "ResponsePayload", conformance: "M" }),
-        Field({ id: 0x1, name: "Bdx", conformance: "M" })
+        Field({ name: "ResponsePayload", id: 0x0, conformance: "M" }),
+        Field({ name: "Bdx", id: 0x1, conformance: "M" })
     )
 );
 

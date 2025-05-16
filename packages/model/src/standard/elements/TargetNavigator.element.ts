@@ -17,53 +17,53 @@ import {
 } from "../../elements/index.js";
 
 export const TargetNavigator = Cluster(
-    { id: 0x505, name: "TargetNavigator" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "TargetNavigator", id: 0x505 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0x0, name: "TargetList", type: "list", access: "R V", conformance: "M" },
+        { name: "TargetList", id: 0x0, type: "list", conformance: "M", access: "R V" },
         Field({ name: "entry", type: "TargetInfoStruct" })
     ),
     Attribute({
-        id: 0x1, name: "CurrentTarget", type: "uint8",
-        access: "R V", conformance: "O", constraint: "desc", default: 255
+        name: "CurrentTarget", id: 0x1, type: "uint8",
+        default: 255, constraint: "desc", conformance: "O", access: "R V"
     }),
 
     Event(
-        { id: 0x0, name: "TargetUpdated", access: "V", conformance: "O", priority: "info" },
+        { name: "TargetUpdated", id: 0x0, conformance: "O", access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "TargetList", type: "list", conformance: "O" },
+            { name: "TargetList", id: 0x0, type: "list", conformance: "O" },
             Field({ name: "entry", type: "TargetInfoStruct" })
         ),
-        Field({ id: 0x1, name: "CurrentTarget", type: "uint8", conformance: "O", constraint: "desc", default: 255 }),
-        Field({ id: 0x2, name: "Data", type: "octstr", conformance: "O", constraint: "max 900" })
+        Field({ name: "CurrentTarget", id: 0x1, type: "uint8", default: 255, constraint: "desc", conformance: "O" }),
+        Field({ name: "Data", id: 0x2, type: "octstr", constraint: "max 900", conformance: "O" })
     ),
 
     Command(
         {
-            id: 0x0, name: "NavigateTarget",
-            access: "O", conformance: "M", direction: "request", response: "NavigateTargetResponse"
+            name: "NavigateTarget", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "NavigateTargetResponse"
         },
-        Field({ id: 0x0, name: "Target", type: "uint8", conformance: "M" }),
-        Field({ id: 0x1, name: "Data", type: "string", conformance: "O" })
+        Field({ name: "Target", id: 0x0, type: "uint8", conformance: "M" }),
+        Field({ name: "Data", id: 0x1, type: "string", conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "NavigateTargetResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "Data", type: "string", conformance: "O", constraint: "any" })
+        { name: "NavigateTargetResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+        Field({ name: "Data", id: 0x1, type: "string", constraint: "any", conformance: "O" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Success", conformance: "M" }),
-        Field({ id: 0x1, name: "TargetNotFound", conformance: "M" }),
-        Field({ id: 0x2, name: "NotAllowed", conformance: "M" })
+        Field({ name: "Success", id: 0x0, conformance: "M" }),
+        Field({ name: "TargetNotFound", id: 0x1, conformance: "M" }),
+        Field({ name: "NotAllowed", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "TargetInfoStruct", type: "struct" },
-        Field({ id: 0x0, name: "Identifier", type: "uint8", conformance: "M", constraint: "max 254" }),
-        Field({ id: 0x1, name: "Name", type: "string", conformance: "M" })
+        Field({ name: "Identifier", id: 0x0, type: "uint8", constraint: "max 254", conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
     )
 );
 

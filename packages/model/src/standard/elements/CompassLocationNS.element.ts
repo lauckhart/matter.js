@@ -13,15 +13,15 @@ import {
 } from "../../elements/index.js";
 
 export const CompassLocationNs = SemanticNamespace(
-    { id: 0x3, name: "CompassLocation" },
-    SemanticTag({ id: 0x0, name: "North" }),
-    SemanticTag({ id: 0x1, name: "North-East" }),
-    SemanticTag({ id: 0x2, name: "East" }),
-    SemanticTag({ id: 0x3, name: "South-East" }),
-    SemanticTag({ id: 0x4, name: "South" }),
-    SemanticTag({ id: 0x5, name: "South-West" }),
-    SemanticTag({ id: 0x6, name: "West" }),
-    SemanticTag({ id: 0x7, name: "North-West" })
+    { name: "CompassLocation", id: 0x3 },
+    SemanticTag({ name: "North", id: 0x0 }),
+    SemanticTag({ name: "North-East", id: 0x1 }),
+    SemanticTag({ name: "East", id: 0x2 }),
+    SemanticTag({ name: "South-East", id: 0x3 }),
+    SemanticTag({ name: "South", id: 0x4 }),
+    SemanticTag({ name: "South-West", id: 0x5 }),
+    SemanticTag({ name: "West", id: 0x6 }),
+    SemanticTag({ name: "North-West", id: 0x7 })
 );
 
 MatterDefinition.children.push(CompassLocationNs);

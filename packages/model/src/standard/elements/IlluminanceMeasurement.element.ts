@@ -15,27 +15,27 @@ import {
 } from "../../elements/index.js";
 
 export const IlluminanceMeasurement = Cluster(
-    { id: 0x400, name: "IlluminanceMeasurement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "IlluminanceMeasurement", id: 0x400 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute({
-        id: 0x0, name: "MeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "0, minMeasuredValue to maxMeasuredValue", default: 0,
+        name: "MeasuredValue", id: 0x0, type: "uint16",
+        default: 0, constraint: "0, minMeasuredValue to maxMeasuredValue", conformance: "M", access: "R V",
         quality: "X P"
     }),
     Attribute({
-        id: 0x1, name: "MinMeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "1 to 65533", quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "uint16",
+        constraint: "1 to 65533", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x2, name: "MaxMeasuredValue", type: "uint16",
-        access: "R V", conformance: "M", constraint: "min minMeasuredValue + 1", quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "uint16",
+        constraint: "min minMeasuredValue + 1", conformance: "M", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x3, name: "Tolerance", type: "uint16", access: "R V", conformance: "O", constraint: "max 2048" }),
-    Attribute({ id: 0x4, name: "LightSensorType", type: "uint8", access: "R V", default: null, quality: "X" }),
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", constraint: "max 2048", conformance: "O", access: "R V" }),
+    Attribute({ name: "LightSensorType", id: 0x4, type: "uint8", default: null, access: "R V", quality: "X" }),
     Datatype(
         { name: "LightSensorTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Photodiode", conformance: "M" }),
-        Field({ id: 0x1, name: "Cmos", conformance: "M" })
+        Field({ name: "Photodiode", id: 0x0, conformance: "M" }),
+        Field({ name: "Cmos", id: 0x1, conformance: "M" })
     )
 );
 

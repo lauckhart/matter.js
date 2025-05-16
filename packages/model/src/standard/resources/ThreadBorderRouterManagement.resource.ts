@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ThreadBorderRouterManagement", tag: "cluster",
+    tag: "cluster", name: "ThreadBorderRouterManagement",
     classification: "application", pics: "TBRM",
     details: "This cluster provides an interface for managing a Thread Border Router and the Thread network that " +
         "it belongs to. Privileged nodes within the same fabric as a Thread Border Router can use these " +
@@ -18,11 +18,11 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§10.3.4",
 
             children: [{
-                name: "PC", tag: "field",
+                tag: "field", name: "PC",
 
                 details: "This feature shall indicate the ability of the Border Router to change its already configured PAN to " +
                     "another, by setting a pending dataset." +
@@ -38,7 +38,7 @@ Resource.add({
         },
 
         {
-            name: "BorderRouterName", tag: "attribute",
+            tag: "attribute", name: "BorderRouterName",
             details: "Indicates a user-friendly name identifying the device model or product of the Border Router in " +
                 "MeshCOP (DNS-SD service name) as defined in the Thread specification, and has the following " +
                 "recommended format: <VendorName> <ProductName>._meshcop._udp. An example name would be ACME Border " +
@@ -47,14 +47,14 @@ Resource.add({
         },
 
         {
-            name: "BorderAgentId", tag: "attribute",
+            tag: "attribute", name: "BorderAgentId",
             details: "Indicates a 16-byte globally unique ID for a Thread Border Router device. This ID is " +
                 "manufacturer-specific, and it is created and managed by the border router’s implementation.",
             xref: "cluster§10.3.5.2"
         },
 
         {
-            name: "ThreadVersion", tag: "attribute",
+            tag: "attribute", name: "ThreadVersion",
             details: "Indicates the Thread version supported by the Thread interface configured by the cluster instance." +
                 "\n" +
                 "The format shall match the value mapping defined in the \"Version TLV\" section of the Thread " +
@@ -63,13 +63,13 @@ Resource.add({
         },
 
         {
-            name: "InterfaceEnabled", tag: "attribute",
+            tag: "attribute", name: "InterfaceEnabled",
             details: "Indicates whether the associated IEEE 802.15.4 Thread interface is enabled or disabled.",
             xref: "cluster§10.3.5.4"
         },
 
         {
-            name: "ActiveDatasetTimestamp", tag: "attribute",
+            tag: "attribute", name: "ActiveDatasetTimestamp",
             details: "Null if the Thread Border Router has no dataset configured, otherwise it shall be the timestamp " +
                 "value extracted from the Active Dataset value configured by the Thread Node to which the border " +
                 "router is connected. This attribute shall be updated when a new Active dataset is configured on the " +
@@ -78,7 +78,7 @@ Resource.add({
         },
 
         {
-            name: "PendingDatasetTimestamp", tag: "attribute",
+            tag: "attribute", name: "PendingDatasetTimestamp",
             details: "Null if the Thread Border Router has no Pending dataset configured, otherwise it shall be the " +
                 "timestamp value extracted from the Pending Dataset value configured by the Thread Node to which the " +
                 "border router is connected. This attribute shall be updated when a new Pending dataset is configured " +
@@ -87,7 +87,7 @@ Resource.add({
         },
 
         {
-            name: "GetActiveDatasetRequest", tag: "command",
+            tag: "command", name: "GetActiveDatasetRequest",
 
             details: "This command shall be used to request the active operational dataset of the Thread network to which " +
                 "the border router is connected." +
@@ -104,7 +104,7 @@ Resource.add({
         },
 
         {
-            name: "GetPendingDatasetRequest", tag: "command",
+            tag: "command", name: "GetPendingDatasetRequest",
 
             details: "This command shall be used to request the pending dataset of the Thread network to which the border " +
                 "router is connected." +
@@ -121,12 +121,12 @@ Resource.add({
         },
 
         {
-            name: "DatasetResponse", tag: "command",
+            tag: "command", name: "DatasetResponse",
             details: "This command is sent in response to GetActiveDatasetRequest or GetPendingDatasetRequest command.",
             xref: "cluster§10.3.6.3",
 
             children: [{
-                name: "Dataset", tag: "field",
+                tag: "field", name: "Dataset",
                 details: "If no dataset (active or pending as requested) is configured, this field shall be set to empty." +
                     "\n" +
                     "Otherwise, this field shall contain the active or pending dataset of the Thread network to which the " +
@@ -137,14 +137,14 @@ Resource.add({
         },
 
         {
-            name: "SetActiveDatasetRequest", tag: "command",
+            tag: "command", name: "SetActiveDatasetRequest",
             details: "This command shall be used to set the active Dataset of the Thread network to which the Border " +
                 "Router is connected, when there is no active dataset already.",
             xref: "cluster§10.3.6.4",
 
             children: [
                 {
-                    name: "ActiveDataset", tag: "field",
+                    tag: "field", name: "ActiveDataset",
                     details: "This field shall contain the active dataset to set of the Thread network to configure in the Border " +
                         "Router as an octet string containing the raw Thread TLV value of the dataset, as defined in the " +
                         "Thread specification.",
@@ -152,7 +152,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Breadcrumb", tag: "field",
+                    tag: "field", name: "Breadcrumb",
                     details: "See Breadcrumb Attribute section of General Commissioning Cluster in [MatterCore] for usage.",
                     xref: "cluster§10.3.6.4.2"
                 }
@@ -160,7 +160,7 @@ Resource.add({
         },
 
         {
-            name: "SetPendingDatasetRequest", tag: "command",
+            tag: "command", name: "SetPendingDatasetRequest",
 
             details: "This command shall be used to set or update the pending Dataset of the Thread network to which the " +
                 "Border Router is connected, if the Border Router supports PAN Change." +

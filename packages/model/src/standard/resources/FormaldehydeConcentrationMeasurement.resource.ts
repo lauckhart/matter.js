@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "FormaldehydeConcentrationMeasurement", tag: "cluster", pics: "FLDCONC" });
+Resource.add({ tag: "cluster", name: "FormaldehydeConcentrationMeasurement", pics: "FLDCONC" });

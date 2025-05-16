@@ -16,53 +16,53 @@ import {
 } from "../../elements/index.js";
 
 export const ThreadNetworkDirectory = Cluster(
-    { id: 0x453, name: "ThreadNetworkDirectory" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ThreadNetworkDirectory", id: 0x453 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        id: 0x0, name: "PreferredExtendedPanId", type: "octstr",
-        access: "RW VM", conformance: "M", constraint: "8", default: null, quality: "X N"
+        name: "PreferredExtendedPanId", id: 0x0, type: "octstr",
+        default: null, constraint: "8", conformance: "M", access: "RW VM", quality: "X N"
     }),
 
     Attribute(
         {
-            id: 0x1, name: "ThreadNetworks", type: "list",
-            access: "R V", conformance: "M", constraint: "max threadNetworkTableSize", quality: "N"
+            name: "ThreadNetworks", id: 0x1, type: "list",
+            constraint: "max threadNetworkTableSize", conformance: "M", access: "R V", quality: "N"
         },
         Field({ name: "entry", type: "ThreadNetworkStruct" })
     ),
 
     Attribute({
-        id: 0x2, name: "ThreadNetworkTableSize", type: "uint8",
-        access: "R V", conformance: "M", constraint: "desc", default: 10, quality: "F"
+        name: "ThreadNetworkTableSize", id: 0x2, type: "uint8",
+        default: 10, constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
     Command(
-        { id: 0x0, name: "AddNetwork", access: "M T", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "OperationalDataset", type: "octstr", conformance: "M", constraint: "max 254" })
+        { name: "AddNetwork", id: 0x0, conformance: "M", access: "M T", direction: "request", response: "status" },
+        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
     ),
     Command(
-        { id: 0x1, name: "RemoveNetwork", access: "M T", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "ExtendedPanId", type: "octstr", conformance: "M", constraint: "8" })
+        { name: "RemoveNetwork", id: 0x1, conformance: "M", access: "M T", direction: "request", response: "status" },
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x2, name: "GetOperationalDataset",
-            access: "M", conformance: "M", direction: "request", response: "OperationalDatasetResponse"
+            name: "GetOperationalDataset", id: 0x2,
+            conformance: "M", access: "M", direction: "request", response: "OperationalDatasetResponse"
         },
-        Field({ id: 0x0, name: "ExtendedPanId", type: "octstr", conformance: "M", constraint: "8" })
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" })
     ),
 
     Command(
-        { id: 0x3, name: "OperationalDatasetResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "OperationalDataset", type: "octstr", conformance: "M", constraint: "max 254" })
+        { name: "OperationalDatasetResponse", id: 0x3, conformance: "M", direction: "response" },
+        Field({ name: "OperationalDataset", id: 0x0, type: "octstr", constraint: "max 254", conformance: "M" })
     ),
 
     Datatype(
         { name: "ThreadNetworkStruct", type: "struct" },
-        Field({ id: 0x0, name: "ExtendedPanId", type: "octstr", conformance: "M", constraint: "8" }),
-        Field({ id: 0x1, name: "NetworkName", type: "string", conformance: "M", constraint: "1 to 16" }),
-        Field({ id: 0x2, name: "Channel", type: "uint16", conformance: "M" }),
-        Field({ id: 0x3, name: "ActiveTimestamp", type: "uint64", conformance: "M" })
+        Field({ name: "ExtendedPanId", id: 0x0, type: "octstr", constraint: "8", conformance: "M" }),
+        Field({ name: "NetworkName", id: 0x1, type: "string", constraint: "1 to 16", conformance: "M" }),
+        Field({ name: "Channel", id: 0x2, type: "uint16", conformance: "M" }),
+        Field({ name: "ActiveTimestamp", id: 0x3, type: "uint64", conformance: "M" })
     )
 );
 

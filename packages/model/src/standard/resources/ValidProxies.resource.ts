@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ValidProxies", tag: "cluster",
+    tag: "cluster", name: "ValidProxies",
     classification: "node", pics: "PXVALID",
     details: "This cluster provides a means for a device to be told of the valid set of possible proxies that can " +
         "proxy subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
@@ -17,27 +17,27 @@ Resource.add({
 
     children: [
         {
-            name: "ValidProxyList", tag: "attribute",
+            tag: "attribute", name: "ValidProxyList",
             details: "List of valid proxies that can proxy this Node. Each entry in this list is fabric-scoped.",
             xref: "core§9.15.14.5.1"
         },
 
         {
-            name: "GetValidProxiesRequest", tag: "command",
+            tag: "command", name: "GetValidProxiesRequest",
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
             xref: "core§9.15.14.6.1"
         },
 
         {
-            name: "GetValidProxiesResponse", tag: "command",
+            tag: "command", name: "GetValidProxiesResponse",
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
             xref: "core§9.15.14.6.2"
         },
 
         {
-            name: "ValidProxyStruct", tag: "datatype",
+            tag: "datatype", name: "ValidProxyStruct",
             details: "Encapsulates the Node ID of a Valid Proxy.",
             xref: "core§9.15.14.4.1"
         }

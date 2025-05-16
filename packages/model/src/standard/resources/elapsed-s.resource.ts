@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "elapsed-s", tag: "datatype",
+    tag: "datatype", name: "elapsed-s",
     description: "Elapsed Time in seconds",
     details: "Elapsed time in seconds is an unsigned 32-bit value representing the time that has elapsed for an " +
         "operation or other activity, as determined by the definition of the attribute using this type.",

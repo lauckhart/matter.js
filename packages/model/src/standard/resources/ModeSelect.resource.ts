@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ModeSelect", tag: "cluster",
+    tag: "cluster", name: "ModeSelect",
     classification: "application", pics: "MOD",
 
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
@@ -38,11 +38,11 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.9.4",
 
             children: [{
-                name: "DEPONOFF", tag: "field",
+                tag: "field", name: "DEPONOFF",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
                     "same endpoint. See OnMode for more information.",
                 xref: "cluster§1.9.4.1"
@@ -50,7 +50,7 @@ Resource.add({
         },
 
         {
-            name: "Description", tag: "attribute",
+            tag: "attribute", name: "Description",
 
             details: "This attribute describes the purpose of the server, in readable text." +
                 "\n" +
@@ -63,7 +63,7 @@ Resource.add({
         },
 
         {
-            name: "StandardNamespace", tag: "attribute",
+            tag: "attribute", name: "StandardNamespace",
             details: "This attribute, when not null, shall indicate a single standard namespace for any standard semantic " +
                 "tag value supported in this or any other cluster instance with the same value of this attribute. A " +
                 "null value indicates no standard namespace, and therefore, no standard semantic tags are provided in " +
@@ -73,7 +73,7 @@ Resource.add({
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
             details: "This attribute is the list of supported modes that may be selected for the CurrentMode attribute. " +
                 "Each item in this list represents a unique mode as indicated by the Mode field of the " +
                 "ModeOptionStruct. Each entry in this list shall have a unique value for the Mode field.",
@@ -81,7 +81,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentMode", tag: "attribute",
+            tag: "attribute", name: "CurrentMode",
             details: "This attribute represents the current mode of the server." +
                 "\n" +
                 "The value of this field must match the Mode field of one of the entries in the SupportedModes" +
@@ -91,7 +91,7 @@ Resource.add({
         },
 
         {
-            name: "StartUpMode", tag: "attribute",
+            tag: "attribute", name: "StartUpMode",
 
             details: "The StartUpMode attribute value indicates the desired startup mode for the server when it is " +
                 "supplied with power." +
@@ -113,7 +113,7 @@ Resource.add({
         },
 
         {
-            name: "OnMode", tag: "attribute",
+            tag: "attribute", name: "OnMode",
 
             details: "Indicates the value of CurrentMode that depends on the state of the On/Off cluster on the same " +
                 "endpoint. If this attribute is not present or is set to null, it shall NOT have an effect, otherwise " +
@@ -127,7 +127,7 @@ Resource.add({
         },
 
         {
-            name: "ChangeToMode", tag: "command",
+            tag: "command", name: "ChangeToMode",
             details: "On receipt of this command, if the NewMode field indicates a valid mode transition within the " +
                 "supported list, the server shall set the CurrentMode attribute to the NewMode value, otherwise, the " +
                 "server shall respond with an INVALID_COMMAND status response.",
@@ -135,13 +135,13 @@ Resource.add({
         },
 
         {
-            name: "SemanticTagStruct", tag: "datatype",
+            tag: "datatype", name: "SemanticTagStruct",
             details: "A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.",
             xref: "cluster§1.9.5.1",
 
             children: [
                 {
-                    name: "MfgCode", tag: "field",
+                    tag: "field", name: "MfgCode",
                     details: "This field shall indicate a manufacturer code (Vendor ID), and the Value field shall indicate a " +
                         "semantic tag defined by the manufacturer. Each manufacturer code supports a single namespace of " +
                         "values. The same manufacturer code and semantic tag value in separate cluster instances are part of " +
@@ -151,7 +151,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Value", tag: "field",
+                    tag: "field", name: "Value",
                     details: "This field shall indicate the semantic tag within a semantic tag namespace which is either " +
                         "manufacturer specific or standard. For semantic tags in a standard namespace, see Standard " +
                         "Namespace.",
@@ -161,13 +161,13 @@ Resource.add({
         },
 
         {
-            name: "ModeOptionStruct", tag: "datatype",
+            tag: "datatype", name: "ModeOptionStruct",
             details: "This is a struct representing a possible mode of the server.",
             xref: "cluster§1.9.5.2",
 
             children: [
                 {
-                    name: "Label", tag: "field",
+                    tag: "field", name: "Label",
                     details: "This field is readable text that describes the mode option that can be used by a client to indicate " +
                         "to the user what this option means. This field is meant to be readable and understandable by the " +
                         "user.",
@@ -175,14 +175,14 @@ Resource.add({
                 },
 
                 {
-                    name: "Mode", tag: "field",
+                    tag: "field", name: "Mode",
                     details: "The Mode field is used to identify the mode option. The value shall be unique for every item in the " +
                         "SupportedModes attribute.",
                     xref: "cluster§1.9.5.2.2"
                 },
 
                 {
-                    name: "SemanticTags", tag: "field",
+                    tag: "field", name: "SemanticTags",
 
                     details: "This field is a list of semantic tags that map to the mode option. This may be used by clients to " +
                         "determine the meaning of the mode option as defined in a standard or manufacturer specific " +

@@ -14,18 +14,18 @@ import {
 } from "../../elements/index.js";
 
 export const BridgedNodeDt = DeviceType(
-    { id: 0x13, name: "BridgedNode", classification: "utility" },
+    { name: "BridgedNode", id: 0x13 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 19, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 19, revision: 3 } ] })
     ),
-    Requirement({ id: 0x39, name: "BridgedDeviceBasicInformation", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x2e, name: "PowerSourceConfiguration", conformance: "BridgedPowerSourceInfo, D", element: "serverCluster" }),
-    Requirement({ id: 0x2f, name: "PowerSource", conformance: "BridgedPowerSourceInfo", element: "serverCluster" }),
+    Requirement({ name: "BridgedDeviceBasicInformation", id: 0x39, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "PowerSourceConfiguration", id: 0x2e, element: "serverCluster", conformance: "BridgedPowerSourceInfo, D" }),
+    Requirement({ name: "PowerSource", id: 0x2f, element: "serverCluster", conformance: "BridgedPowerSourceInfo" }),
     Requirement(
-        { id: 0x750, name: "EcosystemInformation", conformance: "FabricSynchronizedNode, O", element: "serverCluster" }
+        { name: "EcosystemInformation", id: 0x750, element: "serverCluster", conformance: "FabricSynchronizedNode, O" }
     ),
-    Requirement({ id: 0x3c, name: "AdministratorCommissioning", conformance: "FabricSynchronizedNode", element: "serverCluster" }),
+    Requirement({ name: "AdministratorCommissioning", id: 0x3c, element: "serverCluster", conformance: "FabricSynchronizedNode" }),
     Field({ name: "conditions", type: "enum8" }, Field({ name: "FabricSynchronizedNode" }))
 );
 

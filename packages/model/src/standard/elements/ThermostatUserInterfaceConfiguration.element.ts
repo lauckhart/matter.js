@@ -15,37 +15,37 @@ import {
 } from "../../elements/index.js";
 
 export const ThermostatUserInterfaceConfiguration = Cluster(
-    { id: 0x204, name: "ThermostatUserInterfaceConfiguration" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "ThermostatUserInterfaceConfiguration", id: 0x204 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute({
-        id: 0x0, name: "TemperatureDisplayMode", type: "TemperatureDisplayModeEnum",
-        access: "RW VO", conformance: "M", default: 0
+        name: "TemperatureDisplayMode", id: 0x0, type: "TemperatureDisplayModeEnum",
+        default: 0, conformance: "M", access: "RW VO"
     }),
-    Attribute({ id: 0x1, name: "KeypadLockout", type: "KeypadLockoutEnum", access: "RW VM", conformance: "M", default: 0 }),
+    Attribute({ name: "KeypadLockout", id: 0x1, type: "KeypadLockoutEnum", default: 0, conformance: "M", access: "RW VM" }),
     Attribute({
-        id: 0x2, name: "ScheduleProgrammingVisibility", type: "ScheduleProgrammingVisibilityEnum",
-        access: "RW VM", conformance: "O", default: 0
+        name: "ScheduleProgrammingVisibility", id: 0x2, type: "ScheduleProgrammingVisibilityEnum",
+        default: 0, conformance: "O", access: "RW VM"
     }),
     Datatype(
         { name: "TemperatureDisplayModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Celsius", conformance: "M" }),
-        Field({ id: 0x1, name: "Fahrenheit", conformance: "M" })
+        Field({ name: "Celsius", id: 0x0, conformance: "M" }),
+        Field({ name: "Fahrenheit", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "KeypadLockoutEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoLockout", conformance: "M" }),
-        Field({ id: 0x1, name: "Lockout1", conformance: "M" }),
-        Field({ id: 0x2, name: "Lockout2", conformance: "M" }),
-        Field({ id: 0x3, name: "Lockout3", conformance: "M" }),
-        Field({ id: 0x4, name: "Lockout4", conformance: "M" }),
-        Field({ id: 0x5, name: "Lockout5", conformance: "M" })
+        Field({ name: "NoLockout", id: 0x0, conformance: "M" }),
+        Field({ name: "Lockout1", id: 0x1, conformance: "M" }),
+        Field({ name: "Lockout2", id: 0x2, conformance: "M" }),
+        Field({ name: "Lockout3", id: 0x3, conformance: "M" }),
+        Field({ name: "Lockout4", id: 0x4, conformance: "M" }),
+        Field({ name: "Lockout5", id: 0x5, conformance: "M" })
     ),
 
     Datatype(
         { name: "ScheduleProgrammingVisibilityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "ScheduleProgrammingPermitted", conformance: "M" }),
-        Field({ id: 0x1, name: "ScheduleProgrammingDenied", conformance: "M" })
+        Field({ name: "ScheduleProgrammingPermitted", id: 0x0, conformance: "M" }),
+        Field({ name: "ScheduleProgrammingDenied", id: 0x1, conformance: "M" })
     )
 );
 

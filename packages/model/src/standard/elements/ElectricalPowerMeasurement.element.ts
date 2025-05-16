@@ -16,145 +16,145 @@ import {
 } from "../../elements/index.js";
 
 export const ElectricalPowerMeasurement = Cluster(
-    { id: 0x90, name: "ElectricalPowerMeasurement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ElectricalPowerMeasurement", id: 0x90 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DIRC", conformance: "O.a+", constraint: "0", longName: "DirectCurrent" }),
-        Field({ name: "ALTC", conformance: "O.a+", constraint: "1", longName: "AlternatingCurrent" }),
-        Field({ name: "POLY", conformance: "[ALTC]", constraint: "2", longName: "PolyphasePower" }),
-        Field({ name: "HARM", conformance: "[ALTC]", constraint: "3", longName: "Harmonics" }),
-        Field({ name: "PWRQ", conformance: "[ALTC]", constraint: "4", longName: "PowerQuality" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "DIRC", constraint: "0", conformance: "O.a+", longName: "DirectCurrent" }),
+        Field({ name: "ALTC", constraint: "1", conformance: "O.a+", longName: "AlternatingCurrent" }),
+        Field({ name: "POLY", constraint: "2", conformance: "[ALTC]", longName: "PolyphasePower" }),
+        Field({ name: "HARM", constraint: "3", conformance: "[ALTC]", longName: "Harmonics" }),
+        Field({ name: "PWRQ", constraint: "4", conformance: "[ALTC]", longName: "PowerQuality" })
     ),
 
-    Attribute({ id: 0x0, name: "PowerMode", type: "PowerModeEnum", access: "R V", conformance: "M" }),
+    Attribute({ name: "PowerMode", id: 0x0, type: "PowerModeEnum", conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x1, name: "NumberOfMeasurementTypes", type: "uint8",
-        access: "R V", conformance: "M", constraint: "min 1", quality: "F"
+        name: "NumberOfMeasurementTypes", id: 0x1, type: "uint8",
+        constraint: "min 1", conformance: "M", access: "R V", quality: "F"
     }),
 
     Attribute(
         {
-            id: 0x2, name: "Accuracy", type: "list",
-            access: "R V", conformance: "M", constraint: "1 to numberOfMeasurementTypes", quality: "F"
+            name: "Accuracy", id: 0x2, type: "list",
+            constraint: "1 to numberOfMeasurementTypes", conformance: "M", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "MeasurementAccuracyStruct" })
     ),
 
     Attribute(
         {
-            id: 0x3, name: "Ranges", type: "list",
-            access: "R V", conformance: "O", constraint: "0 to numberOfMeasurementTypes", default: [],
+            name: "Ranges", id: 0x3, type: "list",
+            default: [], constraint: "0 to numberOfMeasurementTypes", conformance: "O", access: "R V",
             quality: "Q"
         },
         Field({ name: "entry", type: "MeasurementRangeStruct" })
     ),
 
-    Attribute({ id: 0x4, name: "Voltage", type: "voltage-mV", access: "R V", conformance: "O", default: null, quality: "X Q" }),
+    Attribute({ name: "Voltage", id: 0x4, type: "voltage-mV", default: null, conformance: "O", access: "R V", quality: "X Q" }),
     Attribute({
-        id: 0x5, name: "ActiveCurrent", type: "amperage-mA",
-        access: "R V", conformance: "O", default: null, quality: "X Q"
+        name: "ActiveCurrent", id: 0x5, type: "amperage-mA",
+        default: null, conformance: "O", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x6, name: "ReactiveCurrent", type: "amperage-mA",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
+        name: "ReactiveCurrent", id: 0x6, type: "amperage-mA",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x7, name: "ApparentCurrent", type: "amperage-mA",
-        access: "R V", conformance: "[ALTC]", constraint: "min 0", default: null, quality: "X Q"
+        name: "ApparentCurrent", id: 0x7, type: "amperage-mA",
+        default: null, constraint: "min 0", conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
-    Attribute({ id: 0x8, name: "ActivePower", type: "power-mW", access: "R V", conformance: "M", default: null, quality: "X Q" }),
+    Attribute({ name: "ActivePower", id: 0x8, type: "power-mW", default: null, conformance: "M", access: "R V", quality: "X Q" }),
     Attribute({
-        id: 0x9, name: "ReactivePower", type: "power-mW",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
-    }),
-    Attribute({
-        id: 0xa, name: "ApparentPower", type: "power-mW",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
+        name: "ReactivePower", id: 0x9, type: "power-mW",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0xb, name: "RmsVoltage", type: "voltage-mV",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
+        name: "ApparentPower", id: 0xa, type: "power-mW",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0xc, name: "RmsCurrent", type: "amperage-mA",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
+        name: "RmsVoltage", id: 0xb, type: "voltage-mV",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0xd, name: "RmsPower", type: "power-mW",
-        access: "R V", conformance: "[ALTC]", default: null, quality: "X Q"
+        name: "RmsCurrent", id: 0xc, type: "amperage-mA",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0xe, name: "Frequency", type: "int64",
-        access: "R V", conformance: "[ALTC]", constraint: "0 to 1000000", default: null, quality: "X Q"
+        name: "RmsPower", id: 0xd, type: "power-mW",
+        default: null, conformance: "[ALTC]", access: "R V", quality: "X Q"
+    }),
+    Attribute({
+        name: "Frequency", id: 0xe, type: "int64",
+        default: null, constraint: "0 to 1000000", conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
 
     Attribute(
         {
-            id: 0xf, name: "HarmonicCurrents", type: "list",
-            access: "R V", conformance: "HARM", constraint: "desc", default: null, quality: "X Q"
+            name: "HarmonicCurrents", id: 0xf, type: "list",
+            default: null, constraint: "desc", conformance: "HARM", access: "R V", quality: "X Q"
         },
         Field({ name: "entry", type: "HarmonicMeasurementStruct" })
     ),
 
     Attribute(
         {
-            id: 0x10, name: "HarmonicPhases", type: "list",
-            access: "R V", conformance: "PWRQ", constraint: "desc", default: null, quality: "X Q"
+            name: "HarmonicPhases", id: 0x10, type: "list",
+            default: null, constraint: "desc", conformance: "PWRQ", access: "R V", quality: "X Q"
         },
         Field({ name: "entry", type: "HarmonicMeasurementStruct" })
     ),
 
     Attribute({
-        id: 0x11, name: "PowerFactor", type: "int64",
-        access: "R V", conformance: "[ALTC]", constraint: "-10000 to 10000", default: null, quality: "X Q"
+        name: "PowerFactor", id: 0x11, type: "int64",
+        default: null, constraint: "-10000 to 10000", conformance: "[ALTC]", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x12, name: "NeutralCurrent", type: "amperage-mA",
-        access: "R V", conformance: "[POLY]", default: null, quality: "X Q"
+        name: "NeutralCurrent", id: 0x12, type: "amperage-mA",
+        default: null, conformance: "[POLY]", access: "R V", quality: "X Q"
     }),
 
     Event(
-        { id: 0x0, name: "MeasurementPeriodRanges", access: "V", priority: "info" },
+        { name: "MeasurementPeriodRanges", id: 0x0, access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "Ranges", type: "list", access: "R V", default: [] },
+            { name: "Ranges", id: 0x0, type: "list", default: [], access: "R V" },
             Field({ name: "entry", type: "MeasurementRangeStruct" })
         )
     ),
 
     Datatype(
         { name: "PowerModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x1, name: "Dc", conformance: "M" }),
-        Field({ id: 0x2, name: "Ac", conformance: "M" })
+        Field({ name: "Unknown", id: 0x0, conformance: "M" }),
+        Field({ name: "Dc", id: 0x1, conformance: "M" }),
+        Field({ name: "Ac", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "MeasurementRangeStruct", type: "struct" },
-        Field({ id: 0x0, name: "MeasurementType", type: "MeasurementTypeEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "Min", type: "int64", conformance: "M" }),
-        Field({ id: 0x2, name: "Max", type: "int64", conformance: "M" }),
-        Field({ id: 0x3, name: "StartTimestamp", type: "epoch-s", conformance: "EndTimestamp" }),
-        Field({ id: 0x4, name: "EndTimestamp", type: "epoch-s", conformance: "desc", constraint: "min startTimestamp + 1" }),
-        Field({ id: 0x5, name: "MinTimestamp", type: "epoch-s", conformance: "EndTimestamp" }),
+        Field({ name: "MeasurementType", id: 0x0, type: "MeasurementTypeEnum", conformance: "M" }),
+        Field({ name: "Min", id: 0x1, type: "int64", conformance: "M" }),
+        Field({ name: "Max", id: 0x2, type: "int64", conformance: "M" }),
+        Field({ name: "StartTimestamp", id: 0x3, type: "epoch-s", conformance: "EndTimestamp" }),
+        Field({ name: "EndTimestamp", id: 0x4, type: "epoch-s", constraint: "min startTimestamp + 1", conformance: "desc" }),
+        Field({ name: "MinTimestamp", id: 0x5, type: "epoch-s", conformance: "EndTimestamp" }),
         Field({
-            id: 0x6, name: "MaxTimestamp", type: "epoch-s",
-            conformance: "EndTimestamp", constraint: "min minTimestamp + 1"
+            name: "MaxTimestamp", id: 0x6, type: "epoch-s",
+            constraint: "min minTimestamp + 1", conformance: "EndTimestamp"
         }),
-        Field({ id: 0x7, name: "StartSystime", type: "systime-ms", conformance: "EndSystime" }),
-        Field({ id: 0x8, name: "EndSystime", type: "systime-ms", conformance: "desc", constraint: "min startSystime + 1" }),
-        Field({ id: 0x9, name: "MinSystime", type: "systime-ms", conformance: "EndSystime" }),
+        Field({ name: "StartSystime", id: 0x7, type: "systime-ms", conformance: "EndSystime" }),
+        Field({ name: "EndSystime", id: 0x8, type: "systime-ms", constraint: "min startSystime + 1", conformance: "desc" }),
+        Field({ name: "MinSystime", id: 0x9, type: "systime-ms", conformance: "EndSystime" }),
         Field({
-            id: 0xa, name: "MaxSystime", type: "systime-ms",
-            conformance: "EndSystime", constraint: "min minSystime + 1"
+            name: "MaxSystime", id: 0xa, type: "systime-ms",
+            constraint: "min minSystime + 1", conformance: "EndSystime"
         })
     ),
 
     Datatype(
         { name: "HarmonicMeasurementStruct", type: "struct" },
-        Field({ id: 0x0, name: "Order", type: "uint8", conformance: "M", constraint: "min 1", default: 1 }),
-        Field({ id: 0x1, name: "Measurement", type: "int64", conformance: "M", default: null, quality: "X" })
+        Field({ name: "Order", id: 0x0, type: "uint8", default: 1, constraint: "min 1", conformance: "M" }),
+        Field({ name: "Measurement", id: 0x1, type: "int64", default: null, conformance: "M", quality: "X" })
     )
 );
 

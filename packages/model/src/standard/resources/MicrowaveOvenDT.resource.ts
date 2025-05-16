@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MicrowaveOven", tag: "deviceType",
+    tag: "deviceType", name: "MicrowaveOven",
     classification: "simple",
     details: "This defines conformance to the Microwave Oven device type." +
         "\n" +
@@ -18,10 +18,10 @@ Resource.add({
     xref: "device§13.11",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§13.11.6" },
-        { name: "OperationalState", tag: "requirement", xref: "device§13.11.6" },
-        { name: "FanControl", tag: "requirement", xref: "device§13.11.6" },
-        { name: "MicrowaveOvenMode", tag: "requirement", xref: "device§13.11.6" },
-        { name: "MicrowaveOvenControl", tag: "requirement", xref: "device§13.11.6" }
+        { tag: "requirement", name: "Identify", xref: "device§13.11.6" },
+        { tag: "requirement", name: "OperationalState", xref: "device§13.11.6" },
+        { tag: "requirement", name: "FanControl", xref: "device§13.11.6" },
+        { tag: "requirement", name: "MicrowaveOvenMode", xref: "device§13.11.6" },
+        { tag: "requirement", name: "MicrowaveOvenControl", xref: "device§13.11.6" }
     ]
 });

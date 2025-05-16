@@ -10,20 +10,20 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const ExtractorHoodDt = DeviceType(
-    { id: 0x7a, name: "ExtractorHood", classification: "simple" },
+    { name: "ExtractorHood", id: 0x7a },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 122, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 122, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x71, name: "HepaFilterMonitoring", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x72, name: "ActivatedCarbonFilterMonitoring", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "HepaFilterMonitoring", id: 0x71, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "ActivatedCarbonFilterMonitoring", id: 0x72, element: "serverCluster", conformance: "O" }),
 
     Requirement(
-        { id: 0x202, name: "FanControl", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "ROCKING", conformance: "X", element: "feature" }),
-        Requirement({ name: "WIND", conformance: "X", element: "feature" }),
-        Requirement({ name: "AIRFLOWDIRECTION", conformance: "X", element: "feature" })
+        { name: "FanControl", id: 0x202, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "ROCKING", element: "feature", conformance: "X" }),
+        Requirement({ name: "WIND", element: "feature", conformance: "X" }),
+        Requirement({ name: "AIRFLOWDIRECTION", element: "feature", conformance: "X" })
     )
 );
 

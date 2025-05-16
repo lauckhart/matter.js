@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "trans-id", tag: "datatype",
+    tag: "datatype", name: "trans-id",
     description: "Transaction ID",
     details: "An identifier for a transaction as defined in the Interaction Model specification, see Transaction " +
         "ID.",

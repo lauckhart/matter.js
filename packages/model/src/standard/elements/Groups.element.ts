@@ -16,96 +16,96 @@ import {
 } from "../../elements/index.js";
 
 export const Groups = Cluster(
-    { id: 0x4, name: "Groups" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
+    { name: "Groups", id: 0x4 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "GN", constraint: "0", default: 1, longName: "GroupNames" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "GN", default: 1, constraint: "0", longName: "GroupNames" })
     ),
 
     Attribute(
         {
-            id: 0x0, name: "NameSupport", type: "NameSupportBitmap",
-            access: "R V", constraint: "desc", default: 0, quality: "F"
+            name: "NameSupport", id: 0x0, type: "NameSupportBitmap",
+            default: 0, constraint: "desc", access: "R V", quality: "F"
         },
-        Field({ name: "NameSupport", constraint: "7", default: 1 })
+        Field({ name: "NameSupport", default: 1, constraint: "7" })
     ),
 
     Command(
         {
-            id: 0x0, name: "AddGroup",
-            access: "F M", conformance: "M", direction: "request", response: "AddGroupResponse"
+            name: "AddGroup", id: 0x0,
+            conformance: "M", access: "F M", direction: "request", response: "AddGroupResponse"
         },
-        Field({ id: 0x0, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" }),
-        Field({ id: 0x1, name: "GroupName", type: "string", conformance: "M", constraint: "max 16" })
+        Field({ name: "GroupId", id: 0x0, type: "group-id", constraint: "min 1", conformance: "M" }),
+        Field({ name: "GroupName", id: 0x1, type: "string", constraint: "max 16", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x1, name: "ViewGroup",
-            access: "F O", conformance: "M", direction: "request", response: "ViewGroupResponse"
+            name: "ViewGroup", id: 0x1,
+            conformance: "M", access: "F O", direction: "request", response: "ViewGroupResponse"
         },
-        Field({ id: 0x0, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
+        Field({ name: "GroupId", id: 0x0, type: "group-id", constraint: "min 1", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x2, name: "GetGroupMembership",
-            access: "F O", conformance: "M", direction: "request", response: "GetGroupMembershipResponse"
+            name: "GetGroupMembership", id: 0x2,
+            conformance: "M", access: "F O", direction: "request", response: "GetGroupMembershipResponse"
         },
         Field(
-            { id: 0x0, name: "GroupList", type: "list", conformance: "M", constraint: "all[min 1]" },
+            { name: "GroupList", id: 0x0, type: "list", constraint: "all[min 1]", conformance: "M" },
             Field({ name: "entry", type: "group-id" })
         )
     ),
 
     Command(
         {
-            id: 0x3, name: "RemoveGroup",
-            access: "F M", conformance: "M", direction: "request", response: "RemoveGroupResponse"
+            name: "RemoveGroup", id: 0x3,
+            conformance: "M", access: "F M", direction: "request", response: "RemoveGroupResponse"
         },
-        Field({ id: 0x0, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
+        Field({ name: "GroupId", id: 0x0, type: "group-id", constraint: "min 1", conformance: "M" })
     ),
 
     Command(
-        { id: 0x4, name: "RemoveAllGroups", access: "F M", conformance: "M", direction: "request", response: "status" }
+        { name: "RemoveAllGroups", id: 0x4, conformance: "M", access: "F M", direction: "request", response: "status" }
     ),
 
     Command(
         {
-            id: 0x5, name: "AddGroupIfIdentifying",
-            access: "F M", conformance: "M", direction: "request", response: "status"
+            name: "AddGroupIfIdentifying", id: 0x5,
+            conformance: "M", access: "F M", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" }),
-        Field({ id: 0x1, name: "GroupName", type: "string", conformance: "M", constraint: "max 16" })
+        Field({ name: "GroupId", id: 0x0, type: "group-id", constraint: "min 1", conformance: "M" }),
+        Field({ name: "GroupName", id: 0x1, type: "string", constraint: "max 16", conformance: "M" })
     ),
 
     Command(
-        { id: 0x0, name: "AddGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
+        { name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "status", constraint: "desc", conformance: "M" }),
+        Field({ name: "GroupId", id: 0x1, type: "group-id", constraint: "min 1", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "ViewGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" }),
-        Field({ id: 0x2, name: "GroupName", type: "string", conformance: "M", constraint: "max 16" })
+        { name: "ViewGroupResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "status", constraint: "desc", conformance: "M" }),
+        Field({ name: "GroupId", id: 0x1, type: "group-id", constraint: "min 1", conformance: "M" }),
+        Field({ name: "GroupName", id: 0x2, type: "string", constraint: "max 16", conformance: "M" })
     ),
 
     Command(
-        { id: 0x2, name: "GetGroupMembershipResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Capacity", type: "uint8", conformance: "M", quality: "X" }),
+        { name: "GetGroupMembershipResponse", id: 0x2, conformance: "M", direction: "response" },
+        Field({ name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X" }),
         Field(
-            { id: 0x1, name: "GroupList", type: "list", conformance: "M", constraint: "all[min 1]" },
+            { name: "GroupList", id: 0x1, type: "list", constraint: "all[min 1]", conformance: "M" },
             Field({ name: "entry", type: "group-id" })
         )
     ),
 
     Command(
-        { id: 0x3, name: "RemoveGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
+        { name: "RemoveGroupResponse", id: 0x3, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "status", constraint: "desc", conformance: "M" }),
+        Field({ name: "GroupId", id: 0x1, type: "group-id", constraint: "min 1", conformance: "M" })
     ),
     Datatype({ name: "NameSupportBitmap", type: "map8" }, Field({ name: "GroupNames", constraint: "7" }))
 );

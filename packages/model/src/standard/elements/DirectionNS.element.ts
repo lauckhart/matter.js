@@ -13,13 +13,13 @@ import {
 } from "../../elements/index.js";
 
 export const DirectionNs = SemanticNamespace(
-    { id: 0x4, name: "Direction" },
-    SemanticTag({ id: 0x0, name: "Upward" }),
-    SemanticTag({ id: 0x1, name: "Downward" }),
-    SemanticTag({ id: 0x2, name: "Leftward" }),
-    SemanticTag({ id: 0x3, name: "Rightward" }),
-    SemanticTag({ id: 0x4, name: "Forward" }),
-    SemanticTag({ id: 0x5, name: "Backward" })
+    { name: "Direction", id: 0x4 },
+    SemanticTag({ name: "Upward", id: 0x0 }),
+    SemanticTag({ name: "Downward", id: 0x1 }),
+    SemanticTag({ name: "Leftward", id: 0x2 }),
+    SemanticTag({ name: "Rightward", id: 0x3 }),
+    SemanticTag({ name: "Forward", id: 0x4 }),
+    SemanticTag({ name: "Backward", id: 0x5 })
 );
 
 MatterDefinition.children.push(DirectionNs);

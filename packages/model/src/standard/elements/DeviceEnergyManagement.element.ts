@@ -17,212 +17,212 @@ import {
 } from "../../elements/index.js";
 
 export const DeviceEnergyManagement = Cluster(
-    { id: 0x98, name: "DeviceEnergyManagement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
+    { name: "DeviceEnergyManagement", id: 0x98 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PA", conformance: "O", constraint: "0", longName: "PowerAdjustment" }),
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "PA", constraint: "0", conformance: "O", longName: "PowerAdjustment" }),
         Field({
             name: "PFR",
-            conformance: "[!PA].a, STA | PAU | FA | CON, O", constraint: "1",
+            constraint: "1", conformance: "[!PA].a, STA | PAU | FA | CON, O",
             longName: "PowerForecastReporting"
         }),
-        Field({ name: "SFR", conformance: "[!PA].a", constraint: "2", longName: "StateForecastReporting" }),
-        Field({ name: "STA", conformance: "O", constraint: "3", longName: "StartTimeAdjustment" }),
-        Field({ name: "PAU", conformance: "O", constraint: "4", longName: "Pausable" }),
-        Field({ name: "FA", conformance: "O", constraint: "5", longName: "ForecastAdjustment" }),
-        Field({ name: "CON", conformance: "O", constraint: "6", longName: "ConstraintBasedAdjustment" })
+        Field({ name: "SFR", constraint: "2", conformance: "[!PA].a", longName: "StateForecastReporting" }),
+        Field({ name: "STA", constraint: "3", conformance: "O", longName: "StartTimeAdjustment" }),
+        Field({ name: "PAU", constraint: "4", conformance: "O", longName: "Pausable" }),
+        Field({ name: "FA", constraint: "5", conformance: "O", longName: "ForecastAdjustment" }),
+        Field({ name: "CON", constraint: "6", conformance: "O", longName: "ConstraintBasedAdjustment" })
     ),
 
     Attribute(
-        { id: 0x0, name: "EsaType", type: "ESATypeEnum", access: "R V", conformance: "M", default: 255, quality: "F" }
+        { name: "EsaType", id: 0x0, type: "ESATypeEnum", default: 255, conformance: "M", access: "R V", quality: "F" }
     ),
-    Attribute({ id: 0x1, name: "EsaCanGenerate", type: "bool", access: "R V", conformance: "M", default: false, quality: "F" }),
+    Attribute({ name: "EsaCanGenerate", id: 0x1, type: "bool", default: false, conformance: "M", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x2, name: "EsaState", type: "ESAStateEnum",
-        access: "R V", conformance: "M", constraint: "desc", default: 0
+        name: "EsaState", id: 0x2, type: "ESAStateEnum",
+        default: 0, constraint: "desc", conformance: "M", access: "R V"
     }),
-    Attribute({ id: 0x3, name: "AbsMinPower", type: "power-mW", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "AbsMinPower", id: 0x3, type: "power-mW", default: 0, conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x4, name: "AbsMaxPower", type: "power-mW",
-        access: "R V", conformance: "M", constraint: "min absMinPower", default: 0
-    }),
-    Attribute({
-        id: 0x5, name: "PowerAdjustmentCapability", type: "PowerAdjustCapabilityStruct",
-        access: "R V", conformance: "PA", default: null, quality: "X Q"
+        name: "AbsMaxPower", id: 0x4, type: "power-mW",
+        default: 0, constraint: "min absMinPower", conformance: "M", access: "R V"
     }),
     Attribute({
-        id: 0x6, name: "Forecast", type: "ForecastStruct",
-        access: "R V", conformance: "PFR | SFR", default: null, quality: "X Q"
+        name: "PowerAdjustmentCapability", id: 0x5, type: "PowerAdjustCapabilityStruct",
+        default: null, conformance: "PA", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x7, name: "OptOutState", type: "OptOutStateEnum",
-        access: "R V", conformance: "PA | STA | PAU | FA | CON", constraint: "desc", default: 0
+        name: "Forecast", id: 0x6, type: "ForecastStruct",
+        default: null, conformance: "PFR | SFR", access: "R V", quality: "X Q"
     }),
-    Event({ id: 0x0, name: "PowerAdjustStart", access: "V", conformance: "PA", priority: "info" }),
+    Attribute({
+        name: "OptOutState", id: 0x7, type: "OptOutStateEnum",
+        default: 0, constraint: "desc", conformance: "PA | STA | PAU | FA | CON", access: "R V"
+    }),
+    Event({ name: "PowerAdjustStart", id: 0x0, conformance: "PA", access: "V", priority: "info" }),
 
     Event(
-        { id: 0x1, name: "PowerAdjustEnd", access: "V", conformance: "PA", priority: "info" },
-        Field({ id: 0x0, name: "Cause", type: "CauseEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x2, name: "EnergyUse", type: "energy-mWh", conformance: "M" })
+        { name: "PowerAdjustEnd", id: 0x1, conformance: "PA", access: "V", priority: "info" },
+        Field({ name: "Cause", id: 0x0, type: "CauseEnum", default: 0, conformance: "M" }),
+        Field({ name: "Duration", id: 0x1, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "EnergyUse", id: 0x2, type: "energy-mWh", conformance: "M" })
     ),
 
-    Event({ id: 0x2, name: "Paused", access: "V", conformance: "PAU", priority: "info" }),
+    Event({ name: "Paused", id: 0x2, conformance: "PAU", access: "V", priority: "info" }),
     Event(
-        { id: 0x3, name: "Resumed", access: "V", conformance: "PAU", priority: "info" },
-        Field({ id: 0x0, name: "Cause", type: "CauseEnum", conformance: "M", default: 0 })
+        { name: "Resumed", id: 0x3, conformance: "PAU", access: "V", priority: "info" },
+        Field({ name: "Cause", id: 0x0, type: "CauseEnum", default: 0, conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x0, name: "PowerAdjustRequest",
-            access: "O", conformance: "PA", direction: "request", response: "status"
+            name: "PowerAdjustRequest", id: 0x0,
+            conformance: "PA", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "Power", type: "power-mW", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x2, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M", constraint: "desc" })
+        Field({ name: "Power", id: 0x0, type: "power-mW", constraint: "desc", conformance: "M" }),
+        Field({ name: "Duration", id: 0x1, type: "elapsed-s", constraint: "desc", conformance: "M" }),
+        Field({ name: "Cause", id: 0x2, type: "AdjustmentCauseEnum", constraint: "desc", conformance: "M" })
     ),
 
     Command({
-        id: 0x1, name: "CancelPowerAdjustRequest",
-        access: "O", conformance: "PA", direction: "request", response: "status"
+        name: "CancelPowerAdjustRequest", id: 0x1,
+        conformance: "PA", access: "O", direction: "request", response: "status"
     }),
 
     Command(
         {
-            id: 0x2, name: "StartTimeAdjustRequest",
-            access: "O", conformance: "STA", direction: "request", response: "status"
+            name: "StartTimeAdjustRequest", id: 0x2,
+            conformance: "STA", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "RequestedStartTime", type: "epoch-s", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
+        Field({ name: "RequestedStartTime", id: 0x0, type: "epoch-s", constraint: "desc", conformance: "M" }),
+        Field({ name: "Cause", id: 0x1, type: "AdjustmentCauseEnum", conformance: "M" })
     ),
 
     Command(
-        { id: 0x3, name: "PauseRequest", access: "O", conformance: "PAU", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
+        { name: "PauseRequest", id: 0x3, conformance: "PAU", access: "O", direction: "request", response: "status" },
+        Field({ name: "Duration", id: 0x0, type: "elapsed-s", constraint: "desc", conformance: "M" }),
+        Field({ name: "Cause", id: 0x1, type: "AdjustmentCauseEnum", conformance: "M" })
     ),
-    Command({ id: 0x4, name: "ResumeRequest", access: "O", conformance: "PAU", direction: "request", response: "status" }),
+    Command({ name: "ResumeRequest", id: 0x4, conformance: "PAU", access: "O", direction: "request", response: "status" }),
 
     Command(
         {
-            id: 0x5, name: "ModifyForecastRequest",
-            access: "O", conformance: "FA", direction: "request", response: "status"
+            name: "ModifyForecastRequest", id: 0x5,
+            conformance: "FA", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "ForecastId", type: "uint32", conformance: "M" }),
+        Field({ name: "ForecastId", id: 0x0, type: "uint32", conformance: "M" }),
         Field(
-            { id: 0x1, name: "SlotAdjustments", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "SlotAdjustments", id: 0x1, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "SlotAdjustmentStruct" })
         ),
-        Field({ id: 0x2, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
+        Field({ name: "Cause", id: 0x2, type: "AdjustmentCauseEnum", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x6, name: "RequestConstraintBasedForecast",
-            access: "O", conformance: "CON", direction: "request", response: "status"
+            name: "RequestConstraintBasedForecast", id: 0x6,
+            conformance: "CON", access: "O", direction: "request", response: "status"
         },
         Field(
-            { id: 0x0, name: "Constraints", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "Constraints", id: 0x0, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "ConstraintsStruct" })
         ),
-        Field({ id: 0x1, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
+        Field({ name: "Cause", id: 0x1, type: "AdjustmentCauseEnum", conformance: "M" })
     ),
 
     Command({
-        id: 0x7, name: "CancelRequest",
-        access: "O", conformance: "STA | FA | CON", direction: "request", response: "status"
+        name: "CancelRequest", id: 0x7,
+        conformance: "STA | FA | CON", access: "O", direction: "request", response: "status"
     }),
 
     Datatype(
         { name: "CostTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Financial", conformance: "M" }),
-        Field({ id: 0x1, name: "GhgEmissions", conformance: "M" }),
-        Field({ id: 0x2, name: "Comfort", conformance: "M" }),
-        Field({ id: 0x3, name: "Temperature", conformance: "M" })
+        Field({ name: "Financial", id: 0x0, conformance: "M" }),
+        Field({ name: "GhgEmissions", id: 0x1, conformance: "M" }),
+        Field({ name: "Comfort", id: 0x2, conformance: "M" }),
+        Field({ name: "Temperature", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "ESATypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Evse", conformance: "O" }),
-        Field({ id: 0x1, name: "SpaceHeating", conformance: "O" }),
-        Field({ id: 0x2, name: "WaterHeating", conformance: "O" }),
-        Field({ id: 0x3, name: "SpaceCooling", conformance: "O" }),
-        Field({ id: 0x4, name: "SpaceHeatingCooling", conformance: "O" }),
-        Field({ id: 0x5, name: "BatteryStorage", conformance: "O" }),
-        Field({ id: 0x6, name: "SolarPv", conformance: "O" }),
-        Field({ id: 0x7, name: "FridgeFreezer", conformance: "O" }),
-        Field({ id: 0x8, name: "WashingMachine", conformance: "O" }),
-        Field({ id: 0x9, name: "Dishwasher", conformance: "O" }),
-        Field({ id: 0xa, name: "Cooking", conformance: "O" }),
-        Field({ id: 0xb, name: "HomeWaterPump", conformance: "O" }),
-        Field({ id: 0xc, name: "IrrigationWaterPump", conformance: "O" }),
-        Field({ id: 0xd, name: "PoolPump", conformance: "O" }),
-        Field({ id: 0xff, name: "Other", conformance: "O" })
+        Field({ name: "Evse", id: 0x0, conformance: "O" }),
+        Field({ name: "SpaceHeating", id: 0x1, conformance: "O" }),
+        Field({ name: "WaterHeating", id: 0x2, conformance: "O" }),
+        Field({ name: "SpaceCooling", id: 0x3, conformance: "O" }),
+        Field({ name: "SpaceHeatingCooling", id: 0x4, conformance: "O" }),
+        Field({ name: "BatteryStorage", id: 0x5, conformance: "O" }),
+        Field({ name: "SolarPv", id: 0x6, conformance: "O" }),
+        Field({ name: "FridgeFreezer", id: 0x7, conformance: "O" }),
+        Field({ name: "WashingMachine", id: 0x8, conformance: "O" }),
+        Field({ name: "Dishwasher", id: 0x9, conformance: "O" }),
+        Field({ name: "Cooking", id: 0xa, conformance: "O" }),
+        Field({ name: "HomeWaterPump", id: 0xb, conformance: "O" }),
+        Field({ name: "IrrigationWaterPump", id: 0xc, conformance: "O" }),
+        Field({ name: "PoolPump", id: 0xd, conformance: "O" }),
+        Field({ name: "Other", id: 0xff, conformance: "O" })
     ),
 
     Datatype(
         { name: "ESAStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Offline", conformance: "M" }),
-        Field({ id: 0x1, name: "Online", conformance: "M" }),
-        Field({ id: 0x2, name: "Fault", conformance: "M" }),
-        Field({ id: 0x3, name: "PowerAdjustActive", conformance: "PA" }),
-        Field({ id: 0x4, name: "Paused", conformance: "PAU" })
+        Field({ name: "Offline", id: 0x0, conformance: "M" }),
+        Field({ name: "Online", id: 0x1, conformance: "M" }),
+        Field({ name: "Fault", id: 0x2, conformance: "M" }),
+        Field({ name: "PowerAdjustActive", id: 0x3, conformance: "PA" }),
+        Field({ name: "Paused", id: 0x4, conformance: "PAU" })
     ),
 
     Datatype(
         { name: "OptOutStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoOptOut", conformance: "M" }),
-        Field({ id: 0x1, name: "LocalOptOut", conformance: "M" }),
-        Field({ id: 0x2, name: "GridOptOut", conformance: "M" }),
-        Field({ id: 0x3, name: "OptOut", conformance: "M" })
+        Field({ name: "NoOptOut", id: 0x0, conformance: "M" }),
+        Field({ name: "LocalOptOut", id: 0x1, conformance: "M" }),
+        Field({ name: "GridOptOut", id: 0x2, conformance: "M" }),
+        Field({ name: "OptOut", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "CauseEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NormalCompletion", conformance: "M" }),
-        Field({ id: 0x1, name: "Offline", conformance: "M" }),
-        Field({ id: 0x2, name: "Fault", conformance: "M" }),
-        Field({ id: 0x3, name: "UserOptOut", conformance: "M" }),
-        Field({ id: 0x4, name: "Cancelled", conformance: "M" })
+        Field({ name: "NormalCompletion", id: 0x0, conformance: "M" }),
+        Field({ name: "Offline", id: 0x1, conformance: "M" }),
+        Field({ name: "Fault", id: 0x2, conformance: "M" }),
+        Field({ name: "UserOptOut", id: 0x3, conformance: "M" }),
+        Field({ name: "Cancelled", id: 0x4, conformance: "M" })
     ),
 
     Datatype(
         { name: "AdjustmentCauseEnum", type: "enum8" },
-        Field({ id: 0x0, name: "LocalOptimization", conformance: "M" }),
-        Field({ id: 0x1, name: "GridOptimization", conformance: "M" })
+        Field({ name: "LocalOptimization", id: 0x0, conformance: "M" }),
+        Field({ name: "GridOptimization", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "ForecastUpdateReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "InternalOptimization", conformance: "M" }),
-        Field({ id: 0x1, name: "LocalOptimization", conformance: "M" }),
-        Field({ id: 0x2, name: "GridOptimization", conformance: "M" })
+        Field({ name: "InternalOptimization", id: 0x0, conformance: "M" }),
+        Field({ name: "LocalOptimization", id: 0x1, conformance: "M" }),
+        Field({ name: "GridOptimization", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "PowerAdjustReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoAdjustment", conformance: "M" }),
-        Field({ id: 0x1, name: "LocalOptimizationAdjustment", conformance: "M" }),
-        Field({ id: 0x2, name: "GridOptimizationAdjustment", conformance: "M" })
+        Field({ name: "NoAdjustment", id: 0x0, conformance: "M" }),
+        Field({ name: "LocalOptimizationAdjustment", id: 0x1, conformance: "M" }),
+        Field({ name: "GridOptimizationAdjustment", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "CostStruct", type: "struct" },
-        Field({ id: 0x0, name: "CostType", type: "CostTypeEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "Value", type: "int32", conformance: "M", default: 0 }),
-        Field({ id: 0x2, name: "DecimalPoints", type: "uint8", conformance: "M", default: 0 }),
-        Field({ id: 0x3, name: "Currency", type: "uint16", conformance: "O", constraint: "max 999", default: 0 })
+        Field({ name: "CostType", id: 0x0, type: "CostTypeEnum", default: 0, conformance: "M" }),
+        Field({ name: "Value", id: 0x1, type: "int32", default: 0, conformance: "M" }),
+        Field({ name: "DecimalPoints", id: 0x2, type: "uint8", default: 0, conformance: "M" }),
+        Field({ name: "Currency", id: 0x3, type: "uint16", default: 0, constraint: "max 999", conformance: "O" })
     ),
 
     Datatype(
         { name: "PowerAdjustStruct", type: "struct" },
-        Field({ id: 0x0, name: "MinPower", type: "power-mW", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "MaxPower", type: "power-mW", conformance: "M", constraint: "min minPower", default: 0 }),
-        Field({ id: 0x2, name: "MinDuration", type: "elapsed-s", conformance: "M", default: 0 }),
-        Field({ id: 0x3, name: "MaxDuration", type: "elapsed-s", conformance: "M", constraint: "min minDuration" })
+        Field({ name: "MinPower", id: 0x0, type: "power-mW", default: 0, conformance: "M" }),
+        Field({ name: "MaxPower", id: 0x1, type: "power-mW", default: 0, constraint: "min minPower", conformance: "M" }),
+        Field({ name: "MinDuration", id: 0x2, type: "elapsed-s", default: 0, conformance: "M" }),
+        Field({ name: "MaxDuration", id: 0x3, type: "elapsed-s", constraint: "min minDuration", conformance: "M" })
     ),
 
     Datatype(
@@ -230,70 +230,70 @@ export const DeviceEnergyManagement = Cluster(
 
         Field(
             {
-                id: 0x0, name: "PowerAdjustCapability", type: "list",
-                conformance: "M", constraint: "max 8", default: null, quality: "X"
+                name: "PowerAdjustCapability", id: 0x0, type: "list",
+                default: null, constraint: "max 8", conformance: "M", quality: "X"
             },
             Field({ name: "entry", type: "PowerAdjustStruct" })
         ),
 
-        Field({ id: 0x1, name: "Cause", type: "PowerAdjustReasonEnum", conformance: "M", default: 0 })
+        Field({ name: "Cause", id: 0x1, type: "PowerAdjustReasonEnum", default: 0, conformance: "M" })
     ),
 
     Datatype(
         { name: "ForecastStruct", type: "struct" },
-        Field({ id: 0x0, name: "ForecastId", type: "uint32", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "ActiveSlotNumber", type: "uint16", conformance: "M", default: 0, quality: "X" }),
-        Field({ id: 0x2, name: "StartTime", type: "epoch-s", conformance: "M" }),
-        Field({ id: 0x3, name: "EndTime", type: "epoch-s", conformance: "M" }),
-        Field({ id: 0x4, name: "EarliestStartTime", type: "epoch-s", conformance: "STA", quality: "X" }),
-        Field({ id: 0x5, name: "LatestEndTime", type: "epoch-s", conformance: "STA" }),
-        Field({ id: 0x6, name: "IsPausable", type: "bool", conformance: "M" }),
+        Field({ name: "ForecastId", id: 0x0, type: "uint32", default: 0, conformance: "M" }),
+        Field({ name: "ActiveSlotNumber", id: 0x1, type: "uint16", default: 0, conformance: "M", quality: "X" }),
+        Field({ name: "StartTime", id: 0x2, type: "epoch-s", conformance: "M" }),
+        Field({ name: "EndTime", id: 0x3, type: "epoch-s", conformance: "M" }),
+        Field({ name: "EarliestStartTime", id: 0x4, type: "epoch-s", conformance: "STA", quality: "X" }),
+        Field({ name: "LatestEndTime", id: 0x5, type: "epoch-s", conformance: "STA" }),
+        Field({ name: "IsPausable", id: 0x6, type: "bool", conformance: "M" }),
         Field(
-            { id: 0x7, name: "Slots", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "Slots", id: 0x7, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "SlotStruct" })
         ),
-        Field({ id: 0x8, name: "ForecastUpdateReason", type: "ForecastUpdateReasonEnum", conformance: "M" })
+        Field({ name: "ForecastUpdateReason", id: 0x8, type: "ForecastUpdateReasonEnum", conformance: "M" })
     ),
 
     Datatype(
         { name: "SlotStruct", type: "struct" },
-        Field({ id: 0x0, name: "MinDuration", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x1, name: "MaxDuration", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x2, name: "DefaultDuration", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x3, name: "ElapsedSlotTime", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x4, name: "RemainingSlotTime", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x5, name: "SlotIsPausable", type: "bool", conformance: "PAU" }),
-        Field({ id: 0x6, name: "MinPauseDuration", type: "elapsed-s", conformance: "PAU" }),
-        Field({ id: 0x7, name: "MaxPauseDuration", type: "elapsed-s", conformance: "PAU" }),
-        Field({ id: 0x8, name: "ManufacturerEsaState", type: "uint16", conformance: "SFR" }),
-        Field({ id: 0x9, name: "NominalPower", type: "power-mW", conformance: "PFR" }),
-        Field({ id: 0xa, name: "MinPower", type: "power-mW", conformance: "PFR" }),
-        Field({ id: 0xb, name: "MaxPower", type: "power-mW", conformance: "PFR" }),
-        Field({ id: 0xc, name: "NominalEnergy", type: "energy-mWh", conformance: "PFR" }),
+        Field({ name: "MinDuration", id: 0x0, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "MaxDuration", id: 0x1, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "DefaultDuration", id: 0x2, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "ElapsedSlotTime", id: 0x3, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "RemainingSlotTime", id: 0x4, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "SlotIsPausable", id: 0x5, type: "bool", conformance: "PAU" }),
+        Field({ name: "MinPauseDuration", id: 0x6, type: "elapsed-s", conformance: "PAU" }),
+        Field({ name: "MaxPauseDuration", id: 0x7, type: "elapsed-s", conformance: "PAU" }),
+        Field({ name: "ManufacturerEsaState", id: 0x8, type: "uint16", conformance: "SFR" }),
+        Field({ name: "NominalPower", id: 0x9, type: "power-mW", conformance: "PFR" }),
+        Field({ name: "MinPower", id: 0xa, type: "power-mW", conformance: "PFR" }),
+        Field({ name: "MaxPower", id: 0xb, type: "power-mW", conformance: "PFR" }),
+        Field({ name: "NominalEnergy", id: 0xc, type: "energy-mWh", conformance: "PFR" }),
         Field(
-            { id: 0xd, name: "Costs", type: "list", conformance: "O", constraint: "max 5" },
+            { name: "Costs", id: 0xd, type: "list", constraint: "max 5", conformance: "O" },
             Field({ name: "entry", type: "CostStruct" })
         ),
-        Field({ id: 0xe, name: "MinPowerAdjustment", type: "power-mW", conformance: "FA & PFR" }),
-        Field({ id: 0xf, name: "MaxPowerAdjustment", type: "power-mW", conformance: "FA & PFR" }),
-        Field({ id: 0x10, name: "MinDurationAdjustment", type: "elapsed-s", conformance: "FA" }),
-        Field({ id: 0x11, name: "MaxDurationAdjustment", type: "elapsed-s", conformance: "FA" })
+        Field({ name: "MinPowerAdjustment", id: 0xe, type: "power-mW", conformance: "FA & PFR" }),
+        Field({ name: "MaxPowerAdjustment", id: 0xf, type: "power-mW", conformance: "FA & PFR" }),
+        Field({ name: "MinDurationAdjustment", id: 0x10, type: "elapsed-s", conformance: "FA" }),
+        Field({ name: "MaxDurationAdjustment", id: 0x11, type: "elapsed-s", conformance: "FA" })
     ),
 
     Datatype(
         { name: "SlotAdjustmentStruct", type: "struct" },
-        Field({ id: 0x0, name: "SlotIndex", type: "uint8", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "desc" }),
-        Field({ id: 0x2, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" })
+        Field({ name: "SlotIndex", id: 0x0, type: "uint8", constraint: "desc", conformance: "M" }),
+        Field({ name: "NominalPower", id: 0x1, type: "power-mW", constraint: "desc", conformance: "PFR" }),
+        Field({ name: "Duration", id: 0x2, type: "elapsed-s", constraint: "desc", conformance: "M" })
     ),
 
     Datatype(
         { name: "ConstraintsStruct", type: "struct" },
-        Field({ id: 0x0, name: "StartTime", type: "epoch-s", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "max 86400" }),
-        Field({ id: 0x2, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "desc" }),
-        Field({ id: 0x3, name: "MaximumEnergy", type: "energy-mWh", conformance: "PFR" }),
-        Field({ id: 0x4, name: "LoadControl", type: "int8", conformance: "SFR" })
+        Field({ name: "StartTime", id: 0x0, type: "epoch-s", constraint: "desc", conformance: "M" }),
+        Field({ name: "Duration", id: 0x1, type: "elapsed-s", constraint: "max 86400", conformance: "M" }),
+        Field({ name: "NominalPower", id: 0x2, type: "power-mW", constraint: "desc", conformance: "PFR" }),
+        Field({ name: "MaximumEnergy", id: 0x3, type: "energy-mWh", conformance: "PFR" }),
+        Field({ name: "LoadControl", id: 0x4, type: "int8", conformance: "SFR" })
     )
 );
 

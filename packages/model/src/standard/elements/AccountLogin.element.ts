@@ -16,36 +16,36 @@ import {
 } from "../../elements/index.js";
 
 export const AccountLogin = Cluster(
-    { id: 0x50e, name: "AccountLogin" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "AccountLogin", id: 0x50e },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Event(
-        { id: 0x0, name: "LoggedOut", access: "S A", conformance: "O", priority: "critical" },
-        Field({ id: 0x0, name: "Node", type: "node-id", conformance: "O" })
+        { name: "LoggedOut", id: 0x0, conformance: "O", access: "S A", priority: "critical" },
+        Field({ name: "Node", id: 0x0, type: "node-id", conformance: "O" })
     ),
 
     Command(
         {
-            id: 0x0, name: "GetSetupPin",
-            access: "F A T", conformance: "M", direction: "request", response: "GetSetupPinResponse"
+            name: "GetSetupPin", id: 0x0,
+            conformance: "M", access: "F A T", direction: "request", response: "GetSetupPinResponse"
         },
-        Field({ id: 0x0, name: "TempAccountIdentifier", type: "string", conformance: "M", constraint: "16 to 100" })
+        Field({ name: "TempAccountIdentifier", id: 0x0, type: "string", constraint: "16 to 100", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "GetSetupPinResponse", access: "F", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "SetupPin", type: "string", conformance: "M", constraint: "desc" })
+        { name: "GetSetupPinResponse", id: 0x1, conformance: "M", access: "F", direction: "response" },
+        Field({ name: "SetupPin", id: 0x0, type: "string", constraint: "desc", conformance: "M" })
     ),
 
     Command(
-        { id: 0x2, name: "Login", access: "F A T", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TempAccountIdentifier", type: "string", conformance: "M", constraint: "16 to 100" }),
-        Field({ id: 0x1, name: "SetupPin", type: "string", conformance: "M", constraint: "min 8" }),
-        Field({ id: 0x2, name: "Node", type: "node-id", conformance: "O" })
+        { name: "Login", id: 0x2, conformance: "M", access: "F A T", direction: "request", response: "status" },
+        Field({ name: "TempAccountIdentifier", id: 0x0, type: "string", constraint: "16 to 100", conformance: "M" }),
+        Field({ name: "SetupPin", id: 0x1, type: "string", constraint: "min 8", conformance: "M" }),
+        Field({ name: "Node", id: 0x2, type: "node-id", conformance: "O" })
     ),
 
     Command(
-        { id: 0x3, name: "Logout", access: "F O T", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "Node", type: "node-id", conformance: "O" })
+        { name: "Logout", id: 0x3, conformance: "M", access: "F O T", direction: "request", response: "status" },
+        Field({ name: "Node", id: 0x0, type: "node-id", conformance: "O" })
     )
 );
 

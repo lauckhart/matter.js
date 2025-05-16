@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "CarbonMonoxideConcentrationMeasurement", tag: "cluster", pics: "CMOCONC" });
+Resource.add({ tag: "cluster", name: "CarbonMonoxideConcentrationMeasurement", pics: "CMOCONC" });

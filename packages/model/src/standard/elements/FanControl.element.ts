@@ -16,11 +16,11 @@ import {
 } from "../../elements/index.js";
 
 export const FanControl = Cluster(
-    { id: 0x202, name: "FanControl" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
+    { name: "FanControl", id: 0x202 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "SPD", constraint: "0", longName: "MultiSpeed" }),
         Field({ name: "AUT", constraint: "1", longName: "Auto" }),
         Field({ name: "RCK", constraint: "2", longName: "Rocking" }),
@@ -30,52 +30,52 @@ export const FanControl = Cluster(
     ),
 
     Attribute(
-        { id: 0x0, name: "FanMode", type: "FanModeEnum", access: "RW VO", conformance: "M", default: 0, quality: "N" }
+        { name: "FanMode", id: 0x0, type: "FanModeEnum", default: 0, conformance: "M", access: "RW VO", quality: "N" }
     ),
-    Attribute({ id: 0x1, name: "FanModeSequence", type: "FanModeSequenceEnum", access: "R V", conformance: "M", quality: "F" }),
+    Attribute({ name: "FanModeSequence", id: 0x1, type: "FanModeSequenceEnum", conformance: "M", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x2, name: "PercentSetting", type: "percent",
-        access: "RW VO", conformance: "M", constraint: "max 100", default: 0, quality: "X"
+        name: "PercentSetting", id: 0x2, type: "percent",
+        default: 0, constraint: "max 100", conformance: "M", access: "RW VO", quality: "X"
     }),
-    Attribute({ id: 0x3, name: "PercentCurrent", type: "percent", access: "R V", conformance: "M", constraint: "max 100" }),
+    Attribute({ name: "PercentCurrent", id: 0x3, type: "percent", constraint: "max 100", conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x4, name: "SpeedMax", type: "uint8",
-        access: "R V", conformance: "SPD", constraint: "1 to 100", quality: "F"
-    }),
-    Attribute({
-        id: 0x5, name: "SpeedSetting", type: "uint8",
-        access: "RW VO", conformance: "SPD", constraint: "max speedMax", default: 0, quality: "X"
+        name: "SpeedMax", id: 0x4, type: "uint8",
+        constraint: "1 to 100", conformance: "SPD", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x6, name: "SpeedCurrent", type: "uint8",
-        access: "R V", conformance: "SPD", constraint: "max speedMax", quality: "P"
+        name: "SpeedSetting", id: 0x5, type: "uint8",
+        default: 0, constraint: "max speedMax", conformance: "SPD", access: "RW VO", quality: "X"
     }),
     Attribute({
-        id: 0x7, name: "RockSupport", type: "RockBitmap",
-        access: "R V", conformance: "RCK", constraint: "desc", default: 0, quality: "F"
+        name: "SpeedCurrent", id: 0x6, type: "uint8",
+        constraint: "max speedMax", conformance: "SPD", access: "R V", quality: "P"
     }),
     Attribute({
-        id: 0x8, name: "RockSetting", type: "RockBitmap",
-        access: "RW VO", conformance: "RCK", constraint: "desc", default: 0, quality: "P"
+        name: "RockSupport", id: 0x7, type: "RockBitmap",
+        default: 0, constraint: "desc", conformance: "RCK", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x9, name: "WindSupport", type: "WindBitmap",
-        access: "R V", conformance: "WND", constraint: "desc", default: 0, quality: "F"
+        name: "RockSetting", id: 0x8, type: "RockBitmap",
+        default: 0, constraint: "desc", conformance: "RCK", access: "RW VO", quality: "P"
     }),
     Attribute({
-        id: 0xa, name: "WindSetting", type: "WindBitmap",
-        access: "RW VO", conformance: "WND", constraint: "desc", default: 0, quality: "P"
+        name: "WindSupport", id: 0x9, type: "WindBitmap",
+        default: 0, constraint: "desc", conformance: "WND", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0xb, name: "AirflowDirection", type: "AirflowDirectionEnum",
-        access: "RW VO", conformance: "DIR", constraint: "desc", default: 0, quality: "P"
+        name: "WindSetting", id: 0xa, type: "WindBitmap",
+        default: 0, constraint: "desc", conformance: "WND", access: "RW VO", quality: "P"
+    }),
+    Attribute({
+        name: "AirflowDirection", id: 0xb, type: "AirflowDirectionEnum",
+        default: 0, constraint: "desc", conformance: "DIR", access: "RW VO", quality: "P"
     }),
 
     Command(
-        { id: 0x0, name: "Step", access: "O", conformance: "STEP", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "Direction", type: "StepDirectionEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "Wrap", type: "bool", conformance: "O", default: false }),
-        Field({ id: 0x2, name: "LowestOff", type: "bool", conformance: "O", default: true })
+        { name: "Step", id: 0x0, conformance: "STEP", access: "O", direction: "request", response: "status" },
+        Field({ name: "Direction", id: 0x0, type: "StepDirectionEnum", default: 0, conformance: "M" }),
+        Field({ name: "Wrap", id: 0x1, type: "bool", default: false, conformance: "O" }),
+        Field({ name: "LowestOff", id: 0x2, type: "bool", default: true, conformance: "O" })
     ),
 
     Datatype(
@@ -92,34 +92,34 @@ export const FanControl = Cluster(
     ),
     Datatype(
         { name: "StepDirectionEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Increase", conformance: "M" }),
-        Field({ id: 0x1, name: "Decrease", conformance: "M" })
+        Field({ name: "Increase", id: 0x0, conformance: "M" }),
+        Field({ name: "Decrease", id: 0x1, conformance: "M" })
     ),
     Datatype(
         { name: "AirflowDirectionEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Forward", conformance: "M" }),
-        Field({ id: 0x1, name: "Reverse", conformance: "M" })
+        Field({ name: "Forward", id: 0x0, conformance: "M" }),
+        Field({ name: "Reverse", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "FanModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Off", conformance: "M" }),
-        Field({ id: 0x1, name: "Low", conformance: "desc" }),
-        Field({ id: 0x2, name: "Medium", conformance: "desc" }),
-        Field({ id: 0x3, name: "High", conformance: "M" }),
-        Field({ id: 0x4, name: "On", conformance: "D" }),
-        Field({ id: 0x5, name: "Auto", conformance: "AUT" }),
-        Field({ id: 0x6, name: "Smart", conformance: "D" })
+        Field({ name: "Off", id: 0x0, conformance: "M" }),
+        Field({ name: "Low", id: 0x1, conformance: "desc" }),
+        Field({ name: "Medium", id: 0x2, conformance: "desc" }),
+        Field({ name: "High", id: 0x3, conformance: "M" }),
+        Field({ name: "On", id: 0x4, conformance: "D" }),
+        Field({ name: "Auto", id: 0x5, conformance: "AUT" }),
+        Field({ name: "Smart", id: 0x6, conformance: "D" })
     ),
 
     Datatype(
         { name: "FanModeSequenceEnum", type: "enum8" },
-        Field({ id: 0x0, name: "OffLowMedHigh", conformance: "[!AUT].a" }),
-        Field({ id: 0x1, name: "OffLowHigh", conformance: "[!AUT].a" }),
-        Field({ id: 0x2, name: "OffLowMedHighAuto", conformance: "[AUT].a" }),
-        Field({ id: 0x3, name: "OffLowHighAuto", conformance: "[AUT].a" }),
-        Field({ id: 0x4, name: "OffHighAuto", conformance: "[AUT].a" }),
-        Field({ id: 0x5, name: "OffHigh", conformance: "[!AUT].a" })
+        Field({ name: "OffLowMedHigh", id: 0x0, conformance: "[!AUT].a" }),
+        Field({ name: "OffLowHigh", id: 0x1, conformance: "[!AUT].a" }),
+        Field({ name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT].a" }),
+        Field({ name: "OffLowHighAuto", id: 0x3, conformance: "[AUT].a" }),
+        Field({ name: "OffHighAuto", id: 0x4, conformance: "[AUT].a" }),
+        Field({ name: "OffHigh", id: 0x5, conformance: "[!AUT].a" })
     )
 );
 

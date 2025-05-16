@@ -17,36 +17,36 @@ import {
 } from "../../elements/index.js";
 
 export const SoftwareDiagnostics = Cluster(
-    { id: 0x34, name: "SoftwareDiagnostics", quality: "K" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "SoftwareDiagnostics", id: 0x34, quality: "K" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "WTRMRK", constraint: "0", longName: "Watermarks" })
     ),
     Attribute(
-        { id: 0x0, name: "ThreadMetrics", type: "list", access: "R V", conformance: "O", constraint: "max 64" },
+        { name: "ThreadMetrics", id: 0x0, type: "list", constraint: "max 64", conformance: "O", access: "R V" },
         Field({ name: "entry", type: "ThreadMetricsStruct" })
     ),
-    Attribute({ id: 0x1, name: "CurrentHeapFree", type: "uint64", access: "R V", conformance: "O" }),
-    Attribute({ id: 0x2, name: "CurrentHeapUsed", type: "uint64", access: "R V", conformance: "O" }),
-    Attribute({ id: 0x3, name: "CurrentHeapHighWatermark", type: "uint64", access: "R V", conformance: "WTRMRK" }),
+    Attribute({ name: "CurrentHeapFree", id: 0x1, type: "uint64", conformance: "O", access: "R V" }),
+    Attribute({ name: "CurrentHeapUsed", id: 0x2, type: "uint64", conformance: "O", access: "R V" }),
+    Attribute({ name: "CurrentHeapHighWatermark", id: 0x3, type: "uint64", conformance: "WTRMRK", access: "R V" }),
 
     Event(
-        { id: 0x0, name: "SoftwareFault", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "Id", type: "uint64", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "Name", type: "string", conformance: "O", constraint: "max 8" }),
-        Field({ id: 0x2, name: "FaultRecording", type: "octstr", conformance: "O", constraint: "max 1024" })
+        { name: "SoftwareFault", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "Id", id: 0x0, type: "uint64", default: 0, conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 8", conformance: "O" }),
+        Field({ name: "FaultRecording", id: 0x2, type: "octstr", constraint: "max 1024", conformance: "O" })
     ),
 
-    Command({ id: 0x0, name: "ResetWatermarks", access: "M", conformance: "WTRMRK", direction: "request", response: "status" }),
+    Command({ name: "ResetWatermarks", id: 0x0, conformance: "WTRMRK", access: "M", direction: "request", response: "status" }),
 
     Datatype(
         { name: "ThreadMetricsStruct", type: "struct" },
-        Field({ id: 0x0, name: "Id", type: "uint64", conformance: "M" }),
-        Field({ id: 0x1, name: "Name", type: "string", conformance: "O", constraint: "max 8" }),
-        Field({ id: 0x2, name: "StackFreeCurrent", type: "uint32", conformance: "O" }),
-        Field({ id: 0x3, name: "StackFreeMinimum", type: "uint32", conformance: "O" }),
-        Field({ id: 0x4, name: "StackSize", type: "uint32", conformance: "O" })
+        Field({ name: "Id", id: 0x0, type: "uint64", conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", constraint: "max 8", conformance: "O" }),
+        Field({ name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O" }),
+        Field({ name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O" }),
+        Field({ name: "StackSize", id: 0x4, type: "uint32", conformance: "O" })
     )
 );
 

@@ -15,49 +15,49 @@ import {
 } from "../../elements/index.js";
 
 export const EcosystemInformation = Cluster(
-    { id: 0x750, name: "EcosystemInformation" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "EcosystemInformation", id: 0x750 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0x0, name: "DeviceDirectory", type: "list", access: "R F M", conformance: "M", quality: "N" },
+        { name: "DeviceDirectory", id: 0x0, type: "list", conformance: "M", access: "R F M", quality: "N" },
         Field({ name: "entry", type: "EcosystemDeviceStruct" })
     ),
     Attribute(
-        { id: 0x1, name: "LocationDirectory", type: "list", access: "R F M", conformance: "M", quality: "N" },
+        { name: "LocationDirectory", id: 0x1, type: "list", conformance: "M", access: "R F M", quality: "N" },
         Field({ name: "entry", type: "EcosystemLocationStruct" })
     ),
 
     Datatype(
         { name: "EcosystemDeviceStruct", type: "struct" },
-        Field({ id: 0x0, name: "DeviceName", type: "string", access: "S", conformance: "O", constraint: "max 64" }),
-        Field({ id: 0x1, name: "DeviceNameLastEdit", type: "epoch-us", access: "S", conformance: "desc", default: 0 }),
-        Field({ id: 0x2, name: "BridgedEndpoint", type: "endpoint-no", access: "S", conformance: "desc", constraint: "desc" }),
+        Field({ name: "DeviceName", id: 0x0, type: "string", constraint: "max 64", conformance: "O", access: "S" }),
+        Field({ name: "DeviceNameLastEdit", id: 0x1, type: "epoch-us", default: 0, conformance: "desc", access: "S" }),
+        Field({ name: "BridgedEndpoint", id: 0x2, type: "endpoint-no", constraint: "desc", conformance: "desc", access: "S" }),
         Field({
-            id: 0x3, name: "OriginalEndpoint", type: "endpoint-no",
-            access: "S", conformance: "desc", constraint: "desc"
+            name: "OriginalEndpoint", id: 0x3, type: "endpoint-no",
+            constraint: "desc", conformance: "desc", access: "S"
         }),
         Field(
-            { id: 0x4, name: "DeviceTypes", type: "list", access: "S", conformance: "M", constraint: "desc" },
+            { name: "DeviceTypes", id: 0x4, type: "list", constraint: "desc", conformance: "M", access: "S" },
             Field({ name: "entry", type: "Descriptor.DeviceTypeStruct" })
         ),
 
         Field(
             {
-                id: 0x5, name: "UniqueLocationIDs", type: "list",
-                access: "S", conformance: "M", constraint: "max 64[max 64]"
+                name: "UniqueLocationIDs", id: 0x5, type: "list",
+                constraint: "max 64[max 64]", conformance: "M", access: "S"
             },
             Field({ name: "entry", type: "string" })
         ),
 
-        Field({ id: 0x6, name: "UniqueLocationIDsLastEdit", type: "epoch-us", access: "S", conformance: "M", default: 0 }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "UniqueLocationIDsLastEdit", id: 0x6, type: "epoch-us", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "EcosystemLocationStruct", type: "struct" },
-        Field({ id: 0x0, name: "UniqueLocationId", type: "string", access: "S", conformance: "M", constraint: "max 64" }),
-        Field({ id: 0x1, name: "LocationDescriptor", type: "locationdesc", access: "S", conformance: "M" }),
-        Field({ id: 0x2, name: "LocationDescriptorLastEdit", type: "epoch-us", access: "S", conformance: "M", default: 0 }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "UniqueLocationId", id: 0x0, type: "string", constraint: "max 64", conformance: "M", access: "S" }),
+        Field({ name: "LocationDescriptor", id: 0x1, type: "locationdesc", conformance: "M", access: "S" }),
+        Field({ name: "LocationDescriptorLastEdit", id: 0x2, type: "epoch-us", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );
 

@@ -9,15 +9,15 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WindowCoveringController", tag: "deviceType",
+    tag: "deviceType", name: "WindowCoveringController",
     classification: "simple",
     details: "A Window Covering Controller is a device that controls an automatic window covering.",
     xref: "device§8.4",
 
     children: [
-        { discriminator: "O", name: "Identify", tag: "requirement", xref: "device§8.4.4" },
-        { discriminator: "O", name: "Identify", tag: "requirement", xref: "device§8.4.4" },
-        { name: "Groups", tag: "requirement", xref: "device§8.4.4" },
-        { name: "WindowCovering", tag: "requirement", xref: "device§8.4.4" }
+        { tag: "requirement", name: "Identify", discriminator: "O:serverCluster", xref: "device§8.4.4" },
+        { tag: "requirement", name: "Identify", discriminator: "O:clientCluster", xref: "device§8.4.4" },
+        { tag: "requirement", name: "Groups", xref: "device§8.4.4" },
+        { tag: "requirement", name: "WindowCovering", xref: "device§8.4.4" }
     ]
 });

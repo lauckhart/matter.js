@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "octstr", tag: "datatype",
+    tag: "datatype", name: "octstr",
     description: "Octet string",
     details: "The octet string data type defines a sequence of octets with a finite octet count from 0 to 65534. " +
         "It is recommended to define a constraint on the maximum possible count.",

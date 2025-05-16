@@ -9,8 +9,8 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "PowerSource", tag: "deviceType",
+    tag: "deviceType", name: "PowerSource",
     classification: "utility",
     xref: "device§2.2",
-    children: [{ name: "PowerSource", tag: "requirement", xref: "device§2.2.3" }]
+    children: [{ tag: "requirement", name: "PowerSource", xref: "device§2.2.3" }]
 });

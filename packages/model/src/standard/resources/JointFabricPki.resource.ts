@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "JointFabricPki", tag: "cluster",
+    tag: "cluster", name: "JointFabricPki",
     classification: "node", pics: "JFPKI",
     details: "An instance of the Joint Fabric PKI Cluster only applies to Joint Fabric Administrator nodes " +
         "fulfilling the role of Anchor CA." +
@@ -19,7 +19,7 @@ Resource.add({
 
     children: [
         {
-            name: "IcacsrRequest", tag: "command",
+            tag: "command", name: "IcacsrRequest",
             details: "This command shall be generated and executed during the Joint Commissioning Method steps and " +
                 "subsequently respond in the form of an ICACSRResponse command." +
                 "\n" +
@@ -28,72 +28,72 @@ Resource.add({
         },
 
         {
-            name: "IcacsrResponse", tag: "command",
+            tag: "command", name: "IcacsrResponse",
             details: "This command shall be generated in response to the ICACSRRequest command. Check ICA Cross Signing " +
                 "for details about the generation and contents of ICAC.",
             xref: "core§11.25.5.2",
 
             children: [
                 {
-                    name: "StatusCode", tag: "field",
+                    tag: "field", name: "StatusCode",
                     details: "This field shall contain an ICACSRRequestStatusEnum value representing the status of the Section " +
                         "11.25.5.1, “ICACSRRequest Command” operation.",
                     xref: "core§11.25.5.2.1"
                 },
 
                 {
-                    name: "Icac", tag: "field",
+                    tag: "field", name: "Icac",
                     details: "If present, it shall contain the NOC Issuer Certificate in PEM format.",
                     xref: "core§11.25.5.2.2"
                 }
             ]
         },
 
-        { name: "TransferAnchorRequest", tag: "command", xref: "core§11.25.5" },
-        { name: "TransferAnchorResponse", tag: "command", xref: "core§11.25.5" },
-        { name: "TransferAnchorComplete", tag: "command", xref: "core§11.25.5" },
+        { tag: "command", name: "TransferAnchorRequest", xref: "core§11.25.5" },
+        { tag: "command", name: "TransferAnchorResponse", xref: "core§11.25.5" },
+        { tag: "command", name: "TransferAnchorComplete", xref: "core§11.25.5" },
 
         {
-            name: "IcacsrRequestStatusEnum", tag: "datatype",
+            tag: "datatype", name: "IcacsrRequestStatusEnum",
             details: "This enumeration is used by the ICACSRResponse command to convey the detailed outcome of this " +
                 "cluster’s ICACSRRequest command.",
             xref: "core§11.25.4.1",
 
             children: [
-                { name: "Ok", tag: "field", description: "No error" },
+                { tag: "field", name: "Ok", description: "No error" },
                 {
-                    name: "InvalidIcaCsrFormat", tag: "field",
+                    tag: "field", name: "InvalidIcaCsrFormat",
                     description: "The ICACSR in the request is not compliant to PKCS #10 rules"
                 },
                 {
-                    name: "InvalidIcaCsrSignature", tag: "field",
+                    tag: "field", name: "InvalidIcaCsrSignature",
                     description: "The ICACSR in the request has an incorrect signature"
                 },
-                { name: "FailedDclVendorIdValidation", tag: "field", description: "DCL Vendor ID validation failed" },
-                { name: "NotAnIcac", tag: "field", description: "DCL returned certificate is not an ICAC" },
+                { tag: "field", name: "FailedDclVendorIdValidation", description: "DCL Vendor ID validation failed" },
+                { tag: "field", name: "NotAnIcac", description: "DCL returned certificate is not an ICAC" },
                 {
-                    name: "BusyAnchorTransfer", tag: "field",
+                    tag: "field", name: "BusyAnchorTransfer",
                     description: "Error due to an in progress Anchor Transfer"
                 },
-                { name: "IcaCsrSigningFailed", tag: "field", description: "Signing the ICA CSR failed" },
-                { name: "IcaCsrRequestNoUserConsent", tag: "field", description: "No user consent" }
+                { tag: "field", name: "IcaCsrSigningFailed", description: "Signing the ICA CSR failed" },
+                { tag: "field", name: "IcaCsrRequestNoUserConsent", description: "No user consent" }
             ]
         },
 
         {
-            name: "TransferAnchorResponseStatusEnum", tag: "datatype",
+            tag: "datatype", name: "TransferAnchorResponseStatusEnum",
             details: "This enumeration is used by the TransferAnchorResponse command to convey the detailed outcome of " +
                 "this cluster’s TransferAnchorRequest command.",
             xref: "core§11.25.4.2",
 
             children: [
-                { name: "Ok", tag: "field", description: "No error" },
+                { tag: "field", name: "Ok", description: "No error" },
                 {
-                    name: "TransferAnchorStatusDatastoreBusy", tag: "field",
+                    tag: "field", name: "TransferAnchorStatusDatastoreBusy",
                     description: "Anchor Transfer was not started due to on- going Datastore operations"
                 },
                 {
-                    name: "TransferAnchorStatusNoUserConsent", tag: "field",
+                    tag: "field", name: "TransferAnchorStatusNoUserConsent",
                     description: "User has not consented for Anchor Transfer"
                 }
             ]

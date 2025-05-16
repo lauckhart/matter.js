@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Descriptor", tag: "cluster",
+    tag: "cluster", name: "Descriptor",
     classification: "endpoint", pics: "DESC",
 
     details: "NOTE" +
@@ -30,11 +30,11 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§9.5.4",
 
             children: [{
-                name: "TAGLIST", tag: "field",
+                tag: "field", name: "TAGLIST",
                 details: "See the Disambiguation section in the System Model spec for conformance requirements for this " +
                     "feature and the corresponding attribute.",
                 xref: "core§9.5.4.1"
@@ -42,7 +42,7 @@ Resource.add({
         },
 
         {
-            name: "DeviceTypeList", tag: "attribute",
+            tag: "attribute", name: "DeviceTypeList",
 
             details: "This is a list of device types and corresponding revisions declaring endpoint conformance (see " +
                 "DeviceTypeStruct). At least one device type entry shall be present." +
@@ -55,18 +55,18 @@ Resource.add({
         },
 
         {
-            name: "ServerList", tag: "attribute",
+            tag: "attribute", name: "ServerList",
             details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance.",
             xref: "core§9.5.6.2"
         },
         {
-            name: "ClientList", tag: "attribute",
+            tag: "attribute", name: "ClientList",
             details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance.",
             xref: "core§9.5.6.3"
         },
 
         {
-            name: "PartsList", tag: "attribute",
+            tag: "attribute", name: "PartsList",
             details: "This attribute indicates composition of the device type instance. Device type instance composition " +
                 "shall include the endpoints in this list." +
                 "\n" +
@@ -75,7 +75,7 @@ Resource.add({
         },
 
         {
-            name: "TagList", tag: "attribute",
+            tag: "attribute", name: "TagList",
 
             details: "This attribute shall be used to disambiguate sibling endpoints in certain situations, as defined in " +
                 "the Disambiguation section in the System Model specification. An example of such a situation might " +
@@ -101,21 +101,21 @@ Resource.add({
         },
 
         {
-            name: "DeviceTypeStruct", tag: "datatype",
+            tag: "datatype", name: "DeviceTypeStruct",
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                 "See the Data Model specification for more information.",
             xref: "core§9.5.5.1",
 
             children: [
                 {
-                    name: "DeviceType", tag: "field",
+                    tag: "field", name: "DeviceType",
                     details: "This shall indicate the device type definition. The endpoint shall conform to the device type " +
                         "definition and cluster specifications required by the device type.",
                     xref: "core§9.5.5.1.1"
                 },
 
                 {
-                    name: "Revision", tag: "field",
+                    tag: "field", name: "Revision",
                     details: "This is the implemented revision of the device type definition. The endpoint shall conform to this " +
                         "revision of the device type.",
                     xref: "core§9.5.5.1.2"

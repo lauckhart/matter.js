@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "RadonConcentrationMeasurement", tag: "cluster", pics: "RNCONC" });
+Resource.add({ tag: "cluster", name: "RadonConcentrationMeasurement", pics: "RNCONC" });

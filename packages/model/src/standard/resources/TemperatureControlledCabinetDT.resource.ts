@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TemperatureControlledCabinet", tag: "deviceType",
+    tag: "deviceType", name: "TemperatureControlledCabinet",
     classification: "simple",
     details: "A Temperature Controlled Cabinet only exists composed as part of another device type. It represents " +
         "a single cabinet that is capable of having its temperature controlled. Such a cabinet may be " +
@@ -19,23 +19,23 @@ Resource.add({
     xref: "device§13.4",
 
     children: [
-        { name: "TemperatureControl", tag: "requirement", xref: "device§13.4.4" },
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§13.4.4" },
-        { name: "RefrigeratorAndTemperatureControlledCabinetMode", tag: "requirement", xref: "device§13.4.4" },
-        { name: "OvenMode", tag: "requirement", xref: "device§13.4.4" },
-        { name: "OvenCavityOperationalState", tag: "requirement", xref: "device§13.4.4" },
+        { tag: "requirement", name: "TemperatureControl", xref: "device§13.4.4" },
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§13.4.4" },
+        { tag: "requirement", name: "RefrigeratorAndTemperatureControlledCabinetMode", xref: "device§13.4.4" },
+        { tag: "requirement", name: "OvenMode", xref: "device§13.4.4" },
+        { tag: "requirement", name: "OvenCavityOperationalState", xref: "device§13.4.4" },
 
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
 
             children: [
                 {
-                    name: "Cooler", tag: "field",
+                    tag: "field", name: "Cooler",
                     description: "The device has cooling functionality.",
                     xref: "device§13.4.3"
                 },
                 {
-                    name: "Heater", tag: "field",
+                    tag: "field", name: "Heater",
                     description: "The device has heating functionality.",
                     xref: "device§13.4.3"
                 }

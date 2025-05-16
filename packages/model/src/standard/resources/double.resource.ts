@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "double", tag: "datatype",
+    tag: "datatype", name: "double",
     description: "Double precision",
 
     details: "The double precision number format is based on the IEEE 754-2019 double precision (64-bit) format " +

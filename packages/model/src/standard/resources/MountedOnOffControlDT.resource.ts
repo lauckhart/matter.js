@@ -9,18 +9,18 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MountedOnOffControl", tag: "deviceType",
+    tag: "deviceType", name: "MountedOnOffControl",
     classification: "simple",
     details: "A Mounted On/Off Control is a fixed device that provides power to another device that is plugged " +
         "into it, and is capable of switching that provided power on or off.",
     xref: "device§5.3",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§5.3.4" },
-        { name: "Groups", tag: "requirement", xref: "device§5.3.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§5.3.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§5.3.4" },
-        { name: "LevelControl", tag: "requirement", xref: "device§5.3.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§5.3.4" }
+        { tag: "requirement", name: "Identify", xref: "device§5.3.4" },
+        { tag: "requirement", name: "Groups", xref: "device§5.3.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§5.3.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§5.3.4" },
+        { tag: "requirement", name: "LevelControl", xref: "device§5.3.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§5.3.4" }
     ]
 });

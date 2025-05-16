@@ -9,15 +9,15 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "DoorLockController", tag: "deviceType",
+    tag: "deviceType", name: "DoorLockController",
     classification: "simple",
     details: "A Door Lock Controller is a device capable of controlling a door lock.",
     xref: "device§8.2",
 
     children: [
-        { name: "Groups", tag: "requirement", xref: "device§8.2.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§8.2.4" },
-        { name: "TimeSynchronization", tag: "requirement", xref: "device§8.2.4" },
-        { name: "DoorLock", tag: "requirement", xref: "device§8.2.4" }
+        { tag: "requirement", name: "Groups", xref: "device§8.2.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§8.2.4" },
+        { tag: "requirement", name: "TimeSynchronization", xref: "device§8.2.4" },
+        { tag: "requirement", name: "DoorLock", xref: "device§8.2.4" }
     ]
 });

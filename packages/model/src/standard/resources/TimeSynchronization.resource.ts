@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TimeSynchronization", tag: "cluster",
+    tag: "cluster", name: "TimeSynchronization",
     classification: "node", pics: "TIMESYNC",
 
     details: "Accurate time is required for a number of reasons, including scheduling, display and validating " +
@@ -26,12 +26,12 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.17.5",
 
             children: [
                 {
-                    name: "TZ", tag: "field",
+                    tag: "field", name: "TZ",
                     details: "Allows a server to translate a UTC time to a local time using the time zone and daylight savings " +
                         "time (DST) offsets. If a server supports the TimeZone feature, it shall support the SetTimeZone and " +
                         "SetDSTOffset commands, and TimeZone and DSTOffset attributes, and shall expose the local time " +
@@ -40,20 +40,20 @@ Resource.add({
                 },
 
                 {
-                    name: "NTPC", tag: "field",
+                    tag: "field", name: "NTPC",
                     details: "Allows a node to use NTP/SNTP for time synchronization.",
                     xref: "core§11.17.5.2"
                 },
 
                 {
-                    name: "NTPS", tag: "field",
+                    tag: "field", name: "NTPS",
                     details: "Allows a Node to host an NTP server for the network so that other Nodes can achieve a high accuracy " +
                         "time synchronization within the network. See Section 11.17.15, “Acting as an NTP Server”.",
                     xref: "core§11.17.5.3"
                 },
 
                 {
-                    name: "TSC", tag: "field",
+                    tag: "field", name: "TSC",
                     details: "This node also supports a time synchronization client and can connect to and read time from other " +
                         "nodes.",
                     xref: "core§11.17.5.4"
@@ -62,7 +62,7 @@ Resource.add({
         },
 
         {
-            name: "UtcTime", tag: "attribute",
+            tag: "attribute", name: "UtcTime",
             details: "If the node has achieved time synchronization, this shall indicate the current time as a UTC " +
                 "epoch-us (Epoch Time in Microseconds)." +
                 "\n" +
@@ -72,7 +72,7 @@ Resource.add({
         },
 
         {
-            name: "Granularity", tag: "attribute",
+            tag: "attribute", name: "Granularity",
             details: "The granularity of the error that the node is willing to guarantee on the time synchronization. It " +
                 "is of type GranularityEnum." +
                 "\n" +
@@ -82,7 +82,7 @@ Resource.add({
         },
 
         {
-            name: "TimeSource", tag: "attribute",
+            tag: "attribute", name: "TimeSource",
 
             details: "The node’s time source. This attribute indicates what method the node is using to sync, whether the " +
                 "source uses NTS or not and whether the source is internal or external to the Matter network. This " +
@@ -99,7 +99,7 @@ Resource.add({
         },
 
         {
-            name: "TrustedTimeSource", tag: "attribute",
+            tag: "attribute", name: "TrustedTimeSource",
             details: "A Node ID, endpoint, and associated fabric index of a Node that may be used as trusted time source. " +
                 "See Section 11.17.13, “Time source prioritization”. This attribute reflects the last value set by an " +
                 "administrator using the SetTrustedTimeSource command. If the value is null, no trusted time source " +
@@ -108,7 +108,7 @@ Resource.add({
         },
 
         {
-            name: "DefaultNtp", tag: "attribute",
+            tag: "attribute", name: "DefaultNtp",
 
             details: "The default NTP server that this Node may use if other time sources are unavailable. This attribute " +
                 "is settable by an Administrator using the SetDefaultNTP command. It SHOULD be set by the " +
@@ -124,7 +124,7 @@ Resource.add({
         },
 
         {
-            name: "TimeZone", tag: "attribute",
+            tag: "attribute", name: "TimeZone",
 
             details: "A list of time zone offsets from UTC and when they shall take effect. This attribute uses a list of " +
                 "time offset configurations to allow Nodes to handle scheduled regulatory time zone changes. This " +
@@ -159,7 +159,7 @@ Resource.add({
         },
 
         {
-            name: "DstOffset", tag: "attribute",
+            tag: "attribute", name: "DstOffset",
 
             details: "A list of offsets to apply for daylight savings time, and their validity period. List entries shall " +
                 "be sorted by ValidStarting time." +
@@ -180,7 +180,7 @@ Resource.add({
         },
 
         {
-            name: "LocalTime", tag: "attribute",
+            tag: "attribute", name: "LocalTime",
 
             details: "The computed current local time of the node as a epoch-us (Epoch Time in Microseconds). The value of " +
                 "LocalTime shall be the sum of the UTCTime, the offset of the currently valid TimeZoneStruct from the " +
@@ -194,7 +194,7 @@ Resource.add({
         },
 
         {
-            name: "TimeZoneDatabase", tag: "attribute",
+            tag: "attribute", name: "TimeZoneDatabase",
             details: "Indicates whether the node has access to a time zone database. Nodes with a time zone database may " +
                 "update their own DSTOffset attribute to add new entries and may push DSTOffset updates to other " +
                 "Nodes in the same time zone as required.",
@@ -202,14 +202,14 @@ Resource.add({
         },
 
         {
-            name: "NtpServerAvailable", tag: "attribute",
+            tag: "attribute", name: "NtpServerAvailable",
             details: "If the node is running an RFC 5905 NTPv4 compliant server on port 123, this value shall be True. If " +
                 "the node is not currently running an NTP server, this value shall be False.",
             xref: "core§11.17.8.10"
         },
 
         {
-            name: "TimeZoneListMaxSize", tag: "attribute",
+            tag: "attribute", name: "TimeZoneListMaxSize",
             details: "Number of supported list entries in the TimeZone attribute. This attribute may take the value of 1 " +
                 "or 2, where the optional second list entry may be used to handle scheduled regulatory time zone " +
                 "changes.",
@@ -217,13 +217,13 @@ Resource.add({
         },
 
         {
-            name: "DstOffsetListMaxSize", tag: "attribute",
+            tag: "attribute", name: "DstOffsetListMaxSize",
             details: "Number of supported list entries in DSTOffset attribute. This value must be at least 1.",
             xref: "core§11.17.8.12"
         },
 
         {
-            name: "SupportsDnsResolve", tag: "attribute",
+            tag: "attribute", name: "SupportsDnsResolve",
             details: "This attribute is true if the node supports resolving a domain name. DefaultNTP Address values for " +
                 "these nodes may include domain names. If this is False, the Address for a DefaultNTP shall be an " +
                 "IPv6 address.",
@@ -231,7 +231,7 @@ Resource.add({
         },
 
         {
-            name: "DstTableEmpty", tag: "event",
+            tag: "event", name: "DstTableEmpty",
 
             details: "This event shall be generated when the node stops applying the current DSTOffset and there are no " +
                 "entries in the list with a larger ValidStarting time, indicating the need to possibly get new DST " +
@@ -248,12 +248,12 @@ Resource.add({
         },
 
         {
-            name: "DstStatus", tag: "event",
+            tag: "event", name: "DstStatus",
             details: "This event shall be generated when the node starts or stops applying a DST offset.",
             xref: "core§11.17.10.2",
 
             children: [{
-                name: "DstOffsetActive", tag: "field",
+                tag: "field", name: "DstOffsetActive",
                 details: "Indicates whether the current DST offset is being applied (i.e, daylight savings time is applied, as " +
                     "opposed to standard time).",
                 xref: "core§11.17.10.2.1"
@@ -261,20 +261,20 @@ Resource.add({
         },
 
         {
-            name: "TimeZoneStatus", tag: "event",
+            tag: "event", name: "TimeZoneStatus",
             details: "This event shall be generated when the node changes its time zone offset or name. It shall NOT be " +
                 "sent for DST changes that are not accompanied by a time zone change.",
             xref: "core§11.17.10.3",
 
             children: [
                 {
-                    name: "Offset", tag: "field",
+                    tag: "field", name: "Offset",
                     details: "Current time zone offset from UTC in seconds.",
                     xref: "core§11.17.10.3.1"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "Current time zone name. This name SHOULD use the country/city format specified by the IANA Time Zone " +
                         "Database.",
                     xref: "core§11.17.10.3.2"
@@ -283,7 +283,7 @@ Resource.add({
         },
 
         {
-            name: "TimeFailure", tag: "event",
+            tag: "event", name: "TimeFailure",
             details: "This event shall be generated if the node has not generated a TimeFailure event in the last hour, " +
                 "and the node is unable to get a time from any source. This event SHOULD NOT be generated more often " +
                 "than once per hour.",
@@ -291,7 +291,7 @@ Resource.add({
         },
 
         {
-            name: "MissingTrustedTimeSource", tag: "event",
+            tag: "event", name: "MissingTrustedTimeSource",
 
             details: "This event shall be generated if the TrustedTimeSource is set to null upon fabric removal or by a " +
                 "SetTrustedTimeSource command." +
@@ -305,7 +305,7 @@ Resource.add({
         },
 
         {
-            name: "SetUtcTime", tag: "command",
+            tag: "command", name: "SetUtcTime",
 
             details: "This command may be issued by Administrator to set the time. If the Commissioner does not have a " +
                 "valid time source, it may send a Granularity of NoTimeGranularity." +
@@ -329,17 +329,17 @@ Resource.add({
 
             children: [
                 {
-                    name: "UtcTime", tag: "field",
+                    tag: "field", name: "UtcTime",
                     details: "This shall give the Client’s UTC Time.",
                     xref: "core§11.17.9.1.1"
                 },
                 {
-                    name: "Granularity", tag: "field",
+                    tag: "field", name: "Granularity",
                     details: "This shall give the Client’s Granularity, as described in Granularity.",
                     xref: "core§11.17.9.1.2"
                 },
                 {
-                    name: "TimeSource", tag: "field",
+                    tag: "field", name: "TimeSource",
                     details: "This shall give the Client’s TimeSource, as described in TimeSource.",
                     xref: "core§11.17.9.1.3"
                 }
@@ -347,7 +347,7 @@ Resource.add({
         },
 
         {
-            name: "SetTrustedTimeSource", tag: "command",
+            tag: "command", name: "SetTrustedTimeSource",
 
             details: "This command shall set the TrustedTimeSource attribute. Upon receipt of this command:" +
                 "\n" +
@@ -360,14 +360,14 @@ Resource.add({
 
             xref: "core§11.17.9.2",
             children: [{
-                name: "TrustedTimeSource", tag: "field",
+                tag: "field", name: "TrustedTimeSource",
                 details: "This field contains the Node ID and endpoint of a trusted time source on the accessing fabric.",
                 xref: "core§11.17.9.2.1"
             }]
         },
 
         {
-            name: "SetTimeZone", tag: "command",
+            tag: "command", name: "SetTimeZone",
 
             details: "This command is used to set the time zone of the node." +
                 "\n" +
@@ -389,12 +389,12 @@ Resource.add({
         },
 
         {
-            name: "SetTimeZoneResponse", tag: "command",
+            tag: "command", name: "SetTimeZoneResponse",
             details: "This command shall be generated in response to a SetTimeZone command.",
             xref: "core§11.17.9.4",
 
             children: [{
-                name: "DstOffsetsRequired", tag: "field",
+                tag: "field", name: "DstOffsetsRequired",
                 details: "If the node supports a time zone database with information for the time zone that will be applied, " +
                     "it may use this information to set the DSTOffset attribute. If the node is setting its own DSTOffset " +
                     "attribute, the DSTOffsetsRequired field shall be set to false, otherwise it shall be set to true.",
@@ -403,7 +403,7 @@ Resource.add({
         },
 
         {
-            name: "SetDstOffset", tag: "command",
+            tag: "command", name: "SetDstOffset",
 
             details: "This command is used to set the DST offsets for a node." +
                 "\n" +
@@ -423,7 +423,7 @@ Resource.add({
         },
 
         {
-            name: "SetDefaultNtp", tag: "command",
+            tag: "command", name: "SetDefaultNtp",
 
             details: "This command is used to set the DefaultNTP attribute. If the DefaultNTP Address field does not " +
                 "conform to the requirements in the DefaultNTP attribute description, the command shall fail with a " +
@@ -435,7 +435,7 @@ Resource.add({
             xref: "core§11.17.9.6",
 
             children: [{
-                name: "DefaultNtp", tag: "field",
+                tag: "field", name: "DefaultNtp",
                 details: "This field contains the address of an NTP server than can be used as a fallback for time " +
                     "synchronization. The format of this field shall follow the requirements in the DefaultNTP attribute " +
                     "description.",
@@ -444,132 +444,132 @@ Resource.add({
         },
 
         {
-            name: "GranularityEnum", tag: "datatype",
+            tag: "datatype", name: "GranularityEnum",
             xref: "core§11.17.6.1",
 
             children: [
                 {
-                    name: "NoTimeGranularity", tag: "field",
+                    tag: "field", name: "NoTimeGranularity",
                     description: "This indicates that the node is not currently synchronized with a UTC Time source and its clock is based on the Last Known Good UTC Time only."
                 },
                 {
-                    name: "MinutesGranularity", tag: "field",
+                    tag: "field", name: "MinutesGranularity",
                     description: "This indicates the node was synchronized to an upstream source in the past, but sufficient clock drift has occurred such that the clock error is now > 5 seconds."
                 },
                 {
-                    name: "SecondsGranularity", tag: "field",
+                    tag: "field", name: "SecondsGranularity",
                     description: "This indicates the node is synchronized to an upstream source using a low resolution protocol. UTC Time is accurate to ± 5 seconds."
                 },
                 {
-                    name: "MillisecondsGranularity", tag: "field",
+                    tag: "field", name: "MillisecondsGranularity",
                     description: "This indicates the node is synchronized to an upstream source using high resolution time- synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50 ms."
                 },
                 {
-                    name: "MicrosecondsGranularity", tag: "field",
+                    tag: "field", name: "MicrosecondsGranularity",
                     description: "This indicates the node is synchronized to an upstream source using a highly precise time- synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs."
                 }
             ]
         },
 
         {
-            name: "TimeSourceEnum", tag: "datatype",
+            tag: "datatype", name: "TimeSourceEnum",
             xref: "core§11.17.6.2",
 
             children: [
                 {
-                    name: "None", tag: "field",
+                    tag: "field", name: "None",
                     description: "Node is not currently synchronized with a UTC Time source."
                 },
-                { name: "Unknown", tag: "field", description: "Node uses an unlisted time source." },
+                { tag: "field", name: "Unknown", description: "Node uses an unlisted time source." },
                 {
-                    name: "Admin", tag: "field",
+                    tag: "field", name: "Admin",
                     description: "Node received time from a client using the SetUTCTime Command."
                 },
                 {
-                    name: "NodeTimeCluster", tag: "field",
+                    tag: "field", name: "NodeTimeCluster",
                     description: "Synchronized time by querying the Time Synchronization cluster of another Node."
                 },
                 {
-                    name: "NonMatterSntp", tag: "field",
+                    tag: "field", name: "NonMatterSntp",
                     description: "SNTP from a server not in the Matter network. NTS is not used."
                 },
                 {
-                    name: "NonMatterNtp", tag: "field",
+                    tag: "field", name: "NonMatterNtp",
                     description: "NTP from servers not in the Matter network. None of the servers used NTS."
                 },
                 {
-                    name: "MatterSntp", tag: "field",
+                    tag: "field", name: "MatterSntp",
                     description: "SNTP from a server within the Matter network. NTS is not used."
                 },
                 {
-                    name: "MatterNtp", tag: "field",
+                    tag: "field", name: "MatterNtp",
                     description: "NTP from servers within the Matter network. None of the servers used NTS."
                 },
                 {
-                    name: "MixedNtp", tag: "field",
+                    tag: "field", name: "MixedNtp",
                     description: "NTP from multiple servers in the Matter network and external. None of the servers used NTS."
                 },
                 {
-                    name: "NonMatterSntpnts", tag: "field",
+                    tag: "field", name: "NonMatterSntpnts",
                     description: "SNTP from a server not in the Matter network. NTS is used."
                 },
                 {
-                    name: "NonMatterNtpnts", tag: "field",
+                    tag: "field", name: "NonMatterNtpnts",
                     description: "NTP from servers not in the Matter network. NTS is used on at least one server."
                 },
                 {
-                    name: "MatterSntpnts", tag: "field",
+                    tag: "field", name: "MatterSntpnts",
                     description: "SNTP from a server within the Matter network. NTS is used."
                 },
                 {
-                    name: "MatterNtpnts", tag: "field",
+                    tag: "field", name: "MatterNtpnts",
                     description: "NTP from a server within the Matter network. NTS is used on at least one server."
                 },
                 {
-                    name: "MixedNtpnts", tag: "field",
+                    tag: "field", name: "MixedNtpnts",
                     description: "NTP from multiple servers in the Matter network and external. NTS is used on at least one server."
                 },
                 {
-                    name: "CloudSource", tag: "field",
+                    tag: "field", name: "CloudSource",
                     description: "Time synchronization comes from a vendor cloud-based source (e.g. \"Date\" header in authenticated HTTPS connection)."
                 },
-                { name: "Ptp", tag: "field", description: "Time synchronization comes from PTP." },
-                { name: "Gnss", tag: "field", description: "Time synchronization comes from a GNSS source." }
+                { tag: "field", name: "Ptp", description: "Time synchronization comes from PTP." },
+                { tag: "field", name: "Gnss", description: "Time synchronization comes from a GNSS source." }
             ]
         },
 
         {
-            name: "TimeZoneDatabaseEnum", tag: "datatype",
+            tag: "datatype", name: "TimeZoneDatabaseEnum",
             details: "It indicates what the device knows about the contents of the IANA Time Zone Database. Partial " +
                 "support on a device may be used to omit historical data, less commonly used time zones, and/or time " +
                 "zones not related to the region a product is sold in.",
             xref: "core§11.17.6.3",
             children: [
-                { name: "Full", tag: "field", description: "Node has a full list of the available time zones" },
-                { name: "Partial", tag: "field", description: "Node has a partial list of the available time zones" },
-                { name: "None", tag: "field", description: "Node does not have a time zone database" }
+                { tag: "field", name: "Full", description: "Node has a full list of the available time zones" },
+                { tag: "field", name: "Partial", description: "Node has a partial list of the available time zones" },
+                { tag: "field", name: "None", description: "Node does not have a time zone database" }
             ]
         },
 
         {
-            name: "TrustedTimeSourceStruct", tag: "datatype",
+            tag: "datatype", name: "TrustedTimeSourceStruct",
             xref: "core§11.17.6.4",
 
             children: [
                 {
-                    name: "FabricIndex", tag: "field",
+                    tag: "field", name: "FabricIndex",
                     details: "The Fabric Index associated with the Fabric of the client which last set the value of the trusted " +
                         "time source node.",
                     xref: "core§11.17.6.4.1"
                 },
 
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "Node ID of the trusted time source node on the Fabric associated with the entry.",
                     xref: "core§11.17.6.4.2"
                 },
                 {
-                    name: "Endpoint", tag: "field",
+                    tag: "field", name: "Endpoint",
                     details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server.",
                     xref: "core§11.17.6.4.3"
                 }
@@ -577,18 +577,18 @@ Resource.add({
         },
 
         {
-            name: "FabricScopedTrustedTimeSourceStruct", tag: "datatype",
+            tag: "datatype", name: "FabricScopedTrustedTimeSourceStruct",
             xref: "core§11.17.6.5",
 
             children: [
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "Node ID of the trusted time source node on the Fabric of the issuer.",
                     xref: "core§11.17.6.5.1"
                 },
 
                 {
-                    name: "Endpoint", tag: "field",
+                    tag: "field", name: "Endpoint",
                     details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server. This " +
                         "is provided to avoid having to do discovery of the location of that endpoint by walking over all " +
                         "endpoints and checking their Descriptor Cluster.",
@@ -598,23 +598,23 @@ Resource.add({
         },
 
         {
-            name: "TimeZoneStruct", tag: "datatype",
+            tag: "datatype", name: "TimeZoneStruct",
             xref: "core§11.17.6.6",
 
             children: [
                 {
-                    name: "Offset", tag: "field",
+                    tag: "field", name: "Offset",
                     details: "The time zone offset from UTC in seconds.",
                     xref: "core§11.17.6.6.1"
                 },
                 {
-                    name: "ValidAt", tag: "field",
+                    tag: "field", name: "ValidAt",
                     details: "The UTC time when the offset shall be applied.",
                     xref: "core§11.17.6.6.2"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the country/city " +
                         "format specified by the IANA Time Zone Database. The Name field may be used for display. If the node " +
                         "supports a TimeZoneDatabase it may use the Name field to set its own DST offsets if it has database " +
@@ -625,12 +625,12 @@ Resource.add({
         },
 
         {
-            name: "DSTOffsetStruct", tag: "datatype",
+            tag: "datatype", name: "DSTOffsetStruct",
             xref: "core§11.17.6.7",
 
             children: [
                 {
-                    name: "Offset", tag: "field",
+                    tag: "field", name: "Offset",
                     details: "The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), but this " +
                         "field will accept any values in the int32 range to accommodate potential future legislation that " +
                         "does not fit with these assumptions.",
@@ -638,13 +638,13 @@ Resource.add({
                 },
 
                 {
-                    name: "ValidStarting", tag: "field",
+                    tag: "field", name: "ValidStarting",
                     details: "The UTC time when the offset shall be applied.",
                     xref: "core§11.17.6.7.2"
                 },
 
                 {
-                    name: "ValidUntil", tag: "field",
+                    tag: "field", name: "ValidUntil",
                     details: "The UTC time when the offset shall stop being applied. Providing a null value here indicates a " +
                         "permanent DST change. If this value is non-null the value shall be larger than the ValidStarting " +
                         "time.",
@@ -654,10 +654,10 @@ Resource.add({
         },
 
         {
-            name: "StatusCodeEnum", tag: "datatype",
+            tag: "datatype", name: "StatusCodeEnum",
             xref: "core§11.17.7.1",
             children: [
-                { name: "TimeNotAccepted", tag: "field", description: "Node rejected the attempt to set the UTC time" }
+                { tag: "field", name: "TimeNotAccepted", description: "Node rejected the attempt to set the UTC time" }
             ]
         }
     ]

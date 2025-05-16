@@ -9,21 +9,21 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "PumpController", tag: "deviceType",
+    tag: "deviceType", name: "PumpController",
     classification: "simple",
     details: "A Pump Controller device is capable of configuring and controlling a Pump device.",
     xref: "device§6.5",
 
     children: [
-        { name: "OnOff", tag: "requirement", xref: "device§6.5.3" },
-        { name: "PumpConfigurationAndControl", tag: "requirement", xref: "device§6.5.3" },
-        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.5.3" },
-        { discriminator: "O", name: "Identify", tag: "requirement", xref: "device§6.5.3" },
-        { name: "Groups", tag: "requirement", xref: "device§6.5.3" },
-        { name: "LevelControl", tag: "requirement", xref: "device§6.5.3" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§6.5.3" },
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§6.5.3" },
-        { name: "PressureMeasurement", tag: "requirement", xref: "device§6.5.3" },
-        { name: "FlowMeasurement", tag: "requirement", xref: "device§6.5.3" }
+        { tag: "requirement", name: "OnOff", xref: "device§6.5.3" },
+        { tag: "requirement", name: "PumpConfigurationAndControl", xref: "device§6.5.3" },
+        { tag: "requirement", name: "Identify", discriminator: "M:serverCluster", xref: "device§6.5.3" },
+        { tag: "requirement", name: "Identify", discriminator: "O:clientCluster", xref: "device§6.5.3" },
+        { tag: "requirement", name: "Groups", xref: "device§6.5.3" },
+        { tag: "requirement", name: "LevelControl", xref: "device§6.5.3" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§6.5.3" },
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§6.5.3" },
+        { tag: "requirement", name: "PressureMeasurement", xref: "device§6.5.3" },
+        { tag: "requirement", name: "FlowMeasurement", xref: "device§6.5.3" }
     ]
 });

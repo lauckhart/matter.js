@@ -16,115 +16,115 @@ import {
 } from "../../elements/index.js";
 
 export const GeneralCommissioning = Cluster(
-    { id: 0x30, name: "GeneralCommissioning" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "GeneralCommissioning", id: 0x30 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TC", conformance: "P", constraint: "0", longName: "TermsAndConditions" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "TC", constraint: "0", conformance: "P", longName: "TermsAndConditions" })
     ),
-    Attribute({ id: 0x0, name: "Breadcrumb", type: "uint64", access: "RW VA", conformance: "M", default: 0 }),
+    Attribute({ name: "Breadcrumb", id: 0x0, type: "uint64", default: 0, conformance: "M", access: "RW VA" }),
     Attribute({
-        id: 0x1, name: "BasicCommissioningInfo", type: "BasicCommissioningInfo",
-        access: "R V", conformance: "M", constraint: "desc", quality: "F"
+        name: "BasicCommissioningInfo", id: 0x1, type: "BasicCommissioningInfo",
+        constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x2, name: "RegulatoryConfig", type: "RegulatoryLocationTypeEnum",
-        access: "R V", conformance: "M", default: { type: "reference", name: "LocationCapability" }
+        name: "RegulatoryConfig", id: 0x2, type: "RegulatoryLocationTypeEnum",
+        default: { type: "reference", name: "LocationCapability" }, conformance: "M", access: "R V"
     }),
     Attribute({
-        id: 0x3, name: "LocationCapability", type: "RegulatoryLocationTypeEnum",
-        access: "R V", conformance: "M", default: 2, quality: "F"
+        name: "LocationCapability", id: 0x3, type: "RegulatoryLocationTypeEnum",
+        default: 2, conformance: "M", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x4, name: "SupportsConcurrentConnection", type: "bool",
-        access: "R V", conformance: "M", default: true, quality: "F"
+        name: "SupportsConcurrentConnection", id: 0x4, type: "bool",
+        default: true, conformance: "M", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x5, name: "TcAcceptedVersion", type: "uint16", access: "R A", conformance: "P, TC", quality: "N" }),
-    Attribute({ id: 0x6, name: "TcMinRequiredVersion", type: "uint16", access: "R A", conformance: "P, TC", quality: "N" }),
-    Attribute({ id: 0x7, name: "TcAcknowledgements", type: "map16", access: "R A", conformance: "P, TC", quality: "N" }),
+    Attribute({ name: "TcAcceptedVersion", id: 0x5, type: "uint16", conformance: "P, TC", access: "R A", quality: "N" }),
+    Attribute({ name: "TcMinRequiredVersion", id: 0x6, type: "uint16", conformance: "P, TC", access: "R A", quality: "N" }),
+    Attribute({ name: "TcAcknowledgements", id: 0x7, type: "map16", conformance: "P, TC", access: "R A", quality: "N" }),
     Attribute({
-        id: 0x8, name: "TcAcknowledgementsRequired", type: "bool",
-        access: "R A", conformance: "P, TC", default: true, quality: "N"
+        name: "TcAcknowledgementsRequired", id: 0x8, type: "bool",
+        default: true, conformance: "P, TC", access: "R A", quality: "N"
     }),
-    Attribute({ id: 0x9, name: "TcUpdateDeadline", type: "uint32", access: "R A", conformance: "P, TC", quality: "X N" }),
+    Attribute({ name: "TcUpdateDeadline", id: 0x9, type: "uint32", conformance: "P, TC", access: "R A", quality: "X N" }),
 
     Command(
         {
-            id: 0x0, name: "ArmFailSafe",
-            access: "A", conformance: "M", direction: "request", response: "ArmFailSafeResponse"
+            name: "ArmFailSafe", id: 0x0,
+            conformance: "M", access: "A", direction: "request", response: "ArmFailSafeResponse"
         },
-        Field({ id: 0x0, name: "ExpiryLengthSeconds", type: "uint16", conformance: "M", default: 900 }),
-        Field({ id: 0x1, name: "Breadcrumb", type: "uint64", conformance: "M" })
+        Field({ name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", default: 900, conformance: "M" }),
+        Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "ArmFailSafeResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "ErrorCode", type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "DebugText", type: "string", conformance: "M", constraint: "max 128" })
+        { name: "ArmFailSafeResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", default: 0, conformance: "M" }),
+        Field({ name: "DebugText", id: 0x1, type: "string", constraint: "max 128", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x2, name: "SetRegulatoryConfig",
-            access: "A", conformance: "M", direction: "request", response: "SetRegulatoryConfigResponse"
+            name: "SetRegulatoryConfig", id: 0x2,
+            conformance: "M", access: "A", direction: "request", response: "SetRegulatoryConfigResponse"
         },
-        Field({ id: 0x0, name: "NewRegulatoryConfig", type: "RegulatoryLocationTypeEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "CountryCode", type: "string", conformance: "M", constraint: "2" }),
-        Field({ id: 0x2, name: "Breadcrumb", type: "uint64", conformance: "M" })
+        Field({ name: "NewRegulatoryConfig", id: 0x0, type: "RegulatoryLocationTypeEnum", conformance: "M" }),
+        Field({ name: "CountryCode", id: 0x1, type: "string", constraint: "2", conformance: "M" }),
+        Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "M" })
     ),
 
     Command(
-        { id: 0x3, name: "SetRegulatoryConfigResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "ErrorCode", type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "DebugText", type: "string", conformance: "M" })
+        { name: "SetRegulatoryConfigResponse", id: 0x3, conformance: "M", direction: "response" },
+        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", default: 0, conformance: "M" }),
+        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M" })
     ),
     Command({
-        id: 0x4, name: "CommissioningComplete",
-        access: "F A", conformance: "M", direction: "request", response: "CommissioningCompleteResponse"
+        name: "CommissioningComplete", id: 0x4,
+        conformance: "M", access: "F A", direction: "request", response: "CommissioningCompleteResponse"
     }),
     Command(
-        { id: 0x5, name: "CommissioningCompleteResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "ErrorCode", type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "DebugText", type: "string", conformance: "M" })
+        { name: "CommissioningCompleteResponse", id: 0x5, conformance: "M", direction: "response" },
+        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", default: 0, conformance: "M" }),
+        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x6, name: "SetTcAcknowledgements",
-            access: "A", conformance: "P, TC", direction: "request", response: "SetTcAcknowledgementsResponse"
+            name: "SetTcAcknowledgements", id: 0x6,
+            conformance: "P, TC", access: "A", direction: "request", response: "SetTcAcknowledgementsResponse"
         },
-        Field({ id: 0x0, name: "TcVersion", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "TcUserResponse", type: "map16", conformance: "M" })
+        Field({ name: "TcVersion", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "TcUserResponse", id: 0x1, type: "map16", conformance: "M" })
     ),
 
     Command(
-        { id: 0x7, name: "SetTcAcknowledgementsResponse", conformance: "P, TC", direction: "response" },
-        Field({ id: 0x0, name: "ErrorCode", type: "CommissioningErrorEnum", conformance: "M", default: 0 })
+        { name: "SetTcAcknowledgementsResponse", id: 0x7, conformance: "P, TC", direction: "response" },
+        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", default: 0, conformance: "M" })
     ),
 
     Datatype(
         { name: "CommissioningErrorEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ok", conformance: "M" }),
-        Field({ id: 0x1, name: "ValueOutsideRange", conformance: "M" }),
-        Field({ id: 0x2, name: "InvalidAuthentication", conformance: "M" }),
-        Field({ id: 0x3, name: "NoFailSafe", conformance: "M" }),
-        Field({ id: 0x4, name: "BusyWithOtherAdmin", conformance: "M" }),
-        Field({ id: 0x5, name: "RequiredTcNotAccepted", conformance: "TC" }),
-        Field({ id: 0x6, name: "TcAcknowledgementsNotReceived", conformance: "TC" }),
-        Field({ id: 0x7, name: "TcMinVersionNotMet", conformance: "TC" })
+        Field({ name: "Ok", id: 0x0, conformance: "M" }),
+        Field({ name: "ValueOutsideRange", id: 0x1, conformance: "M" }),
+        Field({ name: "InvalidAuthentication", id: 0x2, conformance: "M" }),
+        Field({ name: "NoFailSafe", id: 0x3, conformance: "M" }),
+        Field({ name: "BusyWithOtherAdmin", id: 0x4, conformance: "M" }),
+        Field({ name: "RequiredTcNotAccepted", id: 0x5, conformance: "TC" }),
+        Field({ name: "TcAcknowledgementsNotReceived", id: 0x6, conformance: "TC" }),
+        Field({ name: "TcMinVersionNotMet", id: 0x7, conformance: "TC" })
     ),
 
     Datatype(
         { name: "RegulatoryLocationTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Indoor", conformance: "M" }),
-        Field({ id: 0x1, name: "Outdoor", conformance: "M" }),
-        Field({ id: 0x2, name: "IndoorOutdoor", conformance: "M" })
+        Field({ name: "Indoor", id: 0x0, conformance: "M" }),
+        Field({ name: "Outdoor", id: 0x1, conformance: "M" }),
+        Field({ name: "IndoorOutdoor", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "BasicCommissioningInfo", type: "struct" },
-        Field({ id: 0x0, name: "FailSafeExpiryLengthSeconds", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "MaxCumulativeFailsafeSeconds", type: "uint16", conformance: "M", constraint: "desc" })
+        Field({ name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", constraint: "desc", conformance: "M" })
     )
 );
 

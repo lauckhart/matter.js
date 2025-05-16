@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OccupancySensing", tag: "cluster",
+    tag: "cluster", name: "OccupancySensing",
     classification: "application", pics: "OCC",
     details: "The server cluster provides an interface to occupancy sensing functionality based on one or more " +
         "sensing modalities, including configuration and provision of notifications of occupancy status.",
@@ -17,41 +17,41 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§2.7.4",
 
             children: [
                 {
-                    name: "OTHER", tag: "field",
+                    tag: "field", name: "OTHER",
                     details: "Supports sensing using a modality not listed in the other bits"
                 },
-                { name: "PIR", tag: "field", details: "Supports sensing using PIR (Passive InfraRed)" },
-                { name: "US", tag: "field", details: "Supports sensing using UltraSound" },
-                { name: "PHY", tag: "field", details: "Supports sensing using a physical contact" },
+                { tag: "field", name: "PIR", details: "Supports sensing using PIR (Passive InfraRed)" },
+                { tag: "field", name: "US", details: "Supports sensing using UltraSound" },
+                { tag: "field", name: "PHY", details: "Supports sensing using a physical contact" },
                 {
-                    name: "AIR", tag: "field",
+                    tag: "field", name: "AIR",
                     details: "Supports sensing using Active InfraRed measurement (e.g. time-of- flight or transflective/reflective " +
                         "IR sensing)"
                 },
-                { name: "RAD", tag: "field", details: "Supports sensing using radar waves (microwave)" },
-                { name: "RFS", tag: "field", details: "Supports sensing based on RF signal analysis" },
-                { name: "VIS", tag: "field", details: "Supports sensing based on analyzing images" }
+                { tag: "field", name: "RAD", details: "Supports sensing using radar waves (microwave)" },
+                { tag: "field", name: "RFS", details: "Supports sensing based on RF signal analysis" },
+                { tag: "field", name: "VIS", details: "Supports sensing based on analyzing images" }
             ]
         },
 
         {
-            name: "Occupancy", tag: "attribute",
+            tag: "attribute", name: "Occupancy",
             details: "Indicates the sensed (processed) status of occupancy. For compatibility reasons this is expressed as " +
                 "a bitmap where the status is indicated in bit 0: a value of 1 means occupied, and 0 means " +
                 "unoccupied, with the other bits set to 0; this can be considered equivalent to a boolean.",
             xref: "cluster§2.7.6.1"
         },
 
-        { name: "OccupancySensorType", tag: "attribute", xref: "cluster§2.7.6" },
-        { name: "OccupancySensorTypeBitmap", tag: "attribute", xref: "cluster§2.7.6" },
+        { tag: "attribute", name: "OccupancySensorType", xref: "cluster§2.7.6" },
+        { tag: "attribute", name: "OccupancySensorTypeBitmap", xref: "cluster§2.7.6" },
 
         {
-            name: "HoldTime", tag: "attribute",
+            tag: "attribute", name: "HoldTime",
 
             details: "This attribute shall specify the time delay, in seconds, before the sensor changes to its unoccupied " +
                 "state after the last detection of occupancy in the sensed area. This is equivalent to the legacy " +
@@ -83,69 +83,69 @@ Resource.add({
         },
 
         {
-            name: "HoldTimeLimits", tag: "attribute",
+            tag: "attribute", name: "HoldTimeLimits",
             details: "Indicates the server’s limits, and default value, for the HoldTime attribute.",
             xref: "cluster§2.7.6.4"
         },
 
         {
-            name: "PirOccupiedToUnoccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "PirOccupiedToUnoccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.6"
         },
 
         {
-            name: "PirUnoccupiedToOccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "PirUnoccupiedToOccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.7"
         },
 
         {
-            name: "PirUnoccupiedToOccupiedThreshold", tag: "attribute",
+            tag: "attribute", name: "PirUnoccupiedToOccupiedThreshold",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PIRUnoccupiedToOccupiedDelay, before the PIR sensor changes to its occupied state.",
             xref: "cluster§2.7.6.8"
         },
 
         {
-            name: "UltrasonicOccupiedToUnoccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "UltrasonicOccupiedToUnoccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.9"
         },
 
         {
-            name: "UltrasonicUnoccupiedToOccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.10"
         },
 
         {
-            name: "UltrasonicUnoccupiedToOccupiedThreshold", tag: "attribute",
+            tag: "attribute", name: "UltrasonicUnoccupiedToOccupiedThreshold",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "UltrasonicUnoccupiedToOccupiedDelay, before the Ultrasonic sensor changes to its occupied state.",
             xref: "cluster§2.7.6.11"
         },
 
         {
-            name: "PhysicalContactOccupiedToUnoccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "PhysicalContactOccupiedToUnoccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the physical contact occupancy " +
                 "sensor changes to its unoccupied state after detecting the unoccupied event.",
             xref: "cluster§2.7.6.12"
         },
 
         {
-            name: "PhysicalContactUnoccupiedToOccupiedDelay", tag: "attribute",
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedDelay",
             details: "This attribute shall specify the time delay, in seconds, before the physical contact sensor changes " +
                 "to its occupied state after the first detection of the occupied event.",
             xref: "cluster§2.7.6.13"
         },
 
         {
-            name: "PhysicalContactUnoccupiedToOccupiedThreshold", tag: "attribute",
+            tag: "attribute", name: "PhysicalContactUnoccupiedToOccupiedThreshold",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PhysicalContactUnoccupiedToOccupiedDelay, before the PhysicalContact sensor changes to its occupied " +
                 "state.",
@@ -153,22 +153,22 @@ Resource.add({
         },
 
         {
-            name: "OccupancyChanged", tag: "event",
+            tag: "event", name: "OccupancyChanged",
             details: "If this event is supported, it shall be generated when the Occupancy attribute changes.",
             xref: "cluster§2.7.7.1",
             children: [{
-                name: "Occupancy", tag: "field",
+                tag: "field", name: "Occupancy",
                 details: "This field shall indicate the new value of the Occupancy attribute.",
                 xref: "cluster§2.7.7.1.1"
             }]
         },
 
         {
-            name: "OccupancyBitmap", tag: "datatype",
+            tag: "datatype", name: "OccupancyBitmap",
             xref: "cluster§2.7.5.1",
 
             children: [{
-                name: "Occupied", tag: "field",
+                tag: "field", name: "Occupied",
                 description: "Indicates the sensed occupancy state",
                 details: "If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall " +
                     "indicate the unoccupied state.",
@@ -177,7 +177,7 @@ Resource.add({
         },
 
         {
-            name: "OccupancySensorTypeBitmap", tag: "datatype",
+            tag: "datatype", name: "OccupancySensorTypeBitmap",
             details: "NOTE" +
                 "\n" +
                 "This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature " +
@@ -185,14 +185,14 @@ Resource.add({
                 "Compatibility section.",
             xref: "cluster§2.7.5.2",
             children: [
-                { name: "Pir", tag: "field", description: "Indicates a passive infrared sensor." },
-                { name: "Ultrasonic", tag: "field", description: "Indicates a ultrasonic sensor." },
-                { name: "PhysicalContact", tag: "field", description: "Indicates a physical contact sensor." }
+                { tag: "field", name: "Pir", description: "Indicates a passive infrared sensor." },
+                { tag: "field", name: "Ultrasonic", description: "Indicates a ultrasonic sensor." },
+                { tag: "field", name: "PhysicalContact", description: "Indicates a physical contact sensor." }
             ]
         },
 
         {
-            name: "OccupancySensorTypeEnum", tag: "datatype",
+            tag: "datatype", name: "OccupancySensorTypeEnum",
 
             details: "NOTE" +
                 "\n" +
@@ -204,38 +204,38 @@ Resource.add({
             xref: "cluster§2.7.5.3",
 
             children: [
-                { name: "Pir", tag: "field", description: "Indicates a passive infrared sensor." },
-                { name: "Ultrasonic", tag: "field", description: "Indicates a ultrasonic sensor." },
+                { tag: "field", name: "Pir", description: "Indicates a passive infrared sensor." },
+                { tag: "field", name: "Ultrasonic", description: "Indicates a ultrasonic sensor." },
                 {
-                    name: "PirAndUltrasonic", tag: "field",
+                    tag: "field", name: "PirAndUltrasonic",
                     description: "Indicates a passive infrared and ultrasonic sensor."
                 },
-                { name: "PhysicalContact", tag: "field", description: "Indicates a physical contact sensor." }
+                { tag: "field", name: "PhysicalContact", description: "Indicates a physical contact sensor." }
             ]
         },
 
         {
-            name: "HoldTimeLimitsStruct", tag: "datatype",
+            tag: "datatype", name: "HoldTimeLimitsStruct",
             details: "This structure provides information on the server’s supported values for the HoldTime attribute.",
             xref: "cluster§2.7.5.4",
 
             children: [
                 {
-                    name: "HoldTimeMin", tag: "field",
+                    tag: "field", name: "HoldTimeMin",
                     details: "This field shall specify the minimum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
                     xref: "cluster§2.7.5.4.1"
                 },
 
                 {
-                    name: "HoldTimeMax", tag: "field",
+                    tag: "field", name: "HoldTimeMax",
                     details: "This field shall specify the maximum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
                     xref: "cluster§2.7.5.4.2"
                 },
 
                 {
-                    name: "HoldTimeDefault", tag: "field",
+                    tag: "field", name: "HoldTimeDefault",
                     details: "This field shall specify the (manufacturer-determined) default value of the server’s HoldTime " +
                         "attribute, in seconds. This is the value that a client who wants to reset the settings to a valid " +
                         "default SHOULD use.",

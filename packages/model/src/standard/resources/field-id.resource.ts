@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "field-id", tag: "datatype",
+    tag: "datatype", name: "field-id",
     description: "Field ID",
     details: "An identifier that indicates a field defined in a struct." +
         "\n" +

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MediaPlayback", tag: "cluster",
+    tag: "cluster", name: "MediaPlayback",
     classification: "application", pics: "MEDIAPLAYBACK",
     details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media " +
         "device such as a TV, Set-top Box, or Smart Speaker." +
@@ -20,12 +20,12 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§6.10.4",
 
             children: [
                 {
-                    name: "AS", tag: "field",
+                    tag: "field", name: "AS",
                     details: "This feature provides access to the time offset location within current playback media and allows " +
                         "for jumping to a specific location using time offsets. This enables clients to implement more " +
                         "advanced media seeking behavior in their user interface, for instance a \"seek bar\".",
@@ -33,23 +33,23 @@ Resource.add({
                 },
 
                 {
-                    name: "VS", tag: "field",
+                    tag: "field", name: "VS",
                     details: "This feature is for a device which supports variable speed playback on media that supports it.",
                     xref: "cluster§6.10.4.2"
                 },
                 {
-                    name: "TT", tag: "field",
+                    tag: "field", name: "TT",
                     details: "This feature is for a device or app that supports Text Tracks.",
                     xref: "cluster§6.10.4.3"
                 },
                 {
-                    name: "AT", tag: "field",
+                    tag: "field", name: "AT",
                     details: "This feature is for a device or app that supports Audio Tracks.",
                     xref: "cluster§6.10.4.4"
                 },
 
                 {
-                    name: "AA", tag: "field",
+                    tag: "field", name: "AA",
 
                     details: "This feature is for a device or app that supports playing audio during fast and slow advance and" +
                         "\n" +
@@ -64,7 +64,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentState", tag: "attribute",
+            tag: "attribute", name: "CurrentState",
             details: "Indicates the current playback state of media." +
                 "\n" +
                 "During fast-forward, rewind, and other seek operations; this attribute shall be set to PLAYING.",
@@ -72,7 +72,7 @@ Resource.add({
         },
 
         {
-            name: "StartTime", tag: "attribute",
+            tag: "attribute", name: "StartTime",
             details: "Indicates the start time of the media, in case the media has a fixed start time (for example, live " +
                 "stream or television broadcast), or null when start time does not apply to the current media (for " +
                 "example, video-on-demand). This time is a UTC time. The client needs to handle conversion to local " +
@@ -81,7 +81,7 @@ Resource.add({
         },
 
         {
-            name: "Duration", tag: "attribute",
+            tag: "attribute", name: "Duration",
             details: "Indicates the duration, in milliseconds, of the current media being played back" +
                 "\n" +
                 "or null when duration is not applicable (for example, in live streaming content with no known " +
@@ -90,7 +90,7 @@ Resource.add({
         },
 
         {
-            name: "SampledPosition", tag: "attribute",
+            tag: "attribute", name: "SampledPosition",
 
             details: "Indicates the position of playback (Position field) at the time (UpdateAt field) specified in the " +
                 "attribute. The client may use the SampledPosition attribute to compute the current position within " +
@@ -113,7 +113,7 @@ Resource.add({
         },
 
         {
-            name: "PlaybackSpeed", tag: "attribute",
+            tag: "attribute", name: "PlaybackSpeed",
 
             details: "Indicates the speed at which the current media is being played. The new PlaybackSpeed shall be " +
                 "reflected in this attribute whenever any of the following occurs:" +
@@ -149,7 +149,7 @@ Resource.add({
         },
 
         {
-            name: "SeekRangeEnd", tag: "attribute",
+            tag: "attribute", name: "SeekRangeEnd",
 
             details: "Indicates the furthest forward valid position to which a client may seek forward, in milliseconds " +
                 "from the start of the media. When the media has an associated StartTime, a value of null shall " +
@@ -162,14 +162,14 @@ Resource.add({
         },
 
         {
-            name: "SeekRangeStart", tag: "attribute",
+            tag: "attribute", name: "SeekRangeStart",
             details: "Indicates the earliest valid position to which a client may seek back, in milliseconds from start of " +
                 "the media. A value of Nas shall indicate that seeking backwards is not allowed.",
             xref: "cluster§6.10.6.6"
         },
 
         {
-            name: "ActiveAudioTrack", tag: "attribute",
+            tag: "attribute", name: "ActiveAudioTrack",
             details: "ActiveTrack refers to the Audio track currently set and being used for the streaming media. A value " +
                 "of null shall indicate that no Audio Track corresponding to the current media is currently being " +
                 "played.",
@@ -177,7 +177,7 @@ Resource.add({
         },
 
         {
-            name: "AvailableAudioTracks", tag: "attribute",
+            tag: "attribute", name: "AvailableAudioTracks",
             details: "AvailableAudioTracks refers to the list of Audio tracks available for the current title being " +
                 "played. A value of null shall indicate that no Audio Tracks corresponding to the current media are " +
                 "selectable by the client.",
@@ -185,7 +185,7 @@ Resource.add({
         },
 
         {
-            name: "ActiveTextTrack", tag: "attribute",
+            tag: "attribute", name: "ActiveTextTrack",
             details: "ActiveTrack refers to the Text track currently set and being used for the streaming media. This can " +
                 "be nil. A value of null shall indicate that no Text Track corresponding to the current media is " +
                 "currently being displayed.",
@@ -193,7 +193,7 @@ Resource.add({
         },
 
         {
-            name: "AvailableTextTracks", tag: "attribute",
+            tag: "attribute", name: "AvailableTextTracks",
             details: "AvailableTextTracks refers to the list of Text tracks available for the current title being played. " +
                 "This can be an empty list. A value of null shall indicate that no Text Tracks corresponding to the " +
                 "current media are selectable by the client.",
@@ -201,69 +201,69 @@ Resource.add({
         },
 
         {
-            name: "StateChanged", tag: "event",
+            tag: "event", name: "StateChanged",
             details: "If supported, this event shall be generated when there is a change in any of the supported " +
                 "attributes of the Media Playback cluster.",
             xref: "cluster§6.10.8.1",
 
             children: [
                 {
-                    name: "CurrentState", tag: "field",
+                    tag: "field", name: "CurrentState",
                     details: "This field shall indicate the updated playback state as defined by the CurrentState attribute, and " +
                         "has the same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.1"
                 },
 
                 {
-                    name: "StartTime", tag: "field",
+                    tag: "field", name: "StartTime",
                     details: "This field shall indicate the updated start time as defined by the StartTime attribute, and has the " +
                         "same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.2"
                 },
 
                 {
-                    name: "Duration", tag: "field",
+                    tag: "field", name: "Duration",
                     details: "This field shall indicate the updated duration as defined by the Duration attribute, and has the " +
                         "same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.3"
                 },
 
                 {
-                    name: "SampledPosition", tag: "field",
+                    tag: "field", name: "SampledPosition",
                     details: "This field shall indicate the updated position of playback as defined by the SampledPosition " +
                         "attribute, and has the same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.4"
                 },
 
                 {
-                    name: "PlaybackSpeed", tag: "field",
+                    tag: "field", name: "PlaybackSpeed",
                     details: "This field shall indicate the updated speed at which the current media is being played as defined by " +
                         "the PlaybackSpeed attribute, and has the same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.5"
                 },
 
                 {
-                    name: "SeekRangeEnd", tag: "field",
+                    tag: "field", name: "SeekRangeEnd",
                     details: "This field shall indicate the updated start of the seek range end as defined by the SeekRangeEnd " +
                         "attribute, and has the same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.7"
                 },
 
                 {
-                    name: "SeekRangeStart", tag: "field",
+                    tag: "field", name: "SeekRangeStart",
                     details: "This field shall indicate the updated start of the seek range start as defined by the SeekRangeStart " +
                         "attribute, and has the same constraint as that attribute.",
                     xref: "cluster§6.10.8.1.6"
                 },
 
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall indicate Optional app-specific data.",
                     xref: "cluster§6.10.8.1.8"
                 },
 
                 {
-                    name: "AudioAdvanceUnmuted", tag: "field",
+                    tag: "field", name: "AudioAdvanceUnmuted",
 
                     details: "This field shall indicate whether audio is unmuted by the player due to a FF or REW command. This " +
                         "field is only meaningful when the PlaybackSpeed is present and not equal to 0 (paused) or 1 (normal " +
@@ -279,47 +279,47 @@ Resource.add({
         },
 
         {
-            name: "Play", tag: "command",
+            tag: "command", name: "Play",
             details: "Upon receipt, this shall play media. If content is currently in a FastForward or Rewind state. Play " +
                 "shall return media to normal playback speed.",
             xref: "cluster§6.10.7.1"
         },
 
         {
-            name: "Pause", tag: "command",
+            tag: "command", name: "Pause",
             details: "Upon receipt, this shall pause playback of the media.",
             xref: "cluster§6.10.7.2"
         },
 
         {
-            name: "Stop", tag: "command",
+            tag: "command", name: "Stop",
             details: "Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This " +
                 "may navigate the user back to the location from where the media was originally launched.",
             xref: "cluster§6.10.7.3"
         },
 
         {
-            name: "StartOver", tag: "command",
+            tag: "command", name: "StartOver",
             details: "Upon receipt, this shall Start Over with the current media playback item.",
             xref: "cluster§6.10.7.4"
         },
 
         {
-            name: "Previous", tag: "command",
+            tag: "command", name: "Previous",
             details: "Upon receipt, this shall cause the handler to be invoked for \"Previous\". User experience is " +
                 "context-specific. This will often Go back to the previous media playback item.",
             xref: "cluster§6.10.7.5"
         },
 
         {
-            name: "Next", tag: "command",
+            tag: "command", name: "Next",
             details: "Upon receipt, this shall cause the handler to be invoked for \"Next\". User experience is context- " +
                 "specific. This will often Go forward to the next media playback item.",
             xref: "cluster§6.10.7.6"
         },
 
         {
-            name: "Rewind", tag: "command",
+            tag: "command", name: "Rewind",
 
             details: "Upon receipt, this shall start playback of the media backward in case the media is currently playing " +
                 "in the forward direction or is not playing. If the playback is already happening in the backwards " +
@@ -336,7 +336,7 @@ Resource.add({
             xref: "cluster§6.10.7.7",
 
             children: [{
-                name: "AudioAdvanceUnmuted", tag: "field",
+                tag: "field", name: "AudioAdvanceUnmuted",
                 details: "This field shall indicate whether audio should be unmuted by the player during rewind." +
                     "\n" +
                     "A value of true does not guarantee that audio can be heard by the user since the speaker may be " +
@@ -346,7 +346,7 @@ Resource.add({
         },
 
         {
-            name: "FastForward", tag: "command",
+            tag: "command", name: "FastForward",
 
             details: "Upon receipt, this shall start playback of the media in the forward direction in case the media is" +
                 "\n" +
@@ -364,7 +364,7 @@ Resource.add({
             xref: "cluster§6.10.7.8",
 
             children: [{
-                name: "AudioAdvanceUnmuted", tag: "field",
+                tag: "field", name: "AudioAdvanceUnmuted",
                 details: "This field shall indicate whether audio should be unmuted by the player during fast forward." +
                     "\n" +
                     "A value of true does not guarantee that audio can be heard by the user since the speaker may be " +
@@ -374,12 +374,12 @@ Resource.add({
         },
 
         {
-            name: "SkipForward", tag: "command",
+            tag: "command", name: "SkipForward",
             details: "Upon receipt, this shall Skip forward in the media by the given number of milliseconds.",
             xref: "cluster§6.10.7.9",
 
             children: [{
-                name: "DeltaPositionMilliseconds", tag: "field",
+                tag: "field", name: "DeltaPositionMilliseconds",
 
                 details: "This field shall indicate the duration of the time span to skip forward in the media, in " +
                     "milliseconds. In case the resulting position falls in the middle of a frame, the server shall set " +
@@ -393,12 +393,12 @@ Resource.add({
         },
 
         {
-            name: "SkipBackward", tag: "command",
+            tag: "command", name: "SkipBackward",
             details: "Upon receipt, this shall Skip backward in the media by the given number of milliseconds.",
             xref: "cluster§6.10.7.10",
 
             children: [{
-                name: "DeltaPositionMilliseconds", tag: "field",
+                tag: "field", name: "DeltaPositionMilliseconds",
 
                 details: "This field shall indicate the duration of the time span to skip backward in the media, in " +
                     "milliseconds. In case the resulting position falls in the middle of a frame, the server shall set " +
@@ -412,18 +412,18 @@ Resource.add({
         },
 
         {
-            name: "PlaybackResponse", tag: "command",
+            tag: "command", name: "PlaybackResponse",
             details: "This command shall be generated in response to various Playback Commands.",
             xref: "cluster§6.10.7.12",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall indicate the status of the command which resulted in this response.",
                     xref: "cluster§6.10.7.12.1"
                 },
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall indicate Optional app-specific data.",
                     xref: "cluster§6.10.7.12.2"
                 }
@@ -431,12 +431,12 @@ Resource.add({
         },
 
         {
-            name: "Seek", tag: "command",
+            tag: "command", name: "Seek",
             details: "Upon receipt, this shall change the playback position in the media to the given position.",
             xref: "cluster§6.10.7.11",
 
             children: [{
-                name: "Position", tag: "field",
+                tag: "field", name: "Position",
 
                 details: "This field shall indicate the position (in milliseconds) in the media to seek to. In case the " +
                     "position falls in the middle of a frame, the server shall set the position to the beginning of that " +
@@ -450,7 +450,7 @@ Resource.add({
         },
 
         {
-            name: "ActivateAudioTrack", tag: "command",
+            tag: "command", name: "ActivateAudioTrack",
             details: "Upon receipt, the server shall set the active Audio Track to the one identified by the TrackID in " +
                 "the Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR " +
                 "does not correspond to the streaming media OR no media is being streamed at the time of receipt of " +
@@ -459,13 +459,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "TrackId", tag: "field",
+                    tag: "field", name: "TrackId",
                     details: "This field shall indicate the Audio Track to activate.",
                     xref: "cluster§6.10.7.13.1"
                 },
 
                 {
-                    name: "AudioOutputIndex", tag: "field",
+                    tag: "field", name: "AudioOutputIndex",
                     details: "This value is the index field of the OutputInfoStruct from the OutputList attribute (from the " +
                         "AudioOutput cluster) and indicates which audio output the Audio Track should be played on. This " +
                         "field is absent for Text Tracks and only present for Audio Tracks. A value of null shall indicate " +
@@ -476,158 +476,158 @@ Resource.add({
         },
 
         {
-            name: "ActivateTextTrack", tag: "command",
+            tag: "command", name: "ActivateTextTrack",
             details: "Upon receipt, the server shall set the active Text Track to the one identified by the TrackID in the " +
                 "Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does " +
                 "not correspond to the streaming media OR no media is being streamed at the time of receipt of this " +
                 "command, the server shall return an error status of INVALID_ARGUMENT.",
             xref: "cluster§6.10.7.14",
             children: [{
-                name: "TrackId", tag: "field",
+                tag: "field", name: "TrackId",
                 details: "This field shall indicate the Text Track to activate.",
                 xref: "cluster§6.10.7.14.1"
             }]
         },
 
         {
-            name: "DeactivateTextTrack", tag: "command",
+            tag: "command", name: "DeactivateTextTrack",
             details: "If a Text Track is active (i.e. being displayed), upon receipt of this command, the server shall " +
                 "stop displaying it.",
             xref: "cluster§6.10.7.15"
         },
 
         {
-            name: "PlaybackStateEnum", tag: "datatype",
+            tag: "datatype", name: "PlaybackStateEnum",
             xref: "cluster§6.10.5.1",
 
             children: [
-                { name: "Playing", tag: "field", description: "Media is currently playing (includes FF and REW)" },
-                { name: "Paused", tag: "field", description: "Media is currently paused" },
-                { name: "NotPlaying", tag: "field", description: "Media is not currently playing" },
+                { tag: "field", name: "Playing", description: "Media is currently playing (includes FF and REW)" },
+                { tag: "field", name: "Paused", description: "Media is currently paused" },
+                { tag: "field", name: "NotPlaying", description: "Media is not currently playing" },
                 {
-                    name: "Buffering", tag: "field",
+                    tag: "field", name: "Buffering",
                     description: "Media is not currently buffering and playback will start when buffer has been filled"
                 }
             ]
         },
 
         {
-            name: "StatusEnum", tag: "datatype",
+            tag: "datatype", name: "StatusEnum",
             xref: "cluster§6.10.5.2",
 
             children: [
-                { name: "Success", tag: "field", description: "Succeeded" },
+                { tag: "field", name: "Success", description: "Succeeded" },
                 {
-                    name: "InvalidStateForCommand", tag: "field",
+                    tag: "field", name: "InvalidStateForCommand",
                     description: "Requested playback command is invalid in the current playback state."
                 },
                 {
-                    name: "NotAllowed", tag: "field",
+                    tag: "field", name: "NotAllowed",
                     description: "Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed."
                 },
-                { name: "NotActive", tag: "field", description: "This endpoint is not active for playback." },
+                { tag: "field", name: "NotActive", description: "This endpoint is not active for playback." },
                 {
-                    name: "SpeedOutOfRange", tag: "field",
+                    tag: "field", name: "SpeedOutOfRange",
                     description: "The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction."
                 },
                 {
-                    name: "SeekOutOfRange", tag: "field",
+                    tag: "field", name: "SeekOutOfRange",
                     description: "The Seek Command was issued with a value of position outside of the allowed seek range of the media."
                 }
             ]
         },
 
         {
-            name: "CharacteristicEnum", tag: "datatype",
+            tag: "datatype", name: "CharacteristicEnum",
             xref: "cluster§6.10.5.3",
 
             children: [
                 {
-                    name: "ForcedSubtitles", tag: "field",
+                    tag: "field", name: "ForcedSubtitles",
                     description: "Textual information meant for display when no other text representation is selected. It is used to clarify dialogue, alternate languages, texted graphics or location/person IDs that are not otherwise covered in the dubbed/localized audio."
                 },
                 {
-                    name: "DescribesVideo", tag: "field",
+                    tag: "field", name: "DescribesVideo",
                     description: "Textual or audio media component containing a textual description (intended for audio synthesis) or an audio description describing a visual component"
                 },
                 {
-                    name: "EasyToRead", tag: "field",
+                    tag: "field", name: "EasyToRead",
                     description: "Simplified or reduced captions as specified in [United States Code Title 47 CFR 79.103(c)(9)]."
                 },
                 {
-                    name: "FrameBased", tag: "field",
+                    tag: "field", name: "FrameBased",
                     description: "A media characteristic that indicates that a track selection option includes frame-based content."
                 },
                 {
-                    name: "MainProgram", tag: "field",
+                    tag: "field", name: "MainProgram",
                     description: "Main media component(s) which is/are intended for presentation if no other information is provided"
                 },
                 {
-                    name: "OriginalContent", tag: "field",
+                    tag: "field", name: "OriginalContent",
                     description: "A media characteristic that indicates that a track or media selection option contains original content."
                 },
                 {
-                    name: "VoiceOverTranslation", tag: "field",
+                    tag: "field", name: "VoiceOverTranslation",
                     description: "A media characteristic that indicates that a track or media selection option contains a language translation and verbal interpretation of spoken dialog."
                 },
                 {
-                    name: "Caption", tag: "field",
+                    tag: "field", name: "Caption",
                     description: "Textual media component containing transcriptions of spoken dialog and auditory cues such as sound effects and music for the hearing impaired."
                 },
-                { name: "Subtitle", tag: "field", description: "Textual transcriptions of spoken dialog." },
+                { tag: "field", name: "Subtitle", description: "Textual transcriptions of spoken dialog." },
                 {
-                    name: "Alternate", tag: "field",
+                    tag: "field", name: "Alternate",
                     description: "Textual media component containing transcriptions of spoken dialog and auditory cues such as sound effects and music for the hearing impaired."
                 },
                 {
-                    name: "Supplementary", tag: "field",
+                    tag: "field", name: "Supplementary",
                     description: "Media content component that is supplementary to a media content component of a different media component type."
                 },
                 {
-                    name: "Commentary", tag: "field",
+                    tag: "field", name: "Commentary",
                     description: "Experience that contains a commentary (e.g. director’s commentary) (typically audio)"
                 },
                 {
-                    name: "DubbedTranslation", tag: "field",
+                    tag: "field", name: "DubbedTranslation",
                     description: "Experience that contains an element that is presented in a different language from the original (e.g. dubbed audio, translated captions)"
                 },
                 {
-                    name: "Description", tag: "field",
+                    tag: "field", name: "Description",
                     description: "Textual or audio media component containing a textual description (intended for audio synthesis) or an audio description describing a visual component"
                 },
                 {
-                    name: "Metadata", tag: "field",
+                    tag: "field", name: "Metadata",
                     description: "Media component containing information intended to be processed by application specific elements."
                 },
                 {
-                    name: "EnhancedAudioIntelligibility", tag: "field",
+                    tag: "field", name: "EnhancedAudioIntelligibility",
                     description: "Experience containing an element for improved intelligibility of the dialogue."
                 },
                 {
-                    name: "Emergency", tag: "field",
+                    tag: "field", name: "Emergency",
                     description: "Experience that provides information, about a current emergency, that is intended to enable the protection of life, health, safety, and property, and may also include critical details regarding the emergency and how to respond to the emergency."
                 },
                 {
-                    name: "Karaoke", tag: "field",
+                    tag: "field", name: "Karaoke",
                     description: "Textual representation of a songs’ lyrics, usually in the same language as the associated song as specified in [SMPTE ST 2067-2]."
                 }
             ]
         },
 
         {
-            name: "PlaybackPositionStruct", tag: "datatype",
+            tag: "datatype", name: "PlaybackPositionStruct",
             details: "This structure defines a playback position within a media stream being played.",
             xref: "cluster§6.10.5.4",
 
             children: [
                 {
-                    name: "UpdatedAt", tag: "field",
+                    tag: "field", name: "UpdatedAt",
                     details: "This field shall indicate the time when the position was last updated.",
                     xref: "cluster§6.10.5.4.1"
                 },
 
                 {
-                    name: "Position", tag: "field",
+                    tag: "field", name: "Position",
 
                     details: "This field shall indicate the associated discrete position within the media stream, in milliseconds " +
                         "from the beginning of the stream, being associated with the time indicated by the UpdatedAt field. " +
@@ -644,20 +644,20 @@ Resource.add({
         },
 
         {
-            name: "TrackStruct", tag: "datatype",
+            tag: "datatype", name: "TrackStruct",
             details: "This structure defines a uniquely identifiable Text Track or Audio Track.",
             xref: "cluster§6.10.5.5",
 
             children: [
                 {
-                    name: "Id", tag: "field",
+                    tag: "field", name: "Id",
                     details: "This field shall indicate the Identifier for the Track which is unique within the Track catalog. The " +
                         "Track catalog contains all the Text/Audio tracks corresponding to the main media content.",
                     xref: "cluster§6.10.5.5.1"
                 },
 
                 {
-                    name: "TrackAttributes", tag: "field",
+                    tag: "field", name: "TrackAttributes",
                     details: "This field shall indicate the Attributes associated to the Track, like languageCode.",
                     xref: "cluster§6.10.5.5.2"
                 }
@@ -665,20 +665,20 @@ Resource.add({
         },
 
         {
-            name: "TrackAttributesStruct", tag: "datatype",
+            tag: "datatype", name: "TrackAttributesStruct",
             details: "This structure includes the attributes associated with a Text/Audio Track",
             xref: "cluster§6.10.5.6",
 
             children: [
                 {
-                    name: "LanguageCode", tag: "field",
+                    tag: "field", name: "LanguageCode",
                     details: "The value is a String containing one of the standard Tags for Identifying Languages RFC 5646, which " +
                         "identifies the primary language used in the Track.",
                     xref: "cluster§6.10.5.6.1"
                 },
 
                 {
-                    name: "Characteristics", tag: "field",
+                    tag: "field", name: "Characteristics",
                     details: "This is a list of enumerated CharacteristicEnum values that indicate a purpose, trait or feature " +
                         "associated with the Track. A value of null shall indicate that there are no Characteristics " +
                         "corresponding to the Track.",
@@ -686,7 +686,7 @@ Resource.add({
                 },
 
                 {
-                    name: "DisplayName", tag: "field",
+                    tag: "field", name: "DisplayName",
                     details: "The value is a String containing a user displayable name for the Track. A value of null shall " +
                         "indicate that there is no DisplayName corresponding to the Track.",
                     xref: "cluster§6.10.5.6.3"

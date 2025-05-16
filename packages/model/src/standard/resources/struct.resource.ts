@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "struct", tag: "datatype",
+    tag: "datatype", name: "struct",
     description: "Struct",
 
     details: "A struct is a sequence of fields of any data type. Individual fields are identified by a field ID of " +

@@ -17,60 +17,60 @@ import {
 } from "../../elements/index.js";
 
 export const ValveConfigurationAndControl = Cluster(
-    { id: 0x81, name: "ValveConfigurationAndControl" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ValveConfigurationAndControl", id: 0x81 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TS", conformance: "desc", constraint: "0", longName: "TimeSync" }),
-        Field({ name: "LVL", conformance: "O", constraint: "1", longName: "Level" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "TS", constraint: "0", conformance: "desc", longName: "TimeSync" }),
+        Field({ name: "LVL", constraint: "1", conformance: "O", longName: "Level" })
     ),
     Attribute({
-        id: 0x0, name: "OpenDuration", type: "elapsed-s",
-        access: "R V", conformance: "M", constraint: "min 1", default: null, quality: "X"
+        name: "OpenDuration", id: 0x0, type: "elapsed-s",
+        default: null, constraint: "min 1", conformance: "M", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x1, name: "DefaultOpenDuration", type: "elapsed-s",
-        access: "RW VO", conformance: "M", constraint: "min 1", default: null, quality: "X N"
+        name: "DefaultOpenDuration", id: 0x1, type: "elapsed-s",
+        default: null, constraint: "min 1", conformance: "M", access: "RW VO", quality: "X N"
     }),
-    Attribute({ id: 0x2, name: "AutoCloseTime", type: "epoch-us", access: "R V", conformance: "TS", default: null, quality: "X" }),
+    Attribute({ name: "AutoCloseTime", id: 0x2, type: "epoch-us", default: null, conformance: "TS", access: "R V", quality: "X" }),
     Attribute({
-        id: 0x3, name: "RemainingDuration", type: "elapsed-s",
-        access: "R V", conformance: "M", default: null, quality: "X Q"
-    }),
-    Attribute({
-        id: 0x4, name: "CurrentState", type: "ValveStateEnum",
-        access: "R V", conformance: "M", default: null, quality: "X"
+        name: "RemainingDuration", id: 0x3, type: "elapsed-s",
+        default: null, conformance: "M", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x5, name: "TargetState", type: "ValveStateEnum",
-        access: "R V", conformance: "M", default: null, quality: "X"
+        name: "CurrentState", id: 0x4, type: "ValveStateEnum",
+        default: null, conformance: "M", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x6, name: "CurrentLevel", type: "percent", access: "R V", conformance: "LVL", default: null, quality: "X" }),
-    Attribute({ id: 0x7, name: "TargetLevel", type: "percent", access: "R V", conformance: "LVL", default: null, quality: "X" }),
     Attribute({
-        id: 0x8, name: "DefaultOpenLevel", type: "percent",
-        access: "RW VO", conformance: "[LVL]", constraint: "1 to 100", default: 100, quality: "N"
+        name: "TargetState", id: 0x5, type: "ValveStateEnum",
+        default: null, conformance: "M", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x9, name: "ValveFault", type: "ValveFaultBitmap", access: "R V", conformance: "O", default: 0 }),
+    Attribute({ name: "CurrentLevel", id: 0x6, type: "percent", default: null, conformance: "LVL", access: "R V", quality: "X" }),
+    Attribute({ name: "TargetLevel", id: 0x7, type: "percent", default: null, conformance: "LVL", access: "R V", quality: "X" }),
     Attribute({
-        id: 0xa, name: "LevelStep", type: "uint8",
-        access: "R V", conformance: "[LVL]", constraint: "1 to 50", default: 1, quality: "F"
+        name: "DefaultOpenLevel", id: 0x8, type: "percent",
+        default: 100, constraint: "1 to 100", conformance: "[LVL]", access: "RW VO", quality: "N"
+    }),
+    Attribute({ name: "ValveFault", id: 0x9, type: "ValveFaultBitmap", default: 0, conformance: "O", access: "R V" }),
+    Attribute({
+        name: "LevelStep", id: 0xa, type: "uint8",
+        default: 1, constraint: "1 to 50", conformance: "[LVL]", access: "R V", quality: "F"
     }),
     Event(
-        { id: 0x0, name: "ValveStateChanged", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "ValveState", type: "ValveStateEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "ValveLevel", type: "percent", conformance: "LVL" })
+        { name: "ValveStateChanged", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "ValveState", id: 0x0, type: "ValveStateEnum", conformance: "M" }),
+        Field({ name: "ValveLevel", id: 0x1, type: "percent", conformance: "LVL" })
     ),
     Event(
-        { id: 0x1, name: "ValveFault", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "ValveFault", type: "ValveFaultBitmap", conformance: "M" })
+        { name: "ValveFault", id: 0x1, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "ValveFault", id: 0x0, type: "ValveFaultBitmap", conformance: "M" })
     ),
     Command(
-        { id: 0x0, name: "Open", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "OpenDuration", type: "elapsed-s", conformance: "O", constraint: "min 1", quality: "X" }),
-        Field({ id: 0x1, name: "TargetLevel", type: "percent", conformance: "[LVL]", constraint: "min 1" })
+        { name: "Open", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" },
+        Field({ name: "OpenDuration", id: 0x0, type: "elapsed-s", constraint: "min 1", conformance: "O", quality: "X" }),
+        Field({ name: "TargetLevel", id: 0x1, type: "percent", constraint: "min 1", conformance: "[LVL]" })
     ),
-    Command({ id: 0x1, name: "Close", access: "O", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "Close", id: 0x1, conformance: "M", access: "O", direction: "request", response: "status" }),
 
     Datatype(
         { name: "ValveFaultBitmap", type: "map16" },
@@ -84,14 +84,14 @@ export const ValveConfigurationAndControl = Cluster(
 
     Datatype(
         { name: "ValveStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Closed", conformance: "M" }),
-        Field({ id: 0x1, name: "Open", conformance: "M" }),
-        Field({ id: 0x2, name: "Transitioning", conformance: "M" })
+        Field({ name: "Closed", id: 0x0, conformance: "M" }),
+        Field({ name: "Open", id: 0x1, conformance: "M" }),
+        Field({ name: "Transitioning", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "StatusCodeEnum", type: "enum8" },
-        Field({ id: 0x2, name: "FailureDueToFault", conformance: "M" })
+        Field({ name: "FailureDueToFault", id: 0x2, conformance: "M" })
     )
 );
 

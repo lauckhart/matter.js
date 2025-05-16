@@ -13,8 +13,8 @@ import {
 } from "../../elements/index.js";
 
 export const RoomAirConditionerNs = SemanticNamespace(
-    { id: 0x42, name: "RoomAirConditioner" },
-    SemanticTag({ id: 0x0, name: "Evaporator" }),
-    SemanticTag({ id: 0x1, name: "Condenser" })
+    { name: "RoomAirConditioner", id: 0x42 },
+    SemanticTag({ name: "Evaporator", id: 0x0 }),
+    SemanticTag({ name: "Condenser", id: 0x1 })
 );
 MatterDefinition.children.push(RoomAirConditionerNs);

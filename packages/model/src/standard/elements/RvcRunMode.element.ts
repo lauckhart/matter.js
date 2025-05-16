@@ -15,45 +15,45 @@ import {
 } from "../../elements/index.js";
 
 export const RvcRunMode = Cluster(
-    { id: 0x54, name: "RvcRunMode", type: "ModeBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "RvcRunMode", id: 0x54, type: "ModeBase" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", longName: "OnOff" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "DEPONOFF", constraint: "0", conformance: "X", longName: "OnOff" })
     ),
-    Attribute({ id: 0x0, name: "SupportedModes" }),
-    Attribute({ id: 0x1, name: "CurrentMode" }),
-    Attribute({ id: 0x2, name: "StartUpMode", conformance: "X" }),
-    Attribute({ id: 0x3, name: "OnMode", conformance: "X" }),
+    Attribute({ name: "SupportedModes", id: 0x0 }),
+    Attribute({ name: "CurrentMode", id: 0x1 }),
+    Attribute({ name: "StartUpMode", id: 0x2, conformance: "X" }),
+    Attribute({ name: "OnMode", id: 0x3, conformance: "X" }),
     Datatype({ name: "ModeOptionStruct", type: "ModeOptionStruct" }),
 
     Datatype(
         { name: "ModeChangeStatus", type: "enum8" },
-        Field({ id: 0x41, name: "Stuck" }),
-        Field({ id: 0x42, name: "DustBinMissing" }),
-        Field({ id: 0x43, name: "DustBinFull" }),
-        Field({ id: 0x44, name: "WaterTankEmpty" }),
-        Field({ id: 0x45, name: "WaterTankMissing" }),
-        Field({ id: 0x46, name: "WaterTankLidOpen" }),
-        Field({ id: 0x47, name: "MopCleaningPadMissing" }),
-        Field({ id: 0x48, name: "BatteryLow" })
+        Field({ name: "Stuck", id: 0x41 }),
+        Field({ name: "DustBinMissing", id: 0x42 }),
+        Field({ name: "DustBinFull", id: 0x43 }),
+        Field({ name: "WaterTankEmpty", id: 0x44 }),
+        Field({ name: "WaterTankMissing", id: 0x45 }),
+        Field({ name: "WaterTankLidOpen", id: 0x46 }),
+        Field({ name: "MopCleaningPadMissing", id: 0x47 }),
+        Field({ name: "BatteryLow", id: 0x48 })
     ),
 
     Datatype(
         { name: "ModeTag", type: "enum16" },
-        Field({ id: 0x0, name: "Auto" }),
-        Field({ id: 0x1, name: "Quick" }),
-        Field({ id: 0x2, name: "Quiet" }),
-        Field({ id: 0x3, name: "LowNoise" }),
-        Field({ id: 0x4, name: "LowEnergy" }),
-        Field({ id: 0x5, name: "Vacation" }),
-        Field({ id: 0x6, name: "Min" }),
-        Field({ id: 0x7, name: "Max" }),
-        Field({ id: 0x8, name: "Night" }),
-        Field({ id: 0x9, name: "Day" }),
-        Field({ id: 0x4000, name: "Idle" }),
-        Field({ id: 0x4001, name: "Cleaning" }),
-        Field({ id: 0x4002, name: "Mapping" })
+        Field({ name: "Auto", id: 0x0 }),
+        Field({ name: "Quick", id: 0x1 }),
+        Field({ name: "Quiet", id: 0x2 }),
+        Field({ name: "LowNoise", id: 0x3 }),
+        Field({ name: "LowEnergy", id: 0x4 }),
+        Field({ name: "Vacation", id: 0x5 }),
+        Field({ name: "Min", id: 0x6 }),
+        Field({ name: "Max", id: 0x7 }),
+        Field({ name: "Night", id: 0x8 }),
+        Field({ name: "Day", id: 0x9 }),
+        Field({ name: "Idle", id: 0x4000 }),
+        Field({ name: "Cleaning", id: 0x4001 }),
+        Field({ name: "Mapping", id: 0x4002 })
     )
 );
 

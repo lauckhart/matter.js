@@ -9,11 +9,7 @@ import { Specification } from "#model";
 import { Block } from "#util/TsFile.js";
 
 export function addProperties(target: Block, ...sets: Record<string, unknown>[]) {
-    const serializedSets = sets.map(set =>
-        Object.entries(set)
-            .sort((a, b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()))
-            .map(([k, v]) => `${k}: ${serialize(v)}`),
-    );
+    const serializedSets = sets.map(set => Object.entries(set).map(([k, v]) => `${k}: ${serialize(v)}`));
 
     for (const set of serializedSets) {
         // Segment properties into rows

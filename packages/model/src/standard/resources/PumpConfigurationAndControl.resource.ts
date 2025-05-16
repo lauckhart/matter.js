@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "PumpConfigurationAndControl", tag: "cluster",
+        tag: "cluster", name: "PumpConfigurationAndControl",
         classification: "application", pics: "PCC",
 
         details: "The Pump Configuration and Control cluster provides an interface for the setup and control of pump " +
@@ -33,22 +33,22 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§4.2.4",
 
                 children: [
-                    { name: "PRSCONST", tag: "field", details: "Supports operating in constant pressure mode" },
-                    { name: "PRSCOMP", tag: "field", details: "Supports operating in compensated pressure mode" },
-                    { name: "FLW", tag: "field", details: "Supports operating in constant flow mode" },
-                    { name: "SPD", tag: "field", details: "Supports operating in constant speed mode" },
-                    { name: "TEMP", tag: "field", details: "Supports operating in constant temperature mode" },
-                    { name: "AUTO", tag: "field", details: "Supports operating in automatic mode" },
-                    { name: "LOCAL", tag: "field", details: "Supports operating using local settings" }
+                    { tag: "field", name: "PRSCONST", details: "Supports operating in constant pressure mode" },
+                    { tag: "field", name: "PRSCOMP", details: "Supports operating in compensated pressure mode" },
+                    { tag: "field", name: "FLW", details: "Supports operating in constant flow mode" },
+                    { tag: "field", name: "SPD", details: "Supports operating in constant speed mode" },
+                    { tag: "field", name: "TEMP", details: "Supports operating in constant temperature mode" },
+                    { tag: "field", name: "AUTO", details: "Supports operating in automatic mode" },
+                    { tag: "field", name: "LOCAL", details: "Supports operating using local settings" }
                 ]
             },
 
             {
-                name: "MaxPressure", tag: "attribute",
+                tag: "attribute", name: "MaxPressure",
                 details: "This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and does " +
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
@@ -57,7 +57,7 @@ Resource.add(
             },
 
             {
-                name: "MaxSpeed", tag: "attribute",
+                tag: "attribute", name: "MaxSpeed",
                 details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does " +
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
@@ -66,7 +66,7 @@ Resource.add(
             },
 
             {
-                name: "MaxFlow", tag: "attribute",
+                tag: "attribute", name: "MaxFlow",
                 details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not " +
                     "apply to any specific control mode or operation mode." +
                     "\n" +
@@ -75,7 +75,7 @@ Resource.add(
             },
 
             {
-                name: "MinConstPressure", tag: "attribute",
+                tag: "attribute", name: "MinConstPressure",
                 details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
@@ -84,7 +84,7 @@ Resource.add(
             },
 
             {
-                name: "MaxConstPressure", tag: "attribute",
+                tag: "attribute", name: "MaxConstPressure",
                 details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
@@ -93,7 +93,7 @@ Resource.add(
             },
 
             {
-                name: "MinCompPressure", tag: "attribute",
+                tag: "attribute", name: "MinCompPressure",
                 details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
@@ -102,7 +102,7 @@ Resource.add(
             },
 
             {
-                name: "MaxCompPressure", tag: "attribute",
+                tag: "attribute", name: "MaxCompPressure",
                 details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
@@ -111,7 +111,7 @@ Resource.add(
             },
 
             {
-                name: "MinConstSpeed", tag: "attribute",
+                tag: "attribute", name: "MinConstSpeed",
                 details: "This attribute specifies the minimum speed the pump can achieve when it is working with the Con" +
                     "\n" +
                     "trolMode attribute set to ConstantSpeed." +
@@ -121,7 +121,7 @@ Resource.add(
             },
 
             {
-                name: "MaxConstSpeed", tag: "attribute",
+                tag: "attribute", name: "MaxConstSpeed",
                 details: "This attribute specifies the maximum speed the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantSpeed." +
                     "\n" +
@@ -130,7 +130,7 @@ Resource.add(
             },
 
             {
-                name: "MinConstFlow", tag: "attribute",
+                tag: "attribute", name: "MinConstFlow",
                 details: "This attribute specifies the minimum flow the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
@@ -139,7 +139,7 @@ Resource.add(
             },
 
             {
-                name: "MaxConstFlow", tag: "attribute",
+                tag: "attribute", name: "MaxConstFlow",
                 details: "This attribute specifies the maximum flow the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
@@ -148,7 +148,7 @@ Resource.add(
             },
 
             {
-                name: "MinConstTemp", tag: "attribute",
+                tag: "attribute", name: "MinConstTemp",
                 details: "This attribute specifies the minimum temperature the pump can maintain in the system when it is " +
                     "working with the ControlMode attribute set to ConstantTemperature." +
                     "\n" +
@@ -157,7 +157,7 @@ Resource.add(
             },
 
             {
-                name: "MaxConstTemp", tag: "attribute",
+                tag: "attribute", name: "MaxConstTemp",
 
                 details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
                     "working with the ControlMode attribute set to ConstantTemperature." +
@@ -170,7 +170,7 @@ Resource.add(
             },
 
             {
-                name: "PumpStatus", tag: "attribute",
+                tag: "attribute", name: "PumpStatus",
                 details: "This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. " +
                     "Where a pump controller function is active, the corresponding bit shall be set to 1. Where a pump" +
                     "\n" +
@@ -179,7 +179,7 @@ Resource.add(
             },
 
             {
-                name: "EffectiveOperationMode", tag: "attribute",
+                tag: "attribute", name: "EffectiveOperationMode",
 
                 details: "This attribute specifies current effective operation mode of the pump as defined in " +
                     "OperationModeEnum." +
@@ -198,7 +198,7 @@ Resource.add(
             },
 
             {
-                name: "EffectiveControlMode", tag: "attribute",
+                tag: "attribute", name: "EffectiveControlMode",
 
                 details: "This attribute specifies the current effective control mode of the pump as defined in " +
                     "ControlModeEnum." +
@@ -224,7 +224,7 @@ Resource.add(
             },
 
             {
-                name: "Capacity", tag: "attribute",
+                tag: "attribute", name: "Capacity",
 
                 details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum " +
                     "setpoint value. It is updated dynamically as the speed of the pump changes." +
@@ -239,7 +239,7 @@ Resource.add(
             },
 
             {
-                name: "Speed", tag: "attribute",
+                tag: "attribute", name: "Speed",
 
                 details: "This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as " +
                     "the speed of the pump changes." +
@@ -253,7 +253,7 @@ Resource.add(
             },
 
             {
-                name: "LifetimeRunningHours", tag: "attribute",
+                tag: "attribute", name: "LifetimeRunningHours",
 
                 details: "This attribute specifies the accumulated number of hours that the pump has been powered and the " +
                     "motor has been running. It is updated dynamically as it increases. It is preserved over power cycles " +
@@ -269,7 +269,7 @@ Resource.add(
             },
 
             {
-                name: "Power", tag: "attribute",
+                tag: "attribute", name: "Power",
 
                 details: "This attribute specifies the actual power consumption of the pump in Watts. The value of this " +
                     "attribute is updated dynamically as the power consumption of the pump changes." +
@@ -283,7 +283,7 @@ Resource.add(
             },
 
             {
-                name: "LifetimeEnergyConsumed", tag: "attribute",
+                tag: "attribute", name: "LifetimeEnergyConsumed",
 
                 details: "This attribute specifies the accumulated energy consumption of the pump through the entire lifetime " +
                     "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
@@ -300,7 +300,7 @@ Resource.add(
             },
 
             {
-                name: "OperationMode", tag: "attribute",
+                tag: "attribute", name: "OperationMode",
 
                 details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum." +
                     "\n" +
@@ -332,7 +332,7 @@ Resource.add(
             },
 
             {
-                name: "ControlMode", tag: "attribute",
+                tag: "attribute", name: "ControlMode",
 
                 details: "This attribute specifies the control mode of the pump as defined in ControlModeEnum." +
                     "\n" +
@@ -348,49 +348,49 @@ Resource.add(
                 xref: "cluster§4.2.7.23"
             },
 
-            { name: "AlarmMask", tag: "attribute", xref: "cluster§4.2.7" },
-            { name: "SupplyVoltageLow", tag: "event", xref: "cluster§4.2.8" },
-            { name: "SupplyVoltageHigh", tag: "event", xref: "cluster§4.2.8" },
-            { name: "PowerMissingPhase", tag: "event", xref: "cluster§4.2.8" },
-            { name: "SystemPressureLow", tag: "event", xref: "cluster§4.2.8" },
-            { name: "SystemPressureHigh", tag: "event", xref: "cluster§4.2.8" },
-            { name: "DryRunning", tag: "event", xref: "cluster§4.2.8" },
-            { name: "MotorTemperatureHigh", tag: "event", xref: "cluster§4.2.8" },
-            { name: "PumpMotorFatalFailure", tag: "event", xref: "cluster§4.2.8" },
-            { name: "ElectronicTemperatureHigh", tag: "event", xref: "cluster§4.2.8" },
-            { name: "PumpBlocked", tag: "event", xref: "cluster§4.2.8" },
-            { name: "SensorFailure", tag: "event", xref: "cluster§4.2.8" },
-            { name: "ElectronicNonFatalFailure", tag: "event", xref: "cluster§4.2.8" },
-            { name: "ElectronicFatalFailure", tag: "event", xref: "cluster§4.2.8" },
-            { name: "GeneralFault", tag: "event", xref: "cluster§4.2.8" },
-            { name: "Leakage", tag: "event", xref: "cluster§4.2.8" },
-            { name: "AirDetection", tag: "event", xref: "cluster§4.2.8" },
-            { name: "TurbineOperation", tag: "event", xref: "cluster§4.2.8" },
+            { tag: "attribute", name: "AlarmMask", xref: "cluster§4.2.7" },
+            { tag: "event", name: "SupplyVoltageLow", xref: "cluster§4.2.8" },
+            { tag: "event", name: "SupplyVoltageHigh", xref: "cluster§4.2.8" },
+            { tag: "event", name: "PowerMissingPhase", xref: "cluster§4.2.8" },
+            { tag: "event", name: "SystemPressureLow", xref: "cluster§4.2.8" },
+            { tag: "event", name: "SystemPressureHigh", xref: "cluster§4.2.8" },
+            { tag: "event", name: "DryRunning", xref: "cluster§4.2.8" },
+            { tag: "event", name: "MotorTemperatureHigh", xref: "cluster§4.2.8" },
+            { tag: "event", name: "PumpMotorFatalFailure", xref: "cluster§4.2.8" },
+            { tag: "event", name: "ElectronicTemperatureHigh", xref: "cluster§4.2.8" },
+            { tag: "event", name: "PumpBlocked", xref: "cluster§4.2.8" },
+            { tag: "event", name: "SensorFailure", xref: "cluster§4.2.8" },
+            { tag: "event", name: "ElectronicNonFatalFailure", xref: "cluster§4.2.8" },
+            { tag: "event", name: "ElectronicFatalFailure", xref: "cluster§4.2.8" },
+            { tag: "event", name: "GeneralFault", xref: "cluster§4.2.8" },
+            { tag: "event", name: "Leakage", xref: "cluster§4.2.8" },
+            { tag: "event", name: "AirDetection", xref: "cluster§4.2.8" },
+            { tag: "event", name: "TurbineOperation", xref: "cluster§4.2.8" },
 
             {
-                name: "PumpStatusBitmap", tag: "datatype",
+                tag: "datatype", name: "PumpStatusBitmap",
                 xref: "cluster§4.2.6.1",
 
                 children: [
                     {
-                        name: "DeviceFault", tag: "field",
+                        tag: "field", name: "DeviceFault",
                         description: "A fault related to the system or pump device is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 2-16, see Events.",
                         xref: "cluster§4.2.6.1.1"
                     },
 
                     {
-                        name: "SupplyFault", tag: "field",
+                        tag: "field", name: "SupplyFault",
                         description: "A fault related to the supply to the pump is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.",
                         xref: "cluster§4.2.6.1.2"
                     },
 
-                    { name: "SpeedLow", tag: "field", description: "Setpoint is too low to achieve." },
-                    { name: "SpeedHigh", tag: "field", description: "Setpoint is too high to achieve." },
+                    { tag: "field", name: "SpeedLow", description: "Setpoint is too low to achieve." },
+                    { tag: "field", name: "SpeedHigh", description: "Setpoint is too high to achieve." },
 
                     {
-                        name: "LocalOverride", tag: "field",
+                        tag: "field", name: "LocalOverride",
                         description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
                         details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
                             "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
@@ -399,10 +399,10 @@ Resource.add(
                         xref: "cluster§4.2.6.1.3"
                     },
 
-                    { name: "Running", tag: "field", description: "Pump is currently running" },
+                    { tag: "field", name: "Running", description: "Pump is currently running" },
 
                     {
-                        name: "RemotePressure", tag: "field",
+                        tag: "field", name: "RemotePressure",
                         description: "A remote pressure sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -411,7 +411,7 @@ Resource.add(
                     },
 
                     {
-                        name: "RemoteFlow", tag: "field",
+                        tag: "field", name: "RemoteFlow",
                         description: "A remote flow sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -420,7 +420,7 @@ Resource.add(
                     },
 
                     {
-                        name: "RemoteTemperature", tag: "field",
+                        tag: "field", name: "RemoteTemperature",
                         description: "A remote temperature sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -431,12 +431,12 @@ Resource.add(
             },
 
             {
-                name: "OperationModeEnum", tag: "datatype",
+                tag: "datatype", name: "OperationModeEnum",
                 xref: "cluster§4.2.6.2",
 
                 children: [
                     {
-                        name: "Normal", tag: "field",
+                        tag: "field", name: "Normal",
                         description: "The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.",
                         details: "If the pump is running in this operation mode the setpoint is an internal variable which may be " +
                             "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
@@ -444,27 +444,27 @@ Resource.add(
                     },
 
                     {
-                        name: "Minimum", tag: "field",
+                        tag: "field", name: "Minimum",
                         description: "This value sets the pump to run at the minimum possible speed it can without being stopped."
                     },
                     {
-                        name: "Maximum", tag: "field",
+                        tag: "field", name: "Maximum",
                         description: "This value sets the pump to run at its maximum possible speed."
                     },
                     {
-                        name: "Local", tag: "field",
+                        tag: "field", name: "Local",
                         description: "This value sets the pump to run with the local settings of the pump, regardless of what these are."
                     }
                 ]
             },
 
             {
-                name: "ControlModeEnum", tag: "datatype",
+                tag: "datatype", name: "ControlModeEnum",
                 xref: "cluster§4.2.6.3",
 
                 children: [
                     {
-                        name: "ConstantSpeed", tag: "field",
+                        tag: "field", name: "ConstantSpeed",
                         description: "The pump is running at a constant speed.",
                         details: "The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – " +
                             "MaxConstSpeed] attributes.",
@@ -472,7 +472,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ConstantPressure", tag: "field",
+                        tag: "field", name: "ConstantPressure",
                         description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure – " +
@@ -482,7 +482,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ProportionalPressure", tag: "field",
+                        tag: "field", name: "ProportionalPressure",
                         description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                         details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – Max" +
                             "\n" +
@@ -492,7 +492,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ConstantFlow", tag: "field",
+                        tag: "field", name: "ConstantFlow",
                         description: "The pump will regulate its speed to maintain a constant flow through the pump.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
@@ -502,7 +502,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ConstantTemperature", tag: "field",
+                        tag: "field", name: "ConstantTemperature",
                         description: "The pump will regulate its speed to maintain a constant temperature.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
@@ -512,7 +512,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Automatic", tag: "field",
+                        tag: "field", name: "Automatic",
                         description: "The operation of the pump is automatically optimized to provide the most suitable performance with respect to comfort and energy savings.",
                         details: "This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level " +
                             "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +

@@ -18,39 +18,39 @@ import {
 
 export const AlarmBase = Cluster(
     { name: "AlarmBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "RESET", constraint: "0", longName: "Reset" })
     ),
-    Attribute({ id: 0x0, name: "Mask", type: "AlarmBitmap", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "Mask", id: 0x0, type: "AlarmBitmap", default: 0, conformance: "M", access: "R V" }),
     Attribute(
-        { id: 0x1, name: "Latch", type: "AlarmBitmap", access: "R V", conformance: "RESET", default: 0, quality: "F" }
+        { name: "Latch", id: 0x1, type: "AlarmBitmap", default: 0, conformance: "RESET", access: "R V", quality: "F" }
     ),
-    Attribute({ id: 0x2, name: "State", type: "AlarmBitmap", access: "R V", conformance: "M", default: 0 }),
+    Attribute({ name: "State", id: 0x2, type: "AlarmBitmap", default: 0, conformance: "M", access: "R V" }),
     Attribute(
-        { id: 0x3, name: "Supported", type: "AlarmBitmap", access: "R V", conformance: "M", default: 0, quality: "F" }
+        { name: "Supported", id: 0x3, type: "AlarmBitmap", default: 0, conformance: "M", access: "R V", quality: "F" }
     ),
 
     Event(
-        { id: 0x0, name: "Notify", access: "V", priority: "info" },
-        Field({ id: 0x0, name: "Active", type: "AlarmBitmap", default: 0 }),
-        Field({ id: 0x1, name: "Inactive", type: "AlarmBitmap", default: 0 }),
-        Field({ id: 0x2, name: "State", type: "AlarmBitmap", default: 0 }),
-        Field({ id: 0x3, name: "Mask", type: "AlarmBitmap", default: 0 })
+        { name: "Notify", id: 0x0, access: "V", priority: "info" },
+        Field({ name: "Active", id: 0x0, type: "AlarmBitmap", default: 0 }),
+        Field({ name: "Inactive", id: 0x1, type: "AlarmBitmap", default: 0 }),
+        Field({ name: "State", id: 0x2, type: "AlarmBitmap", default: 0 }),
+        Field({ name: "Mask", id: 0x3, type: "AlarmBitmap", default: 0 })
     ),
 
     Command(
-        { id: 0x0, name: "Reset", access: "O", conformance: "RESET", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "Alarms", type: "AlarmBitmap", conformance: "M", default: 0 })
+        { name: "Reset", id: 0x0, conformance: "RESET", access: "O", direction: "request", response: "status" },
+        Field({ name: "Alarms", id: 0x0, type: "AlarmBitmap", default: 0, conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x1, name: "ModifyEnabledAlarms",
-            access: "O", conformance: "O", direction: "request", response: "status"
+            name: "ModifyEnabledAlarms", id: 0x1,
+            conformance: "O", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "Mask", type: "AlarmBitmap", conformance: "M", default: 0 })
+        Field({ name: "Mask", id: 0x0, type: "AlarmBitmap", default: 0, conformance: "M" })
     ),
 
     Datatype({ name: "AlarmBitmap", type: "map32" })

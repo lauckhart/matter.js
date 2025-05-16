@@ -10,21 +10,21 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster, AttributeElement as Attribute } from "../../elements/index.js";
 
 export const TemperatureMeasurement = Cluster(
-    { id: 0x402, name: "TemperatureMeasurement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
+    { name: "TemperatureMeasurement", id: 0x402 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
     Attribute({
-        id: 0x0, name: "MeasuredValue", type: "temperature",
-        access: "R V", constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P"
+        name: "MeasuredValue", id: 0x0, type: "temperature",
+        constraint: "minMeasuredValue to maxMeasuredValue", access: "R V", quality: "X P"
     }),
     Attribute({
-        id: 0x1, name: "MinMeasuredValue", type: "temperature",
-        access: "R V", constraint: "-27315 to maxMeasuredValue - 1", default: -27315, quality: "X"
+        name: "MinMeasuredValue", id: 0x1, type: "temperature",
+        default: -27315, constraint: "-27315 to maxMeasuredValue - 1", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x2, name: "MaxMeasuredValue", type: "temperature",
-        access: "R V", constraint: "minMeasuredValue + 1 to 32767", default: 32767, quality: "X"
+        name: "MaxMeasuredValue", id: 0x2, type: "temperature",
+        default: 32767, constraint: "minMeasuredValue + 1 to 32767", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x3, name: "Tolerance", type: "uint16", access: "R V", conformance: "O", constraint: "max 2048", default: 0 })
+    Attribute({ name: "Tolerance", id: 0x3, type: "uint16", default: 0, constraint: "max 2048", conformance: "O", access: "R V" })
 );
 
 MatterDefinition.children.push(TemperatureMeasurement);

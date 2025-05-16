@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TimeFormatLocalization", tag: "cluster",
+    tag: "cluster", name: "TimeFormatLocalization",
     classification: "node", pics: "LTIME",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -24,16 +24,16 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.4.4",
             children: [{
-                name: "CALFMT", tag: "field",
+                tag: "field", name: "CALFMT",
                 details: "The Node can be configured to use different calendar formats when conveying values to a user."
             }]
         },
 
         {
-            name: "HourFormat", tag: "attribute",
+            tag: "attribute", name: "HourFormat",
 
             details: "Indicates the format that the Node is currently configured to use when conveying the hour unit of " +
                 "time." +
@@ -48,7 +48,7 @@ Resource.add({
         },
 
         {
-            name: "ActiveCalendarType", tag: "attribute",
+            tag: "attribute", name: "ActiveCalendarType",
 
             details: "Indicates the calendar format that the Node is currently configured to use when conveying dates." +
                 "\n" +
@@ -62,7 +62,7 @@ Resource.add({
         },
 
         {
-            name: "SupportedCalendarTypes", tag: "attribute",
+            tag: "attribute", name: "SupportedCalendarTypes",
             details: "Indicates a list of CalendarTypeEnum values that are supported by the Node. The list shall NOT " +
                 "contain any duplicate entries. The ordering of items within the list SHOULD NOT express any meaning. " +
                 "The maximum length of the SupportedCalendarTypes list shall be equivalent to the number of " +
@@ -71,33 +71,33 @@ Resource.add({
         },
 
         {
-            name: "HourFormatEnum", tag: "datatype",
+            tag: "datatype", name: "HourFormatEnum",
             xref: "core§11.4.5.1",
             children: [
-                { name: "12Hr", tag: "field", description: "Time conveyed with a 12-hour clock" },
-                { name: "24Hr", tag: "field", description: "Time conveyed with a 24-hour clock" },
-                { name: "UseActiveLocale", tag: "field", description: "Use active locale clock" }
+                { tag: "field", name: "12Hr", description: "Time conveyed with a 12-hour clock" },
+                { tag: "field", name: "24Hr", description: "Time conveyed with a 24-hour clock" },
+                { tag: "field", name: "UseActiveLocale", description: "Use active locale clock" }
             ]
         },
 
         {
-            name: "CalendarTypeEnum", tag: "datatype",
+            tag: "datatype", name: "CalendarTypeEnum",
             xref: "core§11.4.5.2",
 
             children: [
-                { name: "Buddhist", tag: "field", description: "Dates conveyed using the Buddhist calendar" },
-                { name: "Chinese", tag: "field", description: "Dates conveyed using the Chinese calendar" },
-                { name: "Coptic", tag: "field", description: "Dates conveyed using the Coptic calendar" },
-                { name: "Ethiopian", tag: "field", description: "Dates conveyed using the Ethiopian calendar" },
-                { name: "Gregorian", tag: "field", description: "Dates conveyed using the Gregorian calendar" },
-                { name: "Hebrew", tag: "field", description: "Dates conveyed using the Hebrew calendar" },
-                { name: "Indian", tag: "field", description: "Dates conveyed using the Indian calendar" },
-                { name: "Islamic", tag: "field", description: "Dates conveyed using the Islamic calendar" },
-                { name: "Japanese", tag: "field", description: "Dates conveyed using the Japanese calendar" },
-                { name: "Korean", tag: "field", description: "Dates conveyed using the Korean calendar" },
-                { name: "Persian", tag: "field", description: "Dates conveyed using the Persian calendar" },
-                { name: "Taiwanese", tag: "field", description: "Dates conveyed using the Taiwanese calendar" },
-                { name: "UseActiveLocale", tag: "field", description: "calendar implied from active locale" }
+                { tag: "field", name: "Buddhist", description: "Dates conveyed using the Buddhist calendar" },
+                { tag: "field", name: "Chinese", description: "Dates conveyed using the Chinese calendar" },
+                { tag: "field", name: "Coptic", description: "Dates conveyed using the Coptic calendar" },
+                { tag: "field", name: "Ethiopian", description: "Dates conveyed using the Ethiopian calendar" },
+                { tag: "field", name: "Gregorian", description: "Dates conveyed using the Gregorian calendar" },
+                { tag: "field", name: "Hebrew", description: "Dates conveyed using the Hebrew calendar" },
+                { tag: "field", name: "Indian", description: "Dates conveyed using the Indian calendar" },
+                { tag: "field", name: "Islamic", description: "Dates conveyed using the Islamic calendar" },
+                { tag: "field", name: "Japanese", description: "Dates conveyed using the Japanese calendar" },
+                { tag: "field", name: "Korean", description: "Dates conveyed using the Korean calendar" },
+                { tag: "field", name: "Persian", description: "Dates conveyed using the Persian calendar" },
+                { tag: "field", name: "Taiwanese", description: "Dates conveyed using the Taiwanese calendar" },
+                { tag: "field", name: "UseActiveLocale", description: "calendar implied from active locale" }
             ]
         }
     ]

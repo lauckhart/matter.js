@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "string", tag: "datatype",
+    tag: "datatype", name: "string",
     description: "Character String",
 
     details: "The character string data type is derived from an octet string. The octets shall be characters with " +

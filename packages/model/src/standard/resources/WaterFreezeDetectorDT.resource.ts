@@ -9,13 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WaterFreezeDetector", tag: "deviceType",
+    tag: "deviceType", name: "WaterFreezeDetector",
     classification: "simple",
     details: "This defines conformance to the Water Freeze Detector device type.",
     xref: "device§7.11",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§7.11.4" },
-        { name: "BooleanState", tag: "requirement", xref: "device§7.11.4" },
-        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.11.4" }
+        { tag: "requirement", name: "Identify", xref: "device§7.11.4" },
+        { tag: "requirement", name: "BooleanState", xref: "device§7.11.4" },
+        { tag: "requirement", name: "BooleanStateConfiguration", xref: "device§7.11.4" }
     ]
 });

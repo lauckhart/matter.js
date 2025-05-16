@@ -10,12 +10,12 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const BatteryStorageDt = DeviceType(
-    { id: 0x18, name: "BatteryStorage", classification: "simple" },
+    { name: "BatteryStorage", id: 0x18 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 24, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 24, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(BatteryStorageDt);

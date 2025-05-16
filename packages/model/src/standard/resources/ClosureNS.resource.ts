@@ -9,13 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Closure", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "Closure",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a feature of a Closure, e.g. the button to activate opening a garage door.",
     xref: "namespace§2",
     children: [
-        { name: "Opening", tag: "semanticTag", description: "Move toward open position" },
-        { name: "Closing", tag: "semanticTag", description: "Move toward closed position" },
-        { name: "Stop", tag: "semanticTag", description: "Stop any movement" }
+        { tag: "semanticTag", name: "Opening", description: "Move toward open position" },
+        { tag: "semanticTag", name: "Closing", description: "Move toward closed position" },
+        { tag: "semanticTag", name: "Stop", description: "Stop any movement" }
     ]
 });

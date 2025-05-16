@@ -10,6 +10,6 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster } from "../../elements/index.js";
 
 export const RadonConcentrationMeasurement = Cluster(
-    { id: 0x42f, name: "RadonConcentrationMeasurement", type: "ConcentrationMeasurement" }
+    { name: "RadonConcentrationMeasurement", id: 0x42f, type: "ConcentrationMeasurement" }
 );
 MatterDefinition.children.push(RadonConcentrationMeasurement);

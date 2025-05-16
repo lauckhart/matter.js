@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "EnergyPreference", tag: "cluster",
+    tag: "cluster", name: "EnergyPreference",
     classification: "application", pics: "EPREF",
     details: "This cluster provides an interface to specify preferences for how devices should consume energy." +
         "\n" +
@@ -18,19 +18,19 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§9.7.4",
 
             children: [
                 {
-                    name: "BALA", tag: "field",
+                    tag: "field", name: "BALA",
                     details: "This feature allows a user to select from a list of energy balances with associated descriptions of " +
                         "which strategies a device will use to target the specified balance.",
                     xref: "cluster§9.7.4.1"
                 },
 
                 {
-                    name: "LPMS", tag: "field",
+                    tag: "field", name: "LPMS",
                     details: "This feature allows the user to select a condition or set of conditions which will cause the device " +
                         "to switch to a mode using less power. For example, a device might provide a scale of durations that " +
                         "must elapse without user interaction before it goes to sleep.",
@@ -40,7 +40,7 @@ Resource.add({
         },
 
         {
-            name: "EnergyBalances", tag: "attribute",
+            tag: "attribute", name: "EnergyBalances",
 
             details: "Indicates a list of BalanceStructs, each representing a step along a linear scale of relative " +
                 "priorities. A Step field with a value of zero shall indicate that the device SHOULD entirely favor " +
@@ -61,7 +61,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentEnergyBalance", tag: "attribute",
+            tag: "attribute", name: "CurrentEnergyBalance",
 
             details: "Indicates the current preference of the user for balancing different priorities during device use. " +
                 "The value of this attribute is the index, 0-based, into the EnergyBalances attribute for the " +
@@ -87,7 +87,7 @@ Resource.add({
         },
 
         {
-            name: "EnergyPriorities", tag: "attribute",
+            tag: "attribute", name: "EnergyPriorities",
 
             details: "Indicates two extremes for interpreting the values in the EnergyBalances attribute. These two " +
                 "priorities shall be in opposition to each other; e.g. Comfort vs. Efficiency or Speed vs. " +
@@ -100,7 +100,7 @@ Resource.add({
         },
 
         {
-            name: "LowPowerModeSensitivities", tag: "attribute",
+            tag: "attribute", name: "LowPowerModeSensitivities",
             details: "Indicates a list of BalanceStructs, each representing a condition or set of conditions for the " +
                 "device to enter a low power mode. This shall contain at least two BalanceStructs." +
                 "\n" +
@@ -110,7 +110,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentLowPowerModeSensitivity", tag: "attribute",
+            tag: "attribute", name: "CurrentLowPowerModeSensitivity",
 
             details: "Indicates the current preference of the user for determining when the device should enter a low " +
                 "power mode. The value of this attribute is the index, 0-based, into the LowPowerModeSensitivities " +
@@ -127,19 +127,19 @@ Resource.add({
         },
 
         {
-            name: "EnergyPriorityEnum", tag: "datatype",
+            tag: "datatype", name: "EnergyPriorityEnum",
             xref: "cluster§9.7.5.1",
 
             children: [
                 {
-                    name: "Comfort", tag: "field",
+                    tag: "field", name: "Comfort",
                     description: "User comfort",
                     details: "This value shall emphasize user comfort; e.g. local temperature for a thermostat.",
                     xref: "cluster§9.7.5.1.1"
                 },
 
                 {
-                    name: "Speed", tag: "field",
+                    tag: "field", name: "Speed",
                     description: "Speed of operation",
                     details: "This value shall emphasize how quickly a device accomplishes its targeted use; e.g. how quickly a " +
                         "robot vacuum completes a cleaning cycle.",
@@ -147,30 +147,30 @@ Resource.add({
                 },
 
                 {
-                    name: "Efficiency", tag: "field",
+                    tag: "field", name: "Efficiency",
                     description: "Amount of Energy consumed by the device",
                     details: "This value shall emphasize how much energy a device uses; e.g. electricity usage for a Pump.",
                     xref: "cluster§9.7.5.1.3"
                 },
 
-                { name: "WaterConsumption", tag: "field", description: "Amount of water consumed by the device" }
+                { tag: "field", name: "WaterConsumption", description: "Amount of water consumed by the device" }
             ]
         },
 
         {
-            name: "BalanceStruct", tag: "datatype",
+            tag: "datatype", name: "BalanceStruct",
             details: "This represents a step along a scale of preferences.",
             xref: "cluster§9.7.5.2",
 
             children: [
                 {
-                    name: "Step", tag: "field",
+                    tag: "field", name: "Step",
                     details: "This field shall indicate the relative value of this step.",
                     xref: "cluster§9.7.5.2.1"
                 },
 
                 {
-                    name: "Label", tag: "field",
+                    tag: "field", name: "Label",
                     details: "This field shall indicate an optional string explaining which actions a device might take at the " +
                         "given step value.",
                     xref: "cluster§9.7.5.2.2"

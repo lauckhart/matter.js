@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "ipadr", tag: "datatype", description: "IP Address", xref: "core§7.19.2" });
+Resource.add({ tag: "datatype", name: "ipadr", description: "IP Address", xref: "core§7.19.2" });

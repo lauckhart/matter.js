@@ -11,9 +11,9 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const AtomicRequestTypeEnum = Datatype(
     { name: "AtomicRequestTypeEnum", type: "enum8" },
-    Field({ id: 0x0, name: "BeginWrite", conformance: "M" }),
-    Field({ id: 0x1, name: "CommitWrite", conformance: "M" }),
-    Field({ id: 0x2, name: "RollbackWrite", conformance: "M" })
+    Field({ name: "BeginWrite", id: 0x0, conformance: "M" }),
+    Field({ name: "CommitWrite", id: 0x1, conformance: "M" }),
+    Field({ name: "RollbackWrite", id: 0x2, conformance: "M" })
 );
 
 MatterDefinition.children.push(AtomicRequestTypeEnum);

@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "int16", tag: "datatype", description: "Signed 16-bit integer", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "int16", description: "Signed 16-bit integer", xref: "core§7.19.1" });

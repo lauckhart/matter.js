@@ -17,51 +17,51 @@ import {
 } from "../../elements/index.js";
 
 export const CommissionerControl = Cluster(
-    { id: 0x751, name: "CommissionerControl" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "CommissionerControl", id: 0x751 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        id: 0x0, name: "SupportedDeviceCategories", type: "SupportedDeviceCategoryBitmap",
-        access: "R M", conformance: "M", default: 0
+        name: "SupportedDeviceCategories", id: 0x0, type: "SupportedDeviceCategoryBitmap",
+        default: 0, conformance: "M", access: "R M"
     }),
 
     Event(
-        { id: 0x0, name: "CommissioningRequestResult", access: "S M", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "RequestId", type: "uint64", access: "S", conformance: "M" }),
-        Field({ id: 0x1, name: "ClientNodeId", type: "node-id", access: "S", conformance: "M" }),
-        Field({ id: 0x2, name: "StatusCode", type: "status", access: "S", conformance: "M", constraint: "desc" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        { name: "CommissioningRequestResult", id: 0x0, conformance: "M", access: "S M", priority: "info" },
+        Field({ name: "RequestId", id: 0x0, type: "uint64", conformance: "M", access: "S" }),
+        Field({ name: "ClientNodeId", id: 0x1, type: "node-id", conformance: "M", access: "S" }),
+        Field({ name: "StatusCode", id: 0x2, type: "status", constraint: "desc", conformance: "M", access: "S" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Command(
         {
-            id: 0x0, name: "RequestCommissioningApproval",
-            access: "M", conformance: "M", direction: "request", response: "status"
+            name: "RequestCommissioningApproval", id: 0x0,
+            conformance: "M", access: "M", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "RequestId", type: "uint64", conformance: "M" }),
-        Field({ id: 0x1, name: "VendorId", type: "vendor-id", conformance: "M" }),
-        Field({ id: 0x2, name: "ProductId", type: "uint16", conformance: "M" }),
-        Field({ id: 0x3, name: "Label", type: "string", conformance: "O", constraint: "max 64" })
+        Field({ name: "RequestId", id: 0x0, type: "uint64", conformance: "M" }),
+        Field({ name: "VendorId", id: 0x1, type: "vendor-id", conformance: "M" }),
+        Field({ name: "ProductId", id: 0x2, type: "uint16", conformance: "M" }),
+        Field({ name: "Label", id: 0x3, type: "string", constraint: "max 64", conformance: "O" })
     ),
 
     Command(
         {
-            id: 0x1, name: "CommissionNode",
-            access: "M", conformance: "M", direction: "request", response: "ReverseOpenCommissioningWindow"
+            name: "CommissionNode", id: 0x1,
+            conformance: "M", access: "M", direction: "request", response: "ReverseOpenCommissioningWindow"
         },
-        Field({ id: 0x0, name: "RequestId", type: "uint64", conformance: "M" }),
+        Field({ name: "RequestId", id: 0x0, type: "uint64", conformance: "M" }),
         Field({
-            id: 0x1, name: "ResponseTimeoutSeconds", type: "uint16",
-            conformance: "M", constraint: "30 to 120", default: 30
+            name: "ResponseTimeoutSeconds", id: 0x1, type: "uint16",
+            default: 30, constraint: "30 to 120", conformance: "M"
         })
     ),
 
     Command(
-        { id: 0x2, name: "ReverseOpenCommissioningWindow", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "CommissioningTimeout", type: "uint16", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "PakePasscodeVerifier", type: "octstr", conformance: "M" }),
-        Field({ id: 0x2, name: "Discriminator", type: "uint16", conformance: "M", constraint: "max 4095" }),
-        Field({ id: 0x3, name: "Iterations", type: "uint32", conformance: "M", constraint: "1000 to 100000" }),
-        Field({ id: 0x4, name: "Salt", type: "octstr", conformance: "M", constraint: "16 to 32" })
+        { name: "ReverseOpenCommissioningWindow", id: 0x2, conformance: "M", direction: "response" },
+        Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "PakePasscodeVerifier", id: 0x1, type: "octstr", conformance: "M" }),
+        Field({ name: "Discriminator", id: 0x2, type: "uint16", constraint: "max 4095", conformance: "M" }),
+        Field({ name: "Iterations", id: 0x3, type: "uint32", constraint: "1000 to 100000", conformance: "M" }),
+        Field({ name: "Salt", id: 0x4, type: "octstr", constraint: "16 to 32", conformance: "M" })
     ),
 
     Datatype(

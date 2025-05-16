@@ -14,8 +14,8 @@ import {
 } from "../../elements/index.js";
 
 export const LowPower = Cluster(
-    { id: 0x508, name: "LowPower" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Command({ id: 0x0, name: "Sleep", access: "O", conformance: "M", direction: "request", response: "status" })
+    { name: "LowPower", id: 0x508 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
+    Command({ name: "Sleep", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" })
 );
 MatterDefinition.children.push(LowPower);

@@ -9,32 +9,32 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "date", tag: "datatype",
+    tag: "datatype", name: "date",
     description: "Date",
     details: "This data type shall be a struct as defined below.",
     xref: "core§7.19.2.4",
 
     children: [
         {
-            name: "Year", tag: "field",
+            tag: "field", name: "Year",
             details: "The year subfield represents years from 1900 (0) to 2155 (255).",
             xref: "core§7.19.2.4.1"
         },
         {
-            name: "Month", tag: "field",
+            tag: "field", name: "Month",
             details: "This field represents months January (1) to December (12).",
             xref: "core§7.19.2.4.2"
         },
 
         {
-            name: "Day", tag: "field",
+            tag: "field", name: "Day",
             details: "This field represents the day of the month. Note that values in the range 29 to 31 may be invalid, " +
                 "depending on the month and year.",
             xref: "core§7.19.2.4.3"
         },
 
         {
-            name: "DayOfWeek", tag: "field",
+            tag: "field", name: "DayOfWeek",
             details: "This represents the day of the week from Monday (1) to Sunday (7).",
             xref: "core§7.19.2.4.4"
         }

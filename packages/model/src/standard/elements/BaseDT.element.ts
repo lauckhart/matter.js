@@ -14,7 +14,7 @@ import {
 } from "../../elements/index.js";
 
 export const BaseDt = DeviceType(
-    { name: "Base", classification: "base" },
+    { name: "Base" },
 
     Field(
         { name: "conditions", type: "enum8" },
@@ -42,12 +42,12 @@ export const BaseDt = DeviceType(
     ),
 
     Requirement(
-        { id: 0x1d, name: "Descriptor", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "TAGLIST", conformance: "Duplicate", element: "feature" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "TAGLIST", element: "feature", conformance: "Duplicate" })
     ),
-    Requirement({ id: 0x1e, name: "Binding", conformance: "Simple & Client", element: "serverCluster" }),
-    Requirement({ id: 0x40, name: "FixedLabel", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x41, name: "UserLabel", conformance: "O", element: "serverCluster" })
+    Requirement({ name: "Binding", id: 0x1e, element: "serverCluster", conformance: "Simple & Client" }),
+    Requirement({ name: "FixedLabel", id: 0x40, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "UserLabel", id: 0x41, element: "serverCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(BaseDt);

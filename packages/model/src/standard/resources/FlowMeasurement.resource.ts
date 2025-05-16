@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "FlowMeasurement", tag: "cluster",
+        tag: "cluster", name: "FlowMeasurement",
         classification: "application", pics: "FLW",
         details: "This cluster provides an interface to flow measurement functionality, including configuration and " +
             "provision of notifications of flow measurements.",
@@ -18,7 +18,7 @@ Resource.add(
 
         children: [
             {
-                name: "MeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MeasuredValue",
 
                 details: "Indicates the flow in m/h as follows:" +
                     "\n" +
@@ -31,7 +31,7 @@ Resource.add(
             },
 
             {
-                name: "MinMeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MinMeasuredValue",
                 details: "Indicates the minimum value of MeasuredValue that can be measured. See Measured Value for more " +
                     "details." +
                     "\n" +
@@ -40,7 +40,7 @@ Resource.add(
             },
 
             {
-                name: "MaxMeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MaxMeasuredValue",
                 details: "Indicates the maximum value of MeasuredValue that can be measured. See" +
                     "\n" +
                     "Measured Value for more details." +
@@ -49,7 +49,7 @@ Resource.add(
                 xref: "cluster§2.5.4.3"
             },
 
-            { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.5.4.4" }
+            { tag: "attribute", name: "Tolerance", details: "See Measured Value.", xref: "cluster§2.5.4.4" }
         ]
     }
 );

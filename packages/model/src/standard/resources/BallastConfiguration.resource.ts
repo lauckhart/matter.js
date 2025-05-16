@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "BallastConfiguration", tag: "cluster",
+        tag: "cluster", name: "BallastConfiguration",
         classification: "application", pics: "BC",
         details: "This cluster is used for configuring a lighting ballast." +
             "\n" +
@@ -19,28 +19,28 @@ Resource.add(
 
         children: [
             {
-                name: "PhysicalMinLevel", tag: "attribute",
+                tag: "attribute", name: "PhysicalMinLevel",
                 details: "This attribute shall specify the minimum light output the ballast can achieve according to the " +
                     "dimming light curve (see Dimming Curve).",
                 xref: "cluster§3.3.6.1"
             },
 
             {
-                name: "PhysicalMaxLevel", tag: "attribute",
+                tag: "attribute", name: "PhysicalMaxLevel",
                 details: "This attribute shall specify the maximum light output the ballast can achieve according to the " +
                     "dimming light curve (see Dimming Curve).",
                 xref: "cluster§3.3.6.2"
             },
 
             {
-                name: "BallastStatus", tag: "attribute",
+                tag: "attribute", name: "BallastStatus",
                 details: "This attribute shall specify the status of various aspects of the ballast or the connected lights, " +
                     "see BallastStatusBitmap.",
                 xref: "cluster§3.3.6.3"
             },
 
             {
-                name: "MinLevel", tag: "attribute",
+                tag: "attribute", name: "MinLevel",
 
                 details: "This attribute shall specify the light output of the ballast according to the dimming light curve " +
                     "(see Dimming Curve) when the Level Control Cluster’s CurrentLevel attribute equals to 1 (and the " +
@@ -55,7 +55,7 @@ Resource.add(
             },
 
             {
-                name: "MaxLevel", tag: "attribute",
+                tag: "attribute", name: "MaxLevel",
 
                 details: "This attribute shall specify the light output of the ballast according to the dimming light curve " +
                     "(see Dimming Curve) when the Level Control Cluster’s CurrentLevel attribute equals to 254 (and the " +
@@ -70,11 +70,11 @@ Resource.add(
                 xref: "cluster§3.3.6.5"
             },
 
-            { name: "PowerOnLevel", tag: "attribute", xref: "cluster§3.3.6" },
-            { name: "PowerOnFadeTime", tag: "attribute", xref: "cluster§3.3.6" },
+            { tag: "attribute", name: "PowerOnLevel", xref: "cluster§3.3.6" },
+            { tag: "attribute", name: "PowerOnFadeTime", xref: "cluster§3.3.6" },
 
             {
-                name: "IntrinsicBallastFactor", tag: "attribute",
+                tag: "attribute", name: "IntrinsicBallastFactor",
                 details: "This attribute shall specify the ballast factor, as a percentage, of the ballast/lamp combination, " +
                     "prior to any adjustment." +
                     "\n" +
@@ -83,7 +83,7 @@ Resource.add(
             },
 
             {
-                name: "BallastFactorAdjustment", tag: "attribute",
+                tag: "attribute", name: "BallastFactorAdjustment",
 
                 details: "This attribute shall specify the multiplication factor, as a percentage, to be applied to the " +
                     "configured light output of the lamps. A typical use for this attribute is to compensate for " +
@@ -102,25 +102,25 @@ Resource.add(
             },
 
             {
-                name: "LampQuantity", tag: "attribute",
+                tag: "attribute", name: "LampQuantity",
                 details: "This attribute shall specify the number of lamps connected to this ballast. (Note 1: this number " +
                     "does not take into account whether lamps are actually in their sockets or not).",
                 xref: "cluster§3.3.6.8"
             },
 
             {
-                name: "LampType", tag: "attribute",
+                tag: "attribute", name: "LampType",
                 details: "This attribute shall specify the type of lamps (including their wattage) connected to the ballast.",
                 xref: "cluster§3.3.6.9"
             },
             {
-                name: "LampManufacturer", tag: "attribute",
+                tag: "attribute", name: "LampManufacturer",
                 details: "This attribute shall specify the name of the manufacturer of the currently connected lamps.",
                 xref: "cluster§3.3.6.10"
             },
 
             {
-                name: "LampRatedHours", tag: "attribute",
+                tag: "attribute", name: "LampRatedHours",
                 details: "This attribute shall specify the number of hours of use the lamps are rated for by the manufacturer." +
                     "\n" +
                     "A value of null indicates an invalid or unknown time.",
@@ -128,7 +128,7 @@ Resource.add(
             },
 
             {
-                name: "LampBurnHours", tag: "attribute",
+                tag: "attribute", name: "LampBurnHours",
 
                 details: "This attribute shall specify the length of time, in hours, the currently connected lamps have been " +
                     "operated, cumulative since the last re-lamping. Burn hours shall NOT be accumulated if the lamps are " +
@@ -143,7 +143,7 @@ Resource.add(
             },
 
             {
-                name: "LampAlarmMode", tag: "attribute",
+                tag: "attribute", name: "LampAlarmMode",
                 details: "This attribute shall specify which attributes may cause an alarm notification to be generated. Ain " +
                     "each bit position means that its associated attribute is able to generate an alarm." +
                     "\n" +
@@ -152,7 +152,7 @@ Resource.add(
             },
 
             {
-                name: "LampBurnHoursTripPoint", tag: "attribute",
+                tag: "attribute", name: "LampBurnHoursTripPoint",
 
                 details: "This attribute shall specify the number of hours the LampBurnHours attribute may reach before an " +
                     "alarm is generated." +
@@ -168,12 +168,12 @@ Resource.add(
             },
 
             {
-                name: "BallastStatusBitmap", tag: "datatype",
+                tag: "datatype", name: "BallastStatusBitmap",
                 xref: "cluster§3.3.5.1",
 
                 children: [
                     {
-                        name: "BallastNonOperational", tag: "field",
+                        tag: "field", name: "BallastNonOperational",
                         description: "Operational state of the ballast.",
                         details: "This bit shall indicate whether the ballast is operational." +
                             "\n" +
@@ -184,7 +184,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LampFailure", tag: "field",
+                        tag: "field", name: "LampFailure",
                         description: "Operational state of the lamps.",
                         details: "This bit shall indicate whether all lamps is operational." +
                             "\n" +
@@ -197,11 +197,11 @@ Resource.add(
             },
 
             {
-                name: "LampAlarmModeBitmap", tag: "datatype",
+                tag: "datatype", name: "LampAlarmModeBitmap",
                 xref: "cluster§3.3.5.2",
 
                 children: [{
-                    name: "LampBurnHours", tag: "field",
+                    tag: "field", name: "LampBurnHours",
                     description: "State of LampBurnHours alarm generation",
                     details: "This bit shall indicate that the LampBurnHours attribute may generate an alarm.",
                     xref: "cluster§3.3.5.2.1"

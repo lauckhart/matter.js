@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "HeatPump", tag: "deviceType",
+    tag: "deviceType", name: "HeatPump",
     classification: "simple",
 
     details: "A Heat Pump device is a device that uses electrical energy to heat either spaces or water tanks " +
@@ -22,7 +22,7 @@ Resource.add({
 
     xref: "device§14.5",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§14.5.6" },
-        { name: "Thermostat", tag: "requirement", xref: "device§14.5.6" }
+        { tag: "requirement", name: "Identify", xref: "device§14.5.6" },
+        { tag: "requirement", name: "Thermostat", xref: "device§14.5.6" }
     ]
 });

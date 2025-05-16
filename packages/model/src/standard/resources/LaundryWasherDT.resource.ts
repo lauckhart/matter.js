@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "LaundryWasher", tag: "deviceType",
+    tag: "deviceType", name: "LaundryWasher",
     classification: "simple",
     details: "A Laundry Washer represents a device that is capable of laundering consumer items. Any laundry " +
         "washer product may utilize this device type." +
@@ -18,11 +18,11 @@ Resource.add({
     xref: "device§13.1",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§13.1.4" },
-        { name: "LaundryWasherMode", tag: "requirement", xref: "device§13.1.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§13.1.4" },
-        { name: "LaundryWasherControls", tag: "requirement", xref: "device§13.1.4" },
-        { name: "TemperatureControl", tag: "requirement", xref: "device§13.1.4" },
-        { name: "OperationalState", tag: "requirement", xref: "device§13.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§13.1.4" },
+        { tag: "requirement", name: "LaundryWasherMode", xref: "device§13.1.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§13.1.4" },
+        { tag: "requirement", name: "LaundryWasherControls", xref: "device§13.1.4" },
+        { tag: "requirement", name: "TemperatureControl", xref: "device§13.1.4" },
+        { tag: "requirement", name: "OperationalState", xref: "device§13.1.4" }
     ]
 });

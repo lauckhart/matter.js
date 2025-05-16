@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "JointFabricDatastoreCluster", tag: "cluster",
+    tag: "cluster", name: "JointFabricDatastoreCluster",
     classification: "node", pics: "JFDS",
 
     details: "The Joint Fabric Datastore Cluster is a cluster that provides a mechanism for the Joint Fabric " +
@@ -35,30 +35,30 @@ Resource.add({
 
     children: [
         {
-            name: "AnchorRootCa", tag: "attribute",
+            tag: "attribute", name: "AnchorRootCa",
             details: "This shall indicate the Anchor Root CA used to sign all NOC Issuers in the Joint Fabric. A null " +
                 "value indicates that the Joint Fabric is not yet formed.",
             xref: "core§11.24.6.1"
         },
 
         {
-            name: "AnchorNodeId", tag: "attribute",
+            tag: "attribute", name: "AnchorNodeId",
             details: "This shall indicate the Node identifier of the Joint Fabric Anchor Root CA.",
             xref: "core§11.24.6.2"
         },
         {
-            name: "AnchorVendorId", tag: "attribute",
+            tag: "attribute", name: "AnchorVendorId",
             details: "This shall indicate the Vendor identifier of the Joint Fabric Anchor Root CA.",
             xref: "core§11.24.6.3"
         },
         {
-            name: "FriendlyName", tag: "attribute",
+            tag: "attribute", name: "FriendlyName",
             details: "Friendly name for this fabric which can be propagated to nodes.",
             xref: "core§11.24.6.4"
         },
 
         {
-            name: "GroupKeySetList", tag: "attribute",
+            tag: "attribute", name: "GroupKeySetList",
             details: "This shall indicate the list of GroupKeySetStruct used in the Joint Fabric." +
                 "\n" +
                 "This attribute shall contain at least one entry, the IPK, which has GroupKeySetID of 0.",
@@ -66,18 +66,18 @@ Resource.add({
         },
 
         {
-            name: "GroupList", tag: "attribute",
+            tag: "attribute", name: "GroupList",
             details: "This shall indicate the list of groups in the Joint Fabric.",
             xref: "core§11.24.6.6"
         },
         {
-            name: "NodeList", tag: "attribute",
+            tag: "attribute", name: "NodeList",
             details: "This shall indicate the list of nodes in the Joint Fabric.",
             xref: "core§11.24.6.7"
         },
 
         {
-            name: "AdminList", tag: "attribute",
+            tag: "attribute", name: "AdminList",
 
             details: "This shall indicate the list of administrators in the Joint Fabric." +
                 "\n" +
@@ -90,7 +90,7 @@ Resource.add({
         },
 
         {
-            name: "StatusEntry", tag: "attribute",
+            tag: "attribute", name: "StatusEntry",
             details: "This shall indicate the current state of the Joint Fabric Datastore Cluster." +
                 "\n" +
                 "The Committed status indicates the DataStore is ready for use. The Pending status indicates that the " +
@@ -99,49 +99,49 @@ Resource.add({
             xref: "core§11.24.6.9"
         },
 
-        { name: "Section112471", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112472", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112473", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112474", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112475", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112476", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112477", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112478", tag: "command", xref: "core§11.24.7" },
-        { name: "Section112479", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124710", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124711", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124712", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124713", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124714", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124715", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124716", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124717", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124718", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124719", tag: "command", xref: "core§11.24.7" },
-        { name: "Section1124720", tag: "command", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112471", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112472", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112473", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112474", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112475", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112476", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112477", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112478", xref: "core§11.24.7" },
+        { tag: "command", name: "Section112479", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124710", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124711", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124712", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124713", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124714", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124715", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124716", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124717", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124718", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124719", xref: "core§11.24.7" },
+        { tag: "command", name: "Section1124720", xref: "core§11.24.7" },
 
         {
-            name: "DatastoreStateEnum", tag: "datatype",
+            tag: "datatype", name: "DatastoreStateEnum",
             xref: "core§11.24.5.1",
             children: [
-                { name: "Pending", tag: "field", description: "Target device operation is pending" },
-                { name: "Committed", tag: "field", description: "Target device operation has been committed" },
-                { name: "DeletePending", tag: "field", description: "Target device delete operation is pending" }
+                { tag: "field", name: "Pending", description: "Target device operation is pending" },
+                { tag: "field", name: "Committed", description: "Target device operation has been committed" },
+                { tag: "field", name: "DeletePending", description: "Target device delete operation is pending" }
             ]
         },
 
         {
-            name: "DatastoreStatusEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreStatusEntry",
             xref: "core§11.24.5.2",
 
             children: [
                 {
-                    name: "State", tag: "field",
+                    tag: "field", name: "State",
                     details: "This field shall contain the current state of the target device operation.",
                     xref: "core§11.24.5.2.1"
                 },
                 {
-                    name: "UpdateTimestamp", tag: "field",
+                    tag: "field", name: "UpdateTimestamp",
                     details: "This field shall contain the timestamp of the last update.",
                     xref: "core§11.24.5.2.2"
                 }
@@ -149,51 +149,51 @@ Resource.add({
         },
 
         {
-            name: "DatastoreNodeKeyEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreNodeKeyEntry",
             xref: "core§11.24.5.3",
             children: [{
-                name: "StatusEntry", tag: "field",
+                tag: "field", name: "StatusEntry",
                 details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
                 xref: "core§11.24.5.3.2"
             }]
         },
 
         {
-            name: "DatastoreGroupInformationEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreGroupInformationEntry",
             xref: "core§11.24.5.4",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The unique identifier for the group.",
                     xref: "core§11.24.5.4.1"
                 },
                 {
-                    name: "FriendlyName", tag: "field",
+                    tag: "field", name: "FriendlyName",
                     details: "The friendly name for the group.",
                     xref: "core§11.24.5.4.2"
                 },
                 {
-                    name: "GroupKeySetId", tag: "field",
+                    tag: "field", name: "GroupKeySetId",
                     details: "The unique identifier for the group key set.",
                     xref: "core§11.24.5.4.3"
                 },
 
                 {
-                    name: "GroupCat", tag: "field",
+                    tag: "field", name: "GroupCat",
                     details: "CAT value for this group. This is used for control of individual members of a group (non-broadcast " +
                         "commands).",
                     xref: "core§11.24.5.4.4"
                 },
 
                 {
-                    name: "GroupCatVersion", tag: "field",
+                    tag: "field", name: "GroupCatVersion",
                     details: "Current version number for this CAT.",
                     xref: "core§11.24.5.4.5"
                 },
 
                 {
-                    name: "GroupPermission", tag: "field",
+                    tag: "field", name: "GroupPermission",
                     details: "The permission level associated with ACL entries for this group. There should be only one " +
                         "Administrator group per fabric, and at most one Manage group per Ecosystem (Vendor Entry).",
                     xref: "core§11.24.5.4.6"
@@ -202,18 +202,18 @@ Resource.add({
         },
 
         {
-            name: "DatastoreBindingEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreBindingEntry",
             xref: "core§11.24.5.4.7",
 
             children: [
                 {
-                    name: "ListId", tag: "field",
+                    tag: "field", name: "ListId",
                     details: "The unique identifier for the Binding entry in the Datastore’s list of DatastoreBindingEntry.",
                     xref: "core§11.24.5.4.7.1"
                 },
-                { name: "Binding", tag: "field", details: "The binding target structure.", xref: "core§11.24.5.4.7.2" },
+                { tag: "field", name: "Binding", details: "The binding target structure.", xref: "core§11.24.5.4.7.2" },
                 {
-                    name: "StatusEntry", tag: "field",
+                    tag: "field", name: "StatusEntry",
                     details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
                     xref: "core§11.24.5.4.7.3"
                 }
@@ -221,17 +221,17 @@ Resource.add({
         },
 
         {
-            name: "DatastoreGroupIDEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreGroupIDEntry",
             xref: "core§11.24.5.5",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The unique identifier for the group.",
                     xref: "core§11.24.5.5.1"
                 },
                 {
-                    name: "StatusEntry", tag: "field",
+                    tag: "field", name: "StatusEntry",
                     details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
                     xref: "core§11.24.5.5.2"
                 }
@@ -239,23 +239,23 @@ Resource.add({
         },
 
         {
-            name: "DatastoreEndpointEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreEndpointEntry",
             xref: "core§11.24.5.6",
 
             children: [
                 {
-                    name: "EndpointId", tag: "field",
+                    tag: "field", name: "EndpointId",
                     details: "The unique identifier for the endpoint.",
                     xref: "core§11.24.5.6.1"
                 },
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "The unique identifier for the node.",
                     xref: "core§11.24.5.6.2"
                 },
 
                 {
-                    name: "FriendlyName", tag: "field",
+                    tag: "field", name: "FriendlyName",
                     details: "Friendly name for this endpoint which is propagated to nodes. Any changes to Friendly Name or Group " +
                         "Id List (add/remove entry) must follow the pending→committed workflow with current state reflected " +
                         "in the Status Entry.",
@@ -263,20 +263,20 @@ Resource.add({
                 },
 
                 {
-                    name: "StatusEntry", tag: "field",
+                    tag: "field", name: "StatusEntry",
                     details: "Indicates whether changes to Friendly Name are pending or committed.",
                     xref: "core§11.24.5.6.4"
                 },
 
                 {
-                    name: "GroupIdList", tag: "field",
+                    tag: "field", name: "GroupIdList",
                     details: "List of Group IDs that this endpoint is a member of. Any changes to Group Id List (add/remove entry) " +
                         "must follow the pending→committed workflow with current state reflected in the Status Entry.",
                     xref: "core§11.24.5.6.5"
                 },
 
                 {
-                    name: "BindingList", tag: "field",
+                    tag: "field", name: "BindingList",
                     details: "List of Binding Targets for this endpoint. Any changes to Binding List (add/remove entry) must " +
                         "follow the pending→committed workflow with current state reflected in the Status Entry.",
                     xref: "core§11.24.5.6.6"
@@ -285,22 +285,22 @@ Resource.add({
         },
 
         {
-            name: "DatastoreACLEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreACLEntry",
             xref: "core§11.24.5.7",
 
             children: [
                 {
-                    name: "ListId", tag: "field",
+                    tag: "field", name: "ListId",
                     details: "The unique identifier for the ACL entry in the Datastore’s list of DatastoreACLEntry.",
                     xref: "core§11.24.5.7.1"
                 },
                 {
-                    name: "AclEntry", tag: "field",
+                    tag: "field", name: "AclEntry",
                     details: "The Access Control Entry structure.",
                     xref: "core§11.24.5.7.2"
                 },
                 {
-                    name: "StatusEntry", tag: "field",
+                    tag: "field", name: "StatusEntry",
                     details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
                     xref: "core§11.24.5.7.3"
                 }
@@ -308,30 +308,30 @@ Resource.add({
         },
 
         {
-            name: "DatastoreNodeInformationEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreNodeInformationEntry",
             xref: "core§11.24.5.8",
 
             children: [
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "The unique identifier for the node.",
                     xref: "core§11.24.5.8.1"
                 },
                 {
-                    name: "FriendlyName", tag: "field",
+                    tag: "field", name: "FriendlyName",
                     details: "Friendly name for this node which is not propagated to nodes.",
                     xref: "core§11.24.5.8.2"
                 },
 
                 {
-                    name: "CommissioningStatusEntry", tag: "field",
+                    tag: "field", name: "CommissioningStatusEntry",
                     details: "Set to pending prior to completing commissioning, and set to completed after commissioning complete " +
                         "is successful.",
                     xref: "core§11.24.5.8.3"
                 },
 
                 {
-                    name: "NodeKeySetList", tag: "field",
+                    tag: "field", name: "NodeKeySetList",
                     details: "List of Key Set information for the given Node. Updates to the Group Key List must follow the " +
                         "pending→committed workflow with current state reflected in the Status Entry for the corresponding " +
                         "entry in the list.",
@@ -339,7 +339,7 @@ Resource.add({
                 },
 
                 {
-                    name: "AclList", tag: "field",
+                    tag: "field", name: "AclList",
                     details: "List of ACL entries. Group membership for this node is inferred from the ACLs. Client access to a " +
                         "Node Information Entry will be determined from the ACL List. Any changes to ACL List (add/remove " +
                         "entry) must follow the pending→committed workflow with current state reflected in the Status Entry " +
@@ -348,7 +348,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EndpointList", tag: "field",
+                    tag: "field", name: "EndpointList",
                     details: "The list of endpoints for this node. Any changes to Endpoint List (add/remove entry) must follow the " +
                         "pending→committed workflow with current state reflected in the Status Entry for the corresponding " +
                         "entry in the list.",
@@ -358,22 +358,22 @@ Resource.add({
         },
 
         {
-            name: "DatastoreAdministratorInformationEntry", tag: "datatype",
+            tag: "datatype", name: "DatastoreAdministratorInformationEntry",
             xref: "core§11.24.5.9",
 
             children: [
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "The unique identifier for the node.",
                     xref: "core§11.24.5.9.1"
                 },
                 {
-                    name: "FriendlyName", tag: "field",
+                    tag: "field", name: "FriendlyName",
                     details: "Friendly name for this node which is not propagated to nodes.",
                     xref: "core§11.24.5.9.2"
                 },
-                { name: "VendorId", tag: "field", details: "The Vendor ID for the node.", xref: "core§11.24.5.9.3" },
-                { name: "Icac", tag: "field", details: "The ICAC used to issue the NOC.", xref: "core§11.24.5.9.4" }
+                { tag: "field", name: "VendorId", details: "The Vendor ID for the node.", xref: "core§11.24.5.9.3" },
+                { tag: "field", name: "Icac", details: "The ICAC used to issue the NOC.", xref: "core§11.24.5.9.4" }
             ]
         }
     ]

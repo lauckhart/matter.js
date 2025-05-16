@@ -15,21 +15,21 @@ import {
 } from "../../elements/index.js";
 
 export const ProxyDiscovery = Cluster(
-    { id: 0x43, name: "ProxyDiscovery" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ProxyDiscovery", id: 0x43 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
-        { id: 0x0, name: "ProxyDiscoverRequest", access: "O", conformance: "M", direction: "request" },
-        Field({ id: 0x0, name: "SourceNodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x1, name: "NumAttributePaths", type: "uint16", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x2, name: "NumEventPaths", type: "uint16", conformance: "M", constraint: "desc" })
+        { name: "ProxyDiscoverRequest", id: 0x0, conformance: "M", access: "O", direction: "request" },
+        Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
+        Field({ name: "NumAttributePaths", id: 0x1, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "NumEventPaths", id: 0x2, type: "uint16", constraint: "desc", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "ProxyDiscoverResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "SourceNodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x1, name: "NumHopsToSource", type: "uint16", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x2, name: "AvailableCapacity", type: "uint16", conformance: "M", constraint: "desc" })
+        { name: "ProxyDiscoverResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
+        Field({ name: "NumHopsToSource", id: 0x1, type: "uint16", constraint: "desc", conformance: "M" }),
+        Field({ name: "AvailableCapacity", id: 0x2, type: "uint16", constraint: "desc", conformance: "M" })
     )
 );
 

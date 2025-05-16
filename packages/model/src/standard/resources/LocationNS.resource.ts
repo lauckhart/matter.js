@@ -9,26 +9,26 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Location", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "Location",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a location of a device (e.g. an outdoor temperature sensor).",
     xref: "namespace§7",
 
     children: [
         {
-            name: "Indoor", tag: "semanticTag",
+            tag: "semanticTag", name: "Indoor",
             description: "Element is indoors or related to indoor equipment/conditions (e.g. the \"indoor\" temperature)."
         },
         {
-            name: "Outdoor", tag: "semanticTag",
+            tag: "semanticTag", name: "Outdoor",
             description: "Element is outdoors or related to outdoor equipment/conditions (e.g. the \"outdoor\" temperature)."
         },
         {
-            name: "Inside", tag: "semanticTag",
+            tag: "semanticTag", name: "Inside",
             description: "Element is located inside the equipment (e.g. a sensor \"inside\" a cabinet)."
         },
         {
-            name: "Outside", tag: "semanticTag",
+            tag: "semanticTag", name: "Outside",
             description: "Element is located outside the equipment (e.g. a sensor \"outside\" a cabinet)"
         }
     ]

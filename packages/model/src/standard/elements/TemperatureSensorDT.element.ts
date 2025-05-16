@@ -10,13 +10,13 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const TemperatureSensorDt = DeviceType(
-    { id: 0x302, name: "TemperatureSensor", classification: "simple" },
+    { name: "TemperatureSensor", id: 0x302 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 770, revision: 2 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 770, revision: 2 } ] })
     ),
-    Requirement({ id: 0x402, name: "TemperatureMeasurement", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(TemperatureSensorDt);

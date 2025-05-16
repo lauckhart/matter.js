@@ -10,15 +10,15 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const CooktopDt = DeviceType(
-    { id: 0x78, name: "Cooktop", classification: "simple" },
+    { name: "Cooktop", id: 0x78 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 120, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 120, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
     Requirement(
-        { id: 0x6, name: "OnOff", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "OFFONLY", conformance: "M", element: "feature" })
+        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "OFFONLY", element: "feature", conformance: "M" })
     )
 );
 

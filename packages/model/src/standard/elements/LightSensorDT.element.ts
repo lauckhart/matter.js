@@ -10,13 +10,13 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const LightSensorDt = DeviceType(
-    { id: 0x106, name: "LightSensor", classification: "simple" },
+    { name: "LightSensor", id: 0x106 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 262, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 262, revision: 3 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x400, name: "IlluminanceMeasurement", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "IlluminanceMeasurement", id: 0x400, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(LightSensorDt);

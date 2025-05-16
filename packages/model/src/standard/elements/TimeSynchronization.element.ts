@@ -17,11 +17,11 @@ import {
 } from "../../elements/index.js";
 
 export const TimeSynchronization = Cluster(
-    { id: 0x38, name: "TimeSynchronization" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "TimeSynchronization", id: 0x38 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "TZ", constraint: "0", longName: "TimeZone" }),
         Field({ name: "NTPC", constraint: "1", longName: "NtpClient" }),
         Field({ name: "NTPS", constraint: "2", longName: "NtpServer" }),
@@ -29,182 +29,182 @@ export const TimeSynchronization = Cluster(
     ),
 
     Attribute(
-        { id: 0x0, name: "UtcTime", type: "epoch-us", access: "R V", conformance: "M", default: null, quality: "X C" }
+        { name: "UtcTime", id: 0x0, type: "epoch-us", default: null, conformance: "M", access: "R V", quality: "X C" }
     ),
     Attribute({
-        id: 0x1, name: "Granularity", type: "GranularityEnum",
-        access: "R V", conformance: "M", constraint: "desc", default: 0
+        name: "Granularity", id: 0x1, type: "GranularityEnum",
+        default: 0, constraint: "desc", conformance: "M", access: "R V"
     }),
     Attribute({
-        id: 0x2, name: "TimeSource", type: "TimeSourceEnum",
-        access: "R V", conformance: "O", constraint: "desc", default: 0
+        name: "TimeSource", id: 0x2, type: "TimeSourceEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "R V"
     }),
     Attribute({
-        id: 0x3, name: "TrustedTimeSource", type: "TrustedTimeSourceStruct",
-        access: "R V", conformance: "TSC", default: null, quality: "X N"
+        name: "TrustedTimeSource", id: 0x3, type: "TrustedTimeSourceStruct",
+        default: null, conformance: "TSC", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x4, name: "DefaultNtp", type: "string",
-        access: "R V", conformance: "NTPC", constraint: "max 128", default: null, quality: "X N"
+        name: "DefaultNtp", id: 0x4, type: "string",
+        default: null, constraint: "max 128", conformance: "NTPC", access: "R V", quality: "X N"
     }),
 
     Attribute(
         {
-            id: 0x5, name: "TimeZone", type: "list",
-            access: "R V", constraint: "1 to 2",
-            default: [ { type: "properties", properties: { offset: 0, validAt: 0 } } ], quality: "N"
+            name: "TimeZone", id: 0x5, type: "list",
+            default: [ { type: "properties", properties: { offset: 0, validAt: 0 } } ], constraint: "1 to 2",
+            access: "R V", quality: "N"
         },
         Field({ name: "entry", type: "TimeZoneStruct" })
     ),
 
     Attribute(
-        { id: 0x6, name: "DstOffset", type: "list", access: "R V", conformance: "TZ", default: [], quality: "N" },
+        { name: "DstOffset", id: 0x6, type: "list", default: [], conformance: "TZ", access: "R V", quality: "N" },
         Field({ name: "entry", type: "DSTOffsetStruct" })
     ),
-    Attribute({ id: 0x7, name: "LocalTime", type: "epoch-us", access: "R V", conformance: "TZ", default: null, quality: "X C" }),
+    Attribute({ name: "LocalTime", id: 0x7, type: "epoch-us", default: null, conformance: "TZ", access: "R V", quality: "X C" }),
     Attribute({
-        id: 0x8, name: "TimeZoneDatabase", type: "TimeZoneDatabaseEnum",
-        access: "R V", conformance: "TZ", default: 2, quality: "F"
+        name: "TimeZoneDatabase", id: 0x8, type: "TimeZoneDatabaseEnum",
+        default: 2, conformance: "TZ", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x9, name: "NtpServerAvailable", type: "bool", access: "R V", conformance: "NTPS", default: false }),
+    Attribute({ name: "NtpServerAvailable", id: 0x9, type: "bool", default: false, conformance: "NTPS", access: "R V" }),
     Attribute({
-        id: 0xa, name: "TimeZoneListMaxSize", type: "uint8",
-        access: "R V", conformance: "TZ", constraint: "1 to 2", quality: "F"
-    }),
-    Attribute({
-        id: 0xb, name: "DstOffsetListMaxSize", type: "uint8",
-        access: "R V", conformance: "TZ", constraint: "min 1", quality: "F"
+        name: "TimeZoneListMaxSize", id: 0xa, type: "uint8",
+        constraint: "1 to 2", conformance: "TZ", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0xc, name: "SupportsDnsResolve", type: "bool",
-        access: "R V", conformance: "NTPC", default: false, quality: "F"
+        name: "DstOffsetListMaxSize", id: 0xb, type: "uint8",
+        constraint: "min 1", conformance: "TZ", access: "R V", quality: "F"
     }),
-    Event({ id: 0x0, name: "DstTableEmpty", access: "V", conformance: "TZ", priority: "info" }),
+    Attribute({
+        name: "SupportsDnsResolve", id: 0xc, type: "bool",
+        default: false, conformance: "NTPC", access: "R V", quality: "F"
+    }),
+    Event({ name: "DstTableEmpty", id: 0x0, conformance: "TZ", access: "V", priority: "info" }),
     Event(
-        { id: 0x1, name: "DstStatus", access: "V", conformance: "TZ", priority: "info" },
-        Field({ id: 0x0, name: "DstOffsetActive", type: "bool", conformance: "M" })
+        { name: "DstStatus", id: 0x1, conformance: "TZ", access: "V", priority: "info" },
+        Field({ name: "DstOffsetActive", id: 0x0, type: "bool", conformance: "M" })
     ),
     Event(
-        { id: 0x2, name: "TimeZoneStatus", access: "V", conformance: "TZ", priority: "info" },
-        Field({ id: 0x0, name: "Offset", type: "int32", conformance: "M", constraint: "-43200 to 50400" }),
-        Field({ id: 0x1, name: "Name", type: "string", conformance: "O", constraint: "0 to 64" })
+        { name: "TimeZoneStatus", id: 0x2, conformance: "TZ", access: "V", priority: "info" },
+        Field({ name: "Offset", id: 0x0, type: "int32", constraint: "-43200 to 50400", conformance: "M" }),
+        Field({ name: "Name", id: 0x1, type: "string", constraint: "0 to 64", conformance: "O" })
     ),
-    Event({ id: 0x3, name: "TimeFailure", access: "V", conformance: "M", priority: "info" }),
-    Event({ id: 0x4, name: "MissingTrustedTimeSource", access: "V", conformance: "TSC", priority: "info" }),
+    Event({ name: "TimeFailure", id: 0x3, conformance: "M", access: "V", priority: "info" }),
+    Event({ name: "MissingTrustedTimeSource", id: 0x4, conformance: "TSC", access: "V", priority: "info" }),
 
     Command(
-        { id: 0x0, name: "SetUtcTime", access: "A", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "UtcTime", type: "epoch-us", conformance: "M", default: 0 }),
-        Field({ id: 0x1, name: "Granularity", type: "GranularityEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x2, name: "TimeSource", type: "TimeSourceEnum", conformance: "O", default: 0 })
+        { name: "SetUtcTime", id: 0x0, conformance: "M", access: "A", direction: "request", response: "status" },
+        Field({ name: "UtcTime", id: 0x0, type: "epoch-us", default: 0, conformance: "M" }),
+        Field({ name: "Granularity", id: 0x1, type: "GranularityEnum", default: 0, conformance: "M" }),
+        Field({ name: "TimeSource", id: 0x2, type: "TimeSourceEnum", default: 0, conformance: "O" })
     ),
 
     Command(
         {
-            id: 0x1, name: "SetTrustedTimeSource",
-            access: "F A", conformance: "TSC", direction: "request", response: "status"
+            name: "SetTrustedTimeSource", id: 0x1,
+            conformance: "TSC", access: "F A", direction: "request", response: "status"
         },
         Field({
-            id: 0x0, name: "TrustedTimeSource", type: "FabricScopedTrustedTimeSourceStruct",
-            access: "F", conformance: "M", quality: "X"
+            name: "TrustedTimeSource", id: 0x0, type: "FabricScopedTrustedTimeSourceStruct",
+            conformance: "M", access: "F", quality: "X"
         }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Command(
         {
-            id: 0x2, name: "SetTimeZone",
-            access: "M", conformance: "TZ", direction: "request", response: "SetTimeZoneResponse"
+            name: "SetTimeZone", id: 0x2,
+            conformance: "TZ", access: "M", direction: "request", response: "SetTimeZoneResponse"
         },
         Field(
-            { id: 0x0, name: "TimeZone", type: "list", conformance: "M", constraint: "1 to 2" },
+            { name: "TimeZone", id: 0x0, type: "list", constraint: "1 to 2", conformance: "M" },
             Field({ name: "entry", type: "TimeZoneStruct" })
         )
     ),
 
     Command(
-        { id: 0x3, name: "SetTimeZoneResponse", conformance: "TZ", direction: "response" },
-        Field({ id: 0x0, name: "DstOffsetsRequired", type: "bool", conformance: "M", default: true })
+        { name: "SetTimeZoneResponse", id: 0x3, conformance: "TZ", direction: "response" },
+        Field({ name: "DstOffsetsRequired", id: 0x0, type: "bool", default: true, conformance: "M" })
     ),
 
     Command(
-        { id: 0x4, name: "SetDstOffset", access: "M", conformance: "TZ", direction: "request", response: "status" },
+        { name: "SetDstOffset", id: 0x4, conformance: "TZ", access: "M", direction: "request", response: "status" },
         Field(
-            { id: 0x0, name: "DstOffset", type: "list", conformance: "M" },
+            { name: "DstOffset", id: 0x0, type: "list", conformance: "M" },
             Field({ name: "entry", type: "DSTOffsetStruct" })
         )
     ),
 
     Command(
-        { id: 0x5, name: "SetDefaultNtp", access: "A", conformance: "NTPC", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "DefaultNtp", type: "string", conformance: "M", constraint: "max 128", quality: "X" })
+        { name: "SetDefaultNtp", id: 0x5, conformance: "NTPC", access: "A", direction: "request", response: "status" },
+        Field({ name: "DefaultNtp", id: 0x0, type: "string", constraint: "max 128", conformance: "M", quality: "X" })
     ),
 
     Datatype(
         { name: "GranularityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoTimeGranularity", conformance: "M" }),
-        Field({ id: 0x1, name: "MinutesGranularity", conformance: "M" }),
-        Field({ id: 0x2, name: "SecondsGranularity", conformance: "M" }),
-        Field({ id: 0x3, name: "MillisecondsGranularity", conformance: "M" }),
-        Field({ id: 0x4, name: "MicrosecondsGranularity", conformance: "M" })
+        Field({ name: "NoTimeGranularity", id: 0x0, conformance: "M" }),
+        Field({ name: "MinutesGranularity", id: 0x1, conformance: "M" }),
+        Field({ name: "SecondsGranularity", id: 0x2, conformance: "M" }),
+        Field({ name: "MillisecondsGranularity", id: 0x3, conformance: "M" }),
+        Field({ name: "MicrosecondsGranularity", id: 0x4, conformance: "M" })
     ),
 
     Datatype(
         { name: "TimeSourceEnum", type: "enum8" },
-        Field({ id: 0x0, name: "None", conformance: "M" }),
-        Field({ id: 0x1, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x2, name: "Admin", conformance: "M" }),
-        Field({ id: 0x3, name: "NodeTimeCluster", conformance: "M" }),
-        Field({ id: 0x4, name: "NonMatterSntp", conformance: "M" }),
-        Field({ id: 0x5, name: "NonMatterNtp", conformance: "M" }),
-        Field({ id: 0x6, name: "MatterSntp", conformance: "M" }),
-        Field({ id: 0x7, name: "MatterNtp", conformance: "M" }),
-        Field({ id: 0x8, name: "MixedNtp", conformance: "M" }),
-        Field({ id: 0x9, name: "NonMatterSntpnts", conformance: "M" }),
-        Field({ id: 0xa, name: "NonMatterNtpnts", conformance: "M" }),
-        Field({ id: 0xb, name: "MatterSntpnts", conformance: "M" }),
-        Field({ id: 0xc, name: "MatterNtpnts", conformance: "M" }),
-        Field({ id: 0xd, name: "MixedNtpnts", conformance: "M" }),
-        Field({ id: 0xe, name: "CloudSource", conformance: "M" }),
-        Field({ id: 0xf, name: "Ptp", conformance: "M" }),
-        Field({ id: 0x10, name: "Gnss", conformance: "M" })
+        Field({ name: "None", id: 0x0, conformance: "M" }),
+        Field({ name: "Unknown", id: 0x1, conformance: "M" }),
+        Field({ name: "Admin", id: 0x2, conformance: "M" }),
+        Field({ name: "NodeTimeCluster", id: 0x3, conformance: "M" }),
+        Field({ name: "NonMatterSntp", id: 0x4, conformance: "M" }),
+        Field({ name: "NonMatterNtp", id: 0x5, conformance: "M" }),
+        Field({ name: "MatterSntp", id: 0x6, conformance: "M" }),
+        Field({ name: "MatterNtp", id: 0x7, conformance: "M" }),
+        Field({ name: "MixedNtp", id: 0x8, conformance: "M" }),
+        Field({ name: "NonMatterSntpnts", id: 0x9, conformance: "M" }),
+        Field({ name: "NonMatterNtpnts", id: 0xa, conformance: "M" }),
+        Field({ name: "MatterSntpnts", id: 0xb, conformance: "M" }),
+        Field({ name: "MatterNtpnts", id: 0xc, conformance: "M" }),
+        Field({ name: "MixedNtpnts", id: 0xd, conformance: "M" }),
+        Field({ name: "CloudSource", id: 0xe, conformance: "M" }),
+        Field({ name: "Ptp", id: 0xf, conformance: "M" }),
+        Field({ name: "Gnss", id: 0x10, conformance: "M" })
     ),
 
     Datatype(
         { name: "TimeZoneDatabaseEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Full", conformance: "M" }),
-        Field({ id: 0x1, name: "Partial", conformance: "M" }),
-        Field({ id: 0x2, name: "None", conformance: "M" })
+        Field({ name: "Full", id: 0x0, conformance: "M" }),
+        Field({ name: "Partial", id: 0x1, conformance: "M" }),
+        Field({ name: "None", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "TrustedTimeSourceStruct", type: "struct" },
-        Field({ id: 0x0, name: "FabricIndex", type: "fabric-idx", conformance: "M" }),
-        Field({ id: 0x1, name: "NodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x2, name: "Endpoint", type: "endpoint-no", conformance: "M" })
+        Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M" }),
+        Field({ name: "NodeId", id: 0x1, type: "node-id", conformance: "M" }),
+        Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", conformance: "M" })
     ),
 
     Datatype(
         { name: "FabricScopedTrustedTimeSourceStruct", type: "struct" },
-        Field({ id: 0x0, name: "NodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x1, name: "Endpoint", type: "endpoint-no", conformance: "M" })
+        Field({ name: "NodeId", id: 0x0, type: "node-id", conformance: "M" }),
+        Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M" })
     ),
 
     Datatype(
         { name: "TimeZoneStruct", type: "struct" },
-        Field({ id: 0x0, name: "Offset", type: "int32", conformance: "M", constraint: "-43200 to 50400" }),
-        Field({ id: 0x1, name: "ValidAt", type: "epoch-us", conformance: "M" }),
-        Field({ id: 0x2, name: "Name", type: "string", conformance: "O", constraint: "0 to 64" })
+        Field({ name: "Offset", id: 0x0, type: "int32", constraint: "-43200 to 50400", conformance: "M" }),
+        Field({ name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M" }),
+        Field({ name: "Name", id: 0x2, type: "string", constraint: "0 to 64", conformance: "O" })
     ),
 
     Datatype(
         { name: "DSTOffsetStruct", type: "struct" },
-        Field({ id: 0x0, name: "Offset", type: "int32", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "ValidStarting", type: "epoch-us", conformance: "M" }),
-        Field({ id: 0x2, name: "ValidUntil", type: "epoch-us", conformance: "M", quality: "X" })
+        Field({ name: "Offset", id: 0x0, type: "int32", constraint: "desc", conformance: "M" }),
+        Field({ name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M" }),
+        Field({ name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M", quality: "X" })
     ),
 
-    Datatype({ name: "StatusCodeEnum", type: "enum8" }, Field({ id: 0x2, name: "TimeNotAccepted", conformance: "M" }))
+    Datatype({ name: "StatusCodeEnum", type: "enum8" }, Field({ name: "TimeNotAccepted", id: 0x2, conformance: "M" }))
 );
 
 MatterDefinition.children.push(TimeSynchronization);

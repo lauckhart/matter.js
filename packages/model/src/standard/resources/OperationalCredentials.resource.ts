@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "OperationalCredentials", tag: "cluster",
+    tag: "cluster", name: "OperationalCredentials",
     classification: "node", pics: "OPCREDS",
     details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
         "well as manage the associated Fabrics.",
@@ -17,7 +17,7 @@ Resource.add({
 
     children: [
         {
-            name: "Nocs", tag: "attribute",
+            tag: "attribute", name: "Nocs",
 
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
                 "\n" +
@@ -32,7 +32,7 @@ Resource.add({
         },
 
         {
-            name: "Fabrics", tag: "attribute",
+            tag: "attribute", name: "Fabrics",
 
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list " +
                 "of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
@@ -45,14 +45,14 @@ Resource.add({
         },
 
         {
-            name: "SupportedFabrics", tag: "attribute",
+            tag: "attribute", name: "SupportedFabrics",
             details: "This attribute contains the number of Fabrics that are supported by the device. This value is fixed " +
                 "for a particular device.",
             xref: "core§11.18.5.3"
         },
 
         {
-            name: "CommissionedFabrics", tag: "attribute",
+            tag: "attribute", name: "CommissionedFabrics",
 
             details: "This attribute contains the number of Fabrics to which the device is currently commissioned. This " +
                 "attribute shall be equal to the following:" +
@@ -67,7 +67,7 @@ Resource.add({
         },
 
         {
-            name: "TrustedRootCertificates", tag: "attribute",
+            tag: "attribute", name: "TrustedRootCertificates",
 
             details: "This attribute shall contain a read-only list of Trusted Root CA Certificates (RCAC) installed on " +
                 "the Node, as octet strings containing their Matter Certificate Encoding representation." +
@@ -88,7 +88,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentFabricIndex", tag: "attribute",
+            tag: "attribute", name: "CurrentFabricIndex",
             details: "This attribute shall contain accessing fabric index." +
                 "\n" +
                 "This attribute is useful to contextualize Fabric-Scoped entries obtained from response commands or " +
@@ -98,7 +98,7 @@ Resource.add({
         },
 
         {
-            name: "AttestationRequest", tag: "command",
+            tag: "command", name: "AttestationRequest",
             details: "This command shall be generated to request the Attestation Information, in the form of an " +
                 "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a " +
                 "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
@@ -107,7 +107,7 @@ Resource.add({
         },
 
         {
-            name: "AttestationResponse", tag: "command",
+            tag: "command", name: "AttestationResponse",
 
             details: "This command shall be generated in response to an Attestation Request command." +
                 "\n" +
@@ -121,13 +121,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "AttestationElements", tag: "field",
+                    tag: "field", name: "AttestationElements",
                     details: "This field shall contain the octet string of the serialized attestation_elements_message.",
                     xref: "core§11.18.6.2.1"
                 },
 
                 {
-                    name: "AttestationSignature", tag: "field",
+                    tag: "field", name: "AttestationSignature",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.7, “Attestation Information”.",
                     xref: "core§11.18.6.2.2"
@@ -136,19 +136,19 @@ Resource.add({
         },
 
         {
-            name: "CertificateChainRequest", tag: "command",
+            tag: "command", name: "CertificateChainRequest",
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail " +
                 "with a Status Code of INVALID_COMMAND.",
             xref: "core§11.18.6.3"
         },
 
         {
-            name: "CertificateChainResponse", tag: "command",
+            tag: "command", name: "CertificateChainResponse",
             details: "This command shall be generated in response to a CertificateChainRequest command.",
             xref: "core§11.18.6.4",
 
             children: [{
-                name: "Certificate", tag: "field",
+                tag: "field", name: "Certificate",
                 details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
                     "CertificateChainRequest command.",
                 xref: "core§11.18.6.4.1"
@@ -156,7 +156,7 @@ Resource.add({
         },
 
         {
-            name: "CsrRequest", tag: "command",
+            tag: "command", name: "CsrRequest",
 
             details: "This command shall be generated to execute the Node Operational CSR Procedure and subsequently " +
                 "return the NOCSR Information, in the form of a CSRResponse Command." +
@@ -189,7 +189,7 @@ Resource.add({
         },
 
         {
-            name: "CsrResponse", tag: "command",
+            tag: "command", name: "CsrResponse",
 
             details: "This command shall be generated in response to a CSRRequest Command." +
                 "\n" +
@@ -203,13 +203,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "NocsrElements", tag: "field",
+                    tag: "field", name: "NocsrElements",
                     details: "This field shall contain the octet string of the serialized nocsr_elements_message.",
                     xref: "core§11.18.6.6.1"
                 },
 
                 {
-                    name: "AttestationSignature", tag: "field",
+                    tag: "field", name: "AttestationSignature",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.9, “NOCSR Information”.",
                     xref: "core§11.18.6.6.2"
@@ -218,7 +218,7 @@ Resource.add({
         },
 
         {
-            name: "AddNoc", tag: "command",
+            tag: "command", name: "AddNoc",
 
             details: "This command shall add a new NOC chain to the device and commission a new Fabric association upon " +
                 "successful validation of all arguments and preconditions." +
@@ -235,7 +235,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "IpkValue", tag: "field",
+                    tag: "field", name: "IpkValue",
 
                     details: "This field shall contain the value of the Epoch Key for the Identity Protection Key (IPK) to set for " +
                         "the Fabric which is to be added. This is needed to bootstrap a necessary configuration value for " +
@@ -252,7 +252,7 @@ Resource.add({
                 },
 
                 {
-                    name: "CaseAdminSubject", tag: "field",
+                    tag: "field", name: "CaseAdminSubject",
 
                     details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the " +
                         "Access Control SubjectID shall be used to atomically add an Access Control Entry enabling that " +
@@ -277,7 +277,7 @@ Resource.add({
                 },
 
                 {
-                    name: "AdminVendorId", tag: "field",
+                    tag: "field", name: "AdminVendorId",
 
                     details: "This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall " +
                         "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”." +
@@ -377,7 +377,7 @@ Resource.add({
         },
 
         {
-            name: "UpdateNoc", tag: "command",
+            tag: "command", name: "UpdateNoc",
 
             details: "This command shall replace the NOC and optional associated ICAC (if present) scoped under the " +
                 "accessing fabric upon successful validation of all arguments and preconditions. The new value shall " +
@@ -440,7 +440,7 @@ Resource.add({
         },
 
         {
-            name: "NocResponse", tag: "command",
+            tag: "command", name: "NocResponse",
 
             details: "This command shall be generated in response to the following commands:" +
                 "\n" +
@@ -458,20 +458,20 @@ Resource.add({
 
             children: [
                 {
-                    name: "StatusCode", tag: "field",
+                    tag: "field", name: "StatusCode",
                     details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC.",
                     xref: "core§11.18.6.10.1"
                 },
 
                 {
-                    name: "FabricIndex", tag: "field",
+                    tag: "field", name: "FabricIndex",
                     details: "This field shall be present whenever StatusCode has a value of OK. If present, it shall contain the " +
                         "Fabric Index of the Fabric last added, removed or updated.",
                     xref: "core§11.18.6.10.2"
                 },
 
                 {
-                    name: "DebugText", tag: "field",
+                    tag: "field", name: "DebugText",
                     details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
                         "NOT be presented to user interfaces in any way. Its purpose is to help developers in troubleshooting " +
                         "errors and the contents may go into logs or crash reports.",
@@ -481,7 +481,7 @@ Resource.add({
         },
 
         {
-            name: "UpdateFabricLabel", tag: "command",
+            tag: "command", name: "UpdateFabricLabel",
 
             details: "This command shall be used by an Administrator to set the user-visible Label field for a given " +
                 "Fabric, as reflected by entries in the Fabrics attribute. An Administrator shall use this command to " +
@@ -499,7 +499,7 @@ Resource.add({
             xref: "core§11.18.6.11",
 
             children: [{
-                name: "Label", tag: "field",
+                tag: "field", name: "Label",
 
                 details: "This field shall contain the label to set for the fabric associated with the current secure session." +
                     "\n" +
@@ -524,7 +524,7 @@ Resource.add({
         },
 
         {
-            name: "RemoveFabric", tag: "command",
+            tag: "command", name: "RemoveFabric",
 
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                 "fabric-scoped data." +
@@ -547,7 +547,7 @@ Resource.add({
             xref: "core§11.18.6.12",
 
             children: [{
-                name: "FabricIndex", tag: "field",
+                tag: "field", name: "FabricIndex",
 
                 details: "This field shall contain the Fabric Index reference (see fabric-index) associated with the Fabric " +
                     "which is to be removed from the device." +
@@ -597,7 +597,7 @@ Resource.add({
         },
 
         {
-            name: "AddTrustedRootCertificate", tag: "command",
+            tag: "command", name: "AddTrustedRootCertificate",
 
             details: "This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding " +
                 "representation, to the TrustedRootCertificates Attribute list and shall ensure the next AddNOC " +
@@ -630,53 +630,53 @@ Resource.add({
         },
 
         {
-            name: "CertificateChainTypeEnum", tag: "datatype",
+            tag: "datatype", name: "CertificateChainTypeEnum",
             details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from the " +
                 "device attestation certificate chain to transmit back to the client.",
             xref: "core§11.18.4.2",
             children: [
-                { name: "DacCertificate", tag: "field", description: "Request the DER- encoded DAC certificate" },
-                { name: "PaiCertificate", tag: "field", description: "Request the DER- encoded PAI certificate" }
+                { tag: "field", name: "DacCertificate", description: "Request the DER- encoded DAC certificate" },
+                { tag: "field", name: "PaiCertificate", description: "Request the DER- encoded PAI certificate" }
             ]
         },
 
         {
-            name: "NodeOperationalCertStatusEnum", tag: "datatype",
+            tag: "datatype", name: "NodeOperationalCertStatusEnum",
             details: "This enumeration is used by the NOCResponse common response command to convey detailed outcome of " +
                 "several of this cluster’s operations.",
             xref: "core§11.18.4.3",
 
             children: [
-                { name: "Ok", tag: "field", description: "OK, no error" },
+                { tag: "field", name: "Ok", description: "OK, no error" },
                 {
-                    name: "InvalidPublicKey", tag: "field",
+                    tag: "field", name: "InvalidPublicKey",
                     description: "Public Key in the NOC does not match the public key in the NOCSR"
                 },
                 {
-                    name: "InvalidNodeOpId", tag: "field",
+                    tag: "field", name: "InvalidNodeOpId",
                     description: "The Node Operational ID in the NOC is not formatted correctly."
                 },
-                { name: "InvalidNoc", tag: "field", description: "Any other validation error in NOC chain" },
+                { tag: "field", name: "InvalidNoc", description: "Any other validation error in NOC chain" },
                 {
-                    name: "MissingCsr", tag: "field",
+                    tag: "field", name: "MissingCsr",
                     description: "No record of prior CSR for which this NOC could match"
                 },
-                { name: "TableFull", tag: "field", description: "NOCs table full, cannot add another one" },
+                { tag: "field", name: "TableFull", description: "NOCs table full, cannot add another one" },
                 {
-                    name: "InvalidAdminSubject", tag: "field",
+                    tag: "field", name: "InvalidAdminSubject",
                     description: "Invalid CaseAdminSubject field for an AddNOC command."
                 },
                 {
-                    name: "FabricConflict", tag: "field",
+                    tag: "field", name: "FabricConflict",
                     description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric."
                 },
-                { name: "LabelConflict", tag: "field", description: "Label already exists on another Fabric." },
-                { name: "InvalidFabricIndex", tag: "field", description: "FabricIndex argument is invalid." }
+                { tag: "field", name: "LabelConflict", description: "Label already exists on another Fabric." },
+                { tag: "field", name: "InvalidFabricIndex", description: "FabricIndex argument is invalid." }
             ]
         },
 
         {
-            name: "NOCStruct", tag: "datatype",
+            tag: "datatype", name: "NOCStruct",
             details: "This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a " +
                 "given Node." +
                 "\n" +
@@ -686,14 +686,14 @@ Resource.add({
 
             children: [
                 {
-                    name: "Noc", tag: "field",
+                    tag: "field", name: "Noc",
                     details: "This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding.",
                     xref: "core§11.18.4.4.1"
                 },
 
                 {
-                    name: "Icac", tag: "field",
+                    tag: "field", name: "Icac",
                     details: "This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null.",
                     xref: "core§11.18.4.4.2"
@@ -702,14 +702,14 @@ Resource.add({
         },
 
         {
-            name: "FabricDescriptorStruct", tag: "datatype",
+            tag: "datatype", name: "FabricDescriptorStruct",
             details: "This structure encodes a Fabric Reference for a fabric within which a given Node is currently " +
                 "commissioned.",
             xref: "core§11.18.4.5",
 
             children: [
                 {
-                    name: "RootPublicKey", tag: "field",
+                    tag: "field", name: "RootPublicKey",
                     details: "This field shall contain the public key for the trusted root that scopes the fabric referenced by " +
                         "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
                         "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of the " +
@@ -718,7 +718,7 @@ Resource.add({
                 },
 
                 {
-                    name: "VendorId", tag: "field",
+                    tag: "field", name: "VendorId",
 
                     details: "This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the " +
                         "creation of this FabricDescriptorStruct. The set of allowed values is defined in AdminVendorID." +
@@ -733,7 +733,7 @@ Resource.add({
                 },
 
                 {
-                    name: "FabricId", tag: "field",
+                    tag: "field", name: "FabricId",
                     details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-fabric-id field from the operational certificate providing " +
                         "the operational identity under this Fabric.",
@@ -741,7 +741,7 @@ Resource.add({
                 },
 
                 {
-                    name: "NodeId", tag: "field",
+                    tag: "field", name: "NodeId",
                     details: "This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-node-id field from the operational certificate providing " +
                         "this operational identity.",
@@ -749,7 +749,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Label", tag: "field",
+                    tag: "field", name: "Label",
                     details: "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
                         "label is set by the UpdateFabricLabel command.",
                     xref: "core§11.18.4.5.5"

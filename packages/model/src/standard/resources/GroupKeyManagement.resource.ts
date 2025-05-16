@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "GroupKeyManagement", tag: "cluster",
+    tag: "cluster", name: "GroupKeyManagement",
     classification: "node", pics: "GRPKEY",
 
     details: "The Group Key Management cluster manages group keys for the node. The cluster is scoped to the node " +
@@ -27,22 +27,22 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.2.4",
             children: [
-                { name: "CS", tag: "field", details: "The ability to support CacheAndSync security policy and MCSP." }
+                { tag: "field", name: "CS", details: "The ability to support CacheAndSync security policy and MCSP." }
             ]
         },
 
         {
-            name: "GroupKeyMap", tag: "attribute",
+            tag: "attribute", name: "GroupKeyMap",
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id with " +
                 "a particular group key set.",
             xref: "core§11.2.6.1"
         },
 
         {
-            name: "GroupTable", tag: "attribute",
+            tag: "attribute", name: "GroupTable",
 
             details: "This attribute is a list of GroupInfoMapStruct entries. Each entry provides read-only information " +
                 "about how a given logical Group ID maps to a particular set of endpoints, and a name for the group." +
@@ -58,7 +58,7 @@ Resource.add({
         },
 
         {
-            name: "MaxGroupsPerFabric", tag: "attribute",
+            tag: "attribute", name: "MaxGroupsPerFabric",
             details: "Indicates the maximum number of groups that this node supports per fabric. The value of this " +
                 "attribute shall be set to be no less than the required minimum supported groups as specified in " +
                 "Group Limits. The length of the GroupKeyMap and GroupTable list attributes shall NOT exceed the " +
@@ -67,7 +67,7 @@ Resource.add({
         },
 
         {
-            name: "MaxGroupKeysPerFabric", tag: "attribute",
+            tag: "attribute", name: "MaxGroupKeysPerFabric",
             details: "Indicates the maximum number of group key sets this node supports per fabric. The value of this " +
                 "attribute shall be set according to the minimum number of group key sets to support as specified in " +
                 "Group Limits.",
@@ -75,7 +75,7 @@ Resource.add({
         },
 
         {
-            name: "KeySetWrite", tag: "command",
+            tag: "command", name: "KeySetWrite",
 
             details: "This command is used by Administrators to set the state of a given Group Key Set, including " +
                 "atomically updating the state of all epoch keys." +
@@ -149,7 +149,7 @@ Resource.add({
         },
 
         {
-            name: "KeySetRead", tag: "command",
+            tag: "command", name: "KeySetRead",
 
             details: "This command is used by Administrators to read the state of a given Group Key Set." +
                 "\n" +
@@ -167,7 +167,7 @@ Resource.add({
         },
 
         {
-            name: "KeySetReadResponse", tag: "command",
+            tag: "command", name: "KeySetReadResponse",
             details: "This command shall be generated in response to the KeySetRead command, if a valid Group Key Set was " +
                 "found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, " +
                 "EpochKey1 and EpochKey2 key contents replaced by null.",
@@ -175,7 +175,7 @@ Resource.add({
         },
 
         {
-            name: "KeySetRemove", tag: "command",
+            tag: "command", name: "KeySetRemove",
 
             details: "This command is used by Administrators to remove all state of a given Group Key Set." +
                 "\n" +
@@ -200,7 +200,7 @@ Resource.add({
         },
 
         {
-            name: "KeySetReadAllIndices", tag: "command",
+            tag: "command", name: "KeySetReadAllIndices",
 
             details: "This command is used by Administrators to query a list of all Group Key Sets associated with the " +
                 "accessing fabric." +
@@ -215,13 +215,13 @@ Resource.add({
         },
 
         {
-            name: "KeySetReadAllIndicesResponse", tag: "command",
+            tag: "command", name: "KeySetReadAllIndicesResponse",
             details: "This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of " +
                 "GroupKeySetID for all Group Key Sets associated with the scoped Fabric.",
             xref: "core§11.2.7.6",
 
             children: [{
-                name: "GroupKeySetIDs", tag: "field",
+                tag: "field", name: "GroupKeySetIDs",
                 details: "This field references the set of group keys that generate operational group keys for use with the " +
                     "accessing fabric." +
                     "\n" +
@@ -231,32 +231,32 @@ Resource.add({
         },
 
         {
-            name: "GroupKeySecurityPolicyEnum", tag: "datatype",
+            tag: "datatype", name: "GroupKeySecurityPolicyEnum",
             xref: "core§11.2.5.1",
 
             children: [
-                { name: "TrustFirst", tag: "field", description: "Message counter synchronization using trust-first" },
+                { tag: "field", name: "TrustFirst", description: "Message counter synchronization using trust-first" },
                 {
-                    name: "CacheAndSync", tag: "field",
+                    tag: "field", name: "CacheAndSync",
                     description: "Message counter synchronization using cache-and-sync"
                 }
             ]
         },
 
         {
-            name: "GroupKeyMulticastPolicyEnum", tag: "datatype",
+            tag: "datatype", name: "GroupKeyMulticastPolicyEnum",
             xref: "core§11.2.5.2",
 
             children: [
                 {
-                    name: "PerGroupId", tag: "field",
+                    tag: "field", name: "PerGroupId",
                     description: "Indicates filtering of multicast messages for a specific Group ID",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.",
                     xref: "core§11.2.5.2.1"
                 },
 
                 {
-                    name: "AllNodes", tag: "field",
+                    tag: "field", name: "AllNodes",
                     description: "Indicates not filtering of multicast messages",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.",
                     xref: "core§11.2.5.2.2"
@@ -265,18 +265,18 @@ Resource.add({
         },
 
         {
-            name: "GroupKeyMapStruct", tag: "datatype",
+            tag: "datatype", name: "GroupKeyMapStruct",
             xref: "core§11.2.5.3",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field uniquely identifies the group within the scope of the given Fabric.",
                     xref: "core§11.2.5.3.1"
                 },
 
                 {
-                    name: "GroupKeySetId", tag: "field",
+                    tag: "field", name: "GroupKeySetId",
                     details: "This field references the set of group keys that generate operational group keys for use with this " +
                         "group, as specified in Section 4.17.3.5.1, “Group Key Set ID”." +
                         "\n" +
@@ -287,19 +287,19 @@ Resource.add({
         },
 
         {
-            name: "GroupKeySetStruct", tag: "datatype",
+            tag: "datatype", name: "GroupKeySetStruct",
             xref: "core§11.2.5.4",
 
             children: [
                 {
-                    name: "GroupKeySetId", tag: "field",
+                    tag: "field", name: "GroupKeySetId",
                     details: "This field shall provide the fabric-unique index for the associated group key set, as specified in " +
                         "Section 4.17.3.5.1, “Group Key Set ID”.",
                     xref: "core§11.2.5.4.1"
                 },
 
                 {
-                    name: "GroupKeySecurityPolicy", tag: "field",
+                    tag: "field", name: "GroupKeySecurityPolicy",
                     details: "This field shall provide the security policy for an operational group key set." +
                         "\n" +
                         "When CacheAndSync is not supported in the FeatureMap of this cluster, any action attempting to set " +
@@ -308,7 +308,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EpochKey0", tag: "field",
+                    tag: "field", name: "EpochKey0",
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 0 of the given group key set. If EpochKey0 is not null, EpochStartTime0 shall NOT " +
                         "be null.",
@@ -316,14 +316,14 @@ Resource.add({
                 },
 
                 {
-                    name: "EpochStartTime0", tag: "field",
+                    tag: "field", name: "EpochStartTime0",
                     details: "This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
                     xref: "core§11.2.5.4.4"
                 },
 
                 {
-                    name: "EpochKey1", tag: "field",
+                    tag: "field", name: "EpochKey1",
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 1 of the given group key set. If EpochKey1 is not null, EpochStartTime1 shall NOT " +
                         "be null.",
@@ -331,14 +331,14 @@ Resource.add({
                 },
 
                 {
-                    name: "EpochStartTime1", tag: "field",
+                    tag: "field", name: "EpochStartTime1",
                     details: "This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
                     xref: "core§11.2.5.4.6"
                 },
 
                 {
-                    name: "EpochKey2", tag: "field",
+                    tag: "field", name: "EpochKey2",
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 2 of the given group key set. If EpochKey2 is not null, EpochStartTime2 shall NOT " +
                         "be null.",
@@ -346,14 +346,14 @@ Resource.add({
                 },
 
                 {
-                    name: "EpochStartTime2", tag: "field",
+                    tag: "field", name: "EpochStartTime2",
                     details: "This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
                     xref: "core§11.2.5.4.8"
                 },
 
                 {
-                    name: "GroupKeyMulticastPolicy", tag: "field",
+                    tag: "field", name: "GroupKeyMulticastPolicy",
 
                     details: "This field specifies how the IPv6 Multicast Address shall be formed for groups using this " +
                         "operational group key set." +
@@ -375,25 +375,25 @@ Resource.add({
         },
 
         {
-            name: "GroupInfoMapStruct", tag: "datatype",
+            tag: "datatype", name: "GroupInfoMapStruct",
             xref: "core§11.2.5.5",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field uniquely identifies the group within the scope of the given Fabric.",
                     xref: "core§11.2.5.5.1"
                 },
 
                 {
-                    name: "Endpoints", tag: "field",
+                    tag: "field", name: "Endpoints",
                     details: "This field provides the list of Endpoint IDs on the Node to which messages to this group shall be " +
                         "forwarded.",
                     xref: "core§11.2.5.5.2"
                 },
 
                 {
-                    name: "GroupName", tag: "field",
+                    tag: "field", name: "GroupName",
                     details: "This field provides a name for the group. This field shall contain the last GroupName written for a " +
                         "given GroupId on any Endpoint via the Groups cluster.",
                     xref: "core§11.2.5.5.3"

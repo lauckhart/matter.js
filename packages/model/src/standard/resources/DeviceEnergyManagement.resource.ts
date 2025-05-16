@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "DeviceEnergyManagement", tag: "cluster",
+        tag: "cluster", name: "DeviceEnergyManagement",
         classification: "application", pics: "DEM",
 
         details: "This cluster allows a client to manage the power draw of a device. An example of such a client could" +
@@ -65,12 +65,12 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§9.2.4",
 
                 children: [
                     {
-                        name: "PA", tag: "field",
+                        tag: "field", name: "PA",
 
                         details: "For Energy Smart Appliances (ESA) the definition of being 'smart' mandates that they can report " +
                             "their current power adjustment capability and have an EMS request a temporary adjustment. This may " +
@@ -91,7 +91,7 @@ Resource.add(
                     },
 
                     {
-                        name: "PFR", tag: "field",
+                        tag: "field", name: "PFR",
 
                         details: "For Energy Smart Appliances (ESA) the definition of being 'smart' implies that they can report their " +
                             "indicative forecast power demands or generation, to a greater or lesser extent. For some ESAs this " +
@@ -136,7 +136,7 @@ Resource.add(
                     },
 
                     {
-                        name: "SFR", tag: "field",
+                        tag: "field", name: "SFR",
 
                         details: "Some ESAs do not know their actual power consumption, but do know the state of operation. Like the " +
                             "PowerForecastingReporting feature, this uses the same slot structure mechanism to indicate a change " +
@@ -155,7 +155,7 @@ Resource.add(
                     },
 
                     {
-                        name: "STA", tag: "field",
+                        tag: "field", name: "STA",
 
                         details: "ESAs which support the Start Time Adjustment feature, allow an EMS to recommend a change to the " +
                             "start time of the energy transfer that the ESA has previously suggested it would use." +
@@ -180,7 +180,7 @@ Resource.add(
                     },
 
                     {
-                        name: "PAU", tag: "field",
+                        tag: "field", name: "PAU",
 
                         details: "ESAs which support the Pausable feature, allow an EMS to recommend a pause in the middle of a" +
                             "\n" +
@@ -206,7 +206,7 @@ Resource.add(
                     },
 
                     {
-                        name: "FA", tag: "field",
+                        tag: "field", name: "FA",
 
                         details: "ESAs which support the Forecast adjustment feature, allow an EMS to recommend a change to the start, " +
                             "duration and/or power level limits of the steps of the power profile that the ESA has previously " +
@@ -237,7 +237,7 @@ Resource.add(
                     },
 
                     {
-                        name: "CON", tag: "field",
+                        tag: "field", name: "CON",
 
                         details: "ESAs which support the Constraint-Based Adjustment feature allow an EMS to inform the ESA of periods " +
                             "during which power usage should be modified (for example when the EMS has been made aware that the " +
@@ -268,7 +268,7 @@ Resource.add(
             },
 
             {
-                name: "EsaType", tag: "attribute",
+                tag: "attribute", name: "EsaType",
 
                 details: "Indicates the type of ESA." +
                     "\n" +
@@ -287,7 +287,7 @@ Resource.add(
             },
 
             {
-                name: "EsaCanGenerate", tag: "attribute",
+                tag: "attribute", name: "EsaCanGenerate",
 
                 details: "Indicates whether the ESA is classed as a generator or load. This allows an EMS to understand " +
                     "whether the power values reported by the ESA need to have their sign inverted when dealing with " +
@@ -311,7 +311,7 @@ Resource.add(
             },
 
             {
-                name: "EsaState", tag: "attribute",
+                tag: "attribute", name: "EsaState",
 
                 details: "Indicates the current state of the ESA." +
                     "\n" +
@@ -327,7 +327,7 @@ Resource.add(
             },
 
             {
-                name: "AbsMinPower", tag: "attribute",
+                tag: "attribute", name: "AbsMinPower",
 
                 details: "Indicates the minimum electrical power that the ESA can consume when switched on. This does not " +
                     "include when in power save or standby modes." +
@@ -342,7 +342,7 @@ Resource.add(
             },
 
             {
-                name: "AbsMaxPower", tag: "attribute",
+                tag: "attribute", name: "AbsMaxPower",
 
                 details: "Indicates the maximum electrical power that the ESA can consume when switched on." +
                     "\n" +
@@ -358,7 +358,7 @@ Resource.add(
             },
 
             {
-                name: "PowerAdjustmentCapability", tag: "attribute",
+                tag: "attribute", name: "PowerAdjustmentCapability",
 
                 details: "Indicates how the ESA can be adjusted at the current time, and the state of any active adjustment." +
                     "\n" +
@@ -378,7 +378,7 @@ Resource.add(
             },
 
             {
-                name: "Forecast", tag: "attribute",
+                tag: "attribute", name: "Forecast",
 
                 details: "This attribute allows an ESA to share its intended forecast with a client (such as an Energy " +
                     "Management System)." +
@@ -404,7 +404,7 @@ Resource.add(
             },
 
             {
-                name: "OptOutState", tag: "attribute",
+                tag: "attribute", name: "OptOutState",
 
                 details: "Indicates the current Opt-Out state of the ESA. The ESA may have a local user interface to allow the " +
                     "user to control this OptOutState. An EMS may subscribe to the OptOutState to get notified about " +
@@ -442,32 +442,32 @@ Resource.add(
             },
 
             {
-                name: "PowerAdjustStart", tag: "event",
+                tag: "event", name: "PowerAdjustStart",
                 details: "This event shall be generated when the Power Adjustment session is started.",
                 xref: "cluster§9.2.10.1"
             },
 
             {
-                name: "PowerAdjustEnd", tag: "event",
+                tag: "event", name: "PowerAdjustEnd",
                 details: "This event shall be generated when the Power Adjustment session ends.",
                 xref: "cluster§9.2.10.2",
 
                 children: [
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the reason why the power adjustment session ended.",
                         xref: "cluster§9.2.10.2.1"
                     },
 
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the number of seconds that the power adjustment session lasted before " +
                             "ending.",
                         xref: "cluster§9.2.10.2.2"
                     },
 
                     {
-                        name: "EnergyUse", tag: "field",
+                        tag: "field", name: "EnergyUse",
                         details: "This field shall indicate the approximate energy used by the ESA during the session." +
                             "\n" +
                             "For example, if the ESA was on and was adjusted to be switched off, then this shall be 0 mWh. If " +
@@ -479,31 +479,31 @@ Resource.add(
             },
 
             {
-                name: "Paused", tag: "event",
+                tag: "event", name: "Paused",
                 details: "This event shall be generated when the ESA enters the Paused state. There is no data for this event.",
                 xref: "cluster§9.2.10.3"
             },
 
             {
-                name: "Resumed", tag: "event",
+                tag: "event", name: "Resumed",
                 details: "This event shall be generated when the ESA leaves the Paused state and resumes operation.",
                 xref: "cluster§9.2.10.4",
                 children: [{
-                    name: "Cause", tag: "field",
+                    tag: "field", name: "Cause",
                     details: "This field shall indicate the reason why the pause ended.",
                     xref: "cluster§9.2.10.4.1"
                 }]
             },
 
             {
-                name: "PowerAdjustRequest", tag: "command",
+                tag: "command", name: "PowerAdjustRequest",
                 details: "Allows a client to request an adjustment in the power consumption of an ESA for a specified " +
                     "duration.",
                 xref: "cluster§9.2.9.1",
 
                 children: [
                     {
-                        name: "Power", tag: "field",
+                        tag: "field", name: "Power",
                         details: "This field shall indicate the power that the ESA shall use during the adjustment period." +
                             "\n" +
                             "This value shall be between the MinPower and MaxPower fields of the PowerAdjustStruct in the " +
@@ -512,7 +512,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the duration that the ESA shall maintain the requested power for." +
                             "\n" +
                             "This value shall be between the MinDuration and MaxDuration fields of the PowerAdjustStruct in the " +
@@ -521,7 +521,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.1.3"
                     }
@@ -529,20 +529,20 @@ Resource.add(
             },
 
             {
-                name: "CancelPowerAdjustRequest", tag: "command",
+                tag: "command", name: "CancelPowerAdjustRequest",
                 details: "Allows a client to cancel an ongoing PowerAdjustmentRequest operation.",
                 xref: "cluster§9.2.9.2"
             },
 
             {
-                name: "StartTimeAdjustRequest", tag: "command",
+                tag: "command", name: "StartTimeAdjustRequest",
                 details: "Allows a client to adjust the start time of a Forecast sequence that has not yet started operation " +
                     "(i.e. where the current Forecast StartTime is in the future).",
                 xref: "cluster§9.2.9.3",
 
                 children: [
                     {
-                        name: "RequestedStartTime", tag: "field",
+                        tag: "field", name: "RequestedStartTime",
 
                         details: "This field shall indicate the requested start time, in UTC, that the client would like the appliance " +
                             "to shift its Forecast to. This value MUST be in the future." +
@@ -558,7 +558,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.3.2"
                     }
@@ -566,13 +566,13 @@ Resource.add(
             },
 
             {
-                name: "PauseRequest", tag: "command",
+                tag: "command", name: "PauseRequest",
                 details: "Allows a client to temporarily pause an operation and reduce the ESAs energy demand.",
                 xref: "cluster§9.2.9.4",
 
                 children: [
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the duration that the ESA shall be paused for. This value shall be between " +
                             "the MinPauseDuration and MaxPauseDuration indicated in the ActiveSlotNumber index in the Slots list " +
                             "in the Forecast.",
@@ -580,7 +580,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.4.2"
                     }
@@ -588,32 +588,32 @@ Resource.add(
             },
 
             {
-                name: "ResumeRequest", tag: "command",
+                tag: "command", name: "ResumeRequest",
                 details: "Allows a client to cancel the PauseRequest command and enable earlier resumption of operation.",
                 xref: "cluster§9.2.9.5"
             },
 
             {
-                name: "ModifyForecastRequest", tag: "command",
+                tag: "command", name: "ModifyForecastRequest",
                 details: "Allows a client to modify a Forecast within the limits allowed by the ESA.",
                 xref: "cluster§9.2.9.6",
 
                 children: [
                     {
-                        name: "ForecastId", tag: "field",
+                        tag: "field", name: "ForecastId",
                         details: "This field shall indicate the ForecastID that is to be modified.",
                         xref: "cluster§9.2.9.6.1"
                     },
 
                     {
-                        name: "SlotAdjustments", tag: "field",
+                        tag: "field", name: "SlotAdjustments",
                         details: "This field shall contain a list of SlotAdjustment parameters that should be modified in the " +
                             "corresponding Forecast with matching ForecastID.",
                         xref: "cluster§9.2.9.6.2"
                     },
 
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.6.3"
                     }
@@ -621,13 +621,13 @@ Resource.add(
             },
 
             {
-                name: "RequestConstraintBasedForecast", tag: "command",
+                tag: "command", name: "RequestConstraintBasedForecast",
                 details: "Allows a client to ask the ESA to recompute its Forecast based on power and time constraints.",
                 xref: "cluster§9.2.9.7",
 
                 children: [
                     {
-                        name: "Constraints", tag: "field",
+                        tag: "field", name: "Constraints",
 
                         details: "This field shall indicate the series of turn up or turn down power requests that the ESA is being " +
                             "asked to constrain its operation within. These requests shall be in the future, shall be in " +
@@ -648,7 +648,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Cause", tag: "field",
+                        tag: "field", name: "Cause",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.7.2"
                     }
@@ -656,33 +656,33 @@ Resource.add(
             },
 
             {
-                name: "CancelRequest", tag: "command",
+                tag: "command", name: "CancelRequest",
                 details: "Allows a client to request cancellation of a previous adjustment request in a " +
                     "StartTimeAdjustRequest, ModifyForecastRequest or RequestConstraintBasedForecast command.",
                 xref: "cluster§9.2.9.8"
             },
 
             {
-                name: "CostTypeEnum", tag: "datatype",
+                tag: "datatype", name: "CostTypeEnum",
                 xref: "cluster§9.2.7.1",
 
                 children: [
                     {
-                        name: "Financial", tag: "field",
+                        tag: "field", name: "Financial",
                         description: "Financial cost",
                         details: "This value shall indicate that the cost is related to the financial cost to provide the energy.",
                         xref: "cluster§9.2.7.1.1"
                     },
 
                     {
-                        name: "GhgEmissions", tag: "field",
+                        tag: "field", name: "GhgEmissions",
                         description: "Grid CO2e grams cost",
                         details: "This value shall indicate that the cost is related to greenhouse gas emissions (in grams of CO2e).",
                         xref: "cluster§9.2.7.1.2"
                     },
 
                     {
-                        name: "Comfort", tag: "field",
+                        tag: "field", name: "Comfort",
                         description: "Consumer comfort impact cost",
                         details: "This value shall indicate that the cost is related to some abstract sense of comfort expressed by " +
                             "the consumer; a higher value indicates more discomfort. For example, a consumer may be more " +
@@ -693,7 +693,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Temperature", tag: "field",
+                        tag: "field", name: "Temperature",
                         description: "Temperature impact cost",
                         details: "This value shall indicate that the cost is related to the temperature of the home or water being at " +
                             "its setpoint. Some consumers may be more sensitive to being too hot or too cold." +
@@ -705,167 +705,167 @@ Resource.add(
             },
 
             {
-                name: "ESATypeEnum", tag: "datatype",
+                tag: "datatype", name: "ESATypeEnum",
                 xref: "cluster§9.2.7.2",
 
                 children: [
-                    { name: "Evse", tag: "field", description: "EV Supply Equipment" },
-                    { name: "SpaceHeating", tag: "field", description: "Space heating appliance" },
-                    { name: "WaterHeating", tag: "field", description: "Water heating appliance" },
-                    { name: "SpaceCooling", tag: "field", description: "Space cooling appliance" },
-                    { name: "SpaceHeatingCooling", tag: "field", description: "Space heating and cooling appliance" },
-                    { name: "BatteryStorage", tag: "field", description: "Battery Electric Storage System" },
-                    { name: "SolarPv", tag: "field", description: "Solar PV inverter" },
-                    { name: "FridgeFreezer", tag: "field", description: "Fridge / Freezer" },
-                    { name: "WashingMachine", tag: "field", description: "Washing Machine" },
-                    { name: "Dishwasher", tag: "field", description: "Dishwasher" },
-                    { name: "Cooking", tag: "field", description: "Cooking appliance" },
-                    { name: "HomeWaterPump", tag: "field", description: "Home water pump (e.g. drinking well)" },
-                    { name: "IrrigationWaterPump", tag: "field", description: "Irrigation water pump" },
-                    { name: "PoolPump", tag: "field", description: "Pool pump" },
-                    { name: "Other", tag: "field", description: "Other appliance type" }
+                    { tag: "field", name: "Evse", description: "EV Supply Equipment" },
+                    { tag: "field", name: "SpaceHeating", description: "Space heating appliance" },
+                    { tag: "field", name: "WaterHeating", description: "Water heating appliance" },
+                    { tag: "field", name: "SpaceCooling", description: "Space cooling appliance" },
+                    { tag: "field", name: "SpaceHeatingCooling", description: "Space heating and cooling appliance" },
+                    { tag: "field", name: "BatteryStorage", description: "Battery Electric Storage System" },
+                    { tag: "field", name: "SolarPv", description: "Solar PV inverter" },
+                    { tag: "field", name: "FridgeFreezer", description: "Fridge / Freezer" },
+                    { tag: "field", name: "WashingMachine", description: "Washing Machine" },
+                    { tag: "field", name: "Dishwasher", description: "Dishwasher" },
+                    { tag: "field", name: "Cooking", description: "Cooking appliance" },
+                    { tag: "field", name: "HomeWaterPump", description: "Home water pump (e.g. drinking well)" },
+                    { tag: "field", name: "IrrigationWaterPump", description: "Irrigation water pump" },
+                    { tag: "field", name: "PoolPump", description: "Pool pump" },
+                    { tag: "field", name: "Other", description: "Other appliance type" }
                 ]
             },
 
             {
-                name: "ESAStateEnum", tag: "datatype",
+                tag: "datatype", name: "ESAStateEnum",
                 xref: "cluster§9.2.7.3",
 
                 children: [
                     {
-                        name: "Offline", tag: "field",
+                        tag: "field", name: "Offline",
                         description: "The ESA is not available to the EMS (e.g. start- up, maintenance mode)"
                     },
                     {
-                        name: "Online", tag: "field",
+                        tag: "field", name: "Online",
                         description: "The ESA is working normally and can be controlled by the EMS"
                     },
                     {
-                        name: "Fault", tag: "field",
+                        tag: "field", name: "Fault",
                         description: "The ESA has developed a fault and cannot provide service"
                     },
                     {
-                        name: "PowerAdjustActive", tag: "field",
+                        tag: "field", name: "PowerAdjustActive",
                         description: "The ESA is in the middle of a power adjustment event"
                     },
                     {
-                        name: "Paused", tag: "field",
+                        tag: "field", name: "Paused",
                         description: "The ESA is currently paused by a client using the PauseRequest command"
                     }
                 ]
             },
 
             {
-                name: "OptOutStateEnum", tag: "datatype",
+                tag: "datatype", name: "OptOutStateEnum",
                 xref: "cluster§9.2.7.4",
 
                 children: [
                     {
-                        name: "NoOptOut", tag: "field",
+                        tag: "field", name: "NoOptOut",
                         description: "The user has not opted out of either local or grid optimizations"
                     },
                     {
-                        name: "LocalOptOut", tag: "field",
+                        tag: "field", name: "LocalOptOut",
                         description: "The user has opted out of local EMS optimizations only"
                     },
                     {
-                        name: "GridOptOut", tag: "field",
+                        tag: "field", name: "GridOptOut",
                         description: "The user has opted out of grid EMS optimizations only"
                     },
                     {
-                        name: "OptOut", tag: "field",
+                        tag: "field", name: "OptOut",
                         description: "The user has opted out of all external optimizations"
                     }
                 ]
             },
 
             {
-                name: "CauseEnum", tag: "datatype",
+                tag: "datatype", name: "CauseEnum",
                 xref: "cluster§9.2.7.5",
 
                 children: [
                     {
-                        name: "NormalCompletion", tag: "field",
+                        tag: "field", name: "NormalCompletion",
                         description: "The ESA completed the power adjustment as requested"
                     },
-                    { name: "Offline", tag: "field", description: "The ESA was set to offline" },
+                    { tag: "field", name: "Offline", description: "The ESA was set to offline" },
                     {
-                        name: "Fault", tag: "field",
+                        tag: "field", name: "Fault",
                         description: "The ESA has developed a fault could not complete the adjustment"
                     },
                     {
-                        name: "UserOptOut", tag: "field",
+                        tag: "field", name: "UserOptOut",
                         description: "The user has disabled the ESA’s flexibility capability"
                     },
-                    { name: "Cancelled", tag: "field", description: "The adjustment was cancelled by a client" }
+                    { tag: "field", name: "Cancelled", description: "The adjustment was cancelled by a client" }
                 ]
             },
 
             {
-                name: "AdjustmentCauseEnum", tag: "datatype",
+                tag: "datatype", name: "AdjustmentCauseEnum",
                 xref: "cluster§9.2.7.6",
 
                 children: [
                     {
-                        name: "LocalOptimization", tag: "field",
+                        tag: "field", name: "LocalOptimization",
                         description: "The adjustment is to optimize the local energy usage"
                     },
                     {
-                        name: "GridOptimization", tag: "field",
+                        tag: "field", name: "GridOptimization",
                         description: "The adjustment is to optimize the grid energy usage"
                     }
                 ]
             },
 
             {
-                name: "ForecastUpdateReasonEnum", tag: "datatype",
+                tag: "datatype", name: "ForecastUpdateReasonEnum",
                 xref: "cluster§9.2.7.7",
 
                 children: [
                     {
-                        name: "InternalOptimization", tag: "field",
+                        tag: "field", name: "InternalOptimization",
                         description: "The update was due to internal ESA device optimization"
                     },
                     {
-                        name: "LocalOptimization", tag: "field",
+                        tag: "field", name: "LocalOptimization",
                         description: "The update was due to local EMS optimization"
                     },
-                    { name: "GridOptimization", tag: "field", description: "The update was due to grid optimization" }
+                    { tag: "field", name: "GridOptimization", description: "The update was due to grid optimization" }
                 ]
             },
 
             {
-                name: "PowerAdjustReasonEnum", tag: "datatype",
+                tag: "datatype", name: "PowerAdjustReasonEnum",
                 xref: "cluster§9.2.7.8",
 
                 children: [
-                    { name: "NoAdjustment", tag: "field", description: "There is no Power Adjustment active" },
+                    { tag: "field", name: "NoAdjustment", description: "There is no Power Adjustment active" },
                     {
-                        name: "LocalOptimizationAdjustment", tag: "field",
+                        tag: "field", name: "LocalOptimizationAdjustment",
                         description: "There is PowerAdjustment active due to local EMS optimization"
                     },
                     {
-                        name: "GridOptimizationAdjustment", tag: "field",
+                        tag: "field", name: "GridOptimizationAdjustment",
                         description: "There is PowerAdjustment active due to local EMS optimization"
                     }
                 ]
             },
 
             {
-                name: "CostStruct", tag: "datatype",
+                tag: "datatype", name: "CostStruct",
                 details: "This indicates a generic mechanism for expressing cost to run an appliance, in terms of financial, " +
                     "GHG emissions, comfort value etc.",
                 xref: "cluster§9.2.7.9",
 
                 children: [
                     {
-                        name: "CostType", tag: "field",
+                        tag: "field", name: "CostType",
                         details: "This field shall indicate the type of cost being represented (see CostTypeEnum).",
                         xref: "cluster§9.2.7.9.1"
                     },
 
                     {
-                        name: "Value", tag: "field",
+                        tag: "field", name: "Value",
                         details: "This field shall indicate the value of the cost. This may be negative (indicating that it is not a " +
                             "cost, but a free benefit)." +
                             "\n" +
@@ -875,14 +875,14 @@ Resource.add(
                     },
 
                     {
-                        name: "DecimalPoints", tag: "field",
+                        tag: "field", name: "DecimalPoints",
                         details: "This field shall indicate the number of digits to the right of the decimal point in the Value field. " +
                             "For example, if the Value was 102 and DecimalPoints was 2, then this would represent a cost of 1.02.",
                         xref: "cluster§9.2.7.9.3"
                     },
 
                     {
-                        name: "Currency", tag: "field",
+                        tag: "field", name: "Currency",
                         details: "Indicates the currency for the value in the Value field. The value of the currency field shall match " +
                             "the values defined by [ISO 4217]." +
                             "\n" +
@@ -893,12 +893,12 @@ Resource.add(
             },
 
             {
-                name: "PowerAdjustStruct", tag: "datatype",
+                tag: "datatype", name: "PowerAdjustStruct",
                 xref: "cluster§9.2.7.10",
 
                 children: [
                     {
-                        name: "MinPower", tag: "field",
+                        tag: "field", name: "MinPower",
                         details: "This field shall indicate the minimum power that the ESA can have its power adjusted to." +
                             "\n" +
                             "Note that this is a signed value. Negative values indicate power flows out of the node (e.g. " +
@@ -907,7 +907,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxPower", tag: "field",
+                        tag: "field", name: "MaxPower",
 
                         details: "This field shall indicate the maximum power that the ESA can have its power adjusted to." +
                             "\n" +
@@ -930,7 +930,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MinDuration", tag: "field",
+                        tag: "field", name: "MinDuration",
                         details: "This field shall indicate the minimum duration, in seconds, that a controller may invoke an ESA " +
                             "power adjustment. Manufacturers may use this to as an anti-cycling capability to avoid controllers " +
                             "from rapidly making power adjustments.",
@@ -938,7 +938,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxDuration", tag: "field",
+                        tag: "field", name: "MaxDuration",
                         details: "This field shall indicate the maximum duration, in seconds, that a controller may invoke an ESA " +
                             "power adjustment. Manufacturers may use this to protect the user experience, to avoid over heating " +
                             "of the ESA, ensuring that there is sufficient headroom to use or store energy in the ESA or for any " +
@@ -949,11 +949,11 @@ Resource.add(
             },
 
             {
-                name: "PowerAdjustCapabilityStruct", tag: "datatype",
+                tag: "datatype", name: "PowerAdjustCapabilityStruct",
                 xref: "cluster§9.2.7.11",
 
                 children: [{
-                    name: "PowerAdjustCapability", tag: "field",
+                    tag: "field", name: "PowerAdjustCapability",
 
                     details: "This field shall indicate how the ESA can be adjusted at the current time." +
                         "\n" +
@@ -975,7 +975,7 @@ Resource.add(
             },
 
             {
-                name: "ForecastStruct", tag: "datatype",
+                tag: "datatype", name: "ForecastStruct",
 
                 details: "This indicates a list of 'slots' describing the overall timing of the ESA’s planned energy and power " +
                     "use, with different power and energy demands per slot. For example, slots might be used to describe " +
@@ -989,7 +989,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "ForecastId", tag: "field",
+                        tag: "field", name: "ForecastId",
 
                         details: "This field shall indicate the sequence number for the current forecast. If the ESA updates a " +
                             "forecast, it shall monotonically increase this value." +
@@ -1004,32 +1004,32 @@ Resource.add(
                     },
 
                     {
-                        name: "ActiveSlotNumber", tag: "field",
+                        tag: "field", name: "ActiveSlotNumber",
                         details: "This field shall indicate which element of the Slots list is currently active in the Forecast " +
                             "sequence. A null value indicates that the sequence has not yet started.",
                         xref: "cluster§9.2.7.13.2"
                     },
 
                     {
-                        name: "StartTime", tag: "field",
+                        tag: "field", name: "StartTime",
                         details: "This field shall indicate the planned start time, in UTC, for the entire Forecast.",
                         xref: "cluster§9.2.7.13.3"
                     },
                     {
-                        name: "EndTime", tag: "field",
+                        tag: "field", name: "EndTime",
                         details: "This field shall indicate the planned end time, in UTC, for the entire Forecast.",
                         xref: "cluster§9.2.7.13.4"
                     },
 
                     {
-                        name: "EarliestStartTime", tag: "field",
+                        tag: "field", name: "EarliestStartTime",
                         details: "This field shall indicate the earliest start time, in UTC, that the entire Forecast can be shifted " +
                             "to. A null value indicates that it can be started immediately.",
                         xref: "cluster§9.2.7.13.5"
                     },
 
                     {
-                        name: "LatestEndTime", tag: "field",
+                        tag: "field", name: "LatestEndTime",
                         details: "This field shall indicate the latest end time, in UTC, for the entire Forecast." +
                             "\n" +
                             "e.g. for an EVSE charging session, this may indicate the departure time for the vehicle, by which " +
@@ -1038,7 +1038,7 @@ Resource.add(
                     },
 
                     {
-                        name: "IsPausable", tag: "field",
+                        tag: "field", name: "IsPausable",
                         details: "This field shall indicate that some part of the Forecast can be paused. It aims to allow a client to " +
                             "read this flag and if it is false, then none of the slots contain SlotIsPausable set to true. This " +
                             "can save a client from having to check each slot in the list.",
@@ -1046,7 +1046,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Slots", tag: "field",
+                        tag: "field", name: "Slots",
                         details: "This field shall contain a list of SlotStructs." +
                             "\n" +
                             "It shall contain at least 1 entry, and a maximum of 10.",
@@ -1054,7 +1054,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ForecastUpdateReason", tag: "field",
+                        tag: "field", name: "ForecastUpdateReason",
                         details: "This field shall contain the reason the current Forecast was generated.",
                         xref: "cluster§9.2.7.13.9"
                     }
@@ -1062,34 +1062,34 @@ Resource.add(
             },
 
             {
-                name: "SlotStruct", tag: "datatype",
+                tag: "datatype", name: "SlotStruct",
                 details: "This indicates a specific stage of an ESA’s operation.",
                 xref: "cluster§9.2.7.14",
 
                 children: [
                     {
-                        name: "MinDuration", tag: "field",
+                        tag: "field", name: "MinDuration",
                         details: "This field shall indicate the minimum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.1"
                     },
 
                     {
-                        name: "MaxDuration", tag: "field",
+                        tag: "field", name: "MaxDuration",
                         details: "This field shall indicate the maximum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.2"
                     },
 
                     {
-                        name: "DefaultDuration", tag: "field",
+                        tag: "field", name: "DefaultDuration",
                         details: "This field shall indicate the expected time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.3"
                     },
 
                     {
-                        name: "ElapsedSlotTime", tag: "field",
+                        tag: "field", name: "ElapsedSlotTime",
 
                         details: "This field shall indicate the time (in seconds) that has already elapsed whilst in this slot. If the " +
                             "slot has not yet been started, then it shall be 0. Once the slot has been completed, then this " +
@@ -1104,7 +1104,7 @@ Resource.add(
                     },
 
                     {
-                        name: "RemainingSlotTime", tag: "field",
+                        tag: "field", name: "RemainingSlotTime",
 
                         details: "This field shall indicate the time (in seconds) that is estimated to be remaining." +
                             "\n" +
@@ -1122,13 +1122,13 @@ Resource.add(
                     },
 
                     {
-                        name: "SlotIsPausable", tag: "field",
+                        tag: "field", name: "SlotIsPausable",
                         details: "This field shall indicate whether this slot can be paused.",
                         xref: "cluster§9.2.7.14.6"
                     },
 
                     {
-                        name: "MinPauseDuration", tag: "field",
+                        tag: "field", name: "MinPauseDuration",
                         details: "This field shall indicate the shortest period that the slot can be paused for. This can be set to " +
                             "avoid controllers trying to pause ESAs for short periods and then resuming operation in a cyclic " +
                             "fashion which may damage or cause excess energy to be consumed with restarting of an operation.",
@@ -1136,13 +1136,13 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxPauseDuration", tag: "field",
+                        tag: "field", name: "MaxPauseDuration",
                         details: "This field shall indicate the longest period that the slot can be paused for.",
                         xref: "cluster§9.2.7.14.8"
                     },
 
                     {
-                        name: "ManufacturerEsaState", tag: "field",
+                        tag: "field", name: "ManufacturerEsaState",
 
                         details: "This field shall indicate a manufacturer defined value indicating the state of the ESA." +
                             "\n" +
@@ -1168,7 +1168,7 @@ Resource.add(
                     },
 
                     {
-                        name: "NominalPower", tag: "field",
+                        tag: "field", name: "NominalPower",
                         details: "This field shall indicate the expected power that the appliance will use during this slot. It may be " +
                             "considered the average value over the slot, and some variation from this would be expected (for " +
                             "example, as it is ramping up).",
@@ -1176,7 +1176,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MinPower", tag: "field",
+                        tag: "field", name: "MinPower",
                         details: "This field shall indicate the lowest power that the appliance expects to use during this slot. (e.g. " +
                             "during a ramp up it may be 0W)." +
                             "\n" +
@@ -1185,7 +1185,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxPower", tag: "field",
+                        tag: "field", name: "MaxPower",
                         details: "This field shall indicate the maximum power that the appliance expects to use during this slot. " +
                             "(e.g. during a ramp up it may be 0W). This field ignores the effects of short-lived inrush currents." +
                             "\n" +
@@ -1194,7 +1194,7 @@ Resource.add(
                     },
 
                     {
-                        name: "NominalEnergy", tag: "field",
+                        tag: "field", name: "NominalEnergy",
                         details: "This field shall indicate the expected energy that the appliance expects to use or produce during " +
                             "this slot." +
                             "\n" +
@@ -1203,7 +1203,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Costs", tag: "field",
+                        tag: "field", name: "Costs",
 
                         details: "This field shall indicate the current estimated cost for operating." +
                             "\n" +
@@ -1230,7 +1230,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MinPowerAdjustment", tag: "field",
+                        tag: "field", name: "MinPowerAdjustment",
 
                         details: "This field shall indicate the minimum power that the appliance can be requested to use." +
                             "\n" +
@@ -1243,7 +1243,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxPowerAdjustment", tag: "field",
+                        tag: "field", name: "MaxPowerAdjustment",
 
                         details: "This field shall indicate the maximum power that the appliance can be requested to use." +
                             "\n" +
@@ -1256,7 +1256,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MinDurationAdjustment", tag: "field",
+                        tag: "field", name: "MinDurationAdjustment",
 
                         details: "This field shall indicate the minimum time, in seconds, that the slot can be requested to shortened " +
                             "to." +
@@ -1271,7 +1271,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaxDurationAdjustment", tag: "field",
+                        tag: "field", name: "MaxDurationAdjustment",
 
                         details: "This field shall indicate the maximum time, in seconds, that the slot can be requested to extended " +
                             "to." +
@@ -1288,12 +1288,12 @@ Resource.add(
             },
 
             {
-                name: "SlotAdjustmentStruct", tag: "datatype",
+                tag: "datatype", name: "SlotAdjustmentStruct",
                 xref: "cluster§9.2.7.15",
 
                 children: [
                     {
-                        name: "SlotIndex", tag: "field",
+                        tag: "field", name: "SlotIndex",
                         details: "This field shall indicate the index into the Slots list within the Forecast that is to be modified. " +
                             "It shall be less than the actual length of the Slots list (implicitly it must be in the range 0 to 9 " +
                             "based on the maximum length of the Slots list constraint).",
@@ -1301,7 +1301,7 @@ Resource.add(
                     },
 
                     {
-                        name: "NominalPower", tag: "field",
+                        tag: "field", name: "NominalPower",
                         details: "This field shall indicate the new requested power that the ESA shall operate at. It MUST be between " +
                             "the AbsMinPower and AbsMaxPower attributes as advertised by the ESA if it supports PFR." +
                             "\n" +
@@ -1311,7 +1311,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the new requested duration, in seconds, that the ESA shall extend or " +
                             "shorten the slot duration to. It MUST be between the MinDurationAdjustment and MaxDurationAdjustment " +
                             "for the slot as advertised by the ESA.",
@@ -1321,7 +1321,7 @@ Resource.add(
             },
 
             {
-                name: "ConstraintsStruct", tag: "datatype",
+                tag: "datatype", name: "ConstraintsStruct",
                 details: "The ConstraintsStruct allows a client to inform an ESA about a constraint period (such as a grid " +
                     "event, or perhaps excess solar PV). The format allows the client to suggest that the ESA can either " +
                     "turn up its energy consumption, or turn down its energy consumption during this period.",
@@ -1329,7 +1329,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "StartTime", tag: "field",
+                        tag: "field", name: "StartTime",
                         details: "This field shall indicate the start time of the constraint period that the client wishes the ESA to " +
                             "compute a new Forecast." +
                             "\n" +
@@ -1338,13 +1338,13 @@ Resource.add(
                     },
 
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the duration of the constraint in seconds.",
                         xref: "cluster§9.2.7.16.2"
                     },
 
                     {
-                        name: "NominalPower", tag: "field",
+                        tag: "field", name: "NominalPower",
                         details: "This field shall indicate the nominal power that client wishes the ESA to operate at during the " +
                             "constrained period. It MUST be between the AbsMinPower and AbsMaxPower attributes as advertised by " +
                             "the ESA if it supports PFR." +
@@ -1354,7 +1354,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaximumEnergy", tag: "field",
+                        tag: "field", name: "MaximumEnergy",
                         details: "This field shall indicate the maximum energy that can be transferred to or from the ESA during the " +
                             "constraint period." +
                             "\n" +
@@ -1363,7 +1363,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LoadControl", tag: "field",
+                        tag: "field", name: "LoadControl",
 
                         details: "This field shall indicate the turn up or turn down nature that the grid wants as the outcome by the " +
                             "ESA during the constraint period." +

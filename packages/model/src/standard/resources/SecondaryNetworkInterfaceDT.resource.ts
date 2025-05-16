@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "SecondaryNetworkInterface", tag: "deviceType",
+    tag: "deviceType", name: "SecondaryNetworkInterface",
     classification: "utility",
 
     details: "A Secondary Network Interface device provides an additional network interface supported by the Node, " +
@@ -23,9 +23,9 @@ Resource.add({
     xref: "device§2.8",
 
     children: [
-        { name: "NetworkCommissioning", tag: "requirement", xref: "device§2.8.3" },
-        { name: "EthernetNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" },
-        { name: "WiFiNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" },
-        { name: "ThreadNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" }
+        { tag: "requirement", name: "NetworkCommissioning", xref: "device§2.8.3" },
+        { tag: "requirement", name: "EthernetNetworkDiagnostics", xref: "device§2.8.3" },
+        { tag: "requirement", name: "WiFiNetworkDiagnostics", xref: "device§2.8.3" },
+        { tag: "requirement", name: "ThreadNetworkDiagnostics", xref: "device§2.8.3" }
     ]
 });

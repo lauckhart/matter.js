@@ -10,6 +10,7 @@ import type { ElementTag } from "#common/ElementTag.js";
 import type { Specification } from "#common/Specification.js";
 import { CrossReference } from "./CrossReference.js";
 import type { Model } from "./Model.js";
+import type { RequirementModel } from "./RequirementModel.js";
 
 /**
  * Model specification details.
@@ -132,13 +133,12 @@ export class ResourceBundle {
 
         if (item.children) {
             for (const child of item.children) {
-                this.#addNode(child, owner);
+                this.#addNode(child, node);
             }
         }
     }
 
     #findNode(model: Model): IndexNode | undefined {
-        console.log("!!!", model.name);
         let parent;
 
         if (!model.parent || model.parent === model.root) {
@@ -147,8 +147,6 @@ export class ResourceBundle {
             parent = this.#findNode(model.parent);
         }
 
-        console.log("FOUND PARENT WITH:", parent?.children?.keys());
-
         if (!parent) {
             return;
         }
@@ -156,17 +154,12 @@ export class ResourceBundle {
         const key = `${model.tag}:${model.name}`;
         const node = parent.children?.get(key);
 
-        console.log(node);
-
         if (!node) {
             return;
         }
 
         if (node.discriminated) {
-            const conformance = (model as { conformance?: Conformance }).conformance;
-            if (conformance !== undefined && !conformance.isEmpty) {
-                return node.discriminated?.get(conformance.toString());
-            }
+            return node.discriminated?.get(Resource.discriminatorFor(model));
         }
 
         return node;
@@ -193,5 +186,14 @@ export namespace Resource {
 
     export function add(named: Named) {
         ResourceBundle.default.add(named);
+    }
+
+    export function discriminatorFor(model: Model) {
+        if (model.tag === "requirement") {
+            return `${(model as RequirementModel).conformance ?? ""}:${(model as RequirementModel).element}`;
+        }
+        if ("conformance" in model && (model.conformance as Conformance).isEmpty === false) {
+            return `${model.conformance}`;
+        }
     }
 }

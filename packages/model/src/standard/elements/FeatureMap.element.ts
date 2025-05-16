@@ -10,7 +10,7 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { AttributeElement as Attribute } from "../../elements/index.js";
 
 export const FeatureMap = Attribute({
-    id: 0xfffc, name: "FeatureMap", type: "map32",
-    access: "R V", conformance: "M", default: 0, isSeed: true, quality: "F"
+    name: "FeatureMap", id: 0xfffc, type: "map32",
+    isSeed: true, default: 0, conformance: "M", access: "R V", quality: "F"
 });
 MatterDefinition.children.push(FeatureMap);

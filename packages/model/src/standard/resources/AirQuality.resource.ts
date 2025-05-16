@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AirQuality", tag: "cluster",
+    tag: "cluster", name: "AirQuality",
     classification: "application", pics: "AIRQUAL",
     details: "This cluster provides an interface to air quality classification using distinct levels with " +
         "human-readable labels.",
@@ -17,38 +17,38 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§2.9.4",
 
             children: [
-                { name: "FAIR", tag: "field", details: "Cluster supports the Fair air quality level" },
-                { name: "MOD", tag: "field", details: "Cluster supports the Moderate air quality level" },
-                { name: "VPOOR", tag: "field", details: "Cluster supports the Very poor air quality level" },
-                { name: "XPOOR", tag: "field", details: "Cluster supports the Extremely poor air quality level" }
+                { tag: "field", name: "FAIR", details: "Cluster supports the Fair air quality level" },
+                { tag: "field", name: "MOD", details: "Cluster supports the Moderate air quality level" },
+                { tag: "field", name: "VPOOR", details: "Cluster supports the Very poor air quality level" },
+                { tag: "field", name: "XPOOR", details: "Cluster supports the Extremely poor air quality level" }
             ]
         },
 
         {
-            name: "AirQuality", tag: "attribute",
+            tag: "attribute", name: "AirQuality",
             details: "Indicates a value from AirQualityEnum that is indicative of the currently measured air quality.",
             xref: "cluster§2.9.6.1"
         },
 
         {
-            name: "AirQualityEnum", tag: "datatype",
+            tag: "datatype", name: "AirQualityEnum",
             details: "The AirQualityEnum provides a representation of the quality of the analyzed air. It is up to the " +
                 "device manufacturer to determine the mapping between the measured values and their corresponding " +
                 "enumeration values.",
             xref: "cluster§2.9.5.1",
 
             children: [
-                { name: "Unknown", tag: "field", description: "The air quality is unknown." },
-                { name: "Good", tag: "field", description: "The air quality is good." },
-                { name: "Fair", tag: "field", description: "The air quality is fair." },
-                { name: "Moderate", tag: "field", description: "The air quality is moderate." },
-                { name: "Poor", tag: "field", description: "The air quality is poor." },
-                { name: "VeryPoor", tag: "field", description: "The air quality is very poor." },
-                { name: "ExtremelyPoor", tag: "field", description: "The air quality is extremely poor." }
+                { tag: "field", name: "Unknown", description: "The air quality is unknown." },
+                { tag: "field", name: "Good", description: "The air quality is good." },
+                { tag: "field", name: "Fair", description: "The air quality is fair." },
+                { tag: "field", name: "Moderate", description: "The air quality is moderate." },
+                { tag: "field", name: "Poor", description: "The air quality is poor." },
+                { tag: "field", name: "VeryPoor", description: "The air quality is very poor." },
+                { tag: "field", name: "ExtremelyPoor", description: "The air quality is extremely poor." }
             ]
         }
     ]

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Switches", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "Switches",
 
     details: "The tags contained in this namespace are restricted for use in the switches domain and shall NOT be " +
         "used in any other domain or context. They are intended to indicate the function of a button on a " +
@@ -23,13 +23,13 @@ Resource.add({
     xref: "namespace§18",
 
     children: [
-        { name: "Up", tag: "semanticTag", description: "e.g. dim up (light)" },
-        { name: "Down", tag: "semanticTag", description: "e.g. dim down (light)" },
-        { name: "Next", tag: "semanticTag", description: "e.g. select next scene" },
-        { name: "Previous", tag: "semanticTag", description: "e.g. select previous scene" },
+        { tag: "semanticTag", name: "Up", description: "e.g. dim up (light)" },
+        { tag: "semanticTag", name: "Down", description: "e.g. dim down (light)" },
+        { tag: "semanticTag", name: "Next", description: "e.g. select next scene" },
+        { tag: "semanticTag", name: "Previous", description: "e.g. select previous scene" },
 
         {
-            name: "Custom", tag: "semanticTag",
+            tag: "semanticTag", name: "Custom",
             description: "Textual description provided in Label field",
             details: "When this value is used, the Label field in the same Semantic Tag structure shall be filled with a " +
                 "textual description of the function indicated on the button, such as a label or icon printed on the " +

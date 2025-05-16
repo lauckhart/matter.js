@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AirPurifier", tag: "deviceType",
+    tag: "deviceType", name: "AirPurifier",
     classification: "simple",
     details: "An Air Purifier is a standalone device that is designed to clean the air in a room." +
         "\n" +
@@ -18,11 +18,11 @@ Resource.add({
     xref: "device§9.3",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§9.3.5" },
-        { name: "Groups", tag: "requirement", xref: "device§9.3.5" },
-        { name: "OnOff", tag: "requirement", xref: "device§9.3.5" },
-        { name: "FanControl", tag: "requirement", xref: "device§9.3.5" },
-        { name: "HepaFilterMonitoring", tag: "requirement", xref: "device§9.3.5" },
-        { name: "ActivatedCarbonFilterMonitoring", tag: "requirement", xref: "device§9.3.5" }
+        { tag: "requirement", name: "Identify", xref: "device§9.3.5" },
+        { tag: "requirement", name: "Groups", xref: "device§9.3.5" },
+        { tag: "requirement", name: "OnOff", xref: "device§9.3.5" },
+        { tag: "requirement", name: "FanControl", xref: "device§9.3.5" },
+        { tag: "requirement", name: "HepaFilterMonitoring", xref: "device§9.3.5" },
+        { tag: "requirement", name: "ActivatedCarbonFilterMonitoring", xref: "device§9.3.5" }
     ]
 });

@@ -16,343 +16,343 @@ import {
 } from "../../elements/index.js";
 
 export const PowerSource = Cluster(
-    { id: 0x2f, name: "PowerSource" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "PowerSource", id: 0x2f },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "WIRED", conformance: "O.a", constraint: "0", longName: "Wired" }),
-        Field({ name: "BAT", conformance: "O.a", constraint: "1", longName: "Battery" }),
-        Field({ name: "RECHG", conformance: "[BAT]", constraint: "2", longName: "Rechargeable" }),
-        Field({ name: "REPLC", conformance: "[BAT]", constraint: "3", longName: "Replaceable" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "WIRED", constraint: "0", conformance: "O.a", longName: "Wired" }),
+        Field({ name: "BAT", constraint: "1", conformance: "O.a", longName: "Battery" }),
+        Field({ name: "RECHG", constraint: "2", conformance: "[BAT]", longName: "Rechargeable" }),
+        Field({ name: "REPLC", constraint: "3", conformance: "[BAT]", longName: "Replaceable" })
     ),
 
     Attribute(
-        { id: 0x0, name: "Status", type: "PowerSourceStatusEnum", access: "R V", conformance: "M", constraint: "desc" }
+        { name: "Status", id: 0x0, type: "PowerSourceStatusEnum", constraint: "desc", conformance: "M", access: "R V" }
     ),
-    Attribute({ id: 0x1, name: "Order", type: "uint8", access: "R V", conformance: "M", quality: "N" }),
+    Attribute({ name: "Order", id: 0x1, type: "uint8", conformance: "M", access: "R V", quality: "N" }),
     Attribute({
-        id: 0x2, name: "Description", type: "string",
-        access: "R V", conformance: "M", constraint: "max 60", quality: "F"
+        name: "Description", id: 0x2, type: "string",
+        constraint: "max 60", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x3, name: "WiredAssessedInputVoltage", type: "uint32",
-        access: "R V", conformance: "[WIRED]", quality: "X C"
+        name: "WiredAssessedInputVoltage", id: 0x3, type: "uint32",
+        conformance: "[WIRED]", access: "R V", quality: "X C"
     }),
     Attribute({
-        id: 0x4, name: "WiredAssessedInputFrequency", type: "uint16",
-        access: "R V", conformance: "[WIRED]", quality: "X C"
+        name: "WiredAssessedInputFrequency", id: 0x4, type: "uint16",
+        conformance: "[WIRED]", access: "R V", quality: "X C"
     }),
     Attribute({
-        id: 0x5, name: "WiredCurrentType", type: "WiredCurrentTypeEnum",
-        access: "R V", conformance: "WIRED", constraint: "desc", quality: "F"
+        name: "WiredCurrentType", id: 0x5, type: "WiredCurrentTypeEnum",
+        constraint: "desc", conformance: "WIRED", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x6, name: "WiredAssessedCurrent", type: "uint32", access: "R V", conformance: "[WIRED]", quality: "X C" }),
+    Attribute({ name: "WiredAssessedCurrent", id: 0x6, type: "uint32", conformance: "[WIRED]", access: "R V", quality: "X C" }),
     Attribute(
-        { id: 0x7, name: "WiredNominalVoltage", type: "uint32", access: "R V", conformance: "[WIRED]", quality: "F" }
+        { name: "WiredNominalVoltage", id: 0x7, type: "uint32", conformance: "[WIRED]", access: "R V", quality: "F" }
     ),
     Attribute(
-        { id: 0x8, name: "WiredMaximumCurrent", type: "uint32", access: "R V", conformance: "[WIRED]", quality: "F" }
+        { name: "WiredMaximumCurrent", id: 0x8, type: "uint32", conformance: "[WIRED]", access: "R V", quality: "F" }
     ),
-    Attribute({ id: 0x9, name: "WiredPresent", type: "bool", access: "R V", conformance: "[WIRED]" }),
+    Attribute({ name: "WiredPresent", id: 0x9, type: "bool", conformance: "[WIRED]", access: "R V" }),
 
     Attribute(
         {
-            id: 0xa, name: "ActiveWiredFaults", type: "list",
-            access: "R V", conformance: "[WIRED]", constraint: "max 8"
+            name: "ActiveWiredFaults", id: 0xa, type: "list",
+            constraint: "max 8", conformance: "[WIRED]", access: "R V"
         },
         Field({ name: "entry", type: "WiredFaultEnum" })
     ),
 
-    Attribute({ id: 0xb, name: "BatVoltage", type: "uint32", access: "R V", conformance: "[BAT]", quality: "X C" }),
+    Attribute({ name: "BatVoltage", id: 0xb, type: "uint32", conformance: "[BAT]", access: "R V", quality: "X C" }),
     Attribute({
-        id: 0xc, name: "BatPercentRemaining", type: "uint8",
-        access: "R V", conformance: "[BAT]", constraint: "max 200", quality: "X Q"
+        name: "BatPercentRemaining", id: 0xc, type: "uint8",
+        constraint: "max 200", conformance: "[BAT]", access: "R V", quality: "X Q"
     }),
-    Attribute({ id: 0xd, name: "BatTimeRemaining", type: "uint32", access: "R V", conformance: "[BAT]", quality: "X Q" }),
+    Attribute({ name: "BatTimeRemaining", id: 0xd, type: "uint32", conformance: "[BAT]", access: "R V", quality: "X Q" }),
     Attribute({
-        id: 0xe, name: "BatChargeLevel", type: "BatChargeLevelEnum",
-        access: "R V", conformance: "BAT", constraint: "desc"
+        name: "BatChargeLevel", id: 0xe, type: "BatChargeLevelEnum",
+        constraint: "desc", conformance: "BAT", access: "R V"
     }),
-    Attribute({ id: 0xf, name: "BatReplacementNeeded", type: "bool", access: "R V", conformance: "BAT" }),
+    Attribute({ name: "BatReplacementNeeded", id: 0xf, type: "bool", conformance: "BAT", access: "R V" }),
     Attribute({
-        id: 0x10, name: "BatReplaceability", type: "BatReplaceabilityEnum",
-        access: "R V", conformance: "BAT", quality: "F"
+        name: "BatReplaceability", id: 0x10, type: "BatReplaceabilityEnum",
+        conformance: "BAT", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x11, name: "BatPresent", type: "bool", access: "R V", conformance: "[BAT]" }),
+    Attribute({ name: "BatPresent", id: 0x11, type: "bool", conformance: "[BAT]", access: "R V" }),
     Attribute(
-        { id: 0x12, name: "ActiveBatFaults", type: "list", access: "R V", conformance: "[BAT]", constraint: "max 8" },
+        { name: "ActiveBatFaults", id: 0x12, type: "list", constraint: "max 8", conformance: "[BAT]", access: "R V" },
         Field({ name: "entry", type: "BatFaultEnum" })
     ),
     Attribute({
-        id: 0x13, name: "BatReplacementDescription", type: "string",
-        access: "R V", conformance: "REPLC", constraint: "max 60", quality: "F"
+        name: "BatReplacementDescription", id: 0x13, type: "string",
+        constraint: "max 60", conformance: "REPLC", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x14, name: "BatCommonDesignation", type: "BatCommonDesignationEnum",
-        access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F"
+        name: "BatCommonDesignation", id: 0x14, type: "BatCommonDesignationEnum",
+        constraint: "desc", conformance: "[REPLC]", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x15, name: "BatAnsiDesignation", type: "string",
-        access: "R V", conformance: "[REPLC]", constraint: "max 20", quality: "F"
+        name: "BatAnsiDesignation", id: 0x15, type: "string",
+        constraint: "max 20", conformance: "[REPLC]", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x16, name: "BatIecDesignation", type: "string",
-        access: "R V", conformance: "[REPLC]", constraint: "max 20", quality: "F"
+        name: "BatIecDesignation", id: 0x16, type: "string",
+        constraint: "max 20", conformance: "[REPLC]", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x17, name: "BatApprovedChemistry", type: "BatApprovedChemistryEnum",
-        access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F"
+        name: "BatApprovedChemistry", id: 0x17, type: "BatApprovedChemistryEnum",
+        constraint: "desc", conformance: "[REPLC]", access: "R V", quality: "F"
     }),
     Attribute(
-        { id: 0x18, name: "BatCapacity", type: "uint32", access: "R V", conformance: "[REPLC | RECHG]", quality: "F" }
+        { name: "BatCapacity", id: 0x18, type: "uint32", conformance: "[REPLC | RECHG]", access: "R V", quality: "F" }
     ),
-    Attribute({ id: 0x19, name: "BatQuantity", type: "uint8", access: "R V", conformance: "REPLC", quality: "F" }),
+    Attribute({ name: "BatQuantity", id: 0x19, type: "uint8", conformance: "REPLC", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x1a, name: "BatChargeState", type: "BatChargeStateEnum",
-        access: "R V", conformance: "RECHG", constraint: "desc"
+        name: "BatChargeState", id: 0x1a, type: "BatChargeStateEnum",
+        constraint: "desc", conformance: "RECHG", access: "R V"
     }),
-    Attribute({ id: 0x1b, name: "BatTimeToFullCharge", type: "uint32", access: "R V", conformance: "[RECHG]", quality: "X Q" }),
-    Attribute({ id: 0x1c, name: "BatFunctionalWhileCharging", type: "bool", access: "R V", conformance: "RECHG" }),
+    Attribute({ name: "BatTimeToFullCharge", id: 0x1b, type: "uint32", conformance: "[RECHG]", access: "R V", quality: "X Q" }),
+    Attribute({ name: "BatFunctionalWhileCharging", id: 0x1c, type: "bool", conformance: "RECHG", access: "R V" }),
     Attribute(
-        { id: 0x1d, name: "BatChargingCurrent", type: "uint32", access: "R V", conformance: "[RECHG]", quality: "X C" }
+        { name: "BatChargingCurrent", id: 0x1d, type: "uint32", conformance: "[RECHG]", access: "R V", quality: "X C" }
     ),
 
     Attribute(
         {
-            id: 0x1e, name: "ActiveBatChargeFaults", type: "list",
-            access: "R V", conformance: "[RECHG]", constraint: "max 16"
+            name: "ActiveBatChargeFaults", id: 0x1e, type: "list",
+            constraint: "max 16", conformance: "[RECHG]", access: "R V"
         },
         Field({ name: "entry", type: "BatChargeFaultEnum" })
     ),
 
     Attribute(
-        { id: 0x1f, name: "EndpointList", type: "list", access: "R V", conformance: "M" },
+        { name: "EndpointList", id: 0x1f, type: "list", conformance: "M", access: "R V" },
         Field({ name: "entry", type: "endpoint-no" })
     ),
 
     Event(
-        { id: 0x0, name: "WiredFaultChange", access: "V", conformance: "[WIRED]", priority: "info" },
+        { name: "WiredFaultChange", id: 0x0, conformance: "[WIRED]", access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 8", default: [] },
+            { name: "Current", id: 0x0, type: "list", default: [], constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "WiredFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 8", default: [] },
+            { name: "Previous", id: 0x1, type: "list", default: [], constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "WiredFaultEnum" })
         )
     ),
 
     Event(
-        { id: 0x1, name: "BatFaultChange", access: "V", conformance: "[BAT]", priority: "info" },
+        { name: "BatFaultChange", id: 0x1, conformance: "[BAT]", access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 8", default: [] },
+            { name: "Current", id: 0x0, type: "list", default: [], constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "BatFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 8", default: [] },
+            { name: "Previous", id: 0x1, type: "list", default: [], constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "BatFaultEnum" })
         )
     ),
 
     Event(
-        { id: 0x2, name: "BatChargeFaultChange", access: "V", conformance: "[RECHG]", priority: "info" },
+        { name: "BatChargeFaultChange", id: 0x2, conformance: "[RECHG]", access: "V", priority: "info" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 16", default: [] },
+            { name: "Current", id: 0x0, type: "list", default: [], constraint: "max 16", conformance: "M" },
             Field({ name: "entry", type: "BatChargeFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 16", default: [] },
+            { name: "Previous", id: 0x1, type: "list", default: [], constraint: "max 16", conformance: "M" },
             Field({ name: "entry", type: "BatChargeFaultEnum" })
         )
     ),
 
     Datatype(
         { name: "WiredFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "OverVoltage", conformance: "M" }),
-        Field({ id: 0x2, name: "UnderVoltage", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "OverVoltage", id: 0x1, conformance: "M" }),
+        Field({ name: "UnderVoltage", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "OverTemp", conformance: "M" }),
-        Field({ id: 0x2, name: "UnderTemp", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "OverTemp", id: 0x1, conformance: "M" }),
+        Field({ name: "UnderTemp", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatChargeFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "AmbientTooHot", conformance: "M" }),
-        Field({ id: 0x2, name: "AmbientTooCold", conformance: "M" }),
-        Field({ id: 0x3, name: "BatteryTooHot", conformance: "M" }),
-        Field({ id: 0x4, name: "BatteryTooCold", conformance: "M" }),
-        Field({ id: 0x5, name: "BatteryAbsent", conformance: "M" }),
-        Field({ id: 0x6, name: "BatteryOverVoltage", conformance: "M" }),
-        Field({ id: 0x7, name: "BatteryUnderVoltage", conformance: "M" }),
-        Field({ id: 0x8, name: "ChargerOverVoltage", conformance: "M" }),
-        Field({ id: 0x9, name: "ChargerUnderVoltage", conformance: "M" }),
-        Field({ id: 0xa, name: "SafetyTimeout", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "AmbientTooHot", id: 0x1, conformance: "M" }),
+        Field({ name: "AmbientTooCold", id: 0x2, conformance: "M" }),
+        Field({ name: "BatteryTooHot", id: 0x3, conformance: "M" }),
+        Field({ name: "BatteryTooCold", id: 0x4, conformance: "M" }),
+        Field({ name: "BatteryAbsent", id: 0x5, conformance: "M" }),
+        Field({ name: "BatteryOverVoltage", id: 0x6, conformance: "M" }),
+        Field({ name: "BatteryUnderVoltage", id: 0x7, conformance: "M" }),
+        Field({ name: "ChargerOverVoltage", id: 0x8, conformance: "M" }),
+        Field({ name: "ChargerUnderVoltage", id: 0x9, conformance: "M" }),
+        Field({ name: "SafetyTimeout", id: 0xa, conformance: "M" })
     ),
 
     Datatype(
         { name: "PowerSourceStatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "Active", conformance: "M" }),
-        Field({ id: 0x2, name: "Standby", conformance: "M" }),
-        Field({ id: 0x3, name: "Unavailable", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "Active", id: 0x1, conformance: "M" }),
+        Field({ name: "Standby", id: 0x2, conformance: "M" }),
+        Field({ name: "Unavailable", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "WiredCurrentTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ac", conformance: "M" }),
-        Field({ id: 0x1, name: "Dc", conformance: "M" })
+        Field({ name: "Ac", id: 0x0, conformance: "M" }),
+        Field({ name: "Dc", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatChargeLevelEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ok", conformance: "M" }),
-        Field({ id: 0x1, name: "Warning", conformance: "M" }),
-        Field({ id: 0x2, name: "Critical", conformance: "M" })
+        Field({ name: "Ok", id: 0x0, conformance: "M" }),
+        Field({ name: "Warning", id: 0x1, conformance: "M" }),
+        Field({ name: "Critical", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatReplaceabilityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "NotReplaceable", conformance: "M" }),
-        Field({ id: 0x2, name: "UserReplaceable", conformance: "M" }),
-        Field({ id: 0x3, name: "FactoryReplaceable", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "NotReplaceable", id: 0x1, conformance: "M" }),
+        Field({ name: "UserReplaceable", id: 0x2, conformance: "M" }),
+        Field({ name: "FactoryReplaceable", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatCommonDesignationEnum", type: "enum16" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "Aaa", conformance: "M" }),
-        Field({ id: 0x2, name: "Aa", conformance: "M" }),
-        Field({ id: 0x3, name: "C", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0x4, name: "D", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0x5, name: "4V5", conformance: "M" }),
-        Field({ id: 0x6, name: "6V0", conformance: "M" }),
-        Field({ id: 0x7, name: "9V0", conformance: "M" }),
-        Field({ id: 0x8, name: "12Aa", conformance: "M" }),
-        Field({ id: 0x9, name: "Aaaa", conformance: "M" }),
-        Field({ id: 0xa, name: "A", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0xb, name: "B", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0xc, name: "F", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0xd, name: "N", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0xe, name: "No6", conformance: "M" }),
-        Field({ id: 0xf, name: "SubC", conformance: "M" }),
-        Field({ id: 0x10, name: "A23", conformance: "M" }),
-        Field({ id: 0x11, name: "A27", conformance: "M" }),
-        Field({ id: 0x12, name: "Ba5800", conformance: "M" }),
-        Field({ id: 0x13, name: "Duplex", conformance: "M" }),
-        Field({ id: 0x14, name: "4Sr44", conformance: "M" }),
-        Field({ id: 0x15, name: "523", conformance: "M" }),
-        Field({ id: 0x16, name: "531", conformance: "M" }),
-        Field({ id: 0x17, name: "15V0", conformance: "M" }),
-        Field({ id: 0x18, name: "22V5", conformance: "M" }),
-        Field({ id: 0x19, name: "30V0", conformance: "M" }),
-        Field({ id: 0x1a, name: "45V0", conformance: "M" }),
-        Field({ id: 0x1b, name: "67V5", conformance: "M" }),
-        Field({ id: 0x1c, name: "J", conformance: "M", longName: "Common type is as specified" }),
-        Field({ id: 0x1d, name: "Cr123A", conformance: "M" }),
-        Field({ id: 0x1e, name: "Cr2", conformance: "M" }),
-        Field({ id: 0x1f, name: "2Cr5", conformance: "M" }),
-        Field({ id: 0x20, name: "CrP2", conformance: "M" }),
-        Field({ id: 0x21, name: "CrV3", conformance: "M" }),
-        Field({ id: 0x22, name: "Sr41", conformance: "M" }),
-        Field({ id: 0x23, name: "Sr43", conformance: "M" }),
-        Field({ id: 0x24, name: "Sr44", conformance: "M" }),
-        Field({ id: 0x25, name: "Sr45", conformance: "M" }),
-        Field({ id: 0x26, name: "Sr48", conformance: "M" }),
-        Field({ id: 0x27, name: "Sr54", conformance: "M" }),
-        Field({ id: 0x28, name: "Sr55", conformance: "M" }),
-        Field({ id: 0x29, name: "Sr57", conformance: "M" }),
-        Field({ id: 0x2a, name: "Sr58", conformance: "M" }),
-        Field({ id: 0x2b, name: "Sr59", conformance: "M" }),
-        Field({ id: 0x2c, name: "Sr60", conformance: "M" }),
-        Field({ id: 0x2d, name: "Sr63", conformance: "M" }),
-        Field({ id: 0x2e, name: "Sr64", conformance: "M" }),
-        Field({ id: 0x2f, name: "Sr65", conformance: "M" }),
-        Field({ id: 0x30, name: "Sr66", conformance: "M" }),
-        Field({ id: 0x31, name: "Sr67", conformance: "M" }),
-        Field({ id: 0x32, name: "Sr68", conformance: "M" }),
-        Field({ id: 0x33, name: "Sr69", conformance: "M" }),
-        Field({ id: 0x34, name: "Sr516", conformance: "M" }),
-        Field({ id: 0x35, name: "Sr731", conformance: "M" }),
-        Field({ id: 0x36, name: "Sr712", conformance: "M" }),
-        Field({ id: 0x37, name: "Lr932", conformance: "M" }),
-        Field({ id: 0x38, name: "A5", conformance: "M" }),
-        Field({ id: 0x39, name: "A10", conformance: "M" }),
-        Field({ id: 0x3a, name: "A13", conformance: "M" }),
-        Field({ id: 0x3b, name: "A312", conformance: "M" }),
-        Field({ id: 0x3c, name: "A675", conformance: "M" }),
-        Field({ id: 0x3d, name: "Ac41E", conformance: "M" }),
-        Field({ id: 0x3e, name: "10180", conformance: "M" }),
-        Field({ id: 0x3f, name: "10280", conformance: "M" }),
-        Field({ id: 0x40, name: "10440", conformance: "M" }),
-        Field({ id: 0x41, name: "14250", conformance: "M" }),
-        Field({ id: 0x42, name: "14430", conformance: "M" }),
-        Field({ id: 0x43, name: "14500", conformance: "M" }),
-        Field({ id: 0x44, name: "14650", conformance: "M" }),
-        Field({ id: 0x45, name: "15270", conformance: "M" }),
-        Field({ id: 0x46, name: "16340", conformance: "M" }),
-        Field({ id: 0x47, name: "Rcr123A", conformance: "M" }),
-        Field({ id: 0x48, name: "17500", conformance: "M" }),
-        Field({ id: 0x49, name: "17670", conformance: "M" }),
-        Field({ id: 0x4a, name: "18350", conformance: "M" }),
-        Field({ id: 0x4b, name: "18500", conformance: "M" }),
-        Field({ id: 0x4c, name: "18650", conformance: "M" }),
-        Field({ id: 0x4d, name: "19670", conformance: "M" }),
-        Field({ id: 0x4e, name: "25500", conformance: "M" }),
-        Field({ id: 0x4f, name: "26650", conformance: "M" }),
-        Field({ id: 0x50, name: "32600", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "Aaa", id: 0x1, conformance: "M" }),
+        Field({ name: "Aa", id: 0x2, conformance: "M" }),
+        Field({ name: "C", id: 0x3, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "D", id: 0x4, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "4V5", id: 0x5, conformance: "M" }),
+        Field({ name: "6V0", id: 0x6, conformance: "M" }),
+        Field({ name: "9V0", id: 0x7, conformance: "M" }),
+        Field({ name: "12Aa", id: 0x8, conformance: "M" }),
+        Field({ name: "Aaaa", id: 0x9, conformance: "M" }),
+        Field({ name: "A", id: 0xa, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "B", id: 0xb, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "F", id: 0xc, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "N", id: 0xd, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "No6", id: 0xe, conformance: "M" }),
+        Field({ name: "SubC", id: 0xf, conformance: "M" }),
+        Field({ name: "A23", id: 0x10, conformance: "M" }),
+        Field({ name: "A27", id: 0x11, conformance: "M" }),
+        Field({ name: "Ba5800", id: 0x12, conformance: "M" }),
+        Field({ name: "Duplex", id: 0x13, conformance: "M" }),
+        Field({ name: "4Sr44", id: 0x14, conformance: "M" }),
+        Field({ name: "523", id: 0x15, conformance: "M" }),
+        Field({ name: "531", id: 0x16, conformance: "M" }),
+        Field({ name: "15V0", id: 0x17, conformance: "M" }),
+        Field({ name: "22V5", id: 0x18, conformance: "M" }),
+        Field({ name: "30V0", id: 0x19, conformance: "M" }),
+        Field({ name: "45V0", id: 0x1a, conformance: "M" }),
+        Field({ name: "67V5", id: 0x1b, conformance: "M" }),
+        Field({ name: "J", id: 0x1c, conformance: "M", longName: "Common type is as specified" }),
+        Field({ name: "Cr123A", id: 0x1d, conformance: "M" }),
+        Field({ name: "Cr2", id: 0x1e, conformance: "M" }),
+        Field({ name: "2Cr5", id: 0x1f, conformance: "M" }),
+        Field({ name: "CrP2", id: 0x20, conformance: "M" }),
+        Field({ name: "CrV3", id: 0x21, conformance: "M" }),
+        Field({ name: "Sr41", id: 0x22, conformance: "M" }),
+        Field({ name: "Sr43", id: 0x23, conformance: "M" }),
+        Field({ name: "Sr44", id: 0x24, conformance: "M" }),
+        Field({ name: "Sr45", id: 0x25, conformance: "M" }),
+        Field({ name: "Sr48", id: 0x26, conformance: "M" }),
+        Field({ name: "Sr54", id: 0x27, conformance: "M" }),
+        Field({ name: "Sr55", id: 0x28, conformance: "M" }),
+        Field({ name: "Sr57", id: 0x29, conformance: "M" }),
+        Field({ name: "Sr58", id: 0x2a, conformance: "M" }),
+        Field({ name: "Sr59", id: 0x2b, conformance: "M" }),
+        Field({ name: "Sr60", id: 0x2c, conformance: "M" }),
+        Field({ name: "Sr63", id: 0x2d, conformance: "M" }),
+        Field({ name: "Sr64", id: 0x2e, conformance: "M" }),
+        Field({ name: "Sr65", id: 0x2f, conformance: "M" }),
+        Field({ name: "Sr66", id: 0x30, conformance: "M" }),
+        Field({ name: "Sr67", id: 0x31, conformance: "M" }),
+        Field({ name: "Sr68", id: 0x32, conformance: "M" }),
+        Field({ name: "Sr69", id: 0x33, conformance: "M" }),
+        Field({ name: "Sr516", id: 0x34, conformance: "M" }),
+        Field({ name: "Sr731", id: 0x35, conformance: "M" }),
+        Field({ name: "Sr712", id: 0x36, conformance: "M" }),
+        Field({ name: "Lr932", id: 0x37, conformance: "M" }),
+        Field({ name: "A5", id: 0x38, conformance: "M" }),
+        Field({ name: "A10", id: 0x39, conformance: "M" }),
+        Field({ name: "A13", id: 0x3a, conformance: "M" }),
+        Field({ name: "A312", id: 0x3b, conformance: "M" }),
+        Field({ name: "A675", id: 0x3c, conformance: "M" }),
+        Field({ name: "Ac41E", id: 0x3d, conformance: "M" }),
+        Field({ name: "10180", id: 0x3e, conformance: "M" }),
+        Field({ name: "10280", id: 0x3f, conformance: "M" }),
+        Field({ name: "10440", id: 0x40, conformance: "M" }),
+        Field({ name: "14250", id: 0x41, conformance: "M" }),
+        Field({ name: "14430", id: 0x42, conformance: "M" }),
+        Field({ name: "14500", id: 0x43, conformance: "M" }),
+        Field({ name: "14650", id: 0x44, conformance: "M" }),
+        Field({ name: "15270", id: 0x45, conformance: "M" }),
+        Field({ name: "16340", id: 0x46, conformance: "M" }),
+        Field({ name: "Rcr123A", id: 0x47, conformance: "M" }),
+        Field({ name: "17500", id: 0x48, conformance: "M" }),
+        Field({ name: "17670", id: 0x49, conformance: "M" }),
+        Field({ name: "18350", id: 0x4a, conformance: "M" }),
+        Field({ name: "18500", id: 0x4b, conformance: "M" }),
+        Field({ name: "18650", id: 0x4c, conformance: "M" }),
+        Field({ name: "19670", id: 0x4d, conformance: "M" }),
+        Field({ name: "25500", id: 0x4e, conformance: "M" }),
+        Field({ name: "26650", id: 0x4f, conformance: "M" }),
+        Field({ name: "32600", id: 0x50, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatApprovedChemistryEnum", type: "enum16" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "Alkaline", conformance: "M" }),
-        Field({ id: 0x2, name: "LithiumCarbonFluoride", conformance: "M" }),
-        Field({ id: 0x3, name: "LithiumChromiumOxide", conformance: "M" }),
-        Field({ id: 0x4, name: "LithiumCopperOxide", conformance: "M" }),
-        Field({ id: 0x5, name: "LithiumIronDisulfide", conformance: "M" }),
-        Field({ id: 0x6, name: "LithiumManganeseDioxide", conformance: "M" }),
-        Field({ id: 0x7, name: "LithiumThionylChloride", conformance: "M" }),
-        Field({ id: 0x8, name: "Magnesium", conformance: "M" }),
-        Field({ id: 0x9, name: "MercuryOxide", conformance: "M" }),
-        Field({ id: 0xa, name: "NickelOxyhydride", conformance: "M" }),
-        Field({ id: 0xb, name: "SilverOxide", conformance: "M" }),
-        Field({ id: 0xc, name: "ZincAir", conformance: "M" }),
-        Field({ id: 0xd, name: "ZincCarbon", conformance: "M" }),
-        Field({ id: 0xe, name: "ZincChloride", conformance: "M" }),
-        Field({ id: 0xf, name: "ZincManganeseDioxide", conformance: "M" }),
-        Field({ id: 0x10, name: "LeadAcid", conformance: "M" }),
-        Field({ id: 0x11, name: "LithiumCobaltOxide", conformance: "M" }),
-        Field({ id: 0x12, name: "LithiumIon", conformance: "M" }),
-        Field({ id: 0x13, name: "LithiumIonPolymer", conformance: "M" }),
-        Field({ id: 0x14, name: "LithiumIronPhosphate", conformance: "M" }),
-        Field({ id: 0x15, name: "LithiumSulfur", conformance: "M" }),
-        Field({ id: 0x16, name: "LithiumTitanate", conformance: "M" }),
-        Field({ id: 0x17, name: "NickelCadmium", conformance: "M" }),
-        Field({ id: 0x18, name: "NickelHydrogen", conformance: "M" }),
-        Field({ id: 0x19, name: "NickelIron", conformance: "M" }),
-        Field({ id: 0x1a, name: "NickelMetalHydride", conformance: "M" }),
-        Field({ id: 0x1b, name: "NickelZinc", conformance: "M" }),
-        Field({ id: 0x1c, name: "SilverZinc", conformance: "M" }),
-        Field({ id: 0x1d, name: "SodiumIon", conformance: "M" }),
-        Field({ id: 0x1e, name: "SodiumSulfur", conformance: "M" }),
-        Field({ id: 0x1f, name: "ZincBromide", conformance: "M" }),
-        Field({ id: 0x20, name: "ZincCerium", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "Alkaline", id: 0x1, conformance: "M" }),
+        Field({ name: "LithiumCarbonFluoride", id: 0x2, conformance: "M" }),
+        Field({ name: "LithiumChromiumOxide", id: 0x3, conformance: "M" }),
+        Field({ name: "LithiumCopperOxide", id: 0x4, conformance: "M" }),
+        Field({ name: "LithiumIronDisulfide", id: 0x5, conformance: "M" }),
+        Field({ name: "LithiumManganeseDioxide", id: 0x6, conformance: "M" }),
+        Field({ name: "LithiumThionylChloride", id: 0x7, conformance: "M" }),
+        Field({ name: "Magnesium", id: 0x8, conformance: "M" }),
+        Field({ name: "MercuryOxide", id: 0x9, conformance: "M" }),
+        Field({ name: "NickelOxyhydride", id: 0xa, conformance: "M" }),
+        Field({ name: "SilverOxide", id: 0xb, conformance: "M" }),
+        Field({ name: "ZincAir", id: 0xc, conformance: "M" }),
+        Field({ name: "ZincCarbon", id: 0xd, conformance: "M" }),
+        Field({ name: "ZincChloride", id: 0xe, conformance: "M" }),
+        Field({ name: "ZincManganeseDioxide", id: 0xf, conformance: "M" }),
+        Field({ name: "LeadAcid", id: 0x10, conformance: "M" }),
+        Field({ name: "LithiumCobaltOxide", id: 0x11, conformance: "M" }),
+        Field({ name: "LithiumIon", id: 0x12, conformance: "M" }),
+        Field({ name: "LithiumIonPolymer", id: 0x13, conformance: "M" }),
+        Field({ name: "LithiumIronPhosphate", id: 0x14, conformance: "M" }),
+        Field({ name: "LithiumSulfur", id: 0x15, conformance: "M" }),
+        Field({ name: "LithiumTitanate", id: 0x16, conformance: "M" }),
+        Field({ name: "NickelCadmium", id: 0x17, conformance: "M" }),
+        Field({ name: "NickelHydrogen", id: 0x18, conformance: "M" }),
+        Field({ name: "NickelIron", id: 0x19, conformance: "M" }),
+        Field({ name: "NickelMetalHydride", id: 0x1a, conformance: "M" }),
+        Field({ name: "NickelZinc", id: 0x1b, conformance: "M" }),
+        Field({ name: "SilverZinc", id: 0x1c, conformance: "M" }),
+        Field({ name: "SodiumIon", id: 0x1d, conformance: "M" }),
+        Field({ name: "SodiumSulfur", id: 0x1e, conformance: "M" }),
+        Field({ name: "ZincBromide", id: 0x1f, conformance: "M" }),
+        Field({ name: "ZincCerium", id: 0x20, conformance: "M" })
     ),
 
     Datatype(
         { name: "BatChargeStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x1, name: "IsCharging", conformance: "M" }),
-        Field({ id: 0x2, name: "IsAtFullCharge", conformance: "M" }),
-        Field({ id: 0x3, name: "IsNotCharging", conformance: "M" })
+        Field({ name: "Unknown", id: 0x0, conformance: "M" }),
+        Field({ name: "IsCharging", id: 0x1, conformance: "M" }),
+        Field({ name: "IsAtFullCharge", id: 0x2, conformance: "M" }),
+        Field({ name: "IsNotCharging", id: 0x3, conformance: "M" })
     )
 );
 

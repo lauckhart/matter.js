@@ -9,14 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "semtag", tag: "datatype",
+    tag: "datatype", name: "semtag",
     description: "Semantic Tag",
     details: "This data type shall be represented by the following structure:",
     xref: "core§7.19.2.42",
 
     children: [
         {
-            name: "MfgCode", tag: "field",
+            tag: "field", name: "MfgCode",
 
             details: "If the MfgCode field is not null, it shall be the Vendor ID of the manufacturer who has defined a " +
                 "certain namespace and the NamespaceID field shall be the ID of a namespace defined by the " +
@@ -33,7 +33,7 @@ Resource.add({
         },
 
         {
-            name: "NamespaceId", tag: "field",
+            tag: "field", name: "NamespaceId",
             details: "The NamespaceID field shall identify a namespace." +
                 "\n" +
                 "The common and device-specific semantic tag namespaces are listed in StandardNamespaces.",
@@ -41,7 +41,7 @@ Resource.add({
         },
 
         {
-            name: "Tag", tag: "field",
+            tag: "field", name: "Tag",
             details: "The Tag field shall be the ID of a semantic tag located within the namespace indicated by " +
                 "NamespaceID." +
                 "\n" +
@@ -51,7 +51,7 @@ Resource.add({
         },
 
         {
-            name: "Label", tag: "field",
+            tag: "field", name: "Label",
 
             details: "The Label field, if present, shall contain human-readable text suitable for display on a client. The " +
                 "content of the Label field is defined by the manufacturer." +

@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "temperature", tag: "datatype",
+        tag: "datatype", name: "temperature",
         description: "Temperature",
 
         details: "This type represents a temperature on the Celsius scale with a resolution of 0.01°C." +

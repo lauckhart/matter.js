@@ -10,15 +10,15 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const WindowCoveringControllerDt = DeviceType(
-    { id: 0x203, name: "WindowCoveringController", classification: "simple" },
+    { name: "WindowCoveringController", id: 0x203 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 515, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 515, revision: 3 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "clientCluster" }),
-    Requirement({ id: 0x4, name: "Groups", conformance: "Active, O", element: "clientCluster" }),
-    Requirement({ id: 0x102, name: "WindowCovering", conformance: "M", element: "clientCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, element: "clientCluster", conformance: "O" }),
+    Requirement({ name: "Groups", id: 0x4, element: "clientCluster", conformance: "Active, O" }),
+    Requirement({ name: "WindowCovering", id: 0x102, element: "clientCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(WindowCoveringControllerDt);

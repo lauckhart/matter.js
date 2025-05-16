@@ -15,48 +15,48 @@ import {
 } from "../../elements/index.js";
 
 export const TimeFormatLocalization = Cluster(
-    { id: 0x2c, name: "TimeFormatLocalization" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "TimeFormatLocalization", id: 0x2c },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "CALFMT", constraint: "0", longName: "CalendarFormat" })
     ),
-    Attribute({ id: 0x0, name: "HourFormat", type: "HourFormatEnum", access: "RW VM", conformance: "M", quality: "N" }),
+    Attribute({ name: "HourFormat", id: 0x0, type: "HourFormatEnum", conformance: "M", access: "RW VM", quality: "N" }),
     Attribute({
-        id: 0x1, name: "ActiveCalendarType", type: "CalendarTypeEnum",
-        access: "RW VM", constraint: "in SupportedCalendarTypes", quality: "N"
+        name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum",
+        constraint: "in SupportedCalendarTypes", access: "RW VM", quality: "N"
     }),
 
     Attribute(
         {
-            id: 0x2, name: "SupportedCalendarTypes", type: "list",
-            access: "R V", conformance: "CALFMT", constraint: "desc", quality: "F"
+            name: "SupportedCalendarTypes", id: 0x2, type: "list",
+            constraint: "desc", conformance: "CALFMT", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "CalendarTypeEnum" })
     ),
 
     Datatype(
         { name: "HourFormatEnum", type: "enum8" },
-        Field({ id: 0x0, name: "12Hr", conformance: "M" }),
-        Field({ id: 0x1, name: "24Hr", conformance: "M" }),
-        Field({ id: 0xff, name: "UseActiveLocale", conformance: "M" })
+        Field({ name: "12Hr", id: 0x0, conformance: "M" }),
+        Field({ name: "24Hr", id: 0x1, conformance: "M" }),
+        Field({ name: "UseActiveLocale", id: 0xff, conformance: "M" })
     ),
 
     Datatype(
         { name: "CalendarTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Buddhist", conformance: "O.a+" }),
-        Field({ id: 0x1, name: "Chinese", conformance: "O.a+" }),
-        Field({ id: 0x2, name: "Coptic", conformance: "O.a+" }),
-        Field({ id: 0x3, name: "Ethiopian", conformance: "O.a+" }),
-        Field({ id: 0x4, name: "Gregorian", conformance: "O.a+" }),
-        Field({ id: 0x5, name: "Hebrew", conformance: "O.a+" }),
-        Field({ id: 0x6, name: "Indian", conformance: "O.a+" }),
-        Field({ id: 0x7, name: "Islamic", conformance: "O.a+" }),
-        Field({ id: 0x8, name: "Japanese", conformance: "O.a+" }),
-        Field({ id: 0x9, name: "Korean", conformance: "O.a+" }),
-        Field({ id: 0xa, name: "Persian", conformance: "O.a+" }),
-        Field({ id: 0xb, name: "Taiwanese", conformance: "O.a+" }),
-        Field({ id: 0xff, name: "UseActiveLocale", conformance: "O.a+" })
+        Field({ name: "Buddhist", id: 0x0, conformance: "O.a+" }),
+        Field({ name: "Chinese", id: 0x1, conformance: "O.a+" }),
+        Field({ name: "Coptic", id: 0x2, conformance: "O.a+" }),
+        Field({ name: "Ethiopian", id: 0x3, conformance: "O.a+" }),
+        Field({ name: "Gregorian", id: 0x4, conformance: "O.a+" }),
+        Field({ name: "Hebrew", id: 0x5, conformance: "O.a+" }),
+        Field({ name: "Indian", id: 0x6, conformance: "O.a+" }),
+        Field({ name: "Islamic", id: 0x7, conformance: "O.a+" }),
+        Field({ name: "Japanese", id: 0x8, conformance: "O.a+" }),
+        Field({ name: "Korean", id: 0x9, conformance: "O.a+" }),
+        Field({ name: "Persian", id: 0xa, conformance: "O.a+" }),
+        Field({ name: "Taiwanese", id: 0xb, conformance: "O.a+" }),
+        Field({ name: "UseActiveLocale", id: 0xff, conformance: "O.a+" })
     )
 );
 

@@ -15,46 +15,46 @@ import {
 } from "../../elements/index.js";
 
 export const Descriptor = Cluster(
-    { id: 0x1d, name: "Descriptor" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "Descriptor", id: 0x1d },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TAGLIST", conformance: "desc", constraint: "0", longName: "TagList" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "TAGLIST", constraint: "0", conformance: "desc", longName: "TagList" })
     ),
 
     Attribute(
         {
-            id: 0x0, name: "DeviceTypeList", type: "list",
-            access: "R V", conformance: "M", constraint: "min 1", quality: "F"
+            name: "DeviceTypeList", id: 0x0, type: "list",
+            constraint: "min 1", conformance: "M", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "DeviceTypeStruct" })
     ),
 
     Attribute(
-        { id: 0x1, name: "ServerList", type: "list", access: "R V", conformance: "M", default: [], quality: "F" },
+        { name: "ServerList", id: 0x1, type: "list", default: [], conformance: "M", access: "R V", quality: "F" },
         Field({ name: "entry", type: "cluster-id" })
     ),
     Attribute(
-        { id: 0x2, name: "ClientList", type: "list", access: "R V", conformance: "M", default: [], quality: "F" },
+        { name: "ClientList", id: 0x2, type: "list", default: [], conformance: "M", access: "R V", quality: "F" },
         Field({ name: "entry", type: "cluster-id" })
     ),
     Attribute(
-        { id: 0x3, name: "PartsList", type: "list", access: "R V", conformance: "M", default: [] },
+        { name: "PartsList", id: 0x3, type: "list", default: [], conformance: "M", access: "R V" },
         Field({ name: "entry", type: "endpoint-no" })
     ),
 
     Attribute(
         {
-            id: 0x4, name: "TagList", type: "list",
-            access: "R V", conformance: "TAGLIST", constraint: "1 to 6", quality: "F"
+            name: "TagList", id: 0x4, type: "list",
+            constraint: "1 to 6", conformance: "TAGLIST", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "semtag" })
     ),
 
     Datatype(
         { name: "DeviceTypeStruct", type: "struct" },
-        Field({ id: 0x0, name: "DeviceType", type: "devtype-id", conformance: "M" }),
-        Field({ id: 0x1, name: "Revision", type: "uint16", conformance: "M", constraint: "min 1" })
+        Field({ name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M" }),
+        Field({ name: "Revision", id: 0x1, type: "uint16", constraint: "min 1", conformance: "M" })
     )
 );
 

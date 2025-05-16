@@ -17,181 +17,181 @@ import {
 } from "../../elements/index.js";
 
 export const GeneralDiagnostics = Cluster(
-    { id: 0x33, name: "GeneralDiagnostics" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "GeneralDiagnostics", id: 0x33 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DMTEST", conformance: "desc", constraint: "0", longName: "DataModelTest" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "DMTEST", constraint: "0", conformance: "desc", longName: "DataModelTest" })
     ),
     Attribute(
-        { id: 0x0, name: "NetworkInterfaces", type: "list", access: "R V", conformance: "M", constraint: "max 8" },
+        { name: "NetworkInterfaces", id: 0x0, type: "list", constraint: "max 8", conformance: "M", access: "R V" },
         Field({ name: "entry", type: "NetworkInterface" })
     ),
-    Attribute({ id: 0x1, name: "RebootCount", type: "uint16", access: "R V", conformance: "M", quality: "N" }),
-    Attribute({ id: 0x2, name: "UpTime", type: "uint64", access: "R V", conformance: "M", quality: "C" }),
-    Attribute({ id: 0x3, name: "TotalOperationalHours", type: "uint32", access: "R V", conformance: "O", quality: "N C" }),
-    Attribute({ id: 0x4, name: "BootReason", type: "BootReasonEnum", access: "R V", conformance: "O" }),
+    Attribute({ name: "RebootCount", id: 0x1, type: "uint16", conformance: "M", access: "R V", quality: "N" }),
+    Attribute({ name: "UpTime", id: 0x2, type: "uint64", conformance: "M", access: "R V", quality: "C" }),
+    Attribute({ name: "TotalOperationalHours", id: 0x3, type: "uint32", conformance: "O", access: "R V", quality: "N C" }),
+    Attribute({ name: "BootReason", id: 0x4, type: "BootReasonEnum", conformance: "O", access: "R V" }),
     Attribute(
-        { id: 0x5, name: "ActiveHardwareFaults", type: "list", access: "R V", conformance: "O", constraint: "max 11" },
+        { name: "ActiveHardwareFaults", id: 0x5, type: "list", constraint: "max 11", conformance: "O", access: "R V" },
         Field({ name: "entry", type: "HardwareFaultEnum" })
     ),
     Attribute(
-        { id: 0x6, name: "ActiveRadioFaults", type: "list", access: "R V", conformance: "O", constraint: "max 7" },
+        { name: "ActiveRadioFaults", id: 0x6, type: "list", constraint: "max 7", conformance: "O", access: "R V" },
         Field({ name: "entry", type: "RadioFaultEnum" })
     ),
     Attribute(
-        { id: 0x7, name: "ActiveNetworkFaults", type: "list", access: "R V", conformance: "O", constraint: "max 4" },
+        { name: "ActiveNetworkFaults", id: 0x7, type: "list", constraint: "max 4", conformance: "O", access: "R V" },
         Field({ name: "entry", type: "NetworkFaultEnum" })
     ),
-    Attribute({ id: 0x8, name: "TestEventTriggersEnabled", type: "bool", access: "R V", conformance: "M" }),
-    Attribute({ id: 0x9, name: "DoNotUse", conformance: "X" }),
+    Attribute({ name: "TestEventTriggersEnabled", id: 0x8, type: "bool", conformance: "M", access: "R V" }),
+    Attribute({ name: "DoNotUse", id: 0x9, conformance: "X" }),
 
     Event(
-        { id: 0x0, name: "HardwareFaultChange", access: "V", conformance: "O", priority: "critical" },
+        { name: "HardwareFaultChange", id: 0x0, conformance: "O", access: "V", priority: "critical" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 11" },
+            { name: "Current", id: 0x0, type: "list", constraint: "max 11", conformance: "M" },
             Field({ name: "entry", type: "HardwareFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 11" },
+            { name: "Previous", id: 0x1, type: "list", constraint: "max 11", conformance: "M" },
             Field({ name: "entry", type: "HardwareFaultEnum" })
         )
     ),
 
     Event(
-        { id: 0x1, name: "RadioFaultChange", access: "V", conformance: "O", priority: "critical" },
+        { name: "RadioFaultChange", id: 0x1, conformance: "O", access: "V", priority: "critical" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 7" },
+            { name: "Current", id: 0x0, type: "list", constraint: "max 7", conformance: "M" },
             Field({ name: "entry", type: "RadioFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 7" },
+            { name: "Previous", id: 0x1, type: "list", constraint: "max 7", conformance: "M" },
             Field({ name: "entry", type: "RadioFaultEnum" })
         )
     ),
 
     Event(
-        { id: 0x2, name: "NetworkFaultChange", access: "V", conformance: "O", priority: "critical" },
+        { name: "NetworkFaultChange", id: 0x2, conformance: "O", access: "V", priority: "critical" },
         Field(
-            { id: 0x0, name: "Current", type: "list", conformance: "M", constraint: "max 4" },
+            { name: "Current", id: 0x0, type: "list", constraint: "max 4", conformance: "M" },
             Field({ name: "entry", type: "NetworkFaultEnum" })
         ),
         Field(
-            { id: 0x1, name: "Previous", type: "list", conformance: "M", constraint: "max 4" },
+            { name: "Previous", id: 0x1, type: "list", constraint: "max 4", conformance: "M" },
             Field({ name: "entry", type: "NetworkFaultEnum" })
         )
     ),
 
     Event(
-        { id: 0x3, name: "BootReason", access: "V", conformance: "M", priority: "critical" },
-        Field({ id: 0x0, name: "BootReason", type: "BootReasonEnum", conformance: "M" })
+        { name: "BootReason", id: 0x3, conformance: "M", access: "V", priority: "critical" },
+        Field({ name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M" })
     ),
     Command(
-        { id: 0x0, name: "TestEventTrigger", access: "M", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "EnableKey", type: "octstr", conformance: "M", constraint: "16" }),
-        Field({ id: 0x1, name: "EventTrigger", type: "uint64", conformance: "M" })
+        { name: "TestEventTrigger", id: 0x0, conformance: "M", access: "M", direction: "request", response: "status" },
+        Field({ name: "EnableKey", id: 0x0, type: "octstr", constraint: "16", conformance: "M" }),
+        Field({ name: "EventTrigger", id: 0x1, type: "uint64", conformance: "M" })
     ),
     Command({
-        id: 0x1, name: "TimeSnapshot",
-        access: "O", conformance: "M", direction: "request", response: "TimeSnapshotResponse"
+        name: "TimeSnapshot", id: 0x1,
+        conformance: "M", access: "O", direction: "request", response: "TimeSnapshotResponse"
     }),
     Command(
-        { id: 0x2, name: "TimeSnapshotResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "SystemTimeMs", type: "systime-ms", conformance: "M" }),
-        Field({ id: 0x1, name: "PosixTimeMs", type: "posix-ms", conformance: "M", default: null, quality: "X" })
+        { name: "TimeSnapshotResponse", id: 0x2, conformance: "M", direction: "response" },
+        Field({ name: "SystemTimeMs", id: 0x0, type: "systime-ms", conformance: "M" }),
+        Field({ name: "PosixTimeMs", id: 0x1, type: "posix-ms", default: null, conformance: "M", quality: "X" })
     ),
 
     Command(
         {
-            id: 0x3, name: "PayloadTestRequest",
-            access: "M", conformance: "DMTEST", direction: "request", response: "PayloadTestResponse"
+            name: "PayloadTestRequest", id: 0x3,
+            conformance: "DMTEST", access: "M", direction: "request", response: "PayloadTestResponse"
         },
-        Field({ id: 0x0, name: "EnableKey", type: "octstr", conformance: "M", constraint: "16" }),
-        Field({ id: 0x1, name: "Value", type: "uint8", conformance: "M" }),
-        Field({ id: 0x2, name: "Count", type: "uint16", conformance: "M", constraint: "max 2048" })
+        Field({ name: "EnableKey", id: 0x0, type: "octstr", constraint: "16", conformance: "M" }),
+        Field({ name: "Value", id: 0x1, type: "uint8", conformance: "M" }),
+        Field({ name: "Count", id: 0x2, type: "uint16", constraint: "max 2048", conformance: "M" })
     ),
 
     Command(
-        { id: 0x4, name: "PayloadTestResponse", conformance: "DMTEST", direction: "response" },
-        Field({ id: 0x0, name: "Payload", type: "octstr", conformance: "M", constraint: "max 2048" })
+        { name: "PayloadTestResponse", id: 0x4, conformance: "DMTEST", direction: "response" },
+        Field({ name: "Payload", id: 0x0, type: "octstr", constraint: "max 2048", conformance: "M" })
     ),
 
     Datatype(
         { name: "HardwareFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "Radio", conformance: "O" }),
-        Field({ id: 0x2, name: "Sensor", conformance: "O" }),
-        Field({ id: 0x3, name: "ResettableOverTemp", conformance: "O" }),
-        Field({ id: 0x4, name: "NonResettableOverTemp", conformance: "O" }),
-        Field({ id: 0x5, name: "PowerSource", conformance: "O" }),
-        Field({ id: 0x6, name: "VisualDisplayFault", conformance: "O" }),
-        Field({ id: 0x7, name: "AudioOutputFault", conformance: "O" }),
-        Field({ id: 0x8, name: "UserInterfaceFault", conformance: "O" }),
-        Field({ id: 0x9, name: "NonVolatileMemoryError", conformance: "O" }),
-        Field({ id: 0xa, name: "TamperDetected", conformance: "O" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "Radio", id: 0x1, conformance: "O" }),
+        Field({ name: "Sensor", id: 0x2, conformance: "O" }),
+        Field({ name: "ResettableOverTemp", id: 0x3, conformance: "O" }),
+        Field({ name: "NonResettableOverTemp", id: 0x4, conformance: "O" }),
+        Field({ name: "PowerSource", id: 0x5, conformance: "O" }),
+        Field({ name: "VisualDisplayFault", id: 0x6, conformance: "O" }),
+        Field({ name: "AudioOutputFault", id: 0x7, conformance: "O" }),
+        Field({ name: "UserInterfaceFault", id: 0x8, conformance: "O" }),
+        Field({ name: "NonVolatileMemoryError", id: 0x9, conformance: "O" }),
+        Field({ name: "TamperDetected", id: 0xa, conformance: "O" })
     ),
 
     Datatype(
         { name: "RadioFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "WiFiFault", conformance: "O" }),
-        Field({ id: 0x2, name: "CellularFault", conformance: "O" }),
-        Field({ id: 0x3, name: "ThreadFault", conformance: "O" }),
-        Field({ id: 0x4, name: "NfcFault", conformance: "O" }),
-        Field({ id: 0x5, name: "BleFault", conformance: "O" }),
-        Field({ id: 0x6, name: "EthernetFault", conformance: "O" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "WiFiFault", id: 0x1, conformance: "O" }),
+        Field({ name: "CellularFault", id: 0x2, conformance: "O" }),
+        Field({ name: "ThreadFault", id: 0x3, conformance: "O" }),
+        Field({ name: "NfcFault", id: 0x4, conformance: "O" }),
+        Field({ name: "BleFault", id: 0x5, conformance: "O" }),
+        Field({ name: "EthernetFault", id: 0x6, conformance: "O" })
     ),
 
     Datatype(
         { name: "NetworkFaultEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "HardwareFailure", conformance: "O" }),
-        Field({ id: 0x2, name: "NetworkJammed", conformance: "O" }),
-        Field({ id: 0x3, name: "ConnectionFailed", conformance: "O" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "HardwareFailure", id: 0x1, conformance: "O" }),
+        Field({ name: "NetworkJammed", id: 0x2, conformance: "O" }),
+        Field({ name: "ConnectionFailed", id: 0x3, conformance: "O" })
     ),
 
     Datatype(
         { name: "InterfaceTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "WiFi", conformance: "O" }),
-        Field({ id: 0x2, name: "Ethernet", conformance: "O" }),
-        Field({ id: 0x3, name: "Cellular", conformance: "O" }),
-        Field({ id: 0x4, name: "Thread", conformance: "O" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "WiFi", id: 0x1, conformance: "O" }),
+        Field({ name: "Ethernet", id: 0x2, conformance: "O" }),
+        Field({ name: "Cellular", id: 0x3, conformance: "O" }),
+        Field({ name: "Thread", id: 0x4, conformance: "O" })
     ),
 
     Datatype(
         { name: "BootReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
-        Field({ id: 0x1, name: "PowerOnReboot", conformance: "M" }),
-        Field({ id: 0x2, name: "BrownOutReset", conformance: "M" }),
-        Field({ id: 0x3, name: "SoftwareWatchdogReset", conformance: "M" }),
-        Field({ id: 0x4, name: "HardwareWatchdogReset", conformance: "M" }),
-        Field({ id: 0x5, name: "SoftwareUpdateCompleted", conformance: "M" }),
-        Field({ id: 0x6, name: "SoftwareReset", conformance: "M" })
+        Field({ name: "Unspecified", id: 0x0, conformance: "M" }),
+        Field({ name: "PowerOnReboot", id: 0x1, conformance: "M" }),
+        Field({ name: "BrownOutReset", id: 0x2, conformance: "M" }),
+        Field({ name: "SoftwareWatchdogReset", id: 0x3, conformance: "M" }),
+        Field({ name: "HardwareWatchdogReset", id: 0x4, conformance: "M" }),
+        Field({ name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M" }),
+        Field({ name: "SoftwareReset", id: 0x6, conformance: "M" })
     ),
 
     Datatype(
         { name: "NetworkInterface", type: "struct" },
-        Field({ id: 0x0, name: "Name", type: "string", conformance: "M", constraint: "max 32" }),
-        Field({ id: 0x1, name: "IsOperational", type: "bool", conformance: "M" }),
+        Field({ name: "Name", id: 0x0, type: "string", constraint: "max 32", conformance: "M" }),
+        Field({ name: "IsOperational", id: 0x1, type: "bool", conformance: "M" }),
         Field({
-            id: 0x2, name: "OffPremiseServicesReachableIPv4", type: "bool",
-            conformance: "M", default: null, quality: "X"
+            name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool",
+            default: null, conformance: "M", quality: "X"
         }),
         Field({
-            id: 0x3, name: "OffPremiseServicesReachableIPv6", type: "bool",
-            conformance: "M", default: null, quality: "X"
+            name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool",
+            default: null, conformance: "M", quality: "X"
         }),
-        Field({ id: 0x4, name: "HardwareAddress", type: "hwadr", conformance: "M" }),
+        Field({ name: "HardwareAddress", id: 0x4, type: "hwadr", conformance: "M" }),
         Field(
-            { id: 0x5, name: "IPv4Addresses", type: "list", conformance: "M", constraint: "max 4" },
+            { name: "IPv4Addresses", id: 0x5, type: "list", constraint: "max 4", conformance: "M" },
             Field({ name: "entry", type: "ipv4adr" })
         ),
         Field(
-            { id: 0x6, name: "IPv6Addresses", type: "list", conformance: "M", constraint: "max 8" },
+            { name: "IPv6Addresses", id: 0x6, type: "list", constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "ipv6adr" })
         ),
-        Field({ id: 0x7, name: "Type", type: "InterfaceTypeEnum", conformance: "M" })
+        Field({ name: "Type", id: 0x7, type: "InterfaceTypeEnum", conformance: "M" })
     )
 );
 

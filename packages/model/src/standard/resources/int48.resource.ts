@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "int48", tag: "datatype", description: "Signed 48-bit integer", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "int48", description: "Signed 48-bit integer", xref: "core§7.19.1" });

@@ -9,20 +9,20 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "DeviceEnergyManagement", tag: "deviceType",
+    tag: "deviceType", name: "DeviceEnergyManagement",
     classification: "utility",
     details: "A Device Energy Management device provides reporting and optionally adjustment of the electrical " +
         "power planned on being consumed or produced by the device.",
     xref: "device§2.7",
 
     children: [
-        { name: "DeviceEnergyManagement", tag: "requirement", xref: "device§2.7.4" },
-        { name: "DeviceEnergyManagementMode", tag: "requirement", xref: "device§2.7.4" },
+        { tag: "requirement", name: "DeviceEnergyManagement", xref: "device§2.7.4" },
+        { tag: "requirement", name: "DeviceEnergyManagementMode", xref: "device§2.7.4" },
 
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
             children: [{
-                name: "ControllableEsa", tag: "field",
+                tag: "field", name: "ControllableEsa",
                 description: "The DEM cluster on this endpoint accepts commands to adjust its energy operation.",
                 xref: "device§2.7.3"
             }]

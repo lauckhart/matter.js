@@ -17,66 +17,66 @@ import {
 } from "../../elements/index.js";
 
 export const BooleanStateConfiguration = Cluster(
-    { id: 0x80, name: "BooleanStateConfiguration" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "BooleanStateConfiguration", id: 0x80 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "VIS", conformance: "O", constraint: "0", longName: "Visual" }),
-        Field({ name: "AUD", conformance: "O", constraint: "1", longName: "Audible" }),
-        Field({ name: "SPRS", conformance: "[VIS | AUD]", constraint: "2", longName: "AlarmSuppress" }),
-        Field({ name: "SENSLVL", conformance: "O", constraint: "3", longName: "SensitivityLevel" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "VIS", constraint: "0", conformance: "O", longName: "Visual" }),
+        Field({ name: "AUD", constraint: "1", conformance: "O", longName: "Audible" }),
+        Field({ name: "SPRS", constraint: "2", conformance: "[VIS | AUD]", longName: "AlarmSuppress" }),
+        Field({ name: "SENSLVL", constraint: "3", conformance: "O", longName: "SensitivityLevel" })
     ),
 
     Attribute({
-        id: 0x0, name: "CurrentSensitivityLevel", type: "uint8",
-        access: "RW VO", conformance: "SENSLVL", constraint: "max supportedSensitivityLevels - 1",
+        name: "CurrentSensitivityLevel", id: 0x0, type: "uint8",
+        constraint: "max supportedSensitivityLevels - 1", conformance: "SENSLVL", access: "RW VO",
         quality: "N"
     }),
     Attribute({
-        id: 0x1, name: "SupportedSensitivityLevels", type: "uint8",
-        access: "R V", conformance: "SENSLVL", constraint: "2 to 10", quality: "F"
+        name: "SupportedSensitivityLevels", id: 0x1, type: "uint8",
+        constraint: "2 to 10", conformance: "SENSLVL", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x2, name: "DefaultSensitivityLevel", type: "uint8",
-        access: "R V", conformance: "[SENSLVL]", constraint: "max supportedSensitivityLevels - 1",
+        name: "DefaultSensitivityLevel", id: 0x2, type: "uint8",
+        constraint: "max supportedSensitivityLevels - 1", conformance: "[SENSLVL]", access: "R V",
         quality: "F"
     }),
     Attribute(
-        { id: 0x3, name: "AlarmsActive", type: "AlarmModeBitmap", access: "R V", conformance: "VIS | AUD", default: 0 }
+        { name: "AlarmsActive", id: 0x3, type: "AlarmModeBitmap", default: 0, conformance: "VIS | AUD", access: "R V" }
     ),
     Attribute(
-        { id: 0x4, name: "AlarmsSuppressed", type: "AlarmModeBitmap", access: "R V", conformance: "SPRS", default: 0 }
+        { name: "AlarmsSuppressed", id: 0x4, type: "AlarmModeBitmap", default: 0, conformance: "SPRS", access: "R V" }
     ),
     Attribute({
-        id: 0x5, name: "AlarmsEnabled", type: "AlarmModeBitmap",
-        access: "R V", conformance: "[VIS | AUD]", quality: "N"
+        name: "AlarmsEnabled", id: 0x5, type: "AlarmModeBitmap",
+        conformance: "[VIS | AUD]", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x6, name: "AlarmsSupported", type: "AlarmModeBitmap",
-        access: "R V", conformance: "VIS | AUD", default: 0, quality: "F"
+        name: "AlarmsSupported", id: 0x6, type: "AlarmModeBitmap",
+        default: 0, conformance: "VIS | AUD", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x7, name: "SensorFault", type: "SensorFaultBitmap", access: "R V", conformance: "O", default: 0 }),
+    Attribute({ name: "SensorFault", id: 0x7, type: "SensorFaultBitmap", default: 0, conformance: "O", access: "R V" }),
     Event(
-        { id: 0x0, name: "AlarmsStateChanged", access: "V", conformance: "VIS | AUD", priority: "info" },
-        Field({ id: 0x0, name: "AlarmsActive", type: "AlarmModeBitmap", conformance: "M" }),
-        Field({ id: 0x1, name: "AlarmsSuppressed", type: "AlarmModeBitmap", conformance: "SPRS" })
+        { name: "AlarmsStateChanged", id: 0x0, conformance: "VIS | AUD", access: "V", priority: "info" },
+        Field({ name: "AlarmsActive", id: 0x0, type: "AlarmModeBitmap", conformance: "M" }),
+        Field({ name: "AlarmsSuppressed", id: 0x1, type: "AlarmModeBitmap", conformance: "SPRS" })
     ),
     Event(
-        { id: 0x1, name: "SensorFault", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "SensorFault", type: "SensorFaultBitmap", conformance: "M" })
+        { name: "SensorFault", id: 0x1, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "SensorFault", id: 0x0, type: "SensorFaultBitmap", conformance: "M" })
     ),
     Command(
-        { id: 0x0, name: "SuppressAlarm", access: "O", conformance: "SPRS", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "AlarmsToSuppress", type: "AlarmModeBitmap", conformance: "M" })
+        { name: "SuppressAlarm", id: 0x0, conformance: "SPRS", access: "O", direction: "request", response: "status" },
+        Field({ name: "AlarmsToSuppress", id: 0x0, type: "AlarmModeBitmap", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x1, name: "EnableDisableAlarm",
-            access: "O", conformance: "VIS | AUD", direction: "request", response: "status"
+            name: "EnableDisableAlarm", id: 0x1,
+            conformance: "VIS | AUD", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "AlarmsToEnableDisable", type: "AlarmModeBitmap", conformance: "M" })
+        Field({ name: "AlarmsToEnableDisable", id: 0x0, type: "AlarmModeBitmap", conformance: "M" })
     ),
 
     Datatype(

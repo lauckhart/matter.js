@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AccountLogin", tag: "cluster",
+    tag: "cluster", name: "AccountLogin",
     classification: "application", pics: "ALOGIN",
 
     details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
@@ -42,14 +42,14 @@ Resource.add({
 
     children: [
         {
-            name: "LoggedOut", tag: "event",
+            tag: "event", name: "LoggedOut",
             details: "This event can be used by the Content App to indicate that the current user has logged out. In " +
                 "response to this event, the Fabric Admin shall remove access to this Content App by the specified " +
                 "Node. If no Node is provided, then the Fabric Admin shall remove access to all non-Admin Nodes.",
             xref: "cluster§6.2.5.1",
 
             children: [{
-                name: "Node", tag: "field",
+                tag: "field", name: "Node",
                 details: "This field shall provide the Node ID corresponding to the user account that has logged out, if that " +
                     "Node ID is available. If it is NOT available, this field shall NOT be present in the event.",
                 xref: "cluster§6.2.5.1.1"
@@ -57,7 +57,7 @@ Resource.add({
         },
 
         {
-            name: "GetSetupPin", tag: "command",
+            tag: "command", name: "GetSetupPin",
 
             details: "The purpose of this command is to determine if the active user account of the given Content App " +
                 "matches the active user account of a given Commissionee, and when it does, return a Setup PIN code " +
@@ -109,7 +109,7 @@ Resource.add({
             xref: "cluster§6.2.4.1",
 
             children: [{
-                name: "TempAccountIdentifier", tag: "field",
+                tag: "field", name: "TempAccountIdentifier",
                 details: "This field shall specify the client’s Temporary Account Identifier. The length of this field shall " +
                     "be at least 16 characters to protect the account holder against password guessing attacks.",
                 xref: "cluster§6.2.4.1.1"
@@ -117,14 +117,14 @@ Resource.add({
         },
 
         {
-            name: "GetSetupPinResponse", tag: "command",
+            tag: "command", name: "GetSetupPinResponse",
             details: "This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or " +
                 "null when the account identified in the request does not match the active account of the running " +
                 "Content App.",
             xref: "cluster§6.2.4.2",
 
             children: [{
-                name: "SetupPin", tag: "field",
+                tag: "field", name: "SetupPin",
 
                 details: "This field shall provide the setup PIN code as a text string at least 8 characters in length or " +
                     "empty string to indicate that the accounts do not match." +
@@ -139,7 +139,7 @@ Resource.add({
         },
 
         {
-            name: "Login", tag: "command",
+            tag: "command", name: "Login",
 
             details: "The purpose of this command is to allow the Content App to assume the user account of a given " +
                 "Commissionee by leveraging the Setup PIN code input by the user during the commissioning process." +
@@ -185,13 +185,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "TempAccountIdentifier", tag: "field",
+                    tag: "field", name: "TempAccountIdentifier",
                     details: "This field shall specify the client’s temporary account identifier.",
                     xref: "cluster§6.2.4.3.1"
                 },
 
                 {
-                    name: "SetupPin", tag: "field",
+                    tag: "field", name: "SetupPin",
 
                     details: "This field shall provide the setup PIN code as a text string at least 8 characters in length." +
                         "\n" +
@@ -204,7 +204,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Node", tag: "field",
+                    tag: "field", name: "Node",
                     details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content " +
                         "App to keep track of Nodes which currently have access to it.",
                     xref: "cluster§6.2.4.3.3"
@@ -213,13 +213,13 @@ Resource.add({
         },
 
         {
-            name: "Logout", tag: "command",
+            tag: "command", name: "Logout",
             details: "The purpose of this command is to instruct the Content App to clear the current user account. This " +
                 "command SHOULD be used by clients of a Content App to indicate the end of a user session.",
             xref: "cluster§6.2.4.4",
 
             children: [{
-                name: "Node", tag: "field",
+                tag: "field", name: "Node",
                 details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content" +
                     "\n" +
                     "App to keep track of Nodes which currently have access to it.",

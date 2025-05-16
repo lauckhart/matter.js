@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ApplicationLauncher", tag: "cluster",
+    tag: "cluster", name: "ApplicationLauncher",
     classification: "application", pics: "APPLAUNCHER",
 
     details: "This cluster provides an interface for launching applications on a Video Player device such as a TV." +
@@ -26,17 +26,17 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§6.4.4",
             children: [{
-                name: "AP", tag: "field",
+                tag: "field", name: "AP",
                 details: "Support for attributes and commands required for endpoint to support launching any application " +
                     "within the supported application catalogs"
             }]
         },
 
         {
-            name: "CatalogList", tag: "attribute",
+            tag: "attribute", name: "CatalogList",
 
             details: "This attribute shall specify the list of supported application catalogs, where each entry in the " +
                 "list is the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) shall use " +
@@ -49,7 +49,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentApp", tag: "attribute",
+            tag: "attribute", name: "CurrentApp",
             details: "This attribute shall specify the current in-focus application, identified using an Application ID, " +
                 "catalog vendor ID and the corresponding endpoint number when the application is represented by a " +
                 "Content App endpoint. A null shall be used to indicate there is no current in-focus application.",
@@ -57,7 +57,7 @@ Resource.add({
         },
 
         {
-            name: "LaunchApp", tag: "command",
+            tag: "command", name: "LaunchApp",
 
             details: "Upon receipt of this command, the server shall launch the application with optional data. The " +
                 "application shall be either" +
@@ -79,13 +79,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "Application", tag: "field",
+                    tag: "field", name: "Application",
                     details: "This field shall specify the Application to launch.",
                     xref: "cluster§6.4.7.1.1"
                 },
 
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
 
                     details: "This field shall specify optional app-specific data to be sent to the app." +
                         "\n" +
@@ -102,7 +102,7 @@ Resource.add({
         },
 
         {
-            name: "StopApp", tag: "command",
+            tag: "command", name: "StopApp",
 
             details: "Upon receipt of this command, the server shall stop the application if it is running. The " +
                 "application shall be either" +
@@ -119,14 +119,14 @@ Resource.add({
 
             xref: "cluster§6.4.7.2",
             children: [{
-                name: "Application", tag: "field",
+                tag: "field", name: "Application",
                 details: "This field shall specify the Application to stop.",
                 xref: "cluster§6.4.7.2.1"
             }]
         },
 
         {
-            name: "HideApp", tag: "command",
+            tag: "command", name: "HideApp",
 
             details: "Upon receipt of this command, the server shall hide the application. The application shall be either" +
                 "\n" +
@@ -144,25 +144,25 @@ Resource.add({
 
             xref: "cluster§6.4.7.3",
             children: [{
-                name: "Application", tag: "field",
+                tag: "field", name: "Application",
                 details: "This field shall specify the Application to hide.",
                 xref: "cluster§6.4.7.3.1"
             }]
         },
 
         {
-            name: "LauncherResponse", tag: "command",
+            tag: "command", name: "LauncherResponse",
             details: "This command shall be generated in response to LaunchApp/StopApp/HideApp commands.",
             xref: "cluster§6.4.7.4",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall indicate the status of the command which resulted in this response.",
                     xref: "cluster§6.4.7.4.1"
                 },
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall specify Optional app-specific data.",
                     xref: "cluster§6.4.7.4.2"
                 }
@@ -170,27 +170,27 @@ Resource.add({
         },
 
         {
-            name: "StatusEnum", tag: "datatype",
+            tag: "datatype", name: "StatusEnum",
             xref: "cluster§6.4.5.1",
 
             children: [
-                { name: "Success", tag: "field", description: "Command succeeded" },
-                { name: "AppNotAvailable", tag: "field", description: "Requested app is not available" },
-                { name: "SystemBusy", tag: "field", description: "Video platform unable to honor command" },
-                { name: "PendingUserApproval", tag: "field", description: "User approval for app download is pending" },
-                { name: "Downloading", tag: "field", description: "Downloading the requested app" },
-                { name: "Installing", tag: "field", description: "Installing the requested app" }
+                { tag: "field", name: "Success", description: "Command succeeded" },
+                { tag: "field", name: "AppNotAvailable", description: "Requested app is not available" },
+                { tag: "field", name: "SystemBusy", description: "Video platform unable to honor command" },
+                { tag: "field", name: "PendingUserApproval", description: "User approval for app download is pending" },
+                { tag: "field", name: "Downloading", description: "Downloading the requested app" },
+                { tag: "field", name: "Installing", description: "Installing the requested app" }
             ]
         },
 
         {
-            name: "ApplicationStruct", tag: "datatype",
+            tag: "datatype", name: "ApplicationStruct",
             details: "This indicates a global identifier for an Application given a catalog.",
             xref: "cluster§6.4.5.2",
 
             children: [
                 {
-                    name: "CatalogVendorId", tag: "field",
+                    tag: "field", name: "CatalogVendorId",
                     details: "This field shall indicate the CSA-issued vendor ID for the catalog. The DIAL registry shall use " +
                         "value 0x0000." +
                         "\n" +
@@ -200,7 +200,7 @@ Resource.add({
                 },
 
                 {
-                    name: "ApplicationId", tag: "field",
+                    tag: "field", name: "ApplicationId",
                     details: "This field shall indicate the application identifier, expressed as a string, such as \"PruneVideo\" or " +
                         "\"Company X\". This field shall be unique within a catalog." +
                         "\n" +
@@ -211,7 +211,7 @@ Resource.add({
         },
 
         {
-            name: "ApplicationEPStruct", tag: "datatype",
+            tag: "datatype", name: "ApplicationEPStruct",
             details: "This specifies an app along with its corresponding endpoint.",
             xref: "cluster§6.4.5.3"
         }

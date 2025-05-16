@@ -10,17 +10,17 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const FanDt = DeviceType(
-    { id: 0x2b, name: "Fan", classification: "simple" },
+    { name: "Fan", id: 0x2b },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 43, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 43, revision: 3 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x4, name: "Groups", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x6, name: "OnOff", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "OnOff", id: 0x6, element: "serverCluster", conformance: "O" }),
     Requirement(
-        { id: 0x202, name: "FanControl", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "FanModeSequence", access: "R V", conformance: "Matter", element: "attribute" })
+        { name: "FanControl", id: 0x202, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "FanModeSequence", element: "attribute", conformance: "Matter", access: "R V" })
     )
 );
 

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "fabric-idx", tag: "datatype",
+    tag: "datatype", name: "fabric-idx",
     description: "Fabric Index",
     details: "This is an index that maps to a particular fabric on the node, see Fabric-Index. It is used for:" +
         "\n" +

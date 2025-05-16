@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "uint32", tag: "datatype", description: "Unsigned 32-bit integer", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "uint32", description: "Unsigned 32-bit integer", xref: "core§7.19.1" });

@@ -15,31 +15,31 @@ import {
 } from "../../elements/index.js";
 
 export const AirQuality = Cluster(
-    { id: 0x5b, name: "AirQuality" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "AirQuality", id: 0x5b },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "FAIR", conformance: "O", constraint: "0", longName: "Fair" }),
-        Field({ name: "MOD", conformance: "O", constraint: "1", longName: "Moderate" }),
-        Field({ name: "VPOOR", conformance: "O", constraint: "2", longName: "VeryPoor" }),
-        Field({ name: "XPOOR", conformance: "O", constraint: "3", longName: "ExtremelyPoor" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "FAIR", constraint: "0", conformance: "O", longName: "Fair" }),
+        Field({ name: "MOD", constraint: "1", conformance: "O", longName: "Moderate" }),
+        Field({ name: "VPOOR", constraint: "2", conformance: "O", longName: "VeryPoor" }),
+        Field({ name: "XPOOR", constraint: "3", conformance: "O", longName: "ExtremelyPoor" })
     ),
 
     Attribute({
-        id: 0x0, name: "AirQuality", type: "AirQualityEnum",
-        access: "R V", conformance: "M", constraint: "desc", default: 0
+        name: "AirQuality", id: 0x0, type: "AirQualityEnum",
+        default: 0, constraint: "desc", conformance: "M", access: "R V"
     }),
 
     Datatype(
         { name: "AirQualityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "M" }),
-        Field({ id: 0x1, name: "Good", conformance: "M" }),
-        Field({ id: 0x2, name: "Fair", conformance: "FAIR" }),
-        Field({ id: 0x3, name: "Moderate", conformance: "MOD" }),
-        Field({ id: 0x4, name: "Poor", conformance: "M" }),
-        Field({ id: 0x5, name: "VeryPoor", conformance: "VPOOR" }),
-        Field({ id: 0x6, name: "ExtremelyPoor", conformance: "XPOOR" })
+        Field({ name: "Unknown", id: 0x0, conformance: "M" }),
+        Field({ name: "Good", id: 0x1, conformance: "M" }),
+        Field({ name: "Fair", id: 0x2, conformance: "FAIR" }),
+        Field({ name: "Moderate", id: 0x3, conformance: "MOD" }),
+        Field({ name: "Poor", id: 0x4, conformance: "M" }),
+        Field({ name: "VeryPoor", id: 0x5, conformance: "VPOOR" }),
+        Field({ name: "ExtremelyPoor", id: 0x6, conformance: "XPOOR" })
     )
 );
 

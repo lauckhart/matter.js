@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "NetworkInfrastructureManager", tag: "deviceType",
+    tag: "deviceType", name: "NetworkInfrastructureManager",
     classification: "simple",
 
     details: "A Network Infrastructure Manager provides interfaces that allow for the management of the Wi-Fi, " +
@@ -30,8 +30,8 @@ Resource.add({
 
     xref: "device§15.2",
     children: [
-        { name: "WiFiNetworkManagement", tag: "requirement", xref: "device§15.2.4" },
-        { name: "ThreadBorderRouterManagement", tag: "requirement", xref: "device§15.2.4" },
-        { name: "ThreadNetworkDirectory", tag: "requirement", xref: "device§15.2.4" }
+        { tag: "requirement", name: "WiFiNetworkManagement", xref: "device§15.2.4" },
+        { tag: "requirement", name: "ThreadBorderRouterManagement", xref: "device§15.2.4" },
+        { tag: "requirement", name: "ThreadNetworkDirectory", xref: "device§15.2.4" }
     ]
 });

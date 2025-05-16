@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Groups", tag: "cluster",
+    tag: "cluster", name: "Groups",
     classification: "endpoint", pics: "G",
 
     details: "The Groups cluster manages, per endpoint, the content of the node-wide Group Table that is part of " +
@@ -33,17 +33,17 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.3.4",
             children: [{
-                name: "GN", tag: "field",
+                tag: "field", name: "GN",
                 details: "The Group Names feature indicates the ability to store a name for a group when a group is added.",
                 xref: "cluster§1.3.4.1"
             }]
         },
 
         {
-            name: "NameSupport", tag: "attribute",
+            tag: "attribute", name: "NameSupport",
             details: "This attribute provides legacy, read-only access to whether the Group Names feature is supported. " +
                 "The most significant bit, bit 7 (GroupNames), shall be equal to bit 0 of the FeatureMap attribute " +
                 "(GN Feature). All other bits shall be 0.",
@@ -51,21 +51,21 @@ Resource.add({
         },
 
         {
-            name: "AddGroup", tag: "command",
+            tag: "command", name: "AddGroup",
             details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
                 "endpoint.",
             xref: "cluster§1.3.7.1",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall be used to identify the group and any associated key material to which the server " +
                         "endpoint is to be added.",
                     xref: "cluster§1.3.7.1.1"
                 },
 
                 {
-                    name: "GroupName", tag: "field",
+                    tag: "field", name: "GroupName",
                     details: "This field may be set to a human-readable name for the group. If the client has no name for the " +
                         "group, the GroupName field shall be set to the empty string." +
                         "\n" +
@@ -76,35 +76,35 @@ Resource.add({
         },
 
         {
-            name: "ViewGroup", tag: "command",
+            tag: "command", name: "ViewGroup",
             details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                 "command containing the name string for a particular group.",
             xref: "cluster§1.3.7.2"
         },
 
         {
-            name: "GetGroupMembership", tag: "command",
+            tag: "command", name: "GetGroupMembership",
             details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
                 "endpoint, in a number of ways.",
             xref: "cluster§1.3.7.3"
         },
 
         {
-            name: "RemoveGroup", tag: "command",
+            tag: "command", name: "RemoveGroup",
             details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                 "server endpoint, if any, in a particular group.",
             xref: "cluster§1.3.7.4"
         },
 
         {
-            name: "RemoveAllGroups", tag: "command",
+            tag: "command", name: "RemoveAllGroups",
             details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
                 "for the server endpoint.",
             xref: "cluster§1.3.7.5"
         },
 
         {
-            name: "AddGroupIfIdentifying", tag: "command",
+            tag: "command", name: "AddGroupIfIdentifying",
 
             details: "The AddGroupIfIdentifying command allows a client to add group membership in a particular group for " +
                 "the server endpoint, on condition that the endpoint is identifying itself. Identifying functionality " +
@@ -120,14 +120,14 @@ Resource.add({
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall be used to identify the group and any associated key material to which the server " +
                         "endpoint is to be added.",
                     xref: "cluster§1.3.7.6.1"
                 },
 
                 {
-                    name: "GroupName", tag: "field",
+                    tag: "field", name: "GroupName",
                     details: "This field may be set to a human-readable name for the group. If the client has no name for the" +
                         "\n" +
                         "group, the GroupName field shall be set to the empty string." +
@@ -139,18 +139,18 @@ Resource.add({
         },
 
         {
-            name: "AddGroupResponse", tag: "command",
+            tag: "command", name: "AddGroupResponse",
             details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.",
             xref: "cluster§1.3.7.7",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field is set according to the Effect on Receipt section of the AddGroup command.",
                     xref: "cluster§1.3.7.7.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field is set to the GroupID field of the received AddGroup command.",
                     xref: "cluster§1.3.7.7.2"
                 }
@@ -158,25 +158,25 @@ Resource.add({
         },
 
         {
-            name: "ViewGroupResponse", tag: "command",
+            tag: "command", name: "ViewGroupResponse",
             details: "The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup " +
                 "command.",
             xref: "cluster§1.3.7.8",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field is according to the Effect on Receipt section of the ViewGroup command.",
                     xref: "cluster§1.3.7.8.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field is set to the GroupID field of the received ViewGroup command.",
                     xref: "cluster§1.3.7.8.2"
                 },
 
                 {
-                    name: "GroupName", tag: "field",
+                    tag: "field", name: "GroupName",
                     details: "If the status is SUCCESS, and group names are supported, this field is set to the group name " +
                         "associated with that group in the Group Table; otherwise it is set to the empty string.",
                     xref: "cluster§1.3.7.8.3"
@@ -185,14 +185,14 @@ Resource.add({
         },
 
         {
-            name: "GetGroupMembershipResponse", tag: "command",
+            tag: "command", name: "GetGroupMembershipResponse",
             details: "The GetGroupMembershipResponse command is sent by the Groups cluster server in response to a " +
                 "GetGroupMembership command.",
             xref: "cluster§1.3.7.9",
 
             children: [
                 {
-                    name: "Capacity", tag: "field",
+                    tag: "field", name: "Capacity",
 
                     details: "This field shall contain the remaining capacity of the Group Table of the node. The following values " +
                         "apply:" +
@@ -209,7 +209,7 @@ Resource.add({
                 },
 
                 {
-                    name: "GroupList", tag: "field",
+                    tag: "field", name: "GroupList",
 
                     details: "The GroupList field shall contain either the group IDs of all the groups in the Group Table for " +
                         "which the server endpoint is a member of the group (in the case where the GroupList field of the " +
@@ -227,19 +227,19 @@ Resource.add({
         },
 
         {
-            name: "RemoveGroupResponse", tag: "command",
+            tag: "command", name: "RemoveGroupResponse",
             details: "The RemoveGroupResponse command is generated by the server in response to the receipt of a " +
                 "RemoveGroup command.",
             xref: "cluster§1.3.7.10",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field is according to the Effect on Receipt section of the RemoveGroup command.",
                     xref: "cluster§1.3.7.10.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field is set to the GroupID field of the received RemoveGroup command.",
                     xref: "cluster§1.3.7.10.2"
                 }
@@ -247,9 +247,9 @@ Resource.add({
         },
 
         {
-            name: "NameSupportBitmap", tag: "datatype",
+            tag: "datatype", name: "NameSupportBitmap",
             xref: "cluster§1.3.5.1",
-            children: [{ name: "GroupNames", tag: "field", description: "The ability to store a name for a group." }]
+            children: [{ tag: "field", name: "GroupNames", description: "The ability to store a name for a group." }]
         }
     ]
 });

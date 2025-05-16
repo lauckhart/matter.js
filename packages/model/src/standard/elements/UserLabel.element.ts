@@ -14,9 +14,9 @@ import {
 } from "../../elements/index.js";
 
 export const UserLabel = Cluster(
-    { id: 0x41, name: "UserLabel", type: "Label" },
+    { name: "UserLabel", id: 0x41, type: "Label" },
     Attribute(
-        { id: 0x0, name: "LabelList", type: "list", access: "RW VM", constraint: "min 0", default: [], quality: "N" },
+        { name: "LabelList", id: 0x0, type: "list", default: [], constraint: "min 0", access: "RW VM", quality: "N" },
         Field({ name: "entry", type: "LabelStruct" })
     )
 );

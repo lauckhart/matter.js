@@ -9,21 +9,21 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "RvcOperationalState", tag: "cluster",
+    tag: "cluster", name: "RvcOperationalState",
     classification: "application", pics: "RVCOPSTATE",
     details: "This cluster is derived from the Operational State cluster and provides an interface for monitoring " +
         "the operational state of a robotic vacuum cleaner.",
     xref: "cluster§7.4",
 
     children: [
-        { name: "Pause", tag: "command", xref: "cluster§7.4.5" },
-        { name: "Stop", tag: "command", xref: "cluster§7.4.5" },
-        { name: "Start", tag: "command", xref: "cluster§7.4.5" },
-        { name: "Resume", tag: "command", xref: "cluster§7.4.5" },
-        { name: "OperationalCommandResponse", tag: "command", xref: "cluster§7.4.5" },
+        { tag: "command", name: "Pause", xref: "cluster§7.4.5" },
+        { tag: "command", name: "Stop", xref: "cluster§7.4.5" },
+        { tag: "command", name: "Start", xref: "cluster§7.4.5" },
+        { tag: "command", name: "Resume", xref: "cluster§7.4.5" },
+        { tag: "command", name: "OperationalCommandResponse", xref: "cluster§7.4.5" },
 
         {
-            name: "GoHome", tag: "command",
+            tag: "command", name: "GoHome",
 
             details: "On receipt of this command, the device shall start seeking the charging dock, if possible in the " +
                 "current state of the device." +
@@ -47,7 +47,7 @@ Resource.add({
         },
 
         {
-            name: "OperationalStateEnum", tag: "datatype",
+            tag: "datatype", name: "OperationalStateEnum",
 
             details: "The values defined herein are applicable to this derived cluster of Operational State only and are " +
                 "additional to the set of values defined in Operational State itself." +
@@ -72,60 +72,60 @@ Resource.add({
             xref: "cluster§7.4.4.1",
 
             children: [
-                { name: "Stopped", tag: "field", description: "The device is stopped" },
-                { name: "Running", tag: "field", description: "The device is operating" },
-                { name: "Paused", tag: "field", description: "The device is paused during an operation" },
-                { name: "Error", tag: "field", description: "The device is in an error state" },
-                { name: "SeekingCharger", tag: "field", description: "The device is en route to the charging dock" },
-                { name: "Charging", tag: "field", description: "The device is charging" },
-                { name: "Docked", tag: "field", description: "The device is on the dock, not charging" }
+                { tag: "field", name: "Stopped", description: "The device is stopped" },
+                { tag: "field", name: "Running", description: "The device is operating" },
+                { tag: "field", name: "Paused", description: "The device is paused during an operation" },
+                { tag: "field", name: "Error", description: "The device is in an error state" },
+                { tag: "field", name: "SeekingCharger", description: "The device is en route to the charging dock" },
+                { tag: "field", name: "Charging", description: "The device is charging" },
+                { tag: "field", name: "Docked", description: "The device is on the dock, not charging" }
             ]
         },
 
         {
-            name: "ErrorStateEnum", tag: "datatype",
+            tag: "datatype", name: "ErrorStateEnum",
             details: "The values defined herein are applicable to this derived cluster of Operational State only and are " +
                 "additional to the set of values defined in Operational State itself.",
             xref: "cluster§7.4.4.2",
 
             children: [
-                { name: "NoError", tag: "field", description: "The device is not in an error state" },
+                { tag: "field", name: "NoError", description: "The device is not in an error state" },
                 {
-                    name: "UnableToStartOrResume", tag: "field",
+                    tag: "field", name: "UnableToStartOrResume",
                     description: "The device is unable to start or resume operation"
                 },
                 {
-                    name: "UnableToCompleteOperation", tag: "field",
+                    tag: "field", name: "UnableToCompleteOperation",
                     description: "The device was unable to complete the current operation"
                 },
                 {
-                    name: "CommandInvalidInState", tag: "field",
+                    tag: "field", name: "CommandInvalidInState",
                     description: "The device cannot process the command in its current state"
                 },
                 {
-                    name: "FailedToFindChargingDock", tag: "field",
+                    tag: "field", name: "FailedToFindChargingDock",
                     description: "The device has failed to find or reach the charging dock"
                 },
-                { name: "Stuck", tag: "field", description: "The device is stuck and requires manual intervention" },
+                { tag: "field", name: "Stuck", description: "The device is stuck and requires manual intervention" },
                 {
-                    name: "DustBinMissing", tag: "field",
+                    tag: "field", name: "DustBinMissing",
                     description: "The device has detected that its dust bin is missing"
                 },
-                { name: "DustBinFull", tag: "field", description: "The device has detected that its dust bin is full" },
+                { tag: "field", name: "DustBinFull", description: "The device has detected that its dust bin is full" },
                 {
-                    name: "WaterTankEmpty", tag: "field",
+                    tag: "field", name: "WaterTankEmpty",
                     description: "The device has detected that its water tank is empty"
                 },
                 {
-                    name: "WaterTankMissing", tag: "field",
+                    tag: "field", name: "WaterTankMissing",
                     description: "The device has detected that its water tank is missing"
                 },
                 {
-                    name: "WaterTankLidOpen", tag: "field",
+                    tag: "field", name: "WaterTankLidOpen",
                     description: "The device has detected that its water tank lid is open"
                 },
                 {
-                    name: "MopCleaningPadMissing", tag: "field",
+                    tag: "field", name: "MopCleaningPadMissing",
                     description: "The device has detected that its cleaning pad is missing"
                 }
             ]

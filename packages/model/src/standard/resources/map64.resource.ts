@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "map64", tag: "datatype", description: "64-bit bitmap", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "map64", description: "64-bit bitmap", xref: "core§7.19.1" });

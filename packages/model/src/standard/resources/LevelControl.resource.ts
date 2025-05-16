@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "LevelControl", tag: "cluster",
+    tag: "cluster", name: "LevelControl",
     classification: "application", pics: "LVL",
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to a " +
         "level, for example the brightness of a light, the degree of closure of a door, or the power output " +
@@ -18,14 +18,14 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.6.4",
 
             children: [
-                { name: "OO", tag: "field", details: "Dependency with the On/Off cluster" },
+                { tag: "field", name: "OO", details: "Dependency with the On/Off cluster" },
 
                 {
-                    name: "LT", tag: "field",
+                    tag: "field", name: "LT",
 
                     details: "This feature supports an interface for controlling the level of a light source. For the CurrentLevel " +
                         "attribute:" +
@@ -42,7 +42,7 @@ Resource.add({
                 },
 
                 {
-                    name: "FQ", tag: "field",
+                    tag: "field", name: "FQ",
                     details: "NOTE The Frequency feature is provisional.",
                     xref: "cluster§1.6.4.3"
                 }
@@ -50,7 +50,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentLevel", tag: "attribute",
+            tag: "attribute", name: "CurrentLevel",
 
             details: "Indicates the current level of this device. The meaning of 'level' is device dependent." +
                 "\n" +
@@ -66,7 +66,7 @@ Resource.add({
         },
 
         {
-            name: "RemainingTime", tag: "attribute",
+            tag: "attribute", name: "RemainingTime",
 
             details: "Indicates the time remaining until the current command is complete - it is specified in 1/10ths of a " +
                 "second." +
@@ -89,23 +89,23 @@ Resource.add({
         },
 
         {
-            discriminator: "[LT]", name: "MinLevel", tag: "attribute",
+            tag: "attribute", name: "MinLevel", discriminator: "[LT]",
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.4"
         },
         {
-            discriminator: "[!LT]", name: "MinLevel", tag: "attribute",
+            tag: "attribute", name: "MinLevel", discriminator: "[!LT]",
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.4"
         },
         {
-            name: "MaxLevel", tag: "attribute",
+            tag: "attribute", name: "MaxLevel",
             details: "Indicates the maximum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.5"
         },
 
         {
-            name: "CurrentFrequency", tag: "attribute",
+            tag: "attribute", name: "CurrentFrequency",
 
             details: "Indicates the frequency at which the device is at CurrentLevel. A CurrentFrequency of 0 is unknown." +
                 "\n" +
@@ -121,21 +121,21 @@ Resource.add({
         },
 
         {
-            name: "MinFrequency", tag: "attribute",
+            tag: "attribute", name: "MinFrequency",
             details: "Indicates the minimum value of CurrentFrequency that is capable of being assigned. MinFrequency " +
                 "shall be less than or equal to MaxFrequency. A value of 0 indicates undefined.",
             xref: "cluster§1.6.6.7"
         },
 
         {
-            name: "MaxFrequency", tag: "attribute",
+            tag: "attribute", name: "MaxFrequency",
             details: "Indicates the maximum value of CurrentFrequency that is capable of being assigned. MaxFrequency " +
                 "shall be greater than or equal to MinFrequency. A value of 0 indicates undefined.",
             xref: "cluster§1.6.6.8"
         },
 
         {
-            name: "OnOffTransitionTime", tag: "attribute",
+            tag: "attribute", name: "OnOffTransitionTime",
 
             details: "Indicates the time taken to move to or from the target level when On or Off commands are received by " +
                 "an On/Off cluster on the same endpoint. It is specified in 1/10ths of a second." +
@@ -148,7 +148,7 @@ Resource.add({
         },
 
         {
-            name: "OnLevel", tag: "attribute",
+            tag: "attribute", name: "OnLevel",
 
             details: "Indicates the value that the CurrentLevel attribute is set to when the OnOff attribute of an On/Off " +
                 "cluster on the same endpoint is set to TRUE, as a result of processing an On/Off cluster command. If " +
@@ -162,7 +162,7 @@ Resource.add({
         },
 
         {
-            name: "OnTransitionTime", tag: "attribute",
+            tag: "attribute", name: "OnTransitionTime",
             details: "Indicates the time taken to move the current level from the minimum level to the maximum level when " +
                 "an On command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of a " +
                 "second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
@@ -171,7 +171,7 @@ Resource.add({
         },
 
         {
-            name: "OffTransitionTime", tag: "attribute",
+            tag: "attribute", name: "OffTransitionTime",
             details: "Indicates the time taken to move the current level from the maximum level to the minimum level when " +
                 "an Off command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of " +
                 "a second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
@@ -180,14 +180,14 @@ Resource.add({
         },
 
         {
-            name: "DefaultMoveRate", tag: "attribute",
+            tag: "attribute", name: "DefaultMoveRate",
             details: "Indicates the movement rate, in units per second, when a Move command is received with a null value " +
                 "Rate parameter.",
             xref: "cluster§1.6.6.14"
         },
 
         {
-            name: "Options", tag: "attribute",
+            tag: "attribute", name: "Options",
 
             details: "Indicates the selected options of the device." +
                 "\n" +
@@ -214,7 +214,7 @@ Resource.add({
         },
 
         {
-            name: "StartUpCurrentLevel", tag: "attribute",
+            tag: "attribute", name: "StartUpCurrentLevel",
 
             details: "Indicates the desired startup level for a device when it is supplied with power and this level shall " +
                 "be reflected in the CurrentLevel attribute. The values of the StartUpCurrentLevel attribute are " +
@@ -226,21 +226,21 @@ Resource.add({
             xref: "cluster§1.6.6.15"
         },
 
-        { name: "MoveToLevel", tag: "command", xref: "cluster§1.6.7.1" },
+        { tag: "command", name: "MoveToLevel", xref: "cluster§1.6.7.1" },
 
         {
-            name: "Move", tag: "command",
+            tag: "command", name: "Move",
             xref: "cluster§1.6.7.2",
 
             children: [
                 {
-                    name: "MoveMode", tag: "field",
+                    tag: "field", name: "MoveMode",
                     details: "This field shall be one of the non-reserved values in MoveModeEnum.",
                     xref: "cluster§1.6.7.2.1"
                 },
 
                 {
-                    name: "Rate", tag: "field",
+                    tag: "field", name: "Rate",
 
                     details: "This field shall indicate the rate of movement in units per second. The actual rate of movement " +
                         "SHOULD be as close to this rate as the device is able. If the Rate field is null, then the value of " +
@@ -257,23 +257,23 @@ Resource.add({
         },
 
         {
-            name: "Step", tag: "command",
+            tag: "command", name: "Step",
             xref: "cluster§1.6.7.3",
 
             children: [
                 {
-                    name: "StepMode", tag: "field",
+                    tag: "field", name: "StepMode",
                     details: "This field shall be one of the non-reserved values in StepModeEnum.",
                     xref: "cluster§1.6.7.3.1"
                 },
                 {
-                    name: "StepSize", tag: "field",
+                    tag: "field", name: "StepSize",
                     details: "This field shall indicate the change to CurrentLevel.",
                     xref: "cluster§1.6.7.3.2"
                 },
 
                 {
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
 
                     details: "This field shall indicate the time that shall be taken to perform the step, in tenths of a second. A " +
                         "step is a change in the CurrentLevel of StepSize units. The actual time taken SHOULD be as close to" +
@@ -288,27 +288,27 @@ Resource.add({
             ]
         },
 
-        { name: "Stop", tag: "command", xref: "cluster§1.6.7.4" },
-        { name: "MoveToLevelWithOnOff", tag: "command", xref: "cluster§1.6.7" },
-        { name: "MoveWithOnOff", tag: "command", xref: "cluster§1.6.7" },
-        { name: "StepWithOnOff", tag: "command", xref: "cluster§1.6.7" },
-        { name: "StopWithOnOff", tag: "command", xref: "cluster§1.6.7" },
-        { name: "MoveToClosestFrequency", tag: "command", xref: "cluster§1.6.7.5" },
+        { tag: "command", name: "Stop", xref: "cluster§1.6.7.4" },
+        { tag: "command", name: "MoveToLevelWithOnOff", xref: "cluster§1.6.7" },
+        { tag: "command", name: "MoveWithOnOff", xref: "cluster§1.6.7" },
+        { tag: "command", name: "StepWithOnOff", xref: "cluster§1.6.7" },
+        { tag: "command", name: "StopWithOnOff", xref: "cluster§1.6.7" },
+        { tag: "command", name: "MoveToClosestFrequency", xref: "cluster§1.6.7.5" },
 
         {
-            name: "OptionsBitmap", tag: "datatype",
+            tag: "datatype", name: "OptionsBitmap",
             xref: "cluster§1.6.5.1",
 
             children: [
                 {
-                    name: "ExecuteIfOff", tag: "field",
+                    tag: "field", name: "ExecuteIfOff",
                     description: "Dependency on On/Off cluster",
                     details: "This bit indicates if this cluster has a dependency with the On/Off cluster.",
                     xref: "cluster§1.6.5.1.1"
                 },
 
                 {
-                    name: "CoupleColorTempToLevel", tag: "field",
+                    tag: "field", name: "CoupleColorTempToLevel",
                     description: "Dependency on Color Control cluster",
                     details: "This bit indicates if this cluster has a dependency with the Color Control cluster.",
                     xref: "cluster§1.6.5.1.2"
@@ -317,20 +317,20 @@ Resource.add({
         },
 
         {
-            name: "MoveModeEnum", tag: "datatype",
+            tag: "datatype", name: "MoveModeEnum",
             xref: "cluster§1.6.5.2",
             children: [
-                { name: "Up", tag: "field", description: "Increase the level" },
-                { name: "Down", tag: "field", description: "Decrease the level" }
+                { tag: "field", name: "Up", description: "Increase the level" },
+                { tag: "field", name: "Down", description: "Decrease the level" }
             ]
         },
 
         {
-            name: "StepModeEnum", tag: "datatype",
+            tag: "datatype", name: "StepModeEnum",
             xref: "cluster§1.6.5.3",
             children: [
-                { name: "Up", tag: "field", description: "Step upwards" },
-                { name: "Down", tag: "field", description: "Step downwards" }
+                { tag: "field", name: "Up", description: "Step upwards" },
+                { tag: "field", name: "Down", description: "Step downwards" }
             ]
         }
     ]

@@ -16,115 +16,115 @@ import {
 } from "../../elements/index.js";
 
 export const GroupKeyManagement = Cluster(
-    { id: 0x3f, name: "GroupKeyManagement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "GroupKeyManagement", id: 0x3f },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CS", conformance: "P", constraint: "0", longName: "CacheAndSync" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "CS", constraint: "0", conformance: "P", longName: "CacheAndSync" })
     ),
 
     Attribute(
         {
-            id: 0x0, name: "GroupKeyMap", type: "list",
-            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N"
+            name: "GroupKeyMap", id: 0x0, type: "list",
+            default: [], constraint: "desc", conformance: "M", access: "RW F VM", quality: "N"
         },
         Field({ name: "entry", type: "GroupKeyMapStruct" })
     ),
 
     Attribute(
         {
-            id: 0x1, name: "GroupTable", type: "list",
-            access: "R F V", conformance: "M", constraint: "desc", default: []
+            name: "GroupTable", id: 0x1, type: "list",
+            default: [], constraint: "desc", conformance: "M", access: "R F V"
         },
         Field({ name: "entry", type: "GroupInfoMapStruct" })
     ),
 
-    Attribute({ id: 0x2, name: "MaxGroupsPerFabric", type: "uint16", access: "R V", conformance: "M", default: 0, quality: "F" }),
+    Attribute({ name: "MaxGroupsPerFabric", id: 0x2, type: "uint16", default: 0, conformance: "M", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x3, name: "MaxGroupKeysPerFabric", type: "uint16",
-        access: "R V", conformance: "M", constraint: "1 to 65535", default: 1, quality: "F"
+        name: "MaxGroupKeysPerFabric", id: 0x3, type: "uint16",
+        default: 1, constraint: "1 to 65535", conformance: "M", access: "R V", quality: "F"
     }),
     Command(
-        { id: 0x0, name: "KeySetWrite", access: "F A", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "GroupKeySet", type: "GroupKeySetStruct", conformance: "M" })
+        { name: "KeySetWrite", id: 0x0, conformance: "M", access: "F A", direction: "request", response: "status" },
+        Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x1, name: "KeySetRead",
-            access: "F A", conformance: "M", direction: "request", response: "KeySetReadResponse"
+            name: "KeySetRead", id: 0x1,
+            conformance: "M", access: "F A", direction: "request", response: "KeySetReadResponse"
         },
-        Field({ id: 0x0, name: "GroupKeySetId", type: "uint16", conformance: "M" })
+        Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })
     ),
 
     Command(
-        { id: 0x2, name: "KeySetReadResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "GroupKeySet", type: "GroupKeySetStruct", conformance: "M" })
+        { name: "KeySetReadResponse", id: 0x2, conformance: "M", direction: "response" },
+        Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })
     ),
     Command(
-        { id: 0x3, name: "KeySetRemove", access: "F A", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "GroupKeySetId", type: "uint16", conformance: "M" })
+        { name: "KeySetRemove", id: 0x3, conformance: "M", access: "F A", direction: "request", response: "status" },
+        Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x4, name: "KeySetReadAllIndices",
-            access: "F A", conformance: "M", direction: "request", response: "KeySetReadAllIndicesResponse"
+            name: "KeySetReadAllIndices", id: 0x4,
+            conformance: "M", access: "F A", direction: "request", response: "KeySetReadAllIndicesResponse"
         },
-        Field({ id: 0x0, name: "DoNotUse", conformance: "X" })
+        Field({ name: "DoNotUse", id: 0x0, conformance: "X" })
     ),
 
     Command(
-        { id: 0x5, name: "KeySetReadAllIndicesResponse", conformance: "M", direction: "response" },
+        { name: "KeySetReadAllIndicesResponse", id: 0x5, conformance: "M", direction: "response" },
         Field(
-            { id: 0x0, name: "GroupKeySetIDs", type: "list", conformance: "M" },
+            { name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M" },
             Field({ name: "entry", type: "uint16" })
         )
     ),
 
     Datatype(
         { name: "GroupKeySecurityPolicyEnum", type: "enum8" },
-        Field({ id: 0x0, name: "TrustFirst", conformance: "M" }),
-        Field({ id: 0x1, name: "CacheAndSync", conformance: "CS" })
+        Field({ name: "TrustFirst", id: 0x0, conformance: "M" }),
+        Field({ name: "CacheAndSync", id: 0x1, conformance: "CS" })
     ),
     Datatype(
         { name: "GroupKeyMulticastPolicyEnum", type: "enum8" },
-        Field({ id: 0x0, name: "PerGroupId", conformance: "M" }),
-        Field({ id: 0x1, name: "AllNodes", conformance: "M" })
+        Field({ name: "PerGroupId", id: 0x0, conformance: "M" }),
+        Field({ name: "AllNodes", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "GroupKeyMapStruct", type: "struct" },
-        Field({ id: 0x1, name: "GroupId", type: "group-id", access: "F", conformance: "M" }),
-        Field({ id: 0x2, name: "GroupKeySetId", type: "uint16", access: "F", conformance: "M", constraint: "1 to 65535" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", access: "F" }),
+        Field({ name: "GroupKeySetId", id: 0x2, type: "uint16", constraint: "1 to 65535", conformance: "M", access: "F" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "GroupKeySetStruct", type: "struct" },
-        Field({ id: 0x0, name: "GroupKeySetId", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "GroupKeySecurityPolicy", type: "GroupKeySecurityPolicyEnum", access: "S", conformance: "M" }),
-        Field({ id: 0x2, name: "EpochKey0", type: "octstr", access: "S", conformance: "M", constraint: "16", quality: "X" }),
-        Field({ id: 0x3, name: "EpochStartTime0", type: "epoch-us", access: "S", conformance: "M", quality: "X" }),
-        Field({ id: 0x4, name: "EpochKey1", type: "octstr", access: "S", conformance: "M", constraint: "16", quality: "X" }),
-        Field({ id: 0x5, name: "EpochStartTime1", type: "epoch-us", access: "S", conformance: "M", quality: "X" }),
-        Field({ id: 0x6, name: "EpochKey2", type: "octstr", access: "S", conformance: "M", constraint: "16", quality: "X" }),
-        Field({ id: 0x7, name: "EpochStartTime2", type: "epoch-us", access: "S", conformance: "M", quality: "X" }),
+        Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum", conformance: "M", access: "S" }),
+        Field({ name: "EpochKey0", id: 0x2, type: "octstr", constraint: "16", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "EpochStartTime0", id: 0x3, type: "epoch-us", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "EpochKey1", id: 0x4, type: "octstr", constraint: "16", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "EpochStartTime1", id: 0x5, type: "epoch-us", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "EpochKey2", id: 0x6, type: "octstr", constraint: "16", conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "EpochStartTime2", id: 0x7, type: "epoch-us", conformance: "M", access: "S", quality: "X" }),
         Field({
-            id: 0x8, name: "GroupKeyMulticastPolicy", type: "GroupKeyMulticastPolicyEnum",
-            access: "S", conformance: "O", default: 0
+            name: "GroupKeyMulticastPolicy", id: 0x8, type: "GroupKeyMulticastPolicyEnum",
+            default: 0, conformance: "O", access: "S"
         })
     ),
 
     Datatype(
         { name: "GroupInfoMapStruct", type: "struct" },
-        Field({ id: 0x1, name: "GroupId", type: "group-id", access: "F", conformance: "M" }),
+        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", access: "F" }),
         Field(
-            { id: 0x2, name: "Endpoints", type: "list", access: "F", conformance: "M", constraint: "min 1" },
+            { name: "Endpoints", id: 0x2, type: "list", constraint: "min 1", conformance: "M", access: "F" },
             Field({ name: "entry", type: "endpoint-no" })
         ),
-        Field({ id: 0x3, name: "GroupName", type: "string", access: "F", conformance: "O", constraint: "max 16" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "GroupName", id: 0x3, type: "string", constraint: "max 16", conformance: "O", access: "F" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );
 

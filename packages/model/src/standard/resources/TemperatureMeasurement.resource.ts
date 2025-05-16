@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TemperatureMeasurement", tag: "cluster",
+    tag: "cluster", name: "TemperatureMeasurement",
     classification: "application", pics: "TMP",
     details: "This cluster provides an interface to temperature measurement functionality, including configuration " +
         "and provision of notifications of temperature measurements.",
@@ -17,13 +17,13 @@ Resource.add({
 
     children: [
         {
-            name: "MeasuredValue", tag: "attribute",
+            tag: "attribute", name: "MeasuredValue",
             details: "Indicates the measured temperature. The null value indicates that the temperature is unknown.",
             xref: "cluster§2.3.4.1"
         },
 
         {
-            name: "MinMeasuredValue", tag: "attribute",
+            tag: "attribute", name: "MinMeasuredValue",
             details: "Indicates the minimum value of MeasuredValue that is capable of being measured. See Measured Value " +
                 "for more details." +
                 "\n" +
@@ -32,7 +32,7 @@ Resource.add({
         },
 
         {
-            name: "MaxMeasuredValue", tag: "attribute",
+            tag: "attribute", name: "MaxMeasuredValue",
             details: "This attribute indicates the maximum value of MeasuredValue that is capable of being measured. See " +
                 "Measured Value for more details." +
                 "\n" +
@@ -40,6 +40,6 @@ Resource.add({
             xref: "cluster§2.3.4.3"
         },
 
-        { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.3.4.4" }
+        { tag: "attribute", name: "Tolerance", details: "See Measured Value.", xref: "cluster§2.3.4.4" }
     ]
 });

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "devtype-id", tag: "datatype",
+    tag: "datatype", name: "devtype-id",
     description: "Device Type ID",
     details: "An identifier that indicates conformance to a device type." +
         "\n" +

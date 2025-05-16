@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Position", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "Position",
 
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a position relative to the device (e.g. the temperature sensor in the top drawer of " +
@@ -29,7 +29,7 @@ Resource.add({
 
     xref: "namespace§9",
     children: [
-        { name: "Row", tag: "semanticTag", description: "Numeric value provided in Label field" },
-        { name: "Column", tag: "semanticTag", description: "Numeric value provided in Label field" }
+        { tag: "semanticTag", name: "Row", description: "Numeric value provided in Label field" },
+        { tag: "semanticTag", name: "Column", description: "Numeric value provided in Label field" }
     ]
 });

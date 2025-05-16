@@ -16,270 +16,270 @@ import {
 } from "../../elements/index.js";
 
 export const Thermostat = Cluster(
-    { id: 0x201, name: "Thermostat" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 8 }),
+    { name: "Thermostat", id: 0x201 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 8 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", longName: "Heating" }),
-        Field({ name: "COOL", conformance: "AUTO, O.a+", constraint: "1", longName: "Cooling" }),
-        Field({ name: "OCC", conformance: "O", constraint: "2", longName: "Occupancy" }),
-        Field({ name: "SCH", conformance: "O", constraint: "3", longName: "ScheduleConfiguration" }),
-        Field({ name: "SB", conformance: "O", constraint: "4", longName: "Setback" }),
-        Field({ name: "AUTO", conformance: "O", constraint: "5", longName: "AutoMode" }),
-        Field({ name: "LTNE", conformance: "O", constraint: "6", longName: "LocalTemperatureNotExposed" }),
-        Field({ name: "MSCH", conformance: "O", constraint: "7", longName: "MatterScheduleConfiguration" }),
-        Field({ name: "PRES", conformance: "O", constraint: "8", longName: "Presets" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "HEAT", constraint: "0", conformance: "AUTO, O.a+", longName: "Heating" }),
+        Field({ name: "COOL", constraint: "1", conformance: "AUTO, O.a+", longName: "Cooling" }),
+        Field({ name: "OCC", constraint: "2", conformance: "O", longName: "Occupancy" }),
+        Field({ name: "SCH", constraint: "3", conformance: "O", longName: "ScheduleConfiguration" }),
+        Field({ name: "SB", constraint: "4", conformance: "O", longName: "Setback" }),
+        Field({ name: "AUTO", constraint: "5", conformance: "O", longName: "AutoMode" }),
+        Field({ name: "LTNE", constraint: "6", conformance: "O", longName: "LocalTemperatureNotExposed" }),
+        Field({ name: "MSCH", constraint: "7", conformance: "O", longName: "MatterScheduleConfiguration" }),
+        Field({ name: "PRES", constraint: "8", conformance: "O", longName: "Presets" })
     ),
 
     Attribute({
-        id: 0x0, name: "LocalTemperature", type: "temperature",
-        access: "R V", conformance: "M", default: null, quality: "X P"
+        name: "LocalTemperature", id: 0x0, type: "temperature",
+        default: null, conformance: "M", access: "R V", quality: "X P"
     }),
     Attribute({
-        id: 0x1, name: "OutdoorTemperature", type: "temperature",
-        access: "R V", conformance: "O", default: null, quality: "X"
+        name: "OutdoorTemperature", id: 0x1, type: "temperature",
+        default: null, conformance: "O", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x2, name: "Occupancy", type: "OccupancyBitmap", access: "R V", conformance: "OCC", default: 1 }),
+    Attribute({ name: "Occupancy", id: 0x2, type: "OccupancyBitmap", default: 1, conformance: "OCC", access: "R V" }),
     Attribute({
-        id: 0x3, name: "AbsMinHeatSetpointLimit", type: "temperature",
-        access: "R V", conformance: "[HEAT]", constraint: "desc", default: { type: "celsius", value: 7 },
+        name: "AbsMinHeatSetpointLimit", id: 0x3, type: "temperature",
+        default: { type: "celsius", value: 7 }, constraint: "desc", conformance: "[HEAT]", access: "R V",
         quality: "F"
     }),
     Attribute({
-        id: 0x4, name: "AbsMaxHeatSetpointLimit", type: "temperature",
-        access: "R V", conformance: "[HEAT]", constraint: "desc", default: { type: "celsius", value: 30 },
+        name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature",
+        default: { type: "celsius", value: 30 }, constraint: "desc", conformance: "[HEAT]", access: "R V",
         quality: "F"
     }),
     Attribute({
-        id: 0x5, name: "AbsMinCoolSetpointLimit", type: "temperature",
-        access: "R V", conformance: "[COOL]", constraint: "desc", default: { type: "celsius", value: 16 },
+        name: "AbsMinCoolSetpointLimit", id: 0x5, type: "temperature",
+        default: { type: "celsius", value: 16 }, constraint: "desc", conformance: "[COOL]", access: "R V",
         quality: "F"
     }),
     Attribute({
-        id: 0x6, name: "AbsMaxCoolSetpointLimit", type: "temperature",
-        access: "R V", conformance: "[COOL]", constraint: "desc", default: { type: "celsius", value: 32 },
+        name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "temperature",
+        default: { type: "celsius", value: 32 }, constraint: "desc", conformance: "[COOL]", access: "R V",
         quality: "F"
     }),
     Attribute({
-        id: 0x7, name: "PiCoolingDemand", type: "uint8",
-        access: "R V", conformance: "[COOL]", constraint: "0% to 100%", quality: "P"
+        name: "PiCoolingDemand", id: 0x7, type: "uint8",
+        constraint: "0% to 100%", conformance: "[COOL]", access: "R V", quality: "P"
     }),
     Attribute({
-        id: 0x8, name: "PiHeatingDemand", type: "uint8",
-        access: "R V", conformance: "[HEAT]", constraint: "0% to 100%", quality: "P"
+        name: "PiHeatingDemand", id: 0x8, type: "uint8",
+        constraint: "0% to 100%", conformance: "[HEAT]", access: "R V", quality: "P"
     }),
     Attribute({
-        id: 0x9, name: "HvacSystemTypeConfiguration", type: "HVACSystemTypeBitmap",
-        access: "R[W] VM", conformance: "D", constraint: "desc", default: 0, quality: "N"
+        name: "HvacSystemTypeConfiguration", id: 0x9, type: "HVACSystemTypeBitmap",
+        default: 0, constraint: "desc", conformance: "D", access: "R[W] VM", quality: "N"
     }),
     Attribute({
-        id: 0x10, name: "LocalTemperatureCalibration", type: "SignedTemperature",
-        access: "RW VM", conformance: "[!LTNE]", default: { type: "celsius", value: 0 }, quality: "N"
+        name: "LocalTemperatureCalibration", id: 0x10, type: "SignedTemperature",
+        default: { type: "celsius", value: 0 }, conformance: "[!LTNE]", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x11, name: "OccupiedCoolingSetpoint", type: "temperature",
-        access: "RW VO", conformance: "COOL", constraint: "desc", default: { type: "celsius", value: 26 },
+        name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature",
+        default: { type: "celsius", value: 26 }, constraint: "desc", conformance: "COOL", access: "RW VO",
         quality: "N"
     }),
     Attribute({
-        id: 0x12, name: "OccupiedHeatingSetpoint", type: "temperature",
-        access: "RW VO", conformance: "HEAT", constraint: "desc", default: { type: "celsius", value: 20 },
+        name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature",
+        default: { type: "celsius", value: 20 }, constraint: "desc", conformance: "HEAT", access: "RW VO",
         quality: "N"
     }),
     Attribute({
-        id: 0x13, name: "UnoccupiedCoolingSetpoint", type: "temperature",
-        access: "RW VO", conformance: "COOL & OCC", constraint: "desc",
-        default: { type: "celsius", value: 26 }, quality: "N"
+        name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature",
+        default: { type: "celsius", value: 26 }, constraint: "desc", conformance: "COOL & OCC",
+        access: "RW VO", quality: "N"
     }),
     Attribute({
-        id: 0x14, name: "UnoccupiedHeatingSetpoint", type: "temperature",
-        access: "RW VO", conformance: "HEAT & OCC", constraint: "desc",
-        default: { type: "celsius", value: 20 }, quality: "N"
+        name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature",
+        default: { type: "celsius", value: 20 }, constraint: "desc", conformance: "HEAT & OCC",
+        access: "RW VO", quality: "N"
     }),
     Attribute({
-        id: 0x15, name: "MinHeatSetpointLimit", type: "temperature",
-        access: "RW VM", conformance: "[HEAT]", constraint: "desc",
-        default: { type: "reference", name: "AbsMinHeatSetpointLimit" }, quality: "N"
+        name: "MinHeatSetpointLimit", id: 0x15, type: "temperature",
+        default: { type: "reference", name: "AbsMinHeatSetpointLimit" }, constraint: "desc",
+        conformance: "[HEAT]", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x16, name: "MaxHeatSetpointLimit", type: "temperature",
-        access: "RW VM", conformance: "[HEAT]", constraint: "desc",
-        default: { type: "reference", name: "AbsMaxHeatSetpointLimit" }, quality: "N"
+        name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature",
+        default: { type: "reference", name: "AbsMaxHeatSetpointLimit" }, constraint: "desc",
+        conformance: "[HEAT]", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x17, name: "MinCoolSetpointLimit", type: "temperature",
-        access: "RW VM", conformance: "[COOL]", constraint: "desc",
-        default: { type: "reference", name: "AbsMinCoolSetpointLimit" }, quality: "N"
+        name: "MinCoolSetpointLimit", id: 0x17, type: "temperature",
+        default: { type: "reference", name: "AbsMinCoolSetpointLimit" }, constraint: "desc",
+        conformance: "[COOL]", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x18, name: "MaxCoolSetpointLimit", type: "temperature",
-        access: "RW VM", conformance: "[COOL]", constraint: "desc",
-        default: { type: "reference", name: "AbsMaxCoolSetpointLimit" }, quality: "N"
+        name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature",
+        default: { type: "reference", name: "AbsMaxCoolSetpointLimit" }, constraint: "desc",
+        conformance: "[COOL]", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x19, name: "MinSetpointDeadBand", type: "SignedTemperature",
-        access: "R[W] VM", conformance: "AUTO", constraint: "0 to 12.7°C",
-        default: { type: "celsius", value: 2 }, quality: "N"
+        name: "MinSetpointDeadBand", id: 0x19, type: "SignedTemperature",
+        default: { type: "celsius", value: 2 }, constraint: "0 to 12.7°C", conformance: "AUTO",
+        access: "R[W] VM", quality: "N"
     }),
     Attribute({
-        id: 0x1a, name: "RemoteSensing", type: "RemoteSensingBitmap",
-        access: "RW VM", conformance: "O", default: 0, quality: "N"
+        name: "RemoteSensing", id: 0x1a, type: "RemoteSensingBitmap",
+        default: 0, conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x1b, name: "ControlSequenceOfOperation", type: "ControlSequenceOfOperationEnum",
-        access: "RW VM", constraint: "desc", quality: "N"
+        name: "ControlSequenceOfOperation", id: 0x1b, type: "ControlSequenceOfOperationEnum",
+        constraint: "desc", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x1c, name: "SystemMode", type: "SystemModeEnum",
-        access: "RW VM", conformance: "M", constraint: "desc", default: 1, quality: "N"
+        name: "SystemMode", id: 0x1c, type: "SystemModeEnum",
+        default: 1, constraint: "desc", conformance: "M", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x1e, name: "ThermostatRunningMode", type: "ThermostatRunningModeEnum",
-        access: "R V", conformance: "[AUTO]", constraint: "desc", default: 0
+        name: "ThermostatRunningMode", id: 0x1e, type: "ThermostatRunningModeEnum",
+        default: 0, constraint: "desc", conformance: "[AUTO]", access: "R V"
     }),
     Attribute({
-        id: 0x20, name: "StartOfWeek", type: "StartOfWeekEnum",
-        access: "R V", conformance: "SCH", constraint: "desc", quality: "F"
+        name: "StartOfWeek", id: 0x20, type: "StartOfWeekEnum",
+        constraint: "desc", conformance: "SCH", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x21, name: "NumberOfWeeklyTransitions", type: "uint8",
-        access: "R V", conformance: "SCH", default: 0, quality: "F"
+        name: "NumberOfWeeklyTransitions", id: 0x21, type: "uint8",
+        default: 0, conformance: "SCH", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x22, name: "NumberOfDailyTransitions", type: "uint8",
-        access: "R V", conformance: "SCH", default: 0, quality: "F"
+        name: "NumberOfDailyTransitions", id: 0x22, type: "uint8",
+        default: 0, conformance: "SCH", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x23, name: "TemperatureSetpointHold", type: "TemperatureSetpointHoldEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "TemperatureSetpointHold", id: 0x23, type: "TemperatureSetpointHoldEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x24, name: "TemperatureSetpointHoldDuration", type: "uint16",
-        access: "RW VM", conformance: "O", constraint: "max 1440", default: null, quality: "X N"
+        name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
+        default: null, constraint: "max 1440", conformance: "O", access: "RW VM", quality: "X N"
     }),
     Attribute({
-        id: 0x25, name: "ThermostatProgrammingOperationMode", type: "ProgrammingOperationModeBitmap",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "P"
+        name: "ThermostatProgrammingOperationMode", id: 0x25, type: "ProgrammingOperationModeBitmap",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "P"
     }),
     Attribute({
-        id: 0x29, name: "ThermostatRunningState", type: "RelayStateBitmap",
-        access: "R V", conformance: "O", constraint: "desc"
+        name: "ThermostatRunningState", id: 0x29, type: "RelayStateBitmap",
+        constraint: "desc", conformance: "O", access: "R V"
     }),
     Attribute({
-        id: 0x30, name: "SetpointChangeSource", type: "SetpointChangeSourceEnum",
-        access: "R V", conformance: "O", constraint: "desc", default: 0
+        name: "SetpointChangeSource", id: 0x30, type: "SetpointChangeSourceEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "R V"
     }),
     Attribute({
-        id: 0x31, name: "SetpointChangeAmount", type: "TemperatureDifference",
-        access: "R V", conformance: "O", default: null, quality: "X"
+        name: "SetpointChangeAmount", id: 0x31, type: "TemperatureDifference",
+        default: null, conformance: "O", access: "R V", quality: "X"
     }),
-    Attribute({ id: 0x32, name: "SetpointChangeSourceTimestamp", type: "epoch-s", access: "R V", conformance: "O", default: 0 }),
+    Attribute({ name: "SetpointChangeSourceTimestamp", id: 0x32, type: "epoch-s", default: 0, conformance: "O", access: "R V" }),
     Attribute({
-        id: 0x34, name: "OccupiedSetback", type: "UnsignedTemperature",
-        access: "RW VM", conformance: "SB", constraint: "occupiedSetbackMin to occupiedSetbackMax",
-        default: null, quality: "X N"
+        name: "OccupiedSetback", id: 0x34, type: "UnsignedTemperature",
+        default: null, constraint: "occupiedSetbackMin to occupiedSetbackMax", conformance: "SB",
+        access: "RW VM", quality: "X N"
     }),
     Attribute({
-        id: 0x35, name: "OccupiedSetbackMin", type: "UnsignedTemperature",
-        access: "R V", conformance: "SB", constraint: "max occupiedSetbackMax", default: null,
+        name: "OccupiedSetbackMin", id: 0x35, type: "UnsignedTemperature",
+        default: null, constraint: "max occupiedSetbackMax", conformance: "SB", access: "R V",
         quality: "X F"
     }),
     Attribute({
-        id: 0x36, name: "OccupiedSetbackMax", type: "UnsignedTemperature",
-        access: "R V", conformance: "SB", constraint: "occupiedSetbackMin to 25.4°C", default: null,
+        name: "OccupiedSetbackMax", id: 0x36, type: "UnsignedTemperature",
+        default: null, constraint: "occupiedSetbackMin to 25.4°C", conformance: "SB", access: "R V",
         quality: "X F"
     }),
     Attribute({
-        id: 0x37, name: "UnoccupiedSetback", type: "UnsignedTemperature",
-        access: "RW VM", conformance: "SB & OCC",
-        constraint: "unoccupiedSetbackMin to unoccupiedSetbackMax", default: null, quality: "X N"
+        name: "UnoccupiedSetback", id: 0x37, type: "UnsignedTemperature",
+        default: null, constraint: "unoccupiedSetbackMin to unoccupiedSetbackMax", conformance: "SB & OCC",
+        access: "RW VM", quality: "X N"
     }),
     Attribute({
-        id: 0x38, name: "UnoccupiedSetbackMin", type: "UnsignedTemperature",
-        access: "R V", conformance: "SB & OCC", constraint: "max unoccupiedSetbackMax", default: null,
+        name: "UnoccupiedSetbackMin", id: 0x38, type: "UnsignedTemperature",
+        default: null, constraint: "max unoccupiedSetbackMax", conformance: "SB & OCC", access: "R V",
         quality: "X F"
     }),
     Attribute({
-        id: 0x39, name: "UnoccupiedSetbackMax", type: "UnsignedTemperature",
-        access: "R V", conformance: "SB & OCC", constraint: "unoccupiedSetbackMin to 25.4°C", default: null,
+        name: "UnoccupiedSetbackMax", id: 0x39, type: "UnsignedTemperature",
+        default: null, constraint: "unoccupiedSetbackMin to 25.4°C", conformance: "SB & OCC", access: "R V",
         quality: "X F"
     }),
     Attribute({
-        id: 0x3a, name: "EmergencyHeatDelta", type: "UnsignedTemperature",
-        access: "RW VM", conformance: "O", default: { type: "celsius", value: 25 }, quality: "N"
+        name: "EmergencyHeatDelta", id: 0x3a, type: "UnsignedTemperature",
+        default: { type: "celsius", value: 25 }, conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x40, name: "AcType", type: "ACTypeEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "AcType", id: 0x40, type: "ACTypeEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute(
-        { id: 0x41, name: "AcCapacity", type: "uint16", access: "RW VM", conformance: "O", default: 0, quality: "N" }
+        { name: "AcCapacity", id: 0x41, type: "uint16", default: 0, conformance: "O", access: "RW VM", quality: "N" }
     ),
     Attribute({
-        id: 0x42, name: "AcRefrigerantType", type: "ACRefrigerantTypeEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "AcRefrigerantType", id: 0x42, type: "ACRefrigerantTypeEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x43, name: "AcCompressorType", type: "ACCompressorTypeEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "AcCompressorType", id: 0x43, type: "ACCompressorTypeEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
-    Attribute({ id: 0x44, name: "AcErrorCode", type: "ACErrorCodeBitmap", access: "RW VM", conformance: "O", default: 0 }),
+    Attribute({ name: "AcErrorCode", id: 0x44, type: "ACErrorCodeBitmap", default: 0, conformance: "O", access: "RW VM" }),
     Attribute({
-        id: 0x45, name: "AcLouverPosition", type: "ACLouverPositionEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
-    }),
-    Attribute({
-        id: 0x46, name: "AcCoilTemperature", type: "temperature",
-        access: "R V", conformance: "O", default: null, quality: "X"
+        name: "AcLouverPosition", id: 0x45, type: "ACLouverPositionEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x47, name: "AcCapacityFormat", type: "ACCapacityFormatEnum",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "AcCoilTemperature", id: 0x46, type: "temperature",
+        default: null, conformance: "O", access: "R V", quality: "X"
+    }),
+    Attribute({
+        name: "AcCapacityFormat", id: 0x47, type: "ACCapacityFormatEnum",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
 
     Attribute(
         {
-            id: 0x48, name: "PresetTypes", type: "list",
-            access: "R V", conformance: "PRES", constraint: "desc", quality: "F"
+            name: "PresetTypes", id: 0x48, type: "list",
+            constraint: "desc", conformance: "PRES", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "PresetTypeStruct" })
     ),
 
     Attribute(
         {
-            id: 0x49, name: "ScheduleTypes", type: "list",
-            access: "R V", conformance: "MSCH", constraint: "desc", quality: "F"
+            name: "ScheduleTypes", id: 0x49, type: "list",
+            constraint: "desc", conformance: "MSCH", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "ScheduleTypeStruct" })
     ),
 
-    Attribute({ id: 0x4a, name: "NumberOfPresets", type: "uint8", access: "R V", conformance: "PRES", default: 0, quality: "F" }),
+    Attribute({ name: "NumberOfPresets", id: 0x4a, type: "uint8", default: 0, conformance: "PRES", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x4b, name: "NumberOfSchedules", type: "uint8",
-        access: "R V", conformance: "MSCH", default: 0, quality: "F"
+        name: "NumberOfSchedules", id: 0x4b, type: "uint8",
+        default: 0, conformance: "MSCH", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x4c, name: "NumberOfScheduleTransitions", type: "uint8",
-        access: "R V", conformance: "MSCH", default: 0, quality: "F"
+        name: "NumberOfScheduleTransitions", id: 0x4c, type: "uint8",
+        default: 0, conformance: "MSCH", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x4d, name: "NumberOfScheduleTransitionPerDay", type: "uint8",
-        access: "R V", conformance: "MSCH", default: null, quality: "X F"
+        name: "NumberOfScheduleTransitionPerDay", id: 0x4d, type: "uint8",
+        default: null, conformance: "MSCH", access: "R V", quality: "X F"
     }),
     Attribute({
-        id: 0x4e, name: "ActivePresetHandle", type: "octstr",
-        access: "R V", conformance: "PRES", constraint: "max 16", default: null, quality: "X N"
+        name: "ActivePresetHandle", id: 0x4e, type: "octstr",
+        default: null, constraint: "max 16", conformance: "PRES", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x4f, name: "ActiveScheduleHandle", type: "octstr",
-        access: "R V", conformance: "MSCH", constraint: "max 16", default: null, quality: "X N"
+        name: "ActiveScheduleHandle", id: 0x4f, type: "octstr",
+        default: null, constraint: "max 16", conformance: "MSCH", access: "R V", quality: "X N"
     }),
 
     Attribute(
         {
-            id: 0x50, name: "Presets", type: "list",
-            access: "RW VM", conformance: "PRES", constraint: "max numberOfPresets", default: [],
+            name: "Presets", id: 0x50, type: "list",
+            default: [], constraint: "max numberOfPresets", conformance: "PRES", access: "RW VM",
             quality: "N T"
         },
         Field({ name: "entry", type: "PresetStruct" })
@@ -287,95 +287,95 @@ export const Thermostat = Cluster(
 
     Attribute(
         {
-            id: 0x51, name: "Schedules", type: "list",
-            access: "RW VM", conformance: "MSCH", constraint: "desc", default: [], quality: "N T"
+            name: "Schedules", id: 0x51, type: "list",
+            default: [], constraint: "desc", conformance: "MSCH", access: "RW VM", quality: "N T"
         },
         Field({ name: "entry", type: "ScheduleStruct" })
     ),
 
     Attribute({
-        id: 0x52, name: "SetpointHoldExpiryTimestamp", type: "epoch-s",
-        access: "R V", conformance: "O", default: null, quality: "X N"
+        name: "SetpointHoldExpiryTimestamp", id: 0x52, type: "epoch-s",
+        default: null, conformance: "O", access: "R V", quality: "X N"
     }),
 
     Command(
         {
-            id: 0x0, name: "SetpointRaiseLower",
-            access: "O", conformance: "M", direction: "request", response: "status"
+            name: "SetpointRaiseLower", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "Mode", type: "SetpointRaiseLowerModeEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Amount", type: "int8", conformance: "M" })
+        Field({ name: "Mode", id: 0x0, type: "SetpointRaiseLowerModeEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "Amount", id: 0x1, type: "int8", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x1, name: "SetWeeklySchedule",
-            access: "M", conformance: "SCH", direction: "request", response: "status"
+            name: "SetWeeklySchedule", id: 0x1,
+            conformance: "SCH", access: "M", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" }),
+        Field({ name: "NumberOfTransitionsForSequence", id: 0x0, type: "uint8", conformance: "M" }),
         Field({
-            id: 0x1, name: "DayOfWeekForSequence", type: "ScheduleDayOfWeekBitmap",
-            conformance: "M", constraint: "desc"
+            name: "DayOfWeekForSequence", id: 0x1, type: "ScheduleDayOfWeekBitmap",
+            constraint: "desc", conformance: "M"
         }),
-        Field({ id: 0x2, name: "ModeForSequence", type: "ScheduleModeBitmap", conformance: "M", constraint: "desc" }),
+        Field({ name: "ModeForSequence", id: 0x2, type: "ScheduleModeBitmap", constraint: "desc", conformance: "M" }),
         Field(
-            { id: 0x3, name: "Transitions", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "Transitions", id: 0x3, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "WeeklyScheduleTransitionStruct" })
         )
     ),
 
     Command(
         {
-            id: 0x2, name: "GetWeeklySchedule",
-            access: "O", conformance: "SCH", direction: "request", response: "GetWeeklyScheduleResponse"
+            name: "GetWeeklySchedule", id: 0x2,
+            conformance: "SCH", access: "O", direction: "request", response: "GetWeeklyScheduleResponse"
         },
-        Field({ id: 0x0, name: "DaysToReturn", type: "ScheduleDayOfWeekBitmap", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "ModeToReturn", type: "ScheduleModeBitmap", conformance: "M", constraint: "desc" })
+        Field({ name: "DaysToReturn", id: 0x0, type: "ScheduleDayOfWeekBitmap", constraint: "desc", conformance: "M" }),
+        Field({ name: "ModeToReturn", id: 0x1, type: "ScheduleModeBitmap", constraint: "desc", conformance: "M" })
     ),
 
     Command(
-        { id: 0x0, name: "GetWeeklyScheduleResponse", conformance: "SCH", direction: "response" },
-        Field({ id: 0x0, name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" }),
+        { name: "GetWeeklyScheduleResponse", id: 0x0, conformance: "SCH", direction: "response" },
+        Field({ name: "NumberOfTransitionsForSequence", id: 0x0, type: "uint8", conformance: "M" }),
         Field({
-            id: 0x1, name: "DayOfWeekForSequence", type: "ScheduleDayOfWeekBitmap",
-            conformance: "M", constraint: "desc"
+            name: "DayOfWeekForSequence", id: 0x1, type: "ScheduleDayOfWeekBitmap",
+            constraint: "desc", conformance: "M"
         }),
-        Field({ id: 0x2, name: "ModeForSequence", type: "ScheduleModeBitmap", conformance: "M", constraint: "desc" }),
+        Field({ name: "ModeForSequence", id: 0x2, type: "ScheduleModeBitmap", constraint: "desc", conformance: "M" }),
         Field(
-            { id: 0x3, name: "Transitions", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "Transitions", id: 0x3, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "WeeklyScheduleTransitionStruct" })
         )
     ),
 
-    Command({ id: 0x3, name: "ClearWeeklySchedule", access: "M", conformance: "SCH", direction: "request", response: "status" }),
+    Command({ name: "ClearWeeklySchedule", id: 0x3, conformance: "SCH", access: "M", direction: "request", response: "status" }),
 
     Command(
-        { id: 0x1, name: "GetRelayStatusLogResponse", conformance: "GetRelayStatusLog", direction: "response" },
-        Field({ id: 0x0, name: "TimeOfDay", type: "uint16", conformance: "M", constraint: "max 1439" }),
-        Field({ id: 0x1, name: "RelayStatus", type: "RelayStateBitmap", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x2, name: "LocalTemperature", type: "temperature", conformance: "M", quality: "X" }),
+        { name: "GetRelayStatusLogResponse", id: 0x1, conformance: "GetRelayStatusLog", direction: "response" },
+        Field({ name: "TimeOfDay", id: 0x0, type: "uint16", constraint: "max 1439", conformance: "M" }),
+        Field({ name: "RelayStatus", id: 0x1, type: "RelayStateBitmap", constraint: "desc", conformance: "M" }),
+        Field({ name: "LocalTemperature", id: 0x2, type: "temperature", conformance: "M", quality: "X" }),
         Field({
-            id: 0x3, name: "HumidityInPercentage", type: "uint8",
-            conformance: "M", constraint: "0% to 100%", quality: "X"
+            name: "HumidityInPercentage", id: 0x3, type: "uint8",
+            constraint: "0% to 100%", conformance: "M", quality: "X"
         }),
-        Field({ id: 0x4, name: "SetPoint", type: "temperature", conformance: "M" }),
-        Field({ id: 0x5, name: "UnreadEntries", type: "uint16", conformance: "M" })
+        Field({ name: "SetPoint", id: 0x4, type: "temperature", conformance: "M" }),
+        Field({ name: "UnreadEntries", id: 0x5, type: "uint16", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x5, name: "SetActiveScheduleRequest",
-            access: "O", conformance: "MSCH", direction: "request", response: "status"
+            name: "SetActiveScheduleRequest", id: 0x5,
+            conformance: "MSCH", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "ScheduleHandle", type: "octstr", conformance: "M", constraint: "max 16" })
+        Field({ name: "ScheduleHandle", id: 0x0, type: "octstr", constraint: "max 16", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x6, name: "SetActivePresetRequest",
-            access: "O", conformance: "PRES", direction: "request", response: "status"
+            name: "SetActivePresetRequest", id: 0x6,
+            conformance: "PRES", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "PresetHandle", type: "octstr", conformance: "M", constraint: "max 16", quality: "X" })
+        Field({ name: "PresetHandle", id: 0x0, type: "octstr", constraint: "max 16", conformance: "M", quality: "X" })
     ),
 
     Datatype({ name: "TemperatureDifference", type: "int16" }),
@@ -463,182 +463,182 @@ export const Thermostat = Cluster(
         Field({ name: "HeatSetpointPresent", constraint: "0" }),
         Field({ name: "CoolSetpointPresent", constraint: "1" })
     ),
-    Datatype({ name: "ACCapacityFormatEnum", type: "enum8" }, Field({ id: 0x0, name: "BtUh", conformance: "O" })),
+    Datatype({ name: "ACCapacityFormatEnum", type: "enum8" }, Field({ name: "BtUh", id: 0x0, conformance: "O" })),
 
     Datatype(
         { name: "ACCompressorTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "O" }),
-        Field({ id: 0x1, name: "T1", conformance: "O" }),
-        Field({ id: 0x2, name: "T2", conformance: "O" }),
-        Field({ id: 0x3, name: "T3", conformance: "O" })
+        Field({ name: "Unknown", id: 0x0, conformance: "O" }),
+        Field({ name: "T1", id: 0x1, conformance: "O" }),
+        Field({ name: "T2", id: 0x2, conformance: "O" }),
+        Field({ name: "T3", id: 0x3, conformance: "O" })
     ),
 
     Datatype(
         { name: "ACLouverPositionEnum", type: "enum8" },
-        Field({ id: 0x1, name: "Closed", conformance: "O" }),
-        Field({ id: 0x2, name: "Open", conformance: "O" }),
-        Field({ id: 0x3, name: "Quarter", conformance: "O" }),
-        Field({ id: 0x4, name: "Half", conformance: "O" }),
-        Field({ id: 0x5, name: "ThreeQuarters", conformance: "O" })
+        Field({ name: "Closed", id: 0x1, conformance: "O" }),
+        Field({ name: "Open", id: 0x2, conformance: "O" }),
+        Field({ name: "Quarter", id: 0x3, conformance: "O" }),
+        Field({ name: "Half", id: 0x4, conformance: "O" }),
+        Field({ name: "ThreeQuarters", id: 0x5, conformance: "O" })
     ),
 
     Datatype(
         { name: "ACRefrigerantTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "O" }),
-        Field({ id: 0x1, name: "R22", conformance: "O" }),
-        Field({ id: 0x2, name: "R410A", conformance: "O" }),
-        Field({ id: 0x3, name: "R407C", conformance: "O" })
+        Field({ name: "Unknown", id: 0x0, conformance: "O" }),
+        Field({ name: "R22", id: 0x1, conformance: "O" }),
+        Field({ name: "R410A", id: 0x2, conformance: "O" }),
+        Field({ name: "R407C", id: 0x3, conformance: "O" })
     ),
 
     Datatype(
         { name: "ACTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Unknown", conformance: "O" }),
-        Field({ id: 0x1, name: "CoolingFixed", conformance: "O" }),
-        Field({ id: 0x2, name: "HeatPumpFixed", conformance: "O" }),
-        Field({ id: 0x3, name: "CoolingInverter", conformance: "O" }),
-        Field({ id: 0x4, name: "HeatPumpInverter", conformance: "O" })
+        Field({ name: "Unknown", id: 0x0, conformance: "O" }),
+        Field({ name: "CoolingFixed", id: 0x1, conformance: "O" }),
+        Field({ name: "HeatPumpFixed", id: 0x2, conformance: "O" }),
+        Field({ name: "CoolingInverter", id: 0x3, conformance: "O" }),
+        Field({ name: "HeatPumpInverter", id: 0x4, conformance: "O" })
     ),
 
     Datatype(
         { name: "SetpointRaiseLowerModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Heat", conformance: "HEAT" }),
-        Field({ id: 0x1, name: "Cool", conformance: "COOL" }),
-        Field({ id: 0x2, name: "Both", conformance: "HEAT | COOL" })
+        Field({ name: "Heat", id: 0x0, conformance: "HEAT" }),
+        Field({ name: "Cool", id: 0x1, conformance: "COOL" }),
+        Field({ name: "Both", id: 0x2, conformance: "HEAT | COOL" })
     ),
 
     Datatype(
         { name: "ControlSequenceOfOperationEnum", type: "enum8" },
-        Field({ id: 0x0, name: "CoolingOnly", conformance: "[COOL]" }),
-        Field({ id: 0x1, name: "CoolingWithReheat", conformance: "[COOL]" }),
-        Field({ id: 0x2, name: "HeatingOnly", conformance: "[HEAT]" }),
-        Field({ id: 0x3, name: "HeatingWithReheat", conformance: "[HEAT]" }),
-        Field({ id: 0x4, name: "CoolingAndHeating", conformance: "[HEAT & COOL]" }),
-        Field({ id: 0x5, name: "CoolingAndHeatingWithReheat", conformance: "[HEAT & COOL]" })
+        Field({ name: "CoolingOnly", id: 0x0, conformance: "[COOL]" }),
+        Field({ name: "CoolingWithReheat", id: 0x1, conformance: "[COOL]" }),
+        Field({ name: "HeatingOnly", id: 0x2, conformance: "[HEAT]" }),
+        Field({ name: "HeatingWithReheat", id: 0x3, conformance: "[HEAT]" }),
+        Field({ name: "CoolingAndHeating", id: 0x4, conformance: "[HEAT & COOL]" }),
+        Field({ name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "[HEAT & COOL]" })
     ),
 
     Datatype(
         { name: "PresetScenarioEnum", type: "enum8" },
-        Field({ id: 0x1, name: "Occupied", conformance: "M" }),
-        Field({ id: 0x2, name: "Unoccupied", conformance: "M" }),
-        Field({ id: 0x3, name: "Sleep", conformance: "M" }),
-        Field({ id: 0x4, name: "Wake", conformance: "M" }),
-        Field({ id: 0x5, name: "Vacation", conformance: "M" }),
-        Field({ id: 0x6, name: "GoingToSleep", conformance: "M" }),
-        Field({ id: 0xfe, name: "UserDefined", conformance: "M" })
+        Field({ name: "Occupied", id: 0x1, conformance: "M" }),
+        Field({ name: "Unoccupied", id: 0x2, conformance: "M" }),
+        Field({ name: "Sleep", id: 0x3, conformance: "M" }),
+        Field({ name: "Wake", id: 0x4, conformance: "M" }),
+        Field({ name: "Vacation", id: 0x5, conformance: "M" }),
+        Field({ name: "GoingToSleep", id: 0x6, conformance: "M" }),
+        Field({ name: "UserDefined", id: 0xfe, conformance: "M" })
     ),
 
     Datatype(
         { name: "SetpointChangeSourceEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Manual", conformance: "O" }),
-        Field({ id: 0x1, name: "Schedule", conformance: "[SCH | MSCH]" }),
-        Field({ id: 0x2, name: "External", conformance: "O" })
+        Field({ name: "Manual", id: 0x0, conformance: "O" }),
+        Field({ name: "Schedule", id: 0x1, conformance: "[SCH | MSCH]" }),
+        Field({ name: "External", id: 0x2, conformance: "O" })
     ),
 
     Datatype(
         { name: "StartOfWeekEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Sunday", conformance: "M" }),
-        Field({ id: 0x1, name: "Monday", conformance: "M" }),
-        Field({ id: 0x2, name: "Tuesday", conformance: "M" }),
-        Field({ id: 0x3, name: "Wednesday", conformance: "M" }),
-        Field({ id: 0x4, name: "Thursday", conformance: "M" }),
-        Field({ id: 0x5, name: "Friday", conformance: "M" }),
-        Field({ id: 0x6, name: "Saturday", conformance: "M" })
+        Field({ name: "Sunday", id: 0x0, conformance: "M" }),
+        Field({ name: "Monday", id: 0x1, conformance: "M" }),
+        Field({ name: "Tuesday", id: 0x2, conformance: "M" }),
+        Field({ name: "Wednesday", id: 0x3, conformance: "M" }),
+        Field({ name: "Thursday", id: 0x4, conformance: "M" }),
+        Field({ name: "Friday", id: 0x5, conformance: "M" }),
+        Field({ name: "Saturday", id: 0x6, conformance: "M" })
     ),
 
     Datatype(
         { name: "SystemModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Off", conformance: "O" }),
-        Field({ id: 0x1, name: "Auto", conformance: "AUTO" }),
-        Field({ id: 0x3, name: "Cool", conformance: "[COOL]" }),
-        Field({ id: 0x4, name: "Heat", conformance: "[HEAT]" }),
-        Field({ id: 0x5, name: "EmergencyHeat", conformance: "[HEAT]" }),
-        Field({ id: 0x6, name: "Precooling", conformance: "[COOL]" }),
-        Field({ id: 0x7, name: "FanOnly", conformance: "O" }),
-        Field({ id: 0x8, name: "Dry", conformance: "O" }),
-        Field({ id: 0x9, name: "Sleep", conformance: "O" })
+        Field({ name: "Off", id: 0x0, conformance: "O" }),
+        Field({ name: "Auto", id: 0x1, conformance: "AUTO" }),
+        Field({ name: "Cool", id: 0x3, conformance: "[COOL]" }),
+        Field({ name: "Heat", id: 0x4, conformance: "[HEAT]" }),
+        Field({ name: "EmergencyHeat", id: 0x5, conformance: "[HEAT]" }),
+        Field({ name: "Precooling", id: 0x6, conformance: "[COOL]" }),
+        Field({ name: "FanOnly", id: 0x7, conformance: "O" }),
+        Field({ name: "Dry", id: 0x8, conformance: "O" }),
+        Field({ name: "Sleep", id: 0x9, conformance: "O" })
     ),
 
     Datatype(
         { name: "ThermostatRunningModeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Off", conformance: "O" }),
-        Field({ id: 0x3, name: "Cool", conformance: "[COOL]" }),
-        Field({ id: 0x4, name: "Heat", conformance: "[HEAT]" })
+        Field({ name: "Off", id: 0x0, conformance: "O" }),
+        Field({ name: "Cool", id: 0x3, conformance: "[COOL]" }),
+        Field({ name: "Heat", id: 0x4, conformance: "[HEAT]" })
     ),
 
     Datatype(
         { name: "TemperatureSetpointHoldEnum", type: "enum8" },
-        Field({ id: 0x0, name: "SetpointHoldOff", conformance: "M" }),
-        Field({ id: 0x1, name: "SetpointHoldOn", conformance: "M" })
+        Field({ name: "SetpointHoldOff", id: 0x0, conformance: "M" }),
+        Field({ name: "SetpointHoldOn", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "PresetStruct", type: "struct" },
-        Field({ id: 0x0, name: "PresetHandle", type: "octstr", conformance: "M", constraint: "max 16", quality: "X" }),
-        Field({ id: 0x1, name: "PresetScenario", type: "PresetScenarioEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "Name", type: "string", conformance: "O", constraint: "max 64", default: null, quality: "X" }),
+        Field({ name: "PresetHandle", id: 0x0, type: "octstr", constraint: "max 16", conformance: "M", quality: "X" }),
+        Field({ name: "PresetScenario", id: 0x1, type: "PresetScenarioEnum", conformance: "M" }),
+        Field({ name: "Name", id: 0x2, type: "string", default: null, constraint: "max 64", conformance: "O", quality: "X" }),
         Field({
-            id: 0x3, name: "CoolingSetpoint", type: "temperature",
-            conformance: "COOL", constraint: "desc", default: { type: "celsius", value: 26 }
+            name: "CoolingSetpoint", id: 0x3, type: "temperature",
+            default: { type: "celsius", value: 26 }, constraint: "desc", conformance: "COOL"
         }),
         Field({
-            id: 0x4, name: "HeatingSetpoint", type: "temperature",
-            conformance: "HEAT", constraint: "desc", default: { type: "celsius", value: 20 }
+            name: "HeatingSetpoint", id: 0x4, type: "temperature",
+            default: { type: "celsius", value: 20 }, constraint: "desc", conformance: "HEAT"
         }),
-        Field({ id: 0x5, name: "BuiltIn", type: "bool", conformance: "M", default: false, quality: "X" })
+        Field({ name: "BuiltIn", id: 0x5, type: "bool", default: false, conformance: "M", quality: "X" })
     ),
 
     Datatype(
         { name: "PresetTypeStruct", type: "struct" },
-        Field({ id: 0x0, name: "PresetScenario", type: "PresetScenarioEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "NumberOfPresets", type: "uint8", conformance: "M", default: 0 }),
-        Field({ id: 0x2, name: "PresetTypeFeatures", type: "PresetTypeFeaturesBitmap", conformance: "M", default: 0 })
+        Field({ name: "PresetScenario", id: 0x0, type: "PresetScenarioEnum", conformance: "M" }),
+        Field({ name: "NumberOfPresets", id: 0x1, type: "uint8", default: 0, conformance: "M" }),
+        Field({ name: "PresetTypeFeatures", id: 0x2, type: "PresetTypeFeaturesBitmap", default: 0, conformance: "M" })
     ),
 
     Datatype(
         { name: "WeeklyScheduleTransitionStruct", type: "struct" },
-        Field({ id: 0x0, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 1439" }),
-        Field({ id: 0x1, name: "HeatSetpoint", type: "temperature", conformance: "M", quality: "X" }),
-        Field({ id: 0x2, name: "CoolSetpoint", type: "temperature", conformance: "M", quality: "X" })
+        Field({ name: "TransitionTime", id: 0x0, type: "uint16", constraint: "max 1439", conformance: "M" }),
+        Field({ name: "HeatSetpoint", id: 0x1, type: "temperature", conformance: "M", quality: "X" }),
+        Field({ name: "CoolSetpoint", id: 0x2, type: "temperature", conformance: "M", quality: "X" })
     ),
 
     Datatype(
         { name: "ScheduleStruct", type: "struct" },
-        Field({ id: 0x0, name: "ScheduleHandle", type: "octstr", conformance: "M", constraint: "max 16", quality: "X" }),
-        Field({ id: 0x1, name: "SystemMode", type: "SystemModeEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x2, name: "Name", type: "string", conformance: "O", constraint: "max 64" }),
-        Field({ id: 0x3, name: "PresetHandle", type: "octstr", conformance: "O", constraint: "max 16" }),
+        Field({ name: "ScheduleHandle", id: 0x0, type: "octstr", constraint: "max 16", conformance: "M", quality: "X" }),
+        Field({ name: "SystemMode", id: 0x1, type: "SystemModeEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "Name", id: 0x2, type: "string", constraint: "max 64", conformance: "O" }),
+        Field({ name: "PresetHandle", id: 0x3, type: "octstr", constraint: "max 16", conformance: "O" }),
 
         Field(
             {
-                id: 0x4, name: "Transitions", type: "list",
-                conformance: "M", constraint: "1 to numberOfScheduleTransitions", default: []
+                name: "Transitions", id: 0x4, type: "list",
+                default: [], constraint: "1 to numberOfScheduleTransitions", conformance: "M"
             },
             Field({ name: "entry", type: "ScheduleTransitionStruct" })
         ),
 
-        Field({ id: 0x5, name: "BuiltIn", type: "bool", conformance: "M", default: false, quality: "X" })
+        Field({ name: "BuiltIn", id: 0x5, type: "bool", default: false, conformance: "M", quality: "X" })
     ),
 
     Datatype(
         { name: "ScheduleTransitionStruct", type: "struct" },
-        Field({ id: 0x0, name: "DayOfWeek", type: "ScheduleDayOfWeekBitmap", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 1439" }),
-        Field({ id: 0x2, name: "PresetHandle", type: "octstr", conformance: "[PRES]", constraint: "max 16" }),
-        Field({ id: 0x3, name: "SystemMode", type: "SystemModeEnum", conformance: "O", constraint: "desc" }),
-        Field({ id: 0x4, name: "CoolingSetpoint", type: "temperature", conformance: "[COOL]", constraint: "desc" }),
-        Field({ id: 0x5, name: "HeatingSetpoint", type: "temperature", conformance: "[HEAT]", constraint: "desc" })
+        Field({ name: "DayOfWeek", id: 0x0, type: "ScheduleDayOfWeekBitmap", constraint: "desc", conformance: "M" }),
+        Field({ name: "TransitionTime", id: 0x1, type: "uint16", constraint: "max 1439", conformance: "M" }),
+        Field({ name: "PresetHandle", id: 0x2, type: "octstr", constraint: "max 16", conformance: "[PRES]" }),
+        Field({ name: "SystemMode", id: 0x3, type: "SystemModeEnum", constraint: "desc", conformance: "O" }),
+        Field({ name: "CoolingSetpoint", id: 0x4, type: "temperature", constraint: "desc", conformance: "[COOL]" }),
+        Field({ name: "HeatingSetpoint", id: 0x5, type: "temperature", constraint: "desc", conformance: "[HEAT]" })
     ),
 
     Datatype(
         { name: "ScheduleTypeStruct", type: "struct" },
-        Field({ id: 0x0, name: "SystemMode", type: "SystemModeEnum", conformance: "M", constraint: "desc" }),
+        Field({ name: "SystemMode", id: 0x0, type: "SystemModeEnum", constraint: "desc", conformance: "M" }),
         Field({
-            id: 0x1, name: "NumberOfSchedules", type: "uint8",
-            conformance: "M", constraint: "max numberOfSchedules", default: 0
+            name: "NumberOfSchedules", id: 0x1, type: "uint8",
+            default: 0, constraint: "max numberOfSchedules", conformance: "M"
         }),
         Field({
-            id: 0x2, name: "ScheduleTypeFeatures", type: "ScheduleTypeFeaturesBitmap",
-            conformance: "M", constraint: "desc", default: 0
+            name: "ScheduleTypeFeatures", id: 0x2, type: "ScheduleTypeFeaturesBitmap",
+            default: 0, constraint: "desc", conformance: "M"
         })
     )
 );

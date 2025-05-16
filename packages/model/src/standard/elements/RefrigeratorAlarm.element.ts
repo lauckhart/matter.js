@@ -16,13 +16,13 @@ import {
 } from "../../elements/index.js";
 
 export const RefrigeratorAlarm = Cluster(
-    { id: 0x57, name: "RefrigeratorAlarm", type: "AlarmBase" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "RefrigeratorAlarm", id: 0x57, type: "AlarmBase" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "RESET", conformance: "X", constraint: "0", longName: "Reset" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "RESET", constraint: "0", conformance: "X", longName: "Reset" })
     ),
-    Command({ id: 0x1, name: "ModifyEnabledAlarms", conformance: "X" }),
+    Command({ name: "ModifyEnabledAlarms", id: 0x1, conformance: "X" }),
     Datatype({ name: "AlarmBitmap", type: "map32" }, Field({ name: "DoorOpen", constraint: "0" }))
 );
 

@@ -9,16 +9,16 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "RoboticVacuumCleaner", tag: "deviceType",
+    tag: "deviceType", name: "RoboticVacuumCleaner",
     classification: "simple",
     details: "This defines conformance for the Robotic Vacuum Cleaner device type.",
     xref: "device§12.1",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§12.1.4" },
-        { name: "RvcRunMode", tag: "requirement", xref: "device§12.1.4" },
-        { name: "RvcCleanMode", tag: "requirement", xref: "device§12.1.4" },
-        { name: "RvcOperationalState", tag: "requirement", xref: "device§12.1.4" },
-        { name: "ServiceArea", tag: "requirement", xref: "device§12.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§12.1.4" },
+        { tag: "requirement", name: "RvcRunMode", xref: "device§12.1.4" },
+        { tag: "requirement", name: "RvcCleanMode", xref: "device§12.1.4" },
+        { tag: "requirement", name: "RvcOperationalState", xref: "device§12.1.4" },
+        { tag: "requirement", name: "ServiceArea", xref: "device§12.1.4" }
     ]
 });

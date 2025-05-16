@@ -9,13 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WindowCovering", tag: "deviceType",
+    tag: "deviceType", name: "WindowCovering",
     classification: "simple",
     details: "This defines conformance to the Window Covering device type.",
     xref: "device§8.3",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§8.3.4" },
-        { name: "Groups", tag: "requirement", xref: "device§8.3.4" },
-        { name: "WindowCovering", tag: "requirement", xref: "device§8.3.4" }
+        { tag: "requirement", name: "Identify", xref: "device§8.3.4" },
+        { tag: "requirement", name: "Groups", xref: "device§8.3.4" },
+        { tag: "requirement", name: "WindowCovering", xref: "device§8.3.4" }
     ]
 });

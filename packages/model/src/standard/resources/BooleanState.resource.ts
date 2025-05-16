@@ -9,14 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "BooleanState", tag: "cluster",
+    tag: "cluster", name: "BooleanState",
     classification: "application", pics: "BOOL",
     details: "This cluster provides an interface to a boolean state.",
     xref: "cluster§1.7",
 
     children: [
         {
-            name: "StateValue", tag: "attribute",
+            tag: "attribute", name: "StateValue",
             details: "This represents a boolean state." +
                 "\n" +
                 "The semantics of this boolean state are defined by the device type using this cluster." +
@@ -26,11 +26,11 @@ Resource.add({
         },
 
         {
-            name: "StateChange", tag: "event",
+            tag: "event", name: "StateChange",
             details: "If this event is supported, it shall be generated when the StateValue attribute changes.",
             xref: "cluster§1.7.5.1",
             children: [{
-                name: "StateValue", tag: "field",
+                tag: "field", name: "StateValue",
                 details: "This field shall indicate the new value of the StateValue attribute.",
                 xref: "cluster§1.7.5.1.1"
             }]

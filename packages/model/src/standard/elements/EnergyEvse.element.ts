@@ -17,183 +17,183 @@ import {
 } from "../../elements/index.js";
 
 export const EnergyEvse = Cluster(
-    { id: 0x99, name: "EnergyEvse" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "EnergyEvse", id: 0x99 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PREF", conformance: "M", constraint: "0", longName: "ChargingPreferences" }),
-        Field({ name: "SOC", conformance: "P, O", constraint: "1", longName: "SoCReporting" }),
-        Field({ name: "PNC", conformance: "P, O", constraint: "2", longName: "PlugAndCharge" }),
-        Field({ name: "RFID", conformance: "O", constraint: "3", longName: "Rfid" }),
-        Field({ name: "V2X", conformance: "P, O", constraint: "4" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "PREF", constraint: "0", conformance: "M", longName: "ChargingPreferences" }),
+        Field({ name: "SOC", constraint: "1", conformance: "P, O", longName: "SoCReporting" }),
+        Field({ name: "PNC", constraint: "2", conformance: "P, O", longName: "PlugAndCharge" }),
+        Field({ name: "RFID", constraint: "3", conformance: "O", longName: "Rfid" }),
+        Field({ name: "V2X", constraint: "4", conformance: "P, O" })
     ),
 
-    Attribute({ id: 0x0, name: "State", type: "StateEnum", access: "R V", conformance: "M", quality: "X" }),
-    Attribute({ id: 0x1, name: "SupplyState", type: "SupplyStateEnum", access: "R V", conformance: "M" }),
-    Attribute({ id: 0x2, name: "FaultState", type: "FaultStateEnum", access: "R V", conformance: "M" }),
+    Attribute({ name: "State", id: 0x0, type: "StateEnum", conformance: "M", access: "R V", quality: "X" }),
+    Attribute({ name: "SupplyState", id: 0x1, type: "SupplyStateEnum", conformance: "M", access: "R V" }),
+    Attribute({ name: "FaultState", id: 0x2, type: "FaultStateEnum", conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x3, name: "ChargingEnabledUntil", type: "epoch-s",
-        access: "R V", conformance: "M", default: 0, quality: "X N"
+        name: "ChargingEnabledUntil", id: 0x3, type: "epoch-s",
+        default: 0, conformance: "M", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x4, name: "DischargingEnabledUntil", type: "epoch-s",
-        access: "R V", conformance: "V2X", default: 0, quality: "X N"
+        name: "DischargingEnabledUntil", id: 0x4, type: "epoch-s",
+        default: 0, conformance: "V2X", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x5, name: "CircuitCapacity", type: "amperage-mA",
-        access: "R V", conformance: "M", constraint: "min 0", default: 0, quality: "N"
+        name: "CircuitCapacity", id: 0x5, type: "amperage-mA",
+        default: 0, constraint: "min 0", conformance: "M", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x6, name: "MinimumChargeCurrent", type: "amperage-mA",
-        access: "R V", conformance: "M", constraint: "min 0", default: 6000, quality: "N"
+        name: "MinimumChargeCurrent", id: 0x6, type: "amperage-mA",
+        default: 6000, constraint: "min 0", conformance: "M", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x7, name: "MaximumChargeCurrent", type: "amperage-mA",
-        access: "R V", conformance: "M", constraint: "min 0", default: 0, quality: "N"
+        name: "MaximumChargeCurrent", id: 0x7, type: "amperage-mA",
+        default: 0, constraint: "min 0", conformance: "M", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x8, name: "MaximumDischargeCurrent", type: "amperage-mA",
-        access: "R V", conformance: "V2X", constraint: "min 0", default: 0, quality: "N"
+        name: "MaximumDischargeCurrent", id: 0x8, type: "amperage-mA",
+        default: 0, constraint: "min 0", conformance: "V2X", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x9, name: "UserMaximumChargeCurrent", type: "amperage-mA",
-        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
+        name: "UserMaximumChargeCurrent", id: 0x9, type: "amperage-mA",
+        default: 0, constraint: "desc", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0xa, name: "RandomizationDelayWindow", type: "elapsed-s",
-        access: "RW VM", conformance: "O", constraint: "max 86400", default: 600, quality: "N"
+        name: "RandomizationDelayWindow", id: 0xa, type: "elapsed-s",
+        default: 600, constraint: "max 86400", conformance: "O", access: "RW VM", quality: "N"
     }),
     Attribute({
-        id: 0x23, name: "NextChargeStartTime", type: "epoch-s",
-        access: "R V", conformance: "PREF", default: null, quality: "X"
+        name: "NextChargeStartTime", id: 0x23, type: "epoch-s",
+        default: null, conformance: "PREF", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x24, name: "NextChargeTargetTime", type: "epoch-s",
-        access: "R V", conformance: "PREF", default: null, quality: "X"
+        name: "NextChargeTargetTime", id: 0x24, type: "epoch-s",
+        default: null, conformance: "PREF", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x25, name: "NextChargeRequiredEnergy", type: "energy-mWh",
-        access: "R V", conformance: "PREF", constraint: "min 0", default: null, quality: "X"
+        name: "NextChargeRequiredEnergy", id: 0x25, type: "energy-mWh",
+        default: null, constraint: "min 0", conformance: "PREF", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x26, name: "NextChargeTargetSoC", type: "percent",
-        access: "R V", conformance: "PREF", default: null, quality: "X"
+        name: "NextChargeTargetSoC", id: 0x26, type: "percent",
+        default: null, conformance: "PREF", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x27, name: "ApproximateEvEfficiency", type: "uint16",
-        access: "RW VM", conformance: "[PREF]", constraint: "desc", default: null, quality: "X N"
+        name: "ApproximateEvEfficiency", id: 0x27, type: "uint16",
+        default: null, constraint: "desc", conformance: "[PREF]", access: "RW VM", quality: "X N"
     }),
     Attribute({
-        id: 0x30, name: "StateOfCharge", type: "percent",
-        access: "R V", conformance: "SOC", default: null, quality: "X"
+        name: "StateOfCharge", id: 0x30, type: "percent",
+        default: null, conformance: "SOC", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x31, name: "BatteryCapacity", type: "energy-mWh",
-        access: "R V", conformance: "SOC", constraint: "min 0", default: null, quality: "X"
+        name: "BatteryCapacity", id: 0x31, type: "energy-mWh",
+        default: null, constraint: "min 0", conformance: "SOC", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x32, name: "VehicleId", type: "string",
-        access: "R V", conformance: "PNC", constraint: "max 32", default: null, quality: "X"
+        name: "VehicleId", id: 0x32, type: "string",
+        default: null, constraint: "max 32", conformance: "PNC", access: "R V", quality: "X"
     }),
     Attribute(
-        { id: 0x40, name: "SessionId", type: "uint32", access: "R V", conformance: "M", default: null, quality: "X N" }
+        { name: "SessionId", id: 0x40, type: "uint32", default: null, conformance: "M", access: "R V", quality: "X N" }
     ),
     Attribute({
-        id: 0x41, name: "SessionDuration", type: "elapsed-s",
-        access: "R V", conformance: "M", default: null, quality: "X N Q"
+        name: "SessionDuration", id: 0x41, type: "elapsed-s",
+        default: null, conformance: "M", access: "R V", quality: "X N Q"
     }),
     Attribute({
-        id: 0x42, name: "SessionEnergyCharged", type: "energy-mWh",
-        access: "R V", conformance: "M", constraint: "min 0", default: null, quality: "X N Q"
+        name: "SessionEnergyCharged", id: 0x42, type: "energy-mWh",
+        default: null, constraint: "min 0", conformance: "M", access: "R V", quality: "X N Q"
     }),
     Attribute({
-        id: 0x43, name: "SessionEnergyDischarged", type: "energy-mWh",
-        access: "R V", conformance: "V2X", constraint: "min 0", default: null, quality: "X N Q"
+        name: "SessionEnergyDischarged", id: 0x43, type: "energy-mWh",
+        default: null, constraint: "min 0", conformance: "V2X", access: "R V", quality: "X N Q"
     }),
     Event(
-        { id: 0x0, name: "EvConnected", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "SessionId", type: "uint32", conformance: "M" })
+        { name: "EvConnected", id: 0x0, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "SessionId", id: 0x0, type: "uint32", conformance: "M" })
     ),
 
     Event(
-        { id: 0x1, name: "EvNotDetected", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "SessionId", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "State", type: "StateEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "SessionDuration", type: "elapsed-s", conformance: "M" }),
-        Field({ id: 0x3, name: "SessionEnergyCharged", type: "energy-mWh", conformance: "M", constraint: "min 0" }),
-        Field({ id: 0x4, name: "SessionEnergyDischarged", type: "energy-mWh", conformance: "V2X", constraint: "min 0" })
+        { name: "EvNotDetected", id: 0x1, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "SessionId", id: 0x0, type: "uint32", conformance: "M" }),
+        Field({ name: "State", id: 0x1, type: "StateEnum", conformance: "M" }),
+        Field({ name: "SessionDuration", id: 0x2, type: "elapsed-s", conformance: "M" }),
+        Field({ name: "SessionEnergyCharged", id: 0x3, type: "energy-mWh", constraint: "min 0", conformance: "M" }),
+        Field({ name: "SessionEnergyDischarged", id: 0x4, type: "energy-mWh", constraint: "min 0", conformance: "V2X" })
     ),
 
     Event(
-        { id: 0x2, name: "EnergyTransferStarted", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "SessionId", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "State", type: "StateEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "MaximumCurrent", type: "amperage-mA", conformance: "M", constraint: "min 0" }),
-        Field({ id: 0x3, name: "MaximumDischargeCurrent", type: "amperage-mA", conformance: "V2X", constraint: "min 0" })
+        { name: "EnergyTransferStarted", id: 0x2, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "SessionId", id: 0x0, type: "uint32", conformance: "M" }),
+        Field({ name: "State", id: 0x1, type: "StateEnum", conformance: "M" }),
+        Field({ name: "MaximumCurrent", id: 0x2, type: "amperage-mA", constraint: "min 0", conformance: "M" }),
+        Field({ name: "MaximumDischargeCurrent", id: 0x3, type: "amperage-mA", constraint: "min 0", conformance: "V2X" })
     ),
 
     Event(
-        { id: 0x3, name: "EnergyTransferStopped", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "SessionId", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "State", type: "StateEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "Reason", type: "EnergyTransferStoppedReasonEnum", conformance: "M" }),
-        Field({ id: 0x4, name: "EnergyTransferred", type: "energy-mWh", conformance: "M", constraint: "min 0" }),
-        Field({ id: 0x5, name: "EnergyDischarged", type: "energy-mWh", conformance: "V2X", constraint: "min 0" })
+        { name: "EnergyTransferStopped", id: 0x3, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "SessionId", id: 0x0, type: "uint32", conformance: "M" }),
+        Field({ name: "State", id: 0x1, type: "StateEnum", conformance: "M" }),
+        Field({ name: "Reason", id: 0x2, type: "EnergyTransferStoppedReasonEnum", conformance: "M" }),
+        Field({ name: "EnergyTransferred", id: 0x4, type: "energy-mWh", constraint: "min 0", conformance: "M" }),
+        Field({ name: "EnergyDischarged", id: 0x5, type: "energy-mWh", constraint: "min 0", conformance: "V2X" })
     ),
 
     Event(
-        { id: 0x4, name: "Fault", access: "V", conformance: "M", priority: "critical" },
-        Field({ id: 0x0, name: "SessionId", type: "uint32", conformance: "M", quality: "X" }),
-        Field({ id: 0x1, name: "State", type: "StateEnum", conformance: "M" }),
-        Field({ id: 0x2, name: "FaultStatePreviousState", type: "FaultStateEnum", conformance: "M" }),
-        Field({ id: 0x4, name: "FaultStateCurrentState", type: "FaultStateEnum", conformance: "M" })
+        { name: "Fault", id: 0x4, conformance: "M", access: "V", priority: "critical" },
+        Field({ name: "SessionId", id: 0x0, type: "uint32", conformance: "M", quality: "X" }),
+        Field({ name: "State", id: 0x1, type: "StateEnum", conformance: "M" }),
+        Field({ name: "FaultStatePreviousState", id: 0x2, type: "FaultStateEnum", conformance: "M" }),
+        Field({ name: "FaultStateCurrentState", id: 0x4, type: "FaultStateEnum", conformance: "M" })
     ),
 
     Event(
-        { id: 0x5, name: "Rfid", access: "V", conformance: "[RFID]", priority: "info" },
-        Field({ id: 0x0, name: "Uid", type: "octstr", conformance: "M", constraint: "max 10" })
+        { name: "Rfid", id: 0x5, conformance: "[RFID]", access: "V", priority: "info" },
+        Field({ name: "Uid", id: 0x0, type: "octstr", constraint: "max 10", conformance: "M" })
     ),
-    Command({ id: 0x1, name: "Disable", access: "O T", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "Disable", id: 0x1, conformance: "M", access: "O T", direction: "request", response: "status" }),
 
     Command(
-        { id: 0x2, name: "EnableCharging", access: "O T", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "ChargingEnabledUntil", type: "epoch-s", conformance: "M", default: null, quality: "X" }),
-        Field({ id: 0x1, name: "MinimumChargeCurrent", type: "amperage-mA", conformance: "M", constraint: "min 0" }),
-        Field({ id: 0x2, name: "MaximumChargeCurrent", type: "amperage-mA", conformance: "M", constraint: "min 0" })
+        { name: "EnableCharging", id: 0x2, conformance: "M", access: "O T", direction: "request", response: "status" },
+        Field({ name: "ChargingEnabledUntil", id: 0x0, type: "epoch-s", default: null, conformance: "M", quality: "X" }),
+        Field({ name: "MinimumChargeCurrent", id: 0x1, type: "amperage-mA", constraint: "min 0", conformance: "M" }),
+        Field({ name: "MaximumChargeCurrent", id: 0x2, type: "amperage-mA", constraint: "min 0", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0x3, name: "EnableDischarging",
-            access: "O T", conformance: "V2X", direction: "request", response: "status"
+            name: "EnableDischarging", id: 0x3,
+            conformance: "V2X", access: "O T", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "DischargingEnabledUntil", type: "epoch-s", conformance: "M", default: null, quality: "X" }),
-        Field({ id: 0x1, name: "MaximumDischargeCurrent", type: "amperage-mA", conformance: "M", constraint: "min 0" })
+        Field({ name: "DischargingEnabledUntil", id: 0x0, type: "epoch-s", default: null, conformance: "M", quality: "X" }),
+        Field({ name: "MaximumDischargeCurrent", id: 0x1, type: "amperage-mA", constraint: "min 0", conformance: "M" })
     ),
 
-    Command({ id: 0x4, name: "StartDiagnostics", access: "O T", conformance: "O", direction: "request", response: "status" }),
+    Command({ name: "StartDiagnostics", id: 0x4, conformance: "O", access: "O T", direction: "request", response: "status" }),
 
     Command(
-        { id: 0x5, name: "SetTargets", access: "O T", conformance: "PREF", direction: "request", response: "status" },
+        { name: "SetTargets", id: 0x5, conformance: "PREF", access: "O T", direction: "request", response: "status" },
         Field(
-            { id: 0x0, name: "ChargingTargetSchedules", type: "list", conformance: "M", constraint: "max 7" },
+            { name: "ChargingTargetSchedules", id: 0x0, type: "list", constraint: "max 7", conformance: "M" },
             Field({ name: "entry", type: "ChargingTargetScheduleStruct" })
         )
     ),
 
     Command({
-        id: 0x6, name: "GetTargets",
-        access: "O T", conformance: "PREF", direction: "request", response: "GetTargetsResponse"
+        name: "GetTargets", id: 0x6,
+        conformance: "PREF", access: "O T", direction: "request", response: "GetTargetsResponse"
     }),
     Command(
-        { id: 0x7, name: "ClearTargets", access: "O T", conformance: "PREF", direction: "request", response: "status" }
+        { name: "ClearTargets", id: 0x7, conformance: "PREF", access: "O T", direction: "request", response: "status" }
     ),
 
     Command(
-        { id: 0x0, name: "GetTargetsResponse", conformance: "PREF", direction: "response" },
+        { name: "GetTargetsResponse", id: 0x0, conformance: "PREF", direction: "response" },
         Field(
-            { id: 0x0, name: "ChargingTargetSchedules", type: "list", conformance: "M", constraint: "max 7" },
+            { name: "ChargingTargetSchedules", id: 0x0, type: "list", constraint: "max 7", conformance: "M" },
             Field({ name: "entry", type: "ChargingTargetScheduleStruct" })
         )
     ),
@@ -211,71 +211,71 @@ export const EnergyEvse = Cluster(
 
     Datatype(
         { name: "StateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NotPluggedIn", conformance: "M" }),
-        Field({ id: 0x1, name: "PluggedInNoDemand", conformance: "M" }),
-        Field({ id: 0x2, name: "PluggedInDemand", conformance: "M" }),
-        Field({ id: 0x3, name: "PluggedInCharging", conformance: "M" }),
-        Field({ id: 0x4, name: "PluggedInDischarging", conformance: "V2X" }),
-        Field({ id: 0x5, name: "SessionEnding", conformance: "M" }),
-        Field({ id: 0x6, name: "Fault", conformance: "M" })
+        Field({ name: "NotPluggedIn", id: 0x0, conformance: "M" }),
+        Field({ name: "PluggedInNoDemand", id: 0x1, conformance: "M" }),
+        Field({ name: "PluggedInDemand", id: 0x2, conformance: "M" }),
+        Field({ name: "PluggedInCharging", id: 0x3, conformance: "M" }),
+        Field({ name: "PluggedInDischarging", id: 0x4, conformance: "V2X" }),
+        Field({ name: "SessionEnding", id: 0x5, conformance: "M" }),
+        Field({ name: "Fault", id: 0x6, conformance: "M" })
     ),
 
     Datatype(
         { name: "SupplyStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Disabled", conformance: "M" }),
-        Field({ id: 0x1, name: "ChargingEnabled", conformance: "M" }),
-        Field({ id: 0x2, name: "DischargingEnabled", conformance: "[V2X]" }),
-        Field({ id: 0x3, name: "DisabledError", conformance: "M" }),
-        Field({ id: 0x4, name: "DisabledDiagnostics", conformance: "M" }),
-        Field({ id: 0x5, name: "Enabled", conformance: "[V2X]" })
+        Field({ name: "Disabled", id: 0x0, conformance: "M" }),
+        Field({ name: "ChargingEnabled", id: 0x1, conformance: "M" }),
+        Field({ name: "DischargingEnabled", id: 0x2, conformance: "[V2X]" }),
+        Field({ name: "DisabledError", id: 0x3, conformance: "M" }),
+        Field({ name: "DisabledDiagnostics", id: 0x4, conformance: "M" }),
+        Field({ name: "Enabled", id: 0x5, conformance: "[V2X]" })
     ),
 
     Datatype(
         { name: "FaultStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NoError", conformance: "M" }),
-        Field({ id: 0x1, name: "MeterFailure", conformance: "M" }),
-        Field({ id: 0x2, name: "OverVoltage", conformance: "M" }),
-        Field({ id: 0x3, name: "UnderVoltage", conformance: "M" }),
-        Field({ id: 0x4, name: "OverCurrent", conformance: "M" }),
-        Field({ id: 0x5, name: "ContactWetFailure", conformance: "M" }),
-        Field({ id: 0x6, name: "ContactDryFailure", conformance: "M" }),
-        Field({ id: 0x7, name: "GroundFault", conformance: "M" }),
-        Field({ id: 0x8, name: "PowerLoss", conformance: "M" }),
-        Field({ id: 0x9, name: "PowerQuality", conformance: "M" }),
-        Field({ id: 0xa, name: "PilotShortCircuit", conformance: "M" }),
-        Field({ id: 0xb, name: "EmergencyStop", conformance: "M" }),
-        Field({ id: 0xc, name: "EvDisconnected", conformance: "M" }),
-        Field({ id: 0xd, name: "WrongPowerSupply", conformance: "M" }),
-        Field({ id: 0xe, name: "LiveNeutralSwap", conformance: "M" }),
-        Field({ id: 0xf, name: "OverTemperature", conformance: "M" }),
-        Field({ id: 0xff, name: "Other", conformance: "M" })
+        Field({ name: "NoError", id: 0x0, conformance: "M" }),
+        Field({ name: "MeterFailure", id: 0x1, conformance: "M" }),
+        Field({ name: "OverVoltage", id: 0x2, conformance: "M" }),
+        Field({ name: "UnderVoltage", id: 0x3, conformance: "M" }),
+        Field({ name: "OverCurrent", id: 0x4, conformance: "M" }),
+        Field({ name: "ContactWetFailure", id: 0x5, conformance: "M" }),
+        Field({ name: "ContactDryFailure", id: 0x6, conformance: "M" }),
+        Field({ name: "GroundFault", id: 0x7, conformance: "M" }),
+        Field({ name: "PowerLoss", id: 0x8, conformance: "M" }),
+        Field({ name: "PowerQuality", id: 0x9, conformance: "M" }),
+        Field({ name: "PilotShortCircuit", id: 0xa, conformance: "M" }),
+        Field({ name: "EmergencyStop", id: 0xb, conformance: "M" }),
+        Field({ name: "EvDisconnected", id: 0xc, conformance: "M" }),
+        Field({ name: "WrongPowerSupply", id: 0xd, conformance: "M" }),
+        Field({ name: "LiveNeutralSwap", id: 0xe, conformance: "M" }),
+        Field({ name: "OverTemperature", id: 0xf, conformance: "M" }),
+        Field({ name: "Other", id: 0xff, conformance: "M" })
     ),
 
     Datatype(
         { name: "EnergyTransferStoppedReasonEnum", type: "enum8" },
-        Field({ id: 0x0, name: "EvStopped", conformance: "M" }),
-        Field({ id: 0x1, name: "EvseStopped", conformance: "M" }),
-        Field({ id: 0x2, name: "Other", conformance: "M" })
+        Field({ name: "EvStopped", id: 0x0, conformance: "M" }),
+        Field({ name: "EvseStopped", id: 0x1, conformance: "M" }),
+        Field({ name: "Other", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "ChargingTargetStruct", type: "struct" },
         Field({
-            id: 0x0, name: "TargetTimeMinutesPastMidnight", type: "uint16",
-            conformance: "M", constraint: "max 1439", default: 0
+            name: "TargetTimeMinutesPastMidnight", id: 0x0, type: "uint16",
+            default: 0, constraint: "max 1439", conformance: "M"
         }),
-        Field({ id: 0x1, name: "TargetSoC", type: "percent", conformance: "SOC, O.a+", default: 0 }),
+        Field({ name: "TargetSoC", id: 0x1, type: "percent", default: 0, conformance: "SOC, O.a+" }),
         Field({
-            id: 0x2, name: "AddedEnergy", type: "energy-mWh",
-            conformance: "[SOC], O.a+", constraint: "min 0", default: 0
+            name: "AddedEnergy", id: 0x2, type: "energy-mWh",
+            default: 0, constraint: "min 0", conformance: "[SOC], O.a+"
         })
     ),
 
     Datatype(
         { name: "ChargingTargetScheduleStruct", type: "struct" },
-        Field({ id: 0x0, name: "DayOfWeekForSequence", type: "TargetDayOfWeekBitmap", conformance: "M" }),
+        Field({ name: "DayOfWeekForSequence", id: 0x0, type: "TargetDayOfWeekBitmap", conformance: "M" }),
         Field(
-            { id: 0x1, name: "ChargingTargets", type: "list", conformance: "M", constraint: "max 10" },
+            { name: "ChargingTargets", id: 0x1, type: "list", constraint: "max 10", conformance: "M" },
             Field({ name: "entry", type: "ChargingTargetStruct" })
         )
     )

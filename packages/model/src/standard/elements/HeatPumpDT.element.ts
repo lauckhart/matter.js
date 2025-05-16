@@ -10,13 +10,13 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const HeatPumpDt = DeviceType(
-    { id: 0x309, name: "HeatPump", classification: "simple" },
+    { name: "HeatPump", id: 0x309 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 777, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 777, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x201, name: "Thermostat", conformance: "O", element: "clientCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Thermostat", id: 0x201, element: "clientCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(HeatPumpDt);

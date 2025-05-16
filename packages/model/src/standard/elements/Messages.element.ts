@@ -17,83 +17,83 @@ import {
 } from "../../elements/index.js";
 
 export const Messages = Cluster(
-    { id: 0x97, name: "Messages" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
+    { name: "Messages", id: 0x97 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 3 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CONF", conformance: "O", constraint: "0", longName: "ReceivedConfirmation" }),
-        Field({ name: "RESP", conformance: "[CONF]", constraint: "1", longName: "ConfirmationResponse" }),
-        Field({ name: "RPLY", conformance: "[CONF]", constraint: "2", longName: "ConfirmationReply" }),
-        Field({ name: "PROT", conformance: "O", constraint: "3", longName: "ProtectedMessages" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "CONF", constraint: "0", conformance: "O", longName: "ReceivedConfirmation" }),
+        Field({ name: "RESP", constraint: "1", conformance: "[CONF]", longName: "ConfirmationResponse" }),
+        Field({ name: "RPLY", constraint: "2", conformance: "[CONF]", longName: "ConfirmationReply" }),
+        Field({ name: "PROT", constraint: "3", conformance: "O", longName: "ProtectedMessages" })
     ),
 
     Attribute(
         {
-            id: 0x0, name: "Messages", type: "list",
-            access: "R F V", conformance: "M", constraint: "max 8", default: []
+            name: "Messages", id: 0x0, type: "list",
+            default: [], constraint: "max 8", conformance: "M", access: "R F V"
         },
         Field({ name: "entry", type: "MessageStruct" })
     ),
 
     Attribute(
         {
-            id: 0x1, name: "ActiveMessageIDs", type: "list",
-            access: "R V", conformance: "M", constraint: "max 8", default: []
+            name: "ActiveMessageIDs", id: 0x1, type: "list",
+            default: [], constraint: "max 8", conformance: "M", access: "R V"
         },
         Field({ name: "entry", type: "MessageID" })
     ),
 
     Event(
-        { id: 0x0, name: "MessageQueued", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "MessageId", type: "MessageID", access: "S", conformance: "M" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        { name: "MessageQueued", id: 0x0, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "MessageId", id: 0x0, type: "MessageID", conformance: "M", access: "S" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
     Event(
-        { id: 0x1, name: "MessagePresented", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "MessageId", type: "MessageID", access: "S", conformance: "M" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        { name: "MessagePresented", id: 0x1, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "MessageId", id: 0x0, type: "MessageID", conformance: "M", access: "S" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Event(
-        { id: 0x2, name: "MessageComplete", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "MessageId", type: "MessageID", access: "S", conformance: "M" }),
-        Field({ id: 0x1, name: "ResponseId", type: "uint32", access: "S", conformance: "RESP", default: null, quality: "X" }),
+        { name: "MessageComplete", id: 0x2, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "MessageId", id: 0x0, type: "MessageID", conformance: "M", access: "S" }),
+        Field({ name: "ResponseId", id: 0x1, type: "uint32", default: null, conformance: "RESP", access: "S", quality: "X" }),
         Field({
-            id: 0x2, name: "Reply", type: "string",
-            access: "S", conformance: "RPLY", constraint: "max 256", default: null, quality: "X"
+            name: "Reply", id: 0x2, type: "string",
+            default: null, constraint: "max 256", conformance: "RPLY", access: "S", quality: "X"
         }),
         Field({
-            id: 0x3, name: "FutureMessagesPreference", type: "FutureMessagePreferenceEnum",
-            access: "S", conformance: "M", default: null, quality: "X"
+            name: "FutureMessagesPreference", id: 0x3, type: "FutureMessagePreferenceEnum",
+            default: null, conformance: "M", access: "S", quality: "X"
         }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Command(
         {
-            id: 0x0, name: "PresentMessagesRequest",
-            access: "F O", conformance: "M", direction: "request", response: "status"
+            name: "PresentMessagesRequest", id: 0x0,
+            conformance: "M", access: "F O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "MessageId", type: "MessageID", conformance: "M" }),
-        Field({ id: 0x1, name: "Priority", type: "MessagePriorityEnum", conformance: "M", default: 0 }),
-        Field({ id: 0x2, name: "MessageControl", type: "MessageControlBitmap", conformance: "M", default: 0 }),
-        Field({ id: 0x3, name: "StartTime", type: "epoch-s", conformance: "M", default: 0, quality: "X" }),
-        Field({ id: 0x4, name: "Duration", type: "uint64", conformance: "M", default: 0, quality: "X" }),
-        Field({ id: 0x5, name: "MessageText", type: "string", conformance: "M", constraint: "max 256" }),
+        Field({ name: "MessageId", id: 0x0, type: "MessageID", conformance: "M" }),
+        Field({ name: "Priority", id: 0x1, type: "MessagePriorityEnum", default: 0, conformance: "M" }),
+        Field({ name: "MessageControl", id: 0x2, type: "MessageControlBitmap", default: 0, conformance: "M" }),
+        Field({ name: "StartTime", id: 0x3, type: "epoch-s", default: 0, conformance: "M", quality: "X" }),
+        Field({ name: "Duration", id: 0x4, type: "uint64", default: 0, conformance: "M", quality: "X" }),
+        Field({ name: "MessageText", id: 0x5, type: "string", constraint: "max 256", conformance: "M" }),
         Field(
-            { id: 0x6, name: "Responses", type: "list", conformance: "RESP", constraint: "max 4", default: [] },
+            { name: "Responses", id: 0x6, type: "list", default: [], constraint: "max 4", conformance: "RESP" },
             Field({ name: "entry", type: "MessageResponseOptionStruct" })
         )
     ),
 
     Command(
         {
-            id: 0x1, name: "CancelMessagesRequest",
-            access: "F O", conformance: "M", direction: "request", response: "status"
+            name: "CancelMessagesRequest", id: 0x1,
+            conformance: "M", access: "F O", direction: "request", response: "status"
         },
         Field(
-            { id: 0x0, name: "MessageIDs", type: "list", conformance: "M", constraint: "max 8" },
+            { name: "MessageIDs", id: 0x0, type: "list", constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "MessageID" })
         )
     ),
@@ -111,45 +111,45 @@ export const Messages = Cluster(
 
     Datatype(
         { name: "FutureMessagePreferenceEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Allowed", conformance: "M" }),
-        Field({ id: 0x1, name: "Increased", conformance: "M" }),
-        Field({ id: 0x2, name: "Reduced", conformance: "M" }),
-        Field({ id: 0x3, name: "Disallowed", conformance: "M" }),
-        Field({ id: 0x4, name: "Banned", conformance: "M" })
+        Field({ name: "Allowed", id: 0x0, conformance: "M" }),
+        Field({ name: "Increased", id: 0x1, conformance: "M" }),
+        Field({ name: "Reduced", id: 0x2, conformance: "M" }),
+        Field({ name: "Disallowed", id: 0x3, conformance: "M" }),
+        Field({ name: "Banned", id: 0x4, conformance: "M" })
     ),
 
     Datatype(
         { name: "MessagePriorityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Low", conformance: "M" }),
-        Field({ id: 0x1, name: "Medium", conformance: "M" }),
-        Field({ id: 0x2, name: "High", conformance: "M" }),
-        Field({ id: 0x3, name: "Critical", conformance: "M" })
+        Field({ name: "Low", id: 0x0, conformance: "M" }),
+        Field({ name: "Medium", id: 0x1, conformance: "M" }),
+        Field({ name: "High", id: 0x2, conformance: "M" }),
+        Field({ name: "Critical", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "MessageStruct", type: "struct" },
-        Field({ id: 0x0, name: "MessageId", type: "MessageID", access: "S", conformance: "M" }),
-        Field({ id: 0x1, name: "Priority", type: "MessagePriorityEnum", access: "S", conformance: "M", default: 0 }),
-        Field({ id: 0x2, name: "MessageControl", type: "MessageControlBitmap", access: "S", conformance: "M", default: 0 }),
-        Field({ id: 0x3, name: "StartTime", type: "epoch-s", access: "S", conformance: "M", default: 0, quality: "X" }),
-        Field({ id: 0x4, name: "Duration", type: "uint64", access: "S", conformance: "M", default: 0, quality: "X" }),
-        Field({ id: 0x5, name: "MessageText", type: "string", access: "S", conformance: "M", constraint: "max 256" }),
+        Field({ name: "MessageId", id: 0x0, type: "MessageID", conformance: "M", access: "S" }),
+        Field({ name: "Priority", id: 0x1, type: "MessagePriorityEnum", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "MessageControl", id: 0x2, type: "MessageControlBitmap", default: 0, conformance: "M", access: "S" }),
+        Field({ name: "StartTime", id: 0x3, type: "epoch-s", default: 0, conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "Duration", id: 0x4, type: "uint64", default: 0, conformance: "M", access: "S", quality: "X" }),
+        Field({ name: "MessageText", id: 0x5, type: "string", constraint: "max 256", conformance: "M", access: "S" }),
 
         Field(
             {
-                id: 0x6, name: "Responses", type: "list",
-                access: "S", conformance: "RESP", constraint: "max 4", default: []
+                name: "Responses", id: 0x6, type: "list",
+                default: [], constraint: "max 4", conformance: "RESP", access: "S"
             },
             Field({ name: "entry", type: "MessageResponseOptionStruct" })
         ),
 
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     ),
 
     Datatype(
         { name: "MessageResponseOptionStruct", type: "struct" },
-        Field({ id: 0x0, name: "MessageResponseId", type: "uint32", conformance: "M", constraint: "min 1" }),
-        Field({ id: 0x1, name: "Label", type: "string", conformance: "M", constraint: "max 32" })
+        Field({ name: "MessageResponseId", id: 0x0, type: "uint32", constraint: "min 1", conformance: "M" }),
+        Field({ name: "Label", id: 0x1, type: "string", constraint: "max 32", conformance: "M" })
     )
 );
 

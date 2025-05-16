@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "BridgedDeviceBasicInformation", tag: "cluster",
+    tag: "cluster", name: "BridgedDeviceBasicInformation",
     classification: "endpoint", pics: "BRBINFO",
 
     details: "This cluster is a derived cluster of the Basic Information cluster and serves two purposes towards a " +
@@ -43,30 +43,30 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§9.13.4",
-            children: [{ name: "BIS", tag: "field", details: "Support bridged ICDs." }]
+            children: [{ tag: "field", name: "BIS", details: "Support bridged ICDs." }]
         },
-        { name: "DataModelRevision", tag: "attribute", xref: "core§9.13.5" },
-        { name: "VendorName", tag: "attribute", xref: "core§9.13.5" },
-        { name: "VendorId", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ProductName", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ProductId", tag: "attribute", xref: "core§9.13.5" },
-        { name: "NodeLabel", tag: "attribute", xref: "core§9.13.5" },
-        { name: "Location", tag: "attribute", xref: "core§9.13.5" },
-        { name: "HardwareVersion", tag: "attribute", xref: "core§9.13.5" },
-        { name: "HardwareVersionString", tag: "attribute", xref: "core§9.13.5" },
-        { name: "SoftwareVersion", tag: "attribute", xref: "core§9.13.5" },
-        { name: "SoftwareVersionString", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ManufacturingDate", tag: "attribute", xref: "core§9.13.5" },
-        { name: "PartNumber", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ProductUrl", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ProductLabel", tag: "attribute", xref: "core§9.13.5" },
-        { name: "SerialNumber", tag: "attribute", xref: "core§9.13.5" },
-        { name: "LocalConfigDisabled", tag: "attribute", xref: "core§9.13.5" },
+        { tag: "attribute", name: "DataModelRevision", xref: "core§9.13.5" },
+        { tag: "attribute", name: "VendorName", xref: "core§9.13.5" },
+        { tag: "attribute", name: "VendorId", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ProductName", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ProductId", xref: "core§9.13.5" },
+        { tag: "attribute", name: "NodeLabel", xref: "core§9.13.5" },
+        { tag: "attribute", name: "Location", xref: "core§9.13.5" },
+        { tag: "attribute", name: "HardwareVersion", xref: "core§9.13.5" },
+        { tag: "attribute", name: "HardwareVersionString", xref: "core§9.13.5" },
+        { tag: "attribute", name: "SoftwareVersion", xref: "core§9.13.5" },
+        { tag: "attribute", name: "SoftwareVersionString", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ManufacturingDate", xref: "core§9.13.5" },
+        { tag: "attribute", name: "PartNumber", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ProductUrl", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ProductLabel", xref: "core§9.13.5" },
+        { tag: "attribute", name: "SerialNumber", xref: "core§9.13.5" },
+        { tag: "attribute", name: "LocalConfigDisabled", xref: "core§9.13.5" },
 
         {
-            name: "Reachable", tag: "attribute",
+            tag: "attribute", name: "Reachable",
 
             details: "This attribute shall be used to indicate whether the bridged device is reachable by the bridge, so a " +
                 "Matter Node which wants to communicate with a bridged device can get an indication that this might " +
@@ -82,7 +82,7 @@ Resource.add({
         },
 
         {
-            name: "UniqueId", tag: "attribute",
+            tag: "attribute", name: "UniqueId",
 
             details: "This attribute shall, for a Bridged Device, be updated when the Bridge is factory reset. If the " +
                 "bridged device does not provide some unique id (e.g. in the case of bridging from non-Matter " +
@@ -95,15 +95,15 @@ Resource.add({
             xref: "core§9.13.5.2"
         },
 
-        { name: "CapabilityMinima", tag: "attribute", xref: "core§9.13.5" },
-        { name: "ProductAppearance", tag: "attribute", xref: "core§9.13.5" },
-        { name: "SpecificationVersion", tag: "attribute", xref: "core§9.13.5" },
-        { name: "MaxPathsPerInvoke", tag: "attribute", xref: "core§9.13.5" },
-        { name: "StartUp", tag: "event", xref: "core§9.13.7" },
-        { name: "ShutDown", tag: "event", xref: "core§9.13.7" },
+        { tag: "attribute", name: "CapabilityMinima", xref: "core§9.13.5" },
+        { tag: "attribute", name: "ProductAppearance", xref: "core§9.13.5" },
+        { tag: "attribute", name: "SpecificationVersion", xref: "core§9.13.5" },
+        { tag: "attribute", name: "MaxPathsPerInvoke", xref: "core§9.13.5" },
+        { tag: "event", name: "StartUp", xref: "core§9.13.7" },
+        { tag: "event", name: "ShutDown", xref: "core§9.13.7" },
 
         {
-            name: "Leave", tag: "event",
+            tag: "event", name: "Leave",
 
             details: "The Leave event SHOULD be generated by the bridge when it detects that the associated device has " +
                 "left the non-Matter network." +
@@ -118,7 +118,7 @@ Resource.add({
         },
 
         {
-            name: "ReachableChanged", tag: "event",
+            tag: "event", name: "ReachableChanged",
             details: "This event shall be generated when there is a change in the Reachable attribute. Its purpose is to " +
                 "provide an indication towards interested parties that the reachability of a bridged device has " +
                 "changed over its native connectivity technology, so they may take appropriate action." +
@@ -128,7 +128,7 @@ Resource.add({
         },
 
         {
-            name: "ActiveChanged", tag: "event",
+            tag: "event", name: "ActiveChanged",
             details: "This event (when supported) shall be generated the next time a bridged device becomes active after a " +
                 "KeepActive command is received." +
                 "\n" +
@@ -136,7 +136,7 @@ Resource.add({
             xref: "core§9.13.7.3",
 
             children: [{
-                name: "PromisedActiveDuration", tag: "field",
+                tag: "field", name: "PromisedActiveDuration",
 
                 details: "This field shall indicate the minimum duration, in milliseconds, that the bridged device will remain " +
                     "active after receiving the initial request from the KeepActive processing steps." +
@@ -152,7 +152,7 @@ Resource.add({
         },
 
         {
-            name: "KeepActive", tag: "command",
+            tag: "command", name: "KeepActive",
 
             details: "Upon receipt, the server shall attempt to keep the bridged device active for the duration specified " +
                 "by the command, when the device is next active." +
@@ -186,7 +186,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "StayActiveDuration", tag: "field",
+                    tag: "field", name: "StayActiveDuration",
 
                     details: "This field shall indicate the duration, in milliseconds, that the device is requested to remain " +
                         "active, once the device becomes active again." +
@@ -202,7 +202,7 @@ Resource.add({
                 },
 
                 {
-                    name: "TimeoutMs", tag: "field",
+                    tag: "field", name: "TimeoutMs",
 
                     details: "This field shall indicate the period, in milliseconds, that the server will wait before the \"pending " +
                         "active\" state expires. See the KeepActive Command description for details." +

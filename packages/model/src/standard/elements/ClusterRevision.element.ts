@@ -10,7 +10,7 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { AttributeElement as Attribute } from "../../elements/index.js";
 
 export const ClusterRevision = Attribute({
-    id: 0xfffd, name: "ClusterRevision", type: "uint16",
-    access: "R V", conformance: "M", constraint: "min 1", isSeed: true, quality: "F"
+    name: "ClusterRevision", id: 0xfffd, type: "uint16",
+    isSeed: true, constraint: "min 1", conformance: "M", access: "R V", quality: "F"
 });
 MatterDefinition.children.push(ClusterRevision);

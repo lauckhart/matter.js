@@ -10,15 +10,15 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const WaterValveDt = DeviceType(
-    { id: 0x42, name: "WaterValve", classification: "simple" },
+    { name: "WaterValve", id: 0x42 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 66, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 66, revision: 1 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x81, name: "ValveConfigurationAndControl", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x404, name: "FlowMeasurement", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x404, name: "FlowMeasurement", conformance: "O", element: "clientCluster" })
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "ValveConfigurationAndControl", id: 0x81, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "FlowMeasurement", id: 0x404, element: "clientCluster", conformance: "O" })
 );
 
 MatterDefinition.children.push(WaterValveDt);

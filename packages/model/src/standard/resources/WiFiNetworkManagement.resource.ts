@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WiFiNetworkManagement", tag: "cluster",
+    tag: "cluster", name: "WiFiNetworkManagement",
     classification: "application", pics: "WIFINM",
     details: "This cluster provides an interface for getting information about the Wi-Fi network that a Network " +
         "Infrastructure Manager device type provides. Privileged nodes within the same fabric as a Network " +
@@ -19,7 +19,7 @@ Resource.add({
 
     children: [
         {
-            name: "Ssid", tag: "attribute",
+            tag: "attribute", name: "Ssid",
 
             details: "Indicates the SSID of the primary Wi-Fi network provided by this device." +
                 "\n" +
@@ -37,7 +37,7 @@ Resource.add({
         },
 
         {
-            name: "PassphraseSurrogate", tag: "attribute",
+            tag: "attribute", name: "PassphraseSurrogate",
 
             details: "This attribute shall contain an arbitrary numeric value; this value shall increase whenever the " +
                 "passphrase or PSK associated with the primary Wi-Fi network provided by this device changes." +
@@ -62,7 +62,7 @@ Resource.add({
         },
 
         {
-            name: "NetworkPassphraseRequest", tag: "command",
+            tag: "command", name: "NetworkPassphraseRequest",
 
             details: "This command is used to request the current WPA-Personal passphrase or PSK associated with the Wi-Fi " +
                 "network provided by this device." +
@@ -79,7 +79,7 @@ Resource.add({
         },
 
         {
-            name: "NetworkPassphraseResponse", tag: "command",
+            tag: "command", name: "NetworkPassphraseResponse",
             details: "This command shall be generated in response to a NetworkPassphraseRequest command.",
             xref: "cluster§10.2.5.2"
         }

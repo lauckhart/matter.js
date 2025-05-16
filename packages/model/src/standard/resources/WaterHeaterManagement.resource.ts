@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "WaterHeaterManagement", tag: "cluster",
+        tag: "cluster", name: "WaterHeaterManagement",
         classification: "application", pics: "EWATERHTR",
 
         details: "This cluster is used to allow clients to control the operation of a hot water heating appliance so " +
@@ -24,34 +24,34 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§9.5.4",
 
                 children: [
-                    { name: "EM", tag: "field", details: "Allows energy management control of the tank" },
+                    { tag: "field", name: "EM", details: "Allows energy management control of the tank" },
                     {
-                        name: "TP", tag: "field",
+                        tag: "field", name: "TP",
                         details: "Supports monitoring the percentage of hot water in the tank"
                     }
                 ]
             },
 
             {
-                name: "HeaterTypes", tag: "attribute",
+                tag: "attribute", name: "HeaterTypes",
                 details: "Indicates the heat sources that the water heater can call on for heating. If a bit is set then the " +
                     "water heater supports the corresponding heat source.",
                 xref: "cluster§9.5.7.1"
             },
 
             {
-                name: "HeatDemand", tag: "attribute",
+                tag: "attribute", name: "HeatDemand",
                 details: "Indicates if the water heater is heating water. If a bit is set then the corresponding heat source " +
                     "is active.",
                 xref: "cluster§9.5.7.2"
             },
 
             {
-                name: "TankVolume", tag: "attribute",
+                tag: "attribute", name: "TankVolume",
                 details: "Indicates the volume of water that the hot water tank can hold (in units of Litres). This allows an " +
                     "energy management system to estimate the required heating energy needed to reach the target " +
                     "temperature.",
@@ -59,7 +59,7 @@ Resource.add(
             },
 
             {
-                name: "EstimatedHeatRequired", tag: "attribute",
+                tag: "attribute", name: "EstimatedHeatRequired",
 
                 details: "Indicates the estimated heat energy needed to raise the water temperature to the target setpoint. " +
                     "This can be computed by taking the specific heat capacity of water (4182 J/kg °C) and by knowing the " +
@@ -99,7 +99,7 @@ Resource.add(
             },
 
             {
-                name: "TankPercentage", tag: "attribute",
+                tag: "attribute", name: "TankPercentage",
 
                 details: "Indicates an approximate level of hot water stored in the tank, which might help consumers " +
                     "understand the amount of hot water remaining in the tank. The accuracy of this attribute is " +
@@ -132,7 +132,7 @@ Resource.add(
             },
 
             {
-                name: "BoostState", tag: "attribute",
+                tag: "attribute", name: "BoostState",
                 details: "Indicates whether the Boost, as triggered by a Boost command, is currently" +
                     "\n" +
                     "Active or Inactive." +
@@ -142,7 +142,7 @@ Resource.add(
             },
 
             {
-                name: "BoostStarted", tag: "event",
+                tag: "event", name: "BoostStarted",
                 details: "This event shall be generated whenever a Boost command is accepted." +
                     "\n" +
                     "The corresponding structure fields within the WaterHeaterBoostInfoStruct are copied from the Boost " +
@@ -151,56 +151,56 @@ Resource.add(
             },
 
             {
-                name: "BoostEnded", tag: "event",
+                tag: "event", name: "BoostEnded",
                 details: "This event shall be generated whenever the BoostState transitions from Active to Inactive.",
                 xref: "cluster§9.5.9.2"
             },
             {
-                name: "Boost", tag: "command",
+                tag: "command", name: "Boost",
                 details: "Allows a client to request that the water heater is put into a Boost state.",
                 xref: "cluster§9.5.8.1"
             },
             {
-                name: "CancelBoost", tag: "command",
+                tag: "command", name: "CancelBoost",
                 details: "Allows a client to cancel an ongoing Boost operation. This command has no payload.",
                 xref: "cluster§9.5.8.2"
             },
 
             {
-                name: "WaterHeaterHeatSourceBitmap", tag: "datatype",
+                tag: "datatype", name: "WaterHeaterHeatSourceBitmap",
                 xref: "cluster§9.5.6.1",
 
                 children: [
-                    { name: "ImmersionElement1", tag: "field", description: "Immersion Heating Element 1" },
-                    { name: "ImmersionElement2", tag: "field", description: "Immersion Heating Element 2" },
-                    { name: "HeatPump", tag: "field", description: "Heat pump Heating" },
-                    { name: "Boiler", tag: "field", description: "Boiler Heating (e.g. Gas or Oil)" },
-                    { name: "Other", tag: "field", description: "Other Heating" }
+                    { tag: "field", name: "ImmersionElement1", description: "Immersion Heating Element 1" },
+                    { tag: "field", name: "ImmersionElement2", description: "Immersion Heating Element 2" },
+                    { tag: "field", name: "HeatPump", description: "Heat pump Heating" },
+                    { tag: "field", name: "Boiler", description: "Boiler Heating (e.g. Gas or Oil)" },
+                    { tag: "field", name: "Other", description: "Other Heating" }
                 ]
             },
 
             {
-                name: "BoostStateEnum", tag: "datatype",
+                tag: "datatype", name: "BoostStateEnum",
                 xref: "cluster§9.5.6.2",
                 children: [
-                    { name: "Inactive", tag: "field", description: "Boost is not currently active" },
-                    { name: "Active", tag: "field", description: "Boost is currently active" }
+                    { tag: "field", name: "Inactive", description: "Boost is not currently active" },
+                    { tag: "field", name: "Active", description: "Boost is currently active" }
                 ]
             },
 
             {
-                name: "WaterHeaterBoostInfoStruct", tag: "datatype",
+                tag: "datatype", name: "WaterHeaterBoostInfoStruct",
                 xref: "cluster§9.5.6.3",
 
                 children: [
                     {
-                        name: "Duration", tag: "field",
+                        tag: "field", name: "Duration",
                         details: "This field shall indicate the time period, in seconds, for which the boost state is activated.",
                         xref: "cluster§9.5.6.3.1"
                     },
 
                     {
-                        name: "OneShot", tag: "field",
+                        tag: "field", name: "OneShot",
 
                         details: "This field shall indicate whether the boost state shall be automatically canceled once the hot water " +
                             "has reached either:" +
@@ -215,7 +215,7 @@ Resource.add(
                     },
 
                     {
-                        name: "EmergencyBoost", tag: "field",
+                        tag: "field", name: "EmergencyBoost",
                         details: "This field shall indicate that the consumer wants the water to be heated quickly. This may cause " +
                             "multiple heat sources to be activated (e.g. a heat pump and direct electric immersion heating " +
                             "element)." +
@@ -225,7 +225,7 @@ Resource.add(
                     },
 
                     {
-                        name: "TemporarySetpoint", tag: "field",
+                        tag: "field", name: "TemporarySetpoint",
 
                         details: "This field shall indicate the target temperature to which the water will be heated." +
                             "\n" +
@@ -239,14 +239,14 @@ Resource.add(
                     },
 
                     {
-                        name: "TargetPercentage", tag: "field",
+                        tag: "field", name: "TargetPercentage",
                         details: "This field shall indicate the target percentage of hot water in the tank that the TankPercentage " +
                             "attribute must reach before the heating is switched off.",
                         xref: "cluster§9.5.6.3.5"
                     },
 
                     {
-                        name: "TargetReheat", tag: "field",
+                        tag: "field", name: "TargetReheat",
 
                         details: "This field shall indicate the percentage to which the hot water in the tank shall be allowed to fall " +
                             "before again beginning to reheat it." +

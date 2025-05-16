@@ -17,65 +17,65 @@ import {
 
 export const ResourceMonitoring = Cluster(
     { name: "ResourceMonitoring" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CON", conformance: "O", constraint: "0", longName: "Condition" }),
-        Field({ name: "WRN", conformance: "O", constraint: "1", longName: "Warning" }),
-        Field({ name: "REP", conformance: "O", constraint: "2", longName: "ReplacementProductList" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "CON", constraint: "0", conformance: "O", longName: "Condition" }),
+        Field({ name: "WRN", constraint: "1", conformance: "O", longName: "Warning" }),
+        Field({ name: "REP", constraint: "2", conformance: "O", longName: "ReplacementProductList" })
     ),
 
-    Attribute({ id: 0x0, name: "Condition", type: "percent", access: "R V", conformance: "CON" }),
+    Attribute({ name: "Condition", id: 0x0, type: "percent", conformance: "CON", access: "R V" }),
     Attribute({
-        id: 0x1, name: "DegradationDirection", type: "DegradationDirectionEnum",
-        access: "R V", conformance: "CON", constraint: "desc", quality: "F"
+        name: "DegradationDirection", id: 0x1, type: "DegradationDirectionEnum",
+        constraint: "desc", conformance: "CON", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x2, name: "ChangeIndication", type: "ChangeIndicationEnum", access: "R V", conformance: "M", default: 0 }),
-    Attribute({ id: 0x3, name: "InPlaceIndicator", type: "bool", access: "R V", conformance: "O" }),
+    Attribute({ name: "ChangeIndication", id: 0x2, type: "ChangeIndicationEnum", default: 0, conformance: "M", access: "R V" }),
+    Attribute({ name: "InPlaceIndicator", id: 0x3, type: "bool", conformance: "O", access: "R V" }),
     Attribute({
-        id: 0x4, name: "LastChangedTime", type: "epoch-s",
-        access: "RW VO", conformance: "O", default: null, quality: "X N"
+        name: "LastChangedTime", id: 0x4, type: "epoch-s",
+        default: null, conformance: "O", access: "RW VO", quality: "X N"
     }),
 
     Attribute(
         {
-            id: 0x5, name: "ReplacementProductList", type: "list",
-            access: "R V", conformance: "REP", constraint: "max 5", quality: "F"
+            name: "ReplacementProductList", id: 0x5, type: "list",
+            constraint: "max 5", conformance: "REP", access: "R V", quality: "F"
         },
         Field({ name: "entry", type: "ReplacementProductStruct" })
     ),
 
-    Command({ id: 0x0, name: "ResetCondition", access: "O", conformance: "O", direction: "request", response: "status" }),
+    Command({ name: "ResetCondition", id: 0x0, conformance: "O", access: "O", direction: "request", response: "status" }),
     Datatype(
         { name: "DegradationDirectionEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Up", conformance: "M" }),
-        Field({ id: 0x1, name: "Down", conformance: "M" })
+        Field({ name: "Up", id: 0x0, conformance: "M" }),
+        Field({ name: "Down", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "ChangeIndicationEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ok", conformance: "M" }),
-        Field({ id: 0x1, name: "Warning", conformance: "WRN" }),
-        Field({ id: 0x2, name: "Critical", conformance: "M" })
+        Field({ name: "Ok", id: 0x0, conformance: "M" }),
+        Field({ name: "Warning", id: 0x1, conformance: "WRN" }),
+        Field({ name: "Critical", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "ProductIdentifierTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Upc", conformance: "M" }),
-        Field({ id: 0x1, name: "Gtin8", conformance: "M" }),
-        Field({ id: 0x2, name: "Ean", conformance: "M" }),
-        Field({ id: 0x3, name: "Gtin14", conformance: "M" }),
-        Field({ id: 0x4, name: "Oem", conformance: "M" })
+        Field({ name: "Upc", id: 0x0, conformance: "M" }),
+        Field({ name: "Gtin8", id: 0x1, conformance: "M" }),
+        Field({ name: "Ean", id: 0x2, conformance: "M" }),
+        Field({ name: "Gtin14", id: 0x3, conformance: "M" }),
+        Field({ name: "Oem", id: 0x4, conformance: "M" })
     ),
 
     Datatype(
         { name: "ReplacementProductStruct", type: "struct" },
         Field({
-            id: 0x0, name: "ProductIdentifierType", type: "ProductIdentifierTypeEnum",
-            conformance: "M", constraint: "desc"
+            name: "ProductIdentifierType", id: 0x0, type: "ProductIdentifierTypeEnum",
+            constraint: "desc", conformance: "M"
         }),
-        Field({ id: 0x1, name: "ProductIdentifierValue", type: "string", conformance: "M", constraint: "max 20" })
+        Field({ name: "ProductIdentifierValue", id: 0x1, type: "string", constraint: "max 20", conformance: "M" })
     )
 );
 

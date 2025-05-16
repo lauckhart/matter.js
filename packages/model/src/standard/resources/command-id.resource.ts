@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "command-id", tag: "datatype",
+    tag: "datatype", name: "command-id",
     description: "Command ID",
     details: "An identifier that indicates a command defined in a cluster specification." +
         "\n" +

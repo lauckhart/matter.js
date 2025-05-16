@@ -9,12 +9,12 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "GenericSwitch", tag: "deviceType",
+    tag: "deviceType", name: "GenericSwitch",
     classification: "simple",
     details: "This defines conformance for the Generic Switch device type.",
     xref: "device§6.6",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§6.6.4" },
-        { name: "Switch", tag: "requirement", xref: "device§6.6.4" }
+        { tag: "requirement", name: "Identify", xref: "device§6.6.4" },
+        { tag: "requirement", name: "Switch", xref: "device§6.6.4" }
     ]
 });

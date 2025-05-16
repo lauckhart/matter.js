@@ -9,23 +9,23 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "SmokeCoAlarm", tag: "cluster",
+    tag: "cluster", name: "SmokeCoAlarm",
     classification: "application", pics: "SMOKECO",
     details: "This cluster provides an interface for observing and managing the state of smoke and CO alarms.",
     xref: "cluster§2.11",
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§2.11.4",
             children: [
-                { name: "SMOKE", tag: "field", details: "Supports Smoke alarm" },
-                { name: "CO", tag: "field", details: "Supports CO alarm" }
+                { tag: "field", name: "SMOKE", details: "Supports Smoke alarm" },
+                { tag: "field", name: "CO", details: "Supports CO alarm" }
             ]
         },
 
         {
-            name: "ExpressedState", tag: "attribute",
+            tag: "attribute", name: "ExpressedState",
 
             details: "Indicates the visibly- and audibly-expressed state of the alarm. When multiple alarm conditions are " +
                 "being reflected in the server, this attribute shall indicate the condition with the highest " +
@@ -44,18 +44,18 @@ Resource.add({
         },
 
         {
-            name: "SmokeState", tag: "attribute",
+            tag: "attribute", name: "SmokeState",
             details: "Indicates whether the device’s smoke sensor is currently triggering a smoke alarm.",
             xref: "cluster§2.11.6.2"
         },
         {
-            name: "CoState", tag: "attribute",
+            tag: "attribute", name: "CoState",
             details: "Indicates whether the device’s CO sensor is currently triggering a CO alarm.",
             xref: "cluster§2.11.6.3"
         },
 
         {
-            name: "BatteryAlert", tag: "attribute",
+            tag: "attribute", name: "BatteryAlert",
             details: "Indicates whether the power resource fault detection mechanism is currently triggered at the device. " +
                 "If the detection mechanism is triggered, this attribute shall be set to Warning or Critical, " +
                 "otherwise it shall be set to Normal. The battery state shall also be reflected in the Power Source " +
@@ -64,35 +64,35 @@ Resource.add({
         },
 
         {
-            name: "DeviceMuted", tag: "attribute",
+            tag: "attribute", name: "DeviceMuted",
             details: "Indicates the whether the audible expression of the device is currently muted. Audible expression is " +
                 "typically a horn or speaker pattern.",
             xref: "cluster§2.11.6.5"
         },
 
         {
-            name: "TestInProgress", tag: "attribute",
+            tag: "attribute", name: "TestInProgress",
             details: "Indicates whether the device self-test is currently activated. If the device self- test is " +
                 "activated, this attribute shall be set to True, otherwise it shall be set to False.",
             xref: "cluster§2.11.6.6"
         },
 
         {
-            name: "HardwareFaultAlert", tag: "attribute",
+            tag: "attribute", name: "HardwareFaultAlert",
             details: "Indicates whether the hardware fault detection mechanism is currently triggered. If the detection " +
                 "mechanism is triggered, this attribute shall be set to True, otherwise it shall be set to False.",
             xref: "cluster§2.11.6.7"
         },
 
         {
-            name: "EndOfServiceAlert", tag: "attribute",
+            tag: "attribute", name: "EndOfServiceAlert",
             details: "Indicates whether the end-of-service has been triggered at the device. This attribute shall be set " +
                 "to Expired when the device reaches the end-of-service.",
             xref: "cluster§2.11.6.8"
         },
 
         {
-            name: "InterconnectSmokeAlarm", tag: "attribute",
+            tag: "attribute", name: "InterconnectSmokeAlarm",
             details: "Indicates whether the interconnected smoke alarm is currently triggering by branching devices. When " +
                 "the interconnected smoke alarm is being triggered, this attribute shall be set to Warning or " +
                 "Critical, otherwise it shall be set to Normal.",
@@ -100,7 +100,7 @@ Resource.add({
         },
 
         {
-            name: "InterconnectCoAlarm", tag: "attribute",
+            tag: "attribute", name: "InterconnectCoAlarm",
             details: "Indicates whether the interconnected CO alarm is currently triggering by branching devices. When the " +
                 "interconnected CO alarm is being triggered, this attribute shall be set to Warning or Critical, " +
                 "otherwise it shall be set to Normal.",
@@ -108,18 +108,18 @@ Resource.add({
         },
 
         {
-            name: "ContaminationState", tag: "attribute",
+            tag: "attribute", name: "ContaminationState",
             details: "Indicates the contamination level of the smoke sensor.",
             xref: "cluster§2.11.6.11"
         },
         {
-            name: "SmokeSensitivityLevel", tag: "attribute",
+            tag: "attribute", name: "SmokeSensitivityLevel",
             details: "Indicates the sensitivity level of the smoke sensor configured on the device.",
             xref: "cluster§2.11.6.12"
         },
 
         {
-            name: "ExpiryDate", tag: "attribute",
+            tag: "attribute", name: "ExpiryDate",
             details: "Indicates the date when the device reaches its stated expiry date. After the ExpiryDate has been " +
                 "reached, the EndOfServiceAlert shall start to be triggered. To account for better customer " +
                 "experience across time zones, the EndOfServiceAlert may be delayed by up to 24 hours after the " +
@@ -129,102 +129,102 @@ Resource.add({
         },
 
         {
-            name: "SmokeAlarm", tag: "event",
+            tag: "event", name: "SmokeAlarm",
             details: "This event shall be generated when SmokeState attribute changes to either Warning or Critical state.",
             xref: "cluster§2.11.8.1",
             children: [{
-                name: "AlarmSeverityLevel", tag: "field",
+                tag: "field", name: "AlarmSeverityLevel",
                 details: "This field shall indicate the current value of the SmokeState attribute.",
                 xref: "cluster§2.11.8.1.1"
             }]
         },
 
         {
-            name: "CoAlarm", tag: "event",
+            tag: "event", name: "CoAlarm",
             details: "This event shall be generated when COState attribute changes to either Warning or Critical state.",
             xref: "cluster§2.11.8.2",
             children: [{
-                name: "AlarmSeverityLevel", tag: "field",
+                tag: "field", name: "AlarmSeverityLevel",
                 details: "This field shall indicate the current value of the COState attribute.",
                 xref: "cluster§2.11.8.2.1"
             }]
         },
 
         {
-            name: "LowBattery", tag: "event",
+            tag: "event", name: "LowBattery",
             details: "This event shall be generated when BatteryAlert attribute changes to either Warning or Critical " +
                 "state.",
             xref: "cluster§2.11.8.3",
             children: [{
-                name: "AlarmSeverityLevel", tag: "field",
+                tag: "field", name: "AlarmSeverityLevel",
                 details: "This field shall indicate the current value of the BatteryAlert attribute.",
                 xref: "cluster§2.11.8.3.1"
             }]
         },
 
         {
-            name: "HardwareFault", tag: "event",
+            tag: "event", name: "HardwareFault",
             details: "This event shall be generated when the device detects a hardware fault that leads to setting " +
                 "HardwareFaultAlert to True.",
             xref: "cluster§2.11.8.4"
         },
 
         {
-            name: "EndOfService", tag: "event",
+            tag: "event", name: "EndOfService",
             details: "This event shall be generated when the EndOfServiceAlert is set to Expired.",
             xref: "cluster§2.11.8.5"
         },
 
         {
-            name: "SelfTestComplete", tag: "event",
+            tag: "event", name: "SelfTestComplete",
             details: "This event shall be generated when the SelfTest completes, and the attribute TestInProgress changes " +
                 "to False.",
             xref: "cluster§2.11.8.6"
         },
 
         {
-            name: "AlarmMuted", tag: "event",
+            tag: "event", name: "AlarmMuted",
             details: "This event shall be generated when the DeviceMuted attribute changes to Muted.",
             xref: "cluster§2.11.8.7"
         },
         {
-            name: "MuteEnded", tag: "event",
+            tag: "event", name: "MuteEnded",
             details: "This event shall be generated when DeviceMuted attribute changes to NotMuted.",
             xref: "cluster§2.11.8.8"
         },
 
         {
-            name: "InterconnectSmokeAlarm", tag: "event",
+            tag: "event", name: "InterconnectSmokeAlarm",
             details: "This event shall be generated when the device hosting the server receives a smoke alarm from an " +
                 "interconnected sensor.",
             xref: "cluster§2.11.8.9",
             children: [{
-                name: "AlarmSeverityLevel", tag: "field",
+                tag: "field", name: "AlarmSeverityLevel",
                 details: "This field shall indicate the current value of the InterconnectSmokeAlarm attribute.",
                 xref: "cluster§2.11.8.9.1"
             }]
         },
 
         {
-            name: "InterconnectCoAlarm", tag: "event",
+            tag: "event", name: "InterconnectCoAlarm",
             details: "This event shall be generated when the device hosting the server receives a CO alarm from an " +
                 "interconnected sensor.",
             xref: "cluster§2.11.8.10",
             children: [{
-                name: "AlarmSeverityLevel", tag: "field",
+                tag: "field", name: "AlarmSeverityLevel",
                 details: "This field shall indicate the current value of the InterconnectCOAlarm attribute.",
                 xref: "cluster§2.11.8.10.1"
             }]
         },
 
         {
-            name: "AllClear", tag: "event",
+            tag: "event", name: "AllClear",
             details: "This event shall be generated when ExpressedState attribute returns to Normal state.",
             xref: "cluster§2.11.8.11"
         },
 
         {
-            name: "SelfTestRequest", tag: "command",
+            tag: "command", name: "SelfTestRequest",
 
             details: "This command shall initiate a device self-test. The return status shall indicate whether the test " +
                 "was successfully initiated. Only one SelfTestRequest may be processed at a time. When the value of " +
@@ -241,19 +241,19 @@ Resource.add({
         },
 
         {
-            name: "AlarmStateEnum", tag: "datatype",
+            tag: "datatype", name: "AlarmStateEnum",
             xref: "cluster§2.11.5.1",
 
             children: [
                 {
-                    name: "Normal", tag: "field",
+                    tag: "field", name: "Normal",
                     description: "Nominal state, the device is not alarming",
                     details: "This value shall indicate that this alarm is not alarming.",
                     xref: "cluster§2.11.5.1.1"
                 },
 
                 {
-                    name: "Warning", tag: "field",
+                    tag: "field", name: "Warning",
                     description: "Warning state",
                     details: "This value shall indicate that this alarm is in a warning state. Alarms in this state SHOULD be " +
                         "subject to being muted via physical interaction.",
@@ -261,7 +261,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Critical", tag: "field",
+                    tag: "field", name: "Critical",
                     description: "Critical state",
                     details: "This value shall indicate that this alarm is in a critical state. Alarms in this state shall NOT be " +
                         "subject to being muted via physical interaction.",
@@ -271,25 +271,25 @@ Resource.add({
         },
 
         {
-            name: "SensitivityEnum", tag: "datatype",
+            tag: "datatype", name: "SensitivityEnum",
             xref: "cluster§2.11.5.2",
             children: [
-                { name: "High", tag: "field", description: "High sensitivity" },
-                { name: "Standard", tag: "field", description: "Standard Sensitivity" },
-                { name: "Low", tag: "field", description: "Low sensitivity" }
+                { tag: "field", name: "High", description: "High sensitivity" },
+                { tag: "field", name: "Standard", description: "Standard Sensitivity" },
+                { tag: "field", name: "Low", description: "Low sensitivity" }
             ]
         },
 
         {
-            name: "ExpressedStateEnum", tag: "datatype",
+            tag: "datatype", name: "ExpressedStateEnum",
             details: "This value shall indicate that this alarm is not alarming.",
             xref: "cluster§2.11.5.3",
 
             children: [
-                { name: "Normal", tag: "field", description: "Nominal state, the device is not alarming" },
+                { tag: "field", name: "Normal", description: "Nominal state, the device is not alarming" },
 
                 {
-                    name: "SmokeAlarm", tag: "field",
+                    tag: "field", name: "SmokeAlarm",
                     description: "Smoke Alarm state",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of Smoke Alarm. " +
                         "This value shall indicate that the alarm is currently expressing audible indication of Smoke Alarm " +
@@ -298,7 +298,7 @@ Resource.add({
                 },
 
                 {
-                    name: "CoAlarm", tag: "field",
+                    tag: "field", name: "CoAlarm",
                     description: "CO Alarm state",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of CO Alarm. " +
                         "This value shall indicate that the alarm is currently expressing audible indication of CO Alarm " +
@@ -307,7 +307,7 @@ Resource.add({
                 },
 
                 {
-                    name: "BatteryAlert", tag: "field",
+                    tag: "field", name: "BatteryAlert",
                     description: "Battery Alert State",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of Critical Low " +
                         "Battery. This value shall indicate that the alarm is currently expressing audible indication of " +
@@ -316,7 +316,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Testing", tag: "field",
+                    tag: "field", name: "Testing",
                     description: "Test in Progress",
                     details: "This value shall indicate that this alarm is currently expressing visual and audible indication of " +
                         "SelfTest.",
@@ -324,7 +324,7 @@ Resource.add({
                 },
 
                 {
-                    name: "HardwareFault", tag: "field",
+                    tag: "field", name: "HardwareFault",
                     description: "Hardware Fault Alert State",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of Hardware " +
                         "Fault. This value shall indicate that the alarm is currently expressing audible indication of " +
@@ -333,7 +333,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EndOfService", tag: "field",
+                    tag: "field", name: "EndOfService",
                     description: "End of Service Alert State",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of End Of " +
                         "Service. This value shall indicate that the alarm is currently expressing audible indication of End " +
@@ -342,7 +342,7 @@ Resource.add({
                 },
 
                 {
-                    name: "InterconnectSmoke", tag: "field",
+                    tag: "field", name: "InterconnectSmoke",
                     description: "Interconnected Smoke Alarm State",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of Smoke Alarm " +
                         "caused by Interconnect. This value shall indicate that the alarm is currently expressing audible " +
@@ -352,7 +352,7 @@ Resource.add({
                 },
 
                 {
-                    name: "InterconnectCo", tag: "field",
+                    tag: "field", name: "InterconnectCo",
                     description: "Interconnected CO Alarm State",
                     details: "This value shall indicate that this alarm is currently expressing visual indication of CO Alarm " +
                         "caused by Interconnect. This value shall indicate that the alarm is currently expressing audible " +
@@ -364,19 +364,19 @@ Resource.add({
         },
 
         {
-            name: "MuteStateEnum", tag: "datatype",
+            tag: "datatype", name: "MuteStateEnum",
             xref: "cluster§2.11.5.4",
 
             children: [
                 {
-                    name: "NotMuted", tag: "field",
+                    tag: "field", name: "NotMuted",
                     description: "Not Muted",
                     details: "This value shall indicate that the device is not muted.",
                     xref: "cluster§2.11.5.4.1"
                 },
 
                 {
-                    name: "Muted", tag: "field",
+                    tag: "field", name: "Muted",
                     description: "Muted",
                     details: "This value shall indicate that the device is muted.",
                     xref: "cluster§2.11.5.4.2"
@@ -385,12 +385,12 @@ Resource.add({
         },
 
         {
-            name: "EndOfServiceEnum", tag: "datatype",
+            tag: "datatype", name: "EndOfServiceEnum",
             xref: "cluster§2.11.5.5",
 
             children: [
                 {
-                    name: "Normal", tag: "field",
+                    tag: "field", name: "Normal",
                     description: "Device has not expired",
                     details: "This value shall indicate that the device has not yet reached its end of service, and does not need " +
                         "to be imminently replaced.",
@@ -398,7 +398,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Expired", tag: "field",
+                    tag: "field", name: "Expired",
                     description: "Device has reached its end of service",
                     details: "This value shall indicate that the device has reached its end of service, and needs to be replaced.",
                     xref: "cluster§2.11.5.5.1"
@@ -407,16 +407,16 @@ Resource.add({
         },
 
         {
-            name: "ContaminationStateEnum", tag: "datatype",
+            tag: "datatype", name: "ContaminationStateEnum",
             details: "This value shall indicate that the smoke sensor has nominal contamination levels, no customer action " +
                 "is required.",
             xref: "cluster§2.11.5.6",
 
             children: [
-                { name: "Normal", tag: "field", description: "Nominal state, the sensor is not contaminated" },
+                { tag: "field", name: "Normal", description: "Nominal state, the sensor is not contaminated" },
 
                 {
-                    name: "Low", tag: "field",
+                    tag: "field", name: "Low",
                     description: "Low contamination",
                     details: "This value shall indicate that the smoke sensor has detectable contamination levels, but the " +
                         "contamination is too low to cause a visible or audible alarm.",
@@ -424,7 +424,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Warning", tag: "field",
+                    tag: "field", name: "Warning",
                     description: "Warning state",
                     details: "This value shall indicate that the smoke sensor has contamination levels in a warning state. At this " +
                         "level, the contamination may cause a visible or audible alarm. User intervention is suggested.",
@@ -432,7 +432,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Critical", tag: "field",
+                    tag: "field", name: "Critical",
                     description: "Critical state, will cause nuisance alarms",
                     details: "This value shall indicate that the smoke sensor has contamination levels in a critical state. At " +
                         "this level, the contamination should cause a visible or audible alarm. User intervention is " +

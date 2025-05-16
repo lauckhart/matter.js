@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "WindowCovering", tag: "cluster",
+        tag: "cluster", name: "WindowCovering",
         classification: "application", pics: "WNCV",
         details: "The window covering cluster provides an interface for controlling and adjusting automatic window " +
             "coverings such as drapery motors, automatic shades, curtains and blinds.",
@@ -18,12 +18,12 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§5.3.4",
 
                 children: [
                     {
-                        name: "LF", tag: "field",
+                        tag: "field", name: "LF",
                         details: "The Lift feature applies to window coverings that lift up and down (e.g. for a roller shade, Up and " +
                             "Down is lift Open and Close) or slide left to right (e.g. for a sliding curtain, Left and Right is " +
                             "lift Open and Close).",
@@ -31,14 +31,14 @@ Resource.add(
                     },
 
                     {
-                        name: "TL", tag: "field",
+                        tag: "field", name: "TL",
                         details: "The Tilt feature applies to window coverings with vertical or horizontal strips.",
                         xref: "cluster§5.3.4.2"
                     },
-                    { name: "PA_LF", tag: "field", details: "Position aware lift control is supported." },
+                    { tag: "field", name: "PA_LF", details: "Position aware lift control is supported." },
 
                     {
-                        name: "ABS", tag: "field",
+                        tag: "field", name: "ABS",
 
                         details: "The percentage attributes shall indicate the position as a percentage between the " +
                             "InstalledOpenLimits and InstalledClosedLimits attributes of the window covering starting at the open " +
@@ -50,60 +50,60 @@ Resource.add(
                         xref: "cluster§5.3.4.4"
                     },
 
-                    { name: "PA_TL", tag: "field", details: "Position aware tilt control is supported." }
+                    { tag: "field", name: "PA_TL", details: "Position aware tilt control is supported." }
                 ]
             },
 
             {
-                name: "Type", tag: "attribute",
+                tag: "attribute", name: "Type",
                 details: "This attribute shall identify the type of window covering.",
                 xref: "cluster§5.3.6.1"
             },
 
             {
-                name: "PhysicalClosedLimitLift", tag: "attribute",
+                tag: "attribute", name: "PhysicalClosedLimitLift",
                 details: "Indicates the maximum possible encoder position possible (Unit cm, centimeters) to position the " +
                     "height of the window covering lift.",
                 xref: "cluster§5.3.6.2"
             },
 
             {
-                name: "PhysicalClosedLimitTilt", tag: "attribute",
+                tag: "attribute", name: "PhysicalClosedLimitTilt",
                 details: "Indicates the maximum possible encoder position possible (Unit 0.1°, tenths of a degree) to position " +
                     "the angle of the window covering tilt.",
                 xref: "cluster§5.3.6.3"
             },
 
             {
-                name: "CurrentPositionLift", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionLift",
                 details: "Indicates the actual lift position (Unit cm, centimeters) of the window covering from the fully-open " +
                     "position.",
                 xref: "cluster§5.3.6.4"
             },
 
             {
-                name: "CurrentPositionTilt", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionTilt",
                 details: "Indicates the actual tilt position (Unit 0.1°, tenths of a degree) of the window covering from the " +
                     "fully-open position.",
                 xref: "cluster§5.3.6.5"
             },
 
             {
-                name: "NumberOfActuationsLift", tag: "attribute",
+                tag: "attribute", name: "NumberOfActuationsLift",
                 details: "Indicates the total number of lift/slide actuations applied to the window covering since the device " +
                     "was installed.",
                 xref: "cluster§5.3.6.6"
             },
 
             {
-                name: "NumberOfActuationsTilt", tag: "attribute",
+                tag: "attribute", name: "NumberOfActuationsTilt",
                 details: "Indicates the total number of tilt actuations applied to the window covering since the device was " +
                     "installed.",
                 xref: "cluster§5.3.6.7"
             },
 
             {
-                name: "ConfigStatus", tag: "attribute",
+                tag: "attribute", name: "ConfigStatus",
                 details: "This attribute specifies the configuration and status information of the window covering." +
                     "\n" +
                     "To change settings, devices shall write to the Mode attribute. The behavior causing the setting or " +
@@ -112,41 +112,41 @@ Resource.add(
             },
 
             {
-                name: "CurrentPositionLiftPercentage", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionLiftPercentage",
                 details: "Indicates the actual position as a percentage from 0% to 100% with 1% default step. This attribute " +
                     "is equal to CurrentPositionLiftPercent100ths attribute divided by 100.",
                 xref: "cluster§5.3.6.11"
             },
 
             {
-                name: "CurrentPositionTiltPercentage", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionTiltPercentage",
                 details: "Indicates the actual position as a percentage from 0% to 100% with 1% default step. This attribute " +
                     "is equal to CurrentPositionTiltPercent100ths attribute divided by 100.",
                 xref: "cluster§5.3.6.12"
             },
 
             {
-                name: "OperationalStatus", tag: "attribute",
+                tag: "attribute", name: "OperationalStatus",
                 details: "Indicates the currently ongoing operations and applies to all type of devices.",
                 xref: "cluster§5.3.6.15"
             },
 
             {
-                name: "TargetPositionLiftPercent100ths", tag: "attribute",
+                tag: "attribute", name: "TargetPositionLiftPercent100ths",
                 details: "Indicates the position where the window covering lift will go or is moving to as a percentage (Unit " +
                     "0.01%).",
                 xref: "cluster§5.3.6.13"
             },
 
             {
-                name: "TargetPositionTiltPercent100ths", tag: "attribute",
+                tag: "attribute", name: "TargetPositionTiltPercent100ths",
                 details: "Indicates the position where the window covering tilt will go or is moving to as a percentage (Unit " +
                     "0.01%).",
                 xref: "cluster§5.3.6.14"
             },
 
             {
-                name: "EndProductType", tag: "attribute",
+                tag: "attribute", name: "EndProductType",
                 details: "This attribute SHOULD provide more detail about the product type than can be determined from the " +
                     "main category indicated by the Type attribute." +
                     "\n" +
@@ -155,53 +155,53 @@ Resource.add(
             },
 
             {
-                name: "CurrentPositionLiftPercent100ths", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionLiftPercent100ths",
                 details: "Indicates the actual position as a percentage with a minimal step of 0.01%. E.g Max 10000 equals " +
                     "100.00%.",
                 xref: "cluster§5.3.6.9"
             },
 
             {
-                name: "CurrentPositionTiltPercent100ths", tag: "attribute",
+                tag: "attribute", name: "CurrentPositionTiltPercent100ths",
                 details: "Indicates the actual position as a percentage with a minimal step of 0.01%. E.g Max 10000 equals " +
                     "100.00%.",
                 xref: "cluster§5.3.6.10"
             },
 
             {
-                name: "InstalledOpenLimitLift", tag: "attribute",
+                tag: "attribute", name: "InstalledOpenLimitLift",
                 details: "Indicates the open limit for lifting the window covering whether position (in centimeters) is " +
                     "encoded or timed.",
                 xref: "cluster§5.3.6.17"
             },
 
             {
-                name: "InstalledClosedLimitLift", tag: "attribute",
+                tag: "attribute", name: "InstalledClosedLimitLift",
                 details: "Indicates the closed limit for lifting the window covering whether position (in centimeters) is " +
                     "encoded or timed.",
                 xref: "cluster§5.3.6.18"
             },
 
             {
-                name: "InstalledOpenLimitTilt", tag: "attribute",
+                tag: "attribute", name: "InstalledOpenLimitTilt",
                 details: "Indicates the open limit for tilting the window covering whether position (in tenth of a degree) is " +
                     "encoded or timed.",
                 xref: "cluster§5.3.6.19"
             },
 
             {
-                name: "InstalledClosedLimitTilt", tag: "attribute",
+                tag: "attribute", name: "InstalledClosedLimitTilt",
                 details: "Indicates the closed limit for tilting the window covering whether position (in tenth of a degree) " +
                     "is encoded or timed.",
                 xref: "cluster§5.3.6.20"
             },
 
-            { name: "VelocityLift", tag: "attribute", xref: "cluster§5.3.6" },
-            { name: "AccelerationTimeLift", tag: "attribute", xref: "cluster§5.3.6" },
-            { name: "DecelerationTimeLift", tag: "attribute", xref: "cluster§5.3.6" },
+            { tag: "attribute", name: "VelocityLift", xref: "cluster§5.3.6" },
+            { tag: "attribute", name: "AccelerationTimeLift", xref: "cluster§5.3.6" },
+            { tag: "attribute", name: "DecelerationTimeLift", xref: "cluster§5.3.6" },
 
             {
-                name: "Mode", tag: "attribute",
+                tag: "attribute", name: "Mode",
 
                 details: "The Mode attribute allows configuration of the window covering, such as: reversing the motor " +
                     "direction, placing the window covering into calibration mode, placing the motor into maintenance " +
@@ -215,11 +215,11 @@ Resource.add(
                 xref: "cluster§5.3.6.21"
             },
 
-            { name: "IntermediateSetpointsLift", tag: "attribute", xref: "cluster§5.3.6" },
-            { name: "IntermediateSetpointsTilt", tag: "attribute", xref: "cluster§5.3.6" },
+            { tag: "attribute", name: "IntermediateSetpointsLift", xref: "cluster§5.3.6" },
+            { tag: "attribute", name: "IntermediateSetpointsTilt", xref: "cluster§5.3.6" },
 
             {
-                name: "SafetyStatus", tag: "attribute",
+                tag: "attribute", name: "SafetyStatus",
                 details: "The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing " +
                     "movements. By default for nominal operation all flags are cleared (0). A device might support none, " +
                     "one or several bit flags from this attribute (all optional).",
@@ -227,7 +227,7 @@ Resource.add(
             },
 
             {
-                name: "UpOrOpen", tag: "command",
+                tag: "command", name: "UpOrOpen",
 
                 details: "Upon receipt of this command, the window covering will adjust its position so the physical " +
                     "lift/slide and tilt is at the maximum open/up position. This will happen as fast as possible. The " +
@@ -261,7 +261,7 @@ Resource.add(
             },
 
             {
-                name: "DownOrClose", tag: "command",
+                tag: "command", name: "DownOrClose",
 
                 details: "Upon receipt of this command, the window covering will adjust its position so the physical " +
                     "lift/slide and tilt is at the maximum closed/down position. This will happen as fast as possible. " +
@@ -295,7 +295,7 @@ Resource.add(
             },
 
             {
-                name: "StopMotion", tag: "command",
+                tag: "command", name: "StopMotion",
 
                 details: "Upon receipt of this command, the window covering will stop any adjusting to the physical tilt and " +
                     "lift/slide that is currently occurring. The server attributes supported shall be updated as follows:" +
@@ -310,17 +310,17 @@ Resource.add(
             },
 
             {
-                name: "GoToLiftValue", tag: "command",
+                tag: "command", name: "GoToLiftValue",
                 xref: "cluster§5.3.7.4",
                 children: [{
-                    name: "LiftValue", tag: "field",
+                    tag: "field", name: "LiftValue",
                     details: "This field shall specify the requested physical lift/slide position in unit cm (centimeters).",
                     xref: "cluster§5.3.7.4.1"
                 }]
             },
 
             {
-                name: "GoToLiftPercentage", tag: "command",
+                tag: "command", name: "GoToLiftPercentage",
 
                 details: "Upon receipt of this command, the server will adjust the window covering to the lift/slide " +
                     "percentage specified in the payload of this command." +
@@ -342,17 +342,17 @@ Resource.add(
             },
 
             {
-                name: "GoToTiltValue", tag: "command",
+                tag: "command", name: "GoToTiltValue",
                 xref: "cluster§5.3.7.6",
                 children: [{
-                    name: "TiltValue", tag: "field",
+                    tag: "field", name: "TiltValue",
                     details: "This field shall specify the requested physical tilt position in unit 0.1° (tenth of a degrees).",
                     xref: "cluster§5.3.7.6.1"
                 }]
             },
 
             {
-                name: "GoToTiltPercentage", tag: "command",
+                tag: "command", name: "GoToTiltPercentage",
 
                 details: "Upon receipt of this command, the server will adjust the window covering to the tilt percentage " +
                     "specified in the payload of this command." +
@@ -374,12 +374,12 @@ Resource.add(
             },
 
             {
-                name: "ConfigStatusBitmap", tag: "datatype",
+                tag: "datatype", name: "ConfigStatusBitmap",
                 xref: "cluster§5.3.5.1",
 
                 children: [
                     {
-                        name: "Operational", tag: "field",
+                        tag: "field", name: "Operational",
                         description: "Device is operational.",
                         details: "This bit shall indicate whether the window covering is operational for regular use:" +
                             "\n" +
@@ -390,7 +390,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LiftMovementReversed", tag: "field",
+                        tag: "field", name: "LiftMovementReversed",
                         description: "The lift movement is reversed.",
                         details: "This bit shall indicate whether the lift movement is reversed:" +
                             "\n" +
@@ -401,7 +401,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LiftPositionAware", tag: "field",
+                        tag: "field", name: "LiftPositionAware",
                         description: "Supports the PositionAwareLift feature (PA_LF).",
                         details: "This bit shall indicate whether the window covering supports the PositionAwareLift feature:" +
                             "\n" +
@@ -412,7 +412,7 @@ Resource.add(
                     },
 
                     {
-                        name: "TiltPositionAware", tag: "field",
+                        tag: "field", name: "TiltPositionAware",
                         description: "Supports the PositionAwareTilt feature (PA_TL).",
                         details: "This bit shall indicate whether the window covering supports the PositionAwareTilt feature:" +
                             "\n" +
@@ -423,7 +423,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LiftEncoderControlled", tag: "field",
+                        tag: "field", name: "LiftEncoderControlled",
                         description: "Uses an encoder for lift.",
 
                         details: "This bit shall indicate whether a position aware controlled window covering is employing an encoder " +
@@ -437,7 +437,7 @@ Resource.add(
                     },
 
                     {
-                        name: "TiltEncoderControlled", tag: "field",
+                        tag: "field", name: "TiltEncoderControlled",
                         description: "Uses an encoder for tilt.",
 
                         details: "This bit shall indicate whether a position aware controlled window covering is employing an encoder " +
@@ -453,12 +453,12 @@ Resource.add(
             },
 
             {
-                name: "ModeBitmap", tag: "datatype",
+                tag: "datatype", name: "ModeBitmap",
                 xref: "cluster§5.3.5.2",
 
                 children: [
                     {
-                        name: "MotorDirectionReversed", tag: "field",
+                        tag: "field", name: "MotorDirectionReversed",
                         description: "Reverse the lift direction.",
                         details: "This bit shall control the motor direction:" +
                             "\n" +
@@ -469,7 +469,7 @@ Resource.add(
                     },
 
                     {
-                        name: "CalibrationMode", tag: "field",
+                        tag: "field", name: "CalibrationMode",
                         description: "Perform a calibration.",
                         details: "This bit shall set the window covering into calibration mode:" +
                             "\n" +
@@ -480,7 +480,7 @@ Resource.add(
                     },
 
                     {
-                        name: "MaintenanceMode", tag: "field",
+                        tag: "field", name: "MaintenanceMode",
                         description: "Freeze all motions for maintenance.",
                         details: "This bit shall set the window covering into maintenance mode:" +
                             "\n" +
@@ -491,7 +491,7 @@ Resource.add(
                     },
 
                     {
-                        name: "LedFeedback", tag: "field",
+                        tag: "field", name: "LedFeedback",
                         description: "Control the LEDs feedback.",
                         details: "This bit shall control feedback LEDs:" +
                             "\n" +
@@ -504,7 +504,7 @@ Resource.add(
             },
 
             {
-                name: "OperationalStatusBitmap", tag: "datatype",
+                tag: "datatype", name: "OperationalStatusBitmap",
 
                 details: "The OperationalStatusBitmap is using several internal operational state fields (composed of 2 bits) " +
                     "following this definition:" +
@@ -521,7 +521,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "Global", tag: "field",
+                        tag: "field", name: "Global",
                         description: "Global operational state.",
                         details: "These bits shall indicate in which direction the covering is currently moving or if it has stopped. " +
                             "Global operational state shall always reflect the overall motion of the device.",
@@ -529,7 +529,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Lift", tag: "field",
+                        tag: "field", name: "Lift",
                         description: "Lift operational state.",
                         details: "These bits shall indicate in which direction the covering’s lift is currently moving or if it has " +
                             "stopped.",
@@ -537,7 +537,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Tilt", tag: "field",
+                        tag: "field", name: "Tilt",
                         description: "Tilt operational state.",
                         details: "These bits shall indicate in which direction the covering’s tilt is currently moving or if it has " +
                             "stopped.",
@@ -547,117 +547,117 @@ Resource.add(
             },
 
             {
-                name: "SafetyStatusBitmap", tag: "datatype",
+                tag: "datatype", name: "SafetyStatusBitmap",
                 xref: "cluster§5.3.5.4",
 
                 children: [
                     {
-                        name: "RemoteLockout", tag: "field",
+                        tag: "field", name: "RemoteLockout",
                         description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range."
                     },
                     {
-                        name: "TamperDetection", tag: "field",
+                        tag: "field", name: "TamperDetection",
                         description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s)."
                     },
                     {
-                        name: "FailedCommunication", tag: "field",
+                        tag: "field", name: "FailedCommunication",
                         description: "Communication failure to sensors or other safety equipment."
                     },
                     {
-                        name: "PositionFailure", tag: "field",
+                        tag: "field", name: "PositionFailure",
                         description: "Device has failed to reach the desired position. e.g. with position aware device, time expired before TargetPosition is reached."
                     },
                     {
-                        name: "ThermalProtection", tag: "field",
+                        tag: "field", name: "ThermalProtection",
                         description: "Motor(s) and/or electric circuit thermal protection activated."
                     },
                     {
-                        name: "ObstacleDetected", tag: "field",
+                        tag: "field", name: "ObstacleDetected",
                         description: "An obstacle is preventing actuator movement."
                     },
                     {
-                        name: "Power", tag: "field",
+                        tag: "field", name: "Power",
                         description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment."
                     },
                     {
-                        name: "StopInput", tag: "field",
+                        tag: "field", name: "StopInput",
                         description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335)."
                     },
                     {
-                        name: "MotorJammed", tag: "field",
+                        tag: "field", name: "MotorJammed",
                         description: "Mechanical problem related to the motor(s) detected."
                     },
-                    { name: "HardwareFailure", tag: "field", description: "PCB, fuse and other electrics problems." },
+                    { tag: "field", name: "HardwareFailure", description: "PCB, fuse and other electrics problems." },
                     {
-                        name: "ManualOperation", tag: "field",
+                        tag: "field", name: "ManualOperation",
                         description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled)."
                     },
-                    { name: "Protection", tag: "field", description: "Protection is activated." }
+                    { tag: "field", name: "Protection", description: "Protection is activated." }
                 ]
             },
 
             {
-                name: "TypeEnum", tag: "datatype",
+                tag: "datatype", name: "TypeEnum",
                 xref: "cluster§5.3.5.5",
 
                 children: [
-                    { name: "Rollershade", tag: "field", description: "RollerShade" },
-                    { name: "Rollershade2Motor", tag: "field", description: "RollerShade - 2 Motor" },
-                    { name: "RollershadeExterior", tag: "field", description: "RollerShade - Exterior" },
+                    { tag: "field", name: "Rollershade", description: "RollerShade" },
+                    { tag: "field", name: "Rollershade2Motor", description: "RollerShade - 2 Motor" },
+                    { tag: "field", name: "RollershadeExterior", description: "RollerShade - Exterior" },
                     {
-                        name: "RollershadeExterior2Motor", tag: "field",
+                        tag: "field", name: "RollershadeExterior2Motor",
                         description: "RollerShade - Exterior - 2 Motor"
                     },
-                    { name: "Drapery", tag: "field", description: "Drapery (curtain)" },
-                    { name: "Awning", tag: "field", description: "Awning" },
-                    { name: "Shutter", tag: "field", description: "Shutter" },
-                    { name: "TiltBlindTiltOnly", tag: "field", description: "Tilt Blind - Tilt Only" },
-                    { name: "TiltBlindLift", tag: "field", description: "Tilt Blind - Lift & Tilt" },
-                    { name: "ProjectorScreen", tag: "field", description: "Projector Screen" },
-                    { name: "Unknown", tag: "field", description: "Unknown" }
+                    { tag: "field", name: "Drapery", description: "Drapery (curtain)" },
+                    { tag: "field", name: "Awning", description: "Awning" },
+                    { tag: "field", name: "Shutter", description: "Shutter" },
+                    { tag: "field", name: "TiltBlindTiltOnly", description: "Tilt Blind - Tilt Only" },
+                    { tag: "field", name: "TiltBlindLift", description: "Tilt Blind - Lift & Tilt" },
+                    { tag: "field", name: "ProjectorScreen", description: "Projector Screen" },
+                    { tag: "field", name: "Unknown", description: "Unknown" }
                 ]
             },
 
             {
-                name: "EndProductTypeEnum", tag: "datatype",
+                tag: "datatype", name: "EndProductTypeEnum",
                 xref: "cluster§5.3.5.6",
 
                 children: [
-                    { name: "RollerShade", tag: "field", description: "Simple Roller Shade" },
-                    { name: "RomanShade", tag: "field", description: "Roman Shade" },
-                    { name: "BalloonShade", tag: "field", description: "Balloon Shade" },
-                    { name: "WovenWood", tag: "field", description: "Woven Wood" },
-                    { name: "PleatedShade", tag: "field", description: "Pleated Shade" },
-                    { name: "CellularShade", tag: "field", description: "Cellular Shade" },
-                    { name: "LayeredShade", tag: "field", description: "Layered Shade" },
-                    { name: "LayeredShade2D", tag: "field", description: "Layered Shade 2D" },
-                    { name: "SheerShade", tag: "field", description: "Sheer Shade" },
-                    { name: "TiltOnlyInteriorBlind", tag: "field", description: "Tilt Only Interior Blind" },
-                    { name: "InteriorBlind", tag: "field", description: "Interior Blind" },
-                    { name: "VerticalBlindStripCurtain", tag: "field", description: "Vertical Blind, Strip Curtain" },
-                    { name: "InteriorVenetianBlind", tag: "field", description: "Interior Venetian Blind" },
-                    { name: "ExteriorVenetianBlind", tag: "field", description: "Exterior Venetian Blind" },
-                    { name: "LateralLeftCurtain", tag: "field", description: "Lateral Left Curtain" },
-                    { name: "LateralRightCurtain", tag: "field", description: "Lateral Right Curtain" },
-                    { name: "CentralCurtain", tag: "field", description: "Central Curtain" },
-                    { name: "RollerShutter", tag: "field", description: "Roller Shutter" },
-                    { name: "ExteriorVerticalScreen", tag: "field", description: "Exterior Vertical Screen" },
-                    { name: "AwningTerracePatio", tag: "field", description: "Awning Terrace (Patio)" },
-                    { name: "AwningVerticalScreen", tag: "field", description: "Awning Vertical Screen" },
-                    { name: "TiltOnlyPergola", tag: "field", description: "Tilt Only Pergola" },
-                    { name: "SwingingShutter", tag: "field", description: "Swinging Shutter" },
-                    { name: "SlidingShutter", tag: "field", description: "Sliding Shutter" },
-                    { name: "Unknown", tag: "field", description: "Unknown" }
+                    { tag: "field", name: "RollerShade", description: "Simple Roller Shade" },
+                    { tag: "field", name: "RomanShade", description: "Roman Shade" },
+                    { tag: "field", name: "BalloonShade", description: "Balloon Shade" },
+                    { tag: "field", name: "WovenWood", description: "Woven Wood" },
+                    { tag: "field", name: "PleatedShade", description: "Pleated Shade" },
+                    { tag: "field", name: "CellularShade", description: "Cellular Shade" },
+                    { tag: "field", name: "LayeredShade", description: "Layered Shade" },
+                    { tag: "field", name: "LayeredShade2D", description: "Layered Shade 2D" },
+                    { tag: "field", name: "SheerShade", description: "Sheer Shade" },
+                    { tag: "field", name: "TiltOnlyInteriorBlind", description: "Tilt Only Interior Blind" },
+                    { tag: "field", name: "InteriorBlind", description: "Interior Blind" },
+                    { tag: "field", name: "VerticalBlindStripCurtain", description: "Vertical Blind, Strip Curtain" },
+                    { tag: "field", name: "InteriorVenetianBlind", description: "Interior Venetian Blind" },
+                    { tag: "field", name: "ExteriorVenetianBlind", description: "Exterior Venetian Blind" },
+                    { tag: "field", name: "LateralLeftCurtain", description: "Lateral Left Curtain" },
+                    { tag: "field", name: "LateralRightCurtain", description: "Lateral Right Curtain" },
+                    { tag: "field", name: "CentralCurtain", description: "Central Curtain" },
+                    { tag: "field", name: "RollerShutter", description: "Roller Shutter" },
+                    { tag: "field", name: "ExteriorVerticalScreen", description: "Exterior Vertical Screen" },
+                    { tag: "field", name: "AwningTerracePatio", description: "Awning Terrace (Patio)" },
+                    { tag: "field", name: "AwningVerticalScreen", description: "Awning Vertical Screen" },
+                    { tag: "field", name: "TiltOnlyPergola", description: "Tilt Only Pergola" },
+                    { tag: "field", name: "SwingingShutter", description: "Swinging Shutter" },
+                    { tag: "field", name: "SlidingShutter", description: "Sliding Shutter" },
+                    { tag: "field", name: "Unknown", description: "Unknown" }
                 ]
             },
 
             {
-                name: "MovementStatus", tag: "datatype",
+                tag: "datatype", name: "MovementStatus",
                 details: "Values for OperationalStatus attribute fields.",
                 children: [
-                    { name: "Stopped", tag: "field", details: "Covering is not moving" },
-                    { name: "Opening", tag: "field", details: "Covering is moving from closed to open" },
-                    { name: "Closing", tag: "field", details: "Covering is moving from open to closed" }
+                    { tag: "field", name: "Stopped", details: "Covering is not moving" },
+                    { tag: "field", name: "Opening", details: "Covering is moving from closed to open" },
+                    { tag: "field", name: "Closing", details: "Covering is moving from open to closed" }
                 ]
             }
         ]

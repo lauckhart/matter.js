@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AcceptedCommandList", tag: "attribute",
+    tag: "attribute", name: "AcceptedCommandList",
 
     details: "This attribute is a list of client generated commands which are supported by this cluster server " +
         "instance." +

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ThreadNetworkDirectory", tag: "cluster",
+    tag: "cluster", name: "ThreadNetworkDirectory",
     classification: "application", pics: "THNETDIR",
     details: "This cluster stores a list of Thread networks (including the credentials required to access each " +
         "network), as well as a designation of the user’s preferred network, to facilitate the sharing of " +
@@ -18,7 +18,7 @@ Resource.add({
 
     children: [
         {
-            name: "PreferredExtendedPanId", tag: "attribute",
+            tag: "attribute", name: "PreferredExtendedPanId",
 
             details: "Indicates the Thread Extended PAN ID value for the Thread network designated by the user to be their " +
                 "preferred network for commissioning of Thread devices. If not null, the value of this attribute " +
@@ -44,7 +44,7 @@ Resource.add({
         },
 
         {
-            name: "ThreadNetworks", tag: "attribute",
+            tag: "attribute", name: "ThreadNetworks",
 
             details: "Indicates the list of Thread Networks known about by this cluster. If the node hosting this cluster " +
                 "includes a Thread Border Router, then an entry for its Thread Network shall be included in this " +
@@ -62,7 +62,7 @@ Resource.add({
         },
 
         {
-            name: "ThreadNetworkTableSize", tag: "attribute",
+            tag: "attribute", name: "ThreadNetworkTableSize",
             details: "Indicates the maximum number of entries that can be held in the ThreadNetworks list; it shall be at " +
                 "least 2 times the number of SupportedFabrics advertised in the Operational Credentials Cluster on " +
                 "the root endpoint of this node.",
@@ -70,7 +70,7 @@ Resource.add({
         },
 
         {
-            name: "AddNetwork", tag: "command",
+            tag: "command", name: "AddNetwork",
             details: "Adds an entry to the ThreadNetworks attribute with the specified Thread Operational Dataset." +
                 "\n" +
                 "If there is an existing entry with the Extended PAN ID then the Thread Operational Dataset for that " +
@@ -79,7 +79,7 @@ Resource.add({
             xref: "cluster§10.4.6.1",
 
             children: [{
-                name: "OperationalDataset", tag: "field",
+                tag: "field", name: "OperationalDataset",
                 details: "This field shall represent the Operational Dataset for the network, using the encoding defined in " +
                     "the Thread specification. It shall contain at least the following sub-TLVs: Active Timestamp, " +
                     "Channel, Channel Mask, Extended PAN ID, Network Key, Network Mesh-Local Prefix, Network Name, PAN " +
@@ -89,47 +89,47 @@ Resource.add({
         },
 
         {
-            name: "RemoveNetwork", tag: "command",
+            tag: "command", name: "RemoveNetwork",
             details: "Removes the network with the given Extended PAN ID from the ThreadNetworks attribute.",
             xref: "cluster§10.4.6.2"
         },
         {
-            name: "GetOperationalDataset", tag: "command",
+            tag: "command", name: "GetOperationalDataset",
             details: "Retrieves the Thread Operational Dataset with the given Extended PAN ID.",
             xref: "cluster§10.4.6.3"
         },
         {
-            name: "OperationalDatasetResponse", tag: "command",
+            tag: "command", name: "OperationalDatasetResponse",
             details: "Contains the Thread Operational Dataset for the Extended PAN specified in GetOperationalDataset.",
             xref: "cluster§10.4.6.4"
         },
 
         {
-            name: "ThreadNetworkStruct", tag: "datatype",
+            tag: "datatype", name: "ThreadNetworkStruct",
             details: "Represents the data associated with a Thread Network.",
             xref: "cluster§10.4.4.1",
 
             children: [
                 {
-                    name: "ExtendedPanId", tag: "field",
+                    tag: "field", name: "ExtendedPanId",
                     details: "This field shall indicate the Extended PAN ID from the OperationalDataset for the given Thread " +
                         "network.",
                     xref: "cluster§10.4.4.1.1"
                 },
 
                 {
-                    name: "NetworkName", tag: "field",
+                    tag: "field", name: "NetworkName",
                     details: "This field shall indicate the Network Name from the OperationalDataset for the given Thread network.",
                     xref: "cluster§10.4.4.1.2"
                 },
                 {
-                    name: "Channel", tag: "field",
+                    tag: "field", name: "Channel",
                     details: "This field shall indicate the Channel from the OperationalDataset for the given Thread network.",
                     xref: "cluster§10.4.4.1.3"
                 },
 
                 {
-                    name: "ActiveTimestamp", tag: "field",
+                    tag: "field", name: "ActiveTimestamp",
                     details: "This field shall indicate the Active Timestamp from the OperationalDataset for the given Thread " +
                         "network.",
                     xref: "cluster§10.4.4.1.4"

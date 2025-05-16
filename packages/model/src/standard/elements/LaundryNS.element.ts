@@ -13,11 +13,11 @@ import {
 } from "../../elements/index.js";
 
 export const LaundryNs = SemanticNamespace(
-    { id: 0xe, name: "Laundry" },
-    SemanticTag({ id: 0x0, name: "Normal" }),
-    SemanticTag({ id: 0x1, name: "Light Dry" }),
-    SemanticTag({ id: 0x2, name: "Extra Dry" }),
-    SemanticTag({ id: 0x3, name: "No Dry" })
+    { name: "Laundry", id: 0xe },
+    SemanticTag({ name: "Normal", id: 0x0 }),
+    SemanticTag({ name: "Light Dry", id: 0x1 }),
+    SemanticTag({ name: "Extra Dry", id: 0x2 }),
+    SemanticTag({ name: "No Dry", id: 0x3 })
 );
 
 MatterDefinition.children.push(LaundryNs);

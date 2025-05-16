@@ -16,63 +16,63 @@ import {
 } from "../../elements/index.js";
 
 export const ApplicationLauncher = Cluster(
-    { id: 0x50c, name: "ApplicationLauncher" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "ApplicationLauncher", id: 0x50c },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "AP", constraint: "0", longName: "ApplicationPlatform" })
     ),
     Attribute(
-        { id: 0x0, name: "CatalogList", type: "list", access: "R V", conformance: "AP", quality: "N" },
+        { name: "CatalogList", id: 0x0, type: "list", conformance: "AP", access: "R V", quality: "N" },
         Field({ name: "entry", type: "uint16" })
     ),
     Attribute({
-        id: 0x1, name: "CurrentApp", type: "ApplicationEPStruct",
-        access: "R V", conformance: "O", constraint: "desc", default: null, quality: "X"
+        name: "CurrentApp", id: 0x1, type: "ApplicationEPStruct",
+        default: null, constraint: "desc", conformance: "O", access: "R V", quality: "X"
     }),
 
     Command(
         {
-            id: 0x0, name: "LaunchApp",
-            access: "O", conformance: "M", direction: "request", response: "LauncherResponse"
+            name: "LaunchApp", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "LauncherResponse"
         },
-        Field({ id: 0x0, name: "Application", type: "ApplicationStruct", conformance: "AP", constraint: "desc" }),
-        Field({ id: 0x1, name: "Data", type: "octstr", conformance: "O" })
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" }),
+        Field({ name: "Data", id: 0x1, type: "octstr", conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "StopApp", access: "O", conformance: "M", direction: "request", response: "LauncherResponse" },
-        Field({ id: 0x0, name: "Application", type: "ApplicationStruct", conformance: "AP", constraint: "desc" })
+        { name: "StopApp", id: 0x1, conformance: "M", access: "O", direction: "request", response: "LauncherResponse" },
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" })
     ),
     Command(
-        { id: 0x2, name: "HideApp", access: "O", conformance: "M", direction: "request", response: "LauncherResponse" },
-        Field({ id: 0x0, name: "Application", type: "ApplicationStruct", conformance: "AP", constraint: "desc" })
+        { name: "HideApp", id: 0x2, conformance: "M", access: "O", direction: "request", response: "LauncherResponse" },
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", constraint: "desc", conformance: "AP" })
     ),
     Command(
-        { id: 0x3, name: "LauncherResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "Data", type: "octstr", conformance: "O" })
+        { name: "LauncherResponse", id: 0x3, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+        Field({ name: "Data", id: 0x1, type: "octstr", conformance: "O" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Success", conformance: "M" }),
-        Field({ id: 0x1, name: "AppNotAvailable", conformance: "M" }),
-        Field({ id: 0x2, name: "SystemBusy", conformance: "M" }),
-        Field({ id: 0x3, name: "PendingUserApproval", conformance: "M" }),
-        Field({ id: 0x4, name: "Downloading", conformance: "M" }),
-        Field({ id: 0x5, name: "Installing", conformance: "M" })
+        Field({ name: "Success", id: 0x0, conformance: "M" }),
+        Field({ name: "AppNotAvailable", id: 0x1, conformance: "M" }),
+        Field({ name: "SystemBusy", id: 0x2, conformance: "M" }),
+        Field({ name: "PendingUserApproval", id: 0x3, conformance: "M" }),
+        Field({ name: "Downloading", id: 0x4, conformance: "M" }),
+        Field({ name: "Installing", id: 0x5, conformance: "M" })
     ),
 
     Datatype(
         { name: "ApplicationStruct", type: "struct" },
-        Field({ id: 0x0, name: "CatalogVendorId", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "ApplicationId", type: "string", conformance: "M" })
+        Field({ name: "CatalogVendorId", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "ApplicationId", id: 0x1, type: "string", conformance: "M" })
     ),
     Datatype(
         { name: "ApplicationEPStruct", type: "struct" },
-        Field({ id: 0x0, name: "Application", type: "ApplicationStruct", conformance: "M" }),
-        Field({ id: 0x1, name: "Endpoint", type: "endpoint-no", conformance: "O" })
+        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M" }),
+        Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O" })
     )
 );
 

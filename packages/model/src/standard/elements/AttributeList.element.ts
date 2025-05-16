@@ -10,7 +10,7 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { AttributeElement as Attribute, FieldElement as Field } from "../../elements/index.js";
 
 export const AttributeList = Attribute(
-    { id: 0xfffb, name: "AttributeList", type: "list", access: "R V", conformance: "M", isSeed: true, quality: "F" },
+    { name: "AttributeList", id: 0xfffb, type: "list", isSeed: true, conformance: "M", access: "R V", quality: "F" },
     Field({ name: "entry", type: "attrib-id" })
 );
 MatterDefinition.children.push(AttributeList);

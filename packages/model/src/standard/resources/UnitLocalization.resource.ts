@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "UnitLocalization", tag: "cluster",
+    tag: "cluster", name: "UnitLocalization",
     classification: "node", pics: "LUNIT",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -24,16 +24,16 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.5.4",
             children: [{
-                name: "TEMP", tag: "field",
+                tag: "field", name: "TEMP",
                 details: "The Node can be configured to use different units of temperature when conveying values to a user."
             }]
         },
 
         {
-            name: "TemperatureUnit", tag: "attribute",
+            tag: "attribute", name: "TemperatureUnit",
             details: "The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying " +
                 "temperature in communication to the user. If provided, this value shall take priority over any unit " +
                 "implied through the ActiveLocale Attribute.",
@@ -41,12 +41,12 @@ Resource.add({
         },
 
         {
-            name: "TempUnitEnum", tag: "datatype",
+            tag: "datatype", name: "TempUnitEnum",
             xref: "core§11.5.5.1",
             children: [
-                { name: "Fahrenheit", tag: "field", description: "Temperature conveyed in Fahrenheit" },
-                { name: "Celsius", tag: "field", description: "Temperature conveyed in Celsius" },
-                { name: "Kelvin", tag: "field", description: "Temperature conveyed in Kelvin" }
+                { tag: "field", name: "Fahrenheit", description: "Temperature conveyed in Fahrenheit" },
+                { tag: "field", name: "Celsius", description: "Temperature conveyed in Celsius" },
+                { tag: "field", name: "Kelvin", description: "Temperature conveyed in Kelvin" }
             ]
         }
     ]

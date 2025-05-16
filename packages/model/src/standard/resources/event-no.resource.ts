@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "event-no", tag: "datatype",
+    tag: "datatype", name: "event-no",
     description: "Event Number",
     details: "An unsigned number that indicates an Event instance.",
     xref: "core§7.19.2.35"

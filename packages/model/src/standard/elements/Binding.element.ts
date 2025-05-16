@@ -15,24 +15,24 @@ import {
 } from "../../elements/index.js";
 
 export const Binding = Cluster(
-    { id: 0x1e, name: "Binding" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "Binding", id: 0x1e },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
         {
-            id: 0x0, name: "Binding", type: "list",
-            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N"
+            name: "Binding", id: 0x0, type: "list",
+            default: [], constraint: "desc", conformance: "M", access: "RW F VM", quality: "N"
         },
         Field({ name: "entry", type: "TargetStruct" })
     ),
 
     Datatype(
         { name: "TargetStruct", type: "struct" },
-        Field({ id: 0x1, name: "Node", type: "node-id", access: "F", conformance: "Endpoint" }),
-        Field({ id: 0x2, name: "Group", type: "group-id", access: "F", conformance: "!Endpoint", constraint: "min 1" }),
-        Field({ id: 0x3, name: "Endpoint", type: "endpoint-no", access: "F", conformance: "!Group" }),
-        Field({ id: 0x4, name: "Cluster", type: "cluster-id", access: "F", conformance: "O" }),
-        Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
+        Field({ name: "Node", id: 0x1, type: "node-id", conformance: "Endpoint", access: "F" }),
+        Field({ name: "Group", id: 0x2, type: "group-id", constraint: "min 1", conformance: "!Endpoint", access: "F" }),
+        Field({ name: "Endpoint", id: 0x3, type: "endpoint-no", conformance: "!Group", access: "F" }),
+        Field({ name: "Cluster", id: 0x4, type: "cluster-id", conformance: "O", access: "F" }),
+        Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
     )
 );
 

@@ -10,14 +10,14 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const NetworkInfrastructureManagerDt = DeviceType(
-    { id: 0x90, name: "NetworkInfrastructureManager", classification: "simple" },
+    { name: "NetworkInfrastructureManager", id: 0x90 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 144, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 144, revision: 1 } ] })
     ),
-    Requirement({ id: 0x451, name: "WiFiNetworkManagement", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x452, name: "ThreadBorderRouterManagement", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x453, name: "ThreadNetworkDirectory", conformance: "M", element: "serverCluster" })
+    Requirement({ name: "WiFiNetworkManagement", id: 0x451, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "ThreadBorderRouterManagement", id: 0x452, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "ThreadNetworkDirectory", id: 0x453, element: "serverCluster", conformance: "M" })
 );
 
 MatterDefinition.children.push(NetworkInfrastructureManagerDt);

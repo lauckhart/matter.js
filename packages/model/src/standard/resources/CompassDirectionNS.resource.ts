@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "CompassDirection", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "CompassDirection",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a movement into a certain compass direction. Note the difference with Chapter 4, " +
         "Common Compass Location Semantic Tag Namespace.",

@@ -13,11 +13,11 @@ import {
 } from "../../elements/index.js";
 
 export const LocationNs = SemanticNamespace(
-    { id: 0x6, name: "Location" },
-    SemanticTag({ id: 0x0, name: "Indoor" }),
-    SemanticTag({ id: 0x1, name: "Outdoor" }),
-    SemanticTag({ id: 0x2, name: "Inside" }),
-    SemanticTag({ id: 0x3, name: "Outside" })
+    { name: "Location", id: 0x6 },
+    SemanticTag({ name: "Indoor", id: 0x0 }),
+    SemanticTag({ name: "Outdoor", id: 0x1 }),
+    SemanticTag({ name: "Inside", id: 0x2 }),
+    SemanticTag({ name: "Outside", id: 0x3 })
 );
 
 MatterDefinition.children.push(LocationNs);

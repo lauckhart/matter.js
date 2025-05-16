@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ProxyDiscovery", tag: "cluster",
+    tag: "cluster", name: "ProxyDiscovery",
     classification: "node", pics: "PXDSC",
     details: "This cluster contains commands needed to do proxy discovery as defined in the Section 9.15.7.3, " +
         "“Step 2: Proxy Discovery” and Section 9.15.7.4, “Step 3: Proxy Response” steps of the overall " +
@@ -18,27 +18,27 @@ Resource.add({
 
     children: [
         {
-            name: "ProxyDiscoverRequest", tag: "command",
+            tag: "command", name: "ProxyDiscoverRequest",
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
             xref: "core§9.15.12.4.1",
 
             children: [
                 {
-                    name: "SourceNodeId", tag: "field",
+                    tag: "field", name: "SourceNodeId",
                     details: "This is the Node ID of the source for which a client seeks to find a Proxy.",
                     xref: "core§9.15.12.4.1.1"
                 },
 
                 {
-                    name: "NumAttributePaths", tag: "field",
+                    tag: "field", name: "NumAttributePaths",
                     details: "The number of attribute paths the client will have in the subscription request. This is a " +
                         "heuristic/hint to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
                     xref: "core§9.15.12.4.1.2"
                 },
 
                 {
-                    name: "NumEventPaths", tag: "field",
+                    tag: "field", name: "NumEventPaths",
                     details: "The number of event paths the client will have in the subscription request. This is a heuristic/hint " +
                         "to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
                     xref: "core§9.15.12.4.1.3"
@@ -47,21 +47,21 @@ Resource.add({
         },
 
         {
-            name: "ProxyDiscoverResponse", tag: "command",
+            tag: "command", name: "ProxyDiscoverResponse",
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
             xref: "core§9.15.12.4.2",
 
             children: [
                 {
-                    name: "SourceNodeId", tag: "field",
+                    tag: "field", name: "SourceNodeId",
                     details: "This is the Node ID of the source the proxy can proxy for. This shall match the node id in the " +
                         "corresponding Proxy Discover Request Command message.",
                     xref: "core§9.15.12.4.2.1"
                 },
 
                 {
-                    name: "NumHopsToSource", tag: "field",
+                    tag: "field", name: "NumHopsToSource",
 
                     details: "If the proxy currently subscribes to the source (either directly or indirectly), this indicates the " +
                         "number of hops to the source. Sensible values start at 1, with 1 being used for a proxy that " +
@@ -75,7 +75,7 @@ Resource.add({
                 },
 
                 {
-                    name: "AvailableCapacity", tag: "field",
+                    tag: "field", name: "AvailableCapacity",
                     details: "A number indicating the number of Cluster Attribute Paths the proxy has space for support. This " +
                         "allows for an absolute comparison of different memory capacities of candidate proxies by the client " +
                         "in selecting the best possible candidate.",

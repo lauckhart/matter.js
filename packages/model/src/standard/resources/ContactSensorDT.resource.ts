@@ -9,13 +9,13 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ContactSensor", tag: "deviceType",
+    tag: "deviceType", name: "ContactSensor",
     classification: "simple",
     details: "This defines conformance to the Contact Sensor device type.",
     xref: "device§7.1",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§7.1.4" },
-        { name: "BooleanState", tag: "requirement", xref: "device§7.1.4" },
-        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§7.1.4" },
+        { tag: "requirement", name: "BooleanState", xref: "device§7.1.4" },
+        { tag: "requirement", name: "BooleanStateConfiguration", xref: "device§7.1.4" }
     ]
 });

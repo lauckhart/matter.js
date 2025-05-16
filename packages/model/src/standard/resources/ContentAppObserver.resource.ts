@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ContentAppObserver", tag: "cluster",
+    tag: "cluster", name: "ContentAppObserver",
     classification: "application", pics: "APPOBSERVER",
 
     details: "This cluster provides an interface for sending targeted commands to an Observer of a Content App on " +
@@ -57,7 +57,7 @@ Resource.add({
 
     children: [
         {
-            name: "ContentAppMessage", tag: "command",
+            tag: "command", name: "ContentAppMessage",
             details: "Upon receipt, the data field may be parsed and interpreted. Message encoding is specific to the " +
                 "Content App. A Content App may when possible read attributes from the Basic Information Cluster on " +
                 "the Observer and use this to determine the Message encoding." +
@@ -67,12 +67,12 @@ Resource.add({
 
             children: [
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This field shall indicate content app-specific data.",
                     xref: "cluster§6.12.5.1.1"
                 },
                 {
-                    name: "EncodingHint", tag: "field",
+                    tag: "field", name: "EncodingHint",
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
                     xref: "cluster§6.12.5.1.2"
                 }
@@ -80,23 +80,23 @@ Resource.add({
         },
 
         {
-            name: "ContentAppMessageResponse", tag: "command",
+            tag: "command", name: "ContentAppMessageResponse",
             details: "This command shall be generated in response to ContentAppMessage command.",
             xref: "cluster§6.12.5.2",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall indicate the status of the command which resulted in this response.",
                     xref: "cluster§6.12.5.2.1"
                 },
                 {
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
                     details: "This optional field shall indicate content app-specific data.",
                     xref: "cluster§6.12.5.2.2"
                 },
                 {
-                    name: "EncodingHint", tag: "field",
+                    tag: "field", name: "EncodingHint",
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
                     xref: "cluster§6.12.5.2.3"
                 }
@@ -104,13 +104,13 @@ Resource.add({
         },
 
         {
-            name: "StatusEnum", tag: "datatype",
+            tag: "datatype", name: "StatusEnum",
             xref: "cluster§6.12.4.1",
 
             children: [
-                { name: "Success", tag: "field", description: "Command succeeded" },
+                { tag: "field", name: "Success", description: "Command succeeded" },
                 {
-                    name: "UnexpectedData", tag: "field",
+                    tag: "field", name: "UnexpectedData",
                     description: "Data field in command was not understood by the Observer"
                 }
             ]

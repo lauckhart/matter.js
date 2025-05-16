@@ -10,16 +10,16 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const CookSurfaceDt = DeviceType(
-    { id: 0x77, name: "CookSurface", classification: "simple" },
+    { name: "CookSurface", id: 0x77 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 119, revision: 1 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 119, revision: 1 } ] })
     ),
-    Requirement({ id: 0x56, name: "TemperatureControl", conformance: "O.a+", element: "serverCluster" }),
-    Requirement({ id: 0x402, name: "TemperatureMeasurement", conformance: "O.a+", element: "serverCluster" }),
+    Requirement({ name: "TemperatureControl", id: 0x56, element: "serverCluster", conformance: "O.a+" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O.a+" }),
     Requirement(
-        { id: 0x6, name: "OnOff", conformance: "O", element: "serverCluster" },
-        Requirement({ name: "OFFONLY", conformance: "M", element: "feature" })
+        { name: "OnOff", id: 0x6, element: "serverCluster", conformance: "O" },
+        Requirement({ name: "OFFONLY", element: "feature", conformance: "M" })
     )
 );
 

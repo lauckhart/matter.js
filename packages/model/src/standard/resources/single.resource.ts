@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "single", tag: "datatype", description: "Single precision", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "single", description: "Single precision", xref: "core§7.19.1" });

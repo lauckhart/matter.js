@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "event-id", tag: "datatype",
+    tag: "datatype", name: "event-id",
     description: "Event ID",
     details: "An identifier that indicates an Event defined in a cluster specification." +
         "\n" +

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Binding", tag: "cluster",
+    tag: "cluster", name: "Binding",
     classification: "endpoint", pics: "BIND",
 
     details: "NOTE" +
@@ -47,36 +47,36 @@ Resource.add({
     xref: "core§9.6",
 
     children: [
-        { name: "Binding", tag: "attribute", details: "Each entry shall represent a binding.", xref: "core§9.6.6.1" },
+        { tag: "attribute", name: "Binding", details: "Each entry shall represent a binding.", xref: "core§9.6.6.1" },
 
         {
-            name: "TargetStruct", tag: "datatype",
+            tag: "datatype", name: "TargetStruct",
             xref: "core§9.6.5.1",
 
             children: [
                 {
-                    name: "Node", tag: "field",
+                    tag: "field", name: "Node",
                     details: "This field is the remote target node ID. If the Endpoint field is present, this field shall be " +
                         "present.",
                     xref: "core§9.6.5.1.1"
                 },
 
                 {
-                    name: "Group", tag: "field",
+                    tag: "field", name: "Group",
                     details: "This field is the target group ID that represents remote endpoints. If the Endpoint field is " +
                         "present, this field shall NOT be present.",
                     xref: "core§9.6.5.1.2"
                 },
 
                 {
-                    name: "Endpoint", tag: "field",
+                    tag: "field", name: "Endpoint",
                     details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
                         "present, this field shall NOT be present.",
                     xref: "core§9.6.5.1.3"
                 },
 
                 {
-                    name: "Cluster", tag: "field",
+                    tag: "field", name: "Cluster",
                     details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is " +
                         "present, the client cluster shall also exist on this endpoint (with this Binding cluster). If this " +
                         "field is present, the target shall be this cluster on the target endpoint(s).",

@@ -9,5 +9,5 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { AttributeElement as Attribute } from "../../elements/index.js";
 
-export const EventList = Attribute({ id: 0xfffa, name: "EventList", conformance: "D", isSeed: true });
+export const EventList = Attribute({ name: "EventList", id: 0xfffa, isSeed: true, conformance: "D" });
 MatterDefinition.children.push(EventList);

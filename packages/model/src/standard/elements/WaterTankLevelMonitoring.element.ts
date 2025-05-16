@@ -9,5 +9,5 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster } from "../../elements/index.js";
 
-export const WaterTankLevelMonitoring = Cluster({ id: 0x79, name: "WaterTankLevelMonitoring", type: "ResourceMonitoring" });
+export const WaterTankLevelMonitoring = Cluster({ name: "WaterTankLevelMonitoring", id: 0x79, type: "ResourceMonitoring" });
 MatterDefinition.children.push(WaterTankLevelMonitoring);

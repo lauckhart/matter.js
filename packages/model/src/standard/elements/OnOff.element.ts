@@ -16,69 +16,69 @@ import {
 } from "../../elements/index.js";
 
 export const OnOff = Cluster(
-    { id: 0x6, name: "OnOff" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 6 }),
+    { name: "OnOff", id: 0x6 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 6 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0", longName: "Lighting" }),
-        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1", longName: "DeadFrontBehavior" }),
-        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2", longName: "OffOnly" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "LT", constraint: "0", conformance: "[!OFFONLY]", longName: "Lighting" }),
+        Field({ name: "DF", constraint: "1", conformance: "[!OFFONLY]", longName: "DeadFrontBehavior" }),
+        Field({ name: "OFFONLY", constraint: "2", conformance: "[!LT | DF]", longName: "OffOnly" })
     ),
 
-    Attribute({ id: 0x0, name: "OnOff", type: "bool", access: "R V", conformance: "M", default: false, quality: "N S" }),
-    Attribute({ id: 0x4000, name: "GlobalSceneControl", type: "bool", access: "R V", conformance: "LT", default: true }),
-    Attribute({ id: 0x4001, name: "OnTime", type: "uint16", access: "RW VO", conformance: "LT", default: 0 }),
-    Attribute({ id: 0x4002, name: "OffWaitTime", type: "uint16", access: "RW VO", conformance: "LT", default: 0 }),
+    Attribute({ name: "OnOff", id: 0x0, type: "bool", default: false, conformance: "M", access: "R V", quality: "N S" }),
+    Attribute({ name: "GlobalSceneControl", id: 0x4000, type: "bool", default: true, conformance: "LT", access: "R V" }),
+    Attribute({ name: "OnTime", id: 0x4001, type: "uint16", default: 0, conformance: "LT", access: "RW VO" }),
+    Attribute({ name: "OffWaitTime", id: 0x4002, type: "uint16", default: 0, conformance: "LT", access: "RW VO" }),
     Attribute({
-        id: 0x4003, name: "StartUpOnOff", type: "StartUpOnOffEnum",
-        access: "RW VM", conformance: "LT", constraint: "desc", quality: "X N"
+        name: "StartUpOnOff", id: 0x4003, type: "StartUpOnOffEnum",
+        constraint: "desc", conformance: "LT", access: "RW VM", quality: "X N"
     }),
-    Command({ id: 0x0, name: "Off", access: "O", conformance: "M", direction: "request", response: "status" }),
-    Command({ id: 0x1, name: "On", access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
-    Command({ id: 0x2, name: "Toggle", access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
+    Command({ name: "Off", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" }),
+    Command({ name: "On", id: 0x1, conformance: "!OFFONLY", access: "O", direction: "request", response: "status" }),
+    Command({ name: "Toggle", id: 0x2, conformance: "!OFFONLY", access: "O", direction: "request", response: "status" }),
     Command(
-        { id: 0x40, name: "OffWithEffect", access: "O", conformance: "LT", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "EffectVariant", type: "enum8", conformance: "M", constraint: "desc", default: 0 })
+        { name: "OffWithEffect", id: 0x40, conformance: "LT", access: "O", direction: "request", response: "status" },
+        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "EffectVariant", id: 0x1, type: "enum8", default: 0, constraint: "desc", conformance: "M" })
     ),
     Command({
-        id: 0x41, name: "OnWithRecallGlobalScene",
-        access: "O", conformance: "LT", direction: "request", response: "status"
+        name: "OnWithRecallGlobalScene", id: 0x41,
+        conformance: "LT", access: "O", direction: "request", response: "status"
     }),
 
     Command(
-        { id: 0x42, name: "OnWithTimedOff", access: "O", conformance: "LT", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "OnOffControl", type: "OnOffControlBitmap", conformance: "M", constraint: "0 to 1" }),
-        Field({ id: 0x1, name: "OnTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x2, name: "OffWaitTime", type: "uint16", conformance: "M", constraint: "max 65534" })
+        { name: "OnWithTimedOff", id: 0x42, conformance: "LT", access: "O", direction: "request", response: "status" },
+        Field({ name: "OnOffControl", id: 0x0, type: "OnOffControlBitmap", constraint: "0 to 1", conformance: "M" }),
+        Field({ name: "OnTime", id: 0x1, type: "uint16", constraint: "max 65534", conformance: "M" }),
+        Field({ name: "OffWaitTime", id: 0x2, type: "uint16", constraint: "max 65534", conformance: "M" })
     ),
 
     Datatype({ name: "OnOffControlBitmap", type: "map8" }, Field({ name: "AcceptOnlyWhenOn", constraint: "0" })),
 
     Datatype(
         { name: "StartUpOnOffEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Off", conformance: "M" }),
-        Field({ id: 0x1, name: "On", conformance: "M" }),
-        Field({ id: 0x2, name: "Toggle", conformance: "M" })
+        Field({ name: "Off", id: 0x0, conformance: "M" }),
+        Field({ name: "On", id: 0x1, conformance: "M" }),
+        Field({ name: "Toggle", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "EffectIdentifierEnum", type: "enum8" },
-        Field({ id: 0x0, name: "DelayedAllOff", conformance: "M" }),
-        Field({ id: 0x1, name: "DyingLight", conformance: "M" })
+        Field({ name: "DelayedAllOff", id: 0x0, conformance: "M" }),
+        Field({ name: "DyingLight", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "DelayedAllOffEffectVariantEnum", type: "enum8" },
-        Field({ id: 0x0, name: "DelayedOffFastFade", conformance: "M" }),
-        Field({ id: 0x1, name: "NoFade", conformance: "M" }),
-        Field({ id: 0x2, name: "DelayedOffSlowFade", conformance: "M" })
+        Field({ name: "DelayedOffFastFade", id: 0x0, conformance: "M" }),
+        Field({ name: "NoFade", id: 0x1, conformance: "M" }),
+        Field({ name: "DelayedOffSlowFade", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "DyingLightEffectVariantEnum", type: "enum8" },
-        Field({ id: 0x0, name: "DyingLightFadeOff", conformance: "M" })
+        Field({ name: "DyingLightFadeOff", id: 0x0, conformance: "M" })
     )
 );
 

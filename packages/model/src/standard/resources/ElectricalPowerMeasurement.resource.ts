@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ElectricalPowerMeasurement", tag: "cluster",
+    tag: "cluster", name: "ElectricalPowerMeasurement",
     classification: "application", pics: "EPM",
     details: "This cluster provides a mechanism for querying data about electrical power as measured by the " +
         "server.",
@@ -17,35 +17,35 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§2.13.4",
 
             children: [
                 {
-                    name: "DIRC", tag: "field",
+                    tag: "field", name: "DIRC",
                     details: "This feature indicates the cluster can measure a direct current.",
                     xref: "cluster§2.13.4.1"
                 },
                 {
-                    name: "ALTC", tag: "field",
+                    tag: "field", name: "ALTC",
                     details: "This feature indicates the cluster can measure an alternating current.",
                     xref: "cluster§2.13.4.2"
                 },
 
                 {
-                    name: "POLY", tag: "field",
+                    tag: "field", name: "POLY",
                     details: "This feature indicates the cluster represents the collective measurements for a Polyphase power " +
                         "supply.",
                     xref: "cluster§2.13.4.3"
                 },
 
                 {
-                    name: "HARM", tag: "field",
+                    tag: "field", name: "HARM",
                     details: "This feature indicates the cluster can measure the harmonics of an alternating current.",
                     xref: "cluster§2.13.4.4"
                 },
                 {
-                    name: "PWRQ", tag: "field",
+                    tag: "field", name: "PWRQ",
                     details: "This feature indicates the cluster can measure the harmonic phases of an alternating current.",
                     xref: "cluster§2.13.4.5"
                 }
@@ -53,20 +53,20 @@ Resource.add({
         },
 
         {
-            name: "PowerMode", tag: "attribute",
+            tag: "attribute", name: "PowerMode",
             details: "This shall indicate the current mode of the server. For some servers, such as an EV, this may change " +
                 "depending on the mode of charging or discharging.",
             xref: "cluster§2.13.6.1"
         },
 
         {
-            name: "NumberOfMeasurementTypes", tag: "attribute",
+            tag: "attribute", name: "NumberOfMeasurementTypes",
             details: "This shall indicate the maximum number of measurement types the server is capable of reporting.",
             xref: "cluster§2.13.6.2"
         },
 
         {
-            name: "Accuracy", tag: "attribute",
+            tag: "attribute", name: "Accuracy",
             details: "This shall indicate a list of accuracy specifications for the measurement types supported by the " +
                 "server. There shall be an entry for ActivePower, as well as any other measurement types implemented " +
                 "by this server.",
@@ -74,7 +74,7 @@ Resource.add({
         },
 
         {
-            name: "Ranges", tag: "attribute",
+            tag: "attribute", name: "Ranges",
 
             details: "This shall indicate a list of measured ranges for different measurement types. Each measurement type " +
                 "shall have at most one entry in this list, representing the range of measurements in the most recent " +
@@ -93,7 +93,7 @@ Resource.add({
         },
 
         {
-            name: "Voltage", tag: "attribute",
+            tag: "attribute", name: "Voltage",
 
             details: "This shall indicate the most recent Voltage reading in millivolts (mV)." +
                 "\n" +
@@ -112,7 +112,7 @@ Resource.add({
         },
 
         {
-            name: "ActiveCurrent", tag: "attribute",
+            tag: "attribute", name: "ActiveCurrent",
 
             details: "This shall indicate the most recent ActiveCurrent reading in milliamps (mA)." +
                 "\n" +
@@ -134,7 +134,7 @@ Resource.add({
         },
 
         {
-            name: "ReactiveCurrent", tag: "attribute",
+            tag: "attribute", name: "ReactiveCurrent",
 
             details: "This shall indicate the most recent ReactiveCurrent reading in milliamps (mA)." +
                 "\n" +
@@ -156,7 +156,7 @@ Resource.add({
         },
 
         {
-            name: "ApparentCurrent", tag: "attribute",
+            tag: "attribute", name: "ApparentCurrent",
 
             details: "This shall indicate the most recent ApparentCurrent (square root sum of the squares of active and " +
                 "reactive currents) reading in milliamps (mA)." +
@@ -176,7 +176,7 @@ Resource.add({
         },
 
         {
-            name: "ActivePower", tag: "attribute",
+            tag: "attribute", name: "ActivePower",
 
             details: "This shall indicate the most recent ActivePower reading in milliwatts (mW). If the power cannot be " +
                 "measured, a value of null shall be returned." +
@@ -199,7 +199,7 @@ Resource.add({
         },
 
         {
-            name: "ReactivePower", tag: "attribute",
+            tag: "attribute", name: "ReactivePower",
 
             details: "This shall indicate the most recent ReactivePower reading in millivolt-amps reactive (mVAR). A " +
                 "positive value represents power imported, while a negative value represents power exported." +
@@ -222,7 +222,7 @@ Resource.add({
         },
 
         {
-            name: "ApparentPower", tag: "attribute",
+            tag: "attribute", name: "ApparentPower",
 
             details: "This shall indicate the most recent ApparentPower reading in millivolt-amps (mVA)." +
                 "\n" +
@@ -243,7 +243,7 @@ Resource.add({
         },
 
         {
-            name: "RmsVoltage", tag: "attribute",
+            tag: "attribute", name: "RmsVoltage",
 
             details: "This shall indicate the most recent RMSVoltage reading in millivolts (mV)." +
                 "\n" +
@@ -262,7 +262,7 @@ Resource.add({
         },
 
         {
-            name: "RmsCurrent", tag: "attribute",
+            tag: "attribute", name: "RmsCurrent",
 
             details: "This shall indicate the most recent RMSCurrent reading in milliamps (mA)." +
                 "\n" +
@@ -284,7 +284,7 @@ Resource.add({
         },
 
         {
-            name: "RmsPower", tag: "attribute",
+            tag: "attribute", name: "RmsPower",
 
             details: "This shall indicate the most recent RMSPower reading in milliwatts (mW)." +
                 "\n" +
@@ -305,7 +305,7 @@ Resource.add({
         },
 
         {
-            name: "Frequency", tag: "attribute",
+            tag: "attribute", name: "Frequency",
 
             details: "This shall indicate the most recent Frequency reading in millihertz (mHz)." +
                 "\n" +
@@ -324,7 +324,7 @@ Resource.add({
         },
 
         {
-            name: "HarmonicCurrents", tag: "attribute",
+            tag: "attribute", name: "HarmonicCurrents",
 
             details: "This shall indicate a list of HarmonicMeasurementStruct values, with each HarmonicMeasurementStruct " +
                 "representing the harmonic current reading for the harmonic order specified by Order." +
@@ -342,7 +342,7 @@ Resource.add({
         },
 
         {
-            name: "HarmonicPhases", tag: "attribute",
+            tag: "attribute", name: "HarmonicPhases",
 
             details: "This shall indicate a list of HarmonicMeasurementStruct values, with each HarmonicMeasurementStruct " +
                 "representing the most recent phase of the harmonic current reading for the harmonic" +
@@ -362,7 +362,7 @@ Resource.add({
         },
 
         {
-            name: "PowerFactor", tag: "attribute",
+            tag: "attribute", name: "PowerFactor",
 
             details: "This shall indicate the Power Factor ratio in +/- 1/100ths of a percent." +
                 "\n" +
@@ -379,7 +379,7 @@ Resource.add({
         },
 
         {
-            name: "NeutralCurrent", tag: "attribute",
+            tag: "attribute", name: "NeutralCurrent",
 
             details: "This shall indicate the most recent NeutralCurrent reading in milliamps (mA). Typically this is a " +
                 "derived value, taking the magnitude of the vector sum of phase currents." +
@@ -402,29 +402,29 @@ Resource.add({
         },
 
         {
-            name: "MeasurementPeriodRanges", tag: "event",
+            tag: "event", name: "MeasurementPeriodRanges",
             details: "If supported, this event shall be generated at the end of a measurement period. The start and end " +
                 "times for measurement periods shall be determined by the server, and may represent overlapping " +
                 "periods.",
             xref: "cluster§2.13.7.1",
             children: [{
-                name: "Ranges", tag: "field",
+                tag: "field", name: "Ranges",
                 details: "This shall indicate the value of the Ranges attribute at the time of event generation.",
                 xref: "cluster§2.13.7.1.1"
             }]
         },
 
         {
-            name: "PowerModeEnum", tag: "datatype",
+            tag: "datatype", name: "PowerModeEnum",
             xref: "cluster§2.13.5.1",
             children: [
-                { name: "Dc", tag: "field", description: "Direct current" },
-                { name: "Ac", tag: "field", description: "Alternating current, either single-phase or polyphase" }
+                { tag: "field", name: "Dc", description: "Direct current" },
+                { tag: "field", name: "Ac", description: "Alternating current, either single-phase or polyphase" }
             ]
         },
 
         {
-            name: "MeasurementRangeStruct", tag: "datatype",
+            tag: "datatype", name: "MeasurementRangeStruct",
 
             details: "This struct shall indicate the maximum and minimum values of a given measurement type during a " +
                 "measurement period, along with the observation times of these values." +
@@ -441,13 +441,13 @@ Resource.add({
 
             children: [
                 {
-                    name: "MeasurementType", tag: "field",
+                    tag: "field", name: "MeasurementType",
                     details: "This field shall be the type of measurement for the range provided.",
                     xref: "cluster§2.13.5.2.1"
                 },
 
                 {
-                    name: "Min", tag: "field",
+                    tag: "field", name: "Min",
                     details: "This field shall be the smallest measured value for the associated measurement over either the " +
                         "period between StartTimestamp and EndTimestamp, or the period between StartSystime and EndSystime, " +
                         "or both.",
@@ -455,7 +455,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Max", tag: "field",
+                    tag: "field", name: "Max",
                     details: "This field shall be the largest measured value for the associated measurement over the period " +
                         "between either StartTimestamp and EndTimestamp or the period between StartSystime and EndSystime, or " +
                         "both.",
@@ -463,7 +463,7 @@ Resource.add({
                 },
 
                 {
-                    name: "StartTimestamp", tag: "field",
+                    tag: "field", name: "StartTimestamp",
                     details: "This field shall be the timestamp in UTC of the beginning of the measurement period." +
                         "\n" +
                         "If the server had not yet determined the time in UTC at or before the beginning of the measurement " +
@@ -472,7 +472,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EndTimestamp", tag: "field",
+                    tag: "field", name: "EndTimestamp",
                     details: "This field shall be the timestamp in UTC of the end of the measurement period." +
                         "\n" +
                         "If the server had not yet determined the time in UTC at or before the beginning of the measurement " +
@@ -481,7 +481,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MinTimestamp", tag: "field",
+                    tag: "field", name: "MinTimestamp",
                     details: "This field shall be the most recent timestamp in UTC that the value in the Min field was measured." +
                         "\n" +
                         "This field shall be greater than or equal to the value of the StartTimestamp field. This field shall " +
@@ -490,7 +490,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MaxTimestamp", tag: "field",
+                    tag: "field", name: "MaxTimestamp",
                     details: "This field shall be the most recent timestamp in UTC of the value in the Max field. This field shall " +
                         "be greater than or equal to the value of the StartTimestamp field. This field shall be less than or " +
                         "equal to the value of the EndTimestamp field.",
@@ -498,7 +498,7 @@ Resource.add({
                 },
 
                 {
-                    name: "StartSystime", tag: "field",
+                    tag: "field", name: "StartSystime",
                     details: "This field shall be the time since boot of the beginning of the measurement period." +
                         "\n" +
                         "If the server had determined the time in UTC at or before the start of the measurement period, this " +
@@ -507,7 +507,7 @@ Resource.add({
                 },
 
                 {
-                    name: "EndSystime", tag: "field",
+                    tag: "field", name: "EndSystime",
                     details: "This field shall be the time since boot of the end of the measurement period." +
                         "\n" +
                         "If the server had determined the time in UTC at the end of the measurement period, this field may be " +
@@ -516,7 +516,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MinSystime", tag: "field",
+                    tag: "field", name: "MinSystime",
                     details: "This field shall be the measurement time since boot of the value in the Min field was measured. This " +
                         "field shall be greater than or equal to the value of the StartSystime field." +
                         "\n" +
@@ -525,7 +525,7 @@ Resource.add({
                 },
 
                 {
-                    name: "MaxSystime", tag: "field",
+                    tag: "field", name: "MaxSystime",
                     details: "This field shall be the measurement time since boot of the value in the Max field. This field shall " +
                         "be greater than or equal to the value of the StartSystime field." +
                         "\n" +
@@ -536,19 +536,19 @@ Resource.add({
         },
 
         {
-            name: "HarmonicMeasurementStruct", tag: "datatype",
+            tag: "datatype", name: "HarmonicMeasurementStruct",
             xref: "cluster§2.13.5.3",
 
             children: [
                 {
-                    name: "Order", tag: "field",
+                    tag: "field", name: "Order",
                     details: "This field shall be the order of the harmonic being measured. Typically this is an odd number, but " +
                         "servers may choose to report even harmonics.",
                     xref: "cluster§2.13.5.3.1"
                 },
 
                 {
-                    name: "Measurement", tag: "field",
+                    tag: "field", name: "Measurement",
 
                     details: "This field shall be the measured value for the given harmonic order." +
                         "\n" +

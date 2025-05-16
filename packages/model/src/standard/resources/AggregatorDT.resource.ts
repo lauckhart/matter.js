@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Aggregator", tag: "deviceType",
+    tag: "deviceType", name: "Aggregator",
     classification: "simple",
 
     details: "This device type aggregates endpoints as a collection. Clusters on the endpoint indicating this " +
@@ -25,14 +25,14 @@ Resource.add({
     xref: "device§11.2",
 
     children: [
-        { name: "Actions", tag: "requirement", xref: "device§11.2.4" },
-        { name: "Identify", tag: "requirement", xref: "device§11.2.4" },
-        { name: "CommissionerControl", tag: "requirement", xref: "device§11.2.4" },
+        { tag: "requirement", name: "Actions", xref: "device§11.2.4" },
+        { tag: "requirement", name: "Identify", xref: "device§11.2.4" },
+        { tag: "requirement", name: "CommissionerControl", xref: "device§11.2.4" },
 
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
             children: [{
-                name: "FabricSynchronization", tag: "field",
+                tag: "field", name: "FabricSynchronization",
                 description: "See description below.",
                 xref: "device§11.2.3"
             }]

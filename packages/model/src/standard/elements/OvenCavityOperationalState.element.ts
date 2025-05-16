@@ -14,13 +14,13 @@ import {
 } from "../../elements/index.js";
 
 export const OvenCavityOperationalState = Cluster(
-    { id: 0x48, name: "OvenCavityOperationalState", type: "OperationalState" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
-    Command({ id: 0x0, name: "Pause", conformance: "X" }),
-    Command({ id: 0x1, name: "Stop" }),
-    Command({ id: 0x2, name: "Start" }),
-    Command({ id: 0x3, name: "Resume", conformance: "X" }),
-    Command({ id: 0x4, name: "OperationalCommandResponse" })
+    { name: "OvenCavityOperationalState", id: 0x48, type: "OperationalState" },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
+    Command({ name: "Pause", id: 0x0, conformance: "X" }),
+    Command({ name: "Stop", id: 0x1 }),
+    Command({ name: "Start", id: 0x2 }),
+    Command({ name: "Resume", id: 0x3, conformance: "X" }),
+    Command({ name: "OperationalCommandResponse", id: 0x4 })
 );
 
 MatterDefinition.children.push(OvenCavityOperationalState);

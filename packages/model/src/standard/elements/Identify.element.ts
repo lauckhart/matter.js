@@ -16,41 +16,41 @@ import {
 } from "../../elements/index.js";
 
 export const Identify = Cluster(
-    { id: 0x3, name: "Identify" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 5 }),
-    Attribute({ id: 0x0, name: "IdentifyTime", type: "uint16", access: "RW VO", conformance: "M", default: 0 }),
-    Attribute({ id: 0x1, name: "IdentifyType", type: "IdentifyTypeEnum", access: "R V", conformance: "M", constraint: "desc" }),
+    { name: "Identify", id: 0x3 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 }),
+    Attribute({ name: "IdentifyTime", id: 0x0, type: "uint16", default: 0, conformance: "M", access: "RW VO" }),
+    Attribute({ name: "IdentifyType", id: 0x1, type: "IdentifyTypeEnum", constraint: "desc", conformance: "M", access: "R V" }),
     Command(
-        { id: 0x0, name: "Identify", access: "M", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "IdentifyTime", type: "uint16", conformance: "M" })
+        { name: "Identify", id: 0x0, conformance: "M", access: "M", direction: "request", response: "status" },
+        Field({ name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" })
     ),
     Command(
-        { id: 0x40, name: "TriggerEffect", access: "M", conformance: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "EffectVariant", type: "EffectVariantEnum", conformance: "M", constraint: "desc" })
+        { name: "TriggerEffect", id: 0x40, conformance: "O", access: "M", direction: "request", response: "status" },
+        Field({ name: "EffectIdentifier", id: 0x0, type: "EffectIdentifierEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "EffectVariant", id: 0x1, type: "EffectVariantEnum", constraint: "desc", conformance: "M" })
     ),
 
     Datatype(
         { name: "IdentifyTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "None", conformance: "M" }),
-        Field({ id: 0x1, name: "LightOutput", conformance: "M" }),
-        Field({ id: 0x2, name: "VisibleIndicator", conformance: "M" }),
-        Field({ id: 0x3, name: "AudibleBeep", conformance: "M" }),
-        Field({ id: 0x4, name: "Display", conformance: "M" }),
-        Field({ id: 0x5, name: "Actuator", conformance: "M" })
+        Field({ name: "None", id: 0x0, conformance: "M" }),
+        Field({ name: "LightOutput", id: 0x1, conformance: "M" }),
+        Field({ name: "VisibleIndicator", id: 0x2, conformance: "M" }),
+        Field({ name: "AudibleBeep", id: 0x3, conformance: "M" }),
+        Field({ name: "Display", id: 0x4, conformance: "M" }),
+        Field({ name: "Actuator", id: 0x5, conformance: "M" })
     ),
 
     Datatype(
         { name: "EffectIdentifierEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Blink", conformance: "M" }),
-        Field({ id: 0x1, name: "Breathe", conformance: "M" }),
-        Field({ id: 0x2, name: "Okay", conformance: "M" }),
-        Field({ id: 0xb, name: "ChannelChange", conformance: "M" }),
-        Field({ id: 0xfe, name: "FinishEffect", conformance: "M" }),
-        Field({ id: 0xff, name: "StopEffect", conformance: "M" })
+        Field({ name: "Blink", id: 0x0, conformance: "M" }),
+        Field({ name: "Breathe", id: 0x1, conformance: "M" }),
+        Field({ name: "Okay", id: 0x2, conformance: "M" }),
+        Field({ name: "ChannelChange", id: 0xb, conformance: "M" }),
+        Field({ name: "FinishEffect", id: 0xfe, conformance: "M" }),
+        Field({ name: "StopEffect", id: 0xff, conformance: "M" })
     ),
 
-    Datatype({ name: "EffectVariantEnum", type: "enum8" }, Field({ id: 0x0, name: "Default", conformance: "M" }))
+    Datatype({ name: "EffectVariantEnum", type: "enum8" }, Field({ name: "Default", id: 0x0, conformance: "M" }))
 );
 
 MatterDefinition.children.push(Identify);

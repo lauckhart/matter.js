@@ -11,9 +11,9 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const locationdesc = Datatype(
     { name: "locationdesc", type: "struct", isSeed: true },
-    Field({ id: 0x0, name: "LocationName", type: "string", conformance: "M", constraint: "max 128" }),
-    Field({ id: 0x1, name: "FloorNumber", type: "int16", conformance: "M", quality: "X" }),
-    Field({ id: 0x2, name: "AreaType", type: "tag", conformance: "M", quality: "X" })
+    Field({ name: "LocationName", id: 0x0, type: "string", constraint: "max 128", conformance: "M" }),
+    Field({ name: "FloorNumber", id: 0x1, type: "int16", conformance: "M", quality: "X" }),
+    Field({ name: "AreaType", id: 0x2, type: "tag", conformance: "M", quality: "X" })
 );
 
 MatterDefinition.children.push(locationdesc);

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "list", tag: "datatype",
+    tag: "datatype", name: "list",
     description: "List",
 
     details: "A list is defined as a collection of entries of the same data type, with a finite count from 0 to " +

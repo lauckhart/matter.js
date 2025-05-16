@@ -11,7 +11,7 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const AtomicAttributeStatusStruct = Datatype(
     { name: "AtomicAttributeStatusStruct", type: "struct" },
-    Field({ id: 0x0, name: "AttributeId", type: "attrib-id", conformance: "M" }),
-    Field({ id: 0x1, name: "StatusCode", type: "status", conformance: "M" })
+    Field({ name: "AttributeId", id: 0x0, type: "attrib-id", conformance: "M" }),
+    Field({ name: "StatusCode", id: 0x1, type: "status", conformance: "M" })
 );
 MatterDefinition.children.push(AtomicAttributeStatusStruct);

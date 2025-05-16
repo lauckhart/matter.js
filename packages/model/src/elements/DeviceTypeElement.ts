@@ -16,7 +16,7 @@ import { RequirementElement } from "./RequirementElement.js";
  */
 export interface DeviceTypeElement extends BaseElement {
     tag: `${DeviceTypeElement.Tag}`;
-    classification: `${DeviceClassification}`;
+    classification?: `${DeviceClassification}`;
     category?: string;
     children?: (RequirementElement | FieldElement)[];
 }

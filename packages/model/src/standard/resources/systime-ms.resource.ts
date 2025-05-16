@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "systime-ms", tag: "datatype",
+    tag: "datatype", name: "systime-ms",
     description: "System Time in milliseconds",
     details: "System time in milliseconds is an unsigned 64-bit value representing the number of milliseconds " +
         "since boot." +

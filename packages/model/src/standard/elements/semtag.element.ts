@@ -11,10 +11,10 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const semtag = Datatype(
     { name: "semtag", type: "struct", isSeed: true },
-    Field({ id: 0x0, name: "MfgCode", type: "vendor-id", conformance: "M", default: null, quality: "X" }),
-    Field({ id: 0x1, name: "NamespaceId", type: "namespace", conformance: "M" }),
-    Field({ id: 0x2, name: "Tag", type: "tag", conformance: "M" }),
-    Field({ id: 0x3, name: "Label", type: "string", conformance: "O", constraint: "max 64", default: null, quality: "X" })
+    Field({ name: "MfgCode", id: 0x0, type: "vendor-id", default: null, conformance: "M", quality: "X" }),
+    Field({ name: "NamespaceId", id: 0x1, type: "namespace", conformance: "M" }),
+    Field({ name: "Tag", id: 0x2, type: "tag", conformance: "M" }),
+    Field({ name: "Label", id: 0x3, type: "string", default: null, constraint: "max 64", conformance: "O", quality: "X" })
 );
 
 MatterDefinition.children.push(semtag);

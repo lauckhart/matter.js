@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "AccessControl", tag: "cluster",
+        tag: "cluster", name: "AccessControl",
         classification: "node", pics: "ACL",
 
         details: "The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which " +
@@ -26,18 +26,18 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "core§9.10.4",
 
                 children: [
                     {
-                        name: "EXTS", tag: "field",
+                        tag: "field", name: "EXTS",
                         details: "This feature indicates the device supports ACL Extension attribute.",
                         xref: "core§9.10.4.1"
                     },
 
                     {
-                        name: "MNGD", tag: "field",
+                        tag: "field", name: "MNGD",
 
                         details: "This feature is for a device that is managed by a service associated with the device vendor and " +
                             "which imposes default access restrictions upon each new fabric added to it. This could arise, for " +
@@ -114,7 +114,7 @@ Resource.add(
             },
 
             {
-                name: "Acl", tag: "attribute",
+                tag: "attribute", name: "Acl",
 
                 details: "An attempt to add an Access Control Entry when no more entries are available shall result in a " +
                     "RESOURCE_EXHAUSTED error being reported and the ACL attribute shall NOT have the entry added to it. " +
@@ -131,7 +131,7 @@ Resource.add(
             },
 
             {
-                name: "Extension", tag: "attribute",
+                tag: "attribute", name: "Extension",
                 details: "If present, the Access Control Extensions may be used by Administrators to store arbitrary data " +
                     "related to fabric’s Access Control Entries." +
                     "\n" +
@@ -140,7 +140,7 @@ Resource.add(
             },
 
             {
-                name: "SubjectsPerAccessControlEntry", tag: "attribute",
+                tag: "attribute", name: "SubjectsPerAccessControlEntry",
 
                 details: "This attribute shall provide the minimum number of Subjects per entry that are supported by this " +
                     "server." +
@@ -154,7 +154,7 @@ Resource.add(
             },
 
             {
-                name: "TargetsPerAccessControlEntry", tag: "attribute",
+                tag: "attribute", name: "TargetsPerAccessControlEntry",
 
                 details: "This attribute shall provide the minimum number of Targets per entry that are supported by this " +
                     "server." +
@@ -168,7 +168,7 @@ Resource.add(
             },
 
             {
-                name: "AccessControlEntriesPerFabric", tag: "attribute",
+                tag: "attribute", name: "AccessControlEntriesPerFabric",
 
                 details: "This attribute shall provide the minimum number of ACL Entries per fabric that are supported by this " +
                     "server." +
@@ -182,7 +182,7 @@ Resource.add(
             },
 
             {
-                name: "CommissioningArL", tag: "attribute",
+                tag: "attribute", name: "CommissioningArL",
 
                 details: "This attribute shall provide the set of CommissioningAccessRestrictionEntryStruct applied during " +
                     "commissioning on a managed device." +
@@ -202,7 +202,7 @@ Resource.add(
             },
 
             {
-                name: "Arl", tag: "attribute",
+                tag: "attribute", name: "Arl",
 
                 details: "This attribute shall provide the set of AccessRestrictionEntryStruct applied to the associated " +
                     "fabric on a managed device." +
@@ -227,7 +227,7 @@ Resource.add(
             },
 
             {
-                name: "AccessControlEntryChanged", tag: "event",
+                tag: "event", name: "AccessControlEntryChanged",
 
                 details: "The cluster shall generate AccessControlEntryChanged events whenever its ACL attribute data is " +
                     "changed by an Administrator." +
@@ -242,7 +242,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "AdminNodeId", tag: "field",
+                        tag: "field", name: "AdminNodeId",
                         details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session." +
                             "\n" +
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
@@ -251,7 +251,7 @@ Resource.add(
                     },
 
                     {
-                        name: "AdminPasscodeId", tag: "field",
+                        tag: "field", name: "AdminPasscodeId",
 
                         details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
                             "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
@@ -264,13 +264,13 @@ Resource.add(
                     },
 
                     {
-                        name: "ChangeType", tag: "field",
+                        tag: "field", name: "ChangeType",
                         details: "The type of change as appropriate.",
                         xref: "core§9.10.9.1.3"
                     },
 
                     {
-                        name: "LatestValue", tag: "field",
+                        tag: "field", name: "LatestValue",
                         details: "The latest value of the changed entry." +
                             "\n" +
                             "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
@@ -281,7 +281,7 @@ Resource.add(
             },
 
             {
-                name: "AccessControlExtensionChanged", tag: "event",
+                tag: "event", name: "AccessControlExtensionChanged",
 
                 details: "The cluster shall generate AccessControlExtensionChanged events whenever its extension attribute " +
                     "data is changed by an Administrator." +
@@ -296,7 +296,7 @@ Resource.add(
 
                 children: [
                     {
-                        name: "AdminNodeId", tag: "field",
+                        tag: "field", name: "AdminNodeId",
                         details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session." +
                             "\n" +
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
@@ -305,7 +305,7 @@ Resource.add(
                     },
 
                     {
-                        name: "AdminPasscodeId", tag: "field",
+                        tag: "field", name: "AdminPasscodeId",
 
                         details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
                             "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
@@ -318,13 +318,13 @@ Resource.add(
                     },
 
                     {
-                        name: "ChangeType", tag: "field",
+                        tag: "field", name: "ChangeType",
                         details: "The type of change as appropriate.",
                         xref: "core§9.10.9.2.3"
                     },
 
                     {
-                        name: "LatestValue", tag: "field",
+                        tag: "field", name: "LatestValue",
                         details: "The latest value of the changed extension." +
                             "\n" +
                             "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
@@ -335,7 +335,7 @@ Resource.add(
             },
 
             {
-                name: "FabricRestrictionReviewUpdate", tag: "event",
+                tag: "event", name: "FabricRestrictionReviewUpdate",
                 details: "The cluster shall generate a FabricRestrictionReviewUpdate event to indicate completion of a fabric " +
                     "restriction review. Due to the requirement to generate this event within a bound time frame of " +
                     "successful receipt of the ReviewFabricRestrictions command, this event may include additional steps " +
@@ -345,14 +345,14 @@ Resource.add(
 
                 children: [
                     {
-                        name: "Token", tag: "field",
+                        tag: "field", name: "Token",
                         details: "This field shall indicate the Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
                             "with a FabricRestrictionReviewUpdate event.",
                         xref: "core§9.10.9.3.1"
                     },
 
                     {
-                        name: "Instruction", tag: "field",
+                        tag: "field", name: "Instruction",
 
                         details: "This field shall provide human readable text that may be displayed to the user to help them locate " +
                             "the user interface for managing access restrictions for each fabric." +
@@ -367,7 +367,7 @@ Resource.add(
                     },
 
                     {
-                        name: "ArlRequestFlowUrl", tag: "field",
+                        tag: "field", name: "ArlRequestFlowUrl",
 
                         details: "This field shall indicate the URL for the service associated with the device maker which the user " +
                             "can visit to manage fabric limitations. The syntax of this field shall follow the syntax as " +
@@ -547,7 +547,7 @@ Resource.add(
             },
 
             {
-                name: "ReviewFabricRestrictions", tag: "command",
+                tag: "command", name: "ReviewFabricRestrictions",
 
                 details: "This command signals to the service associated with the device vendor that the fabric administrator " +
                     "would like a review of the current restrictions on the accessing fabric. This command includes an " +
@@ -569,7 +569,7 @@ Resource.add(
                 xref: "core§9.10.8.1",
 
                 children: [{
-                    name: "Arl", tag: "field",
+                    tag: "field", name: "Arl",
                     details: "When the ARL field is provided, it indicates the specific restrictions that are requested for " +
                         "review. An empty list represents a generic request for review of all restrictions.",
                     xref: "core§9.10.8.1.1"
@@ -577,13 +577,13 @@ Resource.add(
             },
 
             {
-                name: "ReviewFabricRestrictionsResponse", tag: "command",
+                tag: "command", name: "ReviewFabricRestrictionsResponse",
                 details: "Returns the review token for the request, which can be used to correlate with a " +
                     "FabricRestrictionReviewUpdate event.",
                 xref: "core§9.10.8.2",
 
                 children: [{
-                    name: "Token", tag: "field",
+                    tag: "field", name: "Token",
                     details: "This field shall specify a Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
                         "with a FabricRestrictionReviewUpdate event.",
                     xref: "core§9.10.8.2.1"
@@ -591,17 +591,17 @@ Resource.add(
             },
 
             {
-                name: "ChangeTypeEnum", tag: "datatype",
+                tag: "datatype", name: "ChangeTypeEnum",
                 xref: "core§9.10.5.1",
                 children: [
-                    { name: "Changed", tag: "field", description: "Entry or extension was changed" },
-                    { name: "Added", tag: "field", description: "Entry or extension was added" },
-                    { name: "Removed", tag: "field", description: "Entry or extension was removed" }
+                    { tag: "field", name: "Changed", description: "Entry or extension was changed" },
+                    { tag: "field", name: "Added", description: "Entry or extension was added" },
+                    { tag: "field", name: "Removed", description: "Entry or extension was removed" }
                 ]
             },
 
             {
-                name: "AccessControlEntryPrivilegeEnum", tag: "datatype",
+                tag: "datatype", name: "AccessControlEntryPrivilegeEnum",
                 details: "Proxy View Value" +
                     "\n" +
                     "This value implicitly grants View privileges",
@@ -609,27 +609,27 @@ Resource.add(
 
                 children: [
                     {
-                        name: "View", tag: "field",
+                        tag: "field", name: "View",
                         description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)"
                     },
-                    { name: "ProxyView", tag: "field", description: "Can read and observe all (as seen by a Proxy)" },
+                    { tag: "field", name: "ProxyView", description: "Can read and observe all (as seen by a Proxy)" },
 
                     {
-                        name: "Operate", tag: "field",
+                        tag: "field", name: "Operate",
                         description: "View privileges, and can perform the primary function of this Node (except Access Control Cluster)",
                         details: "This value implicitly grants View privileges",
                         xref: "core§9.10.5.2.1"
                     },
 
                     {
-                        name: "Manage", tag: "field",
+                        tag: "field", name: "Manage",
                         description: "Operate privileges, and can modify persistent configuration of this Node (except Access Control Cluster)",
                         details: "This value implicitly grants Operate & View privileges",
                         xref: "core§9.10.5.2.2"
                     },
 
                     {
-                        name: "Administer", tag: "field",
+                        tag: "field", name: "Administer",
                         description: "Manage privileges, and can observe and modify the Access Control Cluster",
                         details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
                         xref: "core§9.10.5.2.3"
@@ -638,48 +638,48 @@ Resource.add(
             },
 
             {
-                name: "AccessRestrictionTypeEnum", tag: "datatype",
+                tag: "datatype", name: "AccessRestrictionTypeEnum",
                 xref: "core§9.10.5.3",
 
                 children: [
                     {
-                        name: "AttributeAccessForbidden", tag: "field",
+                        tag: "field", name: "AttributeAccessForbidden",
                         description: "Clients on this fabric are currently forbidden from reading and writing an attribute"
                     },
                     {
-                        name: "AttributeWriteForbidden", tag: "field",
+                        tag: "field", name: "AttributeWriteForbidden",
                         description: "Clients on this fabric are currently forbidden from writing an attribute"
                     },
                     {
-                        name: "CommandForbidden", tag: "field",
+                        tag: "field", name: "CommandForbidden",
                         description: "Clients on this fabric are currently forbidden from invoking a command"
                     },
                     {
-                        name: "EventForbidden", tag: "field",
+                        tag: "field", name: "EventForbidden",
                         description: "Clients on this fabric are currently forbidden from reading an event"
                     }
                 ]
             },
 
             {
-                name: "AccessControlEntryAuthModeEnum", tag: "datatype",
+                tag: "datatype", name: "AccessControlEntryAuthModeEnum",
                 xref: "core§9.10.5.4",
                 children: [
-                    { name: "Pase", tag: "field", description: "Passcode authenticated session" },
-                    { name: "Case", tag: "field", description: "Certificate authenticated session" },
-                    { name: "Group", tag: "field", description: "Group authenticated session" }
+                    { tag: "field", name: "Pase", description: "Passcode authenticated session" },
+                    { tag: "field", name: "Case", description: "Certificate authenticated session" },
+                    { tag: "field", name: "Group", description: "Group authenticated session" }
                 ]
             },
 
-            { name: "AccessControlTargetStruct", tag: "datatype", xref: "core§9.10.5.5" },
+            { tag: "datatype", name: "AccessControlTargetStruct", xref: "core§9.10.5.5" },
 
             {
-                name: "AccessControlEntryStruct", tag: "datatype",
+                tag: "datatype", name: "AccessControlEntryStruct",
                 xref: "core§9.10.5.6",
 
                 children: [
                     {
-                        name: "Privilege", tag: "field",
+                        tag: "field", name: "Privilege",
 
                         details: "The privilege field shall specify the level of privilege granted by this Access Control Entry." +
                             "\n" +
@@ -708,13 +708,13 @@ Resource.add(
                     },
 
                     {
-                        name: "AuthMode", tag: "field",
+                        tag: "field", name: "AuthMode",
                         details: "The AuthMode field shall specify the authentication mode required by this Access Control Entry.",
                         xref: "core§9.10.5.6.2"
                     },
 
                     {
-                        name: "Subjects", tag: "field",
+                        tag: "field", name: "Subjects",
 
                         details: "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
                             "access." +
@@ -754,7 +754,7 @@ Resource.add(
                     },
 
                     {
-                        name: "Targets", tag: "field",
+                        tag: "field", name: "Targets",
 
                         details: "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
                             "this Node to which this Access Control Entry grants access." +
@@ -781,11 +781,11 @@ Resource.add(
             },
 
             {
-                name: "AccessControlExtensionStruct", tag: "datatype",
+                tag: "datatype", name: "AccessControlExtensionStruct",
                 xref: "core§9.10.5.7",
 
                 children: [{
-                    name: "Data", tag: "field",
+                    tag: "field", name: "Data",
 
                     details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s" +
                         "\n" +
@@ -803,20 +803,20 @@ Resource.add(
             },
 
             {
-                name: "AccessRestrictionStruct", tag: "datatype",
+                tag: "datatype", name: "AccessRestrictionStruct",
                 details: "This structure describes an access restriction that would be applied to a specific data model " +
                     "element on a given endpoint/cluster pair (see AccessRestrictionEntryStruct).",
                 xref: "core§9.10.5.8",
 
                 children: [
                     {
-                        name: "Type", tag: "field",
+                        tag: "field", name: "Type",
                         details: "This field shall indicate the type of restriction, for example, AttributeAccessForbidden.",
                         xref: "core§9.10.5.8.1"
                     },
 
                     {
-                        name: "Id", tag: "field",
+                        tag: "field", name: "Id",
 
                         details: "This field shall indicate the element Manufacturer Extensible Identifier (MEI) associated with the " +
                             "element type subject to the access restriction, based upon the AccessRestrictionTypeEnum. When the " +
@@ -835,27 +835,27 @@ Resource.add(
             },
 
             {
-                name: "AccessRestrictionEntryStruct", tag: "datatype",
+                tag: "datatype", name: "AccessRestrictionEntryStruct",
                 details: "This structure describes a current access restriction on the fabric.",
                 xref: "core§9.10.5.9",
 
                 children: [
                     {
-                        name: "Endpoint", tag: "field",
+                        tag: "field", name: "Endpoint",
                         details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
                             "associated fabric of the list containing the entry.",
                         xref: "core§9.10.5.9.1"
                     },
 
                     {
-                        name: "Cluster", tag: "field",
+                        tag: "field", name: "Cluster",
                         details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
                             "Endpoint, scoped to the associated fabric of the list containing the entry.",
                         xref: "core§9.10.5.9.2"
                     },
 
                     {
-                        name: "Restrictions", tag: "field",
+                        tag: "field", name: "Restrictions",
                         details: "This field shall indicate the set of restrictions applying to the Cluster under the given Endpoint, " +
                             "scoped to the associated fabric of the list containing the entry." +
                             "\n" +
@@ -866,27 +866,27 @@ Resource.add(
             },
 
             {
-                name: "CommissioningAccessRestrictionEntryStruct", tag: "datatype",
+                tag: "datatype", name: "CommissioningAccessRestrictionEntryStruct",
                 details: "This structure describes a current access restriction when there is no accessing fabric.",
                 xref: "core§9.10.5.10",
 
                 children: [
                     {
-                        name: "Endpoint", tag: "field",
+                        tag: "field", name: "Endpoint",
                         details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
                             "associated fabric of the list containing the entry.",
                         xref: "core§9.10.5.10.1"
                     },
 
                     {
-                        name: "Cluster", tag: "field",
+                        tag: "field", name: "Cluster",
                         details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
                             "Endpoint, scoped to the associated fabric of the list containing the entry.",
                         xref: "core§9.10.5.10.2"
                     },
 
                     {
-                        name: "Restrictions", tag: "field",
+                        tag: "field", name: "Restrictions",
                         details: "This field shall indicate the set of restrictions applying to the Cluster under the given Endpoint, " +
                             "scoped to the associated fabric of the list containing the entry." +
                             "\n" +

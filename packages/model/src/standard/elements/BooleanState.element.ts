@@ -15,12 +15,12 @@ import {
 } from "../../elements/index.js";
 
 export const BooleanState = Cluster(
-    { id: 0x45, name: "BooleanState" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0x0, name: "StateValue", type: "bool", access: "R V", conformance: "M", quality: "P" }),
+    { name: "BooleanState", id: 0x45 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
+    Attribute({ name: "StateValue", id: 0x0, type: "bool", conformance: "M", access: "R V", quality: "P" }),
     Event(
-        { id: 0x0, name: "StateChange", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "StateValue", type: "bool", conformance: "M" })
+        { name: "StateChange", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "StateValue", id: 0x0, type: "bool", conformance: "M" })
     )
 );
 

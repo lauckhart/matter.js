@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "BasicVideoPlayer", tag: "deviceType",
+    tag: "deviceType", name: "BasicVideoPlayer",
     classification: "simple",
 
     details: "This defines conformance to the Basic Video Player device type." +
@@ -32,22 +32,22 @@ Resource.add({
     xref: "device§10.2",
 
     children: [
-        { name: "OnOff", tag: "requirement", xref: "device§10.2.4" },
-        { name: "WakeOnLan", tag: "requirement", xref: "device§10.2.4" },
-        { name: "Channel", tag: "requirement", xref: "device§10.2.4" },
-        { name: "TargetNavigator", tag: "requirement", xref: "device§10.2.4" },
-        { name: "MediaPlayback", tag: "requirement", xref: "device§10.2.4" },
-        { name: "MediaInput", tag: "requirement", xref: "device§10.2.4" },
-        { name: "LowPower", tag: "requirement", xref: "device§10.2.4" },
-        { name: "KeypadInput", tag: "requirement", xref: "device§10.2.4" },
-        { name: "AudioOutput", tag: "requirement", xref: "device§10.2.4" },
-        { name: "ContentControl", tag: "requirement", xref: "device§10.2.4" },
-        { name: "Messages", tag: "requirement", xref: "device§10.2.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§10.2.4" },
+        { tag: "requirement", name: "WakeOnLan", xref: "device§10.2.4" },
+        { tag: "requirement", name: "Channel", xref: "device§10.2.4" },
+        { tag: "requirement", name: "TargetNavigator", xref: "device§10.2.4" },
+        { tag: "requirement", name: "MediaPlayback", xref: "device§10.2.4" },
+        { tag: "requirement", name: "MediaInput", xref: "device§10.2.4" },
+        { tag: "requirement", name: "LowPower", xref: "device§10.2.4" },
+        { tag: "requirement", name: "KeypadInput", xref: "device§10.2.4" },
+        { tag: "requirement", name: "AudioOutput", xref: "device§10.2.4" },
+        { tag: "requirement", name: "ContentControl", xref: "device§10.2.4" },
+        { tag: "requirement", name: "Messages", xref: "device§10.2.4" },
 
         {
-            name: "conditions", tag: "field",
+            tag: "field", name: "conditions",
             children: [{
-                name: "PhysicalInputs", tag: "field",
+                tag: "field", name: "PhysicalInputs",
                 description: "The device has physical inputs for media.",
                 xref: "device§10.2.3"
             }]

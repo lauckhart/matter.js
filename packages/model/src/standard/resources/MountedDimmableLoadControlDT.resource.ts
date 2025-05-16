@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MountedDimmableLoadControl", tag: "deviceType",
+    tag: "deviceType", name: "MountedDimmableLoadControl",
     classification: "simple",
     details: "A Mounted Dimmable Load Control is a fixed device that provides power to another device that is " +
         "plugged into it, and is capable of being switched on or off and have its level adjusted. The Mounted " +
@@ -18,11 +18,11 @@ Resource.add({
     xref: "device§5.4",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§5.4.4" },
-        { name: "Groups", tag: "requirement", xref: "device§5.4.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§5.4.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§5.4.4" },
-        { name: "LevelControl", tag: "requirement", xref: "device§5.4.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§5.4.4" }
+        { tag: "requirement", name: "Identify", xref: "device§5.4.4" },
+        { tag: "requirement", name: "Groups", xref: "device§5.4.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§5.4.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§5.4.4" },
+        { tag: "requirement", name: "LevelControl", xref: "device§5.4.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§5.4.4" }
     ]
 });

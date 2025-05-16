@@ -9,9 +9,9 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ModeSelect", tag: "deviceType",
+    tag: "deviceType", name: "ModeSelect",
     classification: "simple",
     details: "This defines conformance to the Mode Select device type.",
     xref: "device§11.1",
-    children: [{ name: "ModeSelect", tag: "requirement", xref: "device§11.1.4" }]
+    children: [{ tag: "requirement", name: "ModeSelect", xref: "device§11.1.4" }]
 });

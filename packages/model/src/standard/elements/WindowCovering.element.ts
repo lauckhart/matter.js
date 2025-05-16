@@ -16,142 +16,142 @@ import {
 } from "../../elements/index.js";
 
 export const WindowCovering = Cluster(
-    { id: 0x102, name: "WindowCovering" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 5 }),
+    { name: "WindowCovering", id: 0x102 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 5 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LF", conformance: "O.a+", constraint: "0", longName: "Lift" }),
-        Field({ name: "TL", conformance: "O.a+", constraint: "1", longName: "Tilt" }),
-        Field({ name: "PA_LF", conformance: "[LF]", constraint: "2", longName: "PositionAwareLift" }),
-        Field({ name: "ABS", conformance: "O", constraint: "3", longName: "AbsolutePosition" }),
-        Field({ name: "PA_TL", conformance: "[TL]", constraint: "4", longName: "PositionAwareTilt" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "LF", constraint: "0", conformance: "O.a+", longName: "Lift" }),
+        Field({ name: "TL", constraint: "1", conformance: "O.a+", longName: "Tilt" }),
+        Field({ name: "PA_LF", constraint: "2", conformance: "[LF]", longName: "PositionAwareLift" }),
+        Field({ name: "ABS", constraint: "3", conformance: "O", longName: "AbsolutePosition" }),
+        Field({ name: "PA_TL", constraint: "4", conformance: "[TL]", longName: "PositionAwareTilt" })
     ),
 
     Attribute({
-        id: 0x0, name: "Type", type: "TypeEnum",
-        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
+        name: "Type", id: 0x0, type: "TypeEnum",
+        default: 0, constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x1, name: "PhysicalClosedLimitLift", type: "uint16",
-        access: "R V", conformance: "[LF & PA_LF & ABS]", default: 0, quality: "F"
+        name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16",
+        default: 0, conformance: "[LF & PA_LF & ABS]", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x2, name: "PhysicalClosedLimitTilt", type: "uint16",
-        access: "R V", conformance: "[TL & PA_TL & ABS]", default: 0, quality: "F"
+        name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16",
+        default: 0, conformance: "[TL & PA_TL & ABS]", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x3, name: "CurrentPositionLift", type: "uint16",
-        access: "R V", conformance: "[LF & PA_LF & ABS]",
-        constraint: "installedOpenLimitLift to installedClosedLimitLift", default: null, quality: "X N"
+        name: "CurrentPositionLift", id: 0x3, type: "uint16",
+        default: null, constraint: "installedOpenLimitLift to installedClosedLimitLift",
+        conformance: "[LF & PA_LF & ABS]", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x4, name: "CurrentPositionTilt", type: "uint16",
-        access: "R V", conformance: "[TL & PA_TL & ABS]",
-        constraint: "installedOpenLimitTilt to installedClosedLimitTilt", default: null, quality: "X N"
+        name: "CurrentPositionTilt", id: 0x4, type: "uint16",
+        default: null, constraint: "installedOpenLimitTilt to installedClosedLimitTilt",
+        conformance: "[TL & PA_TL & ABS]", access: "R V", quality: "X N"
     }),
     Attribute({
-        id: 0x5, name: "NumberOfActuationsLift", type: "uint16",
-        access: "R V", conformance: "[LF]", default: 0, quality: "N"
+        name: "NumberOfActuationsLift", id: 0x5, type: "uint16",
+        default: 0, conformance: "[LF]", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x6, name: "NumberOfActuationsTilt", type: "uint16",
-        access: "R V", conformance: "[TL]", default: 0, quality: "N"
+        name: "NumberOfActuationsTilt", id: 0x6, type: "uint16",
+        default: 0, conformance: "[TL]", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x7, name: "ConfigStatus", type: "ConfigStatusBitmap",
-        access: "R V", conformance: "M", constraint: "desc", quality: "N"
+        name: "ConfigStatus", id: 0x7, type: "ConfigStatusBitmap",
+        constraint: "desc", conformance: "M", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x8, name: "CurrentPositionLiftPercentage", type: "percent",
-        access: "R V", conformance: "[LF & PA_LF]", default: null, quality: "X N P"
+        name: "CurrentPositionLiftPercentage", id: 0x8, type: "percent",
+        default: null, conformance: "[LF & PA_LF]", access: "R V", quality: "X N P"
     }),
     Attribute({
-        id: 0x9, name: "CurrentPositionTiltPercentage", type: "percent",
-        access: "R V", conformance: "[TL & PA_TL]", default: null, quality: "X N P"
+        name: "CurrentPositionTiltPercentage", id: 0x9, type: "percent",
+        default: null, conformance: "[TL & PA_TL]", access: "R V", quality: "X N P"
     }),
     Attribute({
-        id: 0xa, name: "OperationalStatus", type: "OperationalStatusBitmap",
-        access: "R V", conformance: "M", default: 0, quality: "P"
+        name: "OperationalStatus", id: 0xa, type: "OperationalStatusBitmap",
+        default: 0, conformance: "M", access: "R V", quality: "P"
     }),
     Attribute({
-        id: 0xb, name: "TargetPositionLiftPercent100ths", type: "percent100ths",
-        access: "R V", conformance: "LF & PA_LF", default: null, quality: "X P"
+        name: "TargetPositionLiftPercent100ths", id: 0xb, type: "percent100ths",
+        default: null, conformance: "LF & PA_LF", access: "R V", quality: "X P"
     }),
     Attribute({
-        id: 0xc, name: "TargetPositionTiltPercent100ths", type: "percent100ths",
-        access: "R V", conformance: "TL & PA_TL", default: null, quality: "X P"
+        name: "TargetPositionTiltPercent100ths", id: 0xc, type: "percent100ths",
+        default: null, conformance: "TL & PA_TL", access: "R V", quality: "X P"
     }),
     Attribute({
-        id: 0xd, name: "EndProductType", type: "EndProductTypeEnum",
-        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
+        name: "EndProductType", id: 0xd, type: "EndProductTypeEnum",
+        default: 0, constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0xe, name: "CurrentPositionLiftPercent100ths", type: "percent100ths",
-        access: "R V", conformance: "LF & PA_LF", constraint: "max 10000", default: null, quality: "X N P"
+        name: "CurrentPositionLiftPercent100ths", id: 0xe, type: "percent100ths",
+        default: null, constraint: "max 10000", conformance: "LF & PA_LF", access: "R V", quality: "X N P"
     }),
     Attribute({
-        id: 0xf, name: "CurrentPositionTiltPercent100ths", type: "percent100ths",
-        access: "R V", conformance: "TL & PA_TL", constraint: "max 10000", default: null, quality: "X N P"
+        name: "CurrentPositionTiltPercent100ths", id: 0xf, type: "percent100ths",
+        default: null, constraint: "max 10000", conformance: "TL & PA_TL", access: "R V", quality: "X N P"
     }),
     Attribute({
-        id: 0x10, name: "InstalledOpenLimitLift", type: "uint16",
-        access: "R V", conformance: "LF & PA_LF & ABS", constraint: "max 65534", default: 0, quality: "N"
+        name: "InstalledOpenLimitLift", id: 0x10, type: "uint16",
+        default: 0, constraint: "max 65534", conformance: "LF & PA_LF & ABS", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x11, name: "InstalledClosedLimitLift", type: "uint16",
-        access: "R V", conformance: "LF & PA_LF & ABS", constraint: "max 65534", default: 65534,
+        name: "InstalledClosedLimitLift", id: 0x11, type: "uint16",
+        default: 65534, constraint: "max 65534", conformance: "LF & PA_LF & ABS", access: "R V",
         quality: "N"
     }),
     Attribute({
-        id: 0x12, name: "InstalledOpenLimitTilt", type: "uint16",
-        access: "R V", conformance: "TL & PA_TL & ABS", constraint: "max 65534", default: 0, quality: "N"
+        name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16",
+        default: 0, constraint: "max 65534", conformance: "TL & PA_TL & ABS", access: "R V", quality: "N"
     }),
     Attribute({
-        id: 0x13, name: "InstalledClosedLimitTilt", type: "uint16",
-        access: "R V", conformance: "TL & PA_TL & ABS", constraint: "max 65534", default: 65534,
+        name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16",
+        default: 65534, constraint: "max 65534", conformance: "TL & PA_TL & ABS", access: "R V",
         quality: "N"
     }),
-    Attribute({ id: 0x14, name: "VelocityLift", conformance: "D" }),
-    Attribute({ id: 0x15, name: "AccelerationTimeLift", conformance: "D" }),
-    Attribute({ id: 0x16, name: "DecelerationTimeLift", conformance: "D" }),
-    Attribute({ id: 0x17, name: "Mode", type: "ModeBitmap", access: "RW VM", conformance: "M", default: 0, quality: "N" }),
-    Attribute({ id: 0x18, name: "IntermediateSetpointsLift", conformance: "D" }),
-    Attribute({ id: 0x19, name: "IntermediateSetpointsTilt", conformance: "D" }),
+    Attribute({ name: "VelocityLift", id: 0x14, conformance: "D" }),
+    Attribute({ name: "AccelerationTimeLift", id: 0x15, conformance: "D" }),
+    Attribute({ name: "DecelerationTimeLift", id: 0x16, conformance: "D" }),
+    Attribute({ name: "Mode", id: 0x17, type: "ModeBitmap", default: 0, conformance: "M", access: "RW VM", quality: "N" }),
+    Attribute({ name: "IntermediateSetpointsLift", id: 0x18, conformance: "D" }),
+    Attribute({ name: "IntermediateSetpointsTilt", id: 0x19, conformance: "D" }),
     Attribute({
-        id: 0x1a, name: "SafetyStatus", type: "SafetyStatusBitmap",
-        access: "R V", conformance: "O", constraint: "desc", default: 0, quality: "P"
+        name: "SafetyStatus", id: 0x1a, type: "SafetyStatusBitmap",
+        default: 0, constraint: "desc", conformance: "O", access: "R V", quality: "P"
     }),
-    Command({ id: 0x0, name: "UpOrOpen", access: "O", conformance: "M", direction: "request", response: "status" }),
-    Command({ id: 0x1, name: "DownOrClose", access: "O", conformance: "M", direction: "request", response: "status" }),
-    Command({ id: 0x2, name: "StopMotion", access: "O", conformance: "M", direction: "request", response: "status" }),
+    Command({ name: "UpOrOpen", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" }),
+    Command({ name: "DownOrClose", id: 0x1, conformance: "M", access: "O", direction: "request", response: "status" }),
+    Command({ name: "StopMotion", id: 0x2, conformance: "M", access: "O", direction: "request", response: "status" }),
 
     Command(
-        { id: 0x4, name: "GoToLiftValue", access: "O", direction: "request", response: "status" },
+        { name: "GoToLiftValue", id: 0x4, access: "O", direction: "request", response: "status" },
         Field({
-            id: 0x0, name: "LiftValue", type: "uint16",
-            conformance: "M", constraint: "installedOpenLimitLift to installedClosedLimitLift"
+            name: "LiftValue", id: 0x0, type: "uint16",
+            constraint: "installedOpenLimitLift to installedClosedLimitLift", conformance: "M"
         })
     ),
 
     Command(
-        { id: 0x5, name: "GoToLiftPercentage", access: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "LiftPercent100thsValue", type: "percent100ths", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Ignored", conformance: "X" })
+        { name: "GoToLiftPercentage", id: 0x5, access: "O", direction: "request", response: "status" },
+        Field({ name: "LiftPercent100thsValue", id: 0x0, type: "percent100ths", constraint: "desc", conformance: "M" }),
+        Field({ name: "Ignored", id: 0x1, conformance: "X" })
     ),
 
     Command(
-        { id: 0x7, name: "GoToTiltValue", access: "O", direction: "request", response: "status" },
+        { name: "GoToTiltValue", id: 0x7, access: "O", direction: "request", response: "status" },
         Field({
-            id: 0x0, name: "TiltValue", type: "uint16",
-            conformance: "M", constraint: "installedOpenLimitTilt to installedClosedLimitTilt"
+            name: "TiltValue", id: 0x0, type: "uint16",
+            constraint: "installedOpenLimitTilt to installedClosedLimitTilt", conformance: "M"
         })
     ),
 
     Command(
-        { id: 0x8, name: "GoToTiltPercentage", access: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TiltPercent100thsValue", type: "percent100ths", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Ignored", conformance: "X" })
+        { name: "GoToTiltPercentage", id: 0x8, access: "O", direction: "request", response: "status" },
+        Field({ name: "TiltPercent100thsValue", id: 0x0, type: "percent100ths", constraint: "desc", conformance: "M" }),
+        Field({ name: "Ignored", id: 0x1, conformance: "X" })
     ),
 
     Datatype(
@@ -198,53 +198,53 @@ export const WindowCovering = Cluster(
 
     Datatype(
         { name: "TypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Rollershade", conformance: "LF & !TL" }),
-        Field({ id: 0x1, name: "Rollershade2Motor", conformance: "LF & !TL" }),
-        Field({ id: 0x2, name: "RollershadeExterior", conformance: "LF & !TL" }),
-        Field({ id: 0x3, name: "RollershadeExterior2Motor", conformance: "LF & !TL" }),
-        Field({ id: 0x4, name: "Drapery", conformance: "LF & !TL" }),
-        Field({ id: 0x5, name: "Awning", conformance: "LF & !TL" }),
-        Field({ id: 0x6, name: "Shutter", conformance: "LF | TL" }),
-        Field({ id: 0x7, name: "TiltBlindTiltOnly", conformance: "!LF & TL" }),
-        Field({ id: 0x8, name: "TiltBlindLift", conformance: "LF & TL" }),
-        Field({ id: 0x9, name: "ProjectorScreen", conformance: "LF & !TL" }),
-        Field({ id: 0xff, name: "Unknown", conformance: "O" })
+        Field({ name: "Rollershade", id: 0x0, conformance: "LF & !TL" }),
+        Field({ name: "Rollershade2Motor", id: 0x1, conformance: "LF & !TL" }),
+        Field({ name: "RollershadeExterior", id: 0x2, conformance: "LF & !TL" }),
+        Field({ name: "RollershadeExterior2Motor", id: 0x3, conformance: "LF & !TL" }),
+        Field({ name: "Drapery", id: 0x4, conformance: "LF & !TL" }),
+        Field({ name: "Awning", id: 0x5, conformance: "LF & !TL" }),
+        Field({ name: "Shutter", id: 0x6, conformance: "LF | TL" }),
+        Field({ name: "TiltBlindTiltOnly", id: 0x7, conformance: "!LF & TL" }),
+        Field({ name: "TiltBlindLift", id: 0x8, conformance: "LF & TL" }),
+        Field({ name: "ProjectorScreen", id: 0x9, conformance: "LF & !TL" }),
+        Field({ name: "Unknown", id: 0xff, conformance: "O" })
     ),
 
     Datatype(
         { name: "EndProductTypeEnum", type: "enum8" },
-        Field({ id: 0x0, name: "RollerShade", conformance: "LF" }),
-        Field({ id: 0x1, name: "RomanShade", conformance: "LF" }),
-        Field({ id: 0x2, name: "BalloonShade", conformance: "LF" }),
-        Field({ id: 0x3, name: "WovenWood", conformance: "LF" }),
-        Field({ id: 0x4, name: "PleatedShade", conformance: "LF" }),
-        Field({ id: 0x5, name: "CellularShade", conformance: "LF" }),
-        Field({ id: 0x6, name: "LayeredShade", conformance: "LF" }),
-        Field({ id: 0x7, name: "LayeredShade2D", conformance: "LF" }),
-        Field({ id: 0x8, name: "SheerShade", conformance: "LF & TL" }),
-        Field({ id: 0x9, name: "TiltOnlyInteriorBlind", conformance: "TL" }),
-        Field({ id: 0xa, name: "InteriorBlind", conformance: "LF & TL" }),
-        Field({ id: 0xb, name: "VerticalBlindStripCurtain", conformance: "LF & TL" }),
-        Field({ id: 0xc, name: "InteriorVenetianBlind", conformance: "LF & TL" }),
-        Field({ id: 0xd, name: "ExteriorVenetianBlind", conformance: "LF & TL" }),
-        Field({ id: 0xe, name: "LateralLeftCurtain", conformance: "LF" }),
-        Field({ id: 0xf, name: "LateralRightCurtain", conformance: "LF" }),
-        Field({ id: 0x10, name: "CentralCurtain", conformance: "LF" }),
-        Field({ id: 0x11, name: "RollerShutter", conformance: "LF" }),
-        Field({ id: 0x12, name: "ExteriorVerticalScreen", conformance: "LF" }),
-        Field({ id: 0x13, name: "AwningTerracePatio", conformance: "LF" }),
-        Field({ id: 0x14, name: "AwningVerticalScreen", conformance: "LF" }),
-        Field({ id: 0x15, name: "TiltOnlyPergola", conformance: "LF | TL" }),
-        Field({ id: 0x16, name: "SwingingShutter", conformance: "LF | TL" }),
-        Field({ id: 0x17, name: "SlidingShutter", conformance: "LF | TL" }),
-        Field({ id: 0xff, name: "Unknown", conformance: "O" })
+        Field({ name: "RollerShade", id: 0x0, conformance: "LF" }),
+        Field({ name: "RomanShade", id: 0x1, conformance: "LF" }),
+        Field({ name: "BalloonShade", id: 0x2, conformance: "LF" }),
+        Field({ name: "WovenWood", id: 0x3, conformance: "LF" }),
+        Field({ name: "PleatedShade", id: 0x4, conformance: "LF" }),
+        Field({ name: "CellularShade", id: 0x5, conformance: "LF" }),
+        Field({ name: "LayeredShade", id: 0x6, conformance: "LF" }),
+        Field({ name: "LayeredShade2D", id: 0x7, conformance: "LF" }),
+        Field({ name: "SheerShade", id: 0x8, conformance: "LF & TL" }),
+        Field({ name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "TL" }),
+        Field({ name: "InteriorBlind", id: 0xa, conformance: "LF & TL" }),
+        Field({ name: "VerticalBlindStripCurtain", id: 0xb, conformance: "LF & TL" }),
+        Field({ name: "InteriorVenetianBlind", id: 0xc, conformance: "LF & TL" }),
+        Field({ name: "ExteriorVenetianBlind", id: 0xd, conformance: "LF & TL" }),
+        Field({ name: "LateralLeftCurtain", id: 0xe, conformance: "LF" }),
+        Field({ name: "LateralRightCurtain", id: 0xf, conformance: "LF" }),
+        Field({ name: "CentralCurtain", id: 0x10, conformance: "LF" }),
+        Field({ name: "RollerShutter", id: 0x11, conformance: "LF" }),
+        Field({ name: "ExteriorVerticalScreen", id: 0x12, conformance: "LF" }),
+        Field({ name: "AwningTerracePatio", id: 0x13, conformance: "LF" }),
+        Field({ name: "AwningVerticalScreen", id: 0x14, conformance: "LF" }),
+        Field({ name: "TiltOnlyPergola", id: 0x15, conformance: "LF | TL" }),
+        Field({ name: "SwingingShutter", id: 0x16, conformance: "LF | TL" }),
+        Field({ name: "SlidingShutter", id: 0x17, conformance: "LF | TL" }),
+        Field({ name: "Unknown", id: 0xff, conformance: "O" })
     ),
 
     Datatype(
         { name: "MovementStatus", type: "enum8" },
-        Field({ id: 0x0, name: "Stopped" }),
-        Field({ id: 0x1, name: "Opening" }),
-        Field({ id: 0x2, name: "Closing" })
+        Field({ name: "Stopped", id: 0x0 }),
+        Field({ name: "Opening", id: 0x1 }),
+        Field({ name: "Closing", id: 0x2 })
     )
 );
 

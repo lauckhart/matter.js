@@ -9,12 +9,12 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "TemperatureSensor", tag: "deviceType",
+    tag: "deviceType", name: "TemperatureSensor",
     classification: "simple",
     details: "A Temperature Sensor device reports measurements of temperature.",
     xref: "device§7.4",
     children: [
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§7.4.4" },
-        { name: "Identify", tag: "requirement", xref: "device§7.4.4" }
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§7.4.4" },
+        { tag: "requirement", name: "Identify", xref: "device§7.4.4" }
     ]
 });

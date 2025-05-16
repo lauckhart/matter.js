@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "LandmarkNamespace", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "LandmarkNamespace",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a home landmark.",
     xref: "namespace§10"

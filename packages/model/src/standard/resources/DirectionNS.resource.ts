@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Direction", tag: "semanticNamespace",
+    tag: "semanticNamespace", name: "Direction",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a movement in a certain direction relative to the device. Note the difference with " +
         "Chapter 9, Common Position Semantic Tag Namespace.",

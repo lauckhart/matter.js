@@ -9,19 +9,19 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ValveConfigurationAndControl", tag: "cluster",
+    tag: "cluster", name: "ValveConfigurationAndControl",
     classification: "application", pics: "VALCC",
     details: "This cluster is used to configure a valve.",
     xref: "cluster§4.6",
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§4.6.4",
 
             children: [
                 {
-                    name: "TS", tag: "field",
+                    tag: "field", name: "TS",
                     details: "This feature shall indicate that the valve uses Time Synchronization and UTC time to indicate " +
                         "duration and auto close time." +
                         "\n" +
@@ -30,7 +30,7 @@ Resource.add({
                 },
 
                 {
-                    name: "LVL", tag: "field",
+                    tag: "field", name: "LVL",
                     details: "This feature shall indicate that the valve is capable of being adjusted to a specific position, as a " +
                         "percentage, of its full range of motion.",
                     xref: "cluster§4.6.4.2"
@@ -39,7 +39,7 @@ Resource.add({
         },
 
         {
-            name: "OpenDuration", tag: "attribute",
+            tag: "attribute", name: "OpenDuration",
             details: "Indicates the total duration, in seconds, for which the valve will remain open for this current " +
                 "opening." +
                 "\n" +
@@ -49,7 +49,7 @@ Resource.add({
         },
 
         {
-            name: "DefaultOpenDuration", tag: "attribute",
+            tag: "attribute", name: "DefaultOpenDuration",
             details: "Indicates the default duration, in seconds, for which the valve will remain open, if the " +
                 "OpenDuration field is not present in the Open command." +
                 "\n" +
@@ -59,7 +59,7 @@ Resource.add({
         },
 
         {
-            name: "AutoCloseTime", tag: "attribute",
+            tag: "attribute", name: "AutoCloseTime",
 
             details: "Indicates the UTC time when the valve will close, depending on value of the OpenDuration attribute." +
                 "\n" +
@@ -83,7 +83,7 @@ Resource.add({
         },
 
         {
-            name: "RemainingDuration", tag: "attribute",
+            tag: "attribute", name: "RemainingDuration",
 
             details: "Indicates the remaining duration, in seconds, until the valve closes. Null:" +
                 "\n" +
@@ -115,7 +115,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentState", tag: "attribute",
+            tag: "attribute", name: "CurrentState",
             details: "Indicates the current state of the valve." +
                 "\n" +
                 "A value of null shall indicate that the current state is not known.",
@@ -123,7 +123,7 @@ Resource.add({
         },
 
         {
-            name: "TargetState", tag: "attribute",
+            tag: "attribute", name: "TargetState",
             details: "Indicates the target state, while changing the state, of the valve." +
                 "\n" +
                 "A value of null shall indicate that no target position is set, since the change in state is either " +
@@ -132,7 +132,7 @@ Resource.add({
         },
 
         {
-            name: "CurrentLevel", tag: "attribute",
+            tag: "attribute", name: "CurrentLevel",
 
             details: "Indicates the current level of the valve as a percentage value, between fully closed and fully open. " +
                 "During a transition from one level to another level, the valve SHOULD keep this attribute updated to " +
@@ -147,7 +147,7 @@ Resource.add({
         },
 
         {
-            name: "TargetLevel", tag: "attribute",
+            tag: "attribute", name: "TargetLevel",
 
             details: "Indicates the target level of the valve as a percentage value, between fully closed and fully open." +
                 "\n" +
@@ -160,7 +160,7 @@ Resource.add({
         },
 
         {
-            name: "DefaultOpenLevel", tag: "attribute",
+            tag: "attribute", name: "DefaultOpenLevel",
 
             details: "Indicates the default value used for the TargetLevel attribute, when a valve transitions from the " +
                 "closed to the open state, caused by an Open command, if a TargetLevel field is not present in the " +
@@ -176,13 +176,13 @@ Resource.add({
         },
 
         {
-            name: "ValveFault", tag: "attribute",
+            tag: "attribute", name: "ValveFault",
             details: "Indicates any faults registered by the valve.",
             xref: "cluster§4.6.7.10"
         },
 
         {
-            name: "LevelStep", tag: "attribute",
+            tag: "attribute", name: "LevelStep",
 
             details: "Indicates the step size the valve can support." +
                 "\n" +
@@ -196,19 +196,19 @@ Resource.add({
         },
 
         {
-            name: "ValveStateChanged", tag: "event",
+            tag: "event", name: "ValveStateChanged",
             details: "This event shall be generated when the valve state changed. For level changes, after the end of " +
                 "movement, for state changes when the new state has been reached.",
             xref: "cluster§4.6.9.1",
 
             children: [
                 {
-                    name: "ValveState", tag: "field",
+                    tag: "field", name: "ValveState",
                     details: "This field shall indicate the new state of the valve.",
                     xref: "cluster§4.6.9.1.1"
                 },
                 {
-                    name: "ValveLevel", tag: "field",
+                    tag: "field", name: "ValveLevel",
                     details: "This field shall indicate the new level of the valve.",
                     xref: "cluster§4.6.9.1.2"
                 }
@@ -216,13 +216,13 @@ Resource.add({
         },
 
         {
-            name: "ValveFault", tag: "event",
+            tag: "event", name: "ValveFault",
             details: "This event shall be generated when the valve registers or clears a fault, e.g. not being able to " +
                 "transition to the requested target level or state.",
             xref: "cluster§4.6.9.2",
 
             children: [{
-                name: "ValveFault", tag: "field",
+                tag: "field", name: "ValveFault",
                 details: "This field shall indicate the value of the ValveFault attribute, at the time this event is " +
                     "generated.",
                 xref: "cluster§4.6.9.2.1"
@@ -230,13 +230,13 @@ Resource.add({
         },
 
         {
-            name: "Open", tag: "command",
+            tag: "command", name: "Open",
             details: "This command is used to set the valve to its open position.",
             xref: "cluster§4.6.8.1",
 
             children: [
                 {
-                    name: "OpenDuration", tag: "field",
+                    tag: "field", name: "OpenDuration",
                     details: "This field shall indicate the duration that the valve will remain open for this specific Open " +
                         "command." +
                         "\n" +
@@ -246,7 +246,7 @@ Resource.add({
                 },
 
                 {
-                    name: "TargetLevel", tag: "field",
+                    tag: "field", name: "TargetLevel",
                     details: "This field shall indicate the target level used for this specific Open command.",
                     xref: "cluster§4.6.8.1.2"
                 }
@@ -254,44 +254,44 @@ Resource.add({
         },
 
         {
-            name: "Close", tag: "command",
+            tag: "command", name: "Close",
             details: "This command is used to set the valve to its closed position.",
             xref: "cluster§4.6.8.2"
         },
 
         {
-            name: "ValveFaultBitmap", tag: "datatype",
+            tag: "datatype", name: "ValveFaultBitmap",
             xref: "cluster§4.6.5.1",
 
             children: [
-                { name: "GeneralFault", tag: "field", description: "Unspecified fault detected" },
-                { name: "Blocked", tag: "field", description: "Valve is blocked" },
-                { name: "Leaking", tag: "field", description: "Valve has detected a leak" },
-                { name: "NotConnected", tag: "field", description: "No valve is connected to controller" },
-                { name: "ShortCircuit", tag: "field", description: "Short circuit is detected" },
-                { name: "CurrentExceeded", tag: "field", description: "The available current has been exceeded" }
+                { tag: "field", name: "GeneralFault", description: "Unspecified fault detected" },
+                { tag: "field", name: "Blocked", description: "Valve is blocked" },
+                { tag: "field", name: "Leaking", description: "Valve has detected a leak" },
+                { tag: "field", name: "NotConnected", description: "No valve is connected to controller" },
+                { tag: "field", name: "ShortCircuit", description: "Short circuit is detected" },
+                { tag: "field", name: "CurrentExceeded", description: "The available current has been exceeded" }
             ]
         },
 
         {
-            name: "ValveStateEnum", tag: "datatype",
+            tag: "datatype", name: "ValveStateEnum",
             xref: "cluster§4.6.5.2",
 
             children: [
-                { name: "Closed", tag: "field", description: "Valve is in closed position" },
-                { name: "Open", tag: "field", description: "Valve is in open position" },
+                { tag: "field", name: "Closed", description: "Valve is in closed position" },
+                { tag: "field", name: "Open", description: "Valve is in open position" },
                 {
-                    name: "Transitioning", tag: "field",
+                    tag: "field", name: "Transitioning",
                     description: "Valve is transitioning between closed and open positions or between levels"
                 }
             ]
         },
 
         {
-            name: "StatusCodeEnum", tag: "datatype",
+            tag: "datatype", name: "StatusCodeEnum",
             xref: "cluster§4.6.6.1",
             children: [{
-                name: "FailureDueToFault", tag: "field",
+                tag: "field", name: "FailureDueToFault",
                 description: "The requested action could not be performed due to a fault on the valve."
             }]
         }

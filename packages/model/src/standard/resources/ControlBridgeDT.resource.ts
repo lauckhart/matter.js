@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ControlBridge", tag: "deviceType",
+    tag: "deviceType", name: "ControlBridge",
     classification: "simple",
     details: "A Control Bridge is a controller device that, when bound to a lighting device such as an Extended " +
         "Color Light, is capable of being used to switch the device on or off, adjust the intensity of the " +
@@ -18,14 +18,14 @@ Resource.add({
     xref: "device§6.4",
 
     children: [
-        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.4.4" },
-        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.4.4" },
-        { name: "Groups", tag: "requirement", xref: "device§6.4.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§6.4.4" },
-        { name: "OnOff", tag: "requirement", xref: "device§6.4.4" },
-        { name: "LevelControl", tag: "requirement", xref: "device§6.4.4" },
-        { name: "ColorControl", tag: "requirement", xref: "device§6.4.4" },
-        { name: "IlluminanceMeasurement", tag: "requirement", xref: "device§6.4.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§6.4.4" }
+        { tag: "requirement", name: "Identify", discriminator: "M:serverCluster", xref: "device§6.4.4" },
+        { tag: "requirement", name: "Identify", discriminator: "M:clientCluster", xref: "device§6.4.4" },
+        { tag: "requirement", name: "Groups", xref: "device§6.4.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§6.4.4" },
+        { tag: "requirement", name: "OnOff", xref: "device§6.4.4" },
+        { tag: "requirement", name: "LevelControl", xref: "device§6.4.4" },
+        { tag: "requirement", name: "ColorControl", xref: "device§6.4.4" },
+        { tag: "requirement", name: "IlluminanceMeasurement", xref: "device§6.4.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§6.4.4" }
     ]
 });

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "action-id", tag: "datatype",
+    tag: "datatype", name: "action-id",
     description: "Action ID",
     details: "An identifier that indicates an action as defined in the Interaction Model specification.",
     xref: "core§7.19.2.31"

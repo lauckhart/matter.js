@@ -9,12 +9,12 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "HumiditySensor", tag: "deviceType",
+    tag: "deviceType", name: "HumiditySensor",
     classification: "simple",
     details: "A humidity sensor (in most cases a Relative humidity sensor) reports humidity measurements.",
     xref: "device§7.7",
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§7.7.4" },
-        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§7.7.4" }
+        { tag: "requirement", name: "Identify", xref: "device§7.7.4" },
+        { tag: "requirement", name: "RelativeHumidityMeasurement", xref: "device§7.7.4" }
     ]
 });

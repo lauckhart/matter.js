@@ -13,12 +13,12 @@ import {
 } from "../../elements/index.js";
 
 export const ElectricalMeasurementNs = SemanticNamespace(
-    { id: 0xa, name: "ElectricalMeasurement" },
-    SemanticTag({ id: 0x0, name: "DC" }),
-    SemanticTag({ id: 0x1, name: "AC" }),
-    SemanticTag({ id: 0x2, name: "ACPhase1" }),
-    SemanticTag({ id: 0x3, name: "ACPhase2" }),
-    SemanticTag({ id: 0x4, name: "ACPhase3" })
+    { name: "ElectricalMeasurement", id: 0xa },
+    SemanticTag({ name: "DC", id: 0x0 }),
+    SemanticTag({ name: "AC", id: 0x1 }),
+    SemanticTag({ name: "ACPhase1", id: 0x2 }),
+    SemanticTag({ name: "ACPhase2", id: 0x3 }),
+    SemanticTag({ name: "ACPhase3", id: 0x4 })
 );
 
 MatterDefinition.children.push(ElectricalMeasurementNs);

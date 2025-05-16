@@ -13,10 +13,10 @@ import {
 } from "../../elements/index.js";
 
 export const LevelNs = SemanticNamespace(
-    { id: 0x5, name: "Level" },
-    SemanticTag({ id: 0x0, name: "Low" }),
-    SemanticTag({ id: 0x1, name: "Medium" }),
-    SemanticTag({ id: 0x2, name: "High" })
+    { name: "Level", id: 0x5 },
+    SemanticTag({ name: "Low", id: 0x0 }),
+    SemanticTag({ name: "Medium", id: 0x1 }),
+    SemanticTag({ name: "High", id: 0x2 })
 );
 
 MatterDefinition.children.push(LevelNs);

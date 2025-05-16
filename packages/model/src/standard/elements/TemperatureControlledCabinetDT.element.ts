@@ -14,32 +14,32 @@ import {
 } from "../../elements/index.js";
 
 export const TemperatureControlledCabinetDt = DeviceType(
-    { id: 0x71, name: "TemperatureControlledCabinet", classification: "simple" },
+    { name: "TemperatureControlledCabinet", id: 0x71 },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 113, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 113, revision: 3 } ] })
     ),
-    Requirement({ id: 0x56, name: "TemperatureControl", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x402, name: "TemperatureMeasurement", conformance: "O", element: "serverCluster" }),
+    Requirement({ name: "TemperatureControl", id: 0x56, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "TemperatureMeasurement", id: 0x402, element: "serverCluster", conformance: "O" }),
 
     Requirement(
         {
-            id: 0x52, name: "RefrigeratorAndTemperatureControlledCabinetMode",
-            conformance: "[Cooler]", element: "serverCluster"
+            name: "RefrigeratorAndTemperatureControlledCabinetMode", id: 0x52,
+            element: "serverCluster", conformance: "[Cooler]"
         },
-        Requirement({ name: "StartUpMode", conformance: "X", element: "attribute" }),
-        Requirement({ name: "ONOFF", conformance: "X", element: "feature" })
+        Requirement({ name: "StartUpMode", element: "attribute", conformance: "X" }),
+        Requirement({ name: "ONOFF", element: "feature", conformance: "X" })
     ),
 
     Requirement(
-        { id: 0x49, name: "OvenMode", conformance: "[Heater]", element: "serverCluster" },
-        Requirement({ name: "StartUpMode", conformance: "X", element: "attribute" }),
-        Requirement({ name: "ONOFF", conformance: "X", element: "feature" })
+        { name: "OvenMode", id: 0x49, element: "serverCluster", conformance: "[Heater]" },
+        Requirement({ name: "StartUpMode", element: "attribute", conformance: "X" }),
+        Requirement({ name: "ONOFF", element: "feature", conformance: "X" })
     ),
     Requirement(
-        { id: 0x48, name: "OvenCavityOperationalState", conformance: "[Heater]", element: "serverCluster" },
-        Requirement({ name: "Pause", conformance: "X", element: "command" }),
-        Requirement({ name: "Resume", conformance: "X", element: "command" })
+        { name: "OvenCavityOperationalState", id: 0x48, element: "serverCluster", conformance: "[Heater]" },
+        Requirement({ name: "Pause", element: "command", conformance: "X" }),
+        Requirement({ name: "Resume", element: "command", conformance: "X" })
     ),
     Field({ name: "conditions", type: "enum8" }, Field({ name: "Cooler" }), Field({ name: "Heater" }))
 );

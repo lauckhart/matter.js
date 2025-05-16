@@ -13,10 +13,10 @@ import {
 } from "../../elements/index.js";
 
 export const ClosureNs = SemanticNamespace(
-    { id: 0x1, name: "Closure" },
-    SemanticTag({ id: 0x0, name: "Opening" }),
-    SemanticTag({ id: 0x1, name: "Closing" }),
-    SemanticTag({ id: 0x2, name: "Stop" })
+    { name: "Closure", id: 0x1 },
+    SemanticTag({ name: "Opening", id: 0x0 }),
+    SemanticTag({ name: "Closing", id: 0x1 }),
+    SemanticTag({ name: "Stop", id: 0x2 })
 );
 
 MatterDefinition.children.push(ClosureNs);

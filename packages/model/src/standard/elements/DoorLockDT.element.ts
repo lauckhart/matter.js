@@ -10,20 +10,20 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
 export const DoorLockDt = DeviceType(
-    { id: 0xa, name: "DoorLock", classification: "simple" },
+    { name: "DoorLock", id: 0xa },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 10, revision: 3 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 10, revision: 3 } ] })
     ),
-    Requirement({ id: 0x3, name: "Identify", conformance: "M", element: "serverCluster" }),
-    Requirement({ id: 0x4, name: "Groups", conformance: "X", element: "serverCluster" }),
-    Requirement({ id: 0x62, name: "ScenesManagement", conformance: "X", element: "serverCluster" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "M" }),
+    Requirement({ name: "Groups", id: 0x4, element: "serverCluster", conformance: "X" }),
+    Requirement({ name: "ScenesManagement", id: 0x62, element: "serverCluster", conformance: "X" }),
 
     Requirement(
-        { id: 0x101, name: "DoorLock", conformance: "M", element: "serverCluster" },
-        Requirement({ name: "USER", conformance: "Matter & (PIN | RID | FPG | FACE | ALIRO)", element: "feature" }),
-        Requirement({ name: "RFIDCREDENTIAL", conformance: "P, O", element: "feature" }),
-        Requirement({ name: "AlarmMask", conformance: "[Alarms]", element: "attribute" })
+        { name: "DoorLock", id: 0x101, element: "serverCluster", conformance: "M" },
+        Requirement({ name: "USER", element: "feature", conformance: "Matter & (PIN | RID | FPG | FACE | ALIRO)" }),
+        Requirement({ name: "RFIDCREDENTIAL", element: "feature", conformance: "P, O" }),
+        Requirement({ name: "AlarmMask", element: "attribute", conformance: "[Alarms]" })
     )
 );
 

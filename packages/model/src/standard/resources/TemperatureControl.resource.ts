@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "TemperatureControl", tag: "cluster",
+        tag: "cluster", name: "TemperatureControl",
         classification: "application", pics: "TCTL",
 
         details: "This cluster provides an interface to the setpoint temperature on devices such as washers, " +
@@ -29,12 +29,12 @@ Resource.add(
 
         children: [
             {
-                name: "FeatureMap", tag: "attribute",
+                tag: "attribute", name: "FeatureMap",
                 xref: "cluster§8.2.4",
 
                 children: [
                     {
-                        name: "TN", tag: "field",
+                        tag: "field", name: "TN",
                         details: "For devices that use an actual temperature value for the temperature setpoint, such as some water " +
                             "heaters, the feature TN shall be used. Note that this cluster provides and supports temperatures in " +
                             "degrees Celsius via the temperature data type.",
@@ -42,14 +42,14 @@ Resource.add(
                     },
 
                     {
-                        name: "TL", tag: "field",
+                        tag: "field", name: "TL",
                         details: "For devices that use vendor-specific temperature levels for the temperature setpoint, such as some " +
                             "washers, the feature TL shall be used.",
                         xref: "cluster§8.2.4.2"
                     },
 
                     {
-                        name: "STEP", tag: "field",
+                        tag: "field", name: "STEP",
                         details: "For devices that support discrete temperature setpoints that are larger than the temperature " +
                             "resolution imposed via the temperature data type, the Step feature may be used.",
                         xref: "cluster§8.2.4.3"
@@ -58,18 +58,18 @@ Resource.add(
             },
 
             {
-                name: "TemperatureSetpoint", tag: "attribute",
+                tag: "attribute", name: "TemperatureSetpoint",
                 details: "Indicates the desired Temperature Setpoint on the device.",
                 xref: "cluster§8.2.5.1"
             },
             {
-                name: "MinTemperature", tag: "attribute",
+                tag: "attribute", name: "MinTemperature",
                 details: "Indicates the minimum temperature to which the TemperatureSetpoint attribute may be set.",
                 xref: "cluster§8.2.5.2"
             },
 
             {
-                name: "MaxTemperature", tag: "attribute",
+                tag: "attribute", name: "MaxTemperature",
                 details: "Indicates the maximum temperature to which the TemperatureSetpoint attribute may be set." +
                     "\n" +
                     "If the Step attribute is supported, this attribute shall be such that MaxTemperature = " +
@@ -79,7 +79,7 @@ Resource.add(
             },
 
             {
-                name: "Step", tag: "attribute",
+                tag: "attribute", name: "Step",
 
                 details: "Indicates the discrete value by which the TemperatureSetpoint attribute can be changed via the " +
                     "SetTemperature command." +
@@ -92,7 +92,7 @@ Resource.add(
             },
 
             {
-                name: "SelectedTemperatureLevel", tag: "attribute",
+                tag: "attribute", name: "SelectedTemperatureLevel",
                 details: "Indicates the currently selected temperature level setting of the server. This attribute shall be " +
                     "the positional index of the list item in the SupportedTemperatureLevels list that represents the " +
                     "currently selected temperature level setting of the server.",
@@ -100,7 +100,7 @@ Resource.add(
             },
 
             {
-                name: "SupportedTemperatureLevels", tag: "attribute",
+                tag: "attribute", name: "SupportedTemperatureLevels",
 
                 details: "Indicates the list of supported temperature level settings that may be selected via the " +
                     "TargetTemperatureLevel field in the SetTemperature command. Each string is readable text that " +
@@ -116,12 +116,12 @@ Resource.add(
             },
 
             {
-                name: "SetTemperature", tag: "command",
+                tag: "command", name: "SetTemperature",
                 xref: "cluster§8.2.6.1",
 
                 children: [
                     {
-                        name: "TargetTemperature", tag: "field",
+                        tag: "field", name: "TargetTemperature",
                         details: "This field shall specify the desired temperature setpoint that the server is to be set to." +
                             "\n" +
                             "The TargetTemperature shall be from MinTemperature to MaxTemperature inclusive. If the Step " +
@@ -131,7 +131,7 @@ Resource.add(
                     },
 
                     {
-                        name: "TargetTemperatureLevel", tag: "field",
+                        tag: "field", name: "TargetTemperatureLevel",
                         details: "This field shall specify the index of the list item in the SupportedTemperatureLevels list that " +
                             "represents the desired temperature level setting of the server. The value of this field shall be " +
                             "between 0 and the length of the SupportedTemperatureLevels list -1.",

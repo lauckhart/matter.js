@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "LaundryWasherMode", tag: "cluster",
+    tag: "cluster", name: "LaundryWasherMode",
     classification: "application", pics: "LWM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for laundry washer as well as laundry dryer devices.",
@@ -17,56 +17,56 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§8.5.4",
-            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+            children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
             details: "At least one entry in the SupportedModes attribute shall include the Normal mode tag in the ModeTags " +
                 "field list.",
             xref: "cluster§8.5.6.1"
         },
 
-        { name: "CurrentMode", tag: "attribute", xref: "cluster§8.5.6" },
-        { name: "StartUpMode", tag: "attribute", xref: "cluster§8.5.6" },
-        { name: "OnMode", tag: "attribute", xref: "cluster§8.5.6" },
+        { tag: "attribute", name: "CurrentMode", xref: "cluster§8.5.6" },
+        { tag: "attribute", name: "StartUpMode", xref: "cluster§8.5.6" },
+        { tag: "attribute", name: "OnMode", xref: "cluster§8.5.6" },
 
         {
-            name: "ModeOptionStruct", tag: "datatype",
+            tag: "datatype", name: "ModeOptionStruct",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
             xref: "cluster§8.5.5.1"
         },
 
         {
-            name: "ModeTag", tag: "datatype",
+            tag: "datatype", name: "ModeTag",
 
             children: [
-                { name: "Auto", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Quick", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Quiet", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "LowNoise", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "LowEnergy", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Vacation", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Min", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Max", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Night", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Day", tag: "field", xref: "cluster§8.5.7.1" },
-                { name: "Normal", tag: "field", details: "The normal regime of operation.", xref: "cluster§8.5.7.1.1" },
+                { tag: "field", name: "Auto", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Quick", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Quiet", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "LowNoise", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "LowEnergy", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Vacation", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Min", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Max", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Night", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Day", xref: "cluster§8.5.7.1" },
+                { tag: "field", name: "Normal", details: "The normal regime of operation.", xref: "cluster§8.5.7.1.1" },
                 {
-                    name: "Delicate", tag: "field",
+                    tag: "field", name: "Delicate",
                     details: "Mode optimized for washing delicate garments.",
                     xref: "cluster§8.5.7.1.2"
                 },
                 {
-                    name: "Heavy", tag: "field",
+                    tag: "field", name: "Heavy",
                     details: "Mode optimized for heavy washing.",
                     xref: "cluster§8.5.7.1.3"
                 },
                 {
-                    name: "Whites", tag: "field",
+                    tag: "field", name: "Whites",
                     details: "Mode optimized for stain removal on white fabrics.",
                     xref: "cluster§8.5.7.1.4"
                 }

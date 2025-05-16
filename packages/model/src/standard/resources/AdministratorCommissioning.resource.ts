@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AdministratorCommissioning", tag: "cluster",
+    tag: "cluster", name: "AdministratorCommissioning",
     classification: "node", pics: "CADMIN",
 
     details: "This cluster is used to trigger a Node to allow a new Administrator to commission it. It defines " +
@@ -41,13 +41,13 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.19.4",
-            children: [{ name: "BC", tag: "field", details: "Node supports Basic Commissioning Method." }]
+            children: [{ tag: "field", name: "BC", details: "Node supports Basic Commissioning Method." }]
         },
 
         {
-            name: "WindowStatus", tag: "attribute",
+            tag: "attribute", name: "WindowStatus",
 
             details: "Indicates whether a new Commissioning window has been opened by an Administrator, using either the " +
                 "OpenCommissioningWindow command or the OpenBasicCommissioningWindow command." +
@@ -64,7 +64,7 @@ Resource.add({
         },
 
         {
-            name: "AdminFabricIndex", tag: "attribute",
+            tag: "attribute", name: "AdminFabricIndex",
 
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This may " +
@@ -79,7 +79,7 @@ Resource.add({
         },
 
         {
-            name: "AdminVendorId", tag: "attribute",
+            tag: "attribute", name: "AdminVendorId",
 
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "Vendor ID associated with the Fabric scoping of the Administrator that opened the window. This field " +
@@ -94,7 +94,7 @@ Resource.add({
         },
 
         {
-            name: "OpenCommissioningWindow", tag: "command",
+            tag: "command", name: "OpenCommissioningWindow",
 
             details: "This command is used by a current Administrator to instruct a Node to go into commissioning mode. " +
                 "The Enhanced Commissioning Method specifies a window of time during which an already commissioned " +
@@ -132,7 +132,7 @@ Resource.add({
 
             children: [
                 {
-                    name: "CommissioningTimeout", tag: "field",
+                    tag: "field", name: "CommissioningTimeout",
                     details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                         "allowed by the Node. This timeout value shall follow guidance as specified in the initial " +
                         "Announcement Duration. The CommissioningTimeout applies only to cessation of any announcements and " +
@@ -142,7 +142,7 @@ Resource.add({
                 },
 
                 {
-                    name: "PakePasscodeVerifier", tag: "field",
+                    tag: "field", name: "PakePasscodeVerifier",
 
                     details: "This field shall specify an ephemeral PAKE passcode verifier (see Section 3.10, " +
                         "“Password-Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be used for " +
@@ -156,7 +156,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Discriminator", tag: "field",
+                    tag: "field", name: "Discriminator",
                     details: "This field shall be used by the Node as the long discriminator for DNS-SD advertisement (see " +
                         "Commissioning Discriminator) for discovery by the new Administrator. The new Administrator can find " +
                         "and filter DNS-SD records by long discriminator to locate and initiate commissioning with the " +
@@ -165,7 +165,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Iterations", tag: "field",
+                    tag: "field", name: "Iterations",
                     details: "This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE " +
                         "passcode verifier to be used for this commissioning, which shall be sent by the Node to the new " +
                         "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The permitted " +
@@ -175,7 +175,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Salt", tag: "field",
+                    tag: "field", name: "Salt",
 
                     details: "This field shall be used by the Node as the PAKE Salt associated with the ephemeral PAKE passcode " +
                         "verifier to be used for this commissioning, which shall be sent by the Node to the new " +
@@ -198,7 +198,7 @@ Resource.add({
         },
 
         {
-            name: "OpenBasicCommissioningWindow", tag: "command",
+            tag: "command", name: "OpenBasicCommissioningWindow",
 
             details: "This command may be used by a current Administrator to instruct a Node to go into commissioning " +
                 "mode, if the node supports the Basic Commissioning Method. The Basic Commissioning Method specifies " +
@@ -222,7 +222,7 @@ Resource.add({
             xref: "core§11.19.8.2",
 
             children: [{
-                name: "CommissioningTimeout", tag: "field",
+                tag: "field", name: "CommissioningTimeout",
 
                 details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                     "allowed by the Node. This timeout shall follow guidance as specified in the initial Announcement " +
@@ -242,7 +242,7 @@ Resource.add({
         },
 
         {
-            name: "RevokeCommissioning", tag: "command",
+            tag: "command", name: "RevokeCommissioning",
 
             details: "This command is used by a current Administrator to instruct a Node to revoke any active " +
                 "OpenCommissioningWindow or OpenBasicCommissioningWindow command. This is an idempotent command and " +
@@ -262,33 +262,33 @@ Resource.add({
         },
 
         {
-            name: "CommissioningWindowStatusEnum", tag: "datatype",
+            tag: "datatype", name: "CommissioningWindowStatusEnum",
             xref: "core§11.19.5.1",
 
             children: [
-                { name: "WindowNotOpen", tag: "field", description: "Commissioning window not open" },
+                { tag: "field", name: "WindowNotOpen", description: "Commissioning window not open" },
                 {
-                    name: "EnhancedWindowOpen", tag: "field",
+                    tag: "field", name: "EnhancedWindowOpen",
                     description: "An Enhanced Commissioning Method window is open"
                 },
-                { name: "BasicWindowOpen", tag: "field", description: "A Basic Commissioning Method window is open" }
+                { tag: "field", name: "BasicWindowOpen", description: "A Basic Commissioning Method window is open" }
             ]
         },
 
         {
-            name: "StatusCodeEnum", tag: "datatype",
+            tag: "datatype", name: "StatusCodeEnum",
             xref: "core§11.19.6.1",
 
             children: [
                 {
-                    name: "Busy", tag: "field",
+                    tag: "field", name: "Busy",
                     description: "Could not be completed because another commissioning is in progress"
                 },
                 {
-                    name: "PakeParameterError", tag: "field",
+                    tag: "field", name: "PakeParameterError",
                     description: "Provided PAKE parameters were incorrectly formatted or otherwise invalid"
                 },
-                { name: "WindowNotOpen", tag: "field", description: "No commissioning window was currently open" }
+                { tag: "field", name: "WindowNotOpen", description: "No commissioning window was currently open" }
             ]
         }
     ]

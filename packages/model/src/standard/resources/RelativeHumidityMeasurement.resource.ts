@@ -10,7 +10,7 @@ import { Resource } from "#models/Resource.js";
 
 Resource.add(
     {
-        name: "RelativeHumidityMeasurement", tag: "cluster",
+        tag: "cluster", name: "RelativeHumidityMeasurement",
         classification: "application", pics: "RH",
         details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
             "functionality. The measurement is reportable and may be configured for reporting. Water content " +
@@ -19,7 +19,7 @@ Resource.add(
 
         children: [
             {
-                name: "MeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MeasuredValue",
 
                 details: "MeasuredValue represents the water content in % as follows:" +
                     "\n" +
@@ -39,20 +39,20 @@ Resource.add(
             },
 
             {
-                name: "MinMeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MinMeasuredValue",
                 details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                     "The null value means this attribute is not defined. See Measured Value for more details.",
                 xref: "cluster§2.6.4.2"
             },
 
             {
-                name: "MaxMeasuredValue", tag: "attribute",
+                tag: "attribute", name: "MaxMeasuredValue",
                 details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                     "The null value means this attribute is not defined. See Measured Value for more details.",
                 xref: "cluster§2.6.4.3"
             },
 
-            { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.6.4.4" }
+            { tag: "attribute", name: "Tolerance", details: "See Measured Value.", xref: "cluster§2.6.4.4" }
         ]
     }
 );

@@ -17,11 +17,11 @@ import {
 } from "../../elements/index.js";
 
 export const MediaPlayback = Cluster(
-    { id: 0x506, name: "MediaPlayback" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "MediaPlayback", id: 0x506 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
         Field({ name: "AS", constraint: "0", longName: "AdvancedSeek" }),
         Field({ name: "VS", constraint: "1", longName: "VariableSpeed" }),
         Field({ name: "TT", constraint: "2", longName: "TextTracks" }),
@@ -29,195 +29,195 @@ export const MediaPlayback = Cluster(
         Field({ name: "AA", constraint: "4", longName: "AudioAdvance" })
     ),
 
-    Attribute({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", access: "R V", conformance: "M", constraint: "desc" }),
+    Attribute({ name: "CurrentState", id: 0x0, type: "PlaybackStateEnum", constraint: "desc", conformance: "M", access: "R V" }),
     Attribute({
-        id: 0x1, name: "StartTime", type: "epoch-us",
-        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
+        name: "StartTime", id: 0x1, type: "epoch-us",
+        default: null, constraint: "desc", conformance: "AS", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x2, name: "Duration", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
+        name: "Duration", id: 0x2, type: "uint64",
+        default: null, constraint: "desc", conformance: "AS", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x3, name: "SampledPosition", type: "PlaybackPositionStruct",
-        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
+        name: "SampledPosition", id: 0x3, type: "PlaybackPositionStruct",
+        default: null, constraint: "desc", conformance: "AS", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x4, name: "PlaybackSpeed", type: "single",
-        access: "R V", conformance: "AS", constraint: "desc", default: 0
+        name: "PlaybackSpeed", id: 0x4, type: "single",
+        default: 0, constraint: "desc", conformance: "AS", access: "R V"
     }),
     Attribute({
-        id: 0x5, name: "SeekRangeEnd", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
+        name: "SeekRangeEnd", id: 0x5, type: "uint64",
+        default: null, constraint: "desc", conformance: "AS", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x6, name: "SeekRangeStart", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
+        name: "SeekRangeStart", id: 0x6, type: "uint64",
+        default: null, constraint: "desc", conformance: "AS", access: "R V", quality: "X"
     }),
     Attribute({
-        id: 0x7, name: "ActiveAudioTrack", type: "TrackStruct",
-        access: "R V", conformance: "AT", constraint: "desc", default: null, quality: "X"
+        name: "ActiveAudioTrack", id: 0x7, type: "TrackStruct",
+        default: null, constraint: "desc", conformance: "AT", access: "R V", quality: "X"
     }),
 
     Attribute(
         {
-            id: 0x8, name: "AvailableAudioTracks", type: "list",
-            access: "R V", conformance: "AT", constraint: "desc", default: null, quality: "X"
+            name: "AvailableAudioTracks", id: 0x8, type: "list",
+            default: null, constraint: "desc", conformance: "AT", access: "R V", quality: "X"
         },
         Field({ name: "entry", type: "TrackStruct" })
     ),
 
     Attribute({
-        id: 0x9, name: "ActiveTextTrack", type: "TrackStruct",
-        access: "R V", conformance: "TT", constraint: "desc", default: null, quality: "X"
+        name: "ActiveTextTrack", id: 0x9, type: "TrackStruct",
+        default: null, constraint: "desc", conformance: "TT", access: "R V", quality: "X"
     }),
 
     Attribute(
         {
-            id: 0xa, name: "AvailableTextTracks", type: "list",
-            access: "R V", conformance: "TT", constraint: "desc", default: null, quality: "X"
+            name: "AvailableTextTracks", id: 0xa, type: "list",
+            default: null, constraint: "desc", conformance: "TT", access: "R V", quality: "X"
         },
         Field({ name: "entry", type: "TrackStruct" })
     ),
 
     Event(
-        { id: 0x0, name: "StateChanged", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "StartTime", type: "epoch-us", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x2, name: "Duration", type: "uint64", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x3, name: "SampledPosition", type: "PlaybackPositionStruct", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x4, name: "PlaybackSpeed", type: "single", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x5, name: "SeekRangeEnd", type: "uint64", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x6, name: "SeekRangeStart", type: "uint64", conformance: "AS", constraint: "desc" }),
-        Field({ id: 0x7, name: "Data", type: "octstr", conformance: "O", constraint: "max 900" }),
-        Field({ id: 0x8, name: "AudioAdvanceUnmuted", type: "bool", conformance: "AA", constraint: "desc", default: false })
+        { name: "StateChanged", id: 0x0, conformance: "O", access: "V", priority: "info" },
+        Field({ name: "CurrentState", id: 0x0, type: "PlaybackStateEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "StartTime", id: 0x1, type: "epoch-us", constraint: "desc", conformance: "AS" }),
+        Field({ name: "Duration", id: 0x2, type: "uint64", constraint: "desc", conformance: "AS" }),
+        Field({ name: "SampledPosition", id: 0x3, type: "PlaybackPositionStruct", constraint: "desc", conformance: "AS" }),
+        Field({ name: "PlaybackSpeed", id: 0x4, type: "single", constraint: "desc", conformance: "AS" }),
+        Field({ name: "SeekRangeEnd", id: 0x5, type: "uint64", constraint: "desc", conformance: "AS" }),
+        Field({ name: "SeekRangeStart", id: 0x6, type: "uint64", constraint: "desc", conformance: "AS" }),
+        Field({ name: "Data", id: 0x7, type: "octstr", constraint: "max 900", conformance: "O" }),
+        Field({ name: "AudioAdvanceUnmuted", id: 0x8, type: "bool", default: false, constraint: "desc", conformance: "AA" })
     ),
 
-    Command({ id: 0x0, name: "Play", access: "O", conformance: "M", direction: "request", response: "PlaybackResponse" }),
-    Command({ id: 0x1, name: "Pause", access: "O", conformance: "M", direction: "request", response: "PlaybackResponse" }),
-    Command({ id: 0x2, name: "Stop", access: "O", conformance: "M", direction: "request", response: "PlaybackResponse" }),
-    Command({ id: 0x3, name: "StartOver", access: "O", conformance: "O", direction: "request", response: "PlaybackResponse" }),
-    Command({ id: 0x4, name: "Previous", access: "O", conformance: "O", direction: "request", response: "PlaybackResponse" }),
-    Command({ id: 0x5, name: "Next", access: "O", conformance: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "Play", id: 0x0, conformance: "M", access: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "Pause", id: 0x1, conformance: "M", access: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "Stop", id: 0x2, conformance: "M", access: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "StartOver", id: 0x3, conformance: "O", access: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "Previous", id: 0x4, conformance: "O", access: "O", direction: "request", response: "PlaybackResponse" }),
+    Command({ name: "Next", id: 0x5, conformance: "O", access: "O", direction: "request", response: "PlaybackResponse" }),
     Command(
-        { id: 0x6, name: "Rewind", access: "O", conformance: "VS", direction: "request", response: "PlaybackResponse" },
-        Field({ id: 0x0, name: "AudioAdvanceUnmuted", type: "bool", conformance: "AA", default: false })
-    ),
-
-    Command(
-        {
-            id: 0x7, name: "FastForward",
-            access: "O", conformance: "VS", direction: "request", response: "PlaybackResponse"
-        },
-        Field({ id: 0x0, name: "AudioAdvanceUnmuted", type: "bool", conformance: "AA", default: false })
+        { name: "Rewind", id: 0x6, conformance: "VS", access: "O", direction: "request", response: "PlaybackResponse" },
+        Field({ name: "AudioAdvanceUnmuted", id: 0x0, type: "bool", default: false, conformance: "AA" })
     ),
 
     Command(
         {
-            id: 0x8, name: "SkipForward",
-            access: "O", conformance: "O", direction: "request", response: "PlaybackResponse"
+            name: "FastForward", id: 0x7,
+            conformance: "VS", access: "O", direction: "request", response: "PlaybackResponse"
         },
-        Field({ id: 0x0, name: "DeltaPositionMilliseconds", type: "uint64", conformance: "M" })
+        Field({ name: "AudioAdvanceUnmuted", id: 0x0, type: "bool", default: false, conformance: "AA" })
     ),
 
     Command(
         {
-            id: 0x9, name: "SkipBackward",
-            access: "O", conformance: "O", direction: "request", response: "PlaybackResponse"
+            name: "SkipForward", id: 0x8,
+            conformance: "O", access: "O", direction: "request", response: "PlaybackResponse"
         },
-        Field({ id: 0x0, name: "DeltaPositionMilliseconds", type: "uint64", conformance: "M" })
-    ),
-
-    Command(
-        { id: 0xa, name: "PlaybackResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M", constraint: "desc" }),
-        Field({ id: 0x1, name: "Data", type: "string", conformance: "O", constraint: "any" })
-    ),
-    Command(
-        { id: 0xb, name: "Seek", access: "O", conformance: "AS", direction: "request", response: "PlaybackResponse" },
-        Field({ id: 0x0, name: "Position", type: "uint64", conformance: "M" })
+        Field({ name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0xc, name: "ActivateAudioTrack",
-            access: "O", conformance: "AT", direction: "request", response: "status"
+            name: "SkipBackward", id: 0x9,
+            conformance: "O", access: "O", direction: "request", response: "PlaybackResponse"
         },
-        Field({ id: 0x0, name: "TrackId", type: "string", conformance: "M", constraint: "max 32" }),
-        Field({ id: 0x1, name: "AudioOutputIndex", type: "uint8", conformance: "AT", quality: "X" })
+        Field({ name: "DeltaPositionMilliseconds", id: 0x0, type: "uint64", conformance: "M" })
+    ),
+
+    Command(
+        { name: "PlaybackResponse", id: 0xa, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", constraint: "desc", conformance: "M" }),
+        Field({ name: "Data", id: 0x1, type: "string", constraint: "any", conformance: "O" })
+    ),
+    Command(
+        { name: "Seek", id: 0xb, conformance: "AS", access: "O", direction: "request", response: "PlaybackResponse" },
+        Field({ name: "Position", id: 0x0, type: "uint64", conformance: "M" })
     ),
 
     Command(
         {
-            id: 0xd, name: "ActivateTextTrack",
-            access: "O", conformance: "TT", direction: "request", response: "status"
+            name: "ActivateAudioTrack", id: 0xc,
+            conformance: "AT", access: "O", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "TrackId", type: "string", conformance: "M", constraint: "max 32" })
+        Field({ name: "TrackId", id: 0x0, type: "string", constraint: "max 32", conformance: "M" }),
+        Field({ name: "AudioOutputIndex", id: 0x1, type: "uint8", conformance: "AT", quality: "X" })
     ),
 
-    Command({ id: 0xe, name: "DeactivateTextTrack", access: "O", conformance: "TT", direction: "request", response: "status" }),
+    Command(
+        {
+            name: "ActivateTextTrack", id: 0xd,
+            conformance: "TT", access: "O", direction: "request", response: "status"
+        },
+        Field({ name: "TrackId", id: 0x0, type: "string", constraint: "max 32", conformance: "M" })
+    ),
+
+    Command({ name: "DeactivateTextTrack", id: 0xe, conformance: "TT", access: "O", direction: "request", response: "status" }),
 
     Datatype(
         { name: "PlaybackStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Playing", conformance: "M" }),
-        Field({ id: 0x1, name: "Paused", conformance: "M" }),
-        Field({ id: 0x2, name: "NotPlaying", conformance: "M" }),
-        Field({ id: 0x3, name: "Buffering", conformance: "M" })
+        Field({ name: "Playing", id: 0x0, conformance: "M" }),
+        Field({ name: "Paused", id: 0x1, conformance: "M" }),
+        Field({ name: "NotPlaying", id: 0x2, conformance: "M" }),
+        Field({ name: "Buffering", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Success", conformance: "M" }),
-        Field({ id: 0x1, name: "InvalidStateForCommand", conformance: "M" }),
-        Field({ id: 0x2, name: "NotAllowed", conformance: "M" }),
-        Field({ id: 0x3, name: "NotActive", conformance: "M" }),
-        Field({ id: 0x4, name: "SpeedOutOfRange", conformance: "VS" }),
-        Field({ id: 0x5, name: "SeekOutOfRange", conformance: "AS" })
+        Field({ name: "Success", id: 0x0, conformance: "M" }),
+        Field({ name: "InvalidStateForCommand", id: 0x1, conformance: "M" }),
+        Field({ name: "NotAllowed", id: 0x2, conformance: "M" }),
+        Field({ name: "NotActive", id: 0x3, conformance: "M" }),
+        Field({ name: "SpeedOutOfRange", id: 0x4, conformance: "VS" }),
+        Field({ name: "SeekOutOfRange", id: 0x5, conformance: "AS" })
     ),
 
     Datatype(
         { name: "CharacteristicEnum", type: "enum8" },
-        Field({ id: 0x0, name: "ForcedSubtitles", conformance: "M" }),
-        Field({ id: 0x1, name: "DescribesVideo", conformance: "M" }),
-        Field({ id: 0x2, name: "EasyToRead", conformance: "M" }),
-        Field({ id: 0x3, name: "FrameBased", conformance: "M" }),
-        Field({ id: 0x4, name: "MainProgram", conformance: "M" }),
-        Field({ id: 0x5, name: "OriginalContent", conformance: "M" }),
-        Field({ id: 0x6, name: "VoiceOverTranslation", conformance: "M" }),
-        Field({ id: 0x7, name: "Caption", conformance: "M" }),
-        Field({ id: 0x8, name: "Subtitle", conformance: "M" }),
-        Field({ id: 0x9, name: "Alternate", conformance: "M" }),
-        Field({ id: 0xa, name: "Supplementary", conformance: "M" }),
-        Field({ id: 0xb, name: "Commentary", conformance: "M" }),
-        Field({ id: 0xc, name: "DubbedTranslation", conformance: "M" }),
-        Field({ id: 0xd, name: "Description", conformance: "M" }),
-        Field({ id: 0xe, name: "Metadata", conformance: "M" }),
-        Field({ id: 0xf, name: "EnhancedAudioIntelligibility", conformance: "M" }),
-        Field({ id: 0x10, name: "Emergency", conformance: "M" }),
-        Field({ id: 0x11, name: "Karaoke", conformance: "M" })
+        Field({ name: "ForcedSubtitles", id: 0x0, conformance: "M" }),
+        Field({ name: "DescribesVideo", id: 0x1, conformance: "M" }),
+        Field({ name: "EasyToRead", id: 0x2, conformance: "M" }),
+        Field({ name: "FrameBased", id: 0x3, conformance: "M" }),
+        Field({ name: "MainProgram", id: 0x4, conformance: "M" }),
+        Field({ name: "OriginalContent", id: 0x5, conformance: "M" }),
+        Field({ name: "VoiceOverTranslation", id: 0x6, conformance: "M" }),
+        Field({ name: "Caption", id: 0x7, conformance: "M" }),
+        Field({ name: "Subtitle", id: 0x8, conformance: "M" }),
+        Field({ name: "Alternate", id: 0x9, conformance: "M" }),
+        Field({ name: "Supplementary", id: 0xa, conformance: "M" }),
+        Field({ name: "Commentary", id: 0xb, conformance: "M" }),
+        Field({ name: "DubbedTranslation", id: 0xc, conformance: "M" }),
+        Field({ name: "Description", id: 0xd, conformance: "M" }),
+        Field({ name: "Metadata", id: 0xe, conformance: "M" }),
+        Field({ name: "EnhancedAudioIntelligibility", id: 0xf, conformance: "M" }),
+        Field({ name: "Emergency", id: 0x10, conformance: "M" }),
+        Field({ name: "Karaoke", id: 0x11, conformance: "M" })
     ),
 
     Datatype(
         { name: "PlaybackPositionStruct", type: "struct" },
-        Field({ id: 0x0, name: "UpdatedAt", type: "epoch-us", conformance: "M" }),
-        Field({ id: 0x1, name: "Position", type: "uint64", conformance: "M", quality: "X" })
+        Field({ name: "UpdatedAt", id: 0x0, type: "epoch-us", conformance: "M" }),
+        Field({ name: "Position", id: 0x1, type: "uint64", conformance: "M", quality: "X" })
     ),
     Datatype(
         { name: "TrackStruct", type: "struct" },
-        Field({ id: 0x0, name: "Id", type: "string", conformance: "M", constraint: "max 32" }),
-        Field({ id: 0x1, name: "TrackAttributes", type: "TrackAttributesStruct", conformance: "M" })
+        Field({ name: "Id", id: 0x0, type: "string", constraint: "max 32", conformance: "M" }),
+        Field({ name: "TrackAttributes", id: 0x1, type: "TrackAttributesStruct", conformance: "M" })
     ),
 
     Datatype(
         { name: "TrackAttributesStruct", type: "struct" },
-        Field({ id: 0x0, name: "LanguageCode", type: "string", conformance: "M", constraint: "max 32" }),
+        Field({ name: "LanguageCode", id: 0x0, type: "string", constraint: "max 32", conformance: "M" }),
         Field(
-            { id: 0x1, name: "Characteristics", type: "list", conformance: "O", default: null, quality: "X" },
+            { name: "Characteristics", id: 0x1, type: "list", default: null, conformance: "O", quality: "X" },
             Field({ name: "entry", type: "CharacteristicEnum" })
         ),
         Field({
-            id: 0x2, name: "DisplayName", type: "string",
-            conformance: "O", constraint: "max 256", default: null, quality: "X"
+            name: "DisplayName", id: 0x2, type: "string",
+            default: null, constraint: "max 256", conformance: "O", quality: "X"
         })
     )
 );

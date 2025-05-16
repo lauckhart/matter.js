@@ -9,16 +9,16 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "DoorLock", tag: "deviceType",
+    tag: "deviceType", name: "DoorLock",
     classification: "simple",
     details: "A Door Lock is a device used to secure a door. It is possible to actuate a door lock either by means " +
         "of a manual or a remote method.",
     xref: "device§8.1",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§8.1.4" },
-        { name: "Groups", tag: "requirement", xref: "device§8.1.4" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§8.1.4" },
-        { name: "DoorLock", tag: "requirement", xref: "device§8.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§8.1.4" },
+        { tag: "requirement", name: "Groups", xref: "device§8.1.4" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§8.1.4" },
+        { tag: "requirement", name: "DoorLock", xref: "device§8.1.4" }
     ]
 });

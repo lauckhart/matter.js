@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "GeneratedCommandList", tag: "attribute",
+    tag: "attribute", name: "GeneratedCommandList",
 
     details: "This attribute is a list of server generated commands. A server generated command is a server to " +
         "client command." +

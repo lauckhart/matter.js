@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "RvcRunMode", tag: "cluster",
+    tag: "cluster", name: "RvcRunMode",
     classification: "application", pics: "RVCRUNM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for the running modes of robotic vacuum cleaner devices.",
@@ -17,13 +17,13 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§7.2.4",
-            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+            children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
 
             details: "At least one entry in the SupportedModes attribute shall include the Idle mode tag in the ModeTags " +
                 "field." +
@@ -37,49 +37,49 @@ Resource.add({
             xref: "cluster§7.2.6.1"
         },
 
-        { name: "CurrentMode", tag: "attribute", xref: "cluster§7.2.6" },
-        { name: "StartUpMode", tag: "attribute", xref: "cluster§7.2.6" },
-        { name: "OnMode", tag: "attribute", xref: "cluster§7.2.6" },
+        { tag: "attribute", name: "CurrentMode", xref: "cluster§7.2.6" },
+        { tag: "attribute", name: "StartUpMode", xref: "cluster§7.2.6" },
+        { tag: "attribute", name: "OnMode", xref: "cluster§7.2.6" },
 
         {
-            name: "ModeOptionStruct", tag: "datatype",
+            tag: "datatype", name: "ModeOptionStruct",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
             xref: "cluster§7.2.5.1"
         },
 
         {
-            name: "ModeChangeStatus", tag: "datatype",
+            tag: "datatype", name: "ModeChangeStatus",
 
             children: [
-                { name: "Stuck", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "DustBinMissing", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "DustBinFull", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "WaterTankEmpty", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "WaterTankMissing", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "WaterTankLidOpen", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "MopCleaningPadMissing", tag: "field", xref: "cluster§7.2.7.1" },
-                { name: "BatteryLow", tag: "field", xref: "cluster§7.2.7.1" }
+                { tag: "field", name: "Stuck", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "DustBinMissing", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "DustBinFull", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "WaterTankEmpty", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "WaterTankMissing", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "WaterTankLidOpen", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "MopCleaningPadMissing", xref: "cluster§7.2.7.1" },
+                { tag: "field", name: "BatteryLow", xref: "cluster§7.2.7.1" }
             ]
         },
 
         {
-            name: "ModeTag", tag: "datatype",
+            tag: "datatype", name: "ModeTag",
 
             children: [
-                { name: "Auto", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Quick", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Quiet", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "LowNoise", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "LowEnergy", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Vacation", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Min", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Max", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Night", tag: "field", xref: "cluster§7.2.7.2" },
-                { name: "Day", tag: "field", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Auto", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Quick", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Quiet", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "LowNoise", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "LowEnergy", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Vacation", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Min", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Max", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Night", xref: "cluster§7.2.7.2" },
+                { tag: "field", name: "Day", xref: "cluster§7.2.7.2" },
 
                 {
-                    name: "Idle", tag: "field",
+                    tag: "field", name: "Idle",
                     details: "The device is not performing any of the main operations of the other modes. However, auxiliary " +
                         "actions, such as seeking the charger or charging, may occur." +
                         "\n" +
@@ -89,7 +89,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Cleaning", tag: "field",
+                    tag: "field", name: "Cleaning",
                     details: "The device was asked to clean so it may be actively running, or paused due to an error, due to a " +
                         "pause command, or for recharging etc. If currently paused and the device can resume it will continue " +
                         "to clean.",
@@ -97,7 +97,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Mapping", tag: "field",
+                    tag: "field", name: "Mapping",
 
                     details: "The device was asked to create a map of the space it is located in, so it may be actively running, " +
                         "or paused due to an error, due to a pause command, or for recharging etc. If currently paused and " +

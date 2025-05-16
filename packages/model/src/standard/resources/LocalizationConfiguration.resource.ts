@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "LocalizationConfiguration", tag: "cluster",
+    tag: "cluster", name: "LocalizationConfiguration",
     classification: "node", pics: "LCFG",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -24,7 +24,7 @@ Resource.add({
 
     children: [
         {
-            name: "ActiveLocale", tag: "attribute",
+            tag: "attribute", name: "ActiveLocale",
 
             details: "The ActiveLocale attribute shall represent the locale that the Node is currently configured to use " +
                 "when conveying information. The ActiveLocale attribute shall be a Language Tag as defined by BCP47. " +
@@ -38,7 +38,7 @@ Resource.add({
         },
 
         {
-            name: "SupportedLocales", tag: "attribute",
+            tag: "attribute", name: "SupportedLocales",
             details: "The SupportedLocales attribute shall represent a list of locale strings that are valid values for " +
                 "the ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items " +
                 "within the list SHOULD NOT express any meaning.",

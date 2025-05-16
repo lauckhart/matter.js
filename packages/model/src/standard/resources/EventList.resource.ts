@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "EventList", tag: "attribute", xref: "core§7.13" });
+Resource.add({ tag: "attribute", name: "EventList", xref: "core§7.13" });

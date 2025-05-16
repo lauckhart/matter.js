@@ -8,4 +8,4 @@
 
 import { Resource } from "#models/Resource.js";
 
-Resource.add({ name: "uint64", tag: "datatype", description: "Unsigned 64-bit integer", xref: "core§7.19.1" });
+Resource.add({ tag: "datatype", name: "uint64", description: "Unsigned 64-bit integer", xref: "core§7.19.1" });

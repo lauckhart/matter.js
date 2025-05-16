@@ -16,84 +16,84 @@ import {
 } from "../../elements/index.js";
 
 export const OtaSoftwareUpdateProvider = Cluster(
-    { id: 0x29, name: "OtaSoftwareUpdateProvider" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "OtaSoftwareUpdateProvider", id: 0x29 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
         {
-            id: 0x0, name: "QueryImage",
-            access: "O", conformance: "M", direction: "request", response: "QueryImageResponse"
+            name: "QueryImage", id: 0x0,
+            conformance: "M", access: "O", direction: "request", response: "QueryImageResponse"
         },
-        Field({ id: 0x0, name: "VendorId", type: "vendor-id", conformance: "M" }),
-        Field({ id: 0x1, name: "ProductId", type: "uint16", conformance: "M" }),
-        Field({ id: 0x2, name: "SoftwareVersion", type: "uint32", conformance: "M" }),
+        Field({ name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" }),
+        Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }),
+        Field({ name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" }),
         Field(
-            { id: 0x3, name: "ProtocolsSupported", type: "list", conformance: "M", constraint: "max 8" },
+            { name: "ProtocolsSupported", id: 0x3, type: "list", constraint: "max 8", conformance: "M" },
             Field({ name: "entry", type: "DownloadProtocolEnum" })
         ),
-        Field({ id: 0x4, name: "HardwareVersion", type: "uint16", conformance: "O" }),
-        Field({ id: 0x5, name: "Location", type: "string", conformance: "O", constraint: "2" }),
-        Field({ id: 0x6, name: "RequestorCanConsent", type: "bool", conformance: "O", default: false }),
-        Field({ id: 0x7, name: "MetadataForProvider", type: "octstr", conformance: "O", constraint: "max 512" })
+        Field({ name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" }),
+        Field({ name: "Location", id: 0x5, type: "string", constraint: "2", conformance: "O" }),
+        Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", default: false, conformance: "O" }),
+        Field({ name: "MetadataForProvider", id: 0x7, type: "octstr", constraint: "max 512", conformance: "O" })
     ),
 
     Command(
-        { id: 0x1, name: "QueryImageResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "DelayedActionTime", type: "uint32", conformance: "O" }),
-        Field({ id: 0x2, name: "ImageUri", type: "string", conformance: "O", constraint: "max 256" }),
-        Field({ id: 0x3, name: "SoftwareVersion", type: "uint32", conformance: "O" }),
-        Field({ id: 0x4, name: "SoftwareVersionString", type: "string", conformance: "O", constraint: "1 to 64" }),
-        Field({ id: 0x5, name: "UpdateToken", type: "octstr", conformance: "O", constraint: "8 to 32" }),
-        Field({ id: 0x6, name: "UserConsentNeeded", type: "bool", conformance: "O", default: false }),
-        Field({ id: 0x7, name: "MetadataForRequestor", type: "octstr", conformance: "O", constraint: "max 512" })
-    ),
-
-    Command(
-        {
-            id: 0x2, name: "ApplyUpdateRequest",
-            access: "O", conformance: "M", direction: "request", response: "ApplyUpdateResponse"
-        },
-        Field({ id: 0x0, name: "UpdateToken", type: "octstr", conformance: "M", constraint: "8 to 32" }),
-        Field({ id: 0x1, name: "NewVersion", type: "uint32", conformance: "M" })
-    ),
-
-    Command(
-        { id: 0x3, name: "ApplyUpdateResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Action", type: "ApplyUpdateActionEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "DelayedActionTime", type: "uint32", conformance: "M" })
+        { name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response" },
+        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+        Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" }),
+        Field({ name: "ImageUri", id: 0x2, type: "string", constraint: "max 256", conformance: "O" }),
+        Field({ name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" }),
+        Field({ name: "SoftwareVersionString", id: 0x4, type: "string", constraint: "1 to 64", conformance: "O" }),
+        Field({ name: "UpdateToken", id: 0x5, type: "octstr", constraint: "8 to 32", conformance: "O" }),
+        Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", default: false, conformance: "O" }),
+        Field({ name: "MetadataForRequestor", id: 0x7, type: "octstr", constraint: "max 512", conformance: "O" })
     ),
 
     Command(
         {
-            id: 0x4, name: "NotifyUpdateApplied",
-            access: "O", conformance: "M", direction: "request", response: "status"
+            name: "ApplyUpdateRequest", id: 0x2,
+            conformance: "M", access: "O", direction: "request", response: "ApplyUpdateResponse"
         },
-        Field({ id: 0x0, name: "UpdateToken", type: "octstr", conformance: "M", constraint: "8 to 32" }),
-        Field({ id: 0x1, name: "SoftwareVersion", type: "uint32", conformance: "M" })
+        Field({ name: "UpdateToken", id: 0x0, type: "octstr", constraint: "8 to 32", conformance: "M" }),
+        Field({ name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" })
+    ),
+
+    Command(
+        { name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response" },
+        Field({ name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M" }),
+        Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M" })
+    ),
+
+    Command(
+        {
+            name: "NotifyUpdateApplied", id: 0x4,
+            conformance: "M", access: "O", direction: "request", response: "status"
+        },
+        Field({ name: "UpdateToken", id: 0x0, type: "octstr", constraint: "8 to 32", conformance: "M" }),
+        Field({ name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" })
     ),
 
     Datatype(
         { name: "StatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "UpdateAvailable", conformance: "M" }),
-        Field({ id: 0x1, name: "Busy", conformance: "M" }),
-        Field({ id: 0x2, name: "NotAvailable", conformance: "M" }),
-        Field({ id: 0x3, name: "DownloadProtocolNotSupported", conformance: "M" })
+        Field({ name: "UpdateAvailable", id: 0x0, conformance: "M" }),
+        Field({ name: "Busy", id: 0x1, conformance: "M" }),
+        Field({ name: "NotAvailable", id: 0x2, conformance: "M" }),
+        Field({ name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "ApplyUpdateActionEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Proceed", conformance: "M" }),
-        Field({ id: 0x1, name: "AwaitNextAction", conformance: "M" }),
-        Field({ id: 0x2, name: "Discontinue", conformance: "M" })
+        Field({ name: "Proceed", id: 0x0, conformance: "M" }),
+        Field({ name: "AwaitNextAction", id: 0x1, conformance: "M" }),
+        Field({ name: "Discontinue", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "DownloadProtocolEnum", type: "enum8" },
-        Field({ id: 0x0, name: "BdxSynchronous", conformance: "M" }),
-        Field({ id: 0x1, name: "BdxAsynchronous", conformance: "O" }),
-        Field({ id: 0x2, name: "Https", conformance: "O" }),
-        Field({ id: 0x3, name: "VendorSpecific", conformance: "O" })
+        Field({ name: "BdxSynchronous", id: 0x0, conformance: "M" }),
+        Field({ name: "BdxAsynchronous", id: 0x1, conformance: "O" }),
+        Field({ name: "Https", id: 0x2, conformance: "O" }),
+        Field({ name: "VendorSpecific", id: 0x3, conformance: "O" })
     )
 );
 

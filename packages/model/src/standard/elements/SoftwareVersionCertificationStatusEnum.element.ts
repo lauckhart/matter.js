@@ -11,10 +11,10 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const SoftwareVersionCertificationStatusEnum = Datatype(
     { name: "SoftwareVersionCertificationStatusEnum", type: "enum8" },
-    Field({ id: 0x0, name: "DevTest", conformance: "M" }),
-    Field({ id: 0x1, name: "Provisional", conformance: "M" }),
-    Field({ id: 0x2, name: "Certified", conformance: "M" }),
-    Field({ id: 0x3, name: "Revoked", conformance: "M" })
+    Field({ name: "DevTest", id: 0x0, conformance: "M" }),
+    Field({ name: "Provisional", id: 0x1, conformance: "M" }),
+    Field({ name: "Certified", id: 0x2, conformance: "M" }),
+    Field({ name: "Revoked", id: 0x3, conformance: "M" })
 );
 
 MatterDefinition.children.push(SoftwareVersionCertificationStatusEnum);

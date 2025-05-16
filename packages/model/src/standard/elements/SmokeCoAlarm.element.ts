@@ -17,104 +17,104 @@ import {
 } from "../../elements/index.js";
 
 export const SmokeCoAlarm = Cluster(
-    { id: 0x5c, name: "SmokeCoAlarm" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "SmokeCoAlarm", id: 0x5c },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SMOKE", conformance: "O.a+", constraint: "0", longName: "SmokeAlarm" }),
-        Field({ name: "CO", conformance: "O.a+", constraint: "1", longName: "CoAlarm" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "SMOKE", constraint: "0", conformance: "O.a+", longName: "SmokeAlarm" }),
+        Field({ name: "CO", constraint: "1", conformance: "O.a+", longName: "CoAlarm" })
     ),
     Attribute(
-        { id: 0x0, name: "ExpressedState", type: "ExpressedStateEnum", access: "R V", conformance: "M", quality: "N" }
+        { name: "ExpressedState", id: 0x0, type: "ExpressedStateEnum", conformance: "M", access: "R V", quality: "N" }
     ),
-    Attribute({ id: 0x1, name: "SmokeState", type: "AlarmStateEnum", access: "R V", conformance: "SMOKE", quality: "N" }),
-    Attribute({ id: 0x2, name: "CoState", type: "AlarmStateEnum", access: "R V", conformance: "CO", quality: "N" }),
-    Attribute({ id: 0x3, name: "BatteryAlert", type: "AlarmStateEnum", access: "R V", conformance: "M", quality: "N" }),
-    Attribute({ id: 0x4, name: "DeviceMuted", type: "MuteStateEnum", access: "R V", conformance: "O", quality: "N" }),
-    Attribute({ id: 0x5, name: "TestInProgress", type: "bool", access: "R V", conformance: "M" }),
-    Attribute({ id: 0x6, name: "HardwareFaultAlert", type: "bool", access: "R V", conformance: "M", quality: "N" }),
+    Attribute({ name: "SmokeState", id: 0x1, type: "AlarmStateEnum", conformance: "SMOKE", access: "R V", quality: "N" }),
+    Attribute({ name: "CoState", id: 0x2, type: "AlarmStateEnum", conformance: "CO", access: "R V", quality: "N" }),
+    Attribute({ name: "BatteryAlert", id: 0x3, type: "AlarmStateEnum", conformance: "M", access: "R V", quality: "N" }),
+    Attribute({ name: "DeviceMuted", id: 0x4, type: "MuteStateEnum", conformance: "O", access: "R V", quality: "N" }),
+    Attribute({ name: "TestInProgress", id: 0x5, type: "bool", conformance: "M", access: "R V" }),
+    Attribute({ name: "HardwareFaultAlert", id: 0x6, type: "bool", conformance: "M", access: "R V", quality: "N" }),
     Attribute(
-        { id: 0x7, name: "EndOfServiceAlert", type: "EndOfServiceEnum", access: "R V", conformance: "M", quality: "N" }
+        { name: "EndOfServiceAlert", id: 0x7, type: "EndOfServiceEnum", conformance: "M", access: "R V", quality: "N" }
     ),
-    Attribute({ id: 0x8, name: "InterconnectSmokeAlarm", type: "AlarmStateEnum", access: "R V", conformance: "O" }),
-    Attribute({ id: 0x9, name: "InterconnectCoAlarm", type: "AlarmStateEnum", access: "R V", conformance: "O" }),
+    Attribute({ name: "InterconnectSmokeAlarm", id: 0x8, type: "AlarmStateEnum", conformance: "O", access: "R V" }),
+    Attribute({ name: "InterconnectCoAlarm", id: 0x9, type: "AlarmStateEnum", conformance: "O", access: "R V" }),
     Attribute(
-        { id: 0xa, name: "ContaminationState", type: "ContaminationStateEnum", access: "R V", conformance: "[SMOKE]" }
+        { name: "ContaminationState", id: 0xa, type: "ContaminationStateEnum", conformance: "[SMOKE]", access: "R V" }
     ),
-    Attribute({ id: 0xb, name: "SmokeSensitivityLevel", type: "SensitivityEnum", access: "RW VM", conformance: "[SMOKE]" }),
-    Attribute({ id: 0xc, name: "ExpiryDate", type: "epoch-s", access: "R V", conformance: "O", quality: "F" }),
+    Attribute({ name: "SmokeSensitivityLevel", id: 0xb, type: "SensitivityEnum", conformance: "[SMOKE]", access: "RW VM" }),
+    Attribute({ name: "ExpiryDate", id: 0xc, type: "epoch-s", conformance: "O", access: "R V", quality: "F" }),
     Event(
-        { id: 0x0, name: "SmokeAlarm", access: "V", conformance: "SMOKE", priority: "critical" },
-        Field({ id: 0x0, name: "AlarmSeverityLevel", type: "AlarmStateEnum", conformance: "M" })
-    ),
-    Event(
-        { id: 0x1, name: "CoAlarm", access: "V", conformance: "CO", priority: "critical" },
-        Field({ id: 0x0, name: "AlarmSeverityLevel", type: "AlarmStateEnum", conformance: "M" })
+        { name: "SmokeAlarm", id: 0x0, conformance: "SMOKE", access: "V", priority: "critical" },
+        Field({ name: "AlarmSeverityLevel", id: 0x0, type: "AlarmStateEnum", conformance: "M" })
     ),
     Event(
-        { id: 0x2, name: "LowBattery", access: "V", conformance: "M", priority: "info" },
-        Field({ id: 0x0, name: "AlarmSeverityLevel", type: "AlarmStateEnum", conformance: "M" })
-    ),
-    Event({ id: 0x3, name: "HardwareFault", access: "V", conformance: "M", priority: "info" }),
-    Event({ id: 0x4, name: "EndOfService", access: "V", conformance: "M", priority: "info" }),
-    Event({ id: 0x5, name: "SelfTestComplete", access: "V", conformance: "M", priority: "info" }),
-    Event({ id: 0x6, name: "AlarmMuted", access: "V", conformance: "O", priority: "info" }),
-    Event({ id: 0x7, name: "MuteEnded", access: "V", conformance: "O", priority: "info" }),
-    Event(
-        { id: 0x8, name: "InterconnectSmokeAlarm", access: "V", conformance: "[SMOKE]", priority: "critical" },
-        Field({ id: 0x0, name: "AlarmSeverityLevel", type: "AlarmStateEnum", conformance: "M" })
+        { name: "CoAlarm", id: 0x1, conformance: "CO", access: "V", priority: "critical" },
+        Field({ name: "AlarmSeverityLevel", id: 0x0, type: "AlarmStateEnum", conformance: "M" })
     ),
     Event(
-        { id: 0x9, name: "InterconnectCoAlarm", access: "V", conformance: "[CO]", priority: "critical" },
-        Field({ id: 0x0, name: "AlarmSeverityLevel", type: "AlarmStateEnum", conformance: "M" })
+        { name: "LowBattery", id: 0x2, conformance: "M", access: "V", priority: "info" },
+        Field({ name: "AlarmSeverityLevel", id: 0x0, type: "AlarmStateEnum", conformance: "M" })
     ),
-    Event({ id: 0xa, name: "AllClear", access: "V", conformance: "M", priority: "info" }),
-    Command({ id: 0x0, name: "SelfTestRequest", access: "O", conformance: "O", direction: "request", response: "status" }),
+    Event({ name: "HardwareFault", id: 0x3, conformance: "M", access: "V", priority: "info" }),
+    Event({ name: "EndOfService", id: 0x4, conformance: "M", access: "V", priority: "info" }),
+    Event({ name: "SelfTestComplete", id: 0x5, conformance: "M", access: "V", priority: "info" }),
+    Event({ name: "AlarmMuted", id: 0x6, conformance: "O", access: "V", priority: "info" }),
+    Event({ name: "MuteEnded", id: 0x7, conformance: "O", access: "V", priority: "info" }),
+    Event(
+        { name: "InterconnectSmokeAlarm", id: 0x8, conformance: "[SMOKE]", access: "V", priority: "critical" },
+        Field({ name: "AlarmSeverityLevel", id: 0x0, type: "AlarmStateEnum", conformance: "M" })
+    ),
+    Event(
+        { name: "InterconnectCoAlarm", id: 0x9, conformance: "[CO]", access: "V", priority: "critical" },
+        Field({ name: "AlarmSeverityLevel", id: 0x0, type: "AlarmStateEnum", conformance: "M" })
+    ),
+    Event({ name: "AllClear", id: 0xa, conformance: "M", access: "V", priority: "info" }),
+    Command({ name: "SelfTestRequest", id: 0x0, conformance: "O", access: "O", direction: "request", response: "status" }),
 
     Datatype(
         { name: "AlarmStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Normal", conformance: "M" }),
-        Field({ id: 0x1, name: "Warning", conformance: "O" }),
-        Field({ id: 0x2, name: "Critical", conformance: "M" })
+        Field({ name: "Normal", id: 0x0, conformance: "M" }),
+        Field({ name: "Warning", id: 0x1, conformance: "O" }),
+        Field({ name: "Critical", id: 0x2, conformance: "M" })
     ),
 
     Datatype(
         { name: "SensitivityEnum", type: "enum8" },
-        Field({ id: 0x0, name: "High", conformance: "O" }),
-        Field({ id: 0x1, name: "Standard", conformance: "M" }),
-        Field({ id: 0x2, name: "Low", conformance: "O" })
+        Field({ name: "High", id: 0x0, conformance: "O" }),
+        Field({ name: "Standard", id: 0x1, conformance: "M" }),
+        Field({ name: "Low", id: 0x2, conformance: "O" })
     ),
 
     Datatype(
         { name: "ExpressedStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Normal", conformance: "M" }),
-        Field({ id: 0x1, name: "SmokeAlarm", conformance: "SMOKE" }),
-        Field({ id: 0x2, name: "CoAlarm", conformance: "CO" }),
-        Field({ id: 0x3, name: "BatteryAlert", conformance: "M" }),
-        Field({ id: 0x4, name: "Testing", conformance: "M" }),
-        Field({ id: 0x5, name: "HardwareFault", conformance: "M" }),
-        Field({ id: 0x6, name: "EndOfService", conformance: "M" }),
-        Field({ id: 0x7, name: "InterconnectSmoke", conformance: "O" }),
-        Field({ id: 0x8, name: "InterconnectCo", conformance: "O" })
+        Field({ name: "Normal", id: 0x0, conformance: "M" }),
+        Field({ name: "SmokeAlarm", id: 0x1, conformance: "SMOKE" }),
+        Field({ name: "CoAlarm", id: 0x2, conformance: "CO" }),
+        Field({ name: "BatteryAlert", id: 0x3, conformance: "M" }),
+        Field({ name: "Testing", id: 0x4, conformance: "M" }),
+        Field({ name: "HardwareFault", id: 0x5, conformance: "M" }),
+        Field({ name: "EndOfService", id: 0x6, conformance: "M" }),
+        Field({ name: "InterconnectSmoke", id: 0x7, conformance: "O" }),
+        Field({ name: "InterconnectCo", id: 0x8, conformance: "O" })
     ),
 
     Datatype(
         { name: "MuteStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "NotMuted", conformance: "M" }),
-        Field({ id: 0x1, name: "Muted", conformance: "M" })
+        Field({ name: "NotMuted", id: 0x0, conformance: "M" }),
+        Field({ name: "Muted", id: 0x1, conformance: "M" })
     ),
     Datatype(
         { name: "EndOfServiceEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Normal", conformance: "M" }),
-        Field({ id: 0x1, name: "Expired", conformance: "M" })
+        Field({ name: "Normal", id: 0x0, conformance: "M" }),
+        Field({ name: "Expired", id: 0x1, conformance: "M" })
     ),
 
     Datatype(
         { name: "ContaminationStateEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Normal", conformance: "M" }),
-        Field({ id: 0x1, name: "Low", conformance: "O" }),
-        Field({ id: 0x2, name: "Warning", conformance: "O" }),
-        Field({ id: 0x3, name: "Critical", conformance: "M" })
+        Field({ name: "Normal", id: 0x0, conformance: "M" }),
+        Field({ name: "Low", id: 0x1, conformance: "O" }),
+        Field({ name: "Warning", id: 0x2, conformance: "O" }),
+        Field({ name: "Critical", id: 0x3, conformance: "M" })
     )
 );
 

@@ -16,77 +16,77 @@ import {
 } from "../../elements/index.js";
 
 export const ElectricalEnergyMeasurement = Cluster(
-    { id: 0x91, name: "ElectricalEnergyMeasurement" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ElectricalEnergyMeasurement", id: 0x91 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "IMPE", conformance: "O.a+", constraint: "0", longName: "ImportedEnergy" }),
-        Field({ name: "EXPE", conformance: "O.a+", constraint: "1", longName: "ExportedEnergy" }),
-        Field({ name: "CUME", conformance: "O.b+", constraint: "2", longName: "CumulativeEnergy" }),
-        Field({ name: "PERE", conformance: "O.b+", constraint: "3", longName: "PeriodicEnergy" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "IMPE", constraint: "0", conformance: "O.a+", longName: "ImportedEnergy" }),
+        Field({ name: "EXPE", constraint: "1", conformance: "O.a+", longName: "ExportedEnergy" }),
+        Field({ name: "CUME", constraint: "2", conformance: "O.b+", longName: "CumulativeEnergy" }),
+        Field({ name: "PERE", constraint: "3", conformance: "O.b+", longName: "PeriodicEnergy" })
     ),
 
     Attribute(
-        { id: 0x0, name: "Accuracy", type: "MeasurementAccuracyStruct", access: "R V", conformance: "M", quality: "F" }
+        { name: "Accuracy", id: 0x0, type: "MeasurementAccuracyStruct", conformance: "M", access: "R V", quality: "F" }
     ),
     Attribute({
-        id: 0x1, name: "CumulativeEnergyImported", type: "EnergyMeasurementStruct",
-        access: "R V", conformance: "IMPE & CUME", default: null, quality: "X Q"
+        name: "CumulativeEnergyImported", id: 0x1, type: "EnergyMeasurementStruct",
+        default: null, conformance: "IMPE & CUME", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x2, name: "CumulativeEnergyExported", type: "EnergyMeasurementStruct",
-        access: "R V", conformance: "EXPE & CUME", default: null, quality: "X Q"
+        name: "CumulativeEnergyExported", id: 0x2, type: "EnergyMeasurementStruct",
+        default: null, conformance: "EXPE & CUME", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x3, name: "PeriodicEnergyImported", type: "EnergyMeasurementStruct",
-        access: "R V", conformance: "IMPE & PERE", default: null, quality: "X Q"
+        name: "PeriodicEnergyImported", id: 0x3, type: "EnergyMeasurementStruct",
+        default: null, conformance: "IMPE & PERE", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x4, name: "PeriodicEnergyExported", type: "EnergyMeasurementStruct",
-        access: "R V", conformance: "EXPE & PERE", default: null, quality: "X Q"
+        name: "PeriodicEnergyExported", id: 0x4, type: "EnergyMeasurementStruct",
+        default: null, conformance: "EXPE & PERE", access: "R V", quality: "X Q"
     }),
     Attribute({
-        id: 0x5, name: "CumulativeEnergyReset", type: "CumulativeEnergyResetStruct",
-        access: "R V", conformance: "[CUME]", default: null, quality: "X"
+        name: "CumulativeEnergyReset", id: 0x5, type: "CumulativeEnergyResetStruct",
+        default: null, conformance: "[CUME]", access: "R V", quality: "X"
     }),
     Event(
-        { id: 0x0, name: "CumulativeEnergyMeasured", access: "V", conformance: "CUME", priority: "info" },
-        Field({ id: 0x0, name: "EnergyImported", type: "EnergyMeasurementStruct", conformance: "CUME & IMPE" }),
-        Field({ id: 0x1, name: "EnergyExported", type: "EnergyMeasurementStruct", conformance: "CUME & EXPE" })
+        { name: "CumulativeEnergyMeasured", id: 0x0, conformance: "CUME", access: "V", priority: "info" },
+        Field({ name: "EnergyImported", id: 0x0, type: "EnergyMeasurementStruct", conformance: "CUME & IMPE" }),
+        Field({ name: "EnergyExported", id: 0x1, type: "EnergyMeasurementStruct", conformance: "CUME & EXPE" })
     ),
     Event(
-        { id: 0x1, name: "PeriodicEnergyMeasured", access: "V", conformance: "PERE", priority: "info" },
-        Field({ id: 0x0, name: "EnergyImported", type: "EnergyMeasurementStruct", conformance: "PERE & IMPE" }),
-        Field({ id: 0x1, name: "EnergyExported", type: "EnergyMeasurementStruct", conformance: "PERE & EXPE" })
+        { name: "PeriodicEnergyMeasured", id: 0x1, conformance: "PERE", access: "V", priority: "info" },
+        Field({ name: "EnergyImported", id: 0x0, type: "EnergyMeasurementStruct", conformance: "PERE & IMPE" }),
+        Field({ name: "EnergyExported", id: 0x1, type: "EnergyMeasurementStruct", conformance: "PERE & EXPE" })
     ),
 
     Datatype(
         { name: "EnergyMeasurementStruct", type: "struct" },
-        Field({ id: 0x0, name: "Energy", type: "energy-mWh", conformance: "M", constraint: "min 0" }),
-        Field({ id: 0x1, name: "StartTimestamp", type: "epoch-s", conformance: "desc" }),
-        Field({ id: 0x2, name: "EndTimestamp", type: "epoch-s", conformance: "desc", constraint: "min startTimestamp + 1" }),
-        Field({ id: 0x3, name: "StartSystime", type: "systime-ms", conformance: "desc" }),
-        Field({ id: 0x4, name: "EndSystime", type: "systime-ms", conformance: "desc", constraint: "min startSystime + 1" })
+        Field({ name: "Energy", id: 0x0, type: "energy-mWh", constraint: "min 0", conformance: "M" }),
+        Field({ name: "StartTimestamp", id: 0x1, type: "epoch-s", conformance: "desc" }),
+        Field({ name: "EndTimestamp", id: 0x2, type: "epoch-s", constraint: "min startTimestamp + 1", conformance: "desc" }),
+        Field({ name: "StartSystime", id: 0x3, type: "systime-ms", conformance: "desc" }),
+        Field({ name: "EndSystime", id: 0x4, type: "systime-ms", constraint: "min startSystime + 1", conformance: "desc" })
     ),
 
     Datatype(
         { name: "CumulativeEnergyResetStruct", type: "struct" },
         Field({
-            id: 0x0, name: "ImportedResetTimestamp", type: "epoch-s",
-            conformance: "[IMPE]", default: null, quality: "X"
+            name: "ImportedResetTimestamp", id: 0x0, type: "epoch-s",
+            default: null, conformance: "[IMPE]", quality: "X"
         }),
         Field({
-            id: 0x1, name: "ExportedResetTimestamp", type: "epoch-s",
-            conformance: "[EXPE]", default: null, quality: "X"
+            name: "ExportedResetTimestamp", id: 0x1, type: "epoch-s",
+            default: null, conformance: "[EXPE]", quality: "X"
         }),
         Field({
-            id: 0x2, name: "ImportedResetSystime", type: "systime-ms",
-            conformance: "[IMPE]", default: null, quality: "X"
+            name: "ImportedResetSystime", id: 0x2, type: "systime-ms",
+            default: null, conformance: "[IMPE]", quality: "X"
         }),
         Field({
-            id: 0x3, name: "ExportedResetSystime", type: "systime-ms",
-            conformance: "[EXPE]", default: null, quality: "X"
+            name: "ExportedResetSystime", id: 0x3, type: "systime-ms",
+            default: null, conformance: "[EXPE]", quality: "X"
         })
     )
 );

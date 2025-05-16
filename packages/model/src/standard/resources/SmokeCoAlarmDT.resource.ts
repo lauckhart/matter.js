@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "SmokeCoAlarm", tag: "deviceType",
+    tag: "deviceType", name: "SmokeCoAlarm",
     classification: "simple",
 
     details: "A Smoke CO Alarm device is capable of sensing smoke, carbon monoxide or both. It is capable of " +
@@ -27,11 +27,11 @@ Resource.add({
     xref: "device§7.9",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§7.9.5" },
-        { name: "Groups", tag: "requirement", xref: "device§7.9.5" },
-        { name: "SmokeCoAlarm", tag: "requirement", xref: "device§7.9.5" },
-        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§7.9.5" },
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§7.9.5" },
-        { name: "CarbonMonoxideConcentrationMeasurement", tag: "requirement", xref: "device§7.9.5" }
+        { tag: "requirement", name: "Identify", xref: "device§7.9.5" },
+        { tag: "requirement", name: "Groups", xref: "device§7.9.5" },
+        { tag: "requirement", name: "SmokeCoAlarm", xref: "device§7.9.5" },
+        { tag: "requirement", name: "RelativeHumidityMeasurement", xref: "device§7.9.5" },
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§7.9.5" },
+        { tag: "requirement", name: "CarbonMonoxideConcentrationMeasurement", xref: "device§7.9.5" }
     ]
 });

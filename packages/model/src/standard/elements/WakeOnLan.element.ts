@@ -10,15 +10,15 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import { ClusterElement as Cluster, AttributeElement as Attribute } from "../../elements/index.js";
 
 export const WakeOnLan = Cluster(
-    { id: 0x503, name: "WakeOnLan" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "WakeOnLan", id: 0x503 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        id: 0x0, name: "MacAddress", type: "string",
-        access: "R V", conformance: "O", constraint: "max 12", quality: "F"
+        name: "MacAddress", id: 0x0, type: "string",
+        constraint: "max 12", conformance: "O", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x1, name: "LinkLocalAddress", type: "ipv6adr",
-        access: "R V", conformance: "O", constraint: "desc", quality: "F"
+        name: "LinkLocalAddress", id: 0x1, type: "ipv6adr",
+        constraint: "desc", conformance: "O", access: "R V", quality: "F"
     })
 );
 

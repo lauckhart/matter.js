@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "SoftwareDiagnostics", tag: "cluster",
+    tag: "cluster", name: "SoftwareDiagnostics",
     classification: "node", pics: "DGSW",
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
         "may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
@@ -19,37 +19,37 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "core§11.13.4",
             children: [{
-                name: "WTRMRK", tag: "field",
+                tag: "field", name: "WTRMRK",
                 details: "Node makes available the metrics for high watermark related to memory consumption."
             }]
         },
 
         {
-            name: "ThreadMetrics", tag: "attribute",
+            tag: "attribute", name: "ThreadMetrics",
             details: "The ThreadMetrics attribute shall be a list of ThreadMetricsStruct structs. Each active thread on " +
                 "the Node shall be represented by a single entry within the ThreadMetrics attribute.",
             xref: "core§11.13.6.1"
         },
 
         {
-            name: "CurrentHeapFree", tag: "attribute",
+            tag: "attribute", name: "CurrentHeapFree",
             details: "The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are " +
                 "free for allocation. The effective amount may be smaller due to heap fragmentation or other reasons.",
             xref: "core§11.13.6.2"
         },
 
         {
-            name: "CurrentHeapUsed", tag: "attribute",
+            tag: "attribute", name: "CurrentHeapUsed",
             details: "The CurrentHeapUsed attribute shall indicate the current amount of heap memory, in bytes, that is " +
                 "being used.",
             xref: "core§11.13.6.3"
         },
 
         {
-            name: "CurrentHeapHighWatermark", tag: "attribute",
+            tag: "attribute", name: "CurrentHeapHighWatermark",
             details: "The CurrentHeapHighWatermark attribute shall indicate the maximum amount of heap memory, in bytes, " +
                 "that has been used by the Node. This value shall only be reset upon a Node reboot or upon receiving " +
                 "of the ResetWatermarks command.",
@@ -57,27 +57,27 @@ Resource.add({
         },
 
         {
-            name: "SoftwareFault", tag: "event",
+            tag: "event", name: "SoftwareFault",
             details: "The SoftwareFault Event shall be generated when a software fault takes place on the Node.",
             xref: "core§11.13.8.1",
 
             children: [
                 {
-                    name: "Id", tag: "field",
+                    tag: "field", name: "Id",
                     details: "The ID field shall be set to the ID of the software thread in which the last software fault " +
                         "occurred.",
                     xref: "core§11.13.8.1.1"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "The Name field shall be set to a manufacturer-specified name or prefix of the software thread in " +
                         "which the last software fault occurred.",
                     xref: "core§11.13.8.1.2"
                 },
 
                 {
-                    name: "FaultRecording", tag: "field",
+                    tag: "field", name: "FaultRecording",
                     details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information to " +
                         "assist in further diagnosing or debugging a software fault. The FaultRecording field may be used to " +
                         "convey information such as, but not limited to, thread backtraces or register contents.",
@@ -87,7 +87,7 @@ Resource.add({
         },
 
         {
-            name: "ResetWatermarks", tag: "command",
+            tag: "command", name: "ResetWatermarks",
 
             details: "Receipt of this command shall reset the following values which track high and lower watermarks:" +
                 "\n" +
@@ -110,33 +110,33 @@ Resource.add({
         },
 
         {
-            name: "ThreadMetricsStruct", tag: "datatype",
+            tag: "datatype", name: "ThreadMetricsStruct",
             xref: "core§11.13.5.1",
 
             children: [
                 {
-                    name: "Id", tag: "field",
+                    tag: "field", name: "Id",
                     details: "The Id field shall be a server-assigned per-thread unique ID that is constant for the duration of " +
                         "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
                     xref: "core§11.13.5.1.1"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is static " +
                         "for the duration of the thread.",
                     xref: "core§11.13.5.1.2"
                 },
 
                 {
-                    name: "StackFreeCurrent", tag: "field",
+                    tag: "field", name: "StackFreeCurrent",
                     details: "The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are not " +
                         "being utilized on the respective thread.",
                     xref: "core§11.13.5.1.3"
                 },
 
                 {
-                    name: "StackFreeMinimum", tag: "field",
+                    tag: "field", name: "StackFreeMinimum",
                     details: "The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has " +
                         "been available at any point between the current time and this attribute being reset or initialized " +
                         "on the respective thread. This value shall only be reset upon a Node reboot or upon receiving of the " +
@@ -145,7 +145,7 @@ Resource.add({
                 },
 
                 {
-                    name: "StackSize", tag: "field",
+                    tag: "field", name: "StackSize",
                     details: "The StackSize field shall indicate the amount of stack memory, in bytes, that has been allocated for " +
                         "use by the respective thread.",
                     xref: "core§11.13.5.1.5"

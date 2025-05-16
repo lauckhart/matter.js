@@ -15,49 +15,49 @@ import {
 } from "../../elements/index.js";
 
 export const TemperatureControl = Cluster(
-    { id: 0x56, name: "TemperatureControl" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "TemperatureControl", id: 0x56 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TN", conformance: "O.a", constraint: "0", longName: "TemperatureNumber" }),
-        Field({ name: "TL", conformance: "O.a", constraint: "1", longName: "TemperatureLevel" }),
-        Field({ name: "STEP", conformance: "[TN]", constraint: "2", longName: "TemperatureStep" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "TN", constraint: "0", conformance: "O.a", longName: "TemperatureNumber" }),
+        Field({ name: "TL", constraint: "1", conformance: "O.a", longName: "TemperatureLevel" }),
+        Field({ name: "STEP", constraint: "2", conformance: "[TN]", longName: "TemperatureStep" })
     ),
 
     Attribute({
-        id: 0x0, name: "TemperatureSetpoint", type: "temperature",
-        access: "R V", conformance: "TN", constraint: "minTemperature to maxTemperature"
+        name: "TemperatureSetpoint", id: 0x0, type: "temperature",
+        constraint: "minTemperature to maxTemperature", conformance: "TN", access: "R V"
     }),
     Attribute({
-        id: 0x1, name: "MinTemperature", type: "temperature",
-        access: "R V", conformance: "TN", constraint: "max maxTemperature - 1", quality: "F"
+        name: "MinTemperature", id: 0x1, type: "temperature",
+        constraint: "max maxTemperature - 1", conformance: "TN", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x2, name: "MaxTemperature", type: "temperature",
-        access: "R V", conformance: "TN", constraint: "desc", quality: "F"
+        name: "MaxTemperature", id: 0x2, type: "temperature",
+        constraint: "desc", conformance: "TN", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x3, name: "Step", type: "temperature",
-        access: "R V", conformance: "STEP", constraint: "max maxTemperature - minTemperature", quality: "F"
+        name: "Step", id: 0x3, type: "temperature",
+        constraint: "max maxTemperature - minTemperature", conformance: "STEP", access: "R V", quality: "F"
     }),
     Attribute({
-        id: 0x4, name: "SelectedTemperatureLevel", type: "uint8",
-        access: "R V", conformance: "TL", constraint: "max 31"
+        name: "SelectedTemperatureLevel", id: 0x4, type: "uint8",
+        constraint: "max 31", conformance: "TL", access: "R V"
     }),
 
     Attribute(
         {
-            id: 0x5, name: "SupportedTemperatureLevels", type: "list",
-            access: "R V", conformance: "TL", constraint: "max 32[max 16]"
+            name: "SupportedTemperatureLevels", id: 0x5, type: "list",
+            constraint: "max 32[max 16]", conformance: "TL", access: "R V"
         },
         Field({ name: "entry", type: "string" })
     ),
 
     Command(
-        { id: 0x0, name: "SetTemperature", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TargetTemperature", type: "temperature", conformance: "TN", constraint: "desc" }),
-        Field({ id: 0x1, name: "TargetTemperatureLevel", type: "uint8", conformance: "TL", constraint: "desc" })
+        { name: "SetTemperature", id: 0x0, conformance: "M", access: "O", direction: "request", response: "status" },
+        Field({ name: "TargetTemperature", id: 0x0, type: "temperature", constraint: "desc", conformance: "TN" }),
+        Field({ name: "TargetTemperatureLevel", id: 0x1, type: "uint8", constraint: "desc", conformance: "TL" })
     )
 );
 

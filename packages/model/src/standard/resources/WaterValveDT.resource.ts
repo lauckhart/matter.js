@@ -9,15 +9,15 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WaterValve", tag: "deviceType",
+    tag: "deviceType", name: "WaterValve",
     classification: "simple",
     details: "This defines conformance to the Water Valve device type.",
     xref: "device§5.6",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§5.6.4" },
-        { name: "ValveConfigurationAndControl", tag: "requirement", xref: "device§5.6.4" },
-        { discriminator: "O", name: "FlowMeasurement", tag: "requirement", xref: "device§5.6.4" },
-        { discriminator: "O", name: "FlowMeasurement", tag: "requirement", xref: "device§5.6.4" }
+        { tag: "requirement", name: "Identify", xref: "device§5.6.4" },
+        { tag: "requirement", name: "ValveConfigurationAndControl", xref: "device§5.6.4" },
+        { tag: "requirement", name: "FlowMeasurement", discriminator: "O:serverCluster", xref: "device§5.6.4" },
+        { tag: "requirement", name: "FlowMeasurement", discriminator: "O:clientCluster", xref: "device§5.6.4" }
     ]
 });

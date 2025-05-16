@@ -95,7 +95,7 @@ describe("Resource", () => {
         expect(LandingGearResource.xref).deep.equals({ document: "device", section: "104.2.4" });
     });
 
-    it.only("loads from bundle", () => {
+    it("loads from bundle", () => {
         const matter = new MatterModel();
         matter.resources = new ResourceBundle();
 

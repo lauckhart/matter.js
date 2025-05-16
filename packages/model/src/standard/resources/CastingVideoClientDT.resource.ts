@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "CastingVideoClient", tag: "deviceType",
+    tag: "deviceType", name: "CastingVideoClient",
     classification: "simple",
     details: "This defines conformance to the Casting Video Client device type." +
         "\n" +
@@ -18,22 +18,22 @@ Resource.add({
     xref: "device§10.6",
 
     children: [
-        { name: "OnOff", tag: "requirement", xref: "device§10.6.4" },
-        { name: "LevelControl", tag: "requirement", xref: "device§10.6.4" },
-        { name: "WakeOnLan", tag: "requirement", xref: "device§10.6.4" },
-        { name: "Channel", tag: "requirement", xref: "device§10.6.4" },
-        { name: "TargetNavigator", tag: "requirement", xref: "device§10.6.4" },
-        { name: "MediaPlayback", tag: "requirement", xref: "device§10.6.4" },
-        { name: "MediaInput", tag: "requirement", xref: "device§10.6.4" },
-        { name: "LowPower", tag: "requirement", xref: "device§10.6.4" },
-        { name: "KeypadInput", tag: "requirement", xref: "device§10.6.4" },
-        { name: "ContentLauncher", tag: "requirement", xref: "device§10.6.4" },
-        { name: "AudioOutput", tag: "requirement", xref: "device§10.6.4" },
-        { name: "ApplicationLauncher", tag: "requirement", xref: "device§10.6.4" },
-        { name: "ApplicationBasic", tag: "requirement", xref: "device§10.6.4" },
-        { name: "AccountLogin", tag: "requirement", xref: "device§10.6.4" },
-        { name: "ContentControl", tag: "requirement", xref: "device§10.6.4" },
-        { name: "ContentAppObserver", tag: "requirement", xref: "device§10.6.4" },
-        { name: "Messages", tag: "requirement", xref: "device§10.6.4" }
+        { tag: "requirement", name: "OnOff", xref: "device§10.6.4" },
+        { tag: "requirement", name: "LevelControl", xref: "device§10.6.4" },
+        { tag: "requirement", name: "WakeOnLan", xref: "device§10.6.4" },
+        { tag: "requirement", name: "Channel", xref: "device§10.6.4" },
+        { tag: "requirement", name: "TargetNavigator", xref: "device§10.6.4" },
+        { tag: "requirement", name: "MediaPlayback", xref: "device§10.6.4" },
+        { tag: "requirement", name: "MediaInput", xref: "device§10.6.4" },
+        { tag: "requirement", name: "LowPower", xref: "device§10.6.4" },
+        { tag: "requirement", name: "KeypadInput", xref: "device§10.6.4" },
+        { tag: "requirement", name: "ContentLauncher", xref: "device§10.6.4" },
+        { tag: "requirement", name: "AudioOutput", xref: "device§10.6.4" },
+        { tag: "requirement", name: "ApplicationLauncher", xref: "device§10.6.4" },
+        { tag: "requirement", name: "ApplicationBasic", xref: "device§10.6.4" },
+        { tag: "requirement", name: "AccountLogin", xref: "device§10.6.4" },
+        { tag: "requirement", name: "ContentControl", xref: "device§10.6.4" },
+        { tag: "requirement", name: "ContentAppObserver", xref: "device§10.6.4" },
+        { tag: "requirement", name: "Messages", xref: "device§10.6.4" }
     ]
 });

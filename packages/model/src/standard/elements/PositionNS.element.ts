@@ -13,14 +13,14 @@ import {
 } from "../../elements/index.js";
 
 export const PositionNs = SemanticNamespace(
-    { id: 0x8, name: "Position" },
-    SemanticTag({ id: 0x0, name: "Left" }),
-    SemanticTag({ id: 0x1, name: "Right" }),
-    SemanticTag({ id: 0x2, name: "Top" }),
-    SemanticTag({ id: 0x3, name: "Bottom" }),
-    SemanticTag({ id: 0x4, name: "Middle" }),
-    SemanticTag({ id: 0x5, name: "Row" }),
-    SemanticTag({ id: 0x6, name: "Column" })
+    { name: "Position", id: 0x8 },
+    SemanticTag({ name: "Left", id: 0x0 }),
+    SemanticTag({ name: "Right", id: 0x1 }),
+    SemanticTag({ name: "Top", id: 0x2 }),
+    SemanticTag({ name: "Bottom", id: 0x3 }),
+    SemanticTag({ name: "Middle", id: 0x4 }),
+    SemanticTag({ name: "Row", id: 0x5 }),
+    SemanticTag({ name: "Column", id: 0x6 })
 );
 
 MatterDefinition.children.push(PositionNs);

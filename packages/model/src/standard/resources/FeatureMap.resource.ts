@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "FeatureMap", tag: "attribute",
+    tag: "attribute", name: "FeatureMap",
 
     details: "Each instance of a cluster shall support this attribute." +
         "\n" +

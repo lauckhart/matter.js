@@ -9,42 +9,42 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WildcardPathFlagsBitmap", tag: "datatype",
+    tag: "datatype", name: "WildcardPathFlagsBitmap",
     details: "The WildcardPathFlagsBitmap indicates flags that apply to the path, affecting wildcard expansion. " +
         "The following flags are defined:",
     xref: "core§8.9.2.3",
 
     children: [
         {
-            name: "WildcardSkipRootNode", tag: "field",
+            tag: "field", name: "WildcardSkipRootNode",
             description: "Skip the Root Node endpoint (endpoint 0) during wildcard expansion."
         },
         {
-            name: "WildcardSkipGlobalAttributes", tag: "field",
+            tag: "field", name: "WildcardSkipGlobalAttributes",
             description: "Skip several large global attributes during wildcard expansion."
         },
         {
-            name: "WildcardSkipAttributeList", tag: "field",
+            tag: "field", name: "WildcardSkipAttributeList",
             description: "Skip the AttributeList global attribute during wildcard expansion."
         },
         {
-            name: "WildcardSkipCommandLists", tag: "field",
+            tag: "field", name: "WildcardSkipCommandLists",
             description: "Skip the AcceptedCommandList and GeneratedCommandList global attributes during wildcard expansion."
         },
         {
-            name: "WildcardSkipCustomElements", tag: "field",
+            tag: "field", name: "WildcardSkipCustomElements",
             description: "Skip any manufacturer-specific clusters or attributes during wildcard expansion."
         },
         {
-            name: "WildcardSkipFixedAttributes", tag: "field",
+            tag: "field", name: "WildcardSkipFixedAttributes",
             description: "Skip any Fixed (F) quality attributes during wildcard expansion."
         },
         {
-            name: "WildcardSkipChangesOmittedAttributes", tag: "field",
+            tag: "field", name: "WildcardSkipChangesOmittedAttributes",
             description: "Skip any Changes Omitted (C) quality attributes during wildcard expansion."
         },
         {
-            name: "WildcardSkipDiagnosticsClusters", tag: "field",
+            tag: "field", name: "WildcardSkipDiagnosticsClusters",
             description: "Skip all clusters with the Diagnostics (K) quality during wildcard expansion."
         }
     ]

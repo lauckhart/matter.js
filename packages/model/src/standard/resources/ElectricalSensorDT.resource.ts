@@ -9,14 +9,14 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ElectricalSensor", tag: "deviceType",
+    tag: "deviceType", name: "ElectricalSensor",
     classification: "utility",
     details: "An Electrical Sensor device measures the electrical power and/or energy being imported and/or " +
         "exported.",
     xref: "device§2.6",
     children: [
-        { name: "PowerTopology", tag: "requirement", xref: "device§2.6.4" },
-        { name: "ElectricalPowerMeasurement", tag: "requirement", xref: "device§2.6.4" },
-        { name: "ElectricalEnergyMeasurement", tag: "requirement", xref: "device§2.6.4" }
+        { tag: "requirement", name: "PowerTopology", xref: "device§2.6.4" },
+        { tag: "requirement", name: "ElectricalPowerMeasurement", xref: "device§2.6.4" },
+        { tag: "requirement", name: "ElectricalEnergyMeasurement", xref: "device§2.6.4" }
     ]
 });

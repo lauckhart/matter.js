@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "any", tag: "datatype",
+    tag: "datatype", name: "any",
     description: "A datatype that may represent any value.",
     details: "We use this type in places where the Matter specification allows for values of any type."
 });

@@ -15,36 +15,36 @@ import {
 } from "../../elements/index.js";
 
 export const LaundryWasherControls = Cluster(
-    { id: 0x53, name: "LaundryWasherControls" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
+    { name: "LaundryWasherControls", id: 0x53 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
     Attribute(
-        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SPIN", conformance: "O.a+", constraint: "0", longName: "Spin" }),
-        Field({ name: "RINSE", conformance: "O.a+", constraint: "1", longName: "Rinse" })
+        { name: "FeatureMap", id: 0xfffc, type: "FeatureMap" },
+        Field({ name: "SPIN", constraint: "0", conformance: "O.a+", longName: "Spin" }),
+        Field({ name: "RINSE", constraint: "1", conformance: "O.a+", longName: "Rinse" })
     ),
     Attribute(
-        { id: 0x0, name: "SpinSpeeds", type: "list", access: "R V", conformance: "SPIN", constraint: "max 16[max 64]" },
+        { name: "SpinSpeeds", id: 0x0, type: "list", constraint: "max 16[max 64]", conformance: "SPIN", access: "R V" },
         Field({ name: "entry", type: "string" })
     ),
     Attribute({
-        id: 0x1, name: "SpinSpeedCurrent", type: "uint8",
-        access: "RW VO", conformance: "SPIN", constraint: "max 15", quality: "X"
+        name: "SpinSpeedCurrent", id: 0x1, type: "uint8",
+        constraint: "max 15", conformance: "SPIN", access: "RW VO", quality: "X"
     }),
     Attribute({
-        id: 0x2, name: "NumberOfRinses", type: "NumberOfRinsesEnum",
-        access: "RW VO", conformance: "RINSE", constraint: "desc", default: 1
+        name: "NumberOfRinses", id: 0x2, type: "NumberOfRinsesEnum",
+        default: 1, constraint: "desc", conformance: "RINSE", access: "RW VO"
     }),
     Attribute(
-        { id: 0x3, name: "SupportedRinses", type: "list", access: "R V", conformance: "RINSE", constraint: "max 4" },
+        { name: "SupportedRinses", id: 0x3, type: "list", constraint: "max 4", conformance: "RINSE", access: "R V" },
         Field({ name: "entry", type: "NumberOfRinsesEnum" })
     ),
 
     Datatype(
         { name: "NumberOfRinsesEnum", type: "enum8" },
-        Field({ id: 0x0, name: "None", conformance: "RINSE" }),
-        Field({ id: 0x1, name: "Normal", conformance: "RINSE" }),
-        Field({ id: 0x2, name: "Extra", conformance: "RINSE" }),
-        Field({ id: 0x3, name: "Max", conformance: "RINSE" })
+        Field({ name: "None", id: 0x0, conformance: "RINSE" }),
+        Field({ name: "Normal", id: 0x1, conformance: "RINSE" }),
+        Field({ name: "Extra", id: 0x2, conformance: "RINSE" }),
+        Field({ name: "Max", id: 0x3, conformance: "RINSE" })
     )
 );
 

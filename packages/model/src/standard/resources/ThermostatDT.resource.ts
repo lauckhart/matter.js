@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "Thermostat", tag: "deviceType",
+    tag: "deviceType", name: "Thermostat",
     classification: "simple",
     details: "A Thermostat device is capable of having either built-in or separate sensors for temperature, " +
         "humidity or occupancy. It allows the desired temperature to be set either remotely or locally. The " +
@@ -19,14 +19,14 @@ Resource.add({
     xref: "device§9.1",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§9.1.4" },
-        { name: "Groups", tag: "requirement", xref: "device§9.1.4" },
-        { name: "Thermostat", tag: "requirement", xref: "device§9.1.4" },
-        { name: "ThermostatUserInterfaceConfiguration", tag: "requirement", xref: "device§9.1.4" },
-        { name: "EnergyPreference", tag: "requirement", xref: "device§9.1.4" },
-        { name: "FanControl", tag: "requirement", xref: "device§9.1.4" },
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§9.1.4" },
-        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§9.1.4" },
-        { name: "OccupancySensing", tag: "requirement", xref: "device§9.1.4" }
+        { tag: "requirement", name: "Identify", xref: "device§9.1.4" },
+        { tag: "requirement", name: "Groups", xref: "device§9.1.4" },
+        { tag: "requirement", name: "Thermostat", xref: "device§9.1.4" },
+        { tag: "requirement", name: "ThermostatUserInterfaceConfiguration", xref: "device§9.1.4" },
+        { tag: "requirement", name: "EnergyPreference", xref: "device§9.1.4" },
+        { tag: "requirement", name: "FanControl", xref: "device§9.1.4" },
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§9.1.4" },
+        { tag: "requirement", name: "RelativeHumidityMeasurement", xref: "device§9.1.4" },
+        { tag: "requirement", name: "OccupancySensing", xref: "device§9.1.4" }
     ]
 });

@@ -11,12 +11,12 @@ import { DatatypeElement as Datatype, FieldElement as Field } from "../../elemen
 
 export const MeasurementAccuracyStruct = Datatype(
     { name: "MeasurementAccuracyStruct", type: "struct" },
-    Field({ id: 0x0, name: "MeasurementType", type: "MeasurementTypeEnum", conformance: "M", quality: "F" }),
-    Field({ id: 0x1, name: "Measured", type: "bool", conformance: "M", default: false, quality: "F" }),
-    Field({ id: 0x2, name: "MinMeasuredValue", type: "int64", conformance: "M", quality: "F" }),
-    Field({ id: 0x3, name: "MaxMeasuredValue", type: "int64", conformance: "M", quality: "F" }),
+    Field({ name: "MeasurementType", id: 0x0, type: "MeasurementTypeEnum", conformance: "M", quality: "F" }),
+    Field({ name: "Measured", id: 0x1, type: "bool", default: false, conformance: "M", quality: "F" }),
+    Field({ name: "MinMeasuredValue", id: 0x2, type: "int64", conformance: "M", quality: "F" }),
+    Field({ name: "MaxMeasuredValue", id: 0x3, type: "int64", conformance: "M", quality: "F" }),
     Field(
-        { id: 0x4, name: "AccuracyRanges", type: "list", conformance: "M", constraint: "min 1", quality: "F" },
+        { name: "AccuracyRanges", id: 0x4, type: "list", constraint: "min 1", conformance: "M", quality: "F" },
         Field({ name: "entry", type: "MeasurementAccuracyRangeStruct" })
     )
 );

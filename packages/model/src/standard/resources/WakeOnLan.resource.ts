@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "WakeOnLan", tag: "cluster",
+    tag: "cluster", name: "WakeOnLan",
     classification: "application", pics: "WAKEONLAN",
 
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On " +
@@ -43,7 +43,7 @@ Resource.add({
 
     children: [
         {
-            name: "MacAddress", tag: "attribute",
+            tag: "attribute", name: "MacAddress",
             details: "Indicates the current MAC address of the device. Only 48-bit MAC Addresses shall be used for this " +
                 "attribute as required by the Wake on LAN protocol." +
                 "\n" +
@@ -53,7 +53,7 @@ Resource.add({
         },
 
         {
-            name: "LinkLocalAddress", tag: "attribute",
+            tag: "attribute", name: "LinkLocalAddress",
 
             details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link- local addresses " +
                 "shall be used for this attribute." +

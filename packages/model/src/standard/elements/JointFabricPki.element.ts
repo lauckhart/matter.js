@@ -16,49 +16,49 @@ import {
 } from "../../elements/index.js";
 
 export const JointFabricPki = Cluster(
-    { id: 0x753, name: "JointFabricPki" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "JointFabricPki", id: 0x753 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
     Command(
         {
-            id: 0x0, name: "IcacsrRequest",
-            access: "A", conformance: "M", direction: "request", response: "IcacsrResponse"
+            name: "IcacsrRequest", id: 0x0,
+            conformance: "M", access: "A", direction: "request", response: "IcacsrResponse"
         },
-        Field({ id: 0x0, name: "Icacsr", type: "octstr", conformance: "M", constraint: "max 400" })
+        Field({ name: "Icacsr", id: 0x0, type: "octstr", constraint: "max 400", conformance: "M" })
     ),
 
     Command(
-        { id: 0x1, name: "IcacsrResponse", access: "A", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "StatusCode", type: "IcacsrRequestStatusEnum", conformance: "M" }),
-        Field({ id: 0x1, name: "Icac", type: "octstr", conformance: "O", constraint: "max 400" })
+        { name: "IcacsrResponse", id: 0x1, conformance: "M", access: "A", direction: "response" },
+        Field({ name: "StatusCode", id: 0x0, type: "IcacsrRequestStatusEnum", conformance: "M" }),
+        Field({ name: "Icac", id: 0x1, type: "octstr", constraint: "max 400", conformance: "O" })
     ),
     Command({
-        id: 0x2, name: "TransferAnchorRequest",
-        access: "A", conformance: "M", direction: "request", response: "TransferAnchorResponse"
+        name: "TransferAnchorRequest", id: 0x2,
+        conformance: "M", access: "A", direction: "request", response: "TransferAnchorResponse"
     }),
-    Command({ id: 0x3, name: "TransferAnchorResponse", access: "A", conformance: "M", direction: "response" }),
+    Command({ name: "TransferAnchorResponse", id: 0x3, conformance: "M", access: "A", direction: "response" }),
     Command({
-        id: 0x4, name: "TransferAnchorComplete",
-        access: "A", conformance: "M", direction: "request", response: "status"
+        name: "TransferAnchorComplete", id: 0x4,
+        conformance: "M", access: "A", direction: "request", response: "status"
     }),
 
     Datatype(
         { name: "IcacsrRequestStatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ok", conformance: "M" }),
-        Field({ id: 0x1, name: "InvalidIcaCsrFormat", conformance: "M" }),
-        Field({ id: 0x2, name: "InvalidIcaCsrSignature", conformance: "M" }),
-        Field({ id: 0x3, name: "FailedDclVendorIdValidation", conformance: "M" }),
-        Field({ id: 0x4, name: "NotAnIcac", conformance: "M" }),
-        Field({ id: 0x5, name: "BusyAnchorTransfer", conformance: "M" }),
-        Field({ id: 0x6, name: "IcaCsrSigningFailed", conformance: "M" }),
-        Field({ id: 0x7, name: "IcaCsrRequestNoUserConsent", conformance: "M" })
+        Field({ name: "Ok", id: 0x0, conformance: "M" }),
+        Field({ name: "InvalidIcaCsrFormat", id: 0x1, conformance: "M" }),
+        Field({ name: "InvalidIcaCsrSignature", id: 0x2, conformance: "M" }),
+        Field({ name: "FailedDclVendorIdValidation", id: 0x3, conformance: "M" }),
+        Field({ name: "NotAnIcac", id: 0x4, conformance: "M" }),
+        Field({ name: "BusyAnchorTransfer", id: 0x5, conformance: "M" }),
+        Field({ name: "IcaCsrSigningFailed", id: 0x6, conformance: "M" }),
+        Field({ name: "IcaCsrRequestNoUserConsent", id: 0x7, conformance: "M" })
     ),
 
     Datatype(
         { name: "TransferAnchorResponseStatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Ok", conformance: "M" }),
-        Field({ id: 0x1, name: "TransferAnchorStatusDatastoreBusy", conformance: "M" }),
-        Field({ id: 0x2, name: "TransferAnchorStatusNoUserConsent", conformance: "M" })
+        Field({ name: "Ok", id: 0x0, conformance: "M" }),
+        Field({ name: "TransferAnchorStatusDatastoreBusy", id: 0x1, conformance: "M" }),
+        Field({ name: "TransferAnchorStatusNoUserConsent", id: 0x2, conformance: "M" })
     )
 );
 

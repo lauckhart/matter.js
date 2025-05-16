@@ -15,46 +15,46 @@ import {
 } from "../../elements/index.js";
 
 export const ApplicationBasic = Cluster(
-    { id: 0x50d, name: "ApplicationBasic" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ApplicationBasic", id: 0x50d },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute({
-        id: 0x0, name: "VendorName", type: "string",
-        access: "R V", conformance: "O", constraint: "max 32", quality: "F"
+        name: "VendorName", id: 0x0, type: "string",
+        constraint: "max 32", conformance: "O", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x1, name: "VendorId", type: "vendor-id", access: "R V", conformance: "O", quality: "F" }),
+    Attribute({ name: "VendorId", id: 0x1, type: "vendor-id", conformance: "O", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x2, name: "ApplicationName", type: "string",
-        access: "R V", conformance: "M", constraint: "desc", quality: "F"
+        name: "ApplicationName", id: 0x2, type: "string",
+        constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
-    Attribute({ id: 0x3, name: "ProductId", type: "uint16", access: "R V", conformance: "O", quality: "F" }),
+    Attribute({ name: "ProductId", id: 0x3, type: "uint16", conformance: "O", access: "R V", quality: "F" }),
     Attribute({
-        id: 0x4, name: "Application", type: "ApplicationStruct",
-        access: "R V", conformance: "M", constraint: "desc", quality: "F"
+        name: "Application", id: 0x4, type: "ApplicationStruct",
+        constraint: "desc", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute(
-        { id: 0x5, name: "Status", type: "ApplicationStatusEnum", access: "R V", conformance: "M", constraint: "desc" }
+        { name: "Status", id: 0x5, type: "ApplicationStatusEnum", constraint: "desc", conformance: "M", access: "R V" }
     ),
     Attribute({
-        id: 0x6, name: "ApplicationVersion", type: "string",
-        access: "R V", conformance: "M", constraint: "max 32", quality: "F"
+        name: "ApplicationVersion", id: 0x6, type: "string",
+        constraint: "max 32", conformance: "M", access: "R V", quality: "F"
     }),
     Attribute(
-        { id: 0x7, name: "AllowedVendorList", type: "list", access: "R A", conformance: "M", quality: "F" },
+        { name: "AllowedVendorList", id: 0x7, type: "list", conformance: "M", access: "R A", quality: "F" },
         Field({ name: "entry", type: "vendor-id" })
     ),
 
     Datatype(
         { name: "ApplicationStatusEnum", type: "enum8" },
-        Field({ id: 0x0, name: "Stopped", conformance: "M" }),
-        Field({ id: 0x1, name: "ActiveVisibleFocus", conformance: "M" }),
-        Field({ id: 0x2, name: "ActiveHidden", conformance: "M" }),
-        Field({ id: 0x3, name: "ActiveVisibleNotFocus", conformance: "M" })
+        Field({ name: "Stopped", id: 0x0, conformance: "M" }),
+        Field({ name: "ActiveVisibleFocus", id: 0x1, conformance: "M" }),
+        Field({ name: "ActiveHidden", id: 0x2, conformance: "M" }),
+        Field({ name: "ActiveVisibleNotFocus", id: 0x3, conformance: "M" })
     ),
 
     Datatype(
         { name: "ApplicationStruct", type: "struct" },
-        Field({ id: 0x0, name: "CatalogVendorId", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "ApplicationId", type: "string", conformance: "M" })
+        Field({ name: "CatalogVendorId", id: 0x0, type: "uint16", conformance: "M" }),
+        Field({ name: "ApplicationId", id: 0x1, type: "string", conformance: "M" })
     )
 );
 

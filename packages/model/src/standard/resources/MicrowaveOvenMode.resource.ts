@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MicrowaveOvenMode", tag: "cluster",
+    tag: "cluster", name: "MicrowaveOvenMode",
     classification: "application", pics: "MWOM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for microwave oven devices.",
@@ -17,13 +17,13 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§8.12.4",
-            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+            children: [{ tag: "field", name: "DEPONOFF", details: "Dependency with the OnOff cluster" }]
         },
 
         {
-            name: "SupportedModes", tag: "attribute",
+            tag: "attribute", name: "SupportedModes",
             details: "Exactly one entry in the SupportedModes attribute shall include the Normal mode tag in the ModeTags " +
                 "field." +
                 "\n" +
@@ -32,33 +32,33 @@ Resource.add({
             xref: "cluster§8.12.5.1"
         },
 
-        { name: "CurrentMode", tag: "attribute", xref: "cluster§8.12.5" },
-        { name: "StartUpMode", tag: "attribute", xref: "cluster§8.12.5" },
-        { name: "OnMode", tag: "attribute", xref: "cluster§8.12.5" },
-        { name: "ChangeToMode", tag: "command", xref: "cluster§8.12.6" },
-        { name: "ChangeToModeResponse", tag: "command", xref: "cluster§8.12.6" },
+        { tag: "attribute", name: "CurrentMode", xref: "cluster§8.12.5" },
+        { tag: "attribute", name: "StartUpMode", xref: "cluster§8.12.5" },
+        { tag: "attribute", name: "OnMode", xref: "cluster§8.12.5" },
+        { tag: "command", name: "ChangeToMode", xref: "cluster§8.12.6" },
+        { tag: "command", name: "ChangeToModeResponse", xref: "cluster§8.12.6" },
 
         {
-            name: "ModeTag", tag: "datatype",
+            tag: "datatype", name: "ModeTag",
 
             children: [
-                { name: "Auto", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Quick", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Quiet", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "LowNoise", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "LowEnergy", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Vacation", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Min", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Max", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Night", tag: "field", xref: "cluster§8.12.7.1" },
-                { name: "Day", tag: "field", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Auto", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Quick", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Quiet", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "LowNoise", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "LowEnergy", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Vacation", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Min", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Max", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Night", xref: "cluster§8.12.7.1" },
+                { tag: "field", name: "Day", xref: "cluster§8.12.7.1" },
                 {
-                    name: "Normal", tag: "field",
+                    tag: "field", name: "Normal",
                     details: "This is the normal mode of operation for general cooking of food.",
                     xref: "cluster§8.12.7.1.1"
                 },
                 {
-                    name: "Defrost", tag: "field",
+                    tag: "field", name: "Defrost",
                     details: "This is a mode optimized for defrosting food.",
                     xref: "cluster§8.12.7.1.2"
                 }

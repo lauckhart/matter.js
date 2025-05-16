@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "cluster-id", tag: "datatype",
+    tag: "datatype", name: "cluster-id",
     description: "Cluster ID",
     details: "An identifier that indicates conformance to a cluster specification." +
         "\n" +

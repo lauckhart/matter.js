@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "group-id", tag: "datatype",
+    tag: "datatype", name: "group-id",
     description: "Group ID",
     details: "A 16-bit ID for a group scoped to a particular fabric as indicated by an accompanying fabric index " +
         "adjacent instantiation.",

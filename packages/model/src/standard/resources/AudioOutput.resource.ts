@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "AudioOutput", tag: "cluster",
+    tag: "cluster", name: "AudioOutput",
     classification: "application", pics: "AUDIOOUTPUT",
 
     details: "This cluster provides an interface for controlling the Output on a Video Player device such as a TV." +
@@ -26,23 +26,23 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§6.5.4",
-            children: [{ name: "NU", tag: "field", details: "Supports updates to output names" }]
+            children: [{ tag: "field", name: "NU", details: "Supports updates to output names" }]
         },
         {
-            name: "OutputList", tag: "attribute",
+            tag: "attribute", name: "OutputList",
             details: "This attribute provides the list of outputs supported by the device.",
             xref: "cluster§6.5.6.1"
         },
         {
-            name: "CurrentOutput", tag: "attribute",
+            tag: "attribute", name: "CurrentOutput",
             details: "This attribute contains the value of the index field of the currently selected OutputInfoStruct.",
             xref: "cluster§6.5.6.2"
         },
 
         {
-            name: "SelectOutput", tag: "command",
+            tag: "command", name: "SelectOutput",
 
             details: "Upon receipt, this shall change the output on the device to the output at a specific index in the " +
                 "Output List." +
@@ -54,7 +54,7 @@ Resource.add({
             xref: "cluster§6.5.7.1",
 
             children: [{
-                name: "Index", tag: "field",
+                tag: "field", name: "Index",
                 details: "This shall indicate the index field of the OutputInfoStruct from the OutputList attribute in which " +
                     "to change to.",
                 xref: "cluster§6.5.7.1.1"
@@ -62,7 +62,7 @@ Resource.add({
         },
 
         {
-            name: "RenameOutput", tag: "command",
+            tag: "command", name: "RenameOutput",
             details: "Upon receipt, this shall rename the output at a specific index in the Output List." +
                 "\n" +
                 "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
@@ -71,31 +71,31 @@ Resource.add({
         },
 
         {
-            name: "OutputTypeEnum", tag: "datatype",
+            tag: "datatype", name: "OutputTypeEnum",
             details: "The type of output, expressed as an enum, with the following values:",
             xref: "cluster§6.5.5.1",
-            children: [{ name: "Hdmi", tag: "field", description: "HDMI" }]
+            children: [{ tag: "field", name: "Hdmi", description: "HDMI" }]
         },
 
         {
-            name: "OutputInfoStruct", tag: "datatype",
+            tag: "datatype", name: "OutputInfoStruct",
             details: "This contains information about an output.",
             xref: "cluster§6.5.5.2",
 
             children: [
                 {
-                    name: "Index", tag: "field",
+                    tag: "field", name: "Index",
                     details: "This field shall indicate the unique index into the list of outputs.",
                     xref: "cluster§6.5.5.2.1"
                 },
                 {
-                    name: "OutputType", tag: "field",
+                    tag: "field", name: "OutputType",
                     details: "This field shall indicate the type of output.",
                     xref: "cluster§6.5.5.2.2"
                 },
 
                 {
-                    name: "Name", tag: "field",
+                    tag: "field", name: "Name",
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
                         "blank, but SHOULD be provided when known.",
                     xref: "cluster§6.5.5.2.3"

@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ThermostatUserInterfaceConfiguration", tag: "cluster",
+    tag: "cluster", name: "ThermostatUserInterfaceConfiguration",
     classification: "application", pics: "TSUIC",
     details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, or " +
         "a thermostat controller device, that supports a keypad and LCD screen.",
@@ -17,18 +17,18 @@ Resource.add({
 
     children: [
         {
-            name: "TemperatureDisplayMode", tag: "attribute",
+            tag: "attribute", name: "TemperatureDisplayMode",
             details: "Indicates the units of the temperature displayed on the thermostat screen.",
             xref: "cluster§4.5.6.1"
         },
         {
-            name: "KeypadLockout", tag: "attribute",
+            tag: "attribute", name: "KeypadLockout",
             details: "Indicates the level of functionality that is available to the user via the keypad.",
             xref: "cluster§4.5.6.2"
         },
 
         {
-            name: "ScheduleProgrammingVisibility", tag: "attribute",
+            tag: "attribute", name: "ScheduleProgrammingVisibility",
 
             details: "This attribute is used to hide the weekly schedule programming functionality or menu on a thermostat " +
                 "from a user to prevent local user programming of the weekly schedule. The schedule programming may " +
@@ -43,40 +43,40 @@ Resource.add({
         },
 
         {
-            name: "TemperatureDisplayModeEnum", tag: "datatype",
+            tag: "datatype", name: "TemperatureDisplayModeEnum",
             xref: "cluster§4.5.5.1",
             children: [
-                { name: "Celsius", tag: "field", description: "Temperature displayed in °C" },
-                { name: "Fahrenheit", tag: "field", description: "Temperature displayed in °F" }
+                { tag: "field", name: "Celsius", description: "Temperature displayed in °C" },
+                { tag: "field", name: "Fahrenheit", description: "Temperature displayed in °F" }
             ]
         },
 
         {
-            name: "KeypadLockoutEnum", tag: "datatype",
+            tag: "datatype", name: "KeypadLockoutEnum",
             details: "The interpretation of the various levels is device-dependent.",
             xref: "cluster§4.5.5.2",
 
             children: [
-                { name: "NoLockout", tag: "field", description: "All functionality available to the user" },
-                { name: "Lockout1", tag: "field", description: "Level 1 reduced functionality" },
-                { name: "Lockout2", tag: "field", description: "Level 2 reduced functionality" },
-                { name: "Lockout3", tag: "field", description: "Level 3 reduced functionality" },
-                { name: "Lockout4", tag: "field", description: "Level 4 reduced functionality" },
-                { name: "Lockout5", tag: "field", description: "Least functionality available to the user" }
+                { tag: "field", name: "NoLockout", description: "All functionality available to the user" },
+                { tag: "field", name: "Lockout1", description: "Level 1 reduced functionality" },
+                { tag: "field", name: "Lockout2", description: "Level 2 reduced functionality" },
+                { tag: "field", name: "Lockout3", description: "Level 3 reduced functionality" },
+                { tag: "field", name: "Lockout4", description: "Level 4 reduced functionality" },
+                { tag: "field", name: "Lockout5", description: "Least functionality available to the user" }
             ]
         },
 
         {
-            name: "ScheduleProgrammingVisibilityEnum", tag: "datatype",
+            tag: "datatype", name: "ScheduleProgrammingVisibilityEnum",
             xref: "cluster§4.5.5.3",
 
             children: [
                 {
-                    name: "ScheduleProgrammingPermitted", tag: "field",
+                    tag: "field", name: "ScheduleProgrammingPermitted",
                     description: "Local schedule programming functionality is enabled at the thermostat"
                 },
                 {
-                    name: "ScheduleProgrammingDenied", tag: "field",
+                    tag: "field", name: "ScheduleProgrammingDenied",
                     description: "Local schedule programming functionality is disabled at the thermostat"
                 }
             ]

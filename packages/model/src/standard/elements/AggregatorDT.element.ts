@@ -14,14 +14,14 @@ import {
 } from "../../elements/index.js";
 
 export const AggregatorDt = DeviceType(
-    { id: 0xe, name: "Aggregator", classification: "simple" },
+    { name: "Aggregator", id: 0xe },
     Requirement(
-        { id: 0x1d, name: "Descriptor", element: "serverCluster" },
-        Requirement({ name: "DeviceTypeList", default: [ { deviceType: 14, revision: 2 } ], element: "attribute" })
+        { name: "Descriptor", id: 0x1d, element: "serverCluster" },
+        Requirement({ name: "DeviceTypeList", element: "attribute", default: [ { deviceType: 14, revision: 2 } ] })
     ),
-    Requirement({ id: 0x25, name: "Actions", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x3, name: "Identify", conformance: "O", element: "serverCluster" }),
-    Requirement({ id: 0x751, name: "CommissionerControl", conformance: "FabricSynchronization", element: "serverCluster" }),
+    Requirement({ name: "Actions", id: 0x25, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "Identify", id: 0x3, element: "serverCluster", conformance: "O" }),
+    Requirement({ name: "CommissionerControl", id: 0x751, element: "serverCluster", conformance: "FabricSynchronization" }),
     Field({ name: "conditions", type: "enum8" }, Field({ name: "FabricSynchronization" }))
 );
 

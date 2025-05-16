@@ -9,19 +9,19 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "FanControl", tag: "cluster",
+    tag: "cluster", name: "FanControl",
     classification: "application", pics: "FAN",
     details: "This cluster specifies an interface to control the speed of a fan.",
     xref: "cluster§4.4",
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§4.4.4",
 
             children: [
                 {
-                    name: "SPD", tag: "field",
+                    tag: "field", name: "SPD",
 
                     details: "Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed " +
                         "control but left it up to the implementer to decide what was supported. Therefore, it is assumed " +
@@ -36,16 +36,16 @@ Resource.add({
                     xref: "cluster§4.4.4.1"
                 },
 
-                { name: "AUT", tag: "field", details: "Automatic mode supported for fan speed" },
-                { name: "RCK", tag: "field", details: "Rocking movement supported" },
-                { name: "WND", tag: "field", details: "Wind emulation supported" },
-                { name: "STEP", tag: "field", details: "Step command supported" },
-                { name: "DIR", tag: "field", details: "Airflow Direction attribute is supported" }
+                { tag: "field", name: "AUT", details: "Automatic mode supported for fan speed" },
+                { tag: "field", name: "RCK", details: "Rocking movement supported" },
+                { tag: "field", name: "WND", details: "Wind emulation supported" },
+                { tag: "field", name: "STEP", details: "Step command supported" },
+                { tag: "field", name: "DIR", details: "Airflow Direction attribute is supported" }
             ]
         },
 
         {
-            name: "FanMode", tag: "attribute",
+            tag: "attribute", name: "FanMode",
 
             details: "Indicates the current speed mode of the fan. This attribute may be written by the client to request " +
                 "a different fan mode. A server shall return INVALID_IN_STATE to indicate that the fan is not in a " +
@@ -67,13 +67,13 @@ Resource.add({
         },
 
         {
-            name: "FanModeSequence", tag: "attribute",
+            tag: "attribute", name: "FanModeSequence",
             details: "This attribute indicates the fan speed ranges that shall be supported.",
             xref: "cluster§4.4.6.2"
         },
 
         {
-            name: "PercentSetting", tag: "attribute",
+            tag: "attribute", name: "PercentSetting",
 
             details: "Indicates the speed setting for the fan. This attribute may be written by the client to indicate a " +
                 "new fan speed. If the client writes null to this attribute, the attribute value shall NOT change. A " +
@@ -86,7 +86,7 @@ Resource.add({
         },
 
         {
-            name: "PercentCurrent", tag: "attribute",
+            tag: "attribute", name: "PercentCurrent",
             details: "Indicates the actual currently operating fan speed, or zero to indicate that the fan is off. There " +
                 "may be a temporary mismatch between the value of this attribute and the value of the PercentSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
@@ -95,14 +95,14 @@ Resource.add({
         },
 
         {
-            name: "SpeedMax", tag: "attribute",
+            tag: "attribute", name: "SpeedMax",
             details: "Indicates that the fan has one speed (value of 1) or the maximum speed, if the fan is capable of " +
                 "multiple speeds.",
             xref: "cluster§4.4.6.5"
         },
 
         {
-            name: "SpeedSetting", tag: "attribute",
+            tag: "attribute", name: "SpeedSetting",
 
             details: "Indicates the speed setting for the fan. This attribute may be written by the client to indicate a " +
                 "new fan speed. If the client writes null to this attribute, the attribute value shall NOT change. A " +
@@ -116,7 +116,7 @@ Resource.add({
         },
 
         {
-            name: "SpeedCurrent", tag: "attribute",
+            tag: "attribute", name: "SpeedCurrent",
             details: "Indicates the actual currently operating fan speed, or zero to indicate that the fan is off. There " +
                 "may be a temporary mismatch between the value of this attribute and the value of the SpeedSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
@@ -125,13 +125,13 @@ Resource.add({
         },
 
         {
-            name: "RockSupport", tag: "attribute",
+            tag: "attribute", name: "RockSupport",
             details: "This attribute is a bitmap that indicates what rocking motions the server supports.",
             xref: "cluster§4.4.6.8"
         },
 
         {
-            name: "RockSetting", tag: "attribute",
+            tag: "attribute", name: "RockSetting",
 
             details: "This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit " +
                 "shall only be set to 1, if the corresponding bit in the RockSupport attribute is set to 1, otherwise " +
@@ -148,14 +148,14 @@ Resource.add({
         },
 
         {
-            name: "WindSupport", tag: "attribute",
+            tag: "attribute", name: "WindSupport",
             details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                 "mode bit shall be set.",
             xref: "cluster§4.4.6.10"
         },
 
         {
-            name: "WindSetting", tag: "attribute",
+            tag: "attribute", name: "WindSetting",
 
             details: "This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit " +
                 "shall only be set to 1, if the corresponding bit in the WindSupport attribute is set to 1, otherwise " +
@@ -172,7 +172,7 @@ Resource.add({
         },
 
         {
-            name: "AirflowDirection", tag: "attribute",
+            tag: "attribute", name: "AirflowDirection",
             details: "Indicates the current airflow direction of the fan. This attribute may be written by the client to " +
                 "indicate a new airflow direction for the fan. This attribute shall be set to one of the values in " +
                 "the AirflowDirectionEnum table.",
@@ -180,7 +180,7 @@ Resource.add({
         },
 
         {
-            name: "Step", tag: "command",
+            tag: "command", name: "Step",
 
             details: "This command speeds up or slows down the fan, in steps, without the client having to know the fan " +
                 "speed. This command supports, for example, a user operated wall switch, where the user provides the " +
@@ -193,17 +193,17 @@ Resource.add({
 
             children: [
                 {
-                    name: "Direction", tag: "field",
+                    tag: "field", name: "Direction",
                     details: "This field shall indicate whether the fan speed increases or decreases to the next step value.",
                     xref: "cluster§4.4.7.1.1"
                 },
                 {
-                    name: "Wrap", tag: "field",
+                    tag: "field", name: "Wrap",
                     details: "This field shall indicate if the fan speed wraps between highest and lowest step value.",
                     xref: "cluster§4.4.7.1.2"
                 },
                 {
-                    name: "LowestOff", tag: "field",
+                    tag: "field", name: "LowestOff",
                     details: "This field shall indicate that the fan being off (speed value 0) is included as a step value.",
                     xref: "cluster§4.4.7.1.3"
                 }
@@ -211,51 +211,51 @@ Resource.add({
         },
 
         {
-            name: "RockBitmap", tag: "datatype",
+            tag: "datatype", name: "RockBitmap",
             xref: "cluster§4.4.5.1",
             children: [
-                { name: "RockLeftRight", tag: "field", description: "Indicate rock left to right" },
-                { name: "RockUpDown", tag: "field", description: "Indicate rock up and down" },
-                { name: "RockRound", tag: "field", description: "Indicate rock around" }
+                { tag: "field", name: "RockLeftRight", description: "Indicate rock left to right" },
+                { tag: "field", name: "RockUpDown", description: "Indicate rock up and down" },
+                { tag: "field", name: "RockRound", description: "Indicate rock around" }
             ]
         },
 
         {
-            name: "WindBitmap", tag: "datatype",
+            tag: "datatype", name: "WindBitmap",
             xref: "cluster§4.4.5.2",
             children: [
-                { name: "SleepWind", tag: "field", description: "Indicate sleep wind" },
-                { name: "NaturalWind", tag: "field", description: "Indicate natural wind" }
+                { tag: "field", name: "SleepWind", description: "Indicate sleep wind" },
+                { tag: "field", name: "NaturalWind", description: "Indicate natural wind" }
             ]
         },
 
         {
-            name: "StepDirectionEnum", tag: "datatype",
+            tag: "datatype", name: "StepDirectionEnum",
             xref: "cluster§4.4.5.3",
             children: [
-                { name: "Increase", tag: "field", description: "Step moves in increasing direction" },
-                { name: "Decrease", tag: "field", description: "Step moves in decreasing direction" }
+                { tag: "field", name: "Increase", description: "Step moves in increasing direction" },
+                { tag: "field", name: "Decrease", description: "Step moves in decreasing direction" }
             ]
         },
 
         {
-            name: "AirflowDirectionEnum", tag: "datatype",
+            tag: "datatype", name: "AirflowDirectionEnum",
             xref: "cluster§4.4.5.4",
             children: [
-                { name: "Forward", tag: "field", description: "Airflow is in the forward direction" },
-                { name: "Reverse", tag: "field", description: "Airflow is in the reverse direction" }
+                { tag: "field", name: "Forward", description: "Airflow is in the forward direction" },
+                { tag: "field", name: "Reverse", description: "Airflow is in the reverse direction" }
             ]
         },
 
         {
-            name: "FanModeEnum", tag: "datatype",
+            tag: "datatype", name: "FanModeEnum",
             xref: "cluster§4.4.5.5",
 
             children: [
-                { name: "Off", tag: "field", description: "Fan is off" },
+                { tag: "field", name: "Off", description: "Fan is off" },
 
                 {
-                    name: "Low", tag: "field",
+                    tag: "field", name: "Low",
                     description: "Fan using low speed",
                     details: "If the fan supports 2 or more speeds, the Low value shall be supported." +
                         "\n" +
@@ -264,7 +264,7 @@ Resource.add({
                 },
 
                 {
-                    name: "Medium", tag: "field",
+                    tag: "field", name: "Medium",
                     description: "Fan using medium speed",
                     details: "If the fan supports 3 or more speeds, the Medium value shall be supported." +
                         "\n" +
@@ -272,32 +272,32 @@ Resource.add({
                     xref: "cluster§4.4.5.5.2"
                 },
 
-                { name: "High", tag: "field", description: "Fan using high speed" },
-                { name: "Auto", tag: "field", description: "Fan is using auto mode" },
-                { name: "Smart", tag: "field", description: "Fan is using smart mode" }
+                { tag: "field", name: "High", description: "Fan using high speed" },
+                { tag: "field", name: "Auto", description: "Fan is using auto mode" },
+                { tag: "field", name: "Smart", description: "Fan is using smart mode" }
             ]
         },
 
         {
-            name: "FanModeSequenceEnum", tag: "datatype",
+            tag: "datatype", name: "FanModeSequenceEnum",
             xref: "cluster§4.4.5.6",
 
             children: [
                 {
-                    name: "OffLowMedHigh", tag: "field",
+                    tag: "field", name: "OffLowMedHigh",
                     description: "Fan is capable of off, low, medium and high modes"
                 },
-                { name: "OffLowHigh", tag: "field", description: "Fan is capable of off, low and high modes" },
+                { tag: "field", name: "OffLowHigh", description: "Fan is capable of off, low and high modes" },
                 {
-                    name: "OffLowMedHighAuto", tag: "field",
+                    tag: "field", name: "OffLowMedHighAuto",
                     description: "Fan is capable of off, low, medium, high and auto modes"
                 },
                 {
-                    name: "OffLowHighAuto", tag: "field",
+                    tag: "field", name: "OffLowHighAuto",
                     description: "Fan is capable of off, low, high and auto modes"
                 },
-                { name: "OffHighAuto", tag: "field", description: "Fan is capable of off, high and auto modes" },
-                { name: "OffHigh", tag: "field", description: "Fan is capable of off and high modes" }
+                { tag: "field", name: "OffHighAuto", description: "Fan is capable of off, high and auto modes" },
+                { tag: "field", name: "OffHigh", description: "Fan is capable of off and high modes" }
             ]
         }
     ]

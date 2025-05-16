@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "RoomAirConditioner", tag: "deviceType",
+    tag: "deviceType", name: "RoomAirConditioner",
     classification: "simple",
     details: "This defines conformance to the Room Air Conditioner device type." +
         "\n" +
@@ -18,14 +18,14 @@ Resource.add({
     xref: "device§13.3",
 
     children: [
-        { name: "Identify", tag: "requirement", xref: "device§13.3.6" },
-        { name: "Groups", tag: "requirement", xref: "device§13.3.6" },
-        { name: "ScenesManagement", tag: "requirement", xref: "device§13.3.6" },
-        { name: "OnOff", tag: "requirement", xref: "device§13.3.6" },
-        { name: "Thermostat", tag: "requirement", xref: "device§13.3.6" },
-        { name: "FanControl", tag: "requirement", xref: "device§13.3.6" },
-        { name: "ThermostatUserInterfaceConfiguration", tag: "requirement", xref: "device§13.3.6" },
-        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§13.3.6" },
-        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§13.3.6" }
+        { tag: "requirement", name: "Identify", xref: "device§13.3.6" },
+        { tag: "requirement", name: "Groups", xref: "device§13.3.6" },
+        { tag: "requirement", name: "ScenesManagement", xref: "device§13.3.6" },
+        { tag: "requirement", name: "OnOff", xref: "device§13.3.6" },
+        { tag: "requirement", name: "Thermostat", xref: "device§13.3.6" },
+        { tag: "requirement", name: "FanControl", xref: "device§13.3.6" },
+        { tag: "requirement", name: "ThermostatUserInterfaceConfiguration", xref: "device§13.3.6" },
+        { tag: "requirement", name: "TemperatureMeasurement", xref: "device§13.3.6" },
+        { tag: "requirement", name: "RelativeHumidityMeasurement", xref: "device§13.3.6" }
     ]
 });

@@ -16,28 +16,28 @@ import {
 } from "../../elements/index.js";
 
 export const ValidProxies = Cluster(
-    { id: 0x44, name: "ValidProxies" },
-    Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
+    { name: "ValidProxies", id: 0x44 },
+    Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
     Attribute(
-        { id: 0x0, name: "ValidProxyList", type: "list", access: "RW", conformance: "M", default: [], quality: "N F" },
+        { name: "ValidProxyList", id: 0x0, type: "list", default: [], conformance: "M", access: "RW", quality: "N F" },
         Field({ name: "entry", type: "ValidProxyStruct" })
     ),
     Command({
-        id: 0x0, name: "GetValidProxiesRequest",
-        access: "O", conformance: "M", direction: "request", response: "GetValidProxiesResponse"
+        name: "GetValidProxiesRequest", id: 0x0,
+        conformance: "M", access: "O", direction: "request", response: "GetValidProxiesResponse"
     }),
 
     Command(
-        { id: 0x1, name: "GetValidProxiesResponse", conformance: "M", direction: "response" },
+        { name: "GetValidProxiesResponse", id: 0x1, conformance: "M", direction: "response" },
         Field(
-            { id: 0x0, name: "ProxyNodeIdList", type: "list", conformance: "M" },
+            { name: "ProxyNodeIdList", id: 0x0, type: "list", conformance: "M" },
             Field({ name: "entry", type: "node-id" })
         )
     ),
 
     Datatype(
         { name: "ValidProxyStruct", type: "struct" },
-        Field({ id: 0x1, name: "NodeId", type: "node-id", access: "RW", conformance: "M" })
+        Field({ name: "NodeId", id: 0x1, type: "node-id", conformance: "M", access: "RW" })
     )
 );
 

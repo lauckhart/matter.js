@@ -9,23 +9,23 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "MeasurementTypeEnum", tag: "datatype",
+    tag: "datatype", name: "MeasurementTypeEnum",
     xref: "cluster§2.1.4.2",
 
     children: [
-        { name: "Voltage", tag: "field", description: "Voltage in millivolts (mV)" },
-        { name: "ActiveCurrent", tag: "field", description: "Active current in milliamps (mA)" },
-        { name: "ReactiveCurrent", tag: "field", description: "Reactive current in milliamps (mA)" },
-        { name: "ApparentCurrent", tag: "field", description: "Apparent current in milliamps (mA)" },
-        { name: "ActivePower", tag: "field", description: "Active power in milliwatts (mW)" },
-        { name: "ReactivePower", tag: "field", description: "Reactive power in millivolt-amps reactive (mVAR)" },
-        { name: "ApparentPower", tag: "field", description: "Apparent power in millivolt-amps (mVA)" },
-        { name: "RmsVoltage", tag: "field", description: "Root mean squared voltage in millivolts (mV)" },
-        { name: "RmsCurrent", tag: "field", description: "Root mean squared current in milliamps (mA)" },
-        { name: "RmsPower", tag: "field", description: "Root mean squared power in milliwatts (mW)" },
-        { name: "Frequency", tag: "field", description: "AC frequency in millihertz (mHz)" },
-        { name: "PowerFactor", tag: "field", description: "Power Factor ratio in+/- 1/100ths of a percent." },
-        { name: "NeutralCurrent", tag: "field", description: "AC neutral current in milliamps (mA)" },
-        { name: "ElectricalEnergy", tag: "field", description: "Electrical energy in milliwatt-hours (mWh)" }
+        { tag: "field", name: "Voltage", description: "Voltage in millivolts (mV)" },
+        { tag: "field", name: "ActiveCurrent", description: "Active current in milliamps (mA)" },
+        { tag: "field", name: "ReactiveCurrent", description: "Reactive current in milliamps (mA)" },
+        { tag: "field", name: "ApparentCurrent", description: "Apparent current in milliamps (mA)" },
+        { tag: "field", name: "ActivePower", description: "Active power in milliwatts (mW)" },
+        { tag: "field", name: "ReactivePower", description: "Reactive power in millivolt-amps reactive (mVAR)" },
+        { tag: "field", name: "ApparentPower", description: "Apparent power in millivolt-amps (mVA)" },
+        { tag: "field", name: "RmsVoltage", description: "Root mean squared voltage in millivolts (mV)" },
+        { tag: "field", name: "RmsCurrent", description: "Root mean squared current in milliamps (mA)" },
+        { tag: "field", name: "RmsPower", description: "Root mean squared power in milliwatts (mW)" },
+        { tag: "field", name: "Frequency", description: "AC frequency in millihertz (mHz)" },
+        { tag: "field", name: "PowerFactor", description: "Power Factor ratio in+/- 1/100ths of a percent." },
+        { tag: "field", name: "NeutralCurrent", description: "AC neutral current in milliamps (mA)" },
+        { tag: "field", name: "ElectricalEnergy", description: "Electrical energy in milliwatt-hours (mWh)" }
     ]
 });

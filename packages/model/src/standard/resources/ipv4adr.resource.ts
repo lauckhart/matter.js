@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ipv4adr", tag: "datatype",
+    tag: "datatype", name: "ipv4adr",
     description: "IPv4 Address",
 
     details: "The IPv4 address data type is derived from an octet string. The octets shall correspond to the four " +

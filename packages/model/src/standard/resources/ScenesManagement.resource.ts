@@ -9,7 +9,7 @@
 import { Resource } from "#models/Resource.js";
 
 Resource.add({
-    name: "ScenesManagement", tag: "cluster",
+    tag: "cluster", name: "ScenesManagement",
     classification: "application", pics: "S",
 
     details: "The Scenes Management cluster provides attributes and commands for setting up and recalling scenes. " +
@@ -27,17 +27,17 @@ Resource.add({
 
     children: [
         {
-            name: "FeatureMap", tag: "attribute",
+            tag: "attribute", name: "FeatureMap",
             xref: "cluster§1.4.4",
             children: [{
-                name: "SN", tag: "field",
+                tag: "field", name: "SN",
                 details: "This feature indicates the ability to store a name for a scene when a scene is added.",
                 xref: "cluster§1.4.4.1"
             }]
         },
 
         {
-            name: "LastConfiguredBy", tag: "attribute",
+            tag: "attribute", name: "LastConfiguredBy",
 
             details: "Indicates the Node ID of the node that last configured the Scene Table." +
                 "\n" +
@@ -50,7 +50,7 @@ Resource.add({
         },
 
         {
-            name: "SceneTableSize", tag: "attribute",
+            tag: "attribute", name: "SceneTableSize",
             details: "Indicates the number of entries in the Scene Table on this endpoint. This is the total across all " +
                 "fabrics; note that a single fabric cannot use all those entries (see Handling of fabric- scoping). " +
                 "The minimum size of this table, (i.e., the minimum number of scenes to support across all fabrics " +
@@ -60,7 +60,7 @@ Resource.add({
         },
 
         {
-            name: "FabricSceneInfo", tag: "attribute",
+            tag: "attribute", name: "FabricSceneInfo",
             details: "Indicates a list of fabric scoped information about scenes on this endpoint." +
                 "\n" +
                 "The number of list entries for this attribute shall NOT exceed the number of supported fabrics by " +
@@ -69,7 +69,7 @@ Resource.add({
         },
 
         {
-            name: "AddScene", tag: "command",
+            tag: "command", name: "AddScene",
             details: "It is not mandatory for an extension field set to be included in the command for every cluster on " +
                 "that endpoint that has a defined extension field set. Extension field sets may be omitted, including " +
                 "the case of no extension field sets at all.",
@@ -77,27 +77,27 @@ Resource.add({
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.2.1"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.2.2"
                 },
                 {
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
                     xref: "cluster§1.4.9.2.3"
                 },
                 {
-                    name: "SceneName", tag: "field",
+                    tag: "field", name: "SceneName",
                     details: "This field shall indicate the name of the scene.",
                     xref: "cluster§1.4.9.2.4"
                 },
                 {
-                    name: "ExtensionFieldSetStructs", tag: "field",
+                    tag: "field", name: "ExtensionFieldSetStructs",
                     details: "This field shall contains the list of extension fields.",
                     xref: "cluster§1.4.9.2.5"
                 }
@@ -105,22 +105,22 @@ Resource.add({
         },
 
         {
-            name: "AddSceneResponse", tag: "command",
+            tag: "command", name: "AddSceneResponse",
             xref: "cluster§1.4.9.3",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for AddScene command.",
                     xref: "cluster§1.4.9.3.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The GroupID field shall be set to the corresponding field of the received AddScene command.",
                     xref: "cluster§1.4.9.3.2"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "The SceneID field shall be set to the corresponding field of the received AddScene command.",
                     xref: "cluster§1.4.9.3.3"
                 }
@@ -128,17 +128,17 @@ Resource.add({
         },
 
         {
-            name: "ViewScene", tag: "command",
+            tag: "command", name: "ViewScene",
             xref: "cluster§1.4.9.4",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.4.1"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.4.2"
                 }
@@ -146,42 +146,42 @@ Resource.add({
         },
 
         {
-            name: "ViewSceneResponse", tag: "command",
+            tag: "command", name: "ViewSceneResponse",
             xref: "cluster§1.4.9.5",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for ViewScene command.",
                     xref: "cluster§1.4.9.5.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The GroupID field shall be set to the corresponding field of the received ViewScene command.",
                     xref: "cluster§1.4.9.5.2"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "The SceneID field shall be set to the corresponding field of the received ViewScene command.",
                     xref: "cluster§1.4.9.5.3"
                 },
 
                 {
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.4"
                 },
 
                 {
-                    name: "SceneName", tag: "field",
+                    tag: "field", name: "SceneName",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.5"
                 },
 
                 {
-                    name: "ExtensionFieldSetStructs", tag: "field",
+                    tag: "field", name: "ExtensionFieldSetStructs",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.6"
@@ -190,17 +190,17 @@ Resource.add({
         },
 
         {
-            name: "RemoveScene", tag: "command",
+            tag: "command", name: "RemoveScene",
             xref: "cluster§1.4.9.6",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.6.1"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.6.2"
                 }
@@ -208,22 +208,22 @@ Resource.add({
         },
 
         {
-            name: "RemoveSceneResponse", tag: "command",
+            tag: "command", name: "RemoveSceneResponse",
             xref: "cluster§1.4.9.7",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for RemoveScene command.",
                     xref: "cluster§1.4.9.7.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveScene command.",
                     xref: "cluster§1.4.9.7.2"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "The SceneID field shall be set to the corresponding field of the received RemoveScene command.",
                     xref: "cluster§1.4.9.7.3"
                 }
@@ -231,27 +231,27 @@ Resource.add({
         },
 
         {
-            name: "RemoveAllScenes", tag: "command",
+            tag: "command", name: "RemoveAllScenes",
             xref: "cluster§1.4.9.8",
             children: [{
-                name: "GroupId", tag: "field",
+                tag: "field", name: "GroupId",
                 details: "This field shall indicate the group identifier in the Group Table.",
                 xref: "cluster§1.4.9.8.1"
             }]
         },
 
         {
-            name: "RemoveAllScenesResponse", tag: "command",
+            tag: "command", name: "RemoveAllScenesResponse",
             xref: "cluster§1.4.9.9",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for RemoveAllScenes command.",
                     xref: "cluster§1.4.9.9.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveAllScenes command.",
                     xref: "cluster§1.4.9.9.2"
                 }
@@ -259,17 +259,17 @@ Resource.add({
         },
 
         {
-            name: "StoreScene", tag: "command",
+            tag: "command", name: "StoreScene",
             xref: "cluster§1.4.9.10",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.10.1"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.10.2"
                 }
@@ -277,22 +277,22 @@ Resource.add({
         },
 
         {
-            name: "StoreSceneResponse", tag: "command",
+            tag: "command", name: "StoreSceneResponse",
             xref: "cluster§1.4.9.11",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for StoreScene command.",
                     xref: "cluster§1.4.9.11.1"
                 },
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "The GroupID field shall be set to the corresponding field of the received StoreScene command.",
                     xref: "cluster§1.4.9.11.2"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "The SceneID field shall be set to the corresponding field of the received StoreScene command.",
                     xref: "cluster§1.4.9.11.3"
                 }
@@ -300,22 +300,22 @@ Resource.add({
         },
 
         {
-            name: "RecallScene", tag: "command",
+            tag: "command", name: "RecallScene",
             xref: "cluster§1.4.9.12",
 
             children: [
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.12.1"
                 },
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.12.2"
                 },
                 {
-                    name: "TransitionTime", tag: "field",
+                    tag: "field", name: "TransitionTime",
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
                     xref: "cluster§1.4.9.12.3"
                 }
@@ -323,30 +323,30 @@ Resource.add({
         },
 
         {
-            name: "GetSceneMembership", tag: "command",
+            tag: "command", name: "GetSceneMembership",
             details: "This command can be used to get the used scene identifiers within a certain group, for the endpoint " +
                 "that implements this cluster.",
             xref: "cluster§1.4.9.13",
             children: [{
-                name: "GroupId", tag: "field",
+                tag: "field", name: "GroupId",
                 details: "This field shall indicate the group identifier in the Group Table.",
                 xref: "cluster§1.4.9.13.1"
             }]
         },
 
         {
-            name: "GetSceneMembershipResponse", tag: "command",
+            tag: "command", name: "GetSceneMembershipResponse",
             xref: "cluster§1.4.9.14",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for GetSceneMembership command.",
                     xref: "cluster§1.4.9.14.1"
                 },
 
                 {
-                    name: "Capacity", tag: "field",
+                    tag: "field", name: "Capacity",
 
                     details: "This field shall contain the remaining capacity of the Scene Table of the server (for all groups for " +
                         "the accessing fabric). The following values apply:" +
@@ -363,13 +363,13 @@ Resource.add({
                 },
 
                 {
-                    name: "GroupId", tag: "field",
+                    tag: "field", name: "GroupId",
                     details: "This field shall be set to the corresponding field of the received GetSceneMembership command.",
                     xref: "cluster§1.4.9.14.3"
                 },
 
                 {
-                    name: "SceneList", tag: "field",
+                    tag: "field", name: "SceneList",
                     details: "If the status is not SUCCESS then this field shall be omitted, else this field shall contain the " +
                         "identifiers of all the scenes in the Scene Table with the corresponding Group ID.",
                     xref: "cluster§1.4.9.14.4"
@@ -378,14 +378,14 @@ Resource.add({
         },
 
         {
-            name: "CopyScene", tag: "command",
+            tag: "command", name: "CopyScene",
             details: "This command allows a client to efficiently copy scenes from one group/scene identifier pair to " +
                 "another group/scene identifier pair.",
             xref: "cluster§1.4.9.15",
 
             children: [
                 {
-                    name: "Mode", tag: "field",
+                    tag: "field", name: "Mode",
                     details: "This field shall contain the information of how the scene copy is to proceed." +
                         "\n" +
                         "The CopyAllScenes bit of the Mode indicates whether all scenes are to be copied. If this value is " +
@@ -395,7 +395,7 @@ Resource.add({
                 },
 
                 {
-                    name: "GroupIdentifierFrom", tag: "field",
+                    tag: "field", name: "GroupIdentifierFrom",
                     details: "This field shall indicate the identifier of the group from which the scene is to be copied. Together " +
                         "with the SceneIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
@@ -403,7 +403,7 @@ Resource.add({
                 },
 
                 {
-                    name: "SceneIdentifierFrom", tag: "field",
+                    tag: "field", name: "SceneIdentifierFrom",
                     details: "This field shall indicate the identifier of the scene from which the scene is to be copied. Together " +
                         "with the GroupIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
@@ -411,7 +411,7 @@ Resource.add({
                 },
 
                 {
-                    name: "GroupIdentifierTo", tag: "field",
+                    tag: "field", name: "GroupIdentifierTo",
                     details: "This field shall indicate the identifier of the group to which the scene is to be copied. Together " +
                         "with the SceneIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
@@ -419,7 +419,7 @@ Resource.add({
                 },
 
                 {
-                    name: "SceneIdentifierTo", tag: "field",
+                    tag: "field", name: "SceneIdentifierTo",
                     details: "This field shall indicate the identifier of the scene to which the scene is to be copied. Together " +
                         "with the GroupIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
@@ -429,25 +429,25 @@ Resource.add({
         },
 
         {
-            name: "CopySceneResponse", tag: "command",
+            tag: "command", name: "CopySceneResponse",
             xref: "cluster§1.4.9.16",
 
             children: [
                 {
-                    name: "Status", tag: "field",
+                    tag: "field", name: "Status",
                     details: "This field shall be set according to the Effect on Receipt section for the CopyScene command.",
                     xref: "cluster§1.4.9.16.1"
                 },
 
                 {
-                    name: "GroupIdentifierFrom", tag: "field",
+                    tag: "field", name: "GroupIdentifierFrom",
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
                     xref: "cluster§1.4.9.16.2"
                 },
 
                 {
-                    name: "SceneIdentifierFrom", tag: "field",
+                    tag: "field", name: "SceneIdentifierFrom",
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
                     xref: "cluster§1.4.9.16.3"
@@ -456,18 +456,18 @@ Resource.add({
         },
 
         {
-            name: "CopyModeBitmap", tag: "datatype",
+            tag: "datatype", name: "CopyModeBitmap",
             xref: "cluster§1.4.7.1",
-            children: [{ name: "CopyAllScenes", tag: "field", description: "Copy all scenes in the scene table" }]
+            children: [{ tag: "field", name: "CopyAllScenes", description: "Copy all scenes in the scene table" }]
         },
 
         {
-            name: "SceneInfoStruct", tag: "datatype",
+            tag: "datatype", name: "SceneInfoStruct",
             xref: "cluster§1.4.7.2",
 
             children: [
                 {
-                    name: "SceneCount", tag: "field",
+                    tag: "field", name: "SceneCount",
                     details: "This field shall indicate the number of scenes currently used in the server’s Scene Table on the " +
                         "endpoint where the Scenes Management cluster appears." +
                         "\n" +
@@ -476,21 +476,21 @@ Resource.add({
                 },
 
                 {
-                    name: "CurrentScene", tag: "field",
+                    tag: "field", name: "CurrentScene",
                     details: "This field shall indicate the scene identifier of the scene last invoked on the associated fabric. " +
                         "If no scene has been invoked, the value of this field shall be 0xFF, the undefined scene identifier.",
                     xref: "cluster§1.4.7.2.2"
                 },
 
                 {
-                    name: "CurrentGroup", tag: "field",
+                    tag: "field", name: "CurrentGroup",
                     details: "This field shall indicate the group identifier of the scene last invoked on the associated fabric, " +
                         "or 0 if the scene last invoked is not associated with a group.",
                     xref: "cluster§1.4.7.2.3"
                 },
 
                 {
-                    name: "SceneValid", tag: "field",
+                    tag: "field", name: "SceneValid",
 
                     details: "This field shall indicate whether the state of the server corresponds to that associated with the " +
                         "CurrentScene and CurrentGroup fields of the SceneInfoStruct they belong to. TRUE indicates that " +
@@ -510,7 +510,7 @@ Resource.add({
                 },
 
                 {
-                    name: "RemainingCapacity", tag: "field",
+                    tag: "field", name: "RemainingCapacity",
                     details: "This field shall indicate the remaining capacity of the Scene Table on this endpoint for the " +
                         "accessing fabric. Note that this value may change between reads, even if no entries are added or " +
                         "deleted on the accessing fabric, due to other clients associated with other fabrics adding or " +
@@ -521,12 +521,12 @@ Resource.add({
         },
 
         {
-            name: "AttributeValuePairStruct", tag: "datatype",
+            tag: "datatype", name: "AttributeValuePairStruct",
             details: "This data type indicates a combination of an identifier and the value of an attribute.",
             xref: "cluster§1.4.7.3",
 
             children: [{
-                name: "AttributeId", tag: "field",
+                tag: "field", name: "AttributeId",
 
                 details: "This field shall be present for all instances in a given ExtensionFieldSetStruct." +
                     "\n" +
@@ -607,20 +607,20 @@ Resource.add({
         },
 
         {
-            name: "ExtensionFieldSetStruct", tag: "datatype",
+            tag: "datatype", name: "ExtensionFieldSetStruct",
             details: "This data type indicates for a given cluster a set of attributes and their values.",
             xref: "cluster§1.4.7.4",
 
             children: [
                 {
-                    name: "ClusterId", tag: "field",
+                    tag: "field", name: "ClusterId",
                     details: "This field shall indicate the cluster-id of the cluster whose attributes are in the " +
                         "AttributeValueList field.",
                     xref: "cluster§1.4.7.4.1"
                 },
 
                 {
-                    name: "AttributeValueList", tag: "field",
+                    tag: "field", name: "AttributeValueList",
                     details: "This field shall indicate a set of attributes and their values which are stored as part of a scene." +
                         "\n" +
                         "Attributes which do not have the Scenes (\"S\") designation in the Quality column of their cluster " +
@@ -631,7 +631,7 @@ Resource.add({
         },
 
         {
-            name: "LogicalSceneTable", tag: "datatype",
+            tag: "datatype", name: "LogicalSceneTable",
 
             details: "The Scene Table is used to store information for each scene capable of being invoked on the server. " +
                 "Each scene is defined for a particular group. The Scene Table is defined here as a conceptual " +
@@ -647,20 +647,20 @@ Resource.add({
 
             children: [
                 {
-                    name: "SceneGroupId", tag: "field",
+                    tag: "field", name: "SceneGroupId",
                     details: "This field is the group identifier for which this scene applies, or 0 if the scene is not associated " +
                         "with a group.",
                     xref: "cluster§1.4.7.5.1"
                 },
 
                 {
-                    name: "SceneId", tag: "field",
+                    tag: "field", name: "SceneId",
                     details: "This field is unique within this group, which is used to identify this scene.",
                     xref: "cluster§1.4.7.5.2"
                 },
 
                 {
-                    name: "SceneName", tag: "field",
+                    tag: "field", name: "SceneName",
                     details: "The field is the name of the scene." +
                         "\n" +
                         "If scene names are not supported, any commands that write a scene name shall simply discard the " +
@@ -669,14 +669,14 @@ Resource.add({
                 },
 
                 {
-                    name: "SceneTransitionTime", tag: "field",
+                    tag: "field", name: "SceneTransitionTime",
                     details: "This field is the amount of time, in milliseconds, it will take for a cluster to change from its " +
                         "current state to the requested state.",
                     xref: "cluster§1.4.7.5.4"
                 },
 
                 {
-                    name: "ExtensionFields", tag: "field",
+                    tag: "field", name: "ExtensionFields",
                     details: "See the Scene Table Extensions subsections of individual clusters. A Scene Table Extension shall " +
                         "only use attributes with the Scene quality. Each ExtensionFieldSetStruct holds a set of values of " +
                         "these attributes for a cluster implemented on the same endpoint where the Scene (\"S\") designation " +
