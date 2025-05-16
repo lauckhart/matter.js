@@ -7,7 +7,7 @@
 import { Model } from "#model";
 import { Block } from "../../util/TsFile.js";
 import { camelize, serialize } from "../../util/string.js";
-import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
+import { addDetails, addProperties } from "./element-generation.js";
 
 export function generateElement({
     target,
@@ -30,50 +30,51 @@ export function generateElement({
     const head = expr.expressions("{", "}");
 
     const fields = Object.fromEntries(
-        Object.entries(element.toElement(operational)).filter(([k, v]) => {
-            switch (k) {
-                // We handle these separately
-                case "id":
-                case "name":
-                case "type":
-                case "tag":
-                case "children":
-                case "xref":
-                case "details":
-                    return false;
+        Object.entries(element.toElement(operational))
+            .filter(([k, v]) => {
+                switch (k) {
+                    // We handle these separately
+                    case "id":
+                    case "name":
+                    case "type":
+                    case "tag":
+                    case "children":
+                    case "details":
+                        return false;
 
-                // We either unroll these into individual fields or serialize separately
-                case "resources":
-                    return false;
+                    // We either unroll these into individual fields or serialize separately
+                    case "resources":
+                        return false;
 
-                // These are (currently) only used by codegen
-                case "matchTo":
-                case "asOf":
-                case "until":
-                    return false;
+                    // These are (currently) only used by codegen
+                    case "matchTo":
+                    case "asOf":
+                    case "until":
+                        return false;
 
-                default:
-                    return v !== undefined && v !== "";
-            }
-        }),
+                    default:
+                        return v !== undefined && v !== "";
+                }
+            })
+            .sort(([a], [b]) => a.localeCompare(b, "en", { sensitivity: "base" })),
     );
 
     // First, name/ID/type
-    const row1: Record<string, unknown> = { name: element.name };
+    const start: Record<string, unknown> = { name: element.name };
     delete fields.name;
     if (element.id !== undefined) {
         const idStr = element.id < 0 ? element : serialize.asIs(`0x${element.id.toString(16)}`);
-        row1.id = idStr;
+        start.id = idStr;
     }
     if (element.type) {
-        row1.type = (element as any).type;
+        start.type = (element as any).type;
     }
 
-    addProperties(head, row1, fields);
+    addProperties(head, { ...start, ...fields });
 
     // Details and cross-references
     if (!operational) {
-        addDetailsAndCrossReferences(head, element);
+        addDetails(head, element);
     }
 
     // Children

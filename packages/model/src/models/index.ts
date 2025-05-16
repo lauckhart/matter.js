@@ -7,6 +7,7 @@
 export * from "./AttributeModel.js";
 export * from "./ClusterModel.js";
 export * from "./CommandModel.js";
+export * from "./CrossReference.js";
 export * from "./DatatypeModel.js";
 export * from "./DeviceTypeModel.js";
 export * from "./EndpointModel.js";

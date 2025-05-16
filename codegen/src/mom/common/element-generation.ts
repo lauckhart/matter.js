@@ -5,11 +5,15 @@
  */
 
 import { FormattedText, serialize } from "#general";
-import { Specification } from "#model";
+import { CrossReference } from "#model";
 import { Block } from "#util/TsFile.js";
 
 export function addProperties(target: Block, ...sets: Record<string, unknown>[]) {
-    const serializedSets = sets.map(set => Object.entries(set).map(([k, v]) => `${k}: ${serialize(v)}`));
+    const serializedSets = sets.map(set =>
+        Object.entries(set).map(
+            ([k, v]) => `${k}: ${v instanceof CrossReference ? serialize(v.toString()) : serialize(v)}`,
+        ),
+    );
 
     for (const set of serializedSets) {
         // Segment properties into rows
@@ -31,11 +35,7 @@ export function addProperties(target: Block, ...sets: Record<string, unknown>[])
     }
 }
 
-export function addDetailsAndCrossReferences(
-    target: Block,
-    element: { xref?: Specification.CrossReference | string; details?: string },
-) {
-    // Next row: Details
+export function addDetails(target: Block, element: { details?: string }) {
     if (element.details) {
         const lines = FormattedText(element.details, 100);
         for (let i = 0; i < lines.length; i++) {
@@ -47,10 +47,5 @@ export function addDetailsAndCrossReferences(
         if (text) {
             target.atom(text);
         }
-    }
-
-    // Next row: Cross reference
-    if (element.xref) {
-        target.atom("xref", serialize(element.xref.toString()));
     }
 }

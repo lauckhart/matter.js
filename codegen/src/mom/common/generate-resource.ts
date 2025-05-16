@@ -6,7 +6,7 @@
 
 import { Model, Resource } from "#model";
 import { Block, TsFile } from "#util/TsFile.js";
-import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
+import { addDetails, addProperties } from "./element-generation.js";
 
 export function generateResource(target: TsFile, element: Model): boolean {
     const patch = generateResourceDefinition(element);
@@ -52,10 +52,9 @@ function addResource(target: Block, definition: Resource.Named) {
 
     if (hasProps) {
         delete props.details;
-        delete props.xref;
 
         addProperties(expr, props);
-        addDetailsAndCrossReferences(expr, definition);
+        addDetails(expr, definition);
     }
 
     if (hasChildren) {
