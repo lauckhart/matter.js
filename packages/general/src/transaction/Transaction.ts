@@ -154,7 +154,9 @@ type ParticipantType = Participant;
 
 export const Transaction = {
     /**
-     * Perform a transactional operation.  This is the only way to obtain a read/write transaction.
+     * Perform a transactional operation.
+     *
+     * This creates a read/write transaction scoped to the life of an optionally async function call.
      *
      * The transaction will commit automatically if it is exclusive (write mode) after the actor returns.
      *
@@ -165,6 +167,14 @@ export const Transaction = {
         // This function is replaced below so do not edit
         return act(via, actor);
     },
+
+    /**
+     * Create a transaction.
+     *
+     * Transactions must be closed using {@link Symbol.asyncDispose} or {@link Transaction.Disposable.close}.
+     *
+     * When closed the transaction commits automatically if exclusive.
+     */
 
     ReadOnly: ReadOnlyTransaction,
 
@@ -186,4 +196,8 @@ export namespace Transaction {
     export type ResourceSet = ResourceSetType;
 
     export type Participant = ParticipantType;
+
+    export interface Disposable extends Transaction, AsyncDisposable {
+        close(): MaybePromise<void>;
+    }
 }
