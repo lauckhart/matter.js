@@ -14,7 +14,8 @@ import {
     StorageManager,
     StorageService,
 } from "#general";
-import { ClientStoreFactory, ClientStoreService } from "./ClientStoreService.js";
+import { ClientStores } from "./ClientStores.js";
+import { EndpointStores } from "./EndpointStores.js";
 import { NodeStore } from "./NodeStore.js";
 
 const logger = Logger.get("ServerNodeStore");
@@ -28,19 +29,22 @@ export class ServerNodeStore extends NodeStore implements Destructable {
     #nodeId: string;
     #location: string;
     #storageManager?: StorageManager;
-    #clientStores?: ClientStoreFactory;
+    #clientStores?: ClientStores;
 
     constructor(environment: Environment, nodeId: string) {
-        super({
-            createContext: (name: string) => {
-                if (!this.#storageManager) {
-                    throw new ImplementationError(
-                        `Cannot create storage context ${name} because store is not initialized`,
-                    );
-                }
-                return this.#storageManager.createContext(name);
+        super(
+            {
+                createContext: (name: string) => {
+                    if (!this.#storageManager) {
+                        throw new ImplementationError(
+                            `Cannot create storage context ${name} because store is not initialized`,
+                        );
+                    }
+                    return this.#storageManager.createContext(name);
+                },
             },
-        });
+            EndpointStores.Layout.Hierarchical,
+        );
 
         this.#env = environment;
         this.#nodeId = nodeId;
@@ -61,7 +65,7 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         });
     }
 
-    get clientStores(): ClientStoreService {
+    get clientStores() {
         return this.construction.assert("client stores", this.#clientStores);
     }
 
@@ -73,7 +77,7 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         this.#storageManager = await this.#env.get(StorageService).open(this.#nodeId);
         this.#env.set(StorageManager, this.#storageManager);
 
-        this.#clientStores = await asyncNew(ClientStoreFactory, this.#storageManager.createContext("nodes"));
+        this.#clientStores = await asyncNew(ClientStores, this.#storageManager.createContext("nodes"));
 
         await super.initializeStorage();
 

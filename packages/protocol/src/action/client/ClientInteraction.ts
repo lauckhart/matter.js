@@ -13,17 +13,21 @@ import { InvokeResult } from "#action/response/InvokeResult.js";
 import { ReadResult } from "#action/response/ReadResult.js";
 import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
-import { Environment, Environmental, NotImplementedError, PromiseQueue } from "#general";
-import { InteractionClientMessenger } from "#interaction/InteractionMessenger.js";
+import { Environment, Environmental, PromiseQueue } from "#general";
+import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
+import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
 import { SubscriptionClient } from "#interaction/SubscriptionClient.js";
 import { InteractionQueue } from "#peer/InteractionQueue.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
+import { Status, TlvAny, TlvSubscribeResponse } from "#types";
 
 export interface ClientInteractableContext {
     exchanges: ExchangeProvider;
     subscriptions: SubscriptionClient;
     queue: PromiseQueue;
 }
+
+export const DEFAULT_MIN_INTERVAL_FLOOR_SECONDS = 1;
 
 /**
  * This is a WIP and currently largely a stub.
@@ -59,9 +63,12 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         return instance;
     }
 
-    read(_request: Read, _session?: SessionT): ReadResult {
-        // TODO
-        throw new NotImplementedError();
+    async *read(request: Read, _session?: SessionT): ReadResult {
+        const messenger = await InteractionClientMessenger.create(this.#exchanges);
+
+        await messenger.sendReadRequest(request);
+
+        yield* this.#readDataReports(messenger);
     }
 
     async write<T extends Write>(request: T, _session?: SessionT): WriteResult<T> {
@@ -148,8 +155,90 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    subscribe(_request: Subscribe, _session?: SessionT): SubscribeResult {
-        // TODO
-        throw new NotImplementedError();
+    async *subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
+        const messenger = await InteractionClientMessenger.create(this.#exchanges);
+
+        await messenger.sendSubscribeRequest({
+            ...request,
+            minIntervalFloorSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
+            maxIntervalCeilingSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
+        });
+
+        yield* this.#readDataReports(messenger);
+
+        const subscribeResponseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
+        const subscribeResponse = TlvSubscribeResponse.decode(subscribeResponseMessage.payload);
+        yield subscribeResponse;
+    }
+
+    async *#readDataReports(messenger: InteractionClientMessenger): ReadResult {
+        for await (const report of messenger.readDataReports()[Symbol.asyncIterator]()) {
+            yield convertReport(DecodedDataReport(report));
+        }
+
+        function* convertReport(report: DecodedDataReport): ReadResult.Chunk {
+            for (const attr of report.attributeReports) {
+                yield {
+                    kind: "attr-value",
+                    tlv: TlvAny,
+                    ...attr,
+                };
+            }
+
+            if (report.attributeStatus) {
+                for (const attr of report.attributeStatus) {
+                    yield {
+                        kind: "attr-status",
+                        path: attr.path,
+                        status: attr.status ?? Status.Failure, // TODO - attr.status shouldn't be optional?
+                        clusterStatus: attr.clusterStatus,
+                    };
+                }
+            }
+
+            for (const event of report.eventReports) {
+                for (const occurrence of event.events) {
+                    yield {
+                        kind: "event-value",
+                        path: event.path,
+                        value: occurrence,
+                        number: occurrence.eventNumber,
+                        priority: occurrence.priority,
+                        timestamp: Number(
+                            // TODO - this may not be useful, need to determine correct form
+                            occurrence.epochTimestamp ??
+                                occurrence.systemTimestamp ??
+                                occurrence.deltaEpochTimestamp ??
+                                occurrence.deltaSystemTimestamp ??
+                                0,
+                        ),
+
+                        // TODO - temporary, field will be removed
+                        tlv: TlvAny,
+                    };
+                }
+            }
+
+            if (report.eventStatus) {
+                for (const event of report.eventStatus) {
+                    if (event.status !== undefined) {
+                        yield {
+                            kind: "event-status",
+                            path: event.path,
+                            status: event.status,
+                            clusterStatus: event.clusterStatus,
+                        };
+                    }
+                    if (event.clusterStatus !== undefined) {
+                        yield {
+                            kind: "event-status",
+                            path: event.path,
+                            status: event.status ?? Status.Failure,
+                            clusterStatus: event.clusterStatus,
+                        };
+                    }
+                }
+            }
+        }
     }
 }

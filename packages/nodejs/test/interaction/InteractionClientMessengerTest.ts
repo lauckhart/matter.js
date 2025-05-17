@@ -100,6 +100,7 @@ describe("InteractionClientMessenger", () => {
         } as ReadRequest;
 
         await messenger.sendReadRequest(requestData);
+        await messenger.readAggregateDataReport();
 
         assert.deepEqual(request, requestData);
     });
@@ -131,6 +132,7 @@ describe("InteractionClientMessenger", () => {
         } as ReadRequest;
 
         await messenger.sendReadRequest(requestData);
+        await messenger.readAggregateDataReport();
 
         assert.ok(request);
         assert.deepEqual((request as SubscribeRequest).dataVersionFilters?.length, 68);
@@ -172,6 +174,7 @@ describe("InteractionClientMessenger", () => {
         } as SubscribeRequest;
 
         await messenger.sendSubscribeRequest(requestData);
+        await messenger.readAggregateSubscribeResponse();
 
         assert.deepEqual(request, requestData);
         assert.deepEqual(subscriptionFinalized, true);
@@ -219,6 +222,7 @@ describe("InteractionClientMessenger", () => {
         } as SubscribeRequest;
 
         await messenger.sendSubscribeRequest(requestData);
+        await messenger.readAggregateSubscribeResponse();
 
         assert.ok(request);
         assert.deepEqual((request as SubscribeRequest).dataVersionFilters?.length, 67);

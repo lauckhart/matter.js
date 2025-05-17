@@ -8,15 +8,12 @@ import { Behavior } from "#behavior/Behavior.js";
 import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { EndpointStore } from "#endpoint/storage/EndpointStore.js";
-import { EndpointType } from "#endpoint/type/EndpointType.js";
-import { Environment, StorageBackendMemory, StorageContext, StorageManager, StorageService } from "#general";
+import { Environment, StorageBackendMemory, StorageManager, StorageService } from "#general";
 import { Node } from "#node/Node.js";
 import { ServerNode } from "#node/ServerNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
-import { EndpointStoreService } from "#node/storage/EndpointStoreService.js";
+import { EndpointStores } from "#node/storage/EndpointStores.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import { Val } from "#protocol";
 import { EndpointNumber } from "#types";
 
 export class MockPartInitializer extends EndpointInitializer {
@@ -39,43 +36,15 @@ export class MockPartInitializer extends EndpointInitializer {
     }
 }
 
-class MockEndpointStore extends EndpointStore {
-    endpoint: Endpoint;
-    values = {} as Record<string, Val.Struct>;
-
-    constructor(endpoint: Endpoint) {
-        super(new StorageContext(new StorageBackendMemory(), []));
-        this.endpoint = endpoint;
-    }
-}
-
-class MockEndpointStoreService extends EndpointStoreService {
-    #stores = new Map<EndpointNumber, MockEndpointStore>();
-    #nextNumber = 1;
-
-    assignNumber(endpoint: Endpoint<EndpointType.Empty>): void {
-        endpoint.number = this.#nextNumber++;
-    }
-
-    storeForEndpoint(endpoint: Endpoint<EndpointType.Empty>): EndpointStore {
-        const store = this.#stores.get(endpoint.number) ?? new MockEndpointStore(endpoint);
-        this.#stores.set(endpoint.number, store);
-        return store;
-    }
-
-    deactivateStoreForEndpoint(_endpoint: Endpoint<EndpointType.Empty>) {}
-
-    async eraseStoreForEndpoint(endpoint: Endpoint<EndpointType.Empty>) {
-        this.#stores.delete(endpoint.number);
-    }
-}
-
 export class MockServerStore extends ServerNodeStore {
-    #endpointStores?: MockEndpointStoreService;
+    #endpointStores?: EndpointStores;
 
     override get endpointStores() {
         if (!this.#endpointStores) {
-            this.#endpointStores = new MockEndpointStoreService();
+            this.#endpointStores = new EndpointStores({
+                storage: new StorageManager(new StorageBackendMemory()).createContext(""),
+                layout: EndpointStores.Layout.Hierarchical,
+            });
         }
         return this.#endpointStores;
     }
@@ -102,7 +71,6 @@ export class MockNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoin
         this.env.set(StorageService, new StorageService(this.env, () => new StorageBackendMemory()));
         this.env.set(EndpointInitializer, new MockPartInitializer());
         this.env.set(ServerNodeStore, new MockServerStore(this.env, "test"));
-        this.env.set(EndpointStoreService, new MockEndpointStoreService());
         this.env.set(IdentityService, new IdentityService(this));
         return super.initialize();
     }

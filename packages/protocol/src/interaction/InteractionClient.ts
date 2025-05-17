@@ -489,7 +489,8 @@ export class InteractionClient {
                 .join(", ")} and events ${eventRequests?.map(path => resolveEventName(path)).join(", ")}`,
         );
         // Send read request and combine all (potentially chunked) responses
-        const response = await messenger.sendReadRequest(request);
+        await messenger.sendReadRequest(request);
+        const response = await messenger.readAggregateDataReport();
 
         // Normalize and decode the response
         const normalizedResult = DecodedDataReport(response);
@@ -713,7 +714,7 @@ export class InteractionClient {
             report: DataReport;
             maximumPeerResponseTime: number;
         }>(async messenger => {
-            const { subscribeResponse, report } = await messenger.sendSubscribeRequest({
+            await messenger.sendSubscribeRequest({
                 interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
                 attributeRequests: [{ endpointId, clusterId, attributeId }],
                 dataVersionFilters:
@@ -725,6 +726,7 @@ export class InteractionClient {
                 maxIntervalCeilingSeconds,
                 isFabricFiltered,
             });
+            const { subscribeResponse, report } = await messenger.readAggregateSubscribeResponse();
             return {
                 subscribeResponse,
                 report,
@@ -821,7 +823,7 @@ export class InteractionClient {
             report: DataReport;
             maximumPeerResponseTime: number;
         }>(async messenger => {
-            const { subscribeResponse, report } = await messenger.sendSubscribeRequest({
+            await messenger.sendSubscribeRequest({
                 interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
                 eventRequests: [{ endpointId, clusterId, eventId, isUrgent }],
                 eventFilters: minimumEventNumber !== undefined ? [{ eventMin: minimumEventNumber }] : undefined,
@@ -830,6 +832,7 @@ export class InteractionClient {
                 maxIntervalCeilingSeconds,
                 isFabricFiltered,
             });
+            const { subscribeResponse, report } = await messenger.readAggregateSubscribeResponse();
             return {
                 subscribeResponse,
                 report,
@@ -985,7 +988,7 @@ export class InteractionClient {
             report: DataReport;
             maximumPeerResponseTime: number;
         }>(async messenger => {
-            const { subscribeResponse, report } = await messenger.sendSubscribeRequest({
+            await messenger.sendSubscribeRequest({
                 interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
                 attributeRequests,
                 eventRequests,
@@ -999,6 +1002,7 @@ export class InteractionClient {
                     dataVersion,
                 })),
             });
+            const { subscribeResponse, report } = await messenger.readAggregateSubscribeResponse();
             return {
                 subscribeResponse,
                 report,

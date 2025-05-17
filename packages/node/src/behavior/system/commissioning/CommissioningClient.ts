@@ -19,6 +19,7 @@ import {
     FabricManager,
     LocatedNodeCommissioningOptions,
     PeerAddress,
+    Read,
     SessionParameters,
 } from "#protocol";
 import { DeviceTypeId, DiscoveryCapabilitiesBitmap, NodeId, TypeFromPartialBitSchema, VendorId } from "#types";
@@ -124,14 +125,16 @@ export class CommissioningClient extends Behavior {
             }
         }
 
+        await node.refresh(Read(Read.Attribute()));
+
         return node;
     }
 
     /**
      * Override to implement CASE commissioning yourself.
      *
-     * If you override, matter.js commissions to the point where over PASE is complete.  You must then complete
-     * commissioning yourself by connecting to the device and invokeint the "CommissioningComplete" command.
+     * If you override, matter.js commissions to the point where commissioning over PASE is complete.  You must then
+     * complete commissioning yourself by connecting to the device and invokeint the "CommissioningComplete" command.
      */
     protected async finalizeCommissioning(_address: PeerAddress, _discoveryData?: DiscoveryData) {
         throw new NotImplementedError();
@@ -344,5 +347,29 @@ export namespace CommissioningClient {
          * is supported for initial commissioning.
          */
         discoveryCapabilities?: TypeFromPartialBitSchema<typeof DiscoveryCapabilitiesBitmap>;
+
+        /**
+         * The initial read used to populate node data.
+         *
+         * By default matter.js reads all attributes on the node.  This allows us to efficiently initialize the complete
+         * node structure.
+         *
+         * If you only require a subset of attributes you can replace this with a more discriminative read.  For
+         * example, if you are only interested in interacting with the root endpoint and the On/Off cluster on other
+         * endpoints, you could do:
+         *
+         * ```js
+         * {
+         *     initialRead: Read(
+         *         Read.Attribute({ endpoint: 0 }),
+         *         Read.Attribute({ cluster: OnOffCluster })
+         *     )
+         * }
+         * ```
+         *
+         * Note that certain clusters like Descriptor and Basic Information contain critical operational data. If your
+         * read omits them then the node will only be partially functional once initialized.
+         */
+        initialRead?: Read;
     }
 }

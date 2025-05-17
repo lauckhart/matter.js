@@ -12,7 +12,8 @@ import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
-import { Interactable } from "@matter/protocol";
+import { Matter, MatterModel } from "@matter/model";
+import { Interactable, Read, ReadResult } from "@matter/protocol";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
@@ -24,6 +25,8 @@ import type { ServerNode } from "./ServerNode.js";
  * you invoke {@link commissioned}.
  */
 export class ClientNode extends Node<ClientNode.RootEndpoint> {
+    #matter: MatterModel;
+
     constructor(options: ClientNode.Options) {
         const opts = {
             ...options,
@@ -32,6 +35,31 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
+
+        this.#matter = options.matter ?? Matter;
+    }
+
+    /**
+     * Model of Matter semantics understood by this node.
+     *
+     * Matter elements missing from this model will not support all functionality.
+     */
+    get matter() {
+        return this.#matter;
+    }
+
+    /**
+     * Update the node with attributes selected by a read.
+     */
+    async refresh(read: Read | ReadResult) {
+        if (!(Symbol.asyncIterator in read)) {
+            read = this.interaction.read(read);
+        }
+
+        for await (const chunk of read) {
+            // TODO
+            console.log(chunk);
+        }
     }
 
     override async initialize() {
@@ -91,7 +119,9 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 }
 
 export namespace ClientNode {
-    export interface Options extends Node.Options<RootEndpoint> {}
+    export interface Options extends Node.Options<RootEndpoint> {
+        matter?: MatterModel;
+    }
 
     export const RootEndpoint = Node.CommonRootEndpoint.with(CommissioningClient, NetworkClient);
 

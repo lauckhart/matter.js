@@ -85,3 +85,7 @@ function participantFor(transaction: Transaction, endpointStore: EndpointStore) 
 
     return participant;
 }
+
+export namespace DatasourceStore {
+    export type Type = typeof DatasourceStore;
+}

@@ -23,41 +23,12 @@ const logger = Logger.get("EndpointStoreService");
  *
  * TODO - cleanup of storage for permanently removed endpoints
  */
-export abstract class EndpointStoreService {
-    /**
-     * Allocate an endpoint number.
-     *
-     * Either allocates a new number for a {@link Endpoint} or reserves the endpoint's number.  If the {@link Endpoint}
-     * already has a number but it is allocated to a different endpoint it is an error.
-     *
-     * We must persist the assigned number and next endpoint number.  We are fairly resilient to the small chance that
-     * persistence fails so we persist lazily and return synchronously.
-     */
-    abstract assignNumber(endpoint: Endpoint): void;
-
-    /**
-     * Obtain the store for a single {@link Endpoint}.
-     *
-     * These stores are cached internally by ID.
-     */
-    abstract storeForEndpoint(endpoint: Endpoint): EndpointStore;
-
-    /**
-     * Deactivate the store for a single {@link Endpoint}. This puts the endpoint number back into pre-allocated state
-     */
-    abstract deactivateStoreForEndpoint(endpoint: Endpoint): void;
-
-    /**
-     * Erase storage for a single {@link Endpoint}.
-     */
-    abstract eraseStoreForEndpoint(endpoint: Endpoint): Promise<void>;
-}
-
-export class EndpointStoreFactory extends EndpointStoreService {
+export class EndpointStores {
     #storage: StorageContext;
+    #layout: EndpointStores.Layout;
     #allocatedNumbers = new Set<number>();
     #preAllocatedNumbers = new Set<number>();
-    #construction: Construction<EndpointStoreFactory>;
+    #construction: Construction<EndpointStores>;
     #persistedNextNumber?: number;
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Array<Endpoint>;
@@ -69,11 +40,10 @@ export class EndpointStoreFactory extends EndpointStoreService {
         return this.#construction;
     }
 
-    constructor({ storage, nextNumber }: EndpointStoreService.Options) {
-        super();
-
+    constructor({ storage, nextNumber, layout }: EndpointStores.Options) {
         this.#storage = storage;
         this.#defaultNextNumber = nextNumber ?? 1;
+        this.#layout = layout;
 
         this.#construction = Construction(this);
         this.#construction.start();
@@ -126,6 +96,15 @@ export class EndpointStoreFactory extends EndpointStoreService {
         }
     }
 
+    /**
+     * Allocate an endpoint number.
+     *
+     * Either allocates a new number for a {@link Endpoint} or reserves the endpoint's number.  If the {@link Endpoint}
+     * already has a number but it is allocated to a different endpoint it is an error.
+     *
+     * We must persist the assigned number and next endpoint number.  We are fairly resilient to the small chance that
+     * persistence fails so we persist lazily and return synchronously.
+     */
     assignNumber(endpoint: Endpoint) {
         if (this.#nextNumber === undefined) {
             throw new InternalError("Endpoint number assigned prior to store initialization");
@@ -183,11 +162,20 @@ export class EndpointStoreFactory extends EndpointStoreService {
         this.#persistNumber(endpoint);
     }
 
+    /**
+     * Obtain the store for a single {@link Endpoint}.
+     *
+     * These stores are cached internally by ID.
+     */
     storeForEndpoint(endpoint: Endpoint): EndpointStore {
         this.#construction.assert();
 
         if (endpoint.maybeNumber === 0) {
             return this.#construction.assert("root node store", this.#root);
+        }
+
+        if (this.#layout === EndpointStores.Layout.Flat) {
+            return this.#construction.assert("root node store", this.#root).childStoreFor(endpoint);
         }
 
         if (!endpoint.owner) {
@@ -199,6 +187,9 @@ export class EndpointStoreFactory extends EndpointStoreService {
         return this.storeForEndpoint(endpoint.owner).childStoreFor(endpoint);
     }
 
+    /**
+     * Deactivate the store for a single {@link Endpoint}. This puts the endpoint number back into pre-allocated state
+     */
     deactivateStoreForEndpoint(endpoint: Endpoint) {
         this.#construction.assert();
 
@@ -213,6 +204,9 @@ export class EndpointStoreFactory extends EndpointStoreService {
         this.#preAllocatedNumbers.add(endpoint.number);
     }
 
+    /**
+     * Erase storage for a single {@link Endpoint}.
+     */
     async eraseStoreForEndpoint(endpoint: Endpoint) {
         this.#construction.assert();
 
@@ -272,9 +266,15 @@ export class EndpointStoreFactory extends EndpointStoreService {
     }
 }
 
-export namespace EndpointStoreService {
+export namespace EndpointStores {
+    export enum Layout {
+        Flat,
+        Hierarchical,
+    }
+
     export interface Options {
         storage: StorageContext;
+        layout: Layout;
         nextNumber?: number;
         load?: boolean;
     }
