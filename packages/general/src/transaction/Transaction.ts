@@ -9,7 +9,7 @@ import { Participant } from "./Participant.js";
 import { Resource } from "./Resource.js";
 import { ResourceSet } from "./ResourceSet.js";
 import { Status } from "./Status.js";
-import { ReadOnlyTransaction, act } from "./Tx.js";
+import { ReadOnlyTransaction, open } from "./Tx.js";
 
 /**
  * Two-phase commit implementation.
@@ -140,6 +140,24 @@ export interface Transaction {
     rollback(): MaybePromise;
 
     /**
+     * Commit, close the transaction and return a value.
+     */
+    resolve<T>(result: T): MaybePromise<T>;
+
+    /**
+     * Roll back, close the transaction and throw an error.
+     */
+    reject(cause: unknown): MaybePromise<never>;
+
+    /**
+     * Close the transaction.
+     *
+     * If the transaction is in a write state this will throw an error.  Normally you should use resolve() or reject()
+     * instead.
+     */
+    [Symbol.dispose](): void;
+
+    /**
      * Wait for a set of transactions to complete.
      *
      * @param others the set of transactions to await; cleared on return
@@ -164,17 +182,33 @@ export const Transaction = {
      * destroyed.
      */
     act<T>(via: string, actor: (transaction: Transaction) => MaybePromise<T>): MaybePromise<T> {
-        // This function is replaced below so do not edit
-        return act(via, actor);
+        const tx = open(via);
+
+        let result;
+        try {
+            result = actor(tx);
+        } catch (e) {
+            return tx.reject(e);
+        }
+
+        if (MaybePromise.is(result)) {
+            return result.then(tx.resolve.bind(tx), tx.reject.bind(tx));
+        }
+
+        return tx.resolve(result);
     },
 
     /**
      * Create a transaction.
      *
-     * Transactions must be closed using {@link Symbol.asyncDispose} or {@link Transaction.Disposable.close}.
+     * Transactions must be closed using {@link Transaction#resolve}, {@link Transaction#reject} or {@link Transaction}.
      *
      * When closed the transaction commits automatically if exclusive.
      */
+    open(via: string) {
+        // This function is replaced below so do not edit
+        return open(via);
+    },
 
     ReadOnly: ReadOnlyTransaction,
 
@@ -186,7 +220,7 @@ export const Transaction = {
 };
 
 // This is functionally equivalent to the definition above but removes a stack frame
-Transaction.act = act;
+Transaction.open = open;
 
 export namespace Transaction {
     export type Status = StatusType;

@@ -29,6 +29,10 @@ const MAX_CHAINED_COMMITS = 5;
 /**
  * This is the only public interface to this file.
  */
+export function open(via: string): Transaction {
+    return new Tx(via);
+}
+
 export function act<T>(via: string, actor: (transaction: Transaction) => T): T {
     const tx = new Tx(via);
     let commits = 0;
@@ -149,7 +153,7 @@ class Tx implements Transaction {
         }
     }
 
-    close() {
+    [Symbol.dispose]() {
         Monitor.delete(this);
         this.#status = Status.Destroyed;
         this.#resources.clear();
