@@ -2327,7 +2327,7 @@ describe("SwitchServer", () => {
             ]);
         });
 
-        it.only("Test one short press and a long press with 2 positions", async () => {
+        it("Test one short press and a long press with 2 positions", async () => {
             const events = createEventCatcher(device);
 
             await device.set({
