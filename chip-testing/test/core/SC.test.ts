@@ -46,7 +46,7 @@ describe("SC", () => {
                 "s/, 3840,/, 0000,/",
             ),
         );
-    }).timeout(10000);
+    });
 
     chip("SC/*").exclude(
         // Our GroupKeyManagment is too limited for these
