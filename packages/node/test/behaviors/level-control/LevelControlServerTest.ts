@@ -123,7 +123,7 @@ describe("LevelControlServer", () => {
         await node.close();
     });
 
-    it.only("stops transition timers when destroyed", async () => {
+    it("stops transition timers when destroyed", async () => {
         (globalThis as any).KILLME = true;
 
         // No timers should be present initially

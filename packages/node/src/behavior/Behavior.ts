@@ -246,9 +246,7 @@ export abstract class Behavior {
 
         this.reactTo(observable, reactor, options);
 
-        return function callback(...args: A) {
-            return observable.emit(...args);
-        };
+        return observable.emit.bind(observable);
     }
 
     /**
