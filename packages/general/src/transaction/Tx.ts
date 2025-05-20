@@ -330,9 +330,9 @@ class Tx implements Transaction {
         const participants = [...this.#participants];
         const result = this.#finalize(Status.CommittingPhaseOne, "committed", this.#executeCommit.bind(this));
         if (MaybePromise.is(result)) {
-            return result.then(() => this.#executePostCommit(participants));
+            return result.then(() => this.#executePostCommit(participants[Symbol.iterator]()));
         }
-        return this.#executePostCommit(participants);
+        return this.#executePostCommit(participants[Symbol.iterator]());
     }
 
     waitFor(others: Set<Transaction>) {
@@ -636,10 +636,8 @@ class Tx implements Transaction {
      * We notify each participant sequentially.  If a participant throws, we log the error and move on to the next
      * participant.
      */
-    #executePostCommit(participants: Participant[]) {
-        const participantIterator = participants[Symbol.iterator]();
-
-        const postCommitNextParticipant = (): MaybePromise => {
+    #executePostCommit(participantIterator: Iterator<Participant>): MaybePromise {
+        while (true) {
             const next = participantIterator.next();
 
             if (next.done) {
@@ -652,22 +650,22 @@ class Tx implements Transaction {
                 const promise = participant.postCommit?.();
 
                 if (MaybePromise.is(promise)) {
-                    return Promise.resolve(promise).then(postCommitNextParticipant, e => {
-                        reportParticipantError(e);
-                        postCommitNextParticipant();
-                    });
+                    return Promise.resolve(promise).then(
+                        () => this.#executePostCommit(participantIterator),
+                        e => {
+                            reportParticipantError(e);
+                            this.#executePostCommit(participantIterator);
+                        },
+                    );
                 }
             } catch (e) {
                 reportParticipantError(e);
             }
-            postCommitNextParticipant();
 
             function reportParticipantError(e: unknown) {
                 logger.error(`Error post-commit of ${participant}:`, e);
             }
-        };
-
-        return postCommitNextParticipant();
+        }
     }
 
     /**

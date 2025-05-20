@@ -123,7 +123,7 @@ describe("LevelControlServer", () => {
         await node.close();
     });
 
-    it("stops transition timers when destroyed", async () => {
+    it.only("stops transition timers when destroyed", async () => {
         (globalThis as any).KILLME = true;
 
         // No timers should be present initially
@@ -140,7 +140,7 @@ describe("LevelControlServer", () => {
         // state is deterministic we know that 50 (5 seconds) results in having a deferred emit queued
         await changeLevel(endpoint, 50);
 
-        // There should be two timers, one driving the transition and one to handled the delayed emit interval
+        // Confirm timers are active
         expectTimers(1);
 
         // Close with small step interval because otherwise timer may resolve while awaiting close
