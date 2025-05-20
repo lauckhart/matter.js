@@ -142,7 +142,7 @@ export interface Transaction {
     /**
      * Commit, close the transaction and return a value.
      */
-    resolve<T>(result: T): MaybePromise<T>;
+    resolve<T>(result: T): MaybePromise<Awaited<T>>;
 
     /**
      * Roll back, close the transaction and throw an error.
@@ -189,10 +189,6 @@ export const Transaction = {
             result = actor(tx);
         } catch (e) {
             return tx.reject(e);
-        }
-
-        if (MaybePromise.is(result)) {
-            return result.then(tx.resolve.bind(tx), tx.reject.bind(tx));
         }
 
         return tx.resolve(result);

@@ -88,6 +88,9 @@ class Tx implements Transaction {
         return this.#isAsync;
     }
 
+    /**
+     * We set this during async processing.  This enables the lock reporting when too much time ellapses.
+     */
     set isAsync(isAsync: true) {
         // When the transaction is noted as async we start reporting locks.  A further optimization would be to not even
         // acquire locks for synchronous transactions
@@ -230,18 +233,45 @@ class Tx implements Transaction {
 
         this.#assertAvailable();
 
-        return this.#executeCommitCycle(0);
+        const result = this.#executeCommitCycle(0);
+        if (result) {
+            this.isAsync = true;
+        }
+
+        return result;
     }
 
-    resolve<T>(result: T): MaybePromise<T> {
-        const promise = this.commit();
+    resolve<T>(result: T): MaybePromise<Awaited<T>> {
+        // If result is a promise, we wait for resolution and then commit (success) or roll back (error)
+        if (MaybePromise.is(result)) {
+            this.isAsync = true;
+            return result.then(this.resolve.bind(this), this.reject.bind(this));
+        }
+
+        // Result is not a promise.  Commit immediately
+        let promise;
+        try {
+            promise = this.commit();
+        } catch (e) {
+            // Commit failed synchronously
+            return this.reject(e);
+        }
+
+        // If commit is async then wait for commit before destruction
         if (MaybePromise.is(promise)) {
+            this.isAsync = true;
+
             return Promise.resolve(promise)
-                .then(() => result, this.reject.bind(this))
+                .then(() => {
+                    this[Symbol.dispose]();
+                    return result as Awaited<T>;
+                }, this.reject.bind(this))
                 .finally(this[Symbol.dispose].bind(this));
         }
+
+        // Result and commit succeeded synchronously
         this[Symbol.dispose]();
-        return result;
+        return result as Awaited<T>;
     }
 
     rollback() {
