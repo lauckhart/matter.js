@@ -30,14 +30,14 @@ const MAX_CHAINED_COMMITS = 5;
 /**
  * This is the only public interface to this file.
  */
-export function open(via: string): Transaction {
+export function open(via: string): Transaction & Transaction.Finalization {
     return new Tx(via);
 }
 
 /**
  * The concrete implementation of the Transaction interface.
  */
-class Tx implements Transaction {
+class Tx implements Transaction, Transaction.Finalization {
     #participants = new Set<Participant>();
     #roles = new Map<{}, Participant>();
     #resources = new Set<Resource>();

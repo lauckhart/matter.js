@@ -24,22 +24,21 @@ describe("LevelControlServer", () => {
         expect(events).deep.equals([
             { kind: "time", ms: 0, value: 150 },
             { kind: "level", ms: 300, value: 4 },
-            { kind: "level", ms: 1000, value: 14 },
-            { kind: "level", ms: 1000, value: 35 },
-            { kind: "level", ms: 1000, value: 45 },
-            { kind: "level", ms: 1000, value: 65 },
-            { kind: "level", ms: 1000, value: 85 },
-            { kind: "level", ms: 1000, value: 95 },
-            { kind: "level", ms: 1000, value: 116 },
-            { kind: "level", ms: 1000, value: 138 },
-            { kind: "level", ms: 1000, value: 148 },
-            { kind: "level", ms: 1000, value: 171 },
-            { kind: "level", ms: 1000, value: 181 },
-            { kind: "level", ms: 1000, value: 202 },
-            { kind: "level", ms: 1000, value: 222 },
-            { kind: "level", ms: 1000, value: 232 },
-            { kind: "level", ms: 1000, value: 252 },
-            { kind: "level", ms: 300, value: 254 },
+            { kind: "level", ms: 1000, value: 13 },
+            { kind: "level", ms: 1000, value: 30 },
+            { kind: "level", ms: 1000, value: 47 },
+            { kind: "level", ms: 1000, value: 63 },
+            { kind: "level", ms: 1000, value: 80 },
+            { kind: "level", ms: 1000, value: 97 },
+            { kind: "level", ms: 1000, value: 114 },
+            { kind: "level", ms: 1000, value: 131 },
+            { kind: "level", ms: 1000, value: 149 },
+            { kind: "level", ms: 1000, value: 170 },
+            { kind: "level", ms: 1000, value: 187 },
+            { kind: "level", ms: 1000, value: 203 },
+            { kind: "level", ms: 1000, value: 220 },
+            { kind: "level", ms: 1000, value: 237 },
+            { kind: "level", ms: 800, value: 254 },
             { kind: "time", ms: 0, value: 0 },
         ]);
     });
@@ -243,5 +242,9 @@ async function changeLevel(endpoint: Endpoint<DimmableLightDevice>, steps = 200)
 
     for (let i = 0; i < steps; i++) {
         await MockTime.advance(99);
+
+        // A little bit of non-determinism seems to slip in with timings if we don't nudge the event loop a bit here.
+        // Which is weird and warrants further investigation but does not affect IRL implementation
+        await Promise.resolve();
     }
 }

@@ -404,7 +404,7 @@ class ReactorBacking<T extends any[], R> {
         }
 
         const reactor = this.#bindReactor(context, backing);
-        return reactor(...args);
+        return await reactor(...args);
     }
 
     /**

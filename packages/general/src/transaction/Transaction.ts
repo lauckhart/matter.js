@@ -140,24 +140,6 @@ export interface Transaction {
     rollback(): MaybePromise;
 
     /**
-     * Commit, close the transaction and return a value.
-     */
-    resolve<T>(result: T): MaybePromise<Awaited<T>>;
-
-    /**
-     * Roll back, close the transaction and throw an error.
-     */
-    reject(cause: unknown): MaybePromise<never>;
-
-    /**
-     * Close the transaction.
-     *
-     * If the transaction is in a write state this will throw an error.  Normally you should use resolve() or reject()
-     * instead.
-     */
-    [Symbol.dispose](): void;
-
-    /**
      * Wait for a set of transactions to complete.
      *
      * @param others the set of transactions to await; cleared on return
@@ -197,7 +179,7 @@ export const Transaction = {
     /**
      * Create a transaction.
      *
-     * Transactions must be closed using {@link Transaction#resolve}, {@link Transaction#reject} or {@link Transaction}.
+     * Transactions must be closed using {@link Finalization#resolve} or {@link Finalization#reject}.
      *
      * When closed the transaction commits automatically if exclusive.
      */
@@ -229,5 +211,17 @@ export namespace Transaction {
 
     export interface Disposable extends Transaction, AsyncDisposable {
         close(): MaybePromise<void>;
+    }
+
+    export interface Finalization {
+        /**
+         * Finish the transaction.  If {@link result} is a promise this may result on commit or rollback.
+         */
+        resolve<T>(result: T): MaybePromise<Awaited<T>>;
+
+        /**
+         * Roll back, close the transaction and throw an error.
+         */
+        reject(cause: unknown): MaybePromise<never>;
     }
 }
