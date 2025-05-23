@@ -4,17 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Behavior } from "#behavior/Behavior.js";
 import type { Datasource } from "#behavior/state/managed/Datasource.js";
-import { BasicInformationCluster } from "#clusters/basic-information";
+import { DescriptorBehavior } from "#behaviors/descriptor";
 import { DescriptorCluster } from "#clusters/descriptor";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { DatasourceCache } from "#endpoint/storage/DatasourceCache.js";
-import { MutableEndpoint } from "#endpoint/type/MutableEndpoint.js";
+import { EndpointType } from "#endpoint/type/EndpointType.js";
+import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type FeatureBitmap } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import type { ReadResult } from "#protocol";
-import type { AttributeId, ClusterId, EndpointNumber } from "#types";
+import type { AttributeId, ClusterId, CommandId, EndpointNumber } from "#types";
 
 /**
  * Creates and maintains client endpoints for a specific node.
@@ -74,25 +76,84 @@ export class AttributeProcessor {
     async #updateCluster(values: AttributeUpdates) {
         const endpoint = this.#endpointFor(values.endpointNo);
         const cluster = this.#clusterFor(endpoint, values.clusterId);
-        await cluster.externalSet(values.values);
+        await cluster.store.externalSet(values.values);
+
+        if (cluster.behavior === undefined) {
+            const {
+                [ClusterRevision.id]: clusterRevision,
+                [FeatureMap.id]: features,
+                [AttributeList.id]: attributes,
+                [AcceptedCommandList.id]: commands,
+            } = values.values;
+
+            if (typeof clusterRevision === "number") {
+                cluster.revision = clusterRevision;
+            }
+
+            if (typeof features === "object" && features !== null && !Array.isArray(features)) {
+                cluster.features = features as FeatureBitmap;
+            }
+
+            if (Array.isArray(attributes)) {
+                cluster.attributes = attributes.filter(attr => typeof attr === "number") as AttributeId[];
+            }
+
+            if (Array.isArray(commands)) {
+                cluster.commands = commands.filter(attr => typeof attr === "number") as CommandId[];
+            }
+
+            if (
+                cluster.revision !== undefined &&
+                cluster.features !== undefined &&
+                cluster.attributes !== undefined &&
+                cluster.commands !== undefined
+            ) {
+                this.#generateBehavior(cluster as ClusterGlobals & ClusterState);
+            }
+        }
 
         switch (values.clusterId) {
-            case BasicInformationCluster.id:
-                this.#synchronizeBasicInformation(values);
-                break;
-
             case DescriptorCluster.id:
-                this.#synchronizeDescriptor(values);
+                this.#synchronizeDescriptor(endpoint, values as Partial<DescriptorBehavior.State>);
                 break;
         }
     }
 
-    #synchronizeBasicInformation() {
-        // TODO
-    }
+    #synchronizeDescriptor(
+        endpoint: EndpointState,
+        { deviceTypeList, partsList, serverList }: Partial<DescriptorBehavior.State>,
+    ) {
+        if (deviceTypeList?.[0]) {
+            const [{ deviceType, revision }] = deviceTypeList;
+            endpoint.endpoint.type.deviceType = deviceType;
+            endpoint.endpoint.type.deviceRevision = revision;
+        }
 
-    #synchronizeDescriptor() {
-        // TODO
+        if (serverList) {
+            for (const cluster of serverList) {
+                this.#clusterFor(endpoint, cluster);
+            }
+        }
+
+        if (partsList) {
+            for (const partNo of partsList) {
+                const part = this.#endpointFor(partNo);
+
+                let isAlreadyDescendant = false;
+                for (let owner = part.endpoint.owner; owner; owner = owner.owner) {
+                    if (owner === endpoint.endpoint) {
+                        isAlreadyDescendant = true;
+                        break;
+                    }
+                }
+
+                if (isAlreadyDescendant) {
+                    continue;
+                }
+
+                part.endpoint.owner = endpoint.endpoint;
+            }
+        }
     }
 
     #endpointFor(number: EndpointNumber) {
@@ -102,8 +163,13 @@ export class AttributeProcessor {
         }
 
         endpoint = {
-            endpoint: new Endpoint(ClientEndpointType),
-            ownerNumber: 0 as EndpointNumber,
+            endpoint: new Endpoint(
+                EndpointType({
+                    name: "ClientEndpoint",
+                    deviceType: -1,
+                    deviceRevision: -1,
+                }),
+            ),
             clusters: {},
         };
         this.#endpoints[number] = endpoint;
@@ -117,29 +183,38 @@ export class AttributeProcessor {
             return cluster;
         }
 
-        cluster = this.#nodeStore.endpointStores
-            .storeForEndpoint(endpoint.endpoint)
-            .createStoreForBehavior(id.toString(), DatasourceCache);
+        cluster = {
+            store: this.#nodeStore.endpointStores
+                .storeForEndpoint(endpoint.endpoint)
+                .createStoreForBehavior(id.toString(), DatasourceCache),
+        };
         endpoint.clusters[id] = cluster;
 
         return cluster;
     }
+
+    #generateBehavior(cluster: ClusterGlobals & ClusterState) {}
 }
 
 interface AttributeUpdates {
     endpointNo: EndpointNumber;
     clusterId: ClusterId;
-    values: Record<AttributeId, unknown>;
+    values: Record<number, unknown>;
 }
 
 interface EndpointState {
     endpoint: Endpoint;
-    ownerNumber: EndpointNumber;
-    clusters: Record<ClusterId, Datasource.ExternallyMutableStore>;
+    clusters: Record<ClusterId, ClusterState>;
 }
 
-const ClientEndpointType = MutableEndpoint({
-    name: "ClientEndpoint",
-    deviceType: -1,
-    deviceRevision: -1,
-});
+interface ClusterGlobals {
+    revision: number;
+    features: FeatureBitmap;
+    attributes: AttributeId[];
+    commands: CommandId[];
+}
+
+interface ClusterState extends Partial<ClusterGlobals> {
+    behavior?: Behavior.Type;
+    store: Datasource.ExternallyMutableStore;
+}
