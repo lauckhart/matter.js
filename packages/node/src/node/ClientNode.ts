@@ -15,6 +15,7 @@ import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general
 import { Matter, MatterModel } from "@matter/model";
 import { Interactable, Read, ReadResult } from "@matter/protocol";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
+import { ClientNodeStructure } from "./client/ClientNodeStructure.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
 
@@ -63,6 +64,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     override async initialize() {
+        this.env.set(ClientNodeStructure, new ClientNodeStructure(this));
         this.env.set(EndpointInitializer, await ClientEndpointInitializer.create(this));
 
         await super.initialize();

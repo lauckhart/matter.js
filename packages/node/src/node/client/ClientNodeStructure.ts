@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "#behavior/Behavior.js";
+import { ClusterBehavior } from "#behavior/index.js";
 import type { Datasource } from "#behavior/state/managed/Datasource.js";
 import { DescriptorBehavior } from "#behaviors/descriptor";
 import { DescriptorCluster } from "#clusters/descriptor";
@@ -17,11 +17,12 @@ import type { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import type { ReadResult } from "#protocol";
 import type { AttributeId, ClusterId, CommandId, EndpointNumber } from "#types";
+import { ClientBehavior } from "./ClientBehavior.js";
 
 /**
- * Creates and maintains client endpoints for a specific node.
+ * Manages endpoint and behavior structure for a single client node.
  */
-export class AttributeProcessor {
+export class ClientNodeStructure {
     #nodeStore: NodeStore;
     #endpoints: Record<EndpointNumber, EndpointState> = {};
 
@@ -30,7 +31,20 @@ export class AttributeProcessor {
         this.#endpointFor(0 as EndpointNumber);
     }
 
-    async apply(changes: ReadResult) {
+    /**
+     * Obtain the store for a behavior.
+     */
+    storeFor(endpoint: Endpoint, type: ClusterBehavior.Type) {
+        const endpointState = this.#endpointFor(endpoint.number);
+        const clusterState = this.#clusterFor(endpointState, type.cluster.id);
+
+        return clusterState.store;
+    }
+
+    /**
+     * Update the node structure by applying attribute changes.
+     */
+    async mutate(changes: ReadResult) {
         let currentUpdates: AttributeUpdates | undefined;
 
         for await (const chunk of changes) {
@@ -108,7 +122,9 @@ export class AttributeProcessor {
                 cluster.attributes !== undefined &&
                 cluster.commands !== undefined
             ) {
-                this.#generateBehavior(cluster as ClusterGlobals & ClusterState);
+                const behavior = ClientBehavior(cluster as ClientBehavior.ClusterShape);
+                cluster.behavior = behavior;
+                endpoint.endpoint.behaviors.require(behavior);
             }
         }
 
@@ -184,6 +200,7 @@ export class AttributeProcessor {
         }
 
         cluster = {
+            id,
             store: this.#nodeStore.endpointStores
                 .storeForEndpoint(endpoint.endpoint)
                 .createStoreForBehavior(id.toString(), DatasourceCache),
@@ -192,8 +209,6 @@ export class AttributeProcessor {
 
         return cluster;
     }
-
-    #generateBehavior(cluster: ClusterGlobals & ClusterState) {}
 }
 
 interface AttributeUpdates {
@@ -207,14 +222,8 @@ interface EndpointState {
     clusters: Record<ClusterId, ClusterState>;
 }
 
-interface ClusterGlobals {
-    revision: number;
-    features: FeatureBitmap;
-    attributes: AttributeId[];
-    commands: CommandId[];
-}
-
-interface ClusterState extends Partial<ClusterGlobals> {
-    behavior?: Behavior.Type;
+interface ClusterState extends Partial<ClientBehavior.ClusterShape> {
+    id: ClusterId;
+    behavior?: ClusterBehavior.Type;
     store: Datasource.ExternallyMutableStore;
 }
