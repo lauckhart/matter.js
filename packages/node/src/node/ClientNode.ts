@@ -11,9 +11,9 @@ import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
+import { Identity, ImplementationError, Lifecycle, MaybePromise } from "#general";
+import { ClientInteraction, Interactable, Read, ReadResult } from "#protocol";
 import { Matter, MatterModel } from "@matter/model";
-import { Interactable, Read, ReadResult } from "@matter/protocol";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { ClientNodeStructure } from "./client/ClientNodeStructure.js";
 import { Node } from "./Node.js";
@@ -36,6 +36,8 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
+
+        this.env.set(ClientNode, this);
 
         this.#matter = options.matter ?? Matter;
     }
@@ -115,8 +117,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     get interaction(): Interactable<ActionContext> {
-        // TODO
-        throw new NotImplementedError();
+        const interaction = this.env.maybeGet(ClientInteraction);
+        if (interaction === undefined) {
+            throw new ImplementationError("Cannot interact with node that is not online");
+        }
+        return interaction;
     }
 }
 

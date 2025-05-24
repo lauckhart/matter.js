@@ -13,7 +13,7 @@ import { InvokeResult } from "#action/response/InvokeResult.js";
 import { ReadResult } from "#action/response/ReadResult.js";
 import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
-import { Environment, Environmental, PromiseQueue } from "#general";
+import { BasicSet, Environment, Environmental, ImplementationError, PromiseQueue } from "#general";
 import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
 import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
 import { SubscriptionClient } from "#interaction/SubscriptionClient.js";
@@ -30,7 +30,7 @@ export interface ClientInteractableContext {
 export const DEFAULT_MIN_INTERVAL_FLOOR_SECONDS = 1;
 
 /**
- * This is a WIP and currently largely a stub.
+ * Client-side implementation of the Matter protocol.
  */
 export class ClientInteraction<SessionT extends InteractionSession = InteractionSession>
     implements Interactable<SessionT>
@@ -38,11 +38,21 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     readonly #exchanges: ExchangeProvider;
     readonly #subscriptions: SubscriptionClient;
     readonly #queue?: PromiseQueue;
+    readonly #interactions = new BasicSet<Read | Write | Invoke | Subscribe>();
+    #closed = false;
 
     constructor(context: ClientInteractableContext) {
         this.#exchanges = context.exchanges;
         this.#subscriptions = context.subscriptions;
         this.#queue = context.queue;
+    }
+
+    async close() {
+        this.#closed = true;
+
+        while (this.#interactions.size) {
+            await this.#interactions.deleted;
+        }
     }
 
     get subscriptions() {
@@ -64,111 +74,132 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     }
 
     async *read(request: Read, _session?: SessionT): ReadResult {
-        const messenger = await InteractionClientMessenger.create(this.#exchanges);
+        try {
+            this.#begin(request);
+            const messenger = await InteractionClientMessenger.create(this.#exchanges);
 
-        await messenger.sendReadRequest(request);
+            await messenger.sendReadRequest(request);
 
-        yield* this.#readDataReports(messenger);
+            yield* this.#readDataReports(messenger);
+        } finally {
+            this.#end(request);
+        }
     }
 
     async write<T extends Write>(request: T, _session?: SessionT): WriteResult<T> {
-        const messenger = await InteractionClientMessenger.create(this.#exchanges);
-        const response = await messenger.sendWriteCommand(request);
-        if (request.suppressResponse) {
-            return undefined as Awaited<WriteResult<T>>;
-        }
-        if (!response || !response.writeResponses?.length) {
-            return new Array<WriteResult.AttributeStatus>() as Awaited<WriteResult<T>>;
-        } else {
-            return response.writeResponses.map(
-                ({
-                    path: { nodeId, endpointId, clusterId, attributeId, listIndex },
-                    status: { status, clusterStatus },
-                }) => ({
-                    kind: "attr-status",
-                    path: {
-                        nodeId,
-                        endpointId: endpointId!,
-                        clusterId: clusterId!,
-                        attributeId: attributeId!,
-                        listIndex,
-                    },
-                    status,
-                    clusterStatus,
-                }),
-            ) as Awaited<WriteResult<T>>;
+        try {
+            this.#begin(request);
+            const messenger = await InteractionClientMessenger.create(this.#exchanges);
+            const response = await messenger.sendWriteCommand(request);
+            if (request.suppressResponse) {
+                return undefined as Awaited<WriteResult<T>>;
+            }
+            if (!response || !response.writeResponses?.length) {
+                return new Array<WriteResult.AttributeStatus>() as Awaited<WriteResult<T>>;
+            } else {
+                return response.writeResponses.map(
+                    ({
+                        path: { nodeId, endpointId, clusterId, attributeId, listIndex },
+                        status: { status, clusterStatus },
+                    }) => ({
+                        kind: "attr-status",
+                        path: {
+                            nodeId,
+                            endpointId: endpointId!,
+                            clusterId: clusterId!,
+                            attributeId: attributeId!,
+                            listIndex,
+                        },
+                        status,
+                        clusterStatus,
+                    }),
+                ) as Awaited<WriteResult<T>>;
+            }
+        } finally {
+            this.#end(request);
         }
     }
 
     async *invoke(request: Invoke, _session?: SessionT): InvokeResult {
-        const messenger = await InteractionClientMessenger.create(this.#exchanges);
-        const result = await messenger.sendInvokeCommand(request);
-        if (!request.suppressResponse) {
-            if (result && result.invokeResponses?.length) {
-                const chunk: InvokeResult.Chunk = result.invokeResponses
-                    .map(response => {
-                        if (response.command !== undefined) {
-                            const {
-                                commandPath: { endpointId, clusterId, commandId },
-                                commandRef,
-                                commandFields,
-                            } = response.command;
-                            const res: InvokeResult.CommandResponse = {
-                                kind: "cmd-response",
-                                path: {
-                                    endpointId: endpointId!,
-                                    clusterId: clusterId,
-                                    commandId: commandId,
-                                },
-                                commandRef,
-                                data: commandFields!, // TODO add decoding
-                            };
-                            return res;
-                        } else if (response.status !== undefined) {
-                            const {
-                                commandPath: { endpointId, clusterId, commandId },
-                                commandRef,
-                                status: { status, clusterStatus },
-                            } = response.status;
-                            const res: InvokeResult.CommandStatus = {
-                                kind: "cmd-status",
-                                path: {
-                                    endpointId: endpointId!,
-                                    clusterId: clusterId,
-                                    commandId: commandId,
-                                },
-                                commandRef,
-                                status,
-                                clusterStatus,
-                            };
-                            return res;
-                        } else {
-                            // Should not happen but if we ignore the response?
-                            return undefined;
-                        }
-                    })
-                    .filter(r => r !== undefined);
-                yield chunk;
-            } else {
-                yield [];
+        try {
+            this.#begin(request);
+            const messenger = await InteractionClientMessenger.create(this.#exchanges);
+            const result = await messenger.sendInvokeCommand(request);
+            if (!request.suppressResponse) {
+                if (result && result.invokeResponses?.length) {
+                    const chunk: InvokeResult.Chunk = result.invokeResponses
+                        .map(response => {
+                            if (response.command !== undefined) {
+                                const {
+                                    commandPath: { endpointId, clusterId, commandId },
+                                    commandRef,
+                                    commandFields,
+                                } = response.command;
+                                const res: InvokeResult.CommandResponse = {
+                                    kind: "cmd-response",
+                                    path: {
+                                        endpointId: endpointId!,
+                                        clusterId: clusterId,
+                                        commandId: commandId,
+                                    },
+                                    commandRef,
+                                    data: commandFields!, // TODO add decoding
+                                };
+                                return res;
+                            } else if (response.status !== undefined) {
+                                const {
+                                    commandPath: { endpointId, clusterId, commandId },
+                                    commandRef,
+                                    status: { status, clusterStatus },
+                                } = response.status;
+                                const res: InvokeResult.CommandStatus = {
+                                    kind: "cmd-status",
+                                    path: {
+                                        endpointId: endpointId!,
+                                        clusterId: clusterId,
+                                        commandId: commandId,
+                                    },
+                                    commandRef,
+                                    status,
+                                    clusterStatus,
+                                };
+                                return res;
+                            } else {
+                                // Should not happen but if we ignore the response?
+                                return undefined;
+                            }
+                        })
+                        .filter(r => r !== undefined);
+                    yield chunk;
+                } else {
+                    yield [];
+                }
             }
+        } finally {
+            this.#end(request);
         }
     }
 
     async *subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
-        const messenger = await InteractionClientMessenger.create(this.#exchanges);
+        try {
+            this.#begin(request);
 
-        await messenger.sendSubscribeRequest({
-            ...request,
-            minIntervalFloorSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
-            maxIntervalCeilingSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
-        });
+            const messenger = await InteractionClientMessenger.create(this.#exchanges);
 
-        yield* this.#readDataReports(messenger);
+            await messenger.sendSubscribeRequest({
+                ...request,
+                minIntervalFloorSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
+                maxIntervalCeilingSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
+            });
 
-        const subscribeResponseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
-        const subscribeResponse = TlvSubscribeResponse.decode(subscribeResponseMessage.payload);
-        yield subscribeResponse;
+            yield* this.#readDataReports(messenger);
+
+            const subscribeResponseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
+            const subscribeResponse = TlvSubscribeResponse.decode(subscribeResponseMessage.payload);
+            yield subscribeResponse;
+        } finally {
+            this.#end(request);
+        }
     }
 
     async *#readDataReports(messenger: InteractionClientMessenger): ReadResult {
@@ -240,5 +271,16 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 }
             }
         }
+    }
+
+    #begin(request: Read | Write | Invoke | Subscribe) {
+        if (this.#closed) {
+            throw new ImplementationError("Client interaction unavailable after close");
+        }
+        this.#interactions.add(request);
+    }
+
+    #end(request: Read | Write | Invoke | Subscribe) {
+        this.#interactions.delete(request);
     }
 }

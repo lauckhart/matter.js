@@ -110,6 +110,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
 
             this.#runtime = this.createRuntime();
             this.#runtime.construction.start();
+            this.#environment.set(NetworkRuntime, this.#runtime);
             await this.#runtime.construction.ready;
         } catch (e) {
             this.env.runtime.delete(this);
@@ -147,6 +148,9 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         }
 
         await this.act(agent => this.lifecycle.goingOffline.emit(agent.context));
+        if (this.#runtime) {
+            this.#environment.delete(NetworkRuntime, this.#runtime);
+        }
         await this.#runtime?.close();
         this.#runtime = undefined;
     }
