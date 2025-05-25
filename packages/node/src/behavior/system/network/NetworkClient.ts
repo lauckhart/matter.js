@@ -5,10 +5,9 @@
  */
 
 import { RootEndpoint } from "#endpoints/root";
-import { ImplementationError } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
 import { Node } from "#node/Node.js";
-import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Interactable, Subscribe } from "#protocol";
+import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Subscribe } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
 
@@ -18,14 +17,6 @@ export class NetworkClient extends NetworkBehavior {
 
     override initialize() {
         this.reactTo(this.#node.lifecycle.online, this.startup);
-    }
-
-    interact<T>(interactor: (client: Interactable) => Promise<T>) {
-        const { runtime } = this.internal;
-        if (!runtime) {
-            throw new ImplementationError("Cannot advertise offline server");
-        }
-        return runtime.interact(interactor);
     }
 
     protected async startup() {

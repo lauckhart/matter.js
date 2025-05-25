@@ -5,10 +5,9 @@
  */
 
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import type { ClientNetworkRuntime } from "#behavior/system/network/ClientNetworkRuntime.js";
-import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { camelize } from "#general";
 import { AttributeModel, ClusterModel, CommandModel, FeatureBitmap, Matter } from "#model";
+import { ClientNode } from "#node/ClientNode.js";
 import { Invoke } from "#protocol";
 import {
     Attribute,
@@ -18,6 +17,8 @@ import {
     ClusterType,
     Command,
     CommandId,
+    Status,
+    StatusResponseError,
     TlvAny,
     TlvNoResponse,
 } from "#types";
@@ -48,24 +49,37 @@ export namespace ClientBehavior {
     export interface ClusterShape {
         id: ClusterId;
         revision: number;
-        features: FeatureBitmap;
+        features: FeatureBitmap | number;
         attributes: AttributeId[];
         commands: CommandId[];
     }
 }
 
-function generateType(shape: ShapeAnalysis): ClusterBehavior.Type {
-    let { schema } = shape;
-    const { extraAttrs, extraCommands } = shape;
+function generateType(analysis: ShapeAnalysis): ClusterBehavior.Type {
+    let { schema } = analysis;
+    const { extraAttrs, extraCommands } = analysis;
 
-    let cluster = ClusterRegistry.get(shape.schema.id);
+    let cluster = ClusterRegistry.get(analysis.schema.id) as ClusterType;
     if (!cluster) {
         cluster = ClusterType({ id: schema.id, name: schema.name, revision: schema.revision });
     }
 
-    if (schema.revision !== shape.shape.revision || extraAttrs.size || extraCommands.size) {
+    if (schema.revision !== analysis.shape.revision || extraAttrs.size || extraCommands.size) {
         schema = schema.clone();
-        cluster = { ...cluster, attributes: { ...cluster.attributes }, commands: { ...cluster.commands } };
+
+        let supportedFeatures = analysis.shape.features;
+        if (typeof supportedFeatures === "number") {
+            supportedFeatures = cluster.attributes.featureMap.schema.decode(supportedFeatures as any) as FeatureBitmap;
+        }
+
+        cluster = {
+            ...cluster,
+            supportedFeatures,
+            attributes: { ...cluster.attributes },
+            commands: { ...cluster.commands },
+        };
+
+        schema.supportedFeatures = supportedFeatures;
 
         for (const id of extraAttrs) {
             const name = createUnknownName("attr", id);
@@ -82,33 +96,57 @@ function generateType(shape: ShapeAnalysis): ClusterBehavior.Type {
 
     const type = ClusterBehavior.for(cluster, schema);
 
-    for (const id of shape.shape.commands) {
+    for (const id of analysis.shape.commands) {
         const name = schema.get(CommandModel, id)?.name ?? createUnknownName("command", id);
-        type.prototype[camelize(name, false)] = implementCommand(id);
+        const command = cluster.commands[name];
+        type.prototype[camelize(name, false)] = implementCommand(command);
     }
 
     return type;
 
-    function implementCommand(id: CommandId) {
-        return async function (this: ClusterBehavior, payload: unknown) {
-            const runtime = this.env.get(NetworkRuntime) as ClientNetworkRuntime;
-            return await runtime.interact(async client => {
-                for await (const chunk of client.invoke(Invoke(), this.context)) {
+    function implementCommand(command: ClusterType.Command) {
+        return async function (this: ClusterBehavior, fields?: {}) {
+            const node = this.env.get(ClientNode);
+
+            const chunks = node.interaction.invoke(
+                Invoke(
+                    Invoke.Command<any>({
+                        endpoint: this.endpoint,
+                        cluster,
+                        command,
+                        fields,
+                    }),
+                ),
+            );
+
+            for await (const chunk of chunks) {
+                for (const entry of chunk) {
+                    // TODO - do we need to support multiple data chunks?
+                    switch (entry.kind) {
+                        case "cmd-status":
+                            if (entry.status !== Status.Success) {
+                                throw StatusResponseError.create(entry.status, undefined, entry.clusterStatus);
+                            }
+                            break;
+
+                        case "cmd-response":
+                            return command.responseSchema.decodeTlv(entry.data);
+                    }
                 }
-            });
+            }
         };
     }
 }
 
-function createFingerprint(shape: ShapeAnalysis) {
-    const fingerprint = [shape.shape.id] as (number | string)[];
+function createFingerprint(analysis: ShapeAnalysis) {
+    const fingerprint = [analysis.shape.id] as (number | string)[];
 
-    if (shape.extraAttrs.size) {
-        fingerprint.push("a", createElementFingerprint(shape.extraAttrs));
+    if (analysis.extraAttrs.size) {
+        fingerprint.push("a", createElementFingerprint(analysis.extraAttrs));
     }
 
-    if (shape.extraCommands.size) {
-        fingerprint.push("c", createElementFingerprint(shape.extraCommands));
+    if (analysis.extraCommands.size) {
+        fingerprint.push("c", createElementFingerprint(analysis.extraCommands));
     }
 
     return fingerprint.join(";");
