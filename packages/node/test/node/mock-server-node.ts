@@ -59,10 +59,14 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
     #newExchanges = new DataReadQueue<MockExchange>();
     #simulator = new NetworkSimulator();
 
-    constructor(type?: T, options?: Node.Options<T>, simulator?: NetworkSimulator);
-    constructor(config: Partial<Node.Configuration<T>>);
-    constructor(definition: T | Node.Configuration<T>, options?: Node.Options<T>, simulator?: NetworkSimulator) {
-        const config = Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options);
+    constructor(type?: T, options?: MockServerNode.Options<T>);
+    constructor(config: Partial<MockServerNode.Configuration<T>>);
+    constructor(definition: T | MockServerNode.Configuration<T>, options?: MockServerNode.Options<T>) {
+        const config = Node.nodeConfigFor(
+            ServerNode.RootEndpoint as T,
+            definition,
+            options ?? ({} as MockServerNode.Options<T>),
+        );
 
         let environment = config.environment;
         if (!environment) {
@@ -76,10 +80,10 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
 
         config.environment = environment;
 
-        super(config as any);
+        super(config);
 
-        this.#simulator = simulator ?? new NetworkSimulator();
-        environment.set(Network, this.#simulator.addHost(1));
+        this.#simulator = config.simulator ?? new NetworkSimulator();
+        environment.set(Network, this.#simulator.addHost(config.networkIndex ?? 1));
     }
 
     get simulator() {
@@ -108,7 +112,7 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
     }
 
     static async createOnline<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
-        options?: MockServerNode.Options<T> & { simulator?: NetworkSimulator },
+        options?: MockServerNode.Options<T>,
     ) {
         let { config, device } = options ?? {};
 
@@ -116,7 +120,7 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
             config = { type: ServerNode.RootEndpoint as T } as Node.Configuration<T>;
         }
 
-        const node = new MockServerNode<ServerNode.RootEndpoint>(config.type, config, options?.simulator);
+        const node = new MockServerNode<ServerNode.RootEndpoint>(config.type, config);
 
         if (device === undefined && options && !("device" in options)) {
             device = OnOffLightDevice;
@@ -201,9 +205,21 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
 }
 
 export namespace MockServerNode {
-    export interface Options<T extends ServerNode.RootEndpoint> {
+    export interface MockOptions<T extends ServerNode.RootEndpoint> extends Node.NodeOptions {
         online?: boolean;
         config?: Node.Configuration<T>;
         device?: Endpoint.Definition;
+        networkIndex?: number;
+        simulator?: NetworkSimulator;
     }
+
+    export type Options<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> = Endpoint.Options<
+        T,
+        MockOptions<T>
+    >;
+
+    export type Configuration<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> = Endpoint.Configuration<
+        T,
+        MockOptions<T>
+    >;
 }

@@ -226,21 +226,21 @@ export namespace Node {
         environment?: Environment;
     }
 
-    export type Options<T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint> = Endpoint.Options<T, NodeOptions>;
+    export type Options<
+        T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint,
+        O extends NodeOptions = NodeOptions,
+    > = Endpoint.Options<T, O>;
 
-    export type Configuration<T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint> = Endpoint.Configuration<
-        T,
-        NodeOptions
-    >;
+    export type Configuration<
+        T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint,
+        O extends NodeOptions = NodeOptions,
+    > = Endpoint.Configuration<T, O>;
 
-    export function nodeConfigFor<T extends RootEndpoint>(
+    export function nodeConfigFor<T extends RootEndpoint, O extends NodeOptions>(
         defaultType: T,
         configuration: undefined | T | Configuration<T>,
-        options?: Options<T>,
-    ): Node.Configuration<T> {
-        if (!options) {
-            options = {};
-        }
+        options: Options<T, O>,
+    ): Node.Configuration<T, O> {
         if (configuration === undefined) {
             return {
                 type: defaultType,
@@ -256,7 +256,7 @@ export namespace Node {
         return {
             type: defaultType,
             ...configuration,
-        } as Endpoint.Configuration<T>;
+        } as Node.Configuration<T, O>;
     }
 
     export function forEndpoint(endpoint: Endpoint): Node {

@@ -62,7 +62,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     constructor(config: Partial<Node.Configuration<T>>);
 
     constructor(definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
-        super(Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options));
+        super(Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options ?? ({} as Node.Options<T>)));
 
         this.env.set(ServerNode, this);
 

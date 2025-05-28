@@ -47,7 +47,7 @@ export class ControllerBehavior extends Behavior {
     declare state: ControllerBehavior.State;
 
     override async initialize() {
-        if (this.state.adminFabricLabel === undefined) {
+        if (this.state.adminFabricLabel === undefined || this.state.adminFabricLabel === "") {
             throw new ImplementationError("adminFabricLabel must be set for ControllerBehavior.");
         }
         const adminFabricLabel = this.state.adminFabricLabel;
@@ -173,6 +173,6 @@ export namespace ControllerBehavior {
         /**
          * Contains the label of the admin fabric which is set for all commissioned devices
          */
-        adminFabricLabel!: string;
+        adminFabricLabel = "matter.js";
     }
 }
