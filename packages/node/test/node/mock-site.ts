@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterAggregateError, NetworkSimulator } from "#general";
+import { Logger, MatterAggregateError, NetworkSimulator } from "#general";
 import { Node } from "#node/Node.js";
 import { ServerNode } from "#node/ServerNode.js";
 import { MockServerNode } from "./mock-server-node.js";
+
+const logger = Logger.get("MockSite");
 
 /**
  * Manages a mock network with nodes on it.
@@ -49,17 +51,40 @@ export class MockSite {
         return node;
     }
 
-    async addCommissionedPair() {
-        const controller = await this.addNode(undefined, { online: false, device: undefined });
+    async addUncommissionedPair() {
+        const controller = await this.addNode(undefined, {
+            online: false,
+            device: undefined,
+            commissioning: { enabled: false },
+        });
         const device = await this.addNode();
 
+        return { controller, device };
+    }
+
+    async addCommissionedPair() {
+        const { controller, device } = await this.addUncommissionedPair();
+
         const { passcode, discriminator } = device.state.commissioning;
-        await MockTime.resolve(controller.nodes.commission(passcode, discriminator));
+        await MockTime.resolve(controller.nodes.commission({ passcode, discriminator, timeoutSeconds: 30 }));
 
         return { controller, device };
     }
 
     async [Symbol.asyncDispose]() {
-        await MockTime.resolve(MatterAggregateError.allSettled([...this.#nodes].map(node => node.close())));
+        try {
+            await MockTime.resolve(
+                MatterAggregateError.allSettled(
+                    [...this.#nodes].map(async node => {
+                        await node.close();
+                    }),
+                ),
+
+                // Not sure why macrotasks are necessary; something hangs with microtasks but haven't tracked down
+                { macrotasks: true },
+            );
+        } catch (e) {
+            logger.error("Error closing mock site", e);
+        }
     }
 }

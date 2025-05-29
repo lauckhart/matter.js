@@ -171,11 +171,13 @@ export const MockTime = {
 
             if (stepMs) {
                 await this.advance(stepMs);
+                timeAdvanced += stepMs;
             } else {
                 // Advance time exponentially, trying for granularity but also OK performance.  Note that we are not only
                 // advancing time but also yielding event loop.  So it's possible if we run out of time it's just because
                 // there were too few yields in one virtual hour.  As designed currently it's 360 macrotasks and 360
                 // microtasks (360 loops w/ 1 macro- and 1 micro-yield)
+                // TODO - this isn't exponential, fix comment or fix code
                 await this.advance(1000);
                 timeAdvanced += 1000;
             }

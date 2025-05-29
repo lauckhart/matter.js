@@ -4,9 +4,44 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { DiscoveryError } from "#behavior/system/controller/discovery/DiscoveryError.js";
 import { MockSite } from "./mock-site.js";
 
 describe("ClientNode", () => {
+    it("times out commissioning discovery", async () => {
+        await using site = new MockSite();
+        const controller = await site.addNode(undefined, { online: false, device: undefined });
+        await MockTime.resolve(
+            expect(
+                controller.nodes.commission({ passcode: 12341234, discriminator: 1234, timeoutSeconds: 30 }),
+            ).rejectedWith(DiscoveryError),
+        );
+    });
+
+    it("times out continuous discovery", async () => {
+        await using site = new MockSite();
+
+        const controller = await site.addNode(undefined, { online: false, device: undefined });
+        const discovered = await MockTime.resolve(
+            controller.nodes.discover({ longDiscriminator: 1234, timeoutSeconds: 30 }),
+        );
+
+        expect(discovered.length).equals(0);
+    });
+
+    it.only("discovers", async () => {
+        await using site = new MockSite();
+        const { controller, device } = await site.addUncommissionedPair();
+
+        const { discriminator } = device.state.commissioning;
+        const discovered = await MockTime.resolve(
+            controller.nodes.discover({ longDiscriminator: discriminator, timeoutSeconds: 30 }),
+            { macrotasks: true },
+        );
+
+        expect(discovered.length).equals(1);
+    }).timeout(30 * 60 * 1000);
+
     it("commissions", async () => {
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();

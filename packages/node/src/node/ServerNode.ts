@@ -64,7 +64,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     constructor(definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         super(Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options ?? ({} as Node.Options<T>)));
 
-        this.env.set(ServerNode, this);
+        this.env.set(Node, this);
 
         DiagnosticSource.add(this);
 

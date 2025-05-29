@@ -326,6 +326,11 @@ export namespace CommissioningClient {
         passcode: number;
 
         /**
+         * The device's long discriminator.
+         */
+        discriminator?: number;
+
+        /**
          * The ID to assign the node during commissioning.  By default the node receives the next available ID.
          */
         nodeId?: NodeId;

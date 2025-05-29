@@ -7,7 +7,8 @@
 import type { MaybePromise } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { ServerNode } from "#node/ServerNode.js";
-import { Discovery, DiscoveryError } from "./Discovery.js";
+import { Discovery } from "./Discovery.js";
+import { DiscoveryError } from "./DiscoveryError.js";
 
 /**
  * Locates a single node and returns it.

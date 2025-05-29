@@ -6,7 +6,13 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
-import { ImplementationError, isNetworkInterface, NetInterfaceSet, TransportInterfaceSet } from "#general";
+import {
+    ImplementationError,
+    isNetworkInterface,
+    MatterAggregateError,
+    NetInterfaceSet,
+    TransportInterfaceSet,
+} from "#general";
 import { Node } from "#node/Node.js";
 import { InteractionServer } from "#node/server/InteractionServer.js";
 import {
@@ -100,8 +106,7 @@ export class ControllerBehavior extends Behavior {
                 discovery.cancel();
             }
 
-            // Ignore errors as the invoker must handle
-            await Promise.allSettled([...discoveries]);
+            await MatterAggregateError.allSettled([...discoveries].map(discovery => discovery.settled));
         }
 
         this.env.delete(FabricAuthority);

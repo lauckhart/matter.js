@@ -37,7 +37,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 
         super(opts);
 
-        this.env.set(ClientNode, this);
+        this.env.set(Node, this);
 
         this.#matter = options.matter ?? Matter;
     }

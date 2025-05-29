@@ -7,7 +7,8 @@
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { camelize } from "#general";
 import { AttributeModel, ClusterModel, CommandModel, FeatureBitmap, Matter } from "#model";
-import { ClientNode } from "#node/ClientNode.js";
+import type { ClientNode } from "#node/ClientNode.js";
+import { Node } from "#node/Node.js";
 import { Invoke } from "#protocol";
 import {
     Attribute,
@@ -106,7 +107,7 @@ function generateType(analysis: ShapeAnalysis): ClusterBehavior.Type {
 
     function implementCommand(command: ClusterType.Command) {
         return async function (this: ClusterBehavior, fields?: {}) {
-            const node = this.env.get(ClientNode);
+            const node = this.env.get(Node) as ClientNode;
 
             const chunks = node.interaction.invoke(
                 Invoke(
