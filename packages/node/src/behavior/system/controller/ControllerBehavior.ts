@@ -6,14 +6,7 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
-import {
-    ImplementationError,
-    isNetworkInterface,
-    Logger,
-    MatterAggregateError,
-    NetInterfaceSet,
-    TransportInterfaceSet,
-} from "#general";
+import { ImplementationError, isNetworkInterface, NetInterfaceSet, TransportInterfaceSet } from "#general";
 import { Node } from "#node/Node.js";
 import { InteractionServer } from "#node/server/InteractionServer.js";
 import {
@@ -30,8 +23,6 @@ import { CommissioningServer } from "../commissioning/CommissioningServer.js";
 import { NetworkServer } from "../network/NetworkServer.js";
 import { ActiveDiscoveries } from "./discovery/ActiveDiscoveries.js";
 import type { Discovery } from "./discovery/Discovery.js";
-
-const logger = Logger.get("ControllerBehavior");
 
 /**
  * Node controller functionality.
@@ -109,9 +100,8 @@ export class ControllerBehavior extends Behavior {
                 discovery.cancel();
             }
 
-            await MatterAggregateError.allSettled([...discoveries], "Error while cancelling discoveries").catch(error =>
-                logger.error(error),
-            );
+            // Ignore errors as the invoker must handle
+            await Promise.allSettled([...discoveries]);
         }
 
         this.env.delete(FabricAuthority);

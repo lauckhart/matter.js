@@ -95,7 +95,7 @@ async function setup() {
 }
 
 async function initializeDimmableHueLight() {
-    const node = await MockServerNode.createOnline({
+    const node = await MockServerNode.createOnline(undefined, {
         device: undefined,
     });
 

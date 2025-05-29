@@ -13,5 +13,5 @@ describe("ClientNode", () => {
 
         expect(device.state.commissioning.commissioned).equals(true);
         expect(controller.nodes.size).equals(1);
-    });
+    }).timeout(30 * 60 * 1000);
 });

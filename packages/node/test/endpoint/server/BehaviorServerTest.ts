@@ -253,7 +253,7 @@ describe("BehaviorServer", () => {
 
         const MyDevice = OnOffLightDevice.with(MyServer);
 
-        const node = await MockServerNode.createOnline({ device: MyDevice });
+        const node = await MockServerNode.createOnline(undefined, { device: MyDevice });
 
         const fabric = await node.addFabric(1);
 
@@ -283,7 +283,7 @@ describe("BehaviorServer", () => {
 
         const MyDevice = OnOffLightDevice.with(MyServer);
 
-        const node = await MockServerNode.createOnline({ device: MyDevice });
+        const node = await MockServerNode.createOnline(undefined, { device: MyDevice });
 
         const featureMap = await interaction.read(node, await node.addFabric(1), false, {
             endpointId: EndpointNumber(1),
@@ -314,7 +314,7 @@ describe("BehaviorServer", () => {
 
         const MyDevice = OnOffLightDevice.with(MyServer);
 
-        const node = await MockServerNode.createOnline({ device: MyDevice });
+        const node = await MockServerNode.createOnline(undefined, { device: MyDevice });
 
         await interaction.invoke(
             node,

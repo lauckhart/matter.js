@@ -12,6 +12,7 @@ export interface FailureDetail {
     expected?: string;
     logs?: string;
     cause?: FailureDetail;
+    secondary?: FailureDetail;
     errors?: FailureDetail[];
 }
 
@@ -19,7 +20,7 @@ export interface FailureDetail {
  * Captures all pertinent information about a failed test.
  */
 export function FailureDetail(error: any, logs?: string[], parentStack?: string[]) {
-    const { message, stack, stackLines, cause, errors } = parseError(error, parentStack);
+    const { message, stack, stackLines, cause, errors, secondary } = parseError(error, parentStack);
     const result = { message } as FailureDetail;
 
     if (stack) {
@@ -30,6 +31,9 @@ export function FailureDetail(error: any, logs?: string[], parentStack?: string[
     }
     if (cause) {
         result.cause = cause;
+    }
+    if (secondary) {
+        result.secondary = secondary;
     }
     if (errors) {
         result.errors = errors;
@@ -85,6 +89,12 @@ function messageAndStackFor(
 }
 
 function parseError(error: Error, parentStack?: string[]) {
+    let secondary: FailureDetail | undefined;
+    if ("error" in error && "suppressed" in error) {
+        secondary = FailureDetail(error.error);
+        error = error.suppressed as Error;
+    }
+
     const { message, stack, stackLines } = messageAndStackFor(error, parentStack);
 
     let cause: FailureDetail | undefined, errors: FailureDetail[] | undefined;
@@ -99,5 +109,5 @@ function parseError(error: Error, parentStack?: string[]) {
         errors = errorErrors.map(e => FailureDetail(e, undefined, stackLines));
     }
 
-    return { message, stack, stackLines, cause, errors };
+    return { message, stack, stackLines, cause, errors, secondary };
 }

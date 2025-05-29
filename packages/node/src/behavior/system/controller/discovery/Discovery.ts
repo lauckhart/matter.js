@@ -33,8 +33,8 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
     #cancel?: () => void;
     #owner: ServerNode;
     #options: Discovery.Options;
-    #resolve!: (value: T) => void;
-    #reject!: (cause?: any) => void;
+    #resolve: (value: T) => void;
+    #reject: (cause?: any) => void;
 
     constructor(owner: ServerNode, options: Discovery.Options | undefined) {
         let resolve: (value: T) => void, reject: (cause?: any) => void;
@@ -42,8 +42,15 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
             resolve = resolver;
             reject = rejecter;
         });
-        this.#resolve = resolve!;
-        this.#reject = reject!;
+
+        this.#resolve = result => {
+            this.#owner.env.get(ActiveDiscoveries).delete(this);
+            resolve!(result);
+        };
+        this.#reject = cause => {
+            this.#owner.env.get(ActiveDiscoveries).delete(this);
+            reject!(cause);
+        };
 
         owner.env.get(ActiveDiscoveries).add(this);
 
@@ -196,6 +203,7 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
      */
     #invokeCompleter() {
         let result: MaybePromise<T>;
+
         try {
             result = this.onComplete();
         } catch (e) {
@@ -204,18 +212,10 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
         }
 
         if (MaybePromise.is(result)) {
-            result.then(this.#finish.bind(this), this.#reject);
+            result.then(this.#resolve.bind(this), this.#reject);
             return;
         }
 
-        this.#finish(result);
-    }
-
-    /**
-     * Step 5 - deregister from environment and resolve
-     */
-    #finish(result: T) {
-        this.#owner.env.get(ActiveDiscoveries).delete(this);
         this.#resolve(result);
     }
 }

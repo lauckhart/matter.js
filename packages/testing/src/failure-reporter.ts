@@ -32,7 +32,10 @@ function dumpCause(out: Printer, failure: FailureDetail) {
     });
 }
 
-function dumpDetails(out: Printer, { message, actual, expected, stack, cause, errors, logs }: FailureDetail) {
+function dumpDetails(
+    out: Printer,
+    { message, actual, expected, stack, cause, errors, secondary, logs }: FailureDetail,
+) {
     out("\n", ansi.bright.red(message), "\n");
 
     if (actual !== undefined && expected !== undefined) {
@@ -58,6 +61,11 @@ function dumpDetails(out: Printer, { message, actual, expected, stack, cause, er
             out("\n", ansi.bold(`Cause #${++num}:`), "\n");
             dumpCause(out, cause);
         }
+    }
+
+    if (secondary) {
+        out("\n", ansi.bold("Secondary error during disposal:"), "\n");
+        dumpCause(out, secondary);
     }
 
     if (logs) {
