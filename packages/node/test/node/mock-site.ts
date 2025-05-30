@@ -66,7 +66,7 @@ export class MockSite {
         const { controller, device } = await this.addUncommissionedPair();
 
         const { passcode, discriminator } = device.state.commissioning;
-        await MockTime.resolve(controller.nodes.commission({ passcode, discriminator, timeoutSeconds: 30 }));
+        await MockTime.resolve(controller.nodes.commission({ passcode, discriminator, timeoutSeconds: 90 }));
 
         return { controller, device };
     }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CancelablePromise, MaybePromise, withTimeout } from "#general";
+import { CancelablePromise, Diagnostic, Logger, MaybePromise, withTimeout } from "#general";
 import { ClientNodeFactory } from "#node/client/ClientNodeFactory.js";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { ServerNode } from "#node/ServerNode.js";
@@ -12,6 +12,8 @@ import { CommissionableDeviceIdentifiers, ScannerSet } from "#protocol";
 import { ControllerBehavior } from "../ControllerBehavior.js";
 import { ActiveDiscoveries } from "./ActiveDiscoveries.js";
 import { DiscoveryAggregateError } from "./DiscoveryError.js";
+
+const logger = Logger.get("Logger");
 
 /**
  * Discovery of commissionable devices.
@@ -85,34 +87,42 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
     }
 
     override toString() {
+        const description = this.#description;
+        if (description === undefined) {
+            return "node discovery";
+        }
+        return `discovery of ${description}`;
+    }
+
+    get #description() {
         if ("instanceId" in this.#options) {
-            return `Discovery of node instance ${this.#options.instanceId}`;
+            return `node instance ${this.#options.instanceId}`;
         }
 
         if ("longDiscriminator" in this.#options) {
-            return `Discovery of node with discriminator ${this.#options.longDiscriminator}`;
+            return `node with discriminator ${this.#options.longDiscriminator}`;
         }
 
         if ("shortDiscriminator" in this.#options) {
-            return `Discovery of node with discriminator ${this.#options.shortDiscriminator}`;
+            return `node with discriminator ${this.#options.shortDiscriminator}`;
         }
 
         if ("productId" in this.#options && this.#options.productId !== undefined) {
             if ("vendorId" in this.#options) {
-                return `Discovery of product ${this.#options.productId} from vendor ${this.#options.vendorId}`;
+                return `product ${this.#options.productId} from vendor ${this.#options.vendorId}`;
             }
-            return `Discovery of product ${this.#options.productId}`;
+            return `product ${this.#options.productId}`;
         }
 
         if ("vendorId" in this.#options) {
-            return `Discovery of node from vendor ${this.#options.vendorId}`;
+            return `node from vendor ${this.#options.vendorId}`;
         }
 
         if ("deviceType" in this.#options) {
-            return `Discovery of node with device type ${this.#options.deviceType}`;
+            return `node with device type ${this.#options.deviceType}`;
         }
 
-        return "Node discovery";
+        return "node discovery";
     }
 
     protected override onCancel(reason: Error) {
@@ -165,6 +175,13 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
         if (this.#isStopped) {
             this.#afterDiscovery();
             return;
+        }
+
+        const description = this.#description;
+        if (description === undefined) {
+            logger.info("Initiating", Diagnostic.strong("node discovery"));
+        } else {
+            logger.info("Initiating discovery of", Diagnostic.strong(description));
         }
 
         const scanners = this.#owner.env.get(ScannerSet);

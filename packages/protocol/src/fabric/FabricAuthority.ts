@@ -13,6 +13,7 @@ import {
     Environmental,
     ImplementationError,
     Logger,
+    Observable,
 } from "#general";
 import { CaseAuthenticatedTag, FabricId, FabricIndex, NodeId, VendorId } from "#types";
 import { Fabric, FabricBuilder } from "./Fabric.js";
@@ -59,6 +60,7 @@ export class FabricAuthority {
     #ca: CertificateAuthority;
     #fabrics: FabricManager;
     #config: FabricAuthorityConfiguration;
+    #fabricAdded = new Observable<[Fabric]>();
 
     constructor(context: FabricAuthorityContext) {
         this.#ca = context.ca;
@@ -88,6 +90,13 @@ export class FabricAuthority {
      */
     get fabrics() {
         return Array.from(this.#fabrics).filter(this.hasControlOf.bind(this));
+    }
+
+    /**
+     * Emits after creating a new fabric.
+     */
+    get fabricAdded() {
+        return this.#fabricAdded;
     }
 
     /**
@@ -138,6 +147,7 @@ export class FabricAuthority {
         this.#fabrics.addFabric(fabric);
 
         logger.debug(`Created new controller fabric ${index}`);
+        this.#fabricAdded.emit(fabric);
 
         return fabric;
     }

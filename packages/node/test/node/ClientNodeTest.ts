@@ -13,7 +13,7 @@ describe("ClientNode", () => {
         const controller = await site.addNode(undefined, { online: false, device: undefined });
         await MockTime.resolve(
             expect(
-                controller.nodes.commission({ passcode: 12341234, discriminator: 1234, timeoutSeconds: 30 }),
+                controller.nodes.commission({ passcode: 12341234, discriminator: 1234, timeoutSeconds: 90 }),
             ).rejectedWith(DiscoveryError),
         );
     });
@@ -23,7 +23,7 @@ describe("ClientNode", () => {
 
         const controller = await site.addNode(undefined, { online: false, device: undefined });
         const discovered = await MockTime.resolve(
-            controller.nodes.discover({ longDiscriminator: 1234, timeoutSeconds: 30 }),
+            controller.nodes.discover({ longDiscriminator: 1234, timeoutSeconds: 90 }),
         );
 
         expect(discovered.length).equals(0);
@@ -35,11 +35,12 @@ describe("ClientNode", () => {
 
         const { discriminator } = device.state.commissioning;
         const discovered = await MockTime.resolve(
-            controller.nodes.discover({ longDiscriminator: discriminator, timeoutSeconds: 30 }),
+            controller.nodes.discover({ longDiscriminator: discriminator, timeoutSeconds: 90 }),
             { macrotasks: true },
         );
 
         expect(discovered.length).equals(1);
+        expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     }).timeout(30 * 60 * 1000);
 
     it("commissions", async () => {

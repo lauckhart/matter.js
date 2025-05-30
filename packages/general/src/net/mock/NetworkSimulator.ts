@@ -11,7 +11,7 @@ import { MockNetwork } from "./MockNetwork.js";
 const logger = Logger.get("SimulatedNetwork");
 
 export class NetworkSimulator {
-    private readonly listenersMap = new Map<string, Array<NetworkSimulator.Listener>>();
+    readonly #listeners = new Map<string, Array<NetworkSimulator.Listener>>();
 
     onUdpData(
         host: string | undefined,
@@ -19,32 +19,32 @@ export class NetworkSimulator {
         listener: NetworkSimulator.Listener,
     ): TransportInterface.Listener {
         const ipPort = `${host ?? "*"}:${port}`;
-        let listeners = this.listenersMap.get(ipPort);
+        let listeners = this.#listeners.get(ipPort);
         if (listeners === undefined) {
             listeners = new Array<NetworkSimulator.Listener>();
-            this.listenersMap.set(ipPort, listeners);
+            this.#listeners.set(ipPort, listeners);
         }
         listeners.push(listener);
         return {
-            close: async () => this.offUdpData(host, port, listener),
+            close: async () => this.#offUdpData(host, port, listener),
         };
     }
 
-    private offUdpData(host: string | undefined, port: number, listenerToRemove: NetworkSimulator.Listener) {
+    #offUdpData(host: string | undefined, port: number, listenerToRemove: NetworkSimulator.Listener) {
         const ipPort = `${host ?? "*"}:${port}`;
-        const listeners = this.listenersMap.get(ipPort);
+        const listeners = this.#listeners.get(ipPort);
         if (listeners === undefined) return;
         const newListeners = listeners.filter(listener => listener !== listenerToRemove);
         if (newListeners.length === 0) {
-            this.listenersMap.delete(ipPort);
+            this.#listeners.delete(ipPort);
             return;
         }
-        this.listenersMap.set(ipPort, newListeners);
+        this.#listeners.set(ipPort, newListeners);
     }
 
     sendUdp(localAddress: string, localPort: number, remoteAddress: string, remotePort: number, data: Uint8Array) {
         [`${remoteAddress}:${remotePort}`, `*:${remotePort}`].forEach(ipPort =>
-            this.listenersMap.get(ipPort)?.forEach(listener => {
+            this.#listeners.get(ipPort)?.forEach(listener => {
                 try {
                     listener("fake0", localAddress, localPort, data);
                 } catch (error) {

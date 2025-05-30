@@ -6,21 +6,19 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
-import {
-    ImplementationError,
-    isNetworkInterface,
-    MatterAggregateError,
-    NetInterfaceSet,
-    TransportInterfaceSet,
-} from "#general";
+import { ImplementationError, isNetworkInterface, NetInterfaceSet, TransportInterfaceSet } from "#general";
 import { Node } from "#node/Node.js";
 import { InteractionServer } from "#node/server/InteractionServer.js";
 import {
     Ble,
+    Fabric,
     FabricAuthority,
     FabricAuthorityConfigurationProvider,
     FabricManager,
+    MdnsScanner,
+    MdnsScannerTargetCriteria,
     MdnsService,
+    Scanner,
     ScannerSet,
     SubscriptionClient,
 } from "#protocol";
@@ -41,6 +39,7 @@ import type { Discovery } from "./discovery/Discovery.js";
 export class ControllerBehavior extends Behavior {
     static override readonly id = "controller";
 
+    declare internal: ControllerBehavior.Internal;
     declare state: ControllerBehavior.State;
 
     override async initialize() {
@@ -85,8 +84,8 @@ export class ControllerBehavior extends Behavior {
         // device
         const commissioning = this.agent.get(CommissioningServer);
         if (commissioning.state.enabled === undefined) {
-            const controlledFabrics = this.env.get(FabricAuthority).fabrics.length;
             const totalFabrics = this.env.get(FabricManager).length;
+            const controlledFabrics = this.env.get(FabricAuthority).fabrics.length;
             if (controlledFabrics === totalFabrics) {
                 commissioning.state.enabled = false;
             }
@@ -100,15 +99,7 @@ export class ControllerBehavior extends Behavior {
     }
 
     override async [Symbol.asyncDispose]() {
-        const discoveries = this.env.get(ActiveDiscoveries);
-        while (discoveries.size) {
-            for (const discovery of discoveries) {
-                discovery.cancel();
-            }
-
-            await MatterAggregateError.allSettled([...discoveries].map(discovery => discovery.settled));
-        }
-
+        await this.env.close(ActiveDiscoveries);
         this.env.delete(FabricAuthority);
         this.env.delete(ScannerSet);
     }
@@ -132,6 +123,20 @@ export class ControllerBehavior extends Behavior {
         // Clean up as the node goes offline
         const node = Node.forEndpoint(this.endpoint);
         this.reactTo(node.lifecycle.goingOffline, this.#nodeGoingOffline);
+
+        // Add each pre-existing fabric to discovery criteria
+        const authority = this.env.get(FabricAuthority);
+        for (const fabric of authority.fabrics) {
+            this.#enableScanningForFabric(fabric);
+        }
+        this.reactTo(authority.fabricAdded, this.#enableScanningForFabric);
+
+        // Configure each MDNS scanner with criteria
+        const scanners = this.env.get(ScannerSet);
+        for (const scanner of scanners) {
+            this.#enableScanningForScanner(scanner);
+        }
+        this.reactTo(scanners.added, this.#enableScanningForScanner);
     }
 
     async #nodeGoingOffline() {
@@ -147,9 +152,30 @@ export class ControllerBehavior extends Behavior {
 
         await this.env.close(NetInterfaceSet);
     }
+
+    #enableScanningForFabric(fabric: Fabric) {
+        this.internal.mdnsTargetCriteria.operationalTargets.push({ operationalId: fabric.operationalId });
+    }
+
+    #enableScanningForScanner(scanner: Scanner) {
+        if (!(scanner instanceof MdnsScanner)) {
+            return;
+        }
+        scanner.targetCriteriaProviders.add(this.internal.mdnsTargetCriteria);
+    }
 }
 
 export namespace ControllerBehavior {
+    export class Internal {
+        /**
+         * MDNS scanner criteria for each controlled fabric (keyed by operational ID).
+         */
+        mdnsTargetCriteria: MdnsScannerTargetCriteria = {
+            commissionable: true,
+            operationalTargets: [],
+        };
+    }
+
     export class State {
         /**
          * Set to false to disable scanning on BLE.

@@ -19,12 +19,11 @@ import { ClientNodeStructure } from "./ClientNodeStructure.js";
 export class ClientEndpointInitializer extends EndpointInitializer {
     #node: ClientNode;
     #store: NodeStore;
-    #structure: ClientNodeStructure;
+    #structure?: ClientNodeStructure;
 
     constructor(node: ClientNode) {
         super();
         this.#node = node;
-        this.#structure = node.env.get(ClientNodeStructure);
         this.#store = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
     }
 
@@ -59,6 +58,10 @@ export class ClientEndpointInitializer extends EndpointInitializer {
     override createBacking(endpoint: Endpoint, type: Behavior.Type): BehaviorBacking {
         if ((type as ClusterBehavior.Type).cluster === undefined) {
             return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
+        }
+
+        if (this.#structure === undefined) {
+            this.#structure = this.#node.env.get(ClientNodeStructure);
         }
 
         const store = this.#structure.storeFor(endpoint, type as ClusterBehavior.Type);
