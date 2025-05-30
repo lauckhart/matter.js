@@ -40,9 +40,9 @@ export const MockCrypto = {
     },
 
     getRandomData(length: number) {
-        // Make random data deterministic
         const bytes = new Uint8Array(length);
 
+        // Without this data returned will be all zeros
         if (beRandom) {
             globalThis.crypto.getRandomValues(bytes);
         }
