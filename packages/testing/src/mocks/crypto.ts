@@ -6,15 +6,46 @@
 
 const subtle = globalThis.crypto.subtle;
 
+type MockCryptoLike = typeof MockCrypto;
+export interface MockCrypto extends MockCryptoLike {}
+
+let beRandom = false;
+
 /**
  * An extremely minimal Crypto mock.
  *
  * Only supports those subsets of crypto required to complete matter.js tests.
  */
-const TheCrypto = {
-    getRandomData: (length: number) => {
+export const MockCrypto = {
+    withRandom<T>(actor: () => T) {
+        beRandom = true;
+        let result: unknown;
+        try {
+            result = actor();
+        } finally {
+            if (
+                typeof result === "object" &&
+                result !== null &&
+                "finally" in result &&
+                typeof result["finally"] === "function"
+            ) {
+                result = result.finally(() => {
+                    beRandom = false;
+                });
+            } else {
+                beRandom = false;
+            }
+        }
+        return result as T;
+    },
+
+    getRandomData(length: number) {
         // Make random data deterministic
         const bytes = new Uint8Array(length);
+
+        if (beRandom) {
+            globalThis.crypto.getRandomValues(bytes);
+        }
 
         return bytes;
     },
@@ -65,6 +96,6 @@ export function cryptoSetup(Crypto: any) {
         if ((e as Error).constructor.name !== "NoProviderError") {
             throw e;
         }
-        Crypto.get = () => TheCrypto;
+        Crypto.get = () => MockCrypto;
     }
 }

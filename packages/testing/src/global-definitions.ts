@@ -11,8 +11,8 @@ import Chai from "chai";
 import ChaiAsPromised from "chai-as-promised";
 import { browserSetup, extendApi, generalSetup } from "./mocha.js";
 import { bootSetup } from "./mocks/boot.js";
-import { cryptoSetup } from "./mocks/crypto.js";
-import { TheMockLogger, loggerSetup } from "./mocks/logging.js";
+import { cryptoSetup, MockCrypto } from "./mocks/crypto.js";
+import { loggerSetup, MockLogger } from "./mocks/logging.js";
 import { timeSetup } from "./mocks/time.js";
 
 Chai.config.truncateThreshold = 200;
@@ -28,7 +28,8 @@ Object.assign(globalThis, {
         cryptoSetup,
     },
 
-    MockLogger: TheMockLogger,
+    MockLogger,
+    MockCrypto,
 });
 
 if (globalThis === (globalThis as any).window) {

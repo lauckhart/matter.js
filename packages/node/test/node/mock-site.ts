@@ -45,7 +45,7 @@ export class MockSite {
         config.simulator = this.#simulator;
         config.networkIndex = this.#nextNetworkIndex++;
 
-        const node = await MockServerNode.createOnline(config);
+        const node = await MockCrypto.withRandom(() => MockServerNode.createOnline(config));
         this.#nodes.add(node);
 
         return node;

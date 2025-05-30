@@ -7,6 +7,7 @@
 import type Chai from "chai";
 import "chai-as-promised";
 import type { Boot } from "./mocks/boot.js";
+import type { MockCrypto } from "./mocks/crypto.js";
 import type { DiagnosticMessageLike, MockLogger } from "./mocks/logging.js";
 import type { MockTime } from "./mocks/time.js";
 import type { TestDescriptor, TestSuiteDescriptor } from "./test-descriptor.js";
@@ -20,6 +21,9 @@ declare global {
 
     // Expose API for controlling logging
     let MockLogger: MockLogger;
+
+    // Expose API for controlling crypto
+    let MockCrypto: MockCrypto;
 
     /**
      * If present, the following hooks are engaged by matter.js packages to enable mocking.  We use globals rather than
