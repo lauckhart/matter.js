@@ -44,7 +44,15 @@ export const MockCrypto = {
 
         // Without this data returned will be all zeros
         if (beRandom) {
-            globalThis.crypto.getRandomValues(bytes);
+            // We do not need a true random and it can hang without the event loop on node
+            let randomBits = 0;
+            for (let i = 0; i < bytes.length; i++) {
+                if (!(i % 6)) {
+                    randomBits = Math.random();
+                }
+                bytes[i] = randomBits >> ((i % 6) * 8);
+            }
+            //globalThis.crypto.getRandomValues(bytes);
         }
 
         return bytes;

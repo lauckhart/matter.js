@@ -61,7 +61,7 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         }
 
         if (this.#structure === undefined) {
-            this.#structure = this.#node.env.get(ClientNodeStructure);
+            this.#structure = new ClientNodeStructure(this.#node);
         }
 
         const store = this.#structure.storeFor(endpoint, type as ClusterBehavior.Type);

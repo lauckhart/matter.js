@@ -53,6 +53,8 @@ export namespace ClientBehavior {
         features: FeatureBitmap | number;
         attributes: AttributeId[];
         commands: CommandId[];
+        attributeNames: Record<AttributeId, string>;
+        commandNames: Record<CommandId, string>;
     }
 }
 

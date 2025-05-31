@@ -29,7 +29,7 @@ describe("ClientNode", () => {
         expect(discovered.length).equals(0);
     });
 
-    it.only("discovers", async () => {
+    it("discovers", async () => {
         await using site = new MockSite();
         const { controller, device } = await site.addUncommissionedPair();
 
@@ -41,9 +41,9 @@ describe("ClientNode", () => {
 
         expect(discovered.length).equals(1);
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
-    }).timeout(30 * 60 * 1000);
+    });
 
-    it("commissions", async () => {
+    it.only("commissions", async () => {
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();
 

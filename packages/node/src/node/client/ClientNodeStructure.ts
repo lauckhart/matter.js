@@ -24,11 +24,14 @@ import { ClientBehavior } from "./ClientBehavior.js";
  */
 export class ClientNodeStructure {
     #nodeStore: NodeStore;
-    #endpoints: Record<EndpointNumber, EndpointState> = {};
+    #endpoints: Record<EndpointNumber, EndpointStructure> = {};
 
     constructor(node: ClientNode) {
         this.#nodeStore = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
-        this.#endpointFor(0 as EndpointNumber);
+        this.#endpoints[node.number] = {
+            endpoint: node,
+            clusters: {},
+        };
     }
 
     /**
@@ -136,7 +139,7 @@ export class ClientNodeStructure {
     }
 
     #synchronizeDescriptor(
-        endpoint: EndpointState,
+        endpoint: EndpointStructure,
         { deviceTypeList, partsList, serverList }: Partial<DescriptorBehavior.State>,
     ) {
         if (deviceTypeList?.[0]) {
@@ -193,7 +196,7 @@ export class ClientNodeStructure {
         return endpoint;
     }
 
-    #clusterFor(endpoint: EndpointState, id: ClusterId) {
+    #clusterFor(endpoint: EndpointStructure, id: ClusterId) {
         let cluster = endpoint.clusters[id];
         if (cluster) {
             return cluster;
@@ -217,12 +220,12 @@ interface AttributeUpdates {
     values: Record<number, unknown>;
 }
 
-interface EndpointState {
+interface EndpointStructure {
     endpoint: Endpoint;
-    clusters: Record<ClusterId, ClusterState>;
+    clusters: Record<ClusterId, ClusterStructure>;
 }
 
-interface ClusterState extends Partial<ClientBehavior.ClusterShape> {
+interface ClusterStructure extends Partial<ClientBehavior.ClusterShape> {
     id: ClusterId;
     behavior?: ClusterBehavior.Type;
     store: Datasource.ExternallyMutableStore;

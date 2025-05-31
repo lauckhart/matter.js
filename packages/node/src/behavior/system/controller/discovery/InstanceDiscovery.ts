@@ -24,7 +24,7 @@ export class InstanceDiscovery extends Discovery<ClientNode> {
 
     protected onDiscovered(node: ClientNode) {
         this.#result = node;
-        this.cancel();
+        this.stop();
     }
 
     protected onComplete(): MaybePromise<ClientNode> {
