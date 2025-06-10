@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./ClientStoreService.js";
-export * from "./EndpointStoreService.js";
+export * from "./ClientStores.js";
+export * from "./EndpointStores.js";
 export * from "./NodeStore.js";
 export * from "./ServerNodeStore.js";

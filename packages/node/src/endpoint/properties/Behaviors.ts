@@ -29,7 +29,6 @@ import { FeatureSet } from "#model";
 import { ProtocolService } from "#node/server/ProtocolService.js";
 import { ClusterTypeProtocol, FabricManager, Val } from "#protocol";
 import { ClusterType, VoidSchema } from "#types";
-import { DescriptorServer } from "../../behaviors/descriptor/DescriptorServer.js";
 import type { Agent } from "../Agent.js";
 import type { Endpoint } from "../Endpoint.js";
 import { EndpointVariableService } from "../EndpointVariableService.js";
@@ -159,11 +158,6 @@ export class Behaviors {
         this.#endpoint = endpoint;
         this.#supported = type.behaviors;
         this.#options = options;
-
-        // DescriptorBehavior is unequivocally mandatory
-        if (!this.#supported.descriptor) {
-            this.#supported.descriptor = DescriptorServer;
-        }
 
         for (const id in this.#supported) {
             const type = this.#supported[id];

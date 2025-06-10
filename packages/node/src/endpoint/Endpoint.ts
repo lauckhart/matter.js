@@ -386,20 +386,19 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             return;
         }
         if (this.#owner) {
-            throw new ImplementationError("Endpoint owner cannot be reassigned");
-        }
-        if (owner === undefined) {
-            throw new ImplementationError("Endpoint owner must be defined");
+            this.#container.delete(this);
         }
 
         this.#owner = owner;
 
-        try {
-            this.#container.add(this);
-        } catch (e) {
-            this.#container.delete(this);
-            this.#owner = undefined;
-            throw e;
+        if (owner) {
+            try {
+                this.#container.add(this);
+            } catch (e) {
+                this.#container.delete(this);
+                this.#owner = undefined;
+                throw e;
+            }
         }
     }
 

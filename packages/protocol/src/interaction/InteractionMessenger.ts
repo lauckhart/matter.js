@@ -943,8 +943,6 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
 
     async sendReadRequest(readRequest: ReadRequest) {
         await this.send(MessageType.ReadRequest, this.#encodeReadingRequest(TlvReadRequest, readRequest));
-
-        return this.readAggregateDataReport();
     }
 
     #encodeReadingRequest<T extends TlvSchema<any>>(schema: T, request: TypeFromSchema<T>) {
@@ -1004,7 +1002,9 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
     async sendSubscribeRequest(subscribeRequest: SubscribeRequest) {
         const request = this.#encodeReadingRequest(TlvSubscribeRequest, subscribeRequest);
         await this.send(MessageType.SubscribeRequest, request);
+    }
 
+    async readAggregateSubscribeResponse() {
         const report = await this.readAggregateDataReport();
         const { subscriptionId } = report;
 

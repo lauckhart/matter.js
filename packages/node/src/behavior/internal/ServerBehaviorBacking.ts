@@ -7,7 +7,8 @@
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { GlobalAttributeState } from "#behavior/cluster/ClusterState.js";
 import { ValidatedElements } from "#behavior/cluster/ValidatedElements.js";
-import type { SupportedElements } from "#endpoint/index.js";
+import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
+import { DatasourceStore } from "#endpoint/storage/DatasourceStore.js";
 import { camelize } from "#general";
 import { FieldValue } from "#model";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
@@ -30,7 +31,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         if (!this.#store) {
             this.#store = this.#serverStore.endpointStores
                 .storeForEndpoint(this.endpoint)
-                .storeForBehavior(this.type.id);
+                .createStoreForBehavior(this.type.id, DatasourceStore);
         }
         return this.#store;
     }

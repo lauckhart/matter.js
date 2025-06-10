@@ -80,6 +80,8 @@ export interface Datasource<T extends StateType = StateType> extends Transaction
 export function Datasource<const T extends StateType = StateType>(options: Datasource.Options<T>): Datasource<T> {
     const internals = configure(options);
 
+    configureExternalChanges(internals);
+
     let readOnlyView: undefined | InstanceType<T>;
 
     return {
@@ -194,7 +196,7 @@ export namespace Datasource {
         /**
          * Optional storage for non-volatile values.
          */
-        store?: Store;
+        store?: Store | ExternallyMutableStore;
 
         /**
          * The object that owns the datasource.  This is passed as the "owner" parameter to {@link Val.Dynamic}.
@@ -218,6 +220,23 @@ export namespace Datasource {
          * undefined are deleted.
          */
         set(transaction: Transaction, values: Val.Struct): Promise<void>;
+    }
+
+    /**
+     * An extended {@link Store} that represents cached values that may mutate independently from the datasource.
+     */
+    export interface ExternallyMutableStore extends Store {
+        /**
+         * Apply changes from an external source.
+         *
+         * Uses the same semantics as {@link set}.
+         */
+        externalSet(values: Val.Struct): Promise<void>;
+
+        /**
+         * A listener that reacts to data changes.
+         */
+        externalChangeListener?: (changes: Val.Struct) => Promise<void>;
     }
 
     export interface ValueObserver {
@@ -257,6 +276,9 @@ interface CommitChanges {
     changeList: Set<string>;
 }
 
+/**
+ * Initialize the internal version of the datasource.
+ */
 function configure(options: Datasource.Options): Internals {
     const values = new options.type() as Val.Struct;
 
@@ -316,6 +338,79 @@ function configure(options: Datasource.Options): Internals {
                 }
             }
         },
+    };
+}
+
+/**
+ * If the store supports external mutation, add a listener to update internal state and notify observers.
+ *
+ * Currently ignores locks.  This is probably OK because locks should only be held if we're updating the source of
+ * truth.
+ */
+function configureExternalChanges(internals: Internals) {
+    const { store } = internals;
+    if (!store || !("externalSet" in store)) {
+        return;
+    }
+
+    store.externalChangeListener = async (potentialChanges: Val.Struct) => {
+        const { values } = internals;
+
+        let changes: undefined | Val.Struct;
+        let oldValues: undefined | Val.Struct;
+
+        for (const name in potentialChanges) {
+            if (isDeepEqual(values[name], potentialChanges[name])) {
+                continue;
+            }
+
+            if (changes === undefined) {
+                changes = { [name]: potentialChanges[name] };
+                oldValues = { [name]: values[name] };
+            } else {
+                changes[name] = potentialChanges[name];
+                oldValues![name] = values[name];
+            }
+        }
+
+        if (!changes) {
+            return;
+        }
+
+        internals.values = {
+            ...internals.values,
+            ...changes,
+        };
+
+        if (internals.sessions) {
+            for (const context of internals.sessions.values()) {
+                context.onChange(oldValues!);
+            }
+        }
+
+        const iterator = Object.keys(changes)[Symbol.iterator]();
+
+        return emitChanged();
+
+        function emitChanged(): MaybePromise<void> {
+            while (true) {
+                const n = iterator.next();
+                if (n.done) {
+                    return;
+                }
+
+                const name = n.value;
+                const event = internals.events?.[`${name}$Changed`];
+                if (!event?.isObserved) {
+                    continue;
+                }
+
+                const result = event.emit(changes![name], oldValues![name]);
+                if (MaybePromise.is(result)) {
+                    return Promise.resolve(result).then(emitChanged);
+                }
+            }
+        }
     };
 }
 

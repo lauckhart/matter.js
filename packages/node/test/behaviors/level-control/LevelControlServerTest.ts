@@ -171,7 +171,7 @@ describe("LevelControlServer", () => {
             return class extends LevelControlServer {};
         }
 
-        const node = await MockServerNode.createOnline({ device: endpoint });
+        const node = await MockServerNode.createOnline(undefined, { device: endpoint });
 
         await node.close();
     });
@@ -219,7 +219,7 @@ async function setup() {
 }
 
 async function initializeDimmableLight() {
-    const node = await MockServerNode.createOnline({
+    const node = await MockServerNode.createOnline(undefined, {
         device: undefined,
     });
 

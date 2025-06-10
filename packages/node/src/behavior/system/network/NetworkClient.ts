@@ -5,14 +5,11 @@
  */
 
 import { RootEndpoint } from "#endpoints/root";
-import { ImplementationError } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
 import { Node } from "#node/Node.js";
-import { Interactable, Subscribe } from "#protocol";
+import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Subscribe } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
-
-const DEFAULT_MIN_INTERVAL_FLOOR_SECONDS = 1;
 
 export class NetworkClient extends NetworkBehavior {
     declare internal: NetworkClient.Internal;
@@ -22,16 +19,9 @@ export class NetworkClient extends NetworkBehavior {
         this.reactTo(this.#node.lifecycle.online, this.startup);
     }
 
-    interact<T>(interactor: (client: Interactable) => Promise<T>) {
-        const { runtime } = this.internal;
-        if (!runtime) {
-            throw new ImplementationError("Cannot advertise offline server");
-        }
-        return runtime.interact(interactor);
-    }
-
     protected async startup() {
         const { startupSubscription } = this.state;
+
         if (startupSubscription === null) {
             return;
         }
@@ -79,13 +69,10 @@ export namespace NetworkClient {
         /**
          * A subscription installed when the node is first commissioned and when the service is restarted.
          *
-         * The default subscription is a wildcard for all attributes and events of the node.  You can set to undefined
-         * or filter the fields and values but this will prevent the relevant state values from loading.
+         * The default subscription is a wildcard for all attributes and of the node.  You can set to undefined or
+         * filter the fields and values but only values selected by this subscription will update automatically.
          *
-         * If this subscription does not include appropriate BasicInformation and Descriptor attributes then the
-         * endpoint structure may not initialize fully.
-         *
-         * Set to null to disable.
+         * Set to null to disable automatic subscription.
          */
         startupSubscription?: Subscribe | null;
     }

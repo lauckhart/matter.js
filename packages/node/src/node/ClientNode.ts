@@ -11,8 +11,9 @@ import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
-import { Interactable } from "@matter/protocol";
+import { Identity, Lifecycle, MaybePromise } from "#general";
+import { ClientInteraction, Interactable, Read, ReadResult } from "#protocol";
+import { Matter, MatterModel } from "@matter/model";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
@@ -24,6 +25,8 @@ import type { ServerNode } from "./ServerNode.js";
  * you invoke {@link commissioned}.
  */
 export class ClientNode extends Node<ClientNode.RootEndpoint> {
+    #matter: MatterModel;
+
     constructor(options: ClientNode.Options) {
         const opts = {
             ...options,
@@ -32,6 +35,34 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
+
+        this.env.set(Node, this);
+        this.env.set(ClientNode, this);
+
+        this.#matter = options.matter ?? Matter;
+    }
+
+    /**
+     * Model of Matter semantics understood by this node.
+     *
+     * Matter elements missing from this model will not support all functionality.
+     */
+    get matter() {
+        return this.#matter;
+    }
+
+    /**
+     * Update the node with attributes selected by a read.
+     */
+    async refresh(read: Read | ReadResult) {
+        if (!(Symbol.asyncIterator in read)) {
+            read = this.interaction.read(read);
+        }
+
+        for await (const chunk of read) {
+            // TODO
+            console.log(chunk);
+        }
     }
 
     override async initialize() {
@@ -85,13 +116,14 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     get interaction(): Interactable<ActionContext> {
-        // TODO
-        throw new NotImplementedError();
+        return this.env.get(ClientInteraction);
     }
 }
 
 export namespace ClientNode {
-    export interface Options extends Node.Options<RootEndpoint> {}
+    export interface Options extends Node.Options<RootEndpoint> {
+        matter?: MatterModel;
+    }
 
     export const RootEndpoint = Node.CommonRootEndpoint.with(CommissioningClient, NetworkClient);
 

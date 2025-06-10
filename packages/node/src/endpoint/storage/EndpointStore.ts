@@ -102,16 +102,17 @@ export class EndpointStore {
     }
 
     /**
-     * Obtain a {@link Datasource.Store} for a behavior.
+     * Create a {@link Datasource.Store} for a behavior.
      */
-    storeForBehavior(behaviorId: string): Datasource.Store {
+    createStoreForBehavior<T extends DatasourceStore.Type>(behaviorId: string, factory: T): ReturnType<T> {
         this.#construction.assert();
 
         const initialValues = this.initialValues[behaviorId];
         if (initialValues !== undefined) {
             delete this.initialValues[behaviorId];
         }
-        return DatasourceStore(this, behaviorId, initialValues);
+
+        return factory(this, behaviorId, initialValues) as ReturnType<T>;
     }
 
     childStoreFor(endpoint: Endpoint): EndpointStore {

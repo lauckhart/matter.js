@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BasicSet, createPromise, Logger, MatterError, UninitializedDependencyError } from "#general";
+import { Logger, MatterError } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
-import { ClientInteraction, ExchangeProvider, Interactable, PeerSet } from "#protocol";
+import { ClientInteraction, ExchangeProvider, PeerSet } from "#protocol";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { RemoteDescriptor } from "../commissioning/RemoteDescriptor.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
@@ -20,27 +20,10 @@ const logger = Logger.get("ClientNetworkRuntime");
  * Handles network functionality for {@link ClientNode}.
  */
 export class ClientNetworkRuntime extends NetworkRuntime {
-    #interactions = new BasicSet<Promise<unknown>>();
-    #client?: Interactable;
+    #client?: ClientInteraction;
 
     constructor(owner: ClientNode) {
         super(owner);
-    }
-
-    interact<T>(interactor: (client: Interactable) => Promise<T>) {
-        if (this.#client === undefined) {
-            throw new UninitializedDependencyError(`Node ${this.owner}`, `Interaction client unavailable`);
-        }
-
-        const { promise, resolver, rejecter } = createPromise<T>();
-
-        this.#interactions.add(promise);
-
-        interactor(this.#client)
-            .then(resolver, rejecter)
-            .finally(() => this.#interactions.delete(promise));
-
-        return promise;
     }
 
     protected async start() {
@@ -63,34 +46,14 @@ export class ClientNetworkRuntime extends NetworkRuntime {
     protected async stop() {
         await this.construction;
 
-        this.blockNewActivity();
-
-        // TODO - cancel client initialization if/when possible
-
         try {
-            // TODO - currently no need to close client.  Shut down exchange?
-            //this.#client?.close();
+            await this.#client?.close();
         } catch (e) {
             logger.error(`Error closing connection to ${this.owner}`, e);
-        }
-
-        if (this.#interactions.size) {
-            // TODO - cancel interactions if/when possible
-
-            await new Promise<void>(resolve => {
-                const deletionListener = () => {
-                    if (!this.#interactions.size) {
-                        this.#interactions.deleted.off(deletionListener);
-                        resolve();
-                    }
-                };
-
-                this.#interactions.deleted.on(deletionListener);
-            });
         }
     }
 
     blockNewActivity() {
-        this.#client = undefined;
+        this.owner.env.delete(ClientInteraction, this.#client);
     }
 }

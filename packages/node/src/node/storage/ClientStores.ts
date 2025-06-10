@@ -7,6 +7,7 @@
 import { Construction, MatterAggregateError, StorageContext } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
+import { EndpointStores } from "./EndpointStores.js";
 import { NodeStore } from "./NodeStore.js";
 
 const CLIENT_ID_PREFIX = "peer";
@@ -19,32 +20,10 @@ const CLIENT_ID_PREFIX = "peer";
  *
  * TODO - cleanup of storage for permanently removed endpoints
  */
-export abstract class ClientStoreService {
-    /**
-     * Allocate a stable local ID. for a peer
-     *
-     * The ID may be preassigned or we will assign using an incrementing sequential number.  The number is reserved for
-     * the life of this process or, if data is persisted, until erased.
-     */
-    abstract allocateId(): string;
-
-    /**
-     * Obtain the store for a single {@link ClientNode}.
-     *
-     * These stores are cached internally by ID.
-     */
-    abstract storeForNode(node: ClientNode): NodeStore;
-
-    /**
-     * List all nodes present.
-     */
-    abstract knownIds: string[];
-}
-
-export class ClientStoreFactory extends ClientStoreService {
+export class ClientStores {
     #storage: StorageContext;
     #stores = {} as Record<string, NodeStore>;
-    #construction: Construction<ClientStoreFactory>;
+    #construction: Construction<ClientStores>;
     #nextAutomaticId = 1;
 
     get construction() {
@@ -52,7 +31,6 @@ export class ClientStoreFactory extends ClientStoreService {
     }
 
     constructor(storage: StorageContext) {
-        super();
         this.#storage = storage;
         this.#construction = Construction(this);
         this.#construction.start();
@@ -73,9 +51,7 @@ export class ClientStoreFactory extends ClientStoreService {
                 }
             }
 
-            const store = new NodeStore(this.#storage.createContext(id));
-            this.#stores[id] = store;
-            store.construction.start();
+            this.#createNodeStore(id);
         }
 
         await MatterAggregateError.allSettled(
@@ -84,27 +60,37 @@ export class ClientStoreFactory extends ClientStoreService {
         );
     }
 
+    /**
+     * Allocate a stable local ID. for a peer
+     *
+     * The ID may be preassigned or we will assign using an incrementing sequential number.  The number is reserved for
+     * the life of this process or, if data is persisted, until erased.
+     */
     allocateId() {
         this.#construction.assert();
 
         return `${CLIENT_ID_PREFIX}${this.#nextAutomaticId++}`;
     }
 
+    /**
+     * Obtain the store for a single {@link ClientNode}.
+     *
+     * These stores are cached internally by ID.
+     */
     storeForNode(node: ClientNode): NodeStore {
         this.#construction.assert();
 
-        let store = this.#stores[node.id];
+        const store = this.#stores[node.id];
         if (store) {
             return store;
         }
 
-        store = new NodeStore(this.#storage.createContext(node.id));
-        store.construction.start();
-        this.#stores[node.id] = store;
-
-        return store;
+        return this.#createNodeStore(node.id);
     }
 
+    /**
+     * List all nodes present.
+     */
     get knownIds() {
         this.#construction.assert();
 
@@ -113,5 +99,12 @@ export class ClientStoreFactory extends ClientStoreService {
 
     async close() {
         await this.construction;
+    }
+
+    #createNodeStore(id: string) {
+        const store = new NodeStore(this.#storage.createContext(id), EndpointStores.Layout.Flat);
+        store.construction.start();
+        this.#stores[id] = store;
+        return store;
     }
 }

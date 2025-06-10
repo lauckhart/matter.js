@@ -35,6 +35,7 @@ import { OperationalCredentialsBehavior } from "../../../behaviors/operational-c
 import { Behavior } from "../../Behavior.js";
 import { ActionContext } from "../../context/ActionContext.js";
 import { NetworkServer } from "../network/NetworkServer.js";
+import { ProductDescriptionServer } from "../product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "../sessions/SessionsBehavior.js";
 
 const logger = Logger.get("Commissioning");
@@ -175,6 +176,12 @@ export class CommissioningServer extends Behavior {
      * The default implementation logs the QR code and credentials.
      */
     initiateCommissioning() {
+        if (!this.#hasAdvertisableDeviceType) {
+            throw new ImplementationError(
+                `Node ${this.endpoint} has no endpoints with advertisable device types; you must add an endpoint or set the device type`,
+            );
+        }
+
         const { passcode, discriminator } = this.state;
 
         const { qrPairingCode, manualPairingCode } = this.state.pairingCodes;
@@ -237,14 +244,33 @@ export class CommissioningServer extends Behavior {
     });
 
     #nodeOnline() {
-        if (this.state.enabled && !this.env.get(FabricManager).fabrics.length) {
-            this.initiateCommissioning();
+        // Skip auto commissioning if disabled
+        if (!this.state.enabled) {
+            return;
         }
+
+        // ...or if node is commissioned
+        if (this.env.get(FabricManager).fabrics.length) {
+            return;
+        }
+
+        // ...or the node has no advertisable device type
+        if (!this.#hasAdvertisableDeviceType) {
+            return;
+        }
+
+        this.initiateCommissioning();
     }
 
     #initializeNode() {
         this.state.commissioned = !!this.agent.get(OperationalCredentialsBehavior).state.commissionedFabrics;
         (this.endpoint.lifecycle as NodeLifecycle).initialized.emit(this.state.commissioned);
+    }
+
+    get #hasAdvertisableDeviceType() {
+        return (
+            this.agent.get(ProductDescriptionServer).state.deviceType === ProductDescriptionServer.UNKNOWN_DEVICE_TYPE
+        );
     }
 }
 

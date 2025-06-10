@@ -79,23 +79,8 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
     /**
      * Find a specific commissionable node and commission.
      */
-    commission(passcode: number, discriminator?: number): Promise<ClientNode>;
-
-    /**
-     * Find a specific commissionable node and commission.
-     */
-    commission(options: CommissioningDiscovery.Options): Promise<ClientNode>;
-
-    commission(optionsOrPasscode: CommissioningDiscovery.Options | number, discriminator?: number) {
-        if (typeof optionsOrPasscode !== "object") {
-            optionsOrPasscode = { passcode: optionsOrPasscode };
-        }
-
-        if (discriminator !== undefined) {
-            (optionsOrPasscode as { longDiscriminator: number }).longDiscriminator = discriminator;
-        }
-
-        return new CommissioningDiscovery(this.owner, optionsOrPasscode);
+    commission(options: CommissioningDiscovery.Options) {
+        return new CommissioningDiscovery(this.owner, options);
     }
 
     override get(id: string | PeerAddress) {
