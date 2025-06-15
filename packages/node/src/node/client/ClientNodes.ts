@@ -10,13 +10,15 @@ import { ContinuousDiscovery } from "#behavior/system/controller/discovery/Conti
 import { Discovery } from "#behavior/system/controller/discovery/Discovery.js";
 import { InstanceDiscovery } from "#behavior/system/controller/discovery/InstanceDiscovery.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
-import { CancelablePromise, Lifespan, Time } from "#general";
+import { CancelablePromise, Lifespan, Logger, Time } from "#general";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { PeerAddress, PeerAddressStore } from "#protocol";
 import { ClientNode } from "../ClientNode.js";
 import type { ServerNode } from "../ServerNode.js";
 import { ClientNodeFactory } from "./ClientNodeFactory.js";
 import { NodePeerAddressStore } from "./NodePeerAddressStore.js";
+
+const logger = Logger.get("ClientNodes");
 
 const DEFAULT_TTL = 900 * 1000;
 const EXPIRATION_INTERVAL = 60 * 1000;
@@ -27,7 +29,9 @@ const EXPIRATION_INTERVAL = 60 * 1000;
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
 export class ClientNodes extends EndpointContainer<ClientNode> {
-    #expirationInterval: CancelablePromise | undefined;
+    #expirationInterval?: CancelablePromise;
+    #expirationWorker?: Promise<void>;
+    #closed = false;
 
     constructor(owner: ServerNode) {
         super(owner);
@@ -109,7 +113,9 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
     }
 
     override async close() {
+        this.#closed = true;
         this.#cancelExpiration();
+        await this.#expirationWorker;
         await super.close();
     }
 
@@ -121,6 +127,10 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
     }
 
     #manageExpiration() {
+        if (this.#closed || this.#expirationWorker) {
+            return;
+        }
+
         if (this.#expirationInterval) {
             if (!this.size) {
                 this.#cancelExpiration();
@@ -132,14 +142,21 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
             return;
         }
 
-        this.#expirationInterval = Time.sleep("client node expiration", EXPIRATION_INTERVAL).then(async () => {
-            this.#expirationInterval = undefined;
-            try {
-                await this.#cullExpiredNodesAndAddresses();
-            } finally {
+        this.#expirationInterval = Time.sleep("client node expiration", EXPIRATION_INTERVAL).then(
+            this.#onExpirationIntervalElapsed.bind(this),
+        );
+    }
+
+    #onExpirationIntervalElapsed() {
+        this.#expirationInterval = undefined;
+        this.#expirationWorker = this.#cullExpiredNodesAndAddresses()
+            .catch(error => {
+                logger.error("Error culling expired nodes", error);
+            })
+            .finally(() => {
+                this.#expirationWorker = undefined;
                 this.#manageExpiration();
-            }
-        });
+            });
     }
 
     async #cullExpiredNodesAndAddresses() {

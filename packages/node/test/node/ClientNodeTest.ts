@@ -43,7 +43,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it.only("commissions", async () => {
+    it("commissions", async () => {
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();
 

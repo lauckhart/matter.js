@@ -30,7 +30,10 @@ export class ServerEndpointInitializer extends EndpointInitializer {
 
         this.#store.endpointStores.assignNumber(endpoint);
 
-        endpoint.behaviors.require(DescriptorServer);
+        // DescriptorServer is mandatory but we don't include it in generated device types
+        if (!(DescriptorServer.id in endpoint.behaviors.supported)) {
+            endpoint.behaviors.inject(DescriptorServer);
+        }
     }
 
     async eraseDescendant(endpoint: Endpoint) {

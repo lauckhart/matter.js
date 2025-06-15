@@ -260,10 +260,6 @@ export class Behaviors {
      * Add behavior support dynamically at runtime.  Typically called via {@link Agent.require}.
      */
     require<T extends Behavior.Type>(type: T, options?: Behavior.Options<T>) {
-        if (options) {
-            this.#options[type.id] = options;
-        }
-
         if (this.#supported[type.id]) {
             if (!this.has(type)) {
                 throw new ImplementationError(
@@ -273,12 +269,7 @@ export class Behaviors {
             return;
         }
 
-        if (this.#supported === this.#endpoint.type.behaviors) {
-            this.#supported = { ...this.#supported };
-        }
-        this.#supported[type.id] = type;
-
-        this.#augmentEndpoint(type);
+        this.inject(type, options);
 
         this.#endpoint.lifecycle.change(EndpointLifecycle.Change.ServersChanged);
 
@@ -424,6 +415,22 @@ export class Behaviors {
         };
 
         await OfflineContext.act(`close<${this.#endpoint}>`, this.#endpoint.env.get(NodeActivity), dispose);
+    }
+
+    /**
+     * Add support for an additional behavior statically.  Should only be invoked prior to initialization.
+     */
+    inject(type: Behavior.Type, options?: Behavior.Options) {
+        if (options) {
+            this.#options[type.id] = options;
+        }
+
+        if (this.#supported === this.#endpoint.type.behaviors) {
+            this.#supported = { ...this.#supported };
+        }
+        this.#supported[type.id] = type;
+
+        this.#augmentEndpoint(type);
     }
 
     /**
