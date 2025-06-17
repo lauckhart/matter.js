@@ -8,6 +8,13 @@ import { DiscoveryError } from "#behavior/system/controller/discovery/DiscoveryE
 import { MockSite } from "./mock-site.js";
 
 describe("ClientNode", () => {
+    before(() => {
+        MockTime.init();
+
+        // Required for crypto to succeed
+        MockTime.macrotasks = true;
+    });
+
     it("times out commissioning discovery", async () => {
         await using site = new MockSite();
         const controller = await site.addNode(undefined, { online: false, device: undefined });
@@ -49,5 +56,5 @@ describe("ClientNode", () => {
 
         expect(device.state.commissioning.commissioned).equals(true);
         expect(controller.nodes.size).equals(1);
-    }).timeout(30 * 60 * 1000);
+    }).timeout(1e9);
 });

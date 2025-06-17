@@ -83,8 +83,8 @@ export class Time {
     }
 
     static register(timer: Timer) {
-        timer.elapsed = Diagnostic.elapsed();
         registry.add(timer);
+        timer.elapsed = Diagnostic.elapsed();
     }
 
     static unregister(timer: Timer) {

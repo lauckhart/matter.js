@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { OnOffLightDevice } from "#devices/on-off-light";
 import {
     Crypto,
     Environment,
@@ -28,11 +29,6 @@ export class MockSite {
     #simulator = new NetworkSimulator();
     #nodes = new Set<ServerNode>();
     #nextNetworkIndex = 1;
-
-    constructor() {
-        // Date zero causes issue with cert generation
-        MockTime.reset(new Date("2010-01-01T00:00:00.000Z").getTime());
-    }
 
     addNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
         type?: T,
@@ -85,10 +81,11 @@ export class MockSite {
     async addUncommissionedPair() {
         const controller = await this.addNode(undefined, {
             online: false,
-            device: undefined,
             commissioning: { enabled: false },
         });
-        const device = await this.addNode();
+        const device = await this.addNode(undefined, {
+            device: OnOffLightDevice,
+        });
 
         return { controller, device };
     }
@@ -99,7 +96,7 @@ export class MockSite {
         const controllerCrypto = controller.env.get(Crypto) as MockCrypto;
         const deviceCrypto = device.env.get(Crypto) as MockCrypto;
 
-        // We require more random data
+        // We end up with session collisions without entropy so enable during pairing
         controllerCrypto.entropic = deviceCrypto.entropic = true;
 
         const { passcode, discriminator } = device.state.commissioning;

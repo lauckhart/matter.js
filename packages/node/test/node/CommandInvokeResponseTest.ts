@@ -85,7 +85,7 @@ describe("CommandInvokeResponse", () => {
     });
 
     it("invokes non-existing endpoint wildcard command", async () => {
-        const node = await MockServerNode.createOnline();
+        const node = await MockServerNode.createOnline(undefined, { device: undefined });
         const response = await invokeCmd(
             node,
             Invoke.Command({
@@ -99,7 +99,7 @@ describe("CommandInvokeResponse", () => {
     });
 
     it("invoke non existing concrete command", async () => {
-        const node = await MockServerNode.createOnline();
+        const node = await MockServerNode.createOnline(undefined, { device: undefined });
         const response = await invokeCmd(
             node,
             Invoke.Command({
