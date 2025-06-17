@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger, MatterError } from "#general";
+import { InternalError, Logger, MatterError } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import { ClientInteraction, ExchangeProvider, PeerSet } from "#protocol";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
@@ -28,12 +28,16 @@ export class ClientNetworkRuntime extends NetworkRuntime {
 
     protected async start() {
         if (!this.owner.lifecycle.isCommissioned) {
-            throw new UncommissionedError(`Node unavailable: ${this.owner} is uncommissioned`);
+            throw new UncommissionedError(`Cannot interact with ${this.owner} because it is uncommissioned`);
         }
 
         const commissioningState = this.owner.stateOf(CommissioningClient);
-        const address = this.owner.stateOf(CommissioningClient).peerAddress!;
+        const address = this.owner.stateOf(CommissioningClient).peerAddress;
         const peers = this.owner.env.get(PeerSet);
+
+        if (address === undefined) {
+            throw new InternalError(`Commissioned node ${this.owner} has no peer address`);
+        }
 
         const exchangeProvider = await peers.exchangeProviderFor(address, {
             discoveryData: RemoteDescriptor.fromLongForm(commissioningState),

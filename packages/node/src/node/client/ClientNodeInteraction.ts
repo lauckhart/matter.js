@@ -4,69 +4,51 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Environment, Environmental } from "#general";
-import { ClientNode } from "#node/ClientNode.js";
-import {
-    ClientInteraction,
-    ClientInteractionContext,
-    ExchangeProvider,
-    InteractionSession,
+import type { ActionContext } from "#behavior/context/ActionContext.js";
+import type { ClientNode } from "#node/ClientNode.js";
+import type {
+    Interactable,
     InvokeRequest,
     InvokeResult,
     Read,
     ReadResult,
     Subscribe,
     SubscribeResult,
-    SubscriptionClient,
     Write,
     WriteResult,
 } from "#protocol";
-import { InteractionQueue } from "../../../../protocol/src/peer/InteractionQueue.js";
-
-export interface ClientNodeInteractionContext extends ClientInteractionContext {
-    node: ClientNode;
-}
+import { ClientInteraction } from "#protocol";
 
 /**
  * A {@link ClientInteraction} that brings the node online before attempting interaction.
  */
-export class ClientNodeInteraction extends ClientInteraction {
+export class ClientNodeInteraction implements Interactable<ActionContext> {
     #node: ClientNode;
 
-    constructor(context: ClientNodeInteractionContext) {
-        super(context);
-
-        this.#node = context.node;
+    constructor(node: ClientNode) {
+        this.#node = node;
     }
 
-    override async *read(request: Read, session?: InteractionSession): ReadResult {
-        await this.#node.start();
-        yield* super.read(request, session);
+    async *read(request: Read, context?: ActionContext): ReadResult {
+        yield* (await this.#connect()).read(request, context);
     }
 
-    override async *subscribe(request: Subscribe, session?: InteractionSession): SubscribeResult {
-        await this.#node.start();
-        yield* super.subscribe(request, session);
+    async *subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
+        yield* (await this.#connect()).subscribe(request, context);
     }
 
-    override async write<T extends Write>(request: T, session?: InteractionSession): WriteResult<T> {
-        await this.#node.start();
-        return super.write(request, session);
+    async write<T extends Write>(request: T, context?: ActionContext): WriteResult<T> {
+        return (await this.#connect()).write(request, context);
     }
 
-    override async *invoke(request: InvokeRequest, session?: InteractionSession): InvokeResult {
-        await this.#node.start();
-        yield* super.invoke(request, session);
+    async *invoke(request: InvokeRequest, context?: ActionContext): InvokeResult {
+        yield* (await this.#connect()).invoke(request, context);
     }
 
-    static override [Environmental.create](env: Environment) {
-        const instance = new ClientNodeInteraction({
-            exchanges: env.get(ExchangeProvider),
-            subscriptions: env.get(SubscriptionClient),
-            queue: env.get(InteractionQueue),
-            node: env.get(ClientNode),
-        });
-        env.set(ClientInteraction, instance);
-        return instance;
+    async #connect(): Promise<ClientInteraction> {
+        if (!this.#node.lifecycle.isOnline) {
+            await this.#node.start();
+        }
+        return this.#node.env.get(ClientInteraction);
     }
 }

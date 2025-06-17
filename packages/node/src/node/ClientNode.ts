@@ -12,9 +12,10 @@ import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise } from "#general";
-import { ClientInteraction, Interactable, Read, ReadResult } from "#protocol";
+import { Interactable, Read, ReadResult } from "#protocol";
 import { Matter, MatterModel } from "@matter/model";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
+import { ClientNodeInteraction } from "./client/ClientNodeInteraction.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
 
@@ -26,6 +27,7 @@ import type { ServerNode } from "./ServerNode.js";
  */
 export class ClientNode extends Node<ClientNode.RootEndpoint> {
     #matter: MatterModel;
+    #interaction?: ClientNodeInteraction;
 
     constructor(options: ClientNode.Options) {
         const opts = {
@@ -116,7 +118,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     get interaction(): Interactable<ActionContext> {
-        return this.env.get(ClientInteraction);
+        if (this.#interaction === undefined) {
+            this.#interaction = new ClientNodeInteraction(this);
+        }
+
+        return this.#interaction;
     }
 }
 

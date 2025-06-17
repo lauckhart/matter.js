@@ -119,11 +119,14 @@ export class CommissioningClient extends Behavior {
         try {
             await commissioner.commission(commissioningOptions);
             this.state.peerAddress = address;
-        } finally {
-            if (this.state.peerAddress !== address) {
-                identityService.releaseNodeAddress(address);
-            }
+        } catch (e) {
+            identityService.releaseNodeAddress(address);
+            throw e;
         }
+
+        await this.context.transaction.commit();
+
+        (this.endpoint as ClientNode).lifecycle.commissioned.emit(this.context);
 
         await node.refresh(Read(Read.Attribute()));
 
