@@ -25,6 +25,11 @@ export function DatasourceCache(
 
             if (this.externalChangeListener) {
                 await this.externalChangeListener(values);
+            } else {
+                if (!this.initialValues) {
+                    this.initialValues = {};
+                }
+                Object.assign(this.initialValues, values);
             }
         },
 

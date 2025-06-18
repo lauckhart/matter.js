@@ -19,11 +19,12 @@ import {
     FabricManager,
     LocatedNodeCommissioningOptions,
     PeerAddress,
-    Read,
     SessionParameters,
+    Subscribe,
 } from "#protocol";
 import { DeviceTypeId, DiscoveryCapabilitiesBitmap, NodeId, TypeFromPartialBitSchema, VendorId } from "#types";
 import { ControllerBehavior } from "../controller/ControllerBehavior.js";
+import { NetworkClient } from "../network/NetworkClient.js";
 import { RemoteDescriptor } from "./RemoteDescriptor.js";
 
 /**
@@ -75,7 +76,7 @@ export class CommissioningClient extends Behavior {
         }
 
         // Ensure controller is initialized
-        await this.endpoint.owner?.act(agent => agent.load(ControllerBehavior));
+        await node.owner?.act(agent => agent.load(ControllerBehavior));
 
         // Obtain the fabric we will commission into
         const fabricAuthority = options.fabricAuthority || this.env.get(FabricAuthority);
@@ -99,9 +100,9 @@ export class CommissioningClient extends Behavior {
             throw new ImplementationError(`Cannot commission ${node} because the node has not been located`);
         }
 
-        const commissioner = this.endpoint.env.get(ControllerCommissioner);
+        const commissioner = node.env.get(ControllerCommissioner);
 
-        const identityService = this.endpoint.env.get(IdentityService);
+        const identityService = node.env.get(IdentityService);
         const address = identityService.assignNodeAddress(node, fabric.fabricIndex, options.nodeId);
 
         const commissioningOptions: LocatedNodeCommissioningOptions = {
@@ -126,9 +127,12 @@ export class CommissioningClient extends Behavior {
 
         await this.context.transaction.commit();
 
-        (this.endpoint as ClientNode).lifecycle.commissioned.emit(this.context);
+        const network = this.agent.get(NetworkClient);
+        network.state.startupSubscription = options.startupSubscription;
 
-        await node.refresh(Read(Read.Attribute()));
+        node.lifecycle.commissioned.emit(this.context);
+
+        await node.start();
 
         return node;
     }
@@ -378,6 +382,6 @@ export namespace CommissioningClient {
          * Note that certain clusters like Descriptor and Basic Information contain critical operational data. If your
          * read omits them then the node will only be partially functional once initialized.
          */
-        initialRead?: Read;
+        startupSubscription?: Subscribe | null;
     }
 }

@@ -47,7 +47,12 @@ export function introspectionInstanceOf(type: Behavior.Type) {
 /**
  * This is the actual implementation of ClusterBehavior.for().  The result must match {@link ClusterBehavior.Type}<C>.
  */
-export function createType<const C extends ClusterType>(cluster: C, base: Behavior.Type, schema?: Schema) {
+export function createType<const C extends ClusterType>(
+    cluster: C,
+    base: Behavior.Type,
+    schema?: Schema,
+    name?: string,
+) {
     if (schema === undefined) {
         if (base.schema) {
             schema = base.schema;
@@ -59,16 +64,19 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
 
     schema = syncFeatures(schema, cluster);
 
-    const cached = ClusterBehaviorCache.get(cluster, base, schema);
-    if (cached) {
-        return cached;
-    }
+    // If we are provided a name, the caller is creating a specialized version of the behavior.  Disable caching and
+    // do not create a name automatically
+    if (name === undefined) {
+        const cached = ClusterBehaviorCache.get(cluster, base, schema);
+        if (cached) {
+            return cached;
+        }
 
-    let name;
-    if (base.name.startsWith(cluster.name)) {
-        name = base.name;
-    } else {
-        name = `${cluster.name}Behavior`;
+        if (base.name.startsWith(cluster.name)) {
+            name = base.name;
+        } else {
+            name = `${cluster.name}Behavior`;
+        }
     }
 
     // Mutation of schema will almost certainly result in logic errors so ensure that can't happen
@@ -109,7 +117,9 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
         instanceDescriptors: createDefaultCommandDescriptors(cluster, base),
     }) as ClusterBehavior.Type;
 
-    ClusterBehaviorCache.set(cluster, base, schema, type);
+    if (name === undefined) {
+        ClusterBehaviorCache.set(cluster, base, schema, type);
+    }
 
     return type;
 }

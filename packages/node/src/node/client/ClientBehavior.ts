@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { camelize } from "#general";
+import { camelize, capitalize, ImportError, InternalError, MaybePromise } from "#general";
+import { loader } from "#loader/loader.js";
 import { AttributeModel, ClusterModel, CommandModel, FeatureBitmap, Matter } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
@@ -13,11 +15,12 @@ import { Invoke } from "#protocol";
 import {
     Attribute,
     AttributeId,
+    ClusterComposer,
     ClusterId,
-    ClusterRegistry,
     ClusterType,
     Command,
     CommandId,
+    MutableCluster,
     Status,
     StatusResponseError,
     TlvAny,
@@ -31,7 +34,7 @@ const cache = {} as Record<string, ClusterBehavior.Type>;
 /**
  * Obtain a {@link ClusterBehavior.Type} for a remote cluster.
  */
-export function ClientBehavior(shape: ClientBehavior.ClusterShape): ClusterBehavior.Type {
+export function ClientBehavior(shape: ClientBehavior.ClusterShape): MaybePromise<ClusterBehavior.Type> {
     const analysis = ShapeAnalysis(shape);
 
     const fingerprint = createFingerprint(analysis);
@@ -40,10 +43,26 @@ export function ClientBehavior(shape: ClientBehavior.ClusterShape): ClusterBehav
         return type;
     }
 
-    type = generateType(analysis);
-    cache[fingerprint] = type;
+    try {
+        const loaded = loader.behavior(analysis.schema.name);
+        if (MaybePromise.is(loaded)) {
+            return loaded.then(finalize, loadError);
+        }
+        return finalize(loaded);
+    } catch (e) {
+        return loadError(e);
+    }
 
-    return type;
+    function finalize(baseType: Behavior.Type) {
+        type = generateType(analysis, baseType);
+        cache[fingerprint] = type;
+        return type;
+    }
+
+    function loadError(e: unknown) {
+        ImportError.accept(e);
+        return finalize(ClusterBehavior);
+    }
 }
 
 export namespace ClientBehavior {
@@ -58,22 +77,48 @@ export namespace ClientBehavior {
     }
 }
 
-function generateType(analysis: ShapeAnalysis): ClusterBehavior.Type {
+function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): ClusterBehavior.Type {
+    // Ensure the input type is a ClusterBehavior
+    if (!ClusterBehavior.is(baseType)) {
+        throw new InternalError(`Base Behavior for cluster ${analysis.schema.name} is not a ClusterBehavior`);
+    }
+
     let { schema } = analysis;
     const { extraAttrs, extraCommands } = analysis;
 
-    let cluster = ClusterRegistry.get(analysis.schema.id) as ClusterType;
+    // Obtain a ClusterType.  This provides TLV for known elements
+    let { cluster } = baseType;
     if (!cluster) {
-        cluster = ClusterType({ id: schema.id, name: schema.name, revision: schema.revision });
+        cluster = MutableCluster({ id: schema.id, name: schema.name, revision: schema.revision });
     }
 
+    // Identify known features the device supports
+    let supportedFeatures = analysis.shape.features;
+    if (typeof supportedFeatures === "number") {
+        if (supportedFeatures) {
+            supportedFeatures = cluster.attributes.featureMap.schema.decode(supportedFeatures as any) as FeatureBitmap;
+        } else {
+            supportedFeatures = {};
+        }
+    }
+
+    // If there are features supported, customize the ClusterModel and ClusterType accordingly
+    const featureNames = Object.entries(supportedFeatures)
+        .filter(([, v]) => v)
+        .map(([k]) => k);
+    if (featureNames.length) {
+        // Update ClusterModel
+        schema = schema.clone();
+        schema.supportedFeatures = featureNames;
+
+        // Update the cluster.  Note that we do not validate feature combinations.  What the device sends we work with
+        cluster = new ClusterComposer(cluster, true).compose(featureNames.map(capitalize));
+    }
+
+    // If the schema does not match what the device actually returned, further augment both the ClusterModel and
+    // ClusterType with unknown attributes and/or commands
     if (schema.revision !== analysis.shape.revision || extraAttrs.size || extraCommands.size) {
         schema = schema.clone();
-
-        let supportedFeatures = analysis.shape.features;
-        if (typeof supportedFeatures === "number") {
-            supportedFeatures = cluster.attributes.featureMap.schema.decode(supportedFeatures as any) as FeatureBitmap;
-        }
 
         cluster = {
             ...cluster,
@@ -97,8 +142,10 @@ function generateType(analysis: ShapeAnalysis): ClusterBehavior.Type {
         }
     }
 
-    const type = ClusterBehavior.for(cluster, schema);
+    // Specialize for the specific cluster and schema
+    const type = baseType.for(cluster, schema, `${schema.name}Client`);
 
+    // Add command implementations
     for (const id of analysis.shape.commands) {
         const name = schema.get(CommandModel, id)?.name ?? createUnknownName("command", id);
         const command = cluster.commands[name];

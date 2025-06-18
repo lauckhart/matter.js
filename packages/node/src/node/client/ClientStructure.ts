@@ -6,7 +6,6 @@
 
 import { ClusterBehavior } from "#behavior/index.js";
 import type { Datasource } from "#behavior/state/managed/Datasource.js";
-import { DescriptorBehavior } from "#behaviors/descriptor";
 import { DescriptorCluster } from "#clusters/descriptor";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { DatasourceCache } from "#endpoint/storage/DatasourceCache.js";
@@ -15,14 +14,19 @@ import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type F
 import type { ClientNode } from "#node/ClientNode.js";
 import type { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import type { ReadResult } from "#protocol";
-import type { AttributeId, ClusterId, CommandId, EndpointNumber } from "#types";
+import type { ReadResult, SubscribeResult } from "#protocol";
+import type { AttributeId, ClusterId, CommandId, DeviceTypeId, EndpointNumber } from "#types";
+import { MaybePromise } from "@matter/general";
 import { ClientBehavior } from "./ClientBehavior.js";
+
+const DEVICE_TYPE_LIST_ATTR_ID = DescriptorCluster.attributes.deviceTypeList.id;
+const SERVER_LIST_ATTR_ID = DescriptorCluster.attributes.serverList.id;
+const PARTS_LIST_ATTR_ID = DescriptorCluster.attributes.partsList.id;
 
 /**
  * Manages endpoint and behavior structure for a single client node.
  */
-export class ClientNodeStructure {
+export class ClientStructure {
     #nodeStore: NodeStore;
     #endpoints: Record<EndpointNumber, EndpointStructure> = {};
 
@@ -47,10 +51,15 @@ export class ClientNodeStructure {
     /**
      * Update the node structure by applying attribute changes.
      */
-    async mutate(changes: ReadResult) {
+    async *mutate(changes: ReadResult | SubscribeResult) {
         let currentUpdates: AttributeUpdates | undefined;
 
         for await (const chunk of changes) {
+            if ("subscriptionId" in chunk) {
+                // Skip subscribe response
+                continue;
+            }
+
             for (const change of chunk) {
                 if (change.kind !== "attr-value") {
                     continue;
@@ -78,6 +87,8 @@ export class ClientNodeStructure {
                     currentUpdates.values[attributeId] = change.value;
                 }
             }
+
+            yield chunk;
         }
 
         if (currentUpdates) {
@@ -90,10 +101,10 @@ export class ClientNodeStructure {
      *
      * This is invoked in a batch when we've collected all sequential values for current endpoint/cluster.
      */
-    async #updateCluster(values: AttributeUpdates) {
-        const endpoint = this.#endpointFor(values.endpointNo);
-        const cluster = this.#clusterFor(endpoint, values.clusterId);
-        await cluster.store.externalSet(values.values);
+    async #updateCluster(attrs: AttributeUpdates) {
+        const endpoint = this.#endpointFor(attrs.endpointNo);
+        const cluster = this.#clusterFor(endpoint, attrs.clusterId);
+        await cluster.store.externalSet(attrs.values);
 
         if (cluster.behavior === undefined) {
             const {
@@ -101,7 +112,7 @@ export class ClientNodeStructure {
                 [FeatureMap.id]: features,
                 [AttributeList.id]: attributes,
                 [AcceptedCommandList.id]: commands,
-            } = values.values;
+            } = attrs.values;
 
             if (typeof clusterRevision === "number") {
                 cluster.revision = clusterRevision;
@@ -126,37 +137,51 @@ export class ClientNodeStructure {
                 cluster.commands !== undefined
             ) {
                 const behavior = ClientBehavior(cluster as ClientBehavior.ClusterShape);
-                cluster.behavior = behavior;
-                endpoint.endpoint.behaviors.require(behavior);
+                if (MaybePromise.is(behavior)) {
+                    cluster.behavior = await behavior;
+                } else {
+                    cluster.behavior = behavior;
+                }
+                endpoint.endpoint.behaviors.require(cluster.behavior);
             }
         }
 
-        switch (values.clusterId) {
+        switch (attrs.clusterId) {
             case DescriptorCluster.id:
-                this.#synchronizeDescriptor(endpoint, values as Partial<DescriptorBehavior.State>);
+                this.#synchronizeDescriptor(endpoint, attrs.values);
                 break;
         }
     }
 
-    #synchronizeDescriptor(
-        endpoint: EndpointStructure,
-        { deviceTypeList, partsList, serverList }: Partial<DescriptorBehavior.State>,
-    ) {
-        if (deviceTypeList?.[0]) {
+    #synchronizeDescriptor(endpoint: EndpointStructure, attrs: Record<number, unknown>) {
+        const deviceTypeList = attrs[DEVICE_TYPE_LIST_ATTR_ID];
+        if (Array.isArray(deviceTypeList) && deviceTypeList?.[0]) {
             const [{ deviceType, revision }] = deviceTypeList;
-            endpoint.endpoint.type.deviceType = deviceType;
-            endpoint.endpoint.type.deviceRevision = revision;
-        }
-
-        if (serverList) {
-            for (const cluster of serverList) {
-                this.#clusterFor(endpoint, cluster);
+            if (typeof deviceType === "number") {
+                endpoint.endpoint.type.deviceType = deviceType as DeviceTypeId;
+            }
+            if (typeof revision === "number") {
+                endpoint.endpoint.type.deviceRevision = revision;
             }
         }
 
-        if (partsList) {
+        const serverList = attrs[SERVER_LIST_ATTR_ID];
+        if (Array.isArray(serverList)) {
+            for (const cluster of serverList) {
+                if (typeof cluster === "number") {
+                    this.#clusterFor(endpoint, cluster as ClusterId);
+                }
+            }
+        }
+
+        const partsList = attrs[PARTS_LIST_ATTR_ID];
+        if (Array.isArray(partsList)) {
             for (const partNo of partsList) {
-                const part = this.#endpointFor(partNo);
+                if (typeof partNo !== "number") {
+                    continue;
+                }
+
+                const part = this.#endpointFor(partNo as EndpointNumber);
 
                 let isAlreadyDescendant = false;
                 for (let owner = part.endpoint.owner; owner; owner = owner.owner) {
@@ -182,13 +207,15 @@ export class ClientNodeStructure {
         }
 
         endpoint = {
-            endpoint: new Endpoint(
-                EndpointType({
+            endpoint: new Endpoint({
+                id: `ep${number}`,
+                number,
+                type: EndpointType({
                     name: "ClientEndpoint",
                     deviceType: -1,
                     deviceRevision: -1,
                 }),
-            ),
+            }),
             clusters: {},
         };
         this.#endpoints[number] = endpoint;

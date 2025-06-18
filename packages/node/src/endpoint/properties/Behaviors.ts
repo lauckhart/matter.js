@@ -646,16 +646,10 @@ export class Behaviors {
      * Updates endpoint "state" and "events" properties to include properties for a supported behavior.
      */
     #augmentEndpoint(type: Behavior.Type) {
-        const stateDescriptor = {
-            get: () => {
-                return this.#backingFor(type).stateView;
-            },
-
-            enumerable: true,
-        };
-        Object.defineProperty(this.#endpoint.state, type.id, stateDescriptor);
+        const get = () => this.#backingFor(type).stateView;
+        Object.defineProperty(this.#endpoint.state, type.id, { get, enumerable: true });
         if (type.schema?.id !== undefined) {
-            Object.defineProperty(this.#endpoint.state, type.schema.id, stateDescriptor);
+            Object.defineProperty(this.#endpoint.state, type.schema.id, { get });
         }
 
         let events: undefined | EventEmitter;

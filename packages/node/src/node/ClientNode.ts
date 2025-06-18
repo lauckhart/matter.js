@@ -12,7 +12,7 @@ import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise } from "#general";
-import { Interactable, Read, ReadResult } from "#protocol";
+import { Interactable } from "#protocol";
 import { Matter, MatterModel } from "@matter/model";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { ClientNodeInteraction } from "./client/ClientNodeInteraction.js";
@@ -51,20 +51,6 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
      */
     get matter() {
         return this.#matter;
-    }
-
-    /**
-     * Update the node with attributes selected by a read.
-     */
-    async refresh(read: Read | ReadResult) {
-        if (!(Symbol.asyncIterator in read)) {
-            read = this.interaction.read(read);
-        }
-
-        for await (const chunk of read) {
-            // TODO
-            console.log(chunk);
-        }
     }
 
     override async initialize() {

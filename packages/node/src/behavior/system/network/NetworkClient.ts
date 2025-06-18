@@ -7,7 +7,7 @@
 import { RootEndpoint } from "#endpoints/root";
 import { DatatypeModel, FieldElement } from "#model";
 import { Node } from "#node/Node.js";
-import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Read, Subscribe } from "#protocol";
+import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Subscribe } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
 
@@ -31,12 +31,15 @@ export class NetworkClient extends NetworkBehavior {
             fabricFilter: true,
             minIntervalFloorSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
             maxIntervalCeilingSeconds: 0,
-            attributes: [Read.Attribute()],
+            attributes: [{}],
             ...startupSubscription,
         });
 
-        // TODO - subscription management & population of state
-        this.#node.interaction.subscribe(subscribe);
+        // First, read.  This allows us to retrieve attributes that do not support subscription
+        for await (const _chunk of this.#node.interaction.read(subscribe));
+
+        // TODO - subscription management
+        //this.#node.interaction.subscribe(subscribe);
     }
 
     get #node() {

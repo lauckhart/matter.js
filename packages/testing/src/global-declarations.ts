@@ -12,7 +12,7 @@ import type { TestDescriptor, TestSuiteDescriptor } from "./test-descriptor.js";
 
 declare global {
     // Expose Chai globally
-    const expect: typeof Chai.expect;
+    const expect: typeof Chai.expect & { IGNORE: symbol };
 
     // Expose API for controlling time
     let MockTime: MockTime;

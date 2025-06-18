@@ -30,6 +30,8 @@ Object.assign(globalThis, {
     MockLogger,
 });
 
+expect.IGNORE = Symbol.for("matter-test:ignore");
+
 if (globalThis === (globalThis as any).window) {
     extendApi(Mocha);
     generalSetup(mocha);
@@ -39,3 +41,14 @@ if (globalThis === (globalThis as any).window) {
 function interrupt() {
     // Interrupt handling is platform dependent
 }
+
+(Chai.config as any).deepEqual = (expected: unknown, actual: unknown) => {
+    return (Chai.util as any).eql(expected, actual, {
+        comparator(expected: unknown) {
+            if (expected === expect.IGNORE) {
+                return true;
+            }
+            return null;
+        },
+    });
+};

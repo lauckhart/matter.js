@@ -14,12 +14,13 @@ import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js
 import type { ClientNode } from "#node/ClientNode.js";
 import { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import { ClientNodeStructure } from "./ClientNodeStructure.js";
+import { ReadResult, SubscribeResult } from "#protocol";
+import { ClientStructure } from "./ClientStructure.js";
 
 export class ClientEndpointInitializer extends EndpointInitializer {
     #node: ClientNode;
     #store: NodeStore;
-    #structure?: ClientNodeStructure;
+    #structure?: ClientStructure;
 
     constructor(node: ClientNode) {
         super();
@@ -45,6 +46,10 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         // nothing to do
     }
 
+    mutate(changes: ReadResult | SubscribeResult) {
+        return this.#struct.mutate(changes);
+    }
+
     get ready() {
         return this.#store.construction.ready;
     }
@@ -60,11 +65,14 @@ export class ClientEndpointInitializer extends EndpointInitializer {
             return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
         }
 
-        if (this.#structure === undefined) {
-            this.#structure = new ClientNodeStructure(this.#node);
-        }
-
-        const store = this.#structure.storeFor(endpoint, type as ClusterBehavior.Type);
+        const store = this.#struct.storeFor(endpoint, type as ClusterBehavior.Type);
         return new ClientBehaviorBacking(endpoint, type, store, endpoint.behaviors.optionsFor(type));
+    }
+
+    get #struct() {
+        if (this.#structure === undefined) {
+            this.#structure = new ClientStructure(this.#node);
+        }
+        return this.#structure;
     }
 }

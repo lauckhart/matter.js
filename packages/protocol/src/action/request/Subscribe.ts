@@ -20,8 +20,8 @@ export interface Subscribe extends Read {
     maxIntervalCeilingSeconds?: number;
 }
 
-export function Subscribe(options: Subscribe.Options): Subscribe {
-    const subscribe = Read(options) as unknown as Subscribe;
+export function Subscribe(options: Subscribe.Options, ...selectors: Read.Selector[]): Subscribe {
+    const subscribe = Read(options, ...selectors) as unknown as Subscribe;
 
     const { keepSubscriptions, minIntervalFloorSeconds, maxIntervalCeilingSeconds } = options;
     subscribe.keepSubscriptions = keepSubscriptions ?? true;

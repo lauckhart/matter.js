@@ -319,7 +319,7 @@ function configure(options: Datasource.Options): Internals {
         ...options,
         events,
         version: options.crypto.randomUint32,
-        values: values,
+        values,
         featuresKey,
 
         interactionObserver(session?: ValueSupervisor.Session) {
