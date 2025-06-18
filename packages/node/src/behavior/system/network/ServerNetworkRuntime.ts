@@ -277,6 +277,9 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         env.set(InteractionServer, interactionServer);
         env.get(ExchangeManager).addProtocolHandler(interactionServer);
 
+        // Ensure SecureChannelProtocol is installed
+        env.get(SecureChannelProtocol);
+
         await this.owner.act("load-sessions", agent => agent.load(SessionsBehavior));
 
         // Monitor CommissioningServer to end "uncommissioned" mode when we are commissioned

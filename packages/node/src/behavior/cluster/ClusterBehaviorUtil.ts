@@ -64,9 +64,11 @@ export function createType<const C extends ClusterType>(
 
     schema = syncFeatures(schema, cluster);
 
+    const useCache = name === undefined;
+
     // If we are provided a name, the caller is creating a specialized version of the behavior.  Disable caching and
     // do not create a name automatically
-    if (name === undefined) {
+    if (useCache) {
         const cached = ClusterBehaviorCache.get(cluster, base, schema);
         if (cached) {
             return cached;
@@ -117,7 +119,7 @@ export function createType<const C extends ClusterType>(
         instanceDescriptors: createDefaultCommandDescriptors(cluster, base),
     }) as ClusterBehavior.Type;
 
-    if (name === undefined) {
+    if (useCache) {
         ClusterBehaviorCache.set(cluster, base, schema, type);
     }
 

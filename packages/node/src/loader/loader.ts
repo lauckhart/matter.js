@@ -57,6 +57,8 @@ export namespace loader {
             `../endpoints/${decamelize(name)}.js`,
         ) as MaybePromise<EndpointType>;
     }
+
+    export const registry = {} as Record<string, Record<string, {} | undefined> | undefined>;
 }
 
 function doLoad(description: string, exportName: string, path: string) {
