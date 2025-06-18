@@ -12,7 +12,22 @@ import type { TestDescriptor, TestSuiteDescriptor } from "./test-descriptor.js";
 
 declare global {
     // Expose Chai globally
-    const expect: typeof Chai.expect & { IGNORE: symbol };
+    const expect: typeof Chai.expect & {
+        // Ignores for purposes of deep comparison
+        IGNORE: symbol;
+
+        // Matches any bigint for purposes of deep comparison
+        BIGINT: symbol;
+
+        // Matches any byte array for purposes of deep comparison
+        BYTES: symbol;
+
+        // Matches any number for purposes of deep comparison
+        NUMBER: symbol;
+
+        // Matches any string for purposes of deep comparison
+        STRING: symbol;
+    };
 
     // Expose API for controlling time
     let MockTime: MockTime;

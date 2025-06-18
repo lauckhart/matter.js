@@ -30,7 +30,11 @@ Object.assign(globalThis, {
     MockLogger,
 });
 
-expect.IGNORE = Symbol.for("matter-test:ignore");
+expect.IGNORE = Symbol.for("matter:expect-ignore");
+expect.BIGINT = Symbol.for("matter:expect-bigint");
+expect.BYTES = Symbol.for("matter:expect-bytes");
+expect.NUMBER = Symbol.for("matter:expect-number");
+expect.STRING = Symbol.for("matter:expect-string");
 
 if (globalThis === (globalThis as any).window) {
     extendApi(Mocha);
@@ -44,9 +48,22 @@ function interrupt() {
 
 (Chai.config as any).deepEqual = (expected: unknown, actual: unknown) => {
     return (Chai.util as any).eql(expected, actual, {
-        comparator(expected: unknown) {
-            if (expected === expect.IGNORE) {
-                return true;
+        comparator(expected: unknown, actual: unknown) {
+            switch (expected) {
+                case expect.IGNORE:
+                    return true;
+
+                case expect.BIGINT:
+                    return typeof actual === "bigint";
+
+                case expect.NUMBER:
+                    return typeof actual === "number";
+
+                case expect.STRING:
+                    return typeof actual === "string";
+
+                case expect.BYTES:
+                    return actual instanceof Uint8Array;
             }
             return null;
         },

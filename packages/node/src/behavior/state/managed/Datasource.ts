@@ -202,6 +202,14 @@ export namespace Datasource {
          * The object that owns the datasource.  This is passed as the "owner" parameter to {@link Val.Dynamic}.
          */
         owner?: any;
+
+        /**
+         * The internal key used for storage of attributes and struct properties.  Defaults to name.  If set to ID but
+         * the schema has no ID, uses name instead.
+         *
+         * For structs we also support the other key (id or name) for input, but always write using the preferred key.
+         */
+        primaryKey?: "name" | "id";
     }
 
     /**
@@ -258,6 +266,7 @@ interface SessionContext {
 interface Internals extends Datasource.Options {
     values: Val.Struct;
     version: number;
+    primaryKey: "name" | "id";
     sessions?: Map<ValueSupervisor.Session, SessionContext>;
     featuresKey?: string;
     interactionObserver(session?: AccessControl.Session): MaybePromise<void>;
@@ -317,6 +326,7 @@ function configure(options: Datasource.Options): Internals {
 
     return {
         ...options,
+        primaryKey: options.primaryKey === "id" ? "id" : "name",
         events,
         version: options.crypto.randomUint32,
         values,
@@ -457,6 +467,8 @@ function createReference(resource: Transaction.Resource, internals: Internals, s
 
     // This is the actual reference
     const reference: Val.Reference<Val.Struct> = {
+        primaryKey: internals.primaryKey,
+
         get original() {
             return internals.values;
         },

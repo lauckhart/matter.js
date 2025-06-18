@@ -62,4 +62,10 @@ export class ClientBehaviorBacking extends BehaviorBacking {
             events: new Set(),
         });
     }
+
+    protected override get datasourceOptions() {
+        const options = super.datasourceOptions;
+        options.primaryKey = "id";
+        return options;
+    }
 }
