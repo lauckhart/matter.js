@@ -96,6 +96,12 @@ export class EndpointStores {
         }
     }
 
+    [Symbol.iterator]() {
+        const list = Array<EndpointStore>();
+        this.#root?.visit(list.push.bind(list));
+        return list[Symbol.iterator]();
+    }
+
     /**
      * Allocate an endpoint number.
      *

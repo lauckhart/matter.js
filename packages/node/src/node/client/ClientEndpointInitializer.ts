@@ -11,6 +11,7 @@ import { ClientBehaviorBacking } from "#behavior/internal/ClientBehaviorBacking.
 import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
+import { InternalError } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
@@ -26,6 +27,17 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         super();
         this.#node = node;
         this.#store = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
+    }
+
+    /**
+     * Populate the initial endpoint structure from cache.
+     */
+    loadCache() {
+        if (this.#structure === undefined) {
+            throw new InternalError("Cache load attempted without initialized structure");
+        }
+
+        return this.#structure.loadCache();
     }
 
     async eraseDescendant(endpoint: Endpoint) {

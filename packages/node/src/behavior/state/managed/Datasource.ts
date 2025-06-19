@@ -245,6 +245,11 @@ export namespace Datasource {
          * A listener that reacts to data changes.
          */
         externalChangeListener?: (changes: Val.Struct) => Promise<void>;
+
+        /**
+         * The current version of the data.
+         */
+        version: number;
     }
 
     export interface ValueObserver {
@@ -266,6 +271,7 @@ interface SessionContext {
 interface Internals extends Datasource.Options {
     values: Val.Struct;
     version: number;
+    manageVersion: boolean;
     primaryKey: "name" | "id";
     sessions?: Map<ValueSupervisor.Session, SessionContext>;
     featuresKey?: string;
@@ -331,6 +337,7 @@ function configure(options: Datasource.Options): Internals {
         version: options.crypto.randomUint32,
         values,
         featuresKey,
+        manageVersion: true,
 
         interactionObserver(session?: ValueSupervisor.Session) {
             function handleObserverError(error: any) {
@@ -363,6 +370,9 @@ function configureExternalChanges(internals: Internals) {
         return;
     }
 
+    internals.version = store.version;
+    internals.manageVersion = false;
+
     store.externalChangeListener = async (potentialChanges: Val.Struct) => {
         const { values } = internals;
 
@@ -382,6 +392,8 @@ function configureExternalChanges(internals: Internals) {
                 oldValues![name] = values[name];
             }
         }
+
+        internals.version = store.version;
 
         if (!changes) {
             return;
@@ -608,6 +620,10 @@ function createReference(resource: Transaction.Resource, internals: Internals, s
 
     // Increment data version
     function incrementVersion() {
+        if (!internals.manageVersion) {
+            return;
+        }
+
         // Update version
         internals.version++;
         if (internals.version > 0xffff_ffff) {

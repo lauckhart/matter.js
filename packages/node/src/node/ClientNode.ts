@@ -54,7 +54,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     override async initialize() {
-        this.env.set(EndpointInitializer, await ClientEndpointInitializer.create(this));
+        const initializer = await ClientEndpointInitializer.create(this);
+
+        await initializer.loadCache();
+
+        this.env.set(EndpointInitializer, initializer);
 
         await super.initialize();
     }

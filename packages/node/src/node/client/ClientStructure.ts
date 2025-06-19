@@ -39,6 +39,22 @@ export class ClientStructure {
     }
 
     /**
+     * Load initial structure from cache.
+     */
+    async loadCache() {
+        for (const store of this.#nodeStore.endpointStores) {
+            const number = store.number;
+            if (number === undefined) {
+                return;
+            }
+
+            const endpoint = this.#endpointFor(number as EndpointNumber);
+
+            // TODO
+        }
+    }
+
+    /**
      * Obtain the store for a behavior.
      */
     storeFor(endpoint: Endpoint, type: ClusterBehavior.Type) {

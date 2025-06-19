@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { RootEndpoint } from "#endpoints/root";
 import { DatatypeModel, FieldElement } from "#model";
-import { Node } from "#node/Node.js";
+import { ClientNode } from "#node/ClientNode.js";
 import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Subscribe } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
@@ -43,7 +42,7 @@ export class NetworkClient extends NetworkBehavior {
     }
 
     get #node() {
-        return this.endpoint.ownerOfType(RootEndpoint) as unknown as Node;
+        return this.env.get(ClientNode);
     }
 
     /**
