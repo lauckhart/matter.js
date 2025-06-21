@@ -32,13 +32,17 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
     }
 
     async *read(request: Read, context?: ActionContext): ReadResult {
-        // TODO - provide version filters, update local version
-        yield* this.initializer.mutate((await this.#connect()).read(request, context));
+        request = this.structure.injectVersionFilters(request);
+        const interaction = await this.#connect();
+        const response = interaction.read(request, context);
+        yield* this.structure.mutate(request, response);
     }
 
     async *subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
-        // TODO - provide version filters, update local version
-        yield* this.initializer.mutate((await this.#connect()).subscribe(request, context));
+        request = this.structure.injectVersionFilters(request);
+        const interaction = await this.#connect();
+        const response = interaction.subscribe(request, context);
+        yield* this.structure.mutate(request, response);
     }
 
     async write<T extends Write>(request: T, context?: ActionContext): WriteResult<T> {
@@ -56,7 +60,7 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
         return this.#node.env.get(ClientInteraction);
     }
 
-    get initializer() {
-        return this.#node.env.get(EndpointInitializer) as ClientEndpointInitializer;
+    get structure() {
+        return (this.#node.env.get(EndpointInitializer) as ClientEndpointInitializer).structure;
     }
 }

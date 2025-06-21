@@ -75,6 +75,8 @@ export class MockSite {
 
         await node.start();
 
+        node.lifecycle.destroyed.then(() => this.#nodes.delete(node));
+
         return node;
     }
 
@@ -109,7 +111,7 @@ export class MockSite {
         return { controller, device };
     }
 
-    async [Symbol.asyncDispose]() {
+    async close() {
         try {
             await MockTime.resolve(
                 MatterAggregateError.allSettled(
@@ -124,5 +126,9 @@ export class MockSite {
         } catch (e) {
             logger.error("Error closing mock site", e);
         }
+    }
+
+    async [Symbol.asyncDispose]() {
+        await this.close();
     }
 }

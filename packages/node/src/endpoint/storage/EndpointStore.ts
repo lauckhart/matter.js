@@ -53,6 +53,10 @@ export class EndpointStore {
         }
     }
 
+    get knownBehaviors() {
+        return this.#knownBehaviors;
+    }
+
     constructor(storage: StorageContext, load = true) {
         this.#storage = storage;
         this.#childStorage = storage.createContext("parts");

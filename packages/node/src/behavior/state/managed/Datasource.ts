@@ -252,6 +252,11 @@ export namespace Datasource {
         version: number;
     }
 
+    /**
+     * The version we report until we've recorded a version.
+     */
+    export const UNKNOWN_VERSION = -1;
+
     export interface ValueObserver {
         (value: Val, oldValue: Val, context?: ValueSupervisor.Session): void;
     }

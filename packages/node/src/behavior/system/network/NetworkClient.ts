@@ -5,7 +5,7 @@
  */
 
 import { DatatypeModel, FieldElement } from "#model";
-import { ClientNode } from "#node/ClientNode.js";
+import { Node } from "#node/Node.js";
 import { DEFAULT_MIN_INTERVAL_FLOOR_SECONDS, Subscribe } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
@@ -42,7 +42,7 @@ export class NetworkClient extends NetworkBehavior {
     }
 
     get #node() {
-        return this.env.get(ClientNode);
+        return this.env.get(Node);
     }
 
     /**

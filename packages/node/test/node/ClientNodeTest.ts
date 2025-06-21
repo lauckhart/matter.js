@@ -60,9 +60,9 @@ describe("ClientNode", () => {
 
         // Obtain client view of the device
         const peer1 = controller.nodes.get("peer1")!;
+        expect(peer1).not.undefined;
 
         // Validate the root endpoint
-        expect(peer1).not.undefined;
         expect(peer1.state).deep.equals(PEER1_STATE);
 
         // Validate the light endpoint
@@ -70,6 +70,25 @@ describe("ClientNode", () => {
         const ep1 = peer1.parts.get("ep1")!;
         expect(ep1).not.undefined;
         expect(ep1.state).deep.equals(EP1_STATE);
+
+        // Close all nodes
+        await site.close();
+
+        // Recreate the controller
+        const controllerB = await site.addNode(undefined, { index: 1 });
+
+        // Retrieve the client view of the device that should have been recreated from cache
+        const peer1b = controllerB.nodes.get("peer1")!;
+        expect(peer1b).not.undefined;
+
+        // Validate the root endpoint
+        expect(peer1b.state).deep.equals(PEER1_STATE);
+
+        // Validate the light endpoint
+        expect(peer1b.parts.size).equals(1);
+        const ep1b = peer1b.parts.get("ep1")!;
+        expect(ep1b).not.undefined;
+        expect(ep1b.state).deep.equals(EP1_STATE);
     });
 });
 

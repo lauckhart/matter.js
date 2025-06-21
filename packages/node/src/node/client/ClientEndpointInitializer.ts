@@ -11,11 +11,9 @@ import { ClientBehaviorBacking } from "#behavior/internal/ClientBehaviorBacking.
 import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { InternalError } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import { ReadResult, SubscribeResult } from "#protocol";
 import { ClientStructure } from "./ClientStructure.js";
 
 export class ClientEndpointInitializer extends EndpointInitializer {
@@ -27,17 +25,6 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         super();
         this.#node = node;
         this.#store = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
-    }
-
-    /**
-     * Populate the initial endpoint structure from cache.
-     */
-    loadCache() {
-        if (this.#structure === undefined) {
-            throw new InternalError("Cache load attempted without initialized structure");
-        }
-
-        return this.#structure.loadCache();
     }
 
     async eraseDescendant(endpoint: Endpoint) {
@@ -58,10 +45,6 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         // nothing to do
     }
 
-    mutate(changes: ReadResult | SubscribeResult) {
-        return this.#struct.mutate(changes);
-    }
-
     get ready() {
         return this.#store.construction.ready;
     }
@@ -77,11 +60,11 @@ export class ClientEndpointInitializer extends EndpointInitializer {
             return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
         }
 
-        const store = this.#struct.storeFor(endpoint, type as ClusterBehavior.Type);
+        const store = this.structure.storeFor(endpoint, type as ClusterBehavior.Type);
         return new ClientBehaviorBacking(endpoint, type, store, endpoint.behaviors.optionsFor(type));
     }
 
-    get #struct() {
+    get structure() {
         if (this.#structure === undefined) {
             this.#structure = new ClientStructure(this.#node);
         }

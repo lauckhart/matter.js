@@ -5,3 +5,4 @@
  */
 
 export * from "./ClientInteraction.js";
+export * from "./ReadScope.js";

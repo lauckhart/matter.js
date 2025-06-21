@@ -5,7 +5,7 @@
  */
 
 import { ClusterBehavior } from "#behavior/index.js";
-import type { Datasource } from "#behavior/state/managed/Datasource.js";
+import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { DescriptorCluster } from "#clusters/descriptor";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { DatasourceCache } from "#endpoint/storage/DatasourceCache.js";
@@ -14,7 +14,7 @@ import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type F
 import type { ClientNode } from "#node/ClientNode.js";
 import type { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import type { ReadResult, SubscribeResult } from "#protocol";
+import { ReadScope, type Read, type ReadResult, type SubscribeResult } from "#protocol";
 import type { AttributeId, ClusterId, CommandId, DeviceTypeId, EndpointNumber } from "#types";
 import { MaybePromise } from "@matter/general";
 import { ClientBehavior } from "./ClientBehavior.js";
@@ -50,7 +50,15 @@ export class ClientStructure {
 
             const endpoint = this.#endpointFor(number as EndpointNumber);
 
-            // TODO
+            for (const idStr of store.knownBehaviors) {
+                const id = Number.parseInt(idStr) as ClusterId;
+                if (Number.isNaN(id)) {
+                    continue;
+                }
+
+                const cluster = this.#clusterFor(endpoint, id);
+                await this.#initializeCluster(endpoint, cluster);
+            }
         }
     }
 
@@ -58,16 +66,56 @@ export class ClientStructure {
      * Obtain the store for a behavior.
      */
     storeFor(endpoint: Endpoint, type: ClusterBehavior.Type) {
-        const endpointState = this.#endpointFor(endpoint.number);
-        const clusterState = this.#clusterFor(endpointState, type.cluster.id);
+        const endpointStructure = this.#endpointFor(endpoint.number);
+        const clusterStructure = this.#clusterFor(endpointStructure, type.cluster.id);
 
-        return clusterState.store;
+        return clusterStructure.store;
+    }
+
+    /**
+     * Inject version filters into a Read or Subscribe request.
+     */
+    injectVersionFilters<T extends Read>(request: T): T {
+        const scope = ReadScope(request);
+        let result = request;
+
+        for (const {
+            endpoint: { number: endpointId },
+            clusters,
+        } of Object.values(this.#endpoints)) {
+            for (const {
+                id: clusterId,
+                store: { version },
+            } of Object.values(clusters)) {
+                if (!scope.isRelevant(endpointId, clusterId)) {
+                    continue;
+                }
+
+                if (version === Datasource.UNKNOWN_VERSION) {
+                    continue;
+                }
+
+                if (result === request) {
+                    result = { ...request };
+                }
+
+                if (result.dataVersionFilters === undefined) {
+                    result.dataVersionFilters = [];
+                }
+
+                result.dataVersionFilters.push({ path: { endpointId, clusterId }, dataVersion: version });
+            }
+        }
+
+        return result;
     }
 
     /**
      * Update the node structure by applying attribute changes.
      */
-    async *mutate(changes: ReadResult | SubscribeResult) {
+    async *mutate(request: Read, changes: ReadResult | SubscribeResult) {
+        const scope = ReadScope(request);
+
         let currentUpdates: AttributeUpdates | undefined;
 
         for await (const chunk of changes) {
@@ -81,25 +129,34 @@ export class ClientStructure {
                     continue;
                 }
 
-                const { endpointId: endpointNo, clusterId, attributeId } = change.path;
+                const { endpointId, clusterId, attributeId } = change.path;
 
+                // If we are building updates to a cluster and the cluster/endpoint changes, apply the current update
+                // set
                 if (
                     currentUpdates &&
-                    (currentUpdates.endpointNo !== endpointNo || currentUpdates.clusterId !== clusterId)
+                    (currentUpdates.endpointId !== endpointId || currentUpdates.clusterId !== clusterId)
                 ) {
                     await this.#updateCluster(currentUpdates);
                     currentUpdates = undefined;
                 }
 
                 if (currentUpdates === undefined) {
+                    // Updating a new endpoint/cluster
                     currentUpdates = {
-                        endpointNo,
+                        endpointId,
                         clusterId,
                         values: {
                             [attributeId]: change.value,
                         },
                     };
+
+                    // Update version but only if this was a wildcard read
+                    if (scope.isWildcard(endpointId, clusterId)) {
+                        currentUpdates.values[DatasourceCache.VERSION_KEY] = change.version;
+                    }
                 } else {
+                    // Add value to change set for current endpoint/cluster
                     currentUpdates.values[attributeId] = change.value;
                 }
             }
@@ -115,20 +172,34 @@ export class ClientStructure {
     /**
      * Apply new attribute values for specific endpoint/cluster.
      *
-     * This is invoked in a batch when we've collected all sequential values for current endpoint/cluster.
+     * This is invoked in a batch when we've collected all sequential values for the current endpoint/cluster.
      */
     async #updateCluster(attrs: AttributeUpdates) {
-        const endpoint = this.#endpointFor(attrs.endpointNo);
+        const endpoint = this.#endpointFor(attrs.endpointId);
         const cluster = this.#clusterFor(endpoint, attrs.clusterId);
         await cluster.store.externalSet(attrs.values);
+        await this.#initializeCluster(endpoint, cluster);
+    }
 
+    /**
+     * If enough attributes are present, installs a behavior on an endpoint
+     *
+     * If the cluster is Descriptor, performs additional {@link Endpoint} configuration such as installing parts and
+     * device types.
+     *
+     * Invoked once we've loaded all attributes.
+     */
+    async #initializeCluster(endpoint: EndpointStructure, cluster: ClusterStructure) {
+        const attrs = cluster.store.initialValues ?? {};
+
+        // Generate a behavior if enough information is available
         if (cluster.behavior === undefined) {
             const {
                 [ClusterRevision.id]: clusterRevision,
                 [FeatureMap.id]: features,
                 [AttributeList.id]: attributes,
                 [AcceptedCommandList.id]: commands,
-            } = attrs.values;
+            } = attrs;
 
             if (typeof clusterRevision === "number") {
                 cluster.revision = clusterRevision;
@@ -143,7 +214,7 @@ export class ClientStructure {
             }
 
             if (Array.isArray(commands)) {
-                cluster.commands = commands.filter(attr => typeof attr === "number") as CommandId[];
+                cluster.commands = commands.filter(cmd => typeof cmd === "number") as CommandId[];
             }
 
             if (
@@ -162,10 +233,9 @@ export class ClientStructure {
             }
         }
 
-        switch (attrs.clusterId) {
-            case DescriptorCluster.id:
-                this.#synchronizeDescriptor(endpoint, attrs.values);
-                break;
+        // Special handling for descriptor cluster
+        if (cluster.id === DescriptorCluster.id) {
+            this.#synchronizeDescriptor(endpoint, attrs);
         }
     }
 
@@ -258,9 +328,11 @@ export class ClientStructure {
 }
 
 interface AttributeUpdates {
-    endpointNo: EndpointNumber;
+    endpointId: EndpointNumber;
     clusterId: ClusterId;
-    values: Record<number, unknown>;
+    values: {
+        [K in number | typeof DatasourceCache.VERSION_KEY]?: unknown;
+    };
 }
 
 interface EndpointStructure {

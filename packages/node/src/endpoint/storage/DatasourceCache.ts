@@ -5,6 +5,7 @@
  */
 
 import { Datasource } from "#behavior/state/managed/Datasource.js";
+import { InternalError } from "#general";
 import { Val } from "#protocol";
 import { DatasourceStore } from "./DatasourceStore.js";
 import { EndpointStore } from "./EndpointStore.js";
@@ -19,7 +20,7 @@ export function DatasourceCache(
 ): Datasource.ExternallyMutableStore {
     let version = initialValues?.[DatasourceCache.VERSION_KEY] as number;
     if (typeof version !== "number") {
-        version = DatasourceCache.UNKNOWN_VERSION;
+        version = Datasource.UNKNOWN_VERSION;
     }
 
     return {
@@ -47,17 +48,16 @@ export function DatasourceCache(
         get version() {
             return version;
         },
+
+        set version(_version: number) {
+            throw new InternalError("Datasource version must be set via externalSet");
+        },
     };
 }
 
 DatasourceCache satisfies DatasourceStore.Type;
 
 export namespace DatasourceCache {
-    /**
-     * The version we report until we've recorded a version.
-     */
-    export const UNKNOWN_VERSION = -1;
-
     /**
      * Standard key for storing the version.
      *
