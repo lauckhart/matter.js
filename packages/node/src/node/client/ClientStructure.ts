@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterBehavior } from "#behavior/index.js";
+import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { DescriptorCluster } from "#clusters/descriptor";
 import { Endpoint } from "#endpoint/Endpoint.js";
@@ -12,8 +12,7 @@ import { DatasourceCache } from "#endpoint/storage/DatasourceCache.js";
 import { EndpointType } from "#endpoint/type/EndpointType.js";
 import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type FeatureBitmap } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
-import type { NodeStore } from "#node/storage/NodeStore.js";
-import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
+import { NodeStore } from "#node/storage/NodeStore.js";
 import { ReadScope, type Read, type ReadResult, type SubscribeResult } from "#protocol";
 import type { AttributeId, ClusterId, CommandId, DeviceTypeId, EndpointNumber } from "#types";
 import { MaybePromise } from "@matter/general";
@@ -31,7 +30,7 @@ export class ClientStructure {
     #endpoints: Record<EndpointNumber, EndpointStructure> = {};
 
     constructor(node: ClientNode) {
-        this.#nodeStore = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
+        this.#nodeStore = node.env.get(NodeStore);
         this.#endpoints[node.number] = {
             endpoint: node,
             clusters: {},
@@ -43,13 +42,24 @@ export class ClientStructure {
      */
     async loadCache() {
         for (const store of this.#nodeStore.endpointStores) {
-            const number = store.number;
-            if (number === undefined) {
-                return;
+            const id = store.id;
+
+            // Client storage currently does not persist endpoint number; we determine from the persisted name, either
+            // "root" for endpoint 0 or "epN" for other endpoints
+            let number;
+            if (id === "root") {
+                number = 0;
+            } else {
+                const match = id.match(/^ep(\d+)$/);
+                if (!match) {
+                    continue;
+                }
+                number = Number.parseInt(match[1]);
             }
 
             const endpoint = this.#endpointFor(number as EndpointNumber);
 
+            // Load state for each behavior
             for (const idStr of store.knownBehaviors) {
                 const id = Number.parseInt(idStr) as ClusterId;
                 if (Number.isNaN(id)) {
@@ -197,8 +207,8 @@ export class ClientStructure {
             const {
                 [ClusterRevision.id]: clusterRevision,
                 [FeatureMap.id]: features,
-                [AttributeList.id]: attributes,
-                [AcceptedCommandList.id]: commands,
+                [AttributeList.id]: attributeList,
+                [AcceptedCommandList.id]: commandList,
             } = attrs;
 
             if (typeof clusterRevision === "number") {
@@ -209,12 +219,12 @@ export class ClientStructure {
                 cluster.features = features as FeatureBitmap;
             }
 
-            if (Array.isArray(attributes)) {
-                cluster.attributes = attributes.filter(attr => typeof attr === "number") as AttributeId[];
+            if (Array.isArray(attributeList)) {
+                cluster.attributes = attributeList.filter(attr => typeof attr === "number") as AttributeId[];
             }
 
-            if (Array.isArray(commands)) {
-                cluster.commands = commands.filter(cmd => typeof cmd === "number") as CommandId[];
+            if (Array.isArray(commandList)) {
+                cluster.commands = commandList.filter(cmd => typeof cmd === "number") as CommandId[];
             }
 
             if (

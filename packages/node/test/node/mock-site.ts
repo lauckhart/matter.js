@@ -13,6 +13,7 @@ import {
     MockCrypto,
     Network,
     NetworkSimulator,
+    Storage,
     StorageBackendMemory,
     StorageService,
 } from "#general";
@@ -29,6 +30,7 @@ export class MockSite {
     #simulator = new NetworkSimulator();
     #nodes = new Set<ServerNode>();
     #nextNetworkIndex = 1;
+    #storage = {} as Record<string, Storage>;
 
     addNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
         type?: T,
@@ -62,7 +64,7 @@ export class MockSite {
         const location = `/memory/${id}`;
         if (storage.location !== location) {
             storage.location = location;
-            storage.factory = () => new StorageBackendMemory();
+            storage.factory = () => this.storageFor(id);
         }
 
         // Note that we don't use MockServerNode as we don't actually want anything mocked
@@ -126,6 +128,16 @@ export class MockSite {
         } catch (e) {
             logger.error("Error closing mock site", e);
         }
+    }
+
+    storageFor(id: string | { id: string }) {
+        if (typeof id !== "string") {
+            id = id.id;
+        }
+        if (!(id in this.#storage)) {
+            this.#storage[id] = new StorageBackendMemory();
+        }
+        return this.#storage[id];
     }
 
     async [Symbol.asyncDispose]() {

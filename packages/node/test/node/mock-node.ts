@@ -13,6 +13,7 @@ import { Node } from "#node/Node.js";
 import { ServerNode } from "#node/ServerNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import { EndpointStores } from "#node/storage/EndpointStores.js";
+import { NodeStore } from "#node/storage/NodeStore.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { EndpointNumber } from "#types";
 
@@ -72,7 +73,9 @@ export class MockNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoin
     override initialize() {
         this.env.set(StorageService, new StorageService(this.env, () => new StorageBackendMemory()));
         this.env.set(EndpointInitializer, new MockPartInitializer());
-        this.env.set(ServerNodeStore, new MockServerStore(this.env, "test"));
+        const store = new MockServerStore(this.env, "test");
+        this.env.set(NodeStore, store);
+        this.env.set(ServerNodeStore, store);
         this.env.set(IdentityService, new IdentityService(this));
         return super.initialize();
     }

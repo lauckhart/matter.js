@@ -18,6 +18,8 @@ import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js
 import { ClientNodeInteraction } from "./client/ClientNodeInteraction.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
+import { NodeStore } from "./storage/NodeStore.js";
+import { ServerNodeStore } from "./storage/ServerNodeStore.js";
 
 /**
  * A remote Matter {@link Node}.
@@ -54,11 +56,13 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     override async initialize() {
+        const store = this.env.get(ServerNodeStore).clientStores.storeForNode(this);
+        this.env.set(NodeStore, store);
+
         const initializer = await ClientEndpointInitializer.create(this);
+        this.env.set(EndpointInitializer, initializer);
 
         await initializer.structure.loadCache();
-
-        this.env.set(EndpointInitializer, initializer);
 
         await super.initialize();
     }

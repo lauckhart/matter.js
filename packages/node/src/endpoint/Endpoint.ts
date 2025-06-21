@@ -26,6 +26,7 @@ import { EndpointNumber } from "#types";
 import { RootEndpoint } from "../endpoints/root.js";
 import { Agent } from "./Agent.js";
 import { Behaviors } from "./properties/Behaviors.js";
+import { Commands } from "./properties/Commands.js";
 import { EndpointContainer } from "./properties/EndpointContainer.js";
 import { EndpointInitializer } from "./properties/EndpointInitializer.js";
 import { EndpointLifecycle } from "./properties/EndpointLifecycle.js";
@@ -56,6 +57,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #construction: Construction<Endpoint<T>>;
     #stateView = {} as Immutable<SupportedBehaviors.StateOf<T["behaviors"]>>;
     #events = {} as SupportedBehaviors.EventsOf<T["behaviors"]>;
+    #commands?: Commands<T>;
     #activity?: NodeActivity;
 
     /**
@@ -240,6 +242,26 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
             patch(values, behavior.state, this.path);
         });
+    }
+
+    /**
+     * Commands for all behaviors keyed by behavior ID.
+     */
+    get commands() {
+        if (this.#commands === undefined) {
+            this.#commands = Commands(this);
+        }
+        return this.#commands;
+    }
+
+    /**
+     * Commands for a specific behavior.
+     */
+    commandsOf<T extends Behavior.Type>(type: T) {
+        if (!this.behaviors.has(type)) {
+            throw new ImplementationError(`Behavior ${type.id} is not supported by this endpoint`);
+        }
+        return this.commands[type.id] as unknown as Commands.OfBehavior<T>;
     }
 
     /**
@@ -562,9 +584,13 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             this.#activity = this.env.get(NodeActivity);
         }
 
-        return OfflineContext.act(purpose, this.#activity, context => {
-            return actor(context.agentFor(this));
-        });
+        return OfflineContext.act(
+            purpose,
+            context => {
+                return actor(context.agentFor(this));
+            },
+            { activity: this.#activity },
+        );
     }
 
     /**

@@ -39,6 +39,10 @@ export class EndpointStore {
         return this.#construction;
     }
 
+    get id() {
+        return this.#storage.thisContexts[this.#storage.thisContexts.length - 1];
+    }
+
     get number() {
         this.#construction.assert();
 

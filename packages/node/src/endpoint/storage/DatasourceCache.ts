@@ -63,5 +63,5 @@ export namespace DatasourceCache {
      *
      * This conveys the version to the {@link Datasource}.
      */
-    export const VERSION_KEY = "$version";
+    export const VERSION_KEY = "__version__";
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Endpoint } from "#endpoint/Endpoint.js";
+import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { StorageContext } from "#general";
 import { Construction, ImplementationError, InternalError, Lifecycle, Logger, asyncNew } from "#general";
 import { EndpointStore } from "../../endpoint/storage/EndpointStore.js";

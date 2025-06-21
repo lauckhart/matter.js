@@ -5,7 +5,8 @@
  */
 
 import { DiscoveryError } from "#behavior/system/controller/discovery/DiscoveryError.js";
-import { b$ } from "#general";
+import { OnOffBehavior } from "#behaviors/on-off";
+import { b$, deepCopy } from "#general";
 import { MockSite } from "./mock-site.js";
 
 describe("ClientNode", () => {
@@ -52,11 +53,15 @@ describe("ClientNode", () => {
     });
 
     it("commissions and initializes endpoints", async () => {
+        // *** COMMISSIONING ***
+
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();
 
         expect(device.state.commissioning.commissioned).equals(true);
         expect(controller.nodes.size).equals(1);
+
+        // *** INITIAL STATE ***
 
         // Obtain client view of the device
         const peer1 = controller.nodes.get("peer1")!;
@@ -64,12 +69,16 @@ describe("ClientNode", () => {
 
         // Validate the root endpoint
         expect(peer1.state).deep.equals(PEER1_STATE);
+        const expectedPeer1State = deepCopy(peer1.state);
 
         // Validate the light endpoint
         expect(peer1.parts.size).equals(1);
         const ep1 = peer1.parts.get("ep1")!;
         expect(ep1).not.undefined;
         expect(ep1.state).deep.equals(EP1_STATE);
+        const expectedEp1State = deepCopy(ep1.state);
+
+        // *** STATE AFTER RESTART ***
 
         // Close all nodes
         await site.close();
@@ -82,14 +91,37 @@ describe("ClientNode", () => {
         expect(peer1b).not.undefined;
 
         // Validate the root endpoint
-        expect(peer1b.state).deep.equals(PEER1_STATE);
+        expect(peer1b.state).deep.equals(expectedPeer1State);
 
         // Validate the light endpoint
         expect(peer1b.parts.size).equals(1);
         const ep1b = peer1b.parts.get("ep1")!;
         expect(ep1b).not.undefined;
-        expect(ep1b.state).deep.equals(EP1_STATE);
+        expect(ep1b.state).deep.equals(expectedEp1State);
     });
+
+    it.only("invokes and receives state updates", async () => {
+        // *** SETUP ***
+
+        await using site = new MockSite();
+        const { controller } = await site.addCommissionedPair();
+
+        const peer1 = controller.nodes.get("peer1")!;
+        expect(peer1).not.undefined;
+
+        const ep1 = peer1.parts.get("ep1")!;
+        expect(ep1).not.undefined;
+
+        const receivedUpdate = new Promise<boolean>(resolve => ep1.eventsOf(OnOffBehavior).onOff$Changed.on(resolve));
+
+        // *** INVOCATION ***
+
+        await ep1.commandsOf(OnOffBehavior).toggle();
+
+        // *** UPDATE ***
+
+        await receivedUpdate;
+    }).timeout(1e9);
 });
 
 const PEER1_STATE = {

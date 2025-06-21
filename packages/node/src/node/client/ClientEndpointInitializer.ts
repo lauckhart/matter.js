@@ -13,7 +13,6 @@ import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import type { ClientNode } from "#node/ClientNode.js";
 import { NodeStore } from "#node/storage/NodeStore.js";
-import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { ClientStructure } from "./ClientStructure.js";
 
 export class ClientEndpointInitializer extends EndpointInitializer {
@@ -24,7 +23,7 @@ export class ClientEndpointInitializer extends EndpointInitializer {
     constructor(node: ClientNode) {
         super();
         this.#node = node;
-        this.#store = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
+        this.#store = node.env.get(NodeStore);
     }
 
     async eraseDescendant(endpoint: Endpoint) {

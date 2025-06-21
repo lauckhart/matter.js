@@ -148,7 +148,7 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
     // Add command implementations
     for (const id of analysis.shape.commands) {
         const name = schema.get(CommandModel, id)?.name ?? createUnknownName("command", id);
-        const command = cluster.commands[name];
+        const command = cluster.commands[camelize(name)];
         type.prototype[camelize(name, false)] = implementCommand(command);
     }
 

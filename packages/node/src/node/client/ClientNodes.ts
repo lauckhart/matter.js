@@ -184,7 +184,7 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
 
             // Cull commissionable nodes that have expired
             if (!isCommissioned) {
-                if (!newAddresses?.length || expirationOf(state) <= now) {
+                if (!newAddresses?.length || (expirationOf(state) ?? 0) <= now) {
                     await node.delete();
                     continue;
                 }

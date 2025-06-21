@@ -240,7 +240,7 @@ export namespace CommissioningClient {
         /**
          * Time at which the device was discovered.
          */
-        discoveredAt: number = Time.nowMs();
+        discoveredAt?: number;
 
         /**
          * Time at which we discovered the device's current operational addresses.

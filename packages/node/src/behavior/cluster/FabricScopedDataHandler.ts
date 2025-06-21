@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior, ClusterBehavior } from "#behavior/index.js";
+import { Behavior } from "#behavior/Behavior.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import { createPromise, deepCopy, isObject, Logger, MaybePromise, withTimeout } from "#general";
 import { ServerNode } from "#node/ServerNode.js";
 import { OccurrenceManager, Val } from "#protocol";
 import { ClusterType, FabricIndex, ObjectSchema } from "#types";
+import { ClusterBehavior } from "./ClusterBehavior.js";
 
 const logger = Logger.get("FabricScopedDataHandler");
 

@@ -233,7 +233,7 @@ export class Behaviors {
         const activity = this.#endpoint.env.get(NodeActivity);
 
         // Perform initialization
-        let promise = OfflineContext.act(`initialize<${this.#endpoint}>`, activity, initializeBehaviors);
+        let promise = OfflineContext.act(`initialize<${this.#endpoint}>`, initializeBehaviors, { activity });
 
         // Once behaviors are ready the endpoint we consider the endpoint "ready"
         const onReady = () => {
@@ -414,7 +414,9 @@ export class Behaviors {
             }
         };
 
-        await OfflineContext.act(`close<${this.#endpoint}>`, this.#endpoint.env.get(NodeActivity), dispose);
+        await OfflineContext.act(`close<${this.#endpoint}>`, dispose, {
+            activity: this.#endpoint.env.get(NodeActivity),
+        });
     }
 
     /**
@@ -554,13 +556,17 @@ export class Behaviors {
     }
 
     #activateLate(type: Behavior.Type) {
-        const result = OfflineContext.act("behavior-late-activation", this.#endpoint.env.get(NodeActivity), context => {
-            this.activate(type, context.agentFor(this.#endpoint));
+        const result = OfflineContext.act(
+            "behavior-late-activation",
+            context => {
+                this.activate(type, context.agentFor(this.#endpoint));
 
-            // Agent must remain active until backing is initialized
-            const backing = this.#backingFor(type);
-            return backing.construction.ready;
-        });
+                // Agent must remain active until backing is initialized
+                const backing = this.#backingFor(type);
+                return backing.construction.ready;
+            },
+            { activity: this.#endpoint.env.get(NodeActivity) },
+        );
 
         if (MaybePromise.is(result)) {
             result.then(undefined, error => {

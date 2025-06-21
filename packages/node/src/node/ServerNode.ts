@@ -21,7 +21,7 @@ import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
 import { ClientNodes } from "./client/ClientNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
-import { ServerNodeStore } from "./storage/ServerNodeStore.js";
+import { NodeStore } from "./storage/NodeStore.js";
 
 /**
  * Thrown when there is an error during factory reset.
@@ -192,7 +192,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         await this.env.get(SessionManager).clear();
         await this.env.get(FabricManager).clear();
         await this.env.get(OccurrenceManager).clear();
-        await this.env.get(ServerNodeStore).erase();
+        await this.env.get(NodeStore).erase();
     }
 
     /**

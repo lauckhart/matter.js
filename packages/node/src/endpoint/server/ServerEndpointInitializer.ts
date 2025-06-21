@@ -10,17 +10,17 @@ import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Environment, InternalError, Logger } from "#general";
+import { NodeStore } from "#node/storage/NodeStore.js";
 import { DescriptorServer } from "../../behaviors/descriptor/DescriptorServer.js";
-import { ServerNodeStore } from "../../node/storage/ServerNodeStore.js";
 
 const logger = Logger.get("BehaviorInit");
 
 export class ServerEndpointInitializer extends EndpointInitializer {
-    #store: ServerNodeStore;
+    #store: NodeStore;
 
     constructor(environment: Environment) {
         super();
-        this.#store = environment.get(ServerNodeStore);
+        this.#store = environment.get(NodeStore);
     }
 
     override initializeDescendant(endpoint: Endpoint) {
