@@ -8,10 +8,15 @@
 // from the Node version
 
 import Chai from "chai";
+import ChaiAsPromised from "chai-as-promised";
+
 import { browserSetup, extendApi, generalSetup } from "./mocha.js";
 import { bootSetup } from "./mocks/boot.js";
 import { MockLogger, loggerSetup } from "./mocks/logging.js";
 import { timeSetup } from "./mocks/time.js";
+
+// This must go here so it initializes early
+Chai.use(ChaiAsPromised);
 
 Object.assign(globalThis, {
     expect: Chai.expect,

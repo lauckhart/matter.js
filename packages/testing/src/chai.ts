@@ -5,11 +5,9 @@
  */
 
 import Chai from "chai";
-import ChaiAsPromised from "chai-as-promised";
 import "./global-definitions.js";
 
 Chai.config.truncateThreshold = 200;
-Chai.use(ChaiAsPromised);
 
 expect.IGNORE = Symbol.for("matter:expect-ignore");
 expect.BIGINT = Symbol.for("matter:expect-bigint");
