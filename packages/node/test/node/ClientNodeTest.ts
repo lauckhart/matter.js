@@ -120,7 +120,7 @@ describe("ClientNode", () => {
 
         // *** UPDATE ***
 
-        await receivedUpdate;
+        await MockTime.resolve(receivedUpdate);
     }).timeout(1e9);
 });
 

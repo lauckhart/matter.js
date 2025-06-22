@@ -13,10 +13,18 @@ import { InvokeResult } from "#action/response/InvokeResult.js";
 import { ReadResult } from "#action/response/ReadResult.js";
 import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
-import { BasicSet, Environment, Environmental, ImplementationError, PromiseQueue } from "#general";
+import {
+    BasicSet,
+    CanceledError,
+    Environment,
+    Environmental,
+    ImplementationError,
+    PromiseQueue,
+    TimeoutError,
+} from "#general";
 import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
 import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
-import { SubscriptionClient } from "#interaction/SubscriptionClient.js";
+import { RegisteredSubscription, SubscriptionClient } from "#interaction/SubscriptionClient.js";
 import { InteractionQueue } from "#peer/InteractionQueue.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
 import { Status, TlvAny, TlvSubscribeResponse } from "#types";
@@ -180,7 +188,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async *subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
+    async subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
         try {
             this.#begin(request);
 
@@ -192,13 +200,54 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 maxIntervalCeilingSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
             });
 
-            yield* this.#readDataReports(messenger);
+            await this.#handleSubscriptionResponse(request, this.#readDataReports(messenger));
 
             const subscribeResponseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
             const subscribeResponse = TlvSubscribeResponse.decode(subscribeResponseMessage.payload);
-            yield subscribeResponse;
+
+            // TODO - modify SubscriptionClient to provide exchange/initial message or replace
+            const registration: RegisteredSubscription = {
+                id: subscribeResponse.subscriptionId,
+                maximumPeerResponseTime: 60_000, //request.maxIntervalCeilingSeconds,
+                maxIntervalS: subscribeResponse.maxInterval,
+
+                onData: async _data => {
+                    //await this.#handleSubscriptionResponse(request, data);
+                },
+
+                onTimeout() {
+                    if (request.closed) {
+                        request.closed(new TimeoutError(`Subscription ${registration.id} timed out`));
+                    }
+                },
+            };
+
+            this.#subscriptions.add(registration);
+
+            return {
+                ...subscribeResponse,
+                close: async () => {
+                    this.#subscriptions.delete(registration.id);
+                    if (request.closed) {
+                        request.closed(new CanceledError(`Subscription ${registration.id} canceled`));
+                    }
+                },
+            };
         } finally {
             this.#end(request);
+        }
+    }
+
+    async #handleSubscriptionResponse(request: Subscribe, result: ReadResult) {
+        if (request.updated) {
+            await request.updated(result);
+        } else {
+            // It doesn't really make sense to subscribe without listening to the result, but higher-level Interactables
+            // may process responses so the subscriber doesn't need to.  So "updated" may be omitted from the API, so
+            // we handle this case
+            //
+            // We need to await the generator or the interactable will hang
+            for await (const _chunk of result);
         }
     }
 

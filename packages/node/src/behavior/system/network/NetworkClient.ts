@@ -37,8 +37,8 @@ export class NetworkClient extends NetworkBehavior {
         // First, read.  This allows us to retrieve attributes that do not support subscription
         for await (const _chunk of this.#node.interaction.read(subscribe));
 
-        // TODO - subscription management
-        //this.#node.interaction.subscribe(subscribe);
+        // Now subscribe for subsequent updates
+        await this.#node.interaction.subscribe(subscribe);
     }
 
     get #node() {

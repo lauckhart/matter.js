@@ -38,11 +38,21 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
         yield* this.structure.mutate(request, response);
     }
 
-    async *subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
-        request = this.structure.injectVersionFilters(request);
+    async subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
+        // TODO - persist subscription information somewhere; surface in either SubscriptionsBehavior or SubscriptionsClient
+        request = {
+            ...this.structure.injectVersionFilters(request),
+
+            async updated(_data) {
+                // TODO - invoke this.structure.mutate once _data is a proper read response
+            },
+
+            closed(_cause) {
+                // TODO - unregister subscription, log cause
+            },
+        };
         const interaction = await this.#connect();
-        const response = interaction.subscribe(request, context);
-        yield* this.structure.mutate(request, response);
+        return interaction.subscribe(request, context);
     }
 
     async write<T extends Write>(request: T, context?: ActionContext): WriteResult<T> {

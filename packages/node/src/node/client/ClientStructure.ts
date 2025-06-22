@@ -13,7 +13,7 @@ import { EndpointType } from "#endpoint/type/EndpointType.js";
 import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type FeatureBitmap } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import { NodeStore } from "#node/storage/NodeStore.js";
-import { ReadScope, type Read, type ReadResult, type SubscribeResult } from "#protocol";
+import { ReadScope, type Read, type ReadResult } from "#protocol";
 import type { AttributeId, ClusterId, CommandId, DeviceTypeId, EndpointNumber } from "#types";
 import { MaybePromise } from "@matter/general";
 import { ClientBehavior } from "./ClientBehavior.js";
@@ -123,7 +123,7 @@ export class ClientStructure {
     /**
      * Update the node structure by applying attribute changes.
      */
-    async *mutate(request: Read, changes: ReadResult | SubscribeResult) {
+    async *mutate(request: Read, changes: ReadResult) {
         const scope = ReadScope(request);
 
         let currentUpdates: AttributeUpdates | undefined;

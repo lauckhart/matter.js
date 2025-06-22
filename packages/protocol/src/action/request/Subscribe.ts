@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { UINT16_MAX } from "#general";
+import type { ReadResult } from "#action/response/ReadResult.js";
+import { CanceledError, TimeoutError, UINT16_MAX } from "#general";
 import { MalformedRequestError } from "./MalformedRequestError.js";
 import { Read } from "./Read.js";
 
@@ -18,6 +19,16 @@ export interface Subscribe extends Read {
     keepSubscriptions: boolean;
     minIntervalFloorSeconds?: number;
     maxIntervalCeilingSeconds?: number;
+
+    /**
+     * Invoked when subscribed data changes.
+     */
+    updated?: (data: ReadResult) => Promise<void>;
+
+    /**
+     * Invoked when the subscription is no longer active.
+     */
+    closed?: (cause: CanceledError | TimeoutError) => void;
 }
 
 export function Subscribe(options: Subscribe.Options, ...selectors: Read.Selector[]): Subscribe {
@@ -48,6 +59,8 @@ export namespace Subscribe {
         keepSubscriptions?: boolean;
         minIntervalFloorSeconds?: number;
         maxIntervalCeilingSeconds?: number;
+        update?: Subscribe["updated"];
+        closed?: Subscribe["closed"];
     }
 }
 
