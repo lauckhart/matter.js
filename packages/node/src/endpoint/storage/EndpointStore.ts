@@ -39,6 +39,10 @@ export class EndpointStore {
         return this.#construction;
     }
 
+    get id() {
+        return this.#storage.thisContexts[this.#storage.thisContexts.length - 1];
+    }
+
     get number() {
         this.#construction.assert();
 
@@ -51,6 +55,10 @@ export class EndpointStore {
         if (this.#number !== number) {
             this.#number = number;
         }
+    }
+
+    get knownBehaviors() {
+        return this.#knownBehaviors;
     }
 
     constructor(storage: StorageContext, load = true) {
@@ -102,16 +110,17 @@ export class EndpointStore {
     }
 
     /**
-     * Obtain a {@link Datasource.Store} for a behavior.
+     * Create a {@link Datasource.Store} for a behavior.
      */
-    storeForBehavior(behaviorId: string): Datasource.Store {
+    createStoreForBehavior<T extends DatasourceStore.Type>(behaviorId: string, factory: T): ReturnType<T> {
         this.#construction.assert();
 
         const initialValues = this.initialValues[behaviorId];
         if (initialValues !== undefined) {
             delete this.initialValues[behaviorId];
         }
-        return DatasourceStore(this, behaviorId, initialValues);
+
+        return factory(this, behaviorId, initialValues) as ReturnType<T>;
     }
 
     childStoreFor(endpoint: Endpoint): EndpointStore {

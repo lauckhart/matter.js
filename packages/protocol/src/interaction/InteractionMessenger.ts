@@ -853,14 +853,21 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
     }
 
     /**
+     * Read a single data report.
+     */
+    async readDataReport() {
+        const dataReportMessage = await this.waitFor("DataReport", MessageType.ReportData);
+        return TlvDataReport.decode(dataReportMessage.payload);
+    }
+
+    /**
      * Read data reports as they come in on the wire.
      *
      * Data reports payloads are decoded but list attributes may be split across messages; these will require reassembly.
      */
     async *readDataReports() {
         while (true) {
-            const dataReportMessage = await this.waitFor("DataReport", MessageType.ReportData);
-            const report = TlvDataReport.decode(dataReportMessage.payload);
+            const report = await this.readDataReport();
 
             yield report;
 
@@ -899,16 +906,16 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
 }
 
 export class InteractionClientMessenger extends IncomingInteractionClientMessenger {
+    #exchangeProvider: ExchangeProvider;
+
     static async create(exchangeProvider: ExchangeProvider) {
         const exchange = await exchangeProvider.initiateExchange();
         return new this(exchange, exchangeProvider);
     }
 
-    constructor(
-        exchange: MessageExchange,
-        private readonly exchangeProvider: ExchangeProvider,
-    ) {
+    constructor(exchange: MessageExchange, exchangeProvider: ExchangeProvider) {
         super(exchange);
+        this.#exchangeProvider = exchangeProvider;
     }
 
     /** Implements a send method with an automatic reconnection mechanism */
@@ -921,7 +928,7 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
             return await this.exchange.send(messageType, payload, options);
         } catch (error) {
             if (
-                this.exchangeProvider.supportsReconnect &&
+                this.#exchangeProvider.supportsReconnect &&
                 (error instanceof RetransmissionLimitReachedError || error instanceof ChannelNotConnectedError) &&
                 !options?.multipleMessageInteraction
             ) {
@@ -931,8 +938,8 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
                     `${error instanceof RetransmissionLimitReachedError ? "Retransmission limit reached" : "Channel not connected"}, trying to reconnect and resend the message.`,
                 );
                 await this.exchange.close();
-                if (await this.exchangeProvider.reconnectChannel()) {
-                    this.exchange = await this.exchangeProvider.initiateExchange();
+                if (await this.#exchangeProvider.reconnectChannel()) {
+                    this.exchange = await this.#exchangeProvider.initiateExchange();
                     return await this.exchange.send(messageType, payload, options);
                 }
             } else {
@@ -943,8 +950,6 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
 
     async sendReadRequest(readRequest: ReadRequest) {
         await this.send(MessageType.ReadRequest, this.#encodeReadingRequest(TlvReadRequest, readRequest));
-
-        return this.readAggregateDataReport();
     }
 
     #encodeReadingRequest<T extends TlvSchema<any>>(schema: T, request: TypeFromSchema<T>) {
@@ -1004,7 +1009,9 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
     async sendSubscribeRequest(subscribeRequest: SubscribeRequest) {
         const request = this.#encodeReadingRequest(TlvSubscribeRequest, subscribeRequest);
         await this.send(MessageType.SubscribeRequest, request);
+    }
 
+    async readAggregateSubscribeResponse() {
         const report = await this.readAggregateDataReport();
         const { subscriptionId } = report;
 

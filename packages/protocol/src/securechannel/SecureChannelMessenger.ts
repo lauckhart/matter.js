@@ -66,6 +66,7 @@ export class SecureChannelMessenger {
 
     /**
      * Waits for the next message and returns it.
+     *
      * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
      */
     async #nextMessage(
@@ -88,6 +89,7 @@ export class SecureChannelMessenger {
 
     /**
      * Waits for the next message and decodes it.
+     *
      * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
      */
     async nextMessageDecoded<T>(
@@ -100,6 +102,7 @@ export class SecureChannelMessenger {
 
     /**
      * Waits for the next message and returns it.
+     *
      * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
      */
     async waitForSuccess(
@@ -112,6 +115,7 @@ export class SecureChannelMessenger {
 
     /**
      * Sends a message of the given type with the given payload.
+     *
      * If no ExchangeSendOptions are provided, the expectedProcessingTimeMs will be set to
      * EXPECTED_CRYPTO_PROCESSING_TIME_MS.
      */

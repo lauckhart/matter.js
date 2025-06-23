@@ -7,10 +7,11 @@
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { GlobalAttributeState } from "#behavior/cluster/ClusterState.js";
 import { ValidatedElements } from "#behavior/cluster/ValidatedElements.js";
-import type { SupportedElements } from "#endpoint/index.js";
+import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
+import { DatasourceStore } from "#endpoint/storage/DatasourceStore.js";
 import { camelize } from "#general";
 import { FieldValue } from "#model";
-import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
+import { NodeStore } from "#node/storage/NodeStore.js";
 import { Val } from "#protocol";
 import { ClusterType, TlvNoResponse } from "#types";
 import { Behavior } from "../Behavior.js";
@@ -28,11 +29,15 @@ export class ServerBehaviorBacking extends BehaviorBacking {
 
     override get store() {
         if (!this.#store) {
-            this.#store = this.#serverStore.endpointStores
-                .storeForEndpoint(this.endpoint)
-                .storeForBehavior(this.type.id);
+            this.#store = this.createStore();
         }
         return this.#store;
+    }
+
+    protected createStore() {
+        return this.#nodeStore.endpointStores
+            .storeForEndpoint(this.endpoint)
+            .createStoreForBehavior(this.type.id, DatasourceStore);
     }
 
     get elements() {
@@ -67,8 +72,8 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         finalizeState();
     }
 
-    get #serverStore() {
-        return this.endpoint.env.get(ServerNodeStore);
+    get #nodeStore() {
+        return this.endpoint.env.get(NodeStore);
     }
 
     /**
