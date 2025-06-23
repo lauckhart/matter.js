@@ -11,6 +11,8 @@ import { Node } from "#node/Node.js";
 import { InteractionServer } from "#node/server/InteractionServer.js";
 import {
     Ble,
+    ClientSubscriptionHandler,
+    ClientSubscriptions,
     Fabric,
     FabricAuthority,
     FabricAuthorityConfigurationProvider,
@@ -20,7 +22,6 @@ import {
     MdnsService,
     Scanner,
     ScannerSet,
-    SubscriptionClient,
 } from "#protocol";
 import type { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
@@ -120,8 +121,10 @@ export class ControllerBehavior extends Behavior {
             netInterfaces.add(Ble.get().getBleCentralInterface());
         }
 
-        // This is necessary to receive data reports for subscriptions
-        this.env.get(InteractionServer).clientHandler = this.env.get(SubscriptionClient);
+        // Install handler to receive data reports for subscriptions
+        const subscriptions = this.env.get(ClientSubscriptions);
+        const interactionServer = this.env.get(InteractionServer);
+        interactionServer.clientHandler = new ClientSubscriptionHandler(subscriptions);
 
         // Clean up as the node goes offline
         const node = Node.forEndpoint(this.endpoint);
@@ -143,6 +146,8 @@ export class ControllerBehavior extends Behavior {
     }
 
     async #nodeGoingOffline() {
+        await this.env.close(ClientSubscriptions);
+
         const netInterfaces = this.env.get(NetInterfaceSet);
         const netTransports = this.env.get(TransportInterfaceSet);
 

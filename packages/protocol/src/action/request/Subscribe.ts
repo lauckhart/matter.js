@@ -19,6 +19,7 @@ export interface Subscribe extends Read {
     keepSubscriptions: boolean;
     minIntervalFloorSeconds?: number;
     maxIntervalCeilingSeconds?: number;
+    maxPeerResponseTime?: number;
 
     /**
      * Invoked when subscribed data changes.

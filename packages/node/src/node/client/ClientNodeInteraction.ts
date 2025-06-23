@@ -39,20 +39,25 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
     }
 
     async subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
-        // TODO - persist subscription information somewhere; surface in either SubscriptionsBehavior or SubscriptionsClient
-        request = {
+        const intermediateRequest: Subscribe = {
             ...this.structure.injectVersionFilters(request),
 
-            async updated(_data) {
-                // TODO - invoke this.structure.mutate once _data is a proper read response
+            updated: async data => {
+                const result = this.structure.mutate(request, data);
+                if (request.updated) {
+                    await request.updated(result);
+                } else {
+                    for await (const _chunk of result);
+                }
             },
 
-            closed(_cause) {
-                // TODO - unregister subscription, log cause
+            closed(cause) {
+                // TODO - log cause?
+                request.closed?.(cause);
             },
         };
         const interaction = await this.#connect();
-        return interaction.subscribe(request, context);
+        return interaction.subscribe(intermediateRequest, context);
     }
 
     async write<T extends Write>(request: T, context?: ActionContext): WriteResult<T> {

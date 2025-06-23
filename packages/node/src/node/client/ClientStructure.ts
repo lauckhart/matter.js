@@ -129,11 +129,6 @@ export class ClientStructure {
         let currentUpdates: AttributeUpdates | undefined;
 
         for await (const chunk of changes) {
-            if ("subscriptionId" in chunk) {
-                // Skip subscribe response
-                continue;
-            }
-
             for (const change of chunk) {
                 if (change.kind !== "attr-value") {
                     continue;

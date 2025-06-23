@@ -13,25 +13,17 @@ import { InvokeResult } from "#action/response/InvokeResult.js";
 import { ReadResult } from "#action/response/ReadResult.js";
 import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
-import {
-    BasicSet,
-    CanceledError,
-    Environment,
-    Environmental,
-    ImplementationError,
-    PromiseQueue,
-    TimeoutError,
-} from "#general";
-import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
+import { BasicSet, Environment, Environmental, ImplementationError, PromiseQueue } from "#general";
 import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
-import { RegisteredSubscription, SubscriptionClient } from "#interaction/SubscriptionClient.js";
 import { InteractionQueue } from "#peer/InteractionQueue.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
-import { Status, TlvAny, TlvSubscribeResponse } from "#types";
+import { TlvSubscribeResponse } from "#types";
+import { ClientSubscriptions } from "./ClientSubscriptions.js";
+import { InputChunk } from "./InputChunk.js";
 
 export interface ClientInteractionContext {
     exchanges: ExchangeProvider;
-    subscriptions: SubscriptionClient;
+    subscriptions: ClientSubscriptions;
     queue: PromiseQueue;
 }
 
@@ -44,7 +36,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     implements Interactable<SessionT>
 {
     readonly #exchanges: ExchangeProvider;
-    readonly #subscriptions: SubscriptionClient;
+    readonly #subscriptions: ClientSubscriptions;
     readonly #queue?: PromiseQueue;
     readonly #interactions = new BasicSet<Read | Write | Invoke | Subscribe>();
     #closed = false;
@@ -74,7 +66,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     static [Environmental.create](env: Environment) {
         const instance = new ClientInteraction({
             exchanges: env.get(ExchangeProvider),
-            subscriptions: env.get(SubscriptionClient),
+            subscriptions: env.get(ClientSubscriptions),
             queue: env.get(InteractionQueue),
         });
         env.set(ClientInteraction, instance);
@@ -88,16 +80,19 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
             await messenger.sendReadRequest(request);
 
-            yield* this.#readDataReports(messenger);
+            for await (const report of messenger.readDataReports()) {
+                yield InputChunk(report);
+            }
         } finally {
             this.#end(request);
         }
     }
 
     async write<T extends Write>(request: T, _session?: SessionT): WriteResult<T> {
+        let messenger: undefined | InteractionClientMessenger;
         try {
             this.#begin(request);
-            const messenger = await InteractionClientMessenger.create(this.#exchanges);
+            messenger = await InteractionClientMessenger.create(this.#exchanges);
             const response = await messenger.sendWriteCommand(request);
             if (request.suppressResponse) {
                 return undefined as Awaited<WriteResult<T>>;
@@ -124,14 +119,16 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 ) as Awaited<WriteResult<T>>;
             }
         } finally {
+            await messenger?.close();
             this.#end(request);
         }
     }
 
     async *invoke(request: Invoke, _session?: SessionT): InvokeResult {
+        let messenger: undefined | InteractionClientMessenger;
         try {
             this.#begin(request);
-            const messenger = await InteractionClientMessenger.create(this.#exchanges);
+            messenger = await InteractionClientMessenger.create(this.#exchanges);
             const result = await messenger.sendInvokeCommand(request);
             if (!request.suppressResponse) {
                 if (result && result.invokeResponses?.length) {
@@ -184,15 +181,17 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 }
             }
         } finally {
+            await messenger?.close();
             this.#end(request);
         }
     }
 
     async subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
+        let messenger: undefined | InteractionClientMessenger;
         try {
             this.#begin(request);
 
-            const messenger = await InteractionClientMessenger.create(this.#exchanges);
+            messenger = await InteractionClientMessenger.create(this.#exchanges);
 
             await messenger.sendSubscribeRequest({
                 ...request,
@@ -200,40 +199,14 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 maxIntervalCeilingSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
             });
 
-            await this.#handleSubscriptionResponse(request, this.#readDataReports(messenger));
+            await this.#handleSubscriptionResponse(request, readChunks(messenger));
 
-            const subscribeResponseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
-            const subscribeResponse = TlvSubscribeResponse.decode(subscribeResponseMessage.payload);
+            const responseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
+            const response = TlvSubscribeResponse.decode(responseMessage.payload);
 
-            // TODO - modify SubscriptionClient to provide exchange/initial message or replace
-            const registration: RegisteredSubscription = {
-                id: subscribeResponse.subscriptionId,
-                maximumPeerResponseTime: 60_000, //request.maxIntervalCeilingSeconds,
-                maxIntervalS: subscribeResponse.maxInterval,
-
-                onData: async _data => {
-                    //await this.#handleSubscriptionResponse(request, data);
-                },
-
-                onTimeout() {
-                    if (request.closed) {
-                        request.closed(new TimeoutError(`Subscription ${registration.id} timed out`));
-                    }
-                },
-            };
-
-            this.#subscriptions.add(registration);
-
-            return {
-                ...subscribeResponse,
-                close: async () => {
-                    this.#subscriptions.delete(registration.id);
-                    if (request.closed) {
-                        request.closed(new CanceledError(`Subscription ${registration.id} canceled`));
-                    }
-                },
-            };
+            return this.#subscriptions.add(request, response);
         } finally {
+            await messenger?.close();
             this.#end(request);
         }
     }
@@ -251,77 +224,6 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async *#readDataReports(messenger: InteractionClientMessenger): ReadResult {
-        for await (const report of messenger.readDataReports()[Symbol.asyncIterator]()) {
-            yield convertReport(DecodedDataReport(report));
-        }
-
-        function* convertReport(report: DecodedDataReport): ReadResult.Chunk {
-            for (const attr of report.attributeReports) {
-                yield {
-                    kind: "attr-value",
-                    tlv: TlvAny,
-                    ...attr,
-                };
-            }
-
-            if (report.attributeStatus) {
-                for (const attr of report.attributeStatus) {
-                    yield {
-                        kind: "attr-status",
-                        path: attr.path,
-                        status: attr.status ?? Status.Failure, // TODO - attr.status shouldn't be optional?
-                        clusterStatus: attr.clusterStatus,
-                    };
-                }
-            }
-
-            for (const event of report.eventReports) {
-                for (const occurrence of event.events) {
-                    yield {
-                        kind: "event-value",
-                        path: event.path,
-                        value: occurrence,
-                        number: occurrence.eventNumber,
-                        priority: occurrence.priority,
-                        timestamp: Number(
-                            // TODO - this may not be useful, need to determine correct form
-                            occurrence.epochTimestamp ??
-                                occurrence.systemTimestamp ??
-                                occurrence.deltaEpochTimestamp ??
-                                occurrence.deltaSystemTimestamp ??
-                                0,
-                        ),
-
-                        // TODO - temporary, field will be removed
-                        tlv: TlvAny,
-                    };
-                }
-            }
-
-            if (report.eventStatus) {
-                for (const event of report.eventStatus) {
-                    if (event.status !== undefined) {
-                        yield {
-                            kind: "event-status",
-                            path: event.path,
-                            status: event.status,
-                            clusterStatus: event.clusterStatus,
-                        };
-                    }
-                    if (event.clusterStatus !== undefined) {
-                        yield {
-                            kind: "event-status",
-                            path: event.path,
-                            status: event.status ?? Status.Failure,
-                            clusterStatus: event.clusterStatus,
-                        };
-                    }
-                }
-            }
-        }
-    }
-
     #begin(request: Read | Write | Invoke | Subscribe) {
         if (this.#closed) {
             throw new ImplementationError("Client interaction unavailable after close");
@@ -331,5 +233,11 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
     #end(request: Read | Write | Invoke | Subscribe) {
         this.#interactions.delete(request);
+    }
+}
+
+async function* readChunks(messenger: InteractionClientMessenger) {
+    for await (const report of messenger.readDataReports()) {
+        yield InputChunk(report);
     }
 }

@@ -100,7 +100,7 @@ describe("ClientNode", () => {
         expect(ep1b.state).deep.equals(expectedEp1State);
     });
 
-    it.only("invokes and receives state updates", async () => {
+    it("invokes and receives state updates", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -121,7 +121,7 @@ describe("ClientNode", () => {
         // *** UPDATE ***
 
         await MockTime.resolve(receivedUpdate);
-    }).timeout(1e9);
+    });
 });
 
 const PEER1_STATE = {

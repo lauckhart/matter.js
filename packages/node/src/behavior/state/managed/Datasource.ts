@@ -5,6 +5,7 @@
  */
 
 import {
+    camelize,
     Crypto,
     deepCopy,
     ImplementationError,
@@ -282,6 +283,7 @@ interface Internals extends Datasource.Options {
     featuresKey?: string;
     interactionObserver(session?: AccessControl.Session): MaybePromise<void>;
     events: Datasource.InternalEvents;
+    changedEventFor(key: string): undefined | Datasource.Events[any];
 }
 
 /**
@@ -335,6 +337,8 @@ function configure(options: Datasource.Options): Internals {
     const events = (options.events ?? {}) as Datasource.InternalEvents;
     events[changed] = new Observable();
 
+    let changedEventIndex: undefined | Map<string, undefined | Datasource.InternalEvents[`${string}$Changed`]>;
+
     return {
         ...options,
         primaryKey: options.primaryKey === "id" ? "id" : "name",
@@ -359,6 +363,29 @@ function configure(options: Datasource.Options): Internals {
                     handleObserverError(e);
                 }
             }
+        },
+
+        changedEventFor(key: string) {
+            if (changedEventIndex === undefined) {
+                changedEventIndex = new Map();
+            } else if (changedEventIndex.has(key)) {
+                return changedEventIndex.get(key);
+            }
+
+            const id = Number.parseInt(key);
+            let event;
+            if (Number.isNaN(id)) {
+                event = events[`${key}$Changed`];
+            } else {
+                const field = options.supervisor.schema.member(id);
+                if (field !== undefined) {
+                    event = events[`${camelize(field.name)}$Changed`];
+                }
+            }
+
+            changedEventIndex.set(key, event);
+
+            return event;
         },
     };
 }
@@ -427,7 +454,7 @@ function configureExternalChanges(internals: Internals) {
                 }
 
                 const name = n.value;
-                const event = internals.events?.[`${name}$Changed`];
+                const event = internals.changedEventFor(name);
                 if (!event?.isObserved) {
                     continue;
                 }
@@ -742,7 +769,7 @@ function createReference(resource: Transaction.Resource, internals: Internals, s
                     changes.persistent[name] = values[name];
                 }
 
-                const event = internals.events?.[`${name}$Changed`];
+                const event = internals.changedEventFor(name);
                 if (event?.isObserved) {
                     changes.notifications.push({
                         event,
