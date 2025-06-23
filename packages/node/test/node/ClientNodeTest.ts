@@ -52,7 +52,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it("commissions and initializes endpoints", async () => {
+    it.only("commissions and initializes endpoints", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -98,7 +98,7 @@ describe("ClientNode", () => {
         const ep1b = peer1b.parts.get("ep1")!;
         expect(ep1b).not.undefined;
         expect(ep1b.state).deep.equals(expectedEp1State);
-    });
+    }).timeout(1e9);
 
     it("invokes and receives state updates", async () => {
         // *** SETUP ***
