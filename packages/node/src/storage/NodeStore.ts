@@ -5,9 +5,9 @@
  */
 
 import type { Endpoint } from "#endpoint/Endpoint.js";
-import { EndpointStore } from "#endpoint/storage/EndpointStore.js";
 import { Construction, MaybePromise, StorageContextFactory } from "#general";
-import type { Node } from "../Node.js";
+import type { Node } from "../node/Node.js";
+import { EndpointStore } from "./EndpointStore.js";
 
 /**
  * Non-volatile state management for a {@link Node}.

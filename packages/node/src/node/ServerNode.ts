@@ -17,11 +17,11 @@ import { Endpoint } from "#endpoint/Endpoint.js";
 import type { Environment } from "#general";
 import { asyncNew, Construction, DiagnosticSource, errorOf, Identity, MatterError } from "#general";
 import { FabricManager, Interactable, OccurrenceManager, ServerInteraction, SessionManager } from "#protocol";
+import { NodeStore } from "#storage/NodeStore.js";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
 import { ClientNodes } from "./client/ClientNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
-import { NodeStore } from "./storage/NodeStore.js";
 
 /**
  * Thrown when there is an error during factory reset.

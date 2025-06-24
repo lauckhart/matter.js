@@ -12,7 +12,7 @@ import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import type { ClientNode } from "#node/ClientNode.js";
-import { NodeStore } from "#node/storage/NodeStore.js";
+import { NodeStore } from "#storage/NodeStore.js";
 import { ClientStructure } from "./ClientStructure.js";
 
 export class ClientEndpointInitializer extends EndpointInitializer {

@@ -7,8 +7,8 @@
 import { Construction, MatterAggregateError, StorageContext } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
+import { NodeStore } from "../NodeStore.js";
 import { ClientNodeStore } from "./ClientNodeStore.js";
-import { NodeStore } from "./NodeStore.js";
 
 const CLIENT_ID_PREFIX = "peer";
 

@@ -7,14 +7,16 @@
 import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { InternalError } from "#general";
 import { Val } from "#protocol";
-import { DatasourceStore } from "./DatasourceStore.js";
-import { EndpointStore } from "./EndpointStore.js";
+import { EndpointStore } from "#storage/EndpointStore.js";
+import { DatasourceStore } from "../server/DatasourceStore.js";
 
 /**
  * Factory function for the default implementation of {@link Datasource.ExternallyMutableStore}.
+ *
+ * This implements storage for attribute values for a single cluster loaded from remote nodes.
  */
 export function DatasourceCache(
-    endpointStore: EndpointStore,
+    store: EndpointStore,
     behaviorId: string,
     initialValues: Val.Struct | undefined,
 ): Datasource.ExternallyMutableStore {
@@ -24,14 +26,14 @@ export function DatasourceCache(
     }
 
     return {
-        ...DatasourceStore(endpointStore, behaviorId, initialValues),
+        ...DatasourceStore(store, behaviorId, initialValues),
 
         async externalSet(values: Val.Struct) {
             if (typeof values[DatasourceCache.VERSION_KEY] === "number") {
                 version = values[DatasourceCache.VERSION_KEY];
             }
 
-            await endpointStore.set({ [behaviorId]: values });
+            await store.set({ [behaviorId]: values });
 
             if (this.externalChangeListener) {
                 await this.externalChangeListener(values);

@@ -9,9 +9,9 @@ import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js
 import { ServerEndpointInitializer } from "#endpoint/server/ServerEndpointInitializer.js";
 import { Crypto, Observable } from "#general";
 import type { ServerNode } from "#node/ServerNode.js";
-import { NodeStore } from "#node/storage/NodeStore.js";
-import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { FabricManager, SessionManager } from "#protocol";
+import { NodeStore } from "#storage/NodeStore.js";
+import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { IdentityService } from "./IdentityService.js";
 
 /**

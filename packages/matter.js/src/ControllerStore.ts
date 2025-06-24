@@ -22,10 +22,6 @@ const logger = Logger.get("ControllerStore");
 
 /**
  * Non-volatile state management for a {@link ControllerNode}.
- *
- * The default implementation for matter.js uses synchronous APIs for storage.
- * However, this will change in the future, and other implementations may be
- * backed by asynchronous storage.  So the public API is asynchronous.
  */
 export class ControllerStore implements Destructable, ControllerStoreInterface {
     #location: string;

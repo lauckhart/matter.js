@@ -8,12 +8,12 @@ import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { DescriptorCluster } from "#clusters/descriptor";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { DatasourceCache } from "#endpoint/storage/DatasourceCache.js";
 import { EndpointType } from "#endpoint/type/EndpointType.js";
 import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap, type FeatureBitmap } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
-import { NodeStore } from "#node/storage/NodeStore.js";
 import { ReadScope, type Read, type ReadResult } from "#protocol";
+import { DatasourceCache } from "#storage/client/DatasourceCache.js";
+import { ClientNodeStore } from "#storage/index.js";
 import type { AttributeId, ClusterId, CommandId, DeviceTypeId, EndpointNumber } from "#types";
 import { ClientBehavior } from "./ClientBehavior.js";
 
@@ -25,11 +25,11 @@ const PARTS_LIST_ATTR_ID = DescriptorCluster.attributes.partsList.id;
  * Manages endpoint and behavior structure for a single client node.
  */
 export class ClientStructure {
-    #nodeStore: NodeStore;
+    #nodeStore: ClientNodeStore;
     #endpoints: Record<EndpointNumber, EndpointStructure> = {};
 
     constructor(node: ClientNode) {
-        this.#nodeStore = node.env.get(NodeStore);
+        this.#nodeStore = node.env.get(ClientNodeStore);
         this.#endpoints[node.number] = {
             endpoint: node,
             clusters: {},
@@ -191,7 +191,7 @@ export class ClientStructure {
      * If the cluster is Descriptor, performs additional {@link Endpoint} configuration such as installing parts and
      * device types.
      *
-     * Invoked once we've loaded all attributes.
+     * Invoked once we've loaded all attributes in an interaction.
      */
     #initializeCluster(endpoint: EndpointStructure, cluster: ClusterStructure) {
         const attrs = cluster.store.initialValues ?? {};
@@ -228,6 +228,7 @@ export class ClientStructure {
                 cluster.commands !== undefined
             ) {
                 cluster.behavior = ClientBehavior(cluster as ClientBehavior.ClusterShape);
+                endpoint.endpoint.behaviors.require(cluster.behavior);
             }
         }
 

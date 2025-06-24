@@ -15,8 +15,8 @@ import {
     StorageManager,
     StorageService,
 } from "#general";
-import { ClientNodeStores } from "./ClientNodeStores.js";
-import { NodeStore } from "./NodeStore.js";
+import { NodeStore } from "../NodeStore.js";
+import { ClientNodeStores } from "../client/ClientNodeStores.js";
 import { ServerEndpointStores } from "./ServerEndpointStores.js";
 
 const logger = Logger.get("ServerNodeStore");
@@ -66,6 +66,16 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         });
     }
 
+    /**
+     * Stores associated with server endpoints supported by this node.
+     */
+    get endpointStores() {
+        return this.construction.assert("endpoint stores", this.#endpointStores);
+    }
+
+    /**
+     * Stores associated with remote nodes known by this node.
+     */
     get clientStores() {
         return this.construction.assert("client stores", this.#clientStores);
     }

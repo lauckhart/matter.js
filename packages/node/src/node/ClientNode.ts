@@ -13,13 +13,13 @@ import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise } from "#general";
 import { Interactable } from "#protocol";
+import { ClientNodeStore } from "#storage/client/ClientNodeStore.js";
+import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { Matter, MatterModel } from "@matter/model";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { ClientNodeInteraction } from "./client/ClientNodeInteraction.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
-import { NodeStore } from "./storage/NodeStore.js";
-import { ServerNodeStore } from "./storage/ServerNodeStore.js";
 
 /**
  * A remote Matter {@link Node}.
@@ -57,7 +57,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 
     override initialize() {
         const store = this.env.get(ServerNodeStore).clientStores.storeForNode(this);
-        this.env.set(NodeStore, store);
+        this.env.set(ClientNodeStore, store);
 
         const initializer = new ClientEndpointInitializer(this);
         this.env.set(EndpointInitializer, initializer);

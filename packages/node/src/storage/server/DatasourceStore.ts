@@ -7,7 +7,8 @@
 import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { MaybePromise, Transaction } from "#general";
 import { Val } from "#protocol";
-import type { EndpointStore } from "./EndpointStore.js";
+import { EndpointStore } from "#storage/EndpointStore.js";
+import type { ServerEndpointStore } from "./ServerEndpointStore.js";
 
 interface StorageParticipant extends Transaction.Participant {
     mutations?: Record<string, Val.Struct>;
@@ -16,7 +17,7 @@ interface StorageParticipant extends Transaction.Participant {
 /**
  * Factory function for the default implementation of {@link Datasource.Store}.
  *
- * Performs read & write for non-volatile values for a single behavior via the {@link EndpointStore} interface.
+ * Performs read & write for non-volatile values for a single behavior via the {@link ServerEndpointStore} interface.
  */
 export function DatasourceStore(
     endpointStore: EndpointStore,

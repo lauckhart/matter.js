@@ -6,17 +6,17 @@
 
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { StorageContext } from "#general";
-import { ImplementationError, InternalError, Logger, asyncNew } from "#general";
-import { EndpointStore } from "../../endpoint/storage/EndpointStore.js";
-import { type ServerNode } from "../ServerNode.js";
-import { IdentityConflictError } from "../server/IdentityService.js";
+import { ImplementationError, InternalError, Logger } from "#general";
+import { type ServerNode } from "#node/ServerNode.js";
+import { IdentityConflictError } from "#node/server/IdentityService.js";
+import { ServerEndpointStore } from "./ServerEndpointStore.js";
 
 const NEXT_NUMBER_KEY = "__nextNumber__";
 
 const logger = Logger.get("EndpointStoreService");
 
 /**
- * Manages {@link EndpointStore}s for a {@link ServerNode}.
+ * Manages {@link ServerEndpointStore}s for a {@link ServerNode}.
  */
 export class ServerEndpointStores {
     #storage?: StorageContext;
@@ -26,7 +26,7 @@ export class ServerEndpointStores {
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Array<Endpoint>;
     #nextNumber = 1;
-    #root?: EndpointStore;
+    #root?: ServerEndpointStore;
 
     async load(storage: StorageContext) {
         this.#storage = storage;
@@ -41,7 +41,8 @@ export class ServerEndpointStores {
         }
 
         // Preload stores so we can access synchronously going forward
-        this.#root = await asyncNew(EndpointStore, this.#storage);
+        this.#root = new ServerEndpointStore(this.#storage);
+        await this.#root.load();
 
         // Ensure all known numbers are allocated.  This protects them when unknown endpoints initialize before known
         // endpoints and #nextNumber is somehow invalid
@@ -149,7 +150,7 @@ export class ServerEndpointStores {
      *
      * These stores are cached internally by ID.
      */
-    storeForEndpoint(endpoint: Endpoint): EndpointStore {
+    storeForEndpoint(endpoint: Endpoint): ServerEndpointStore {
         if (endpoint.maybeNumber === 0) {
             if (this.#root === undefined) {
                 this.#premature("Root store accessed");
