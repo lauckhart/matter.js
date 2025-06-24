@@ -315,7 +315,7 @@ export class ClientStructure {
 
         cluster = {
             id,
-            store: this.#nodeStore.endpointStores
+            store: this.#nodeStore
                 .storeForEndpoint(endpoint.endpoint)
                 .createStoreForBehavior(id.toString(), DatasourceCache),
         };

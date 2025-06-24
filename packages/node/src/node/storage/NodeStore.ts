@@ -4,26 +4,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { asyncNew, Construction, ImplementationError, StorageContextFactory } from "#general";
+import type { Endpoint } from "#endpoint/Endpoint.js";
+import { EndpointStore } from "#endpoint/storage/EndpointStore.js";
+import { Construction, MaybePromise, StorageContextFactory } from "#general";
 import type { Node } from "../Node.js";
-import { EndpointStores } from "./EndpointStores.js";
 
 /**
  * Non-volatile state management for a {@link Node}.
+ *
+ * We eagerly load all available data from disk on startup.  This prevents storage from forcing asynchronous
+ * {@link Endpoint} initialization.  We then can initialize most behaviors synchronously.
  */
-export class NodeStore {
-    #factory: StorageContextFactory;
-    #layout: EndpointStores.Layout;
-    #rootStore?: EndpointStores;
+export abstract class NodeStore {
+    #storageFactory: StorageContextFactory;
     #construction: Construction<NodeStore>;
 
     get construction() {
         return this.#construction;
     }
 
-    constructor(factory: StorageContextFactory, layout: EndpointStores.Layout) {
-        this.#factory = factory;
-        this.#layout = layout;
+    constructor(storageFactory: StorageContextFactory) {
+        this.#storageFactory = storageFactory;
         this.#construction = Construction(this);
     }
 
@@ -32,28 +33,20 @@ export class NodeStore {
     }
 
     [Construction.construct]() {
-        return this.initializeStorage();
+        return this.load();
     }
 
-    async erase() {
-        await this.#rootStore?.erase();
+    abstract storeForEndpoint(endpoint: Endpoint): EndpointStore;
+
+    abstract erase(): MaybePromise<void>;
+
+    protected abstract load(): MaybePromise<void>;
+
+    protected createStorageContext(name: string) {
+        return this.#storageFactory.createContext(name);
     }
 
-    get endpointStores() {
-        if (this.#rootStore === undefined) {
-            throw new ImplementationError("Endpoint storage accessed prior to initialization");
-        }
-        return this.#rootStore;
-    }
-
-    protected async initializeStorage() {
-        this.#rootStore = await asyncNew(EndpointStores, {
-            storage: this.factory.createContext("root"),
-            layout: this.#layout,
-        });
-    }
-
-    protected get factory() {
-        return this.#factory;
+    protected get storageFactory() {
+        return this.#storageFactory;
     }
 }

@@ -7,23 +7,18 @@
 import { Construction, MatterAggregateError, StorageContext } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
-import { EndpointStores } from "./EndpointStores.js";
+import { ClientNodeStore } from "./ClientNodeStore.js";
 import { NodeStore } from "./NodeStore.js";
 
 const CLIENT_ID_PREFIX = "peer";
 
 /**
- * Manages all {@link ClientNodeStore}s for a {@link Node}.
- *
- * We eagerly load all available endpoint data from disk because this allows us to keep {@link Endpoint} initialization
- * more synchronous.  We can initialize most behaviors synchronously if their state is already in memory.
- *
- * TODO - cleanup of storage for permanently removed endpoints
+ * Manages {@link ClientNodeStore}s for a {@link Node}.
  */
-export class ClientStores {
+export class ClientNodeStores {
     #storage: StorageContext;
     #stores = {} as Record<string, NodeStore>;
-    #construction: Construction<ClientStores>;
+    #construction: Construction<ClientNodeStores>;
     #nextAutomaticId = 1;
 
     get construction() {
@@ -61,7 +56,7 @@ export class ClientStores {
     }
 
     /**
-     * Allocate a stable local ID. for a peer
+     * Allocate a stable local ID for a peer.
      *
      * The ID may be preassigned or we will assign using an incrementing sequential number.  The number is reserved for
      * the life of this process or, if data is persisted, until erased.
@@ -102,7 +97,7 @@ export class ClientStores {
     }
 
     #createNodeStore(id: string) {
-        const store = new NodeStore(this.#storage.createContext(id), EndpointStores.Layout.Flat);
+        const store = new ClientNodeStore(this.#storage.createContext(id));
         store.construction.start();
         this.#stores[id] = store;
         return store;

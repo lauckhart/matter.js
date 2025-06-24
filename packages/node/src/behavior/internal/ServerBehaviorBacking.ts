@@ -11,7 +11,7 @@ import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import { DatasourceStore } from "#endpoint/storage/DatasourceStore.js";
 import { camelize } from "#general";
 import { FieldValue } from "#model";
-import { NodeStore } from "#node/storage/NodeStore.js";
+import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { Val } from "#protocol";
 import { ClusterType, TlvNoResponse } from "#types";
 import { Behavior } from "../Behavior.js";
@@ -35,9 +35,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     }
 
     protected createStore() {
-        return this.#nodeStore.endpointStores
-            .storeForEndpoint(this.endpoint)
-            .createStoreForBehavior(this.type.id, DatasourceStore);
+        return this.#nodeStore.storeForEndpoint(this.endpoint).createStoreForBehavior(this.type.id, DatasourceStore);
     }
 
     get elements() {
@@ -73,7 +71,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     }
 
     get #nodeStore() {
-        return this.endpoint.env.get(NodeStore);
+        return this.endpoint.env.get(ServerNodeStore);
     }
 
     /**

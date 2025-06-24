@@ -36,7 +36,7 @@ export class ClientEndpointInitializer extends EndpointInitializer {
             return;
         }
 
-        const store = this.#store.endpointStores.storeForEndpoint(endpoint);
+        const store = this.#store.storeForEndpoint(endpoint);
         await store.erase();
     }
 

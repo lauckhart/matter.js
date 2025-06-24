@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Endpoint } from "#endpoint/Endpoint.js";
 import {
     asyncNew,
     Destructable,
@@ -14,9 +15,9 @@ import {
     StorageManager,
     StorageService,
 } from "#general";
-import { ClientStores } from "./ClientStores.js";
-import { EndpointStores } from "./EndpointStores.js";
+import { ClientNodeStores } from "./ClientNodeStores.js";
 import { NodeStore } from "./NodeStore.js";
+import { ServerEndpointStores } from "./ServerEndpointStores.js";
 
 const logger = Logger.get("ServerNodeStore");
 
@@ -28,23 +29,23 @@ export class ServerNodeStore extends NodeStore implements Destructable {
     #env: Environment;
     #nodeId: string;
     #location: string;
+    #endpointStores: ServerEndpointStores;
     #storageManager?: StorageManager;
-    #clientStores?: ClientStores;
+    #clientStores?: ClientNodeStores;
 
     constructor(environment: Environment, nodeId: string) {
-        super(
-            {
-                createContext: (name: string) => {
-                    if (!this.#storageManager) {
-                        throw new ImplementationError(
-                            `Cannot create storage context ${name} because store is not initialized`,
-                        );
-                    }
-                    return this.#storageManager.createContext(name);
-                },
+        super({
+            createContext: (name: string) => {
+                if (!this.#storageManager) {
+                    throw new ImplementationError(
+                        `Cannot create storage context ${name} because store is not initialized`,
+                    );
+                }
+                return this.#storageManager.createContext(name);
             },
-            EndpointStores.Layout.Hierarchical,
-        );
+        });
+
+        this.#endpointStores = new ServerEndpointStores();
 
         this.#env = environment;
         this.#nodeId = nodeId;
@@ -73,13 +74,22 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         logger.info(what, Diagnostic.strong(this.#nodeId ?? "node"), "storage at", `${this.#location}/${this.#nodeId}`);
     }
 
-    override async initializeStorage() {
+    storeForEndpoint(endpoint: Endpoint) {
+        return this.#endpointStores.storeForEndpoint(endpoint);
+    }
+
+    erase() {
+        return this.#endpointStores.erase();
+    }
+
+    async load() {
         this.#storageManager = await this.#env.get(StorageService).open(this.#nodeId);
         this.#env.set(StorageManager, this.#storageManager);
 
-        this.#clientStores = await asyncNew(ClientStores, this.#storageManager.createContext("nodes"));
+        this.#clientStores = await asyncNew(ClientNodeStores, this.#storageManager.createContext("nodes"));
 
-        await super.initializeStorage();
+        const rootContext = this.storageFactory.createContext("root");
+        await this.#endpointStores.load(rootContext);
 
         this.#logChange("Opened");
     }

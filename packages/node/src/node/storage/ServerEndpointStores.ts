@@ -6,9 +6,9 @@
 
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { StorageContext } from "#general";
-import { Construction, ImplementationError, InternalError, Lifecycle, Logger, asyncNew } from "#general";
+import { ImplementationError, InternalError, Logger, asyncNew } from "#general";
 import { EndpointStore } from "../../endpoint/storage/EndpointStore.js";
-import { type Node } from "../Node.js";
+import { type ServerNode } from "../ServerNode.js";
 import { IdentityConflictError } from "../server/IdentityService.js";
 
 const NEXT_NUMBER_KEY = "__nextNumber__";
@@ -16,44 +16,25 @@ const NEXT_NUMBER_KEY = "__nextNumber__";
 const logger = Logger.get("EndpointStoreService");
 
 /**
- * Manages all {@link EndpointStore}s for a {@link Node}.
- *
- * We eagerly load all available endpoint data from disk because this allows us to keep {@link Endpoint} initialization
- * more synchronous.  We can initialize most behaviors synchronously if their state is already in memory.
- *
- * TODO - cleanup of storage for permanently removed endpoints
+ * Manages {@link EndpointStore}s for a {@link ServerNode}.
  */
-export class EndpointStores {
-    #storage: StorageContext;
-    #layout: EndpointStores.Layout;
+export class ServerEndpointStores {
+    #storage?: StorageContext;
     #allocatedNumbers = new Set<number>();
     #preAllocatedNumbers = new Set<number>();
-    #construction: Construction<EndpointStores>;
     #persistedNextNumber?: number;
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Array<Endpoint>;
-    #nextNumber?: number;
-    #defaultNextNumber: number;
+    #nextNumber = 1;
     #root?: EndpointStore;
 
-    get construction() {
-        return this.#construction;
-    }
-
-    constructor({ storage, nextNumber, layout }: EndpointStores.Options) {
+    async load(storage: StorageContext) {
         this.#storage = storage;
-        this.#defaultNextNumber = nextNumber ?? 1;
-        this.#layout = layout;
 
-        this.#construction = Construction(this);
-        this.#construction.start();
-    }
-
-    async [Construction.construct]() {
         // Load next number with excessive validation for the off-chance it somehow gets corrupted
-        this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, this.#defaultNextNumber)) % 0xffff;
+        this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, 1)) % 0xffff;
 
-        if (!this.#nextNumber) {
+        if (this.#nextNumber < 1) {
             this.#nextNumber = 1;
         } else {
             this.#persistedNextNumber = this.#nextNumber;
@@ -72,21 +53,24 @@ export class EndpointStores {
     }
 
     async erase() {
+        const storage = this.#storage;
+        if (!storage) {
+            return;
+        }
+
         if (this.#numbersPersisted) {
             await this.#numbersPersisted;
         }
 
-        await this.#storage.clearAll();
+        this.#storage = undefined;
 
-        this.#construction.setStatus(Lifecycle.Status.Inactive);
-        this.#construction.start();
+        await storage.clearAll();
 
         this.#allocatedNumbers = new Set();
-        this.#nextNumber = (this.#defaultNextNumber ?? 1) % 0xffff;
+        this.#nextNumber = 1;
         this.#persistedNextNumber = undefined;
-        this.#root = new EndpointStore(this.#storage, false);
 
-        await this.construction;
+        await this.load(storage);
     }
 
     async close() {
@@ -96,10 +80,8 @@ export class EndpointStores {
         }
     }
 
-    [Symbol.iterator]() {
-        const list = Array<EndpointStore>();
-        this.#root?.visit(list.push.bind(list));
-        return list[Symbol.iterator]();
+    #premature(what: string): never {
+        throw new InternalError(`${what} prior to storage initialization`);
     }
 
     /**
@@ -112,12 +94,6 @@ export class EndpointStores {
      * persistence fails so we persist lazily and return synchronously.
      */
     assignNumber(endpoint: Endpoint) {
-        if (this.#nextNumber === undefined) {
-            throw new InternalError("Endpoint number assigned prior to store initialization");
-        }
-
-        this.#construction.assert();
-
         const store = this.storeForEndpoint(endpoint);
 
         if (endpoint.lifecycle.hasNumber) {
@@ -174,14 +150,11 @@ export class EndpointStores {
      * These stores are cached internally by ID.
      */
     storeForEndpoint(endpoint: Endpoint): EndpointStore {
-        this.#construction.assert();
-
         if (endpoint.maybeNumber === 0) {
-            return this.#construction.assert("root node store", this.#root);
-        }
-
-        if (this.#layout === EndpointStores.Layout.Flat) {
-            return this.#construction.assert("root node store", this.#root).childStoreFor(endpoint);
+            if (this.#root === undefined) {
+                this.#premature("Root store accessed");
+            }
+            return this.#root;
         }
 
         if (!endpoint.owner) {
@@ -197,8 +170,6 @@ export class EndpointStores {
      * Deactivate the store for a single {@link Endpoint}. This puts the endpoint number back into pre-allocated state
      */
     deactivateStoreForEndpoint(endpoint: Endpoint) {
-        this.#construction.assert();
-
         if (endpoint.maybeNumber === 0) {
             throw new InternalError("Cannot deactivate root node store");
         }
@@ -214,8 +185,6 @@ export class EndpointStores {
      * Erase storage for a single {@link Endpoint}.
      */
     async eraseStoreForEndpoint(endpoint: Endpoint) {
-        this.#construction.assert();
-
         if (!endpoint.owner) {
             throw new InternalError(
                 "Endpoint storage inaccessible because endpoint is not a node and is not owned by another endpoint",
@@ -242,8 +211,6 @@ export class EndpointStores {
         this.#numbersToPersist = [endpoint];
 
         const numberPersister = async () => {
-            await this.#construction;
-
             const numbersToPersist = this.#numbersToPersist;
             if (!numbersToPersist) {
                 return;
@@ -256,6 +223,9 @@ export class EndpointStores {
             }
 
             if (this.#nextNumber !== this.#persistedNextNumber) {
+                if (this.#storage === undefined) {
+                    this.#premature("Numer persistance");
+                }
                 await this.#storage.set(NEXT_NUMBER_KEY, this.#nextNumber);
                 this.#persistedNextNumber = this.#nextNumber;
             }
@@ -269,19 +239,5 @@ export class EndpointStores {
         } else {
             this.#numbersPersisted = numberPersister();
         }
-    }
-}
-
-export namespace EndpointStores {
-    export enum Layout {
-        Flat,
-        Hierarchical,
-    }
-
-    export interface Options {
-        storage: StorageContext;
-        layout: Layout;
-        nextNumber?: number;
-        load?: boolean;
     }
 }
