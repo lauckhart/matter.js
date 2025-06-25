@@ -43,17 +43,10 @@ export class ClientStructure {
         for (const store of this.#nodeStore.endpointStores) {
             const id = store.id;
 
-            // Client storage currently does not persist endpoint number; we determine from the persisted name, either
-            // "root" for endpoint 0 or "epN" for other endpoints
-            let number;
-            if (id === "root") {
-                number = 0;
-            } else {
-                const match = id.match(/^ep(\d+)$/);
-                if (!match) {
-                    continue;
-                }
-                number = Number.parseInt(match[1]);
+            // Client storage uses the endpoint number as the key for the endpoint
+            const number = Number.parseInt(id);
+            if (Number.isNaN(number)) {
+                continue;
             }
 
             const endpoint = this.#endpointFor(number as EndpointNumber);

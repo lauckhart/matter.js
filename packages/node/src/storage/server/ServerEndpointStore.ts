@@ -21,10 +21,6 @@ export class ServerEndpointStore extends EndpointStore {
     #childStorage: StorageContext;
     #childStores = {} as Record<string, ServerEndpointStore>;
 
-    get id() {
-        return this.storage.thisContexts[this.storage.thisContexts.length - 1];
-    }
-
     get number() {
         return this.#number;
     }

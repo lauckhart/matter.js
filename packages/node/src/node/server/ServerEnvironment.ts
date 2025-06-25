@@ -6,8 +6,8 @@
 
 import { limitNodeDataToAllowedFabrics } from "#behavior/cluster/FabricScopedDataHandler.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { ServerEndpointInitializer } from "#endpoint/server/ServerEndpointInitializer.js";
 import { Crypto, Observable } from "#general";
+import { ServerEndpointInitializer } from "#node/server/ServerEndpointInitializer.js";
 import type { ServerNode } from "#node/ServerNode.js";
 import { FabricManager, SessionManager } from "#protocol";
 import { NodeStore } from "#storage/NodeStore.js";

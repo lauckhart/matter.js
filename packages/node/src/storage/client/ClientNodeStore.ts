@@ -15,7 +15,7 @@ export class ClientNodeStore extends NodeStore {
     #stores = new Map<EndpointNumber, EndpointStore>();
 
     get endpointStores() {
-        return Object.values(this.#stores);
+        return this.#stores.values();
     }
 
     override erase() {

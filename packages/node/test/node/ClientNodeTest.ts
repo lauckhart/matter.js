@@ -52,7 +52,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it.only("commissions and initializes endpoints", async () => {
+    it("commissions and initializes endpoints", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -89,7 +89,10 @@ describe("ClientNode", () => {
         // Retrieve the client view of the device that should have been recreated from cache
         const peer1b = controllerB.nodes.get("peer1")!;
         expect(peer1b).not.undefined;
-        expect(peer1b.construction.status).equals("initialized");
+
+        // Client nodes should fully initialize on initial load.  We could initialize asynchronously during ServerNode
+        // initialization but currently we don't
+        expect(peer1b.construction.status).equals("active");
 
         // Validate the root endpoint
         expect(peer1b.state).deep.equals(expectedPeer1State);
@@ -98,9 +101,9 @@ describe("ClientNode", () => {
         expect(peer1b.parts.size).equals(1);
         const ep1b = peer1b.parts.get("ep1")!;
         expect(ep1b).not.undefined;
-        expect(ep1b.construction.status).equals("initialized");
+        expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    }).timeout(1e9);
+    });
 
     it("invokes and receives state updates", async () => {
         // *** SETUP ***

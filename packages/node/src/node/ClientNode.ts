@@ -14,6 +14,7 @@ import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js
 import { Identity, Lifecycle, MaybePromise } from "#general";
 import { Interactable } from "#protocol";
 import { ClientNodeStore } from "#storage/client/ClientNodeStore.js";
+import { NodeStore } from "#storage/NodeStore.js";
 import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { Matter, MatterModel } from "@matter/model";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
@@ -57,6 +58,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 
     override initialize() {
         const store = this.env.get(ServerNodeStore).clientStores.storeForNode(this);
+        this.env.set(NodeStore, store);
         this.env.set(ClientNodeStore, store);
 
         const initializer = new ClientEndpointInitializer(this);

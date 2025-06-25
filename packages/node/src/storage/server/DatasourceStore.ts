@@ -7,7 +7,7 @@
 import { Datasource } from "#behavior/state/managed/Datasource.js";
 import { MaybePromise, Transaction } from "#general";
 import { Val } from "#protocol";
-import { EndpointStore } from "#storage/EndpointStore.js";
+import type { EndpointStore } from "#storage/EndpointStore.js";
 import type { ServerEndpointStore } from "./ServerEndpointStore.js";
 
 interface StorageParticipant extends Transaction.Participant {

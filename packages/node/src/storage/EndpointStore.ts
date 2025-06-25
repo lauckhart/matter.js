@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { Datasource } from "#behavior/state/managed/Datasource.js";
 import { StorageContext, SupportedStorageTypes } from "#general";
 import { Val } from "#protocol";
 import { DatasourceStore } from "./server/DatasourceStore.js";
@@ -20,6 +21,13 @@ export class EndpointStore {
 
     constructor(storage: StorageContext) {
         this.#storage = storage;
+    }
+
+    /**
+     * Retrieve the primary key used to identify this store.
+     */
+    get id() {
+        return this.storage.thisContexts[this.storage.thisContexts.length - 1];
     }
 
     /**

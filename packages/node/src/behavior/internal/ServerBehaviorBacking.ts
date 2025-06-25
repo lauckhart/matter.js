@@ -11,8 +11,8 @@ import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import { camelize } from "#general";
 import { FieldValue } from "#model";
 import { Val } from "#protocol";
+import { NodeStore } from "#storage/NodeStore.js";
 import { DatasourceStore } from "#storage/server/DatasourceStore.js";
-import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { ClusterType, TlvNoResponse } from "#types";
 import { Behavior } from "../Behavior.js";
 import { Datasource } from "../state/managed/Datasource.js";
@@ -71,7 +71,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     }
 
     get #nodeStore() {
-        return this.endpoint.env.get(ServerNodeStore);
+        return this.endpoint.env.get(NodeStore);
     }
 
     /**
