@@ -159,7 +159,7 @@ export class StandardTimer implements Timer {
                 `Invalid intervalMs: ${intervalMs}. The value must be between 0 and 32-bit maximum value (2147483647)`,
             );
         }
-        this.intervalMs = intervalMs;
+        this.#intervalMs = intervalMs;
     }
 
     get intervalMs() {

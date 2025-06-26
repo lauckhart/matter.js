@@ -5,7 +5,7 @@
  */
 
 import { DiscoveryError } from "#behavior/system/controller/discovery/DiscoveryError.js";
-import { OnOffBehavior } from "#behaviors/on-off";
+import { OnOffClient } from "#behaviors/on-off";
 import { b$, deepCopy } from "#general";
 import { MockSite } from "./mock-site.js";
 
@@ -117,11 +117,11 @@ describe("ClientNode", () => {
         const ep1 = peer1.parts.get("ep1")!;
         expect(ep1).not.undefined;
 
-        const receivedUpdate = new Promise<boolean>(resolve => ep1.eventsOf(OnOffBehavior).onOff$Changed.on(resolve));
+        const receivedUpdate = new Promise<boolean>(resolve => ep1.eventsOf(OnOffClient).onOff$Changed.on(resolve));
 
         // *** INVOCATION ***
 
-        await ep1.commandsOf(OnOffBehavior).toggle();
+        await ep1.commandsOf(OnOffClient).toggle();
 
         // *** UPDATE ***
 
