@@ -7,13 +7,23 @@
 import Chai from "chai";
 import "./global-definitions.js";
 
+export interface DiffMarker {}
+
 Chai.config.truncateThreshold = 200;
 
-expect.IGNORE = Symbol.for("matter:expect-ignore");
-expect.BIGINT = Symbol.for("matter:expect-bigint");
-expect.BYTES = Symbol.for("matter:expect-bytes");
-expect.NUMBER = Symbol.for("matter:expect-number");
-expect.STRING = Symbol.for("matter:expect-string");
+function createDiffMarker(title: string) {
+    return {
+        toString() {
+            return `<<${title}>>`;
+        },
+    } as DiffMarker;
+}
+
+expect.IGNORE = createDiffMarker("ignore");
+expect.BIGINT = createDiffMarker("bigint");
+expect.BYTES = createDiffMarker("bytes");
+expect.NUMBER = createDiffMarker("number");
+expect.STRING = createDiffMarker("string");
 
 (Chai.config as any).deepEqual = (expected: unknown, actual: unknown) => {
     return (Chai.util as any).eql(expected, actual, {

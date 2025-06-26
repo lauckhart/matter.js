@@ -6,6 +6,7 @@
 
 import type Chai from "chai";
 import "chai-as-promised";
+import type { DiffMarker } from "./chai.js";
 import type { DiagnosticMessageLike, MockLogger } from "./mocks/logging.js";
 import type { MockTime } from "./mocks/time.js";
 import type { TestDescriptor, TestSuiteDescriptor } from "./test-descriptor.js";
@@ -14,19 +15,19 @@ declare global {
     // Expose Chai globally
     const expect: typeof Chai.expect & {
         // Ignores for purposes of deep comparison
-        IGNORE: symbol;
+        IGNORE: DiffMarker;
 
         // Matches any bigint for purposes of deep comparison
-        BIGINT: symbol;
+        BIGINT: DiffMarker;
 
         // Matches any byte array for purposes of deep comparison
-        BYTES: symbol;
+        BYTES: DiffMarker;
 
         // Matches any number for purposes of deep comparison
-        NUMBER: symbol;
+        NUMBER: DiffMarker;
 
         // Matches any string for purposes of deep comparison
-        STRING: symbol;
+        STRING: DiffMarker;
     };
 
     // Expose API for controlling time
