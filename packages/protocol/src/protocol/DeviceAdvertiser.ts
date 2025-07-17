@@ -5,10 +5,10 @@
  */
 
 import { CommissioningMode, CommissioningModeInstanceData, InstanceBroadcaster } from "#common/InstanceBroadcaster.js";
-import { Fabric } from "#fabric/Fabric.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     AsyncObservable,
+    BasicMultiplex,
     Diagnostic,
     Environment,
     Environmental,
@@ -36,29 +36,29 @@ export interface DeviceAdvertiserContext {
  * Advertises a node for commissioning (if uncommissioned) or operationally (if commissioned).
  */
 export class DeviceAdvertiser {
-    readonly #context: DeviceAdvertiserContext;
-    readonly #broadcasters = new Set<InstanceBroadcaster>();
-    readonly #timedOut = AsyncObservable<[]>();
-    readonly #operationalModeEnabled = new AsyncObservable<[]>();
-    readonly #operationalModeEnded = new AsyncObservable<[]>();
-    readonly #observers = new ObserverGroup();
+    #context: DeviceAdvertiserContext;
+    #broadcasters = new Set<InstanceBroadcaster>();
+    #timedOut = AsyncObservable<[]>();
+    #observers = new ObserverGroup();
     #interval: Timer;
     #startTime: number | null = null;
     #isClosing = false;
     #commissioningMode = CommissioningMode.NotCommissioning;
 
-    // Currently we do not put much effort into synchronizing announcements as it probably isn't really necessary.  But
-    // this mutex prevents automated announcements from piling up and allows us to ensure announcements are complete on
-    // close
+    // We synchronize advertisement logic using this mutex
     #mutex = new Mutex(this);
+
+    // We track promises for event emits here because doing so in the mutex could cause deadlock if the observers
+    // trigger advertising again
+    #emitters = new BasicMultiplex();
 
     constructor(context: DeviceAdvertiserContext) {
         this.#context = context;
 
-        this.#interval = Time.getPeriodicTimer("Server node announcement", DEVICE_ANNOUNCEMENT_INTERVAL_MS, () =>
-            // Announcement needs to await a previous announcement because otherwise in testing at least announcement
-            // may crash if started simultaneously
-            this.#mutex.run(this.advertise.bind(this)),
+        this.#interval = Time.getPeriodicTimer(
+            "Server node announcement",
+            DEVICE_ANNOUNCEMENT_INTERVAL_MS,
+            this.advertise.bind(this),
         );
 
         this.#observers.on(this.#context.fabrics.events.deleted, () => {
@@ -67,19 +67,19 @@ export class DeviceAdvertiser {
                 this.#mutex.run(this.#exitOperationalMode.bind(this));
             } else {
                 // At least one fabric is still present, so re-announce
-                this.#mutex.run(() => this.advertise(true));
+                this.advertise(true);
             }
         });
 
         this.#observers.on(this.#context.sessions.resubmissionStarted, (session?) => {
             logger.debug(`Resubmission started, re-announce node ${session?.nodeId}`);
-            this.#mutex.run(() => this.advertise(true));
+            this.advertise(true);
         });
 
         this.#observers.on(this.#context.sessions.subscriptionsChanged, (_session, subscription) => {
             if (subscription.isCanceledByPeer) {
                 logger.debug(`Subscription canceled by peer, re-announce`);
-                this.#mutex.run(this.startAdvertising.bind(this));
+                this.startAdvertising.bind(this);
             }
         });
     }
@@ -104,26 +104,12 @@ export class DeviceAdvertiser {
         return this.#timedOut;
     }
 
-    /**
-     * Emitted when the device stops advertising due to decommissioning.
-     */
-    get operationalModeEnded() {
-        return this.#operationalModeEnded;
-    }
-
-    /**
-     * Emitted when the device starts advertising in operational mode.
-     */
-    get operationalModeEnabled() {
-        return this.#operationalModeEnabled;
-    }
-
     async enterCommissioningMode(mode: CommissioningMode, deviceData: CommissioningModeInstanceData) {
         this.#commissioningMode = mode;
         for (const broadcaster of this.#broadcasters) {
             await broadcaster.setCommissionMode(mode, deviceData);
         }
-        await this.startAdvertising();
+        this.startAdvertising();
     }
 
     async exitCommissioningMode() {
@@ -135,72 +121,69 @@ export class DeviceAdvertiser {
         }
     }
 
-    async startAdvertising() {
-        if (this.#isClosing) return;
+    startAdvertising() {
+        if (this.#isClosing) {
+            return;
+        }
+
         if (this.#interval.isRunning) {
             this.#interval.stop();
         }
         this.#startTime = Time.nowMs();
         this.#interval.start();
-        await this.advertise();
+        this.advertise();
     }
 
-    async advertise(once = false) {
-        if (!once) {
-            // Stop announcement if duration is reached
-            if (this.#startTime !== null && Time.nowMs() - this.#startTime > DEVICE_ANNOUNCEMENT_DURATION_MS) {
-                logger.debug("Announcement duration reached, stop announcing");
-                await this.#timedOut.emit();
-                return;
+    advertise(once = false) {
+        if (this.#isClosing) {
+            return;
+        }
+
+        const advertise = async () => {
+            if (!once) {
+                // Stop announcement if duration is reached
+                if (this.#startTime !== null && Time.nowMs() - this.#startTime > DEVICE_ANNOUNCEMENT_DURATION_MS) {
+                    logger.debug("Announcement duration reached, stop announcing");
+                    this.#emitters.add(this.#timedOut.emit(), "advertisement timeout observer");
+                    return;
+                }
+
+                if (this.#commissioningMode !== CommissioningMode.NotCommissioning) {
+                    // Re-Announce but do not reset Fabrics
+                    for (const broadcaster of this.#broadcasters) {
+                        await broadcaster.announce();
+                    }
+                    return;
+                }
             }
 
-            if (this.#commissioningMode !== CommissioningMode.NotCommissioning) {
-                // Re-Announce but do not reset Fabrics
+            const fabrics = this.#context.fabrics;
+
+            if (fabrics.length) {
+                let fabricsWithoutSessions = 0;
+                for (const fabric of fabrics) {
+                    const session = this.#context.sessions.getSessionForNode(fabric.addressOf(fabric.rootNodeId));
+                    if (session === undefined || !session.isSecure || session.subscriptions.size === 0) {
+                        fabricsWithoutSessions++;
+                        logger.debug(
+                            "Announcing",
+                            Diagnostic.dict({ fabricIndex: fabric.fabricIndex, fabricId: fabric.fabricId }),
+                        );
+                    }
+                }
                 for (const broadcaster of this.#broadcasters) {
-                    await broadcaster.announce();
+                    await broadcaster.setFabrics(fabrics.fabrics);
+                    if (fabricsWithoutSessions > 0 || this.#commissioningMode !== CommissioningMode.NotCommissioning) {
+                        await broadcaster.announce();
+                    }
                 }
-                return;
+            } else {
+                // Expire operational Fabric announcements (if fabric got just deleted)
+                await this.#exitOperationalMode();
             }
-        }
+        };
 
-        const fabrics = this.#context.fabrics;
-
-        if (fabrics.length) {
-            let fabricsWithoutSessions = 0;
-            for (const fabric of fabrics) {
-                const session = this.#context.sessions.getSessionForNode(fabric.addressOf(fabric.rootNodeId));
-                if (session === undefined || !session.isSecure || session.subscriptions.size === 0) {
-                    fabricsWithoutSessions++;
-                    logger.debug(
-                        "Announcing",
-                        Diagnostic.dict({ fabricIndex: fabric.fabricIndex, fabricId: fabric.fabricId }),
-                    );
-                }
-            }
-            for (const broadcaster of this.#broadcasters) {
-                await broadcaster.setFabrics(fabrics.fabrics);
-                if (fabricsWithoutSessions > 0 || this.#commissioningMode !== CommissioningMode.NotCommissioning) {
-                    await broadcaster.announce();
-                }
-            }
-        } else {
-            // Expire operational Fabric announcements (if fabric got just deleted)
-            await this.#exitOperationalMode();
-            await this.#operationalModeEnded.emit();
-        }
-    }
-
-    async advertiseFabrics(fabrics: Fabric[], expireCommissioningAnnouncement = false) {
-        if (expireCommissioningAnnouncement) {
-            // TODO: For real "non-ethernet-only" cases like Wifi or Thread devices this might still be too early.
-            //  In these cases we might need an option to (re-)create mdns broadcaster just when interface
-            //  is connected
-            await this.#operationalModeEnabled.emit();
-        }
-        for (const broadcaster of this.#broadcasters) {
-            await broadcaster.setFabrics(fabrics, expireCommissioningAnnouncement);
-            await broadcaster.announce();
-        }
+        this.#mutex.run(advertise);
     }
 
     async #exitOperationalMode() {
@@ -211,6 +194,7 @@ export class DeviceAdvertiser {
 
     async close() {
         this.#isClosing = true;
+        await this.#emitters;
         await this.#mutex;
         this.#observers.close();
         this.#interval.stop();

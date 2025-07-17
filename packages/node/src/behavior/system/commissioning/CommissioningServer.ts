@@ -93,6 +93,8 @@ export class CommissioningServer extends Behavior {
         this.reactTo((this.endpoint as Node).lifecycle.online, this.#enterOnlineMode);
 
         this.reactTo((this.endpoint as Node).lifecycle.goingOffline, this.#enterOfflineMode);
+
+        this.reactTo(this.env.get(FabricManager).events.added, this.enterOperationalMode);
     }
 
     override async [Symbol.asyncDispose]() {
@@ -196,7 +198,7 @@ export class CommissioningServer extends Behavior {
         failsafe.construction.change.on(listener);
     }
 
-    #enterOnlineMode() {
+    async #enterOnlineMode() {
         // If already commissioned, trigger operational announcement
         if ((this.endpoint.lifecycle as NodeLifecycle).isCommissioned) {
             this.enterOperationalMode();
@@ -219,7 +221,7 @@ export class CommissioningServer extends Behavior {
         }
 
         // Advertise as commissionable
-        this.enterCommissionableMode();
+        await this.enterCommissionableMode();
     }
 
     #enterOfflineMode() {
@@ -237,20 +239,14 @@ export class CommissioningServer extends Behavior {
      * The server normally invokes this method when the node starts and is not yet commissioned.  You can disable by
      * setting {@link CommissioningServer.State#enabled} to false.  Then you must invoke yourself.
      */
-    enterCommissionableMode() {
+    async enterCommissionableMode() {
         if (!this.#hasAdvertisableDeviceType) {
             throw new ImplementationError(
                 `Node ${this.endpoint} has no endpoints with advertisable device types; you must add an endpoint or set the device type`,
             );
         }
 
-        // Ensure a device commissioner is loaded
-        //
-        // TODO - DeviceCommissioner/DeviceAdvertiser API is convoluted; refactor to allow directly moving to the
-        // desired mode
-        this.env.get(DeviceCommissioner);
-
-        this.beginAdvertising();
+        await this.env.get(DeviceCommissioner).allowBasicCommissioning();
 
         this.initiateCommissioning();
     }
@@ -339,10 +335,7 @@ export class CommissioningServer extends Behavior {
             throw new ImplementationError("Cannot advertise offline server");
         }
 
-        this.env
-            .get(DeviceAdvertiser)
-            .startAdvertising()
-            .catch(error => logger.error("Failed to open advertisement window", error));
+        this.env.get(DeviceAdvertiser).startAdvertising();
     }
 
     #initializeNode() {

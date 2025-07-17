@@ -285,8 +285,10 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         // Monitor CommissioningServer to end "uncommissioned" mode when we are commissioned
         this.#observers.on(this.owner.eventsOf(CommissioningServer).commissioned, this.endUncommissionedMode);
 
-        // Monitor DeviceAdvertiser to enable MDNS broadcasting when the first Fabric is added
-        this.#observers.on(advertiser.operationalModeEnabled, this.enableMdnsBroadcasting);
+        // Enable MDNS broadcasting if there are fabrics present
+        if (this.owner.stateOf(CommissioningServer).commissioned) {
+            this.enableMdnsBroadcasting();
+        }
     }
 
     override async [Construction.construct]() {

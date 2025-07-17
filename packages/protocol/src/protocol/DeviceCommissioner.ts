@@ -9,7 +9,6 @@ import { FailsafeContext } from "#common/FailsafeContext.js";
 import { CommissioningMode } from "#common/InstanceBroadcaster.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
-    Diagnostic,
     Environment,
     Environmental,
     InternalError,
@@ -63,22 +62,8 @@ export class DeviceCommissioner {
     constructor(context: DeviceCommissionerContext) {
         this.#context = context;
 
+        // The advertiser controls the timeout, which is confusing, because it's a commissioning timeout
         this.#observers.on(this.#context.advertiser.timedOut, this.endCommissioning);
-
-        // If a commissioning window is open then we re-announce this because it was ended as fabric got added
-        this.#observers.on(this.#context.fabrics.events.deleted, async () => {
-            // If a commissioning window is open, or we removed the last fabric, then we re-announce this
-            // because it was ended as fabric got added
-            if (
-                this.#context.fabrics.length === 0 ||
-                this.#windowStatus !== AdministratorCommissioning.CommissioningWindowStatus.WindowNotOpen
-            ) {
-                this.reactivateAdvertiser();
-            }
-        });
-
-        // No fabric paired yet, so announce as "ready for commissioning"
-        this.#observers.on(this.#context.advertiser.operationalModeEnded, this.allowBasicCommissioning);
 
         // Cancel commissioning when there are too many PASE errors
         this.#observers.on(this.#context.secureChannelProtocol.tooManyPaseErrors, async () => {
@@ -86,6 +71,8 @@ export class DeviceCommissioner {
             await this.endCommissioning();
         });
 
+        // When a session closes, if the session's fabric still exists but no active sessions then we begin advertising
+        // again so peers will find us
         this.#observers.on(this.#context.sessions.sessions.deleted, session => {
             const currentFabricIndex = session.fabric?.fabricIndex;
 
@@ -100,9 +87,7 @@ export class DeviceCommissioner {
             // layer and it would be not good to announce a commissionable device and then reset that again with the
             // factory reset
             if (this.#context.fabrics.length > 0 || session.isPase || !existingSessionFabric) {
-                this.#context.advertiser
-                    .startAdvertising()
-                    .catch(error => logger.warn(`Error while announcing`, error));
+                this.#context.advertiser.startAdvertising();
             }
         });
     }
@@ -131,7 +116,7 @@ export class DeviceCommissioner {
     ) {
         if (this.#windowStatus === AdministratorCommissioning.CommissioningWindowStatus.BasicWindowOpen) {
             throw new MatterFlowError(
-                "Basic commissioning window is already open! Cannot set Enhanced commissioning mode.",
+                "Basic commissioning window is already open! Cannot set enhanced commissioning mode.",
             );
         }
 
@@ -146,7 +131,7 @@ export class DeviceCommissioner {
     async allowBasicCommissioning(commissioningEndCallback?: () => MaybePromise) {
         if (this.#windowStatus === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen) {
             throw new MatterFlowError(
-                "Enhanced commissioning window is already open! Cannot set Basic commissioning mode.",
+                "Enhanced commissioning window is already open! Cannot set basic commissioning mode.",
             );
         }
 
@@ -166,14 +151,8 @@ export class DeviceCommissioner {
     beginTimed(failsafeContext: FailsafeContext) {
         this.#failsafeContext = failsafeContext;
 
-        this.#context.fabrics.events.added.on(fabric => {
-            const fabrics = this.#context.fabrics.fabrics;
-            this.#context.advertiser
-                .advertiseFabrics(fabrics, true)
-                .catch(error =>
-                    logger.warn(`Error sending Fabric announcement for Index ${fabric.fabricIndex}`, error),
-                );
-            logger.info("Announce done", Diagnostic.dict({ fabric: fabric.fabricId, fabricIndex: fabric.fabricIndex }));
+        this.#context.fabrics.events.added.on(() => {
+            this.#context.advertiser.startAdvertising();
         });
 
         failsafeContext.commissioned.on(async () => await this.endCommissioning());
@@ -197,21 +176,13 @@ export class DeviceCommissioner {
         );
     }
 
-    reactivateAdvertiser() {
-        if (this.#windowStatus === AdministratorCommissioning.CommissioningWindowStatus.WindowNotOpen) {
-            return;
-        }
-        this.#enterCommissioningMode(this.#windowStatus, this.#activeDiscriminator).catch(error =>
-            logger.warn("Error sending announcement:", error),
-        );
-    }
-
     async #enterCommissioningMode(
         windowStatus: AdministratorCommissioning.CommissioningWindowStatus,
         discriminator?: number,
     ) {
         this.#windowStatus = windowStatus;
         const commissioningConfig = this.#context.commissioningConfig.values;
+
         await this.#context.advertiser.enterCommissioningMode(
             windowStatus === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen
                 ? CommissioningMode.Enhanced
@@ -224,23 +195,44 @@ export class DeviceCommissioner {
     }
 
     async #becomeCommissionable(
-        windowStatus: AdministratorCommissioning.CommissioningWindowStatus,
+        windowStatus:
+            | AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen
+            | AdministratorCommissioning.CommissioningWindowStatus.BasicWindowOpen,
         activeCommissioningEndCallback?: () => MaybePromise,
         discriminator?: number,
     ) {
+        if (this.#windowStatus !== AdministratorCommissioning.CommissioningWindowStatus.WindowNotOpen) {
+            if (this.#windowStatus !== windowStatus) {
+                throw new InternalError(
+                    `Commissioning mode ${windowStatus} request but already in mode ${this.#windowStatus}`,
+                );
+            }
+
+            if (
+                this.#activeCommissioningEndCallback &&
+                this.#activeCommissioningEndCallback !== activeCommissioningEndCallback
+            ) {
+                throw new InternalError(`Already in commissioning mode with a different callback`);
+            }
+        }
+
+        await this.#enterCommissioningMode(this.#windowStatus, this.#activeDiscriminator);
         if (
             this.#windowStatus === windowStatus &&
             (discriminator === undefined || discriminator === this.#activeDiscriminator)
         ) {
-            // We want to re-announce
-            return this.reactivateAdvertiser();
+            await this.#enterCommissioningMode(this.#windowStatus, this.#activeDiscriminator);
+            return;
         }
+
         if (this.#windowStatus !== AdministratorCommissioning.CommissioningWindowStatus.WindowNotOpen) {
             throw new InternalError(`Commissioning window already open with different mode (${this.#windowStatus})!`);
         }
+
         if (this.#activeCommissioningEndCallback !== undefined) {
             throw new InternalError("Commissioning window already open with different callback!");
         }
+
         this.#activeCommissioningEndCallback = activeCommissioningEndCallback;
         this.#activeDiscriminator = discriminator;
 
