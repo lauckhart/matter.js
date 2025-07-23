@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningMode, CommissioningModeInstanceData, InstanceBroadcaster } from "#common/InstanceBroadcaster.js";
+import { CommissioningMode } from "#advertisement/CommissioningMode.js";
+import { NodeDescription } from "#advertisement/NodeDescription.js";
+import { InstanceBroadcaster } from "#common/InstanceBroadcaster.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     AsyncObservable,
@@ -61,9 +63,10 @@ export class DeviceAdvertiser {
             this.advertise.bind(this),
         );
 
+        // When a fabric is deleted we exit operational mode and expire announcements
         this.#observers.on(this.#context.fabrics.events.deleted, () => {
             if (this.#context.fabrics.length === 0) {
-                // Last fabric got removed, so expire all announcements
+                // Last fabric got removed, so expire all operational records
                 this.#mutex.run(this.#exitOperationalMode.bind(this));
             } else {
                 // At least one fabric is still present, so re-announce
@@ -71,11 +74,40 @@ export class DeviceAdvertiser {
             }
         });
 
+        // When a fabric is added we begin advertising it
+        this.#observers.on(this.#context.fabrics.events.added, () => {
+            this.startAdvertising();
+        });
+
+        // Each time we retry a packet we also send a new announcement
         this.#observers.on(this.#context.sessions.resubmissionStarted, (session?) => {
             logger.debug(`Resubmission started, re-announce node ${session?.nodeId}`);
             this.advertise(true);
         });
 
+        // When a session closes, if the session's fabric still exists but has no active sessions then we begin
+        // advertising again so peers will find us
+        this.#observers.on(this.#context.sessions.sessions.deleted, session => {
+            const currentFabricIndex = session.fabric?.fabricIndex;
+
+            // Verify if the session associated fabric still exists
+            const existingSessionFabric =
+                currentFabricIndex === undefined
+                    ? undefined
+                    : this.#context.fabrics.findByIndex(currentFabricIndex)?.fabricIndex;
+
+            // When a session closes, announce existing fabrics again so that controller can detect the device again.
+            // When session was closed and no fabric exist anymore then this is triggering a factory reset in upper
+            // layer and it would be not good to announce a commissionable device and then reset that again with the
+            // factory reset
+            if (this.#context.fabrics.length > 0 || session.isPase || !existingSessionFabric) {
+                this.startAdvertising();
+            }
+        });
+
+        // TODO - this may be unnecessary:
+        //   If session still exists: This is a no-op because advertise() won't advertise the fabric
+        //   If no sessions exist: We will start advertising anyway because of deleted session handler
         this.#observers.on(this.#context.sessions.subscriptionsChanged, (_session, subscription) => {
             if (subscription.isCanceledByPeer) {
                 logger.debug(`Subscription canceled by peer, re-announce`);
@@ -104,10 +136,10 @@ export class DeviceAdvertiser {
         return this.#timedOut;
     }
 
-    async enterCommissioningMode(mode: CommissioningMode, deviceData: CommissioningModeInstanceData) {
-        this.#commissioningMode = mode;
+    async enterCommissioningMode(deviceData: NodeDescription.Commissionable) {
+        this.#commissioningMode = deviceData.mode;
         for (const broadcaster of this.#broadcasters) {
-            await broadcaster.setCommissionMode(mode, deviceData);
+            await broadcaster.setCommissionMode(deviceData);
         }
         this.startAdvertising();
     }

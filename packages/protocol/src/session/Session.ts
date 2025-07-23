@@ -48,7 +48,7 @@ export const FALLBACK_MAX_PATHS_PER_INVOKE = 1;
 
 export const FALLBACK_MAX_TCP_MESSAGE_SIZE = 64000;
 
-export interface SessionParameters {
+export interface SessionIntervals {
     /**
      * Minimum amount of time between sender retries when the destination node is Idle.
      * This SHALL be greater than or equal to the maximum amount of time a node may be
@@ -70,7 +70,9 @@ export interface SessionParameters {
      * Default: 4000ms
      */
     activeThresholdMs: number;
+}
 
+export interface SessionParameters extends SessionIntervals {
     /** Version of Data Model for the Session parameters side where it appears. */
     dataModelRevision: number;
 

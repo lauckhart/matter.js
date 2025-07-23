@@ -4,12 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeDescription } from "#advertisement/NodeDescription.js";
 import { ImplementationError } from "#general";
-import {
-    CommissionerInstanceData,
-    CommissioningModeInstanceData,
-    InstanceBroadcaster,
-} from "../common/InstanceBroadcaster.js";
+import { InstanceBroadcaster } from "../common/InstanceBroadcaster.js";
 import { Fabric } from "../fabric/Fabric.js";
 import type { MdnsBroadcaster } from "./MdnsBroadcaster.js";
 
@@ -40,9 +37,9 @@ export class MdnsInstanceBroadcaster implements InstanceBroadcaster {
         this.#onclose();
     }
 
-    async setCommissionMode(mode: number, deviceData: CommissioningModeInstanceData) {
+    async setCommissionMode(deviceData: NodeDescription.Commissionable) {
         this.#assertOpen();
-        await this.#mdnsBroadcaster.setCommissionMode(this.#instancePort, mode, deviceData);
+        await this.#mdnsBroadcaster.setCommissionMode(this.#instancePort, deviceData);
     }
 
     /** Set the Broadcaster Data to announce a device for operative discovery (aka "already paired") */
@@ -55,7 +52,7 @@ export class MdnsInstanceBroadcaster implements InstanceBroadcaster {
     }
 
     /** Set the Broadcaster data to announce a Commissioner (aka Commissioner discovery) */
-    async setCommissionerInfo(commissionerData: CommissionerInstanceData) {
+    async setCommissionerInfo(commissionerData: NodeDescription.Commissioner) {
         this.#assertOpen();
         await this.#mdnsBroadcaster.setCommissionerInfo(this.#instancePort, commissionerData);
     }

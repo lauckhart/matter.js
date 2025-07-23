@@ -16,6 +16,7 @@ import {
     NetworkSimulator,
     UdpChannel,
 } from "#general";
+import { CommissioningMode } from "#index.js";
 import { MdnsBroadcaster } from "#mdns/MdnsBroadcaster.js";
 import { MdnsScanner, MdnsScannerTargetCriteria } from "#mdns/MdnsScanner.js";
 import { NodeId, VendorId } from "#types";
@@ -155,8 +156,8 @@ const NODE_ID = NodeId(BigInt(1));
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
 
                 await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric], {
-                    sessionIdleInterval: 100,
-                    sessionActiveInterval: 200,
+                    idleIntervalMs: 100,
+                    activeIntervalMs: 200,
                 });
                 await broadcaster.announce(PORT);
 
@@ -300,8 +301,9 @@ const NODE_ID = NodeId(BigInt(1));
                 const { promise, resolver } = createPromise<Uint8Array>();
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: CommissioningMode.Basic,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -549,8 +551,9 @@ const NODE_ID = NodeId(BigInt(1));
                 });
 
                 await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
-                await broadcaster.setCommissionMode(PORT2, 1, {
+                await broadcaster.setCommissionMode(PORT2, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -844,8 +847,9 @@ const NODE_ID = NodeId(BigInt(1));
 
         describe("Disabled discovery", () => {
             it("the client do not know announced records if scanning is not enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -889,8 +893,9 @@ const NODE_ID = NodeId(BigInt(1));
             afterEach(() => scanner.targetCriteriaProviders.delete(criteria));
 
             it("the client do not know announced operational records if scanning is not enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -1054,8 +1059,9 @@ const NODE_ID = NodeId(BigInt(1));
                     netData.push(data);
                 });
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -1153,8 +1159,9 @@ const NODE_ID = NodeId(BigInt(1));
             afterEach(() => scanner.targetCriteriaProviders.delete(criteria));
 
             it("the client knows announced records if scanning is enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
@@ -1222,8 +1229,9 @@ const NODE_ID = NodeId(BigInt(1));
                     }
                 });
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.setCommissionMode(PORT, {
                     name: "Test Device",
+                    mode: 1,
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,

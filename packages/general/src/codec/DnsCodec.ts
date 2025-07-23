@@ -99,7 +99,6 @@ export type DnsRecord<T> = {
     flushCache?: boolean;
     ttl: number;
     value: T;
-    forInstance?: string;
 };
 
 export type DnsMessage = {

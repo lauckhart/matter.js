@@ -28,11 +28,6 @@ export const MDNS_BROADCAST_IPV4 = "224.0.0.251";
 export const MDNS_BROADCAST_IPV6 = "ff02::fb";
 export const MDNS_BROADCAST_PORT = 5353;
 
-export enum AnnouncementType {
-    Commissionable,
-    Operative,
-}
-
 export class MdnsServer {
     static async create(network: Network, options?: { enableIpv4?: boolean; netInterface?: string }) {
         const { enableIpv4 = true, netInterface } = options ?? {};
@@ -79,14 +74,6 @@ export class MdnsServer {
 
     buildDnsRecordKey(record: DnsRecord<any>, netInterface?: string, unicastTarget?: string) {
         return `${record.name}-${record.recordClass}-${record.recordType}-${netInterface}-${unicastTarget}`;
-    }
-
-    buildTypePortKey(type: AnnouncementType, port: number) {
-        return `${port}-${type}`;
-    }
-
-    isKeyForPort(key: string, port: number) {
-        return key.startsWith(`${port}-`);
     }
 
     async #handleDnsMessage(messageBytes: Uint8Array, remoteIp: string, netInterface: string) {
@@ -252,43 +239,30 @@ export class MdnsServer {
         await this.#multicastServer.send(DnsCodec.encode(dnsMessageDataToSend), netInterface, unicastTarget);
     }
 
-    async announce(announcedNetPort?: number) {
+    async announce(...services: string[]) {
         await MatterAggregateError.allSettled(
             (await this.#getMulticastInterfacesForAnnounce()).map(async ({ name: netInterface }) => {
                 const records = await this.#records.get(netInterface);
-                for (const [portType, portTypeRecords] of records) {
-                    if (announcedNetPort !== undefined && !this.isKeyForPort(portType, announcedNetPort)) continue;
+                for (const [service, serviceRecords] of records) {
+                    if (services.length && !services.includes(service)) continue;
 
                     // TODO: try to combine the messages to avoid sending multiple messages but keep under 1500 bytes per message
-                    await this.#announceRecordsForInterface(netInterface, portTypeRecords);
+                    await this.#announceRecordsForInterface(netInterface, serviceRecords);
                     await Time.sleep("MDNS delay", 20 + Math.floor(Math.random() * 100)); // as per DNS-SD spec wait 20-120ms before sending more packets
                 }
             }),
-            "Error happened when announcing MDNS messages",
+            "Error announcing MDNS messages",
         ).catch(error => logger.error(error));
     }
 
-    async expireAnnouncements(options?: { announcedNetPort?: number; type?: AnnouncementType; forInstance?: string }) {
-        const { announcedNetPort, type, forInstance: instanceToExpire } = options ?? {};
+    async expireAnnouncements(services: string[]) {
         await MatterAggregateError.allSettled(
             this.#records.keys().map(async netInterface => {
                 const records = await this.#records.get(netInterface);
-                for (const [portType, portTypeRecords] of records) {
-                    if (announcedNetPort !== undefined && !this.isKeyForPort(portType, announcedNetPort)) continue;
-                    if (
-                        announcedNetPort !== undefined &&
-                        type !== undefined &&
-                        portType !== this.buildTypePortKey(type, announcedNetPort)
-                    )
-                        continue;
-                    const recordsToProcess =
-                        instanceToExpire !== undefined
-                            ? portTypeRecords.filter(
-                                  ({ forInstance }) => forInstance !== undefined && instanceToExpire === forInstance,
-                              )
-                            : portTypeRecords;
+                for (const [service, serviceRecords] of records) {
+                    if (services.length && !services.includes(service)) continue;
                     const instanceSet = new Set<string>();
-                    recordsToProcess.forEach(record => {
+                    serviceRecords.forEach(record => {
                         record.ttl = 0;
                         if (record.recordType === DnsRecordType.TXT) {
                             instanceSet.add(record.name);
@@ -303,15 +277,15 @@ export class MdnsServer {
                     logger.debug(
                         `Expiring records`,
                         Diagnostic.dict({
+                            service,
                             instanceName,
-                            port: announcedNetPort,
                             netInterface,
                         }),
                     );
 
                     // TODO: try to combine the messages to avoid sending multiple messages but keep under 1500 bytes per message
-                    await this.#announceRecordsForInterface(netInterface, portTypeRecords);
-                    this.#recordsGenerator.delete(portType);
+                    await this.#announceRecordsForInterface(netInterface, serviceRecords);
+                    this.#recordsGenerator.delete(service);
                     await Time.sleep("MDNS delay", 20 + Math.floor(Math.random() * 100)); // as per DNS-SD spec wait 20-120ms before sending more packets
                 }
             }),
@@ -322,15 +296,11 @@ export class MdnsServer {
         this.#recordLastSentAsUnicastAnswer.clear();
     }
 
-    async setRecordsGenerator(
-        hostPort: number,
-        type: AnnouncementType,
-        generator: (netInterface: string) => Promise<DnsRecord<any>[]>,
-    ) {
+    async setRecordsGenerator(service: string, generator: (netInterface: string) => Promise<DnsRecord<any>[]>) {
         await this.#records.clear();
         this.#recordLastSentAsMulticastAnswer.clear();
         this.#recordLastSentAsUnicastAnswer.clear();
-        this.#recordsGenerator.set(this.buildTypePortKey(type, hostPort), generator);
+        this.#recordsGenerator.set(service, generator);
     }
 
     async close() {

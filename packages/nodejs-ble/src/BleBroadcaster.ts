@@ -5,13 +5,7 @@
  */
 
 import { ImplementationError, Logger } from "#general";
-import {
-    BtpCodec,
-    CommissionerInstanceData,
-    CommissioningMode,
-    CommissioningModeInstanceData,
-    InstanceBroadcaster,
-} from "#protocol";
+import { BtpCodec, CommissioningMode, InstanceBroadcaster, NodeDescription } from "#protocol";
 import { VendorId } from "#types";
 import { BlenoBleServer } from "./BlenoBleServer.js";
 
@@ -31,10 +25,14 @@ export class BleBroadcaster implements InstanceBroadcaster {
         this.#additionalAdvertisementData = additionalAdvertisementData;
     }
 
-    async setCommissionMode(
-        mode: number,
-        { name: deviceName, deviceType, vendorId, productId, discriminator }: CommissioningModeInstanceData,
-    ) {
+    async setCommissionMode({
+        name: deviceName,
+        mode,
+        deviceType,
+        vendorId,
+        productId,
+        discriminator,
+    }: NodeDescription.Commissionable) {
         this.#assertOpen();
         if (mode !== CommissioningMode.Basic) {
             this.#advertise = false;
@@ -62,7 +60,7 @@ export class BleBroadcaster implements InstanceBroadcaster {
         return; // Not needed because we only advertise un-commissioned devices
     }
 
-    async setCommissionerInfo(_commissionerData: CommissionerInstanceData) {
+    async setCommissionerInfo(_commissionerData: NodeDescription.Commissioner) {
         this.#assertOpen();
         this.#advertise = false;
         logger.error(`skip BLE announce because announcing a commissioner is not supported`);

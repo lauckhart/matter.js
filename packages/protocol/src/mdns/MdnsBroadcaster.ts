@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeDescription } from "#advertisement/NodeDescription.js";
+import { PairingHintBitmap, PairingHintBitmapSchema } from "#advertisement/PairingHintBitmap.js";
 import {
     AAAARecord,
     ARecord,
@@ -23,13 +25,6 @@ import {
     isIPv6,
 } from "#general";
 import { FabricIndex, NodeId, TypeFromPartialBitSchema } from "#types";
-import {
-    CommissionerInstanceData,
-    CommissioningModeInstanceData,
-    OperationalInstanceData,
-    PairingHintBitmap,
-    PairingHintBitmapSchema,
-} from "../common/InstanceBroadcaster.js";
 import { Fabric } from "../fabric/Fabric.js";
 import {
     SESSION_ACTIVE_INTERVAL_MS,
@@ -51,7 +46,7 @@ import {
     getVendorQname,
 } from "./MdnsConsts.js";
 import { MdnsInstanceBroadcaster } from "./MdnsInstanceBroadcaster.js";
-import { AnnouncementType, MdnsServer } from "./MdnsServer.js";
+import { MdnsServer } from "./MdnsServer.js";
 
 const logger = Logger.get("MdnsBroadcaster");
 
@@ -104,16 +99,16 @@ export class MdnsBroadcaster {
         return instance;
     }
 
-    #validateCommissioningData(data: CommissioningModeInstanceData) {
-        const { sessionIdleInterval, sessionActiveInterval, sessionActiveThreshold } = data;
+    #validateCommissioningData(data: NodeDescription.Commissionable) {
+        const { idleIntervalMs, activeIntervalMs, activeThresholdMs } = data;
 
-        if (sessionIdleInterval !== undefined && sessionIdleInterval > 3_600_000) {
+        if (idleIntervalMs !== undefined && idleIntervalMs > 3_600_000) {
             throw new ImplementationError("Session Idle Interval must be less than 1 hour");
         }
-        if (sessionActiveInterval !== undefined && sessionActiveInterval > 3_600_000) {
+        if (activeIntervalMs !== undefined && activeIntervalMs > 3_600_000) {
             throw new ImplementationError("Session Active Interval must be less than 1 hour");
         }
-        if (sessionActiveThreshold !== undefined && sessionActiveThreshold > 65_535) {
+        if (activeThresholdMs !== undefined && activeThresholdMs > 65_535) {
             throw new ImplementationError("Session Active Threshold must be less than 65535 seconds");
         }
     }
@@ -159,22 +154,19 @@ export class MdnsBroadcaster {
     }
 
     /** Set the Broadcaster data to announce a device ready for commissioning in a special mode */
-    async setCommissionMode(
-        announcedNetPort: number,
-        mode: number,
-        commissioningModeData: CommissioningModeInstanceData,
-    ) {
+    async setCommissionMode(announcedNetPort: number, commissioningModeData: NodeDescription.Commissionable) {
         this.#validateCommissioningData(commissioningModeData); // Throws error if invalid!
 
         const {
             name: deviceName,
+            mode,
             deviceType,
             vendorId,
             productId,
             discriminator,
-            sessionIdleInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
+            idleIntervalMs = SESSION_IDLE_INTERVAL_MS,
+            activeIntervalMs = SESSION_ACTIVE_INTERVAL_MS,
+            activeThresholdMs = SESSION_ACTIVE_THRESHOLD_MS,
             pairingHint = DEFAULT_PAIRING_HINT,
             pairingInstructions = "",
         } = commissioningModeData;
@@ -197,59 +189,55 @@ export class MdnsBroadcaster {
         const commissionModeQname = getCommissioningModeQname();
         const deviceQname = getDeviceInstanceQname(instanceId);
 
-        await this.#mdnsServer.setRecordsGenerator(
-            announcedNetPort,
-            AnnouncementType.Commissionable,
-            async netInterface => {
-                const ipMac = await this.#network.getIpMac(netInterface);
+        await this.#mdnsServer.setRecordsGenerator(`commission:${announcedNetPort}`, async netInterface => {
+            const ipMac = await this.#network.getIpMac(netInterface);
 
-                if (ipMac === undefined) return [];
-                const { mac, ipV4, ipV6 } = ipMac;
-                const hostname = mac.replace(/:/g, "").toUpperCase() + "0000.local";
+            if (ipMac === undefined) return [];
+            const { mac, ipV4, ipV6 } = ipMac;
+            const hostname = mac.replace(/:/g, "").toUpperCase() + "0000.local";
 
-                logger.debug(
-                    "Announcement Generator: Commission mode ",
-                    Diagnostic.dict({
-                        mode,
-                        qname: deviceQname,
-                        port: announcedNetPort,
-                        interface: netInterface,
-                    }),
-                );
+            logger.debug(
+                "Announcement Generator: Commission mode ",
+                Diagnostic.dict({
+                    mode,
+                    qname: deviceQname,
+                    port: announcedNetPort,
+                    interface: netInterface,
+                }),
+            );
 
-                const records = [
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_COMMISSION_SERVICE_QNAME),
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname),
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname),
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, shortDiscriminatorQname),
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, longDiscriminatorQname),
-                    PtrRecord(SERVICE_DISCOVERY_QNAME, commissionModeQname),
-                    PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, deviceQname),
-                    PtrRecord(vendorQname, deviceQname),
-                    PtrRecord(deviceTypeQname, deviceQname),
-                    PtrRecord(shortDiscriminatorQname, deviceQname),
-                    PtrRecord(longDiscriminatorQname, deviceQname),
-                    PtrRecord(commissionModeQname, deviceQname),
-                    SrvRecord(deviceQname, { priority: 0, weight: 0, port: announcedNetPort, target: hostname }),
-                    TxtRecord(deviceQname, [
-                        `VP=${vendorId}+${productId}` /* Vendor / Product */,
-                        `DT=${deviceType}` /* Device Type */,
-                        `DN=${deviceName}` /* Device Name */,
-                        `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                        `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                        `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
-                        //`T=${TCP_SUPPORTED}` /* TODO TCP not supported */,
-                        `D=${discriminator}` /* Discriminator */,
-                        `CM=${mode}` /* Commission Mode */,
-                        `PH=${PairingHintBitmapSchema.encode(pairingHint)}` /* Pairing Hint */,
-                        `PI=${pairingInstructions}` /* Pairing Instruction */,
-                        //`ICD=${ICD_SUPPORTED}` /* ICD not supported */,
-                    ]),
-                ];
-                records.push(...this.#getIpRecords(hostname, [...ipV6, ...ipV4]));
-                return records;
-            },
-        );
+            const records = [
+                PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_COMMISSION_SERVICE_QNAME),
+                PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname),
+                PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname),
+                PtrRecord(SERVICE_DISCOVERY_QNAME, shortDiscriminatorQname),
+                PtrRecord(SERVICE_DISCOVERY_QNAME, longDiscriminatorQname),
+                PtrRecord(SERVICE_DISCOVERY_QNAME, commissionModeQname),
+                PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, deviceQname),
+                PtrRecord(vendorQname, deviceQname),
+                PtrRecord(deviceTypeQname, deviceQname),
+                PtrRecord(shortDiscriminatorQname, deviceQname),
+                PtrRecord(longDiscriminatorQname, deviceQname),
+                PtrRecord(commissionModeQname, deviceQname),
+                SrvRecord(deviceQname, { priority: 0, weight: 0, port: announcedNetPort, target: hostname }),
+                TxtRecord(deviceQname, [
+                    `VP=${vendorId}+${productId}` /* Vendor / Product */,
+                    `DT=${deviceType}` /* Device Type */,
+                    `DN=${deviceName}` /* Device Name */,
+                    `SII=${idleIntervalMs}` /* Session Idle Interval */,
+                    `SAI=${activeIntervalMs}` /* Session Active Interval */,
+                    `SAT=${activeThresholdMs}` /* Session Active Threshold */,
+                    //`T=${TCP_SUPPORTED}` /* TODO TCP not supported */,
+                    `D=${discriminator}` /* Discriminator */,
+                    `CM=${mode}` /* Commission Mode */,
+                    `PH=${PairingHintBitmapSchema.encode(pairingHint)}` /* Pairing Hint */,
+                    `PI=${pairingInstructions}` /* Pairing Instruction */,
+                    //`ICD=${ICD_SUPPORTED}` /* ICD not supported */,
+                ]),
+            ];
+            records.push(...this.#getIpRecords(hostname, [...ipV6, ...ipV4]));
+            return records;
+        });
     }
 
     /** Set the Broadcaster Data to announce a device for operative discovery (aka "already paired") */
@@ -257,10 +245,10 @@ export class MdnsBroadcaster {
         announcedNetPort: number,
         fabrics: Fabric[],
         {
-            sessionIdleInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
-        }: OperationalInstanceData = {},
+            idleIntervalMs = SESSION_IDLE_INTERVAL_MS,
+            activeIntervalMs = SESSION_ACTIVE_INTERVAL_MS,
+            activeThresholdMs = SESSION_ACTIVE_THRESHOLD_MS,
+        }: NodeDescription = {},
     ) {
         const currentOperationalFabrics = this.#activeOperationalAnnouncements.get(announcedNetPort);
 
@@ -284,7 +272,7 @@ export class MdnsBroadcaster {
             for (const { fabricIndex, forInstance } of currentOperationalFabrics) {
                 if (!fabricIndexesSet.has(fabricIndex)) {
                     expires.push(
-                        this.#mdnsServer.expireAnnouncements({
+                        this.#mdnsServer.expireAnnouncements(`fabric-${{
                             announcedNetPort,
                             type: AnnouncementType.Operative,
                             forInstance,
@@ -328,9 +316,9 @@ export class MdnsBroadcaster {
                     TxtRecord(
                         deviceMatterQname,
                         [
-                            `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                            `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                            `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
+                            `SII=${idleIntervalMs}` /* Session Idle Interval */,
+                            `SAI=${activeIntervalMs}` /* Session Active Interval */,
+                            `SAT=${activeThresholdMs}` /* Session Active Threshold */,
                             //`T=${TCP_SUPPORTED}` /* TODO TCP not supported */,
                             //`ICD=${ICD_SUPPORTED}` /* ICD not supported */,
                         ],
@@ -354,10 +342,10 @@ export class MdnsBroadcaster {
             deviceType,
             vendorId,
             productId,
-            sessionIdleInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
-        }: CommissionerInstanceData,
+            idleIntervalMs = SESSION_IDLE_INTERVAL_MS,
+            activeIntervalMs = SESSION_ACTIVE_INTERVAL_MS,
+            activeThresholdMs = SESSION_ACTIVE_THRESHOLD_MS,
+        }: NodeDescription.Commissioner,
     ) {
         logger.debug(
             "Announcement: Commissioner",
@@ -391,9 +379,9 @@ export class MdnsBroadcaster {
                         `VP=${vendorId}+${productId}` /* Vendor / Product */,
                         `DT=${deviceType}` /* Device Type */,
                         `DN=${deviceName}` /* Device Name */,
-                        `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                        `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                        `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
+                        `SII=${idleIntervalMs}` /* Session Idle Interval */,
+                        `SAI=${activeIntervalMs}` /* Session Active Interval */,
+                        `SAT=${activeThresholdMs}` /* Session Active Threshold */,
                         //`T=${TCP_SUPPORTED}` /* TODO TCP not supported */,
                         //`ICD=${ICD_SUPPORTED}` /* ICD not supported */,
                     ]),

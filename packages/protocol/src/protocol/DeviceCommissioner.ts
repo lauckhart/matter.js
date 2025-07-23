@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CommissioningMode } from "#advertisement/CommissioningMode.js";
 import { AdministratorCommissioning } from "#clusters/administrator-commissioning";
 import { FailsafeContext } from "#common/FailsafeContext.js";
-import { CommissioningMode } from "#common/InstanceBroadcaster.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     Environment,
@@ -69,26 +69,6 @@ export class DeviceCommissioner {
         this.#observers.on(this.#context.secureChannelProtocol.tooManyPaseErrors, async () => {
             logger.info("Maximum number of PASE pairing errors reached, canceling commissioning");
             await this.endCommissioning();
-        });
-
-        // When a session closes, if the session's fabric still exists but no active sessions then we begin advertising
-        // again so peers will find us
-        this.#observers.on(this.#context.sessions.sessions.deleted, session => {
-            const currentFabricIndex = session.fabric?.fabricIndex;
-
-            // Verify if the session associated fabric still exists
-            const existingSessionFabric =
-                currentFabricIndex === undefined
-                    ? undefined
-                    : this.#context.fabrics.findByIndex(currentFabricIndex)?.fabricIndex;
-
-            // When a session closes, announce existing fabrics again so that controller can detect the device again.
-            // When session was closed and no fabric exist anymore then this is triggering a factory reset in upper
-            // layer and it would be not good to announce a commissionable device and then reset that again with the
-            // factory reset
-            if (this.#context.fabrics.length > 0 || session.isPase || !existingSessionFabric) {
-                this.#context.advertiser.startAdvertising();
-            }
         });
     }
 
@@ -183,15 +163,15 @@ export class DeviceCommissioner {
         this.#windowStatus = windowStatus;
         const commissioningConfig = this.#context.commissioningConfig.values;
 
-        await this.#context.advertiser.enterCommissioningMode(
+        const mode =
             windowStatus === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen
                 ? CommissioningMode.Enhanced
-                : CommissioningMode.Basic,
-            {
-                ...commissioningConfig.productDescription,
-                discriminator: discriminator ?? commissioningConfig.discriminator,
-            },
-        );
+                : CommissioningMode.Basic;
+        await this.#context.advertiser.enterCommissioningMode({
+            ...commissioningConfig.productDescription,
+            mode,
+            discriminator: discriminator ?? commissioningConfig.discriminator,
+        });
     }
 
     async #becomeCommissionable(
