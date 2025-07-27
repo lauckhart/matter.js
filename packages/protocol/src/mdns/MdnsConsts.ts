@@ -16,6 +16,20 @@ export const DEFAULT_PAIRING_HINT = {
     deviceManual: true,
 };
 
+export const PAIRING_HINTS_REQUIRING_INSTRUCTION = [
+    "customInstruction",
+    "pressRestButtonForNumberOfSeconds",
+    "pressResetButtonUntilLightBlinks",
+    "pressResetButtonForNumberOfSecondsWithApplicationOfPower",
+    "pressResetButtonUntilLightBlinksWithApplicationOfPower",
+    "pressResetButtonNumberOfTimes",
+    "pressSetupButtonForNumberOfSeconds",
+    "pressSetupButtonUntilLightBlinks",
+    "pressSetupButtonForNumberOfSecondsWithApplicationOfPower",
+    "pressSetupButtonUntilLightBlinksWithApplicationOfPower",
+    "pressSetupButtonNumberOfTimes",
+];
+
 export const getFabricQname = (operationalIdString: string) => `_I${operationalIdString}._sub.${MATTER_SERVICE_QNAME}`;
 export const getOperationalDeviceQname = (operationalIdString: string, nodeIdString: string) =>
     `${operationalIdString}-${nodeIdString}.${MATTER_SERVICE_QNAME}`;

@@ -12,21 +12,15 @@ import { BleAdvertiser } from "./BleAdvertiser.js";
 export class BleAdvertisement extends Advertisement<ServiceDescription.Commissionable> {
     declare advertiser: BleAdvertiser;
 
-    #previous?: BleAdvertisement;
-
     constructor(
         advertiser: BleAdvertiser,
         description: ServiceDescription.Commissionable,
         previous?: BleAdvertisement,
     ) {
-        super(advertiser, "ble:commissioning", description);
-
-        this.#previous = previous;
+        super(advertiser, "ble:commissioning", description, previous);
     }
 
     protected override async run() {
-        await this.#previous;
-
         const {
             peripheral,
             config: { aad, timeout, earlyInterval, lateInterval },

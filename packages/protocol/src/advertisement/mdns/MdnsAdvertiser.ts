@@ -21,6 +21,13 @@ import { OperationalMdnsAdvertisement } from "./OperationalMdnsAdvertisement.js"
 export class MdnsAdvertiser implements Advertiser {
     readonly retrySchedule: RetrySchedule;
 
+    /**
+     * Only one commissionable MDNS advertisement may be active for a node at a time.
+     *
+     * We track it here so we can cancel if a new one starts.
+     */
+    #activeCommissionable?: CommissionableMdnsAdvertisement;
+
     constructor(
         readonly crypto: Crypto,
         readonly network: Network,
@@ -38,7 +45,14 @@ export class MdnsAdvertiser implements Advertiser {
                 return new OperationalMdnsAdvertisement(this, description);
 
             case "commissionable":
-                return new CommissionableMdnsAdvertisement(this, description);
+                const ad = new CommissionableMdnsAdvertisement(this, description, this.#activeCommissionable);
+                this.#activeCommissionable = ad;
+                ad.finally(() => {
+                    if (this.#activeCommissionable === ad) {
+                        this.#activeCommissionable = undefined;
+                    }
+                });
+                return;
 
             case "commissioner":
                 return new CommissionerMdnsAdvertisement(this, description);

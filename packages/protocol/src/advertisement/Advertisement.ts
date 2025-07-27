@@ -34,10 +34,11 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
     #resolve: () => void;
     #reject: (cause: unknown) => void;
 
+    #previous?: Advertisement;
     #sleep?: CancelablePromise;
     #cancelReason?: Error;
 
-    constructor(advertiser: Advertiser, service: string, description: T) {
+    constructor(advertiser: Advertiser, service: string, description: T, previous?: Advertisement) {
         let resolve: () => void, reject: (cause: unknown) => void;
         super((res, rej) => {
             resolve = res;
@@ -55,6 +56,7 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         this.service = service;
         this.advertiser = advertiser;
         this.description = description;
+        this.#previous = previous;
     }
 
     /**
@@ -121,6 +123,13 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
 
     async #run() {
         logger.info("Advertising", Diagnostic.strong(this.service));
+
+        // A "previous" advertisement is a stale version that this advertisement overrides
+        if (this.#previous) {
+            this.#previous.cancel();
+            await this.#previous;
+            this.#previous = undefined;
+        }
 
         try {
             await this.run();

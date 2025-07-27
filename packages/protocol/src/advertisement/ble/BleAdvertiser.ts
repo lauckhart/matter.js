@@ -16,8 +16,12 @@ import { BleAdvertisement } from "./BleAdvertisement.js";
 export class BleAdvertiser implements Advertiser {
     #peripheral: BlePeripheralInterface;
     #config: BleAdvertiser.Configuration;
-    #advertisement?: BleAdvertisement;
     #isClosed = false;
+
+    /**
+     * We only support a single BLE advertisement.  We track it here so we can cancel if a new one starts.
+     */
+    #advertisement?: BleAdvertisement;
 
     constructor(peripheral: BlePeripheralInterface, options?: BleAdvertiser.Options) {
         this.#peripheral = peripheral;

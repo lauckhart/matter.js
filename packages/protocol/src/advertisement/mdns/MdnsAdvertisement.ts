@@ -18,6 +18,7 @@ import {
     TxtRecord,
 } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
+import { SessionIntervals } from "#session/SessionIntervals.js";
 import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 
 const logger = Logger.get("MdnsAdvertisement");
@@ -35,8 +36,12 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
      */
     qname: string;
 
-    constructor(advertiser: Advertiser, qname: string, description: T) {
-        super(advertiser, `mdns:${qname}`, description);
+    constructor(advertiser: Advertiser, qname: string, description: T, previous?: Advertisement) {
+        description = {
+            ...description,
+            ...SessionIntervals(description),
+        };
+        super(advertiser, `mdns:${qname}`, description, previous);
         this.qname = qname;
     }
 
