@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Advertisement } from "#advertisement/Advertisement.js";
+import { Advertiser } from "#advertisement/Advertiser.js";
 import { CommissioningMode } from "#advertisement/CommissioningMode.js";
-import { NodeDescription } from "#advertisement/NodeDescription.js";
-import { InstanceBroadcaster } from "#common/InstanceBroadcaster.js";
+import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     AsyncObservable,
@@ -39,7 +40,8 @@ export interface DeviceAdvertiserContext {
  */
 export class DeviceAdvertiser {
     #context: DeviceAdvertiserContext;
-    #broadcasters = new Set<InstanceBroadcaster>();
+    #advertisers = new Set<Advertiser>();
+    #advertisements = new Set<Advertisement>();
     #timedOut = AsyncObservable<[]>();
     #observers = new ObserverGroup();
     #interval: Timer;
@@ -136,10 +138,14 @@ export class DeviceAdvertiser {
         return this.#timedOut;
     }
 
-    async enterCommissioningMode(deviceData: NodeDescription.Commissionable) {
-        this.#commissioningMode = deviceData.mode;
-        for (const broadcaster of this.#broadcasters) {
-            await broadcaster.setCommissionMode(deviceData);
+    async enterCommissioningMode(description: ServiceDescription.Commissionable) {
+        this.#commissioningMode = description.mode;
+        for (const advertiser of this.#advertisers) {
+            const ad = advertiser.advertise(description);
+            if (ad) {
+                ad.start();
+                this.#advertisements.add(ad);
+            }
         }
         this.startAdvertising();
     }
@@ -148,9 +154,7 @@ export class DeviceAdvertiser {
         this.#commissioningMode = CommissioningMode.NotCommissioning;
         this.#interval.stop();
         this.#startTime = null;
-        for (const broadcaster of this.#broadcasters) {
-            await broadcaster.expireCommissioningAnnouncement();
-        }
+        await this.#cancelAds([...this.#advertisements].filter(Advertisement.isCommissioning));
     }
 
     startAdvertising() {
@@ -182,8 +186,8 @@ export class DeviceAdvertiser {
 
                 if (this.#commissioningMode !== CommissioningMode.NotCommissioning) {
                     // Re-Announce but do not reset Fabrics
-                    for (const broadcaster of this.#broadcasters) {
-                        await broadcaster.announce();
+                    for (const ad of this.#advertisements) {
+                        await ad.broadcast();
                     }
                     return;
                 }
@@ -203,7 +207,8 @@ export class DeviceAdvertiser {
                         );
                     }
                 }
-                for (const broadcaster of this.#broadcasters) {
+                for (const advertiser of this.#advertisers) {
+                    const ad = advertiser.createOperationalAdvertisement();
                     await broadcaster.setFabrics(fabrics.fabrics);
                     if (fabricsWithoutSessions > 0 || this.#commissioningMode !== CommissioningMode.NotCommissioning) {
                         await broadcaster.announce();
@@ -219,9 +224,7 @@ export class DeviceAdvertiser {
     }
 
     async #exitOperationalMode() {
-        for (const broadcaster of this.#broadcasters) {
-            await broadcaster.expireFabricAnnouncement();
-        }
+        await this.#cancelAds([...this.#advertisements].filter(Advertisement.isOperational));
     }
 
     async close() {
@@ -230,30 +233,46 @@ export class DeviceAdvertiser {
         await this.#mutex;
         this.#observers.close();
         this.#interval.stop();
-        await this.clearBroadcasters();
+        await this.clearAdvertisers();
     }
 
-    hasBroadcaster(broadcaster: InstanceBroadcaster) {
-        return this.#broadcasters.has(broadcaster);
+    hasAdvertiser(advertiser: Advertiser) {
+        return this.#advertisers.has(advertiser);
     }
 
-    addBroadcaster(broadcaster: InstanceBroadcaster) {
-        this.#broadcasters.add(broadcaster);
+    addAdvertiser(advertiser: Advertiser) {
+        this.#advertisers.add(advertiser);
     }
 
-    async deleteBroadcaster(broadcaster: InstanceBroadcaster) {
-        if (this.#broadcasters.delete(broadcaster)) {
-            await broadcaster.expireAllAnnouncements();
+    async deleteAdvertiser(advertiser: Advertiser) {
+        this.#advertisers.delete(advertiser);
+        await this.#cancelAds([...this.#advertisements].filter(ad => ad.advertiser === advertiser));
+    }
+
+    async clearAdvertisers() {
+        this.#advertisers.clear();
+        await this.#cancelAds([...this.#advertisements]);
+    }
+
+    #advertise(description: ServiceDescription) {
+        for (const advertiser of this.#advertisers) {
+            const ad = advertiser.advertise(description);
+
+            if (ad === undefined) {
+                continue;
+            }
+
+            ad.catch(reason => {
+                logger.error(`Error in advertiser ${ad.instance}`);
+            });
         }
     }
 
-    async clearBroadcasters() {
-        const broadcasters = [...this.#broadcasters];
-        const closed = MatterAggregateError.allSettled(
-            broadcasters.map(b => b.close()),
-            "Error closing broadcasters",
-        ).catch(error => logger.error(error));
-        this.#broadcasters.clear();
-        await closed;
+    async #cancelAds(ads: Array<Advertisement>) {
+        for (const ad of ads) {
+            ad.cancel();
+        }
+
+        await MatterAggregateError.allSettled(ads).catch(error => logger.error(error));
     }
 }

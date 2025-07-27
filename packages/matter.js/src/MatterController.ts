@@ -384,15 +384,15 @@ export class MatterController {
     }
 
     hasBroadcaster(broadcaster: InstanceBroadcaster) {
-        return this.#advertiser.hasBroadcaster(broadcaster);
+        return this.#advertiser.hasAdvertiser(broadcaster);
     }
 
     addBroadcaster(broadcaster: InstanceBroadcaster) {
-        this.#advertiser.addBroadcaster(broadcaster);
+        this.#advertiser.addAdvertiser(broadcaster);
     }
 
     async deleteBroadcaster(broadcaster: InstanceBroadcaster) {
-        await this.#advertiser.deleteBroadcaster(broadcaster);
+        await this.#advertiser.deleteAdvertiser(broadcaster);
     }
 
     public collectScanners(

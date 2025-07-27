@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeDescription } from "#advertisement/NodeDescription.js";
+import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { ImplementationError } from "#general";
 import { InstanceBroadcaster } from "../common/InstanceBroadcaster.js";
 import { Fabric } from "../fabric/Fabric.js";
@@ -37,7 +37,7 @@ export class MdnsInstanceBroadcaster implements InstanceBroadcaster {
         this.#onclose();
     }
 
-    async setCommissionMode(deviceData: NodeDescription.Commissionable) {
+    async setCommissionMode(deviceData: ServiceDescription.Commissionable) {
         this.#assertOpen();
         await this.#mdnsBroadcaster.setCommissionMode(this.#instancePort, deviceData);
     }
@@ -52,7 +52,7 @@ export class MdnsInstanceBroadcaster implements InstanceBroadcaster {
     }
 
     /** Set the Broadcaster data to announce a Commissioner (aka Commissioner discovery) */
-    async setCommissionerInfo(commissionerData: NodeDescription.Commissioner) {
+    async setCommissionerInfo(commissionerData: ServiceDescription.Commissioner) {
         this.#assertOpen();
         await this.#mdnsBroadcaster.setCommissionerInfo(this.#instancePort, commissionerData);
     }

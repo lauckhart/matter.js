@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeDescription } from "#advertisement/NodeDescription.js";
 import { PairingHintBitmap, PairingHintBitmapSchema } from "#advertisement/PairingHintBitmap.js";
+import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import {
     AAAARecord,
     ARecord,
@@ -61,12 +61,12 @@ const DEFAULT_PAIRING_HINT = {
  * This class is handing MDNS Announcements for multiple instances/devices
  */
 export class MdnsBroadcaster {
-    readonly #activeCommissioningAnnouncements = new Set<number>();
-    readonly #activeOperationalAnnouncements = new Map<number, { fabricIndex: FabricIndex; forInstance: string }[]>();
     readonly #crypto: Crypto;
     readonly #network: Network;
     readonly #mdnsServer: MdnsServer;
     readonly #enableIpv4?: boolean;
+    readonly #activeCommissioningAnnouncements = new Set<number>();
+    readonly #activeOperationalAnnouncements = new Map<number, { fabricIndex: FabricIndex; forInstance: string }[]>();
     readonly #instances = new BasicSet<MdnsInstanceBroadcaster>();
 
     static async create(
@@ -99,7 +99,7 @@ export class MdnsBroadcaster {
         return instance;
     }
 
-    #validateCommissioningData(data: NodeDescription.Commissionable) {
+    #validateCommissioningData(data: ServiceDescription.Commissionable) {
         const { idleIntervalMs, activeIntervalMs, activeThresholdMs } = data;
 
         if (idleIntervalMs !== undefined && idleIntervalMs > 3_600_000) {
@@ -154,7 +154,7 @@ export class MdnsBroadcaster {
     }
 
     /** Set the Broadcaster data to announce a device ready for commissioning in a special mode */
-    async setCommissionMode(announcedNetPort: number, commissioningModeData: NodeDescription.Commissionable) {
+    async setCommissionMode(announcedNetPort: number, commissioningModeData: ServiceDescription.Commissionable) {
         this.#validateCommissioningData(commissioningModeData); // Throws error if invalid!
 
         const {
@@ -248,7 +248,7 @@ export class MdnsBroadcaster {
             idleIntervalMs = SESSION_IDLE_INTERVAL_MS,
             activeIntervalMs = SESSION_ACTIVE_INTERVAL_MS,
             activeThresholdMs = SESSION_ACTIVE_THRESHOLD_MS,
-        }: NodeDescription = {},
+        }: ServiceDescription = {},
     ) {
         const currentOperationalFabrics = this.#activeOperationalAnnouncements.get(announcedNetPort);
 
@@ -272,7 +272,7 @@ export class MdnsBroadcaster {
             for (const { fabricIndex, forInstance } of currentOperationalFabrics) {
                 if (!fabricIndexesSet.has(fabricIndex)) {
                     expires.push(
-                        this.#mdnsServer.expireAnnouncements(`fabric-${{
+                        this.#mdnsServer.expireAnnouncements({
                             announcedNetPort,
                             type: AnnouncementType.Operative,
                             forInstance,
@@ -345,7 +345,7 @@ export class MdnsBroadcaster {
             idleIntervalMs = SESSION_IDLE_INTERVAL_MS,
             activeIntervalMs = SESSION_ACTIVE_INTERVAL_MS,
             activeThresholdMs = SESSION_ACTIVE_THRESHOLD_MS,
-        }: NodeDescription.Commissioner,
+        }: ServiceDescription.Commissioner,
     ) {
         logger.debug(
             "Announcement: Commissioner",

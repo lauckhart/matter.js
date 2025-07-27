@@ -177,7 +177,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
      * Add broadcasters to the {@link DeviceAdvertiser}.
      */
     protected async addBroadcasters(advertiser: DeviceAdvertiser) {
-        await advertiser.clearBroadcasters();
+        await advertiser.clearAdvertisers();
 
         const isCommissioned = !!this.#commissionedFabrics;
 
@@ -189,11 +189,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         }
 
         if (discoveryCapabilities.onIpNetwork) {
-            advertiser.addBroadcaster(this.mdnsBroadcaster);
+            advertiser.addAdvertiser(this.mdnsBroadcaster);
         }
 
         if (discoveryCapabilities.ble) {
-            advertiser.addBroadcaster(this.bleBroadcaster);
+            advertiser.addAdvertiser(this.bleBroadcaster);
         }
     }
 
@@ -203,9 +203,9 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     enableMdnsBroadcasting() {
         const advertiser = this.owner.env.get(DeviceAdvertiser);
         const mdnsBroadcaster = this.mdnsBroadcaster;
-        if (!advertiser.hasBroadcaster(mdnsBroadcaster)) {
+        if (!advertiser.hasAdvertiser(mdnsBroadcaster)) {
             logger.debug("Enabling MDNS broadcasting");
-            advertiser.addBroadcaster(mdnsBroadcaster);
+            advertiser.addAdvertiser(mdnsBroadcaster);
         }
     }
 
@@ -232,7 +232,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
     async #removeBleBroadcaster(bleBroadcaster: InstanceBroadcaster) {
         const advertiser = this.owner.env.get(DeviceAdvertiser);
-        await advertiser.deleteBroadcaster(bleBroadcaster);
+        await advertiser.deleteAdvertiser(bleBroadcaster);
         await bleBroadcaster.close();
     }
 

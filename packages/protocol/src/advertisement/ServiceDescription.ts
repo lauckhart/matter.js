@@ -10,15 +10,30 @@ import type { SessionIntervals } from "#session/Session.js";
 import type { ProductDescription, TypeFromPartialBitSchema, VendorId } from "@matter/types";
 import { CommissioningMode } from "./CommissioningMode.js";
 
-export interface NodeDescription extends Partial<SessionIntervals> {
-    /**
-     * The IP port for the Matter protocol.
-     */
-    port?: number;
-}
+export type ServiceDescription =
+    | ServiceDescription.Operational
+    | ServiceDescription.Commissionable
+    | ServiceDescription.Commissioner;
 
-export namespace NodeDescription {
-    export interface Commissionable extends NodeDescription, ProductDescription {
+export namespace ServiceDescription {
+    export function isCommissioning(description: ServiceDescription): description is Commissionable | Commissioner {
+        return description.kind === "commissionable" || description.kind === "commissioner";
+    }
+
+    export function isOperational(description: ServiceDescription): description is Operational {
+        return description.kind === "operational";
+    }
+
+    export interface Base extends Partial<SessionIntervals> {
+        /**
+         * The IP port for the Matter protocol.
+         */
+        port?: number;
+    }
+
+    export interface Commissionable extends Base, ProductDescription {
+        kind: "commissionable";
+
         /**
          * The commissioning mode.
          */
@@ -40,14 +55,18 @@ export namespace NodeDescription {
         pairingInstructions?: string;
     }
 
-    export interface Operational extends NodeDescription {
+    export interface Operational extends Base {
+        kind: "operational";
+
         /**
          * The advertised fabric.
          */
         fabric: Fabric;
     }
 
-    export interface Commissioner extends NodeDescription {
+    export interface Commissioner extends Base {
+        kind: "commissioner";
+
         /**
          * Device name for commissionable announcements.
          */

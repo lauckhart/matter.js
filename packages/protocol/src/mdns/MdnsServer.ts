@@ -18,6 +18,7 @@ import {
     MatterAggregateError,
     MAX_MDNS_MESSAGE_SIZE,
     Network,
+    NetworkInterfaceDetails,
     Time,
     UdpMulticastServer,
 } from "#general";
@@ -44,15 +45,21 @@ export class MdnsServer {
         );
     }
 
-    #recordsGenerator = new Map<string, (netInterface: string) => Promise<DnsRecord<any>[]>>();
+    #recordsGenerator = new Map<string, MdnsServer.RecordGenerator>();
     readonly #records = new AsyncCache<Map<string, DnsRecord<any>[]>>(
         "MDNS discovery",
         async (multicastInterface: string) => {
-            const portTypeMap = new Map<string, DnsRecord<any>[]>();
-            for (const [announceTypePort, generator] of this.#recordsGenerator) {
-                portTypeMap.set(announceTypePort, await generator(multicastInterface));
+            const serviceRecords = new Map<string, DnsRecord<any>[]>();
+            const addrs = await this.#network.getIpMac(multicastInterface);
+            if (addrs === undefined) {
+                return serviceRecords;
             }
-            return portTypeMap;
+
+            for (const [service, generator] of this.#recordsGenerator) {
+                serviceRecords.set(service, await generator(multicastInterface, addrs));
+            }
+
+            return serviceRecords;
         },
         15 * 60 * 1000 /* 15mn - also matches maximum commissioning window time. */,
     );
@@ -296,7 +303,7 @@ export class MdnsServer {
         this.#recordLastSentAsUnicastAnswer.clear();
     }
 
-    async setRecordsGenerator(service: string, generator: (netInterface: string) => Promise<DnsRecord<any>[]>) {
+    async setRecordsGenerator(service: string, generator: MdnsServer.RecordGenerator) {
         await this.#records.clear();
         this.#recordLastSentAsMulticastAnswer.clear();
         this.#recordLastSentAsUnicastAnswer.clear();
@@ -320,5 +327,11 @@ export class MdnsServer {
         } else {
             return records.filter(record => record.name === name && record.recordType === recordType);
         }
+    }
+}
+
+export namespace MdnsServer {
+    export interface RecordGenerator {
+        (intf: string, addrs: NetworkInterfaceDetails): Promise<DnsRecord<any>[]>;
     }
 }
