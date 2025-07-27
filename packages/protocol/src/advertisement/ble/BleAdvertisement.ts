@@ -40,10 +40,10 @@ export class BleAdvertisement extends Advertisement<ServiceDescription.Commissio
         );
 
         try {
-            await peripheral.advertise(advertisementData, aad, 20);
+            await peripheral.advertise(advertisementData, aad, earlyInterval);
             await this.sleep("BLE advertisement timeout", Math.min(timeout, 30 * 1_000));
 
-            await peripheral.advertise(advertisementData, aad, 150);
+            await peripheral.advertise(advertisementData, aad, lateInterval);
             await this.sleep("BLE advertisement timeout", Math.max(timeout - 30 * 1_000, 0));
         } finally {
             await peripheral.stopAdvertising();

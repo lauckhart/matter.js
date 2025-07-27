@@ -13,8 +13,14 @@ import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDescription> extends Advertisement<T> {
     declare advertiser: MdnsAdvertiser;
 
-    constructor(advertiser: Advertiser, service: string, description: T) {
-        super(advertiser, `mdns:${service}`, description);
+    /**
+     * The device qname.
+     */
+    qname: string;
+
+    constructor(advertiser: Advertiser, qname: string, description: T) {
+        super(advertiser, `mdns:${qname}`, description);
+        this.qname = qname;
     }
 
     abstract recordsGenerator: MdnsServer.RecordGenerator;

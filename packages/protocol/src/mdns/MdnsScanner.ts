@@ -43,11 +43,11 @@ import { Fabric } from "../fabric/Fabric.js";
 import {
     MATTER_COMMISSION_SERVICE_QNAME,
     MATTER_SERVICE_QNAME,
+    getCommissionableDeviceQname,
     getCommissioningModeQname,
-    getDeviceInstanceQname,
-    getDeviceMatterQname,
     getDeviceTypeQname,
     getLongDiscriminatorQname,
+    getOperationalDeviceQname,
     getShortDiscriminatorQname,
     getVendorQname,
 } from "./MdnsConsts.js";
@@ -540,7 +540,7 @@ export class MdnsScanner implements Scanner {
 
     #createOperationalMatterQName(operationalId: Uint8Array, nodeId: NodeId) {
         const operationalIdString = Bytes.toHex(operationalId).toUpperCase();
-        return getDeviceMatterQname(operationalIdString, NodeId.toHexString(nodeId));
+        return getOperationalDeviceQname(operationalIdString, NodeId.toHexString(nodeId));
     }
 
     /**
@@ -643,7 +643,7 @@ export class MdnsScanner implements Scanner {
      */
     #buildCommissionableQueryIdentifier(identifier: CommissionableDeviceIdentifiers) {
         if ("instanceId" in identifier) {
-            return getDeviceInstanceQname(identifier.instanceId);
+            return getCommissionableDeviceQname(identifier.instanceId);
         }
 
         if ("longDiscriminator" in identifier) {
@@ -752,7 +752,7 @@ export class MdnsScanner implements Scanner {
         names.push(MATTER_COMMISSION_SERVICE_QNAME);
 
         if ("instanceId" in identifier) {
-            names.push(getDeviceInstanceQname(identifier.instanceId));
+            names.push(getCommissionableDeviceQname(identifier.instanceId));
         } else if ("longDiscriminator" in identifier) {
             names.push(getLongDiscriminatorQname(identifier.longDiscriminator));
         } else if ("shortDiscriminator" in identifier) {

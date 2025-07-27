@@ -36,12 +36,12 @@ import {
     MATTER_COMMISSION_SERVICE_QNAME,
     MATTER_SERVICE_QNAME,
     SERVICE_DISCOVERY_QNAME,
+    getCommissionableDeviceQname,
     getCommissioningModeQname,
-    getDeviceInstanceQname,
-    getDeviceMatterQname,
     getDeviceTypeQname,
     getFabricQname,
     getLongDiscriminatorQname,
+    getOperationalDeviceQname,
     getShortDiscriminatorQname,
     getVendorQname,
 } from "./MdnsConsts.js";
@@ -187,7 +187,7 @@ export class MdnsBroadcaster {
         const shortDiscriminatorQname = getShortDiscriminatorQname(shortDiscriminator);
         const longDiscriminatorQname = getLongDiscriminatorQname(discriminator);
         const commissionModeQname = getCommissioningModeQname();
-        const deviceQname = getDeviceInstanceQname(instanceId);
+        const deviceQname = getCommissionableDeviceQname(instanceId);
 
         await this.#mdnsServer.setRecordsGenerator(`commission:${announcedNetPort}`, async netInterface => {
             const ipMac = await this.#network.getIpMac(netInterface);
@@ -256,7 +256,7 @@ export class MdnsBroadcaster {
             announcedNetPort,
             fabrics.map(f => ({
                 fabricIndex: f.fabricIndex,
-                forInstance: getDeviceMatterQname(
+                forInstance: getOperationalDeviceQname(
                     Bytes.toHex(f.operationalId).toUpperCase(),
                     NodeId.toHexString(f.nodeId),
                 ),
@@ -293,7 +293,7 @@ export class MdnsBroadcaster {
                 const { operationalId, nodeId } = fabric;
                 const operationalIdString = Bytes.toHex(operationalId).toUpperCase();
                 const fabricQname = getFabricQname(operationalIdString);
-                const deviceMatterQname = getDeviceMatterQname(operationalIdString, NodeId.toHexString(nodeId));
+                const deviceMatterQname = getOperationalDeviceQname(operationalIdString, NodeId.toHexString(nodeId));
 
                 logger.debug(
                     "Announcement Generator: Fabric",

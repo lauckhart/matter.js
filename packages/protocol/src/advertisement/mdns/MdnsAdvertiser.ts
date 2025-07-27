@@ -7,29 +7,52 @@
 import type { Advertisement } from "#advertisement/Advertisement.js";
 import type { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
-import { Crypto, MatterAggregateError, Network, Observable } from "#general";
+import { Bytes, Crypto, ImplementationError, Network } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
 import { RetrySchedule } from "../../../../general/src/net/RetrySchedule.js";
-import type { MdnsAdvertisement } from "./MdnsAdvertisement.js";
+import { CommissionableMdnsAdvertisement } from "./CommissionableMdnsAdvertisement.js";
+import { CommissionerMdnsAdvertisement } from "./CommissionerMdnsAdvertisement.js";
+import { OperationalMdnsAdvertisement } from "./OperationalMdnsAdvertisement.js";
 
+/**
+ * An {@link Advertiser} that advertises using an in-process MDNS implementation.
+ */
 export class MdnsAdvertiser implements Advertiser {
-    #advertisements = new Set<MdnsAdvertisement>();
-    #advertisementDeleted = new Observable<[]>();
+    readonly retrySchedule: RetrySchedule;
 
     constructor(
         readonly crypto: Crypto,
         readonly network: Network,
         readonly server: MdnsServer,
-        retrySchedule?: Partial<RetrySchedule>,
-    ) {}
-
-    advertise(description: ServiceDescription): Advertisement | undefined {
-        throw new Error("Method not implemented.");
+        retryOptions?: RetrySchedule.Options,
+    ) {
+        const retryConfig = RetrySchedule.Configuration(MdnsAdvertiser.RetryDefaults, retryOptions);
+        this.retrySchedule = new RetrySchedule(crypto, retryConfig);
     }
 
-    async close() {
-        await MatterAggregateError.allSettled([...this.#advertisements].map(advertisement => advertisement.close()));
+    advertise(description: ServiceDescription): Advertisement | undefined {
+        switch (description.kind) {
+            case "operational":
+                return new OperationalMdnsAdvertisement(this, description);
+
+            case "commissionable":
+                return new CommissionableMdnsAdvertisement(this, description);
+
+            case "commissioner":
+                return new CommissionerMdnsAdvertisement(this, description);
+
+            default:
+                throw new ImplementationError(
+                    `Unsupported service description kind "${(description as ServiceDescription).kind}`,
+                );
+        }
+    }
+
+    async close() {}
+
+    createInstanceId() {
+        return Bytes.toHex(this.crypto.randomBytes(8)).toUpperCase();
     }
 }
 

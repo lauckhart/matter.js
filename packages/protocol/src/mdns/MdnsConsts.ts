@@ -12,7 +12,7 @@ export const MATTER_COMMISSIONER_SERVICE_QNAME = "_matterd._udp.local";
 export const MATTER_SERVICE_QNAME = "_matter._tcp.local";
 
 export const getFabricQname = (operationalIdString: string) => `_I${operationalIdString}._sub.${MATTER_SERVICE_QNAME}`;
-export const getDeviceMatterQname = (operationalIdString: string, nodeIdString: string) =>
+export const getOperationalDeviceQname = (operationalIdString: string, nodeIdString: string) =>
     `${operationalIdString}-${nodeIdString}.${MATTER_SERVICE_QNAME}`;
 export const getVendorQname = (vendorId: VendorId) => `_V${vendorId}._sub.${MATTER_COMMISSION_SERVICE_QNAME}`;
 export const getDeviceTypeQname = (deviceType: number) => `_T${deviceType}._sub.${MATTER_COMMISSION_SERVICE_QNAME}`;
@@ -21,4 +21,5 @@ export const getShortDiscriminatorQname = (shortDiscriminator: number) =>
 export const getLongDiscriminatorQname = (longDiscriminator: number) =>
     `_L${longDiscriminator}._sub.${MATTER_COMMISSION_SERVICE_QNAME}`;
 export const getCommissioningModeQname = () => `_CM._sub.${MATTER_COMMISSION_SERVICE_QNAME}`;
-export const getDeviceInstanceQname = (instanceId: string) => `${instanceId}.${MATTER_COMMISSION_SERVICE_QNAME}`;
+export const getCommissionableDeviceQname = (instanceId: string) => `${instanceId}.${MATTER_COMMISSION_SERVICE_QNAME}`;
+export const getCommissionerDeviceQname = (instanceId: string) => `${instanceId}.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
