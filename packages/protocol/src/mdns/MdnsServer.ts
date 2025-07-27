@@ -56,7 +56,7 @@ export class MdnsServer {
             }
 
             for (const [service, generator] of this.#recordsGenerator) {
-                serviceRecords.set(service, await generator(multicastInterface, addrs));
+                serviceRecords.set(service, generator(multicastInterface, addrs));
             }
 
             return serviceRecords;
@@ -77,6 +77,10 @@ export class MdnsServer {
         this.#network = network;
         this.#multicastServer = multicastServer;
         this.#netInterface = netInterface;
+    }
+
+    get supportsIpv4() {
+        return this.#multicastServer.supportsIpv4;
     }
 
     buildDnsRecordKey(record: DnsRecord<any>, netInterface?: string, unicastTarget?: string) {
@@ -262,7 +266,7 @@ export class MdnsServer {
         ).catch(error => logger.error(error));
     }
 
-    async expireAnnouncements(services: string[]) {
+    async expireAnnouncements(...services: string[]) {
         await MatterAggregateError.allSettled(
             this.#records.keys().map(async netInterface => {
                 const records = await this.#records.get(netInterface);
@@ -332,6 +336,6 @@ export class MdnsServer {
 
 export namespace MdnsServer {
     export interface RecordGenerator {
-        (intf: string, addrs: NetworkInterfaceDetails): Promise<DnsRecord<any>[]>;
+        (intf: string, addrs: NetworkInterfaceDetails): DnsRecord[];
     }
 }

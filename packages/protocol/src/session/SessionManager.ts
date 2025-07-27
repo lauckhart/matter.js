@@ -41,19 +41,15 @@ import {
     FALLBACK_MAX_TCP_MESSAGE_SIZE,
     FALLBACK_SPECIFICATION_VERSION,
     Session,
-    SESSION_ACTIVE_INTERVAL_MS,
-    SESSION_ACTIVE_THRESHOLD_MS,
-    SESSION_IDLE_INTERVAL_MS,
     SessionParameterOptions,
     SessionParameters,
 } from "./Session.js";
+import { SessionIntervals } from "./SessionIntervals.js";
 
 const logger = Logger.get("SessionManager");
 
 const DEFAULT_SESSION_PARAMETERS = {
-    idleIntervalMs: SESSION_IDLE_INTERVAL_MS,
-    activeIntervalMs: SESSION_ACTIVE_INTERVAL_MS,
-    activeThresholdMs: SESSION_ACTIVE_THRESHOLD_MS,
+    ...SessionIntervals.defaults,
     dataModelRevision: Specification.DATA_MODEL_REVISION,
     interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
     specificationVersion: Specification.SPECIFICATION_VERSION,
@@ -612,9 +608,9 @@ export class SessionManager {
                     peerNodeId,
                     sessionParameters: {
                         // Make sure to initialize default values when restoring an older resumption record
-                        idleIntervalMs: idleIntervalMs ?? SESSION_IDLE_INTERVAL_MS,
-                        activeIntervalMs: activeIntervalMs ?? SESSION_ACTIVE_INTERVAL_MS,
-                        activeThresholdMs: activeThresholdMs ?? SESSION_ACTIVE_THRESHOLD_MS,
+                        idleIntervalMs: idleIntervalMs ?? SessionIntervals.defaults.idleIntervalMs,
+                        activeIntervalMs: activeIntervalMs ?? SessionIntervals.defaults.activeIntervalMs,
+                        activeThresholdMs: activeThresholdMs ?? SessionIntervals.defaults.activeThresholdMs,
                         dataModelRevision: dataModelRevision ?? FALLBACK_DATAMODEL_REVISION,
                         interactionModelRevision: interactionModelRevision ?? FALLBACK_INTERACTIONMODEL_REVISION,
                         specificationVersion: specificationVersion ?? FALLBACK_SPECIFICATION_VERSION,

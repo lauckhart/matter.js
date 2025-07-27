@@ -27,11 +27,6 @@ import {
 import { FabricIndex, NodeId, TypeFromPartialBitSchema } from "#types";
 import { Fabric } from "../fabric/Fabric.js";
 import {
-    SESSION_ACTIVE_INTERVAL_MS,
-    SESSION_ACTIVE_THRESHOLD_MS,
-    SESSION_IDLE_INTERVAL_MS,
-} from "../session/Session.js";
-import {
     MATTER_COMMISSIONER_SERVICE_QNAME,
     MATTER_COMMISSION_SERVICE_QNAME,
     MATTER_SERVICE_QNAME,
@@ -52,10 +47,6 @@ const logger = Logger.get("MdnsBroadcaster");
 
 //const TCP_SUPPORTED = 0;
 //const ICD_SUPPORTED = 0; // TODO: Implement ICD later
-const DEFAULT_PAIRING_HINT = {
-    powerCycle: true,
-    deviceManual: true,
-};
 
 /**
  * This class is handing MDNS Announcements for multiple instances/devices

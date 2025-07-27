@@ -25,6 +25,7 @@ export class MdnsAdvertiser implements Advertiser {
         readonly crypto: Crypto,
         readonly network: Network,
         readonly server: MdnsServer,
+        readonly port = 5540,
         retryOptions?: RetrySchedule.Options,
     ) {
         const retryConfig = RetrySchedule.Configuration(MdnsAdvertiser.RetryDefaults, retryOptions);

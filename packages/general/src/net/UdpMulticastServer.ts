@@ -85,6 +85,10 @@ export class UdpMulticastServer {
         private readonly netInterface: string | undefined,
     ) {}
 
+    get supportsIpv4() {
+        return this.serverIpv4 !== undefined;
+    }
+
     onMessage(listener: (message: Uint8Array, peerAddress: string, netInterface: string) => void) {
         this.serverIpv4?.onData((netInterface, peerAddress, _port, message) => {
             if (netInterface === undefined) {

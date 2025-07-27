@@ -6,7 +6,7 @@
 
 import type { PairingHintBitmap } from "#advertisement/PairingHintBitmap.js";
 import type { Fabric } from "#fabric/Fabric.js";
-import type { SessionIntervals } from "#session/Session.js";
+import { SessionIntervals } from "#session/SessionIntervals.js";
 import type { ProductDescription, TypeFromPartialBitSchema, VendorId } from "@matter/types";
 import { CommissioningMode } from "./CommissioningMode.js";
 

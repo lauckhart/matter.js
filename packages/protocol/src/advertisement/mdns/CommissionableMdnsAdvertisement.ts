@@ -4,13 +4,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PairingHintBitmapSchema } from "#advertisement/PairingHintBitmap.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
-import { NotImplementedError } from "#general";
-import { getCommissionableDeviceQname } from "#mdns/MdnsConsts.js";
-import { MdnsServer } from "#mdns/MdnsServer.js";
+import { PtrRecord } from "#general";
+import {
+    DEFAULT_PAIRING_HINT,
+    getCommissionableDeviceQname,
+    getCommissioningModeQname,
+    getDeviceTypeQname,
+    getLongDiscriminatorQname,
+    getShortDiscriminatorQname,
+    getVendorQname,
+    MATTER_COMMISSION_SERVICE_QNAME,
+    MATTER_COMMISSIONER_SERVICE_QNAME,
+    SERVICE_DISCOVERY_QNAME,
+} from "#mdns/MdnsConsts.js";
 import { MdnsAdvertisement } from "./MdnsAdvertisement.js";
 import { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 
+/**
+ * Advertise a node as commissionable.
+ */
 export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDescription.Commissionable> {
     instanceId: string;
 
@@ -23,7 +37,65 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
         this.instanceId = instanceId;
     }
 
-    override get recordsGenerator(): MdnsServer.RecordGenerator {
-        throw new NotImplementedError();
+    override get ptrRecords() {
+        const { discriminator, deviceType, vendorId } = this.description;
+
+        const shortDiscriminator = (discriminator >> 8) & 0x0f;
+        const instanceId = this.advertiser.createInstanceId();
+        const vendorQname = getVendorQname(vendorId);
+        const deviceTypeQname = getDeviceTypeQname(deviceType);
+        const shortDiscriminatorQname = getShortDiscriminatorQname(shortDiscriminator);
+        const longDiscriminatorQname = getLongDiscriminatorQname(discriminator);
+        const commissionModeQname = getCommissioningModeQname();
+        const deviceQname = getCommissionableDeviceQname(instanceId);
+
+        const records = [
+            PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_COMMISSION_SERVICE_QNAME),
+            PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname),
+            PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname),
+            PtrRecord(SERVICE_DISCOVERY_QNAME, shortDiscriminatorQname),
+            PtrRecord(SERVICE_DISCOVERY_QNAME, longDiscriminatorQname),
+            PtrRecord(SERVICE_DISCOVERY_QNAME, commissionModeQname),
+            PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, deviceQname),
+            PtrRecord(vendorQname, deviceQname),
+            PtrRecord(deviceTypeQname, deviceQname),
+            PtrRecord(shortDiscriminatorQname, deviceQname),
+            PtrRecord(longDiscriminatorQname, deviceQname),
+            PtrRecord(commissionModeQname, deviceQname),
+        ];
+
+        if (deviceType !== undefined) {
+            const deviceTypeQname = `_T${deviceType}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
+
+            records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname));
+            records.push(PtrRecord(deviceTypeQname, this.qname));
+        }
+
+        return records;
+    }
+
+    override get txtValues() {
+        const {
+            vendorId,
+            productId,
+            deviceType,
+            name,
+            discriminator,
+            mode,
+            pairingHint = DEFAULT_PAIRING_HINT,
+            pairingInstructions,
+        } = this.description;
+
+        const values: Record<string, unknown> = {
+            VP: `${vendorId}+${productId}` /* Vendor / Product */,
+            DN: name /* Device Name */,
+            DT: deviceType /* Device Type */,
+            D: discriminator /* Discriminator */,
+            CM: mode /* Commission Mode */,
+            PH: PairingHintBitmapSchema.encode(pairingHint) /* Pairing Hint */,
+            PI: pairingInstructions /* Pairing Instruction */,
+        };
+
+        return values;
     }
 }
