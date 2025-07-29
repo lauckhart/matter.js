@@ -76,13 +76,13 @@ export class UdpMulticastServer {
     );
 
     private constructor(
-        private readonly network: Network,
+        readonly network: Network,
         private readonly broadcastAddressIpv4: string | undefined,
         private readonly broadcastAddressIpv6: string,
         private readonly broadcastPort: number,
         private readonly serverIpv4: UdpChannel | undefined,
         private readonly serverIpv6: UdpChannel,
-        private readonly netInterface: string | undefined,
+        readonly netInterface: string | undefined,
     ) {}
 
     get supportsIpv4() {

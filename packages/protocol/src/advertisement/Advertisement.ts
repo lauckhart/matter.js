@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { asError, CancelablePromise, CanceledError, Diagnostic, Logger, Time } from "#general";
-import { Advertiser } from "./Advertiser.js";
+import { asError, CancelablePromise, CanceledError, Diagnostic, Logger, MatterAggregateError, Time } from "#general";
+import type { Advertiser } from "./Advertiser.js";
 import { ServiceDescription } from "./ServiceDescription.js";
 
 const logger = Logger.get("Advertisement");
@@ -34,11 +34,10 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
     #resolve: () => void;
     #reject: (cause: unknown) => void;
 
-    #previous?: Advertisement;
     #sleep?: CancelablePromise;
     #cancelReason?: Error;
 
-    constructor(advertiser: Advertiser, service: string, description: T, previous?: Advertisement) {
+    constructor(advertiser: Advertiser, service: string, description: T) {
         let resolve: () => void, reject: (cause: unknown) => void;
         super((res, rej) => {
             resolve = res;
@@ -56,7 +55,6 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         this.service = service;
         this.advertiser = advertiser;
         this.description = description;
-        this.#previous = previous;
     }
 
     /**
@@ -107,29 +105,45 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         }
     }
 
-    static isCommissioning(
-        advertisement: Advertisement,
-    ): advertisement is
+    isCommissioning(): this is
         | Advertisement<ServiceDescription.Commissionable>
         | Advertisement<ServiceDescription.Commissioner> {
-        return ServiceDescription.isCommissioning(advertisement.description);
+        return ServiceDescription.isCommissioning(this.description);
     }
 
-    static isOperational(
-        advertisement: Advertisement,
-    ): advertisement is Advertisement<ServiceDescription.Commissioner> {
-        return ServiceDescription.isOperational(advertisement.description);
+    isOperational(): this is Advertisement<ServiceDescription.Operational> {
+        return ServiceDescription.isOperational(this.description);
+    }
+
+    /**
+     * Cancel a set of advertisements.
+     */
+    static cancelAll(ads: Iterable<Advertisement>) {
+        for (const ad of ads) {
+            ad.cancel();
+        }
+    }
+
+    /**
+     * Cancel a set of advertisements and wait for them to complete.
+     */
+    static async closeAll(ads: Iterable<Advertisement>) {
+        this.cancelAll(ads);
+        await MatterAggregateError.allSettled(ads);
     }
 
     async #run() {
-        logger.info("Advertising", Diagnostic.strong(this.service));
-
-        // A "previous" advertisement is a stale version that this advertisement overrides
-        if (this.#previous) {
-            this.#previous.cancel();
-            await this.#previous;
-            this.#previous = undefined;
+        // There may only be a single commissionable advertisement per advertiser
+        if (this.description.kind === "commissionable") {
+            const toClose = [...this.advertiser.advertisements].filter(
+                ({ description: { kind } }) => kind === "commissionable",
+            );
+            if (toClose.length) {
+                await Advertisement.closeAll(toClose);
+            }
         }
+
+        logger.info("Advertising", Diagnostic.strong(this.service));
 
         try {
             await this.run();

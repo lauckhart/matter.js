@@ -8,18 +8,46 @@ import { Advertisement } from "./Advertisement.js";
 import { ServiceDescription } from "./ServiceDescription.js";
 
 /**
- * A component that provides {@link Advertisement} instances.
+ * A component that advertises a Matter service.
  */
-export interface Advertiser {
+export abstract class Advertiser {
+    #advertisements = new Set<Advertisement>();
+    #isClosed = false;
+
     /**
-     * Begin advertising.
+     * Begin advertising on configured schedule.
      *
      * Returns undefined if the advertiser does not support this type of advertisement.
      */
-    advertise(description: ServiceDescription): Advertisement | undefined;
+    advertise(description: ServiceDescription): Advertisement | undefined {
+        if (this.#isClosed) {
+            return;
+        }
+
+        const ad = this.createAdvertisement(description);
+        if (ad) {
+            ad.finally(() => this.#advertisements.delete(ad));
+            this.#advertisements.add(ad);
+            ad.start();
+        }
+
+        return ad;
+    }
+
+    protected abstract createAdvertisement(description: ServiceDescription): Advertisement | undefined;
 
     /**
      * Destroy the instance.
      */
-    close(): Promise<void>;
+    async close() {
+        this.#isClosed = true;
+        await Advertisement.closeAll(this.#advertisements);
+    }
+
+    /**
+     * The set of advertisements active for this advertiser.
+     */
+    get advertisements() {
+        return this.#advertisements;
+    }
 }

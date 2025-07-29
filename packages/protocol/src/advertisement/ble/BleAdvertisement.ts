@@ -12,12 +12,8 @@ import { BleAdvertiser } from "./BleAdvertiser.js";
 export class BleAdvertisement extends Advertisement<ServiceDescription.Commissionable> {
     declare advertiser: BleAdvertiser;
 
-    constructor(
-        advertiser: BleAdvertiser,
-        description: ServiceDescription.Commissionable,
-        previous?: BleAdvertisement,
-    ) {
-        super(advertiser, "ble:commissioning", description, previous);
+    constructor(advertiser: BleAdvertiser, description: ServiceDescription.Commissionable) {
+        super(advertiser, "ble:commissioning", description);
     }
 
     protected override async run() {

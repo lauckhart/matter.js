@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Advertisement } from "#advertisement/Advertisement.js";
 import { PairingHintBitmapSchema } from "#advertisement/PairingHintBitmap.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { ImplementationError, PtrRecord } from "#general";
@@ -30,11 +29,11 @@ import { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDescription.Commissionable> {
     instanceId: string;
 
-    constructor(advertiser: MdnsAdvertiser, description: ServiceDescription.Commissionable, previous?: Advertisement) {
+    constructor(advertiser: MdnsAdvertiser, description: ServiceDescription.Commissionable) {
         const instanceId = advertiser.createInstanceId();
         const qname = getCommissionableDeviceQname(instanceId);
 
-        super(advertiser, qname, description, previous);
+        super(advertiser, qname, description);
 
         this.instanceId = instanceId;
 

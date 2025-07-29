@@ -16,7 +16,7 @@ import {
     Scanner,
 } from "../common/Scanner.js";
 import { Fabric } from "../fabric/Fabric.js";
-import { MdnsScanner } from "../mdns/MdnsScanner.js";
+import { MdnsScanner } from "../mdns/MdnsClient.js";
 import { RetransmissionLimitReachedError } from "../protocol/MessageExchange.js";
 
 const logger = Logger.get("ControllerDiscovery");

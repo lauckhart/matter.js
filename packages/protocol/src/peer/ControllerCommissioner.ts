@@ -23,7 +23,7 @@ import {
     serverAddressToString,
 } from "#general";
 import { InteractionClient, InteractionClientProvider } from "#interaction/InteractionClient.js";
-import { MdnsScanner } from "#mdns/MdnsScanner.js";
+import { MdnsScanner } from "#mdns/MdnsClient.js";
 import {
     CommissioningError,
     ControllerCommissioningFlow,

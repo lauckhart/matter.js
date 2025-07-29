@@ -13,17 +13,14 @@ import { CommissioningMode } from "../CommissioningMode.js";
 import { ServiceDescription } from "../ServiceDescription.js";
 import { BleAdvertisement } from "./BleAdvertisement.js";
 
-export class BleAdvertiser implements Advertiser {
+export class BleAdvertiser extends Advertiser {
     #peripheral: BlePeripheralInterface;
     #config: BleAdvertiser.Configuration;
     #isClosed = false;
 
-    /**
-     * We only support a single BLE advertisement.  We track it here so we can cancel if a new one starts.
-     */
-    #advertisement?: BleAdvertisement;
-
     constructor(peripheral: BlePeripheralInterface, options?: BleAdvertiser.Options) {
+        super();
+
         this.#peripheral = peripheral;
         this.#config = BleAdvertiser.Configuration(options);
     }
@@ -36,30 +33,14 @@ export class BleAdvertiser implements Advertiser {
         return this.#config;
     }
 
-    advertise(description: ServiceDescription): Advertisement | undefined {
+    createAdvertisement(description: ServiceDescription): Advertisement | undefined {
         this.#assertOpen();
-
-        const previous = this.#advertisement;
-        if (previous) {
-            previous.cancel();
-        }
 
         if (description.kind !== "commissionable" || description.mode !== CommissioningMode.Basic) {
             return;
         }
 
-        return new BleAdvertisement(this, description, previous);
-    }
-
-    async close() {
-        if (this.#isClosed) {
-            return;
-        }
-        this.#isClosed = true;
-
-        this.#advertisement?.cancel();
-
-        await this.#advertisement;
+        return new BleAdvertisement(this, description);
     }
 
     #assertOpen() {

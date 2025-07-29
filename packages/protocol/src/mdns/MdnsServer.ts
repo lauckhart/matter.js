@@ -7,50 +7,28 @@
 import {
     AsyncCache,
     Diagnostic,
-    DnsCodec,
-    DnsMessage,
-    DnsMessagePartiallyPreEncoded,
     DnsMessageType,
     DnsRecord,
     DnsRecordType,
     isDeepEqual,
     Logger,
     MatterAggregateError,
-    MAX_MDNS_MESSAGE_SIZE,
-    Network,
     NetworkInterfaceDetails,
+    ObserverGroup,
     Time,
-    UdpMulticastServer,
 } from "#general";
+import { MdnsSocket } from "./MdnsSocket.js";
 
 const logger = Logger.get("MdnsServer");
 
-export const MDNS_BROADCAST_IPV4 = "224.0.0.251";
-export const MDNS_BROADCAST_IPV6 = "ff02::fb";
-export const MDNS_BROADCAST_PORT = 5353;
-
 export class MdnsServer {
-    static async create(network: Network, options?: { enableIpv4?: boolean; netInterface?: string }) {
-        const { enableIpv4 = true, netInterface } = options ?? {};
-        return new MdnsServer(
-            network,
-            await UdpMulticastServer.create({
-                network,
-                netInterface,
-                broadcastAddressIpv4: enableIpv4 ? MDNS_BROADCAST_IPV4 : undefined,
-                broadcastAddressIpv6: MDNS_BROADCAST_IPV6,
-                listeningPort: MDNS_BROADCAST_PORT,
-            }),
-            netInterface,
-        );
-    }
-
+    #observers = new ObserverGroup();
     #recordsGenerator = new Map<string, MdnsServer.RecordGenerator>();
     readonly #records = new AsyncCache<Map<string, DnsRecord<any>[]>>(
         "MDNS discovery",
         async (multicastInterface: string) => {
             const serviceRecords = new Map<string, DnsRecord<any>[]>();
-            const addrs = await this.#network.getIpMac(multicastInterface);
+            const addrs = await this.network.getIpMac(multicastInterface);
             if (addrs === undefined) {
                 return serviceRecords;
             }
@@ -66,38 +44,32 @@ export class MdnsServer {
     readonly #recordLastSentAsMulticastAnswer = new Map<string, number>();
     readonly #recordLastSentAsUnicastAnswer = new Map<string, number>();
 
-    readonly #network: Network;
-    readonly #multicastServer: UdpMulticastServer;
-    readonly #netInterface: string | undefined;
+    readonly #socket: MdnsSocket;
 
-    constructor(network: Network, multicastServer: UdpMulticastServer, netInterface: string | undefined) {
-        multicastServer.onMessage(
-            (message, remoteIp, netInterface) => void this.#handleDnsMessage(message, remoteIp, netInterface),
-        );
-        this.#network = network;
-        this.#multicastServer = multicastServer;
-        this.#netInterface = netInterface;
+    constructor(socket: MdnsSocket) {
+        this.#socket = socket;
+        this.#observers.on(this.#socket.receipt, this.#handleMessage);
+    }
+
+    get network() {
+        return this.#socket.network;
     }
 
     get supportsIpv4() {
-        return this.#multicastServer.supportsIpv4;
+        return this.#socket.supportsIpv4;
     }
 
     buildDnsRecordKey(record: DnsRecord<any>, netInterface?: string, unicastTarget?: string) {
         return `${record.name}-${record.recordClass}-${record.recordType}-${netInterface}-${unicastTarget}`;
     }
 
-    async #handleDnsMessage(messageBytes: Uint8Array, remoteIp: string, netInterface: string) {
-        // This message was on a subnet not supported by this device
-        if (netInterface === undefined) return;
-        const records = await this.#records.get(netInterface);
+    async #handleMessage(message: MdnsSocket.Message) {
+        const records = await this.#records.get(message.sourceIntf);
 
-        // No need to process the DNS message if there are no records to serve
+        // Ignore if we have no records for interface
         if (records.size === 0) return;
 
-        const message = DnsCodec.decode(messageBytes);
-        if (message === undefined) return; // The message cannot be parsed
-        const { transactionId, messageType, queries, answers: knownAnswers } = message;
+        const { sourceIntf, sourceIp, transactionId, messageType, queries, answers: knownAnswers } = message;
         if (messageType !== DnsMessageType.Query && messageType !== DnsMessageType.TruncatedQuery) return;
         if (queries.length === 0) return; // No queries to answer, can happen in a TruncatedQuery, let's ignore for now
         for (const portRecords of records.values()) {
@@ -130,11 +102,10 @@ export class MdnsServer {
             let uniCastResponse = queries.filter(query => !query.uniCastResponse).length === 0;
             const answersTimeSinceLastSent = answers.map(answer => ({
                 timeSinceLastMultiCast:
-                    now -
-                    (this.#recordLastSentAsMulticastAnswer.get(this.buildDnsRecordKey(answer, netInterface)) ?? 0),
+                    now - (this.#recordLastSentAsMulticastAnswer.get(this.buildDnsRecordKey(answer, sourceIntf)) ?? 0),
                 timeSinceLastUniCast:
                     now -
-                    (this.#recordLastSentAsUnicastAnswer.get(this.buildDnsRecordKey(answer, netInterface, remoteIp)) ??
+                    (this.#recordLastSentAsUnicastAnswer.get(this.buildDnsRecordKey(answer, sourceIntf, sourceIp)) ??
                         0),
                 ttl: answer.ttl,
             }));
@@ -152,32 +123,31 @@ export class MdnsServer {
                 if (answers.length === 0) continue; // Nothing to send
 
                 answers.forEach(answer =>
-                    this.#recordLastSentAsMulticastAnswer.set(this.buildDnsRecordKey(answer, netInterface), now),
+                    this.#recordLastSentAsMulticastAnswer.set(this.buildDnsRecordKey(answer, sourceIntf), now),
                 );
             } else {
                 answers = answers.filter((_, index) => answersTimeSinceLastSent[index].timeSinceLastUniCast > 1000);
                 if (answers.length === 0) continue; // Nothing to send
 
                 answers.forEach(answer =>
-                    this.#recordLastSentAsUnicastAnswer.set(
-                        this.buildDnsRecordKey(answer, netInterface, remoteIp),
-                        now,
-                    ),
+                    this.#recordLastSentAsUnicastAnswer.set(this.buildDnsRecordKey(answer, sourceIntf, sourceIp), now),
                 );
             }
 
-            this.#sendRecords(
-                {
-                    messageType: DnsMessageType.Response,
-                    transactionId,
-                    answers,
-                    additionalRecords,
-                },
-                netInterface,
-                uniCastResponse ? remoteIp : undefined,
-            ).catch(error => {
-                logger.warn(`Failed to send mDNS response to ${remoteIp}`, error);
-            });
+            this.#socket
+                .send(
+                    {
+                        messageType: DnsMessageType.Response,
+                        transactionId,
+                        answers,
+                        additionalRecords,
+                    },
+                    sourceIntf,
+                    uniCastResponse ? sourceIp : undefined,
+                )
+                .catch(error => {
+                    logger.warn(`Failed to send mDNS response to ${sourceIp}`, error);
+                });
             await Time.sleep("MDNS delay", 20 + Math.floor(Math.random() * 100)); // as per DNS-SD spec wait 20-120ms before sending more packets
         }
     }
@@ -186,7 +156,7 @@ export class MdnsServer {
         const answers = records.filter(({ recordType }) => recordType === DnsRecordType.PTR);
         const additionalRecords = records.filter(({ recordType }) => recordType !== DnsRecordType.PTR);
 
-        await this.#sendRecords(
+        await this.#socket.send(
             {
                 messageType: DnsMessageType.Response,
                 answers,
@@ -194,60 +164,6 @@ export class MdnsServer {
             },
             netInterface,
         );
-    }
-
-    async #sendRecords(dnsMessageData: Partial<DnsMessage>, netInterface: string, unicastTarget?: string) {
-        const { answers = [], additionalRecords = [] } = dnsMessageData;
-        const answersToSend = [...answers];
-        const additionalRecordsToSend = [...additionalRecords];
-
-        const dnsMessageDataToSend = {
-            ...dnsMessageData,
-            answers: [],
-            additionalRecords: [],
-        } as DnsMessagePartiallyPreEncoded;
-
-        const emptyDnsMessage = DnsCodec.encode(dnsMessageDataToSend);
-        let dnsMessageSize = emptyDnsMessage.length;
-
-        while (true) {
-            if (answersToSend.length > 0) {
-                const nextAnswer = answersToSend.shift();
-                if (nextAnswer === undefined) {
-                    break;
-                }
-
-                const nextAnswerEncoded = DnsCodec.encodeRecord(nextAnswer);
-                dnsMessageSize += nextAnswerEncoded.length; // Add additional record as long as size is ok
-
-                if (dnsMessageSize > MAX_MDNS_MESSAGE_SIZE) {
-                    // New answer do not fit anymore, send out the message
-                    await this.#multicastServer.send(
-                        DnsCodec.encode(dnsMessageDataToSend),
-                        netInterface,
-                        unicastTarget,
-                    );
-
-                    // Reset the message, length counter and included answers to count for next message
-                    dnsMessageDataToSend.answers.length = 0;
-                    dnsMessageSize = emptyDnsMessage.length + nextAnswerEncoded.length;
-                }
-                dnsMessageDataToSend.answers.push(nextAnswerEncoded);
-            } else {
-                break;
-            }
-        }
-
-        for (const additionalRecord of additionalRecordsToSend) {
-            const additionalRecordEncoded = DnsCodec.encodeRecord(additionalRecord);
-            dnsMessageSize += additionalRecordEncoded.length; // Add additional record as long as size is ok
-            if (dnsMessageSize > MAX_MDNS_MESSAGE_SIZE) {
-                break;
-            }
-            dnsMessageDataToSend.additionalRecords.push(additionalRecordEncoded);
-        }
-
-        await this.#multicastServer.send(DnsCodec.encode(dnsMessageDataToSend), netInterface, unicastTarget);
     }
 
     async announce(...services: string[]) {
@@ -315,14 +231,15 @@ export class MdnsServer {
     }
 
     async close() {
+        this.#observers.close();
         await this.#records.close();
         this.#recordLastSentAsMulticastAnswer.clear();
         this.#recordLastSentAsUnicastAnswer.clear();
-        await this.#multicastServer.close();
     }
 
     #getMulticastInterfacesForAnnounce() {
-        return this.#netInterface === undefined ? this.#network.getNetInterfaces() : [{ name: this.#netInterface }];
+        const { netInterface } = this.#socket;
+        return netInterface === undefined ? this.network.getNetInterfaces() : [{ name: netInterface }];
     }
 
     #queryRecords({ name, recordType }: { name: string; recordType: DnsRecordType }, records: DnsRecord<any>[]) {

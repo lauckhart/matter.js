@@ -33,6 +33,7 @@ import {
 } from "#general";
 import { LegacyControllerStore } from "#LegacyControllerStore.js";
 import {
+    Advertiser,
     CertificateAuthority,
     ChannelManager,
     ClusterClient,
@@ -49,7 +50,6 @@ import {
     Fabric,
     FabricBuilder,
     FabricManager,
-    InstanceBroadcaster,
     InteractionClientProvider,
     NodeDiscoveryType,
     OperationalPeer,
@@ -383,16 +383,16 @@ export class MatterController {
         return [this.fabric];
     }
 
-    hasBroadcaster(broadcaster: InstanceBroadcaster) {
-        return this.#advertiser.hasAdvertiser(broadcaster);
+    hasAdvertiser(advertiser: Advertiser) {
+        return this.#advertiser.hasAdvertiser(advertiser);
     }
 
-    addBroadcaster(broadcaster: InstanceBroadcaster) {
-        this.#advertiser.addAdvertiser(broadcaster);
+    addAdvertiser(advertiser: Advertiser) {
+        this.#advertiser.addAdvertiser(advertiser);
     }
 
-    async deleteBroadcaster(broadcaster: InstanceBroadcaster) {
-        await this.#advertiser.deleteAdvertiser(broadcaster);
+    async deleteBroadcaster(advertiser: Advertiser) {
+        await this.#advertiser.deleteAdvertiser(advertiser);
     }
 
     public collectScanners(
@@ -576,7 +576,7 @@ export class MatterController {
 
     announce() {
         // Announce the controller itself
-        return this.#advertiser.advertise();
+        return this.#advertiser.start({ kind: "operational", fabric: this.fabric });
     }
 
     async close() {

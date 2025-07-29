@@ -5,9 +5,9 @@
  */
 
 import type { Advertisement } from "#advertisement/Advertisement.js";
-import type { Advertiser } from "#advertisement/Advertiser.js";
+import { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
-import { Bytes, Crypto, ImplementationError, Network } from "#general";
+import { Bytes, Crypto, ImplementationError } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
 import { RetrySchedule } from "../../../../general/src/net/RetrySchedule.js";
@@ -18,41 +18,28 @@ import { OperationalMdnsAdvertisement } from "./OperationalMdnsAdvertisement.js"
 /**
  * An {@link Advertiser} that advertises using an in-process MDNS implementation.
  */
-export class MdnsAdvertiser implements Advertiser {
+export class MdnsAdvertiser extends Advertiser {
     readonly retrySchedule: RetrySchedule;
-
-    /**
-     * Only one commissionable MDNS advertisement may be active for a node at a time.
-     *
-     * We track it here so we can cancel if a new one starts.
-     */
-    #activeCommissionable?: CommissionableMdnsAdvertisement;
 
     constructor(
         readonly crypto: Crypto,
-        readonly network: Network,
         readonly server: MdnsServer,
         readonly port = 5540,
         retryOptions?: RetrySchedule.Options,
     ) {
+        super();
+
         const retryConfig = RetrySchedule.Configuration(MdnsAdvertiser.RetryDefaults, retryOptions);
         this.retrySchedule = new RetrySchedule(crypto, retryConfig);
     }
 
-    advertise(description: ServiceDescription): Advertisement | undefined {
+    createAdvertisement(description: ServiceDescription): Advertisement | undefined {
         switch (description.kind) {
             case "operational":
                 return new OperationalMdnsAdvertisement(this, description);
 
             case "commissionable":
-                const ad = new CommissionableMdnsAdvertisement(this, description, this.#activeCommissionable);
-                this.#activeCommissionable = ad;
-                ad.finally(() => {
-                    if (this.#activeCommissionable === ad) {
-                        this.#activeCommissionable = undefined;
-                    }
-                });
-                return;
+                return new CommissionableMdnsAdvertisement(this, description);
 
             case "commissioner":
                 return new CommissionerMdnsAdvertisement(this, description);
@@ -63,8 +50,6 @@ export class MdnsAdvertiser implements Advertiser {
                 );
         }
     }
-
-    async close() {}
 
     createInstanceId() {
         return Bytes.toHex(this.crypto.randomBytes(8)).toUpperCase();

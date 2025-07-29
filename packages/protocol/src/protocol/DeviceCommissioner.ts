@@ -131,10 +131,6 @@ export class DeviceCommissioner {
     beginTimed(failsafeContext: FailsafeContext) {
         this.#failsafeContext = failsafeContext;
 
-        this.#context.fabrics.events.added.on(() => {
-            this.#context.advertiser.startAdvertising();
-        });
-
         failsafeContext.commissioned.on(async () => await this.endCommissioning());
 
         failsafeContext.construction.change.on(status => {

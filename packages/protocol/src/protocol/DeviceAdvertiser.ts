@@ -6,24 +6,11 @@
 
 import { Advertisement } from "#advertisement/Advertisement.js";
 import { Advertiser } from "#advertisement/Advertiser.js";
-import { CommissioningMode } from "#advertisement/CommissioningMode.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
+import { Fabric } from "#fabric/Fabric.js";
 import { FabricManager } from "#fabric/FabricManager.js";
-import {
-    AsyncObservable,
-    BasicMultiplex,
-    Diagnostic,
-    Environment,
-    Environmental,
-    Logger,
-    MatterAggregateError,
-    Mutex,
-    ObserverGroup,
-    Time,
-    Timer,
-} from "#general";
+import { Diagnostic, Environment, Environmental, Logger, ObserverGroup } from "#general";
 import { SessionManager } from "#session/SessionManager.js";
-import { DEVICE_ANNOUNCEMENT_DURATION_MS, DEVICE_ANNOUNCEMENT_INTERVAL_MS } from "#types";
 
 const logger = Logger.get("DeviceAdvertiser");
 
@@ -42,79 +29,65 @@ export class DeviceAdvertiser {
     #context: DeviceAdvertiserContext;
     #advertisers = new Set<Advertiser>();
     #advertisements = new Set<Advertisement>();
-    #timedOut = AsyncObservable<[]>();
     #observers = new ObserverGroup();
-    #interval: Timer;
-    #startTime: number | null = null;
+    #isOperational = false;
     #isClosing = false;
-    #commissioningMode = CommissioningMode.NotCommissioning;
-
-    // We synchronize advertisement logic using this mutex
-    #mutex = new Mutex(this);
-
-    // We track promises for event emits here because doing so in the mutex could cause deadlock if the observers
-    // trigger advertising again
-    #emitters = new BasicMultiplex();
+    #commissioningService?: ServiceDescription;
 
     constructor(context: DeviceAdvertiserContext) {
         this.#context = context;
 
-        this.#interval = Time.getPeriodicTimer(
-            "Server node announcement",
-            DEVICE_ANNOUNCEMENT_INTERVAL_MS,
-            this.advertise.bind(this),
-        );
-
-        // When a fabric is deleted we exit operational mode and expire announcements
-        this.#observers.on(this.#context.fabrics.events.deleted, () => {
-            if (this.#context.fabrics.length === 0) {
-                // Last fabric got removed, so expire all operational records
-                this.#mutex.run(this.#exitOperationalMode.bind(this));
-            } else {
-                // At least one fabric is still present, so re-announce
-                this.advertise(true);
+        // When a fabric is deleted, cancel any active advertisement
+        this.#observers.on(this.#context.fabrics.events.deleted, fabric => {
+            Advertisement.cancelAll(
+                [...this.#advertisements].filter(ad => ad.isOperational() && ad.description.fabric === fabric),
+            );
+            for (const ad of this.#advertisements) {
+                if (ad.description.kind !== "operational") {
+                    continue;
+                }
+                if (ad.description.fabric !== fabric) {
+                    continue;
+                }
+                ad.cancel();
             }
         });
 
-        // When a fabric is added we begin advertising it
-        this.#observers.on(this.#context.fabrics.events.added, () => {
-            this.startAdvertising();
+        // When a fabric is added, begin advertising automatically if in operational mode
+        this.#observers.on(this.#context.fabrics.events.added, fabric => {
+            if (!this.#isOperational) {
+                return;
+            }
+
+            this.#advertiseFabric(fabric);
         });
 
         // Each time we retry a packet we also send a new announcement
-        this.#observers.on(this.#context.sessions.resubmissionStarted, (session?) => {
-            logger.debug(`Resubmission started, re-announce node ${session?.nodeId}`);
-            this.advertise(true);
+        this.#observers.on(this.#context.sessions.resubmissionStarted, (_session?) => {
+            // TODO - one-off ad doesn't seem too useful but if we're going to start advertising then need a way to
+            // stop advertising once exchange receives an ACK
+            // logger.debug(`Resubmission started, re-announce node ${session?.nodeId}`);
+            // this.advertise(true);
         });
 
-        // When a session closes, if the session's fabric still exists but has no active sessions then we begin
-        // advertising again so peers will find us
+        // Handle session closure
         this.#observers.on(this.#context.sessions.sessions.deleted, session => {
-            const currentFabricIndex = session.fabric?.fabricIndex;
+            const fabricIndex = session.fabric?.fabricIndex;
+            const fabric = fabricIndex ? this.#context.fabrics.findByIndex(fabricIndex) : undefined;
 
-            // Verify if the session associated fabric still exists
-            const existingSessionFabric =
-                currentFabricIndex === undefined
-                    ? undefined
-                    : this.#context.fabrics.findByIndex(currentFabricIndex)?.fabricIndex;
+            // If this was an operational connection, readvertise if we're no longer connected to the peer
+            if (fabric) {
+                if (fabric.hasSessionForPeer(session.peerNodeId)) {
+                    return;
+                }
 
-            // When a session closes, announce existing fabrics again so that controller can detect the device again.
-            // When session was closed and no fabric exist anymore then this is triggering a factory reset in upper
-            // layer and it would be not good to announce a commissionable device and then reset that again with the
-            // factory reset
-            if (this.#context.fabrics.length > 0 || session.isPase || !existingSessionFabric) {
-                this.startAdvertising();
+                this.#advertiseFabric(fabric);
+
+                return;
             }
-        });
 
-        // TODO - this may be unnecessary:
-        //   If session still exists: This is a no-op because advertise() won't advertise the fabric
-        //   If no sessions exist: We will start advertising anyway because of deleted session handler
-        this.#observers.on(this.#context.sessions.subscriptionsChanged, (_session, subscription) => {
-            if (subscription.isCanceledByPeer) {
-                logger.debug(`Subscription canceled by peer, re-announce`);
-                this.startAdvertising.bind(this);
-            }
+            // If we're in commissioning mode, resume advertising for commissioning
+            this.#advertiseCommissioning();
         });
     }
 
@@ -131,108 +104,47 @@ export class DeviceAdvertiser {
         return instance;
     }
 
-    /**
-     * Emitted when the advertising window closes with no response.
-     */
-    get timedOut() {
-        return this.#timedOut;
+    enterCommissioningMode(description: ServiceDescription.Commissionable) {
+        this.#commissioningService = description;
+        this.#advertiseCommissioning();
     }
 
-    async enterCommissioningMode(description: ServiceDescription.Commissionable) {
-        this.#commissioningMode = description.mode;
-        for (const advertiser of this.#advertisers) {
-            const ad = advertiser.advertise(description);
-            if (ad) {
-                ad.start();
-                this.#advertisements.add(ad);
+    exitCommissioningMode() {
+        this.#commissioningService = undefined;
+        for (const ad of this.#advertisements) {
+            if (ad.isCommissioning()) {
+                ad.cancel();
             }
         }
-        this.startAdvertising();
     }
 
-    async exitCommissioningMode() {
-        this.#commissioningMode = CommissioningMode.NotCommissioning;
-        this.#interval.stop();
-        this.#startTime = null;
-        await this.#cancelAds([...this.#advertisements].filter(Advertisement.isCommissioning));
-    }
+    enterOperationalMode() {
+        const fabricsAdvertised = new Set(
+            [...this.#advertisements]
+                .map(ad => ad.isOperational() && ad.description.fabric)
+                .filter(fabric => fabric) as Fabric[],
+        );
 
-    startAdvertising() {
-        if (this.#isClosing) {
-            return;
-        }
-
-        if (this.#interval.isRunning) {
-            this.#interval.stop();
-        }
-        this.#startTime = Time.nowMs();
-        this.#interval.start();
-        this.advertise();
-    }
-
-    advertise(once = false) {
-        if (this.#isClosing) {
-            return;
-        }
-
-        const advertise = async () => {
-            if (!once) {
-                // Stop announcement if duration is reached
-                if (this.#startTime !== null && Time.nowMs() - this.#startTime > DEVICE_ANNOUNCEMENT_DURATION_MS) {
-                    logger.debug("Announcement duration reached, stop announcing");
-                    this.#emitters.add(this.#timedOut.emit(), "advertisement timeout observer");
-                    return;
-                }
-
-                if (this.#commissioningMode !== CommissioningMode.NotCommissioning) {
-                    // Re-Announce but do not reset Fabrics
-                    for (const ad of this.#advertisements) {
-                        await ad.broadcast();
-                    }
-                    return;
-                }
+        for (const fabric of this.#context.fabrics) {
+            if (!fabricsAdvertised.has(fabric)) {
+                this.#advertise({ kind: "operational", fabric });
             }
-
-            const fabrics = this.#context.fabrics;
-
-            if (fabrics.length) {
-                let fabricsWithoutSessions = 0;
-                for (const fabric of fabrics) {
-                    const session = this.#context.sessions.getSessionForNode(fabric.addressOf(fabric.rootNodeId));
-                    if (session === undefined || !session.isSecure || session.subscriptions.size === 0) {
-                        fabricsWithoutSessions++;
-                        logger.debug(
-                            "Announcing",
-                            Diagnostic.dict({ fabricIndex: fabric.fabricIndex, fabricId: fabric.fabricId }),
-                        );
-                    }
-                }
-                for (const advertiser of this.#advertisers) {
-                    const ad = advertiser.createOperationalAdvertisement();
-                    await broadcaster.setFabrics(fabrics.fabrics);
-                    if (fabricsWithoutSessions > 0 || this.#commissioningMode !== CommissioningMode.NotCommissioning) {
-                        await broadcaster.announce();
-                    }
-                }
-            } else {
-                // Expire operational Fabric announcements (if fabric got just deleted)
-                await this.#exitOperationalMode();
-            }
-        };
-
-        this.#mutex.run(advertise);
+        }
     }
 
-    async #exitOperationalMode() {
-        await this.#cancelAds([...this.#advertisements].filter(Advertisement.isOperational));
+    exitOperationalMode() {
+        this.#isOperational = false;
+
+        for (const ad of this.#advertisements) {
+            if (ad.isOperational()) {
+                ad.cancel();
+            }
+        }
     }
 
     async close() {
         this.#isClosing = true;
-        await this.#emitters;
-        await this.#mutex;
         this.#observers.close();
-        this.#interval.stop();
         await this.clearAdvertisers();
     }
 
@@ -246,15 +158,30 @@ export class DeviceAdvertiser {
 
     async deleteAdvertiser(advertiser: Advertiser) {
         this.#advertisers.delete(advertiser);
-        await this.#cancelAds([...this.#advertisements].filter(ad => ad.advertiser === advertiser));
+        await Advertisement.closeAll([...this.#advertisements].filter(ad => ad.advertiser === advertiser));
     }
 
     async clearAdvertisers() {
         this.#advertisers.clear();
-        await this.#cancelAds([...this.#advertisements]);
+        await Advertisement.closeAll([...this.#advertisements]);
+    }
+
+    #advertiseFabric(fabric: Fabric) {
+        this.#advertise({ kind: "operational", fabric });
+    }
+
+    #advertiseCommissioning() {
+        if (this.#commissioningService === undefined) {
+            return;
+        }
+        this.#advertise(this.#commissioningService);
     }
 
     #advertise(description: ServiceDescription) {
+        if (this.#isClosing) {
+            return;
+        }
+
         for (const advertiser of this.#advertisers) {
             const ad = advertiser.advertise(description);
 
@@ -263,16 +190,10 @@ export class DeviceAdvertiser {
             }
 
             ad.catch(reason => {
-                logger.error(`Error in advertiser ${ad.instance}`);
+                logger.error("Error in advertiser", Diagnostic.strong(ad.service), reason);
             });
-        }
-    }
 
-    async #cancelAds(ads: Array<Advertisement>) {
-        for (const ad of ads) {
-            ad.cancel();
+            this.#advertisements.add(ad);
         }
-
-        await MatterAggregateError.allSettled(ads).catch(error => logger.error(error));
     }
 }
