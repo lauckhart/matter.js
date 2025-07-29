@@ -18,7 +18,6 @@ import {
     InternalError,
     Lifespan,
     Logger,
-    MdnsSocket,
     ObserverGroup,
     ServerAddressIp,
     SrvRecordValue,
@@ -47,6 +46,7 @@ import {
     getShortDiscriminatorQname,
     getVendorQname,
 } from "./MdnsConsts.js";
+import { MdnsSocket } from "./MdnsSocket.js";
 
 const logger = Logger.get("MdnsClient");
 

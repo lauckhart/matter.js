@@ -33,6 +33,7 @@ import {
     DiscoveryAndCommissioningOptions,
     DiscoveryData,
     InteractionClient,
+    MdnsAdvertiser,
     MdnsClient,
     MdnsServer,
     MdnsService,
@@ -284,7 +285,7 @@ export class CommissioningController {
             rootFabric,
         });
         if (this.#mdnsServer) {
-            controller.addAdvertiser(this.#mdnsServer.createInstanceBroadcaster(port));
+            controller.addAdvertiser(new MdnsAdvertiser(this.#crypto, this.#mdnsServer, port));
         }
         return controller;
     }

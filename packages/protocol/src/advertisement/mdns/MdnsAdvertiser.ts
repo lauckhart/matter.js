@@ -7,10 +7,9 @@
 import type { Advertisement } from "#advertisement/Advertisement.js";
 import { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
-import { Bytes, Crypto, ImplementationError } from "#general";
+import { Bytes, Crypto, ImplementationError, RetrySchedule } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
-import { RetrySchedule } from "../../../../general/src/net/RetrySchedule.js";
 import { CommissionableMdnsAdvertisement } from "./CommissionableMdnsAdvertisement.js";
 import { CommissionerMdnsAdvertisement } from "./CommissionerMdnsAdvertisement.js";
 import { OperationalMdnsAdvertisement } from "./OperationalMdnsAdvertisement.js";

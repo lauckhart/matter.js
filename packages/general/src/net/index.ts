@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "../../../protocol/src/mdns/MdnsSocket.js";
 export * from "./Channel.js";
 export * from "./mock/index.js";
 export * from "./NetInterface.js";
