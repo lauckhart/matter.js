@@ -9,6 +9,15 @@ import { Advertisement } from "../Advertisement.js";
 import { ServiceDescription } from "../ServiceDescription.js";
 import { BleAdvertiser } from "./BleAdvertiser.js";
 
+// Period for "fast" broadcast.  See core spec 5.4.2.5.3
+const EARLY_INTERVAL_SLEEP = 30_000;
+
+// Period for "medium" broadcast.  See core spec 5.4.2.5.3
+const LATE_INTERVAL_SLEEP = 15 * 60_000 - EARLY_INTERVAL_SLEEP;
+
+// Period for "extended" broadcast.  See core spec 5.4.2.5.3
+const EXTENDED_INTERVAL_SLEEP = 48 * 60 * 60_000 - LATE_INTERVAL_SLEEP;
+
 export class BleAdvertisement extends Advertisement<ServiceDescription.Commissionable> {
     declare advertiser: BleAdvertiser;
 
@@ -19,24 +28,58 @@ export class BleAdvertisement extends Advertisement<ServiceDescription.Commissio
     protected override async run() {
         const {
             peripheral,
-            config: { aad, timeout, earlyInterval, lateInterval },
+            config: { earlyInterval, lateInterval, extendedInterval },
         } = this.advertiser;
 
-        const advertisementData = BtpCodec.encodeBleAdvertisementData(
-            this.description.discriminator,
-            this.description.vendorId,
-            this.description.productId,
-            aad !== undefined && aad.length > 0,
-        );
+        let aad = this.advertiser.config.aad;
+
+        let timeout = this.advertiser.config.timeout;
+
+        let advertisementData = this.#encodedAdvertisement;
+
+        let isExtended = false;
+
+        const intervals = [
+            { sleepTime: EARLY_INTERVAL_SLEEP, broadcastInterval: earlyInterval },
+            { sleepTime: LATE_INTERVAL_SLEEP, broadcastInterval: lateInterval },
+            { sleepTime: EXTENDED_INTERVAL_SLEEP, broadcastInterval: extendedInterval },
+        ];
 
         try {
-            await peripheral.advertise(advertisementData, aad, earlyInterval);
-            await this.sleep("BLE advertisement timeout", Math.min(timeout, 30 * 1_000));
+            for (const { sleepTime, broadcastInterval } of intervals) {
+                // Recreate advertisement data for extended announcement
+                if (!isExtended && this.isExtendedAnnouncement) {
+                    isExtended = true;
+                    advertisementData = this.#encodedAdvertisement;
+                    aad = undefined;
+                }
 
-            await peripheral.advertise(advertisementData, aad, lateInterval);
-            await this.sleep("BLE advertisement timeout", Math.max(timeout - 30 * 1_000, 0));
+                // Configure BLE peripheral broadcasts at specified interval
+                await peripheral.advertise(advertisementData, aad, broadcastInterval);
+
+                // Wait for timeout of at this broadcast interval
+                await this.sleep("BLE advertisement interval", Math.min(timeout, sleepTime));
+
+                timeout -= sleepTime;
+                if ((timeout -= sleepTime) <= 0) {
+                    break;
+                }
+            }
         } finally {
             await peripheral.stopAdvertising();
         }
+    }
+
+    get #encodedAdvertisement() {
+        const { discriminator, vendorId, productId } = this.description;
+        const { isExtendedAnnouncement } = this;
+
+        return BtpCodec.encodeBleAdvertisementData(
+            discriminator,
+            isExtendedAnnouncement ? 0 : vendorId,
+            isExtendedAnnouncement ? 0 : productId,
+            !isExtendedAnnouncement && !!this.advertiser.config.aad?.length,
+            isExtendedAnnouncement,
+        );
     }
 }

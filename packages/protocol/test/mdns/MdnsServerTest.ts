@@ -12,34 +12,19 @@ import {
     DnsRecord,
     DnsRecordClass,
     DnsRecordType,
-    MockNetwork,
-    NetworkSimulator,
     PtrRecord,
     SrvRecord,
     TxtRecord,
 } from "#general";
-import { AnnouncementType, MdnsServer } from "#mdns/MdnsServer.js";
+import { MdnsServer } from "#mdns/MdnsServer.js";
+import { MdnsSocket } from "#mdns/MdnsSocket.js";
 
-const CLIENT_IPv4 = "192.168.200.2";
-const CLIENT_MAC = "CA:FE:00:00:BE:EF";
-const PORT = 1234;
 const DUMMY_IP = "1.2.3.4";
 const DUMMY_QNAME = "a.b.c.d";
 const INTERFACE_NAME = "fake0";
 
-function removeUndefinedForInstanceField(arr: DnsRecord<any>[]) {
-    return arr.map(record => {
-        if (record.forInstance === undefined) delete record.forInstance;
-        return record;
-    });
-}
-
 describe("MdnsServer", () => {
     before(MockTime.enable);
-
-    const clientIps = [CLIENT_IPv4];
-    const simulator = new NetworkSimulator();
-    const clientNetwork = new MockNetwork(simulator, CLIENT_MAC, clientIps);
 
     let send: (message: Uint8Array, remoteIp: string, netInterface: string) => void;
     let onResponse: (message: Uint8Array, netInterface?: string, unicastTarget?: string) => Promise<void>;
@@ -55,9 +40,10 @@ describe("MdnsServer", () => {
 
     beforeEach(async () => {
         await MockTime.advance(130_000); // More then 2 minutes in the future for the difference calculation vs 120s ttl
-        mdnsServer = new MdnsServer(clientNetwork, udpServerSimulator, INTERFACE_NAME);
+        const socket = new MdnsSocket(udpServerSimulator);
+        mdnsServer = new MdnsServer(socket);
 
-        await mdnsServer.setRecordsGenerator(PORT, AnnouncementType.Commissionable, async () => [
+        await mdnsServer.setRecordsGenerator("foo", () => [
             PtrRecord(DUMMY_QNAME, "abcd"),
             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
@@ -94,11 +80,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -137,12 +123,12 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([PtrRecord(DUMMY_QNAME, "abcd")]),
-                        additionalRecords: removeUndefinedForInstanceField([
+                        answers: [PtrRecord(DUMMY_QNAME, "abcd")],
+                        additionalRecords: [
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
                             ARecord("abcd.local", DUMMY_IP),
-                        ]),
+                        ],
                         authorities: [],
                         queries: [],
                     },
@@ -180,13 +166,8 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
-                            SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
-                        ]),
-                        additionalRecords: removeUndefinedForInstanceField([
-                            TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                            ARecord("abcd.local", DUMMY_IP),
-                        ]),
+                        answers: [SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" })],
+                        additionalRecords: [TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]), ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
                     },
@@ -224,7 +205,7 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([ARecord("abcd.local", DUMMY_IP)]),
+                        answers: [ARecord("abcd.local", DUMMY_IP)],
                         additionalRecords: [],
                         authorities: [],
                         queries: [],
@@ -266,10 +247,10 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -309,9 +290,7 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
-                            SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
-                        ]),
+                        answers: [SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" })],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -407,11 +386,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -469,11 +448,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -530,11 +509,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -599,11 +578,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -695,11 +674,11 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField([
+                        answers: [
                             PtrRecord(DUMMY_QNAME, "abcd"),
                             SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                             TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                        ]),
+                        ],
                         additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                         authorities: [],
                         queries: [],
@@ -728,11 +707,11 @@ describe("MdnsServer", () => {
             message: {
                 transactionId: 0,
                 messageType: DnsMessageType.Response,
-                answers: removeUndefinedForInstanceField([
+                answers: [
                     PtrRecord(DUMMY_QNAME, "abcd"),
                     SrvRecord(DUMMY_QNAME, { priority: 0, weight: 0, port: 1234, target: "abcd.local" }),
                     TxtRecord(DUMMY_QNAME, [`A=1`, `B=2`]),
-                ]),
+                ],
                 additionalRecords: [ARecord("abcd.local", DUMMY_IP)],
                 authorities: [],
                 queries: [],
@@ -823,7 +802,7 @@ describe("MdnsServer", () => {
                 recordsAdditional.push(ARecord("abcd.local", DUMMY_IP));
             }
 
-            await mdnsServer.setRecordsGenerator(PORT, AnnouncementType.Commissionable, async () => recordsRequest);
+            await mdnsServer.setRecordsGenerator("foo", () => recordsRequest);
 
             send(
                 DnsCodec.encode({
@@ -847,8 +826,8 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField(recordsAnswers),
-                        additionalRecords: removeUndefinedForInstanceField(recordsAdditional.slice(0, 5)),
+                        answers: recordsAnswers,
+                        additionalRecords: recordsAdditional.slice(0, 5),
                         authorities: [],
                         queries: [],
                     },
@@ -884,7 +863,7 @@ describe("MdnsServer", () => {
                 recordsAdditional.push(ARecord("abcd.local", DUMMY_IP));
             }
 
-            await mdnsServer.setRecordsGenerator(PORT, AnnouncementType.Commissionable, async () => recordsRequest);
+            await mdnsServer.setRecordsGenerator("foo", () => recordsRequest);
 
             send(
                 DnsCodec.encode({
@@ -908,7 +887,7 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField(recordsAnswers.splice(0, recordsAnswers.length - 7)),
+                        answers: recordsAnswers.splice(0, recordsAnswers.length - 7),
                         additionalRecords: [],
                         authorities: [],
                         queries: [],
@@ -920,8 +899,8 @@ describe("MdnsServer", () => {
                     message: {
                         transactionId: 0,
                         messageType: DnsMessageType.Response,
-                        answers: removeUndefinedForInstanceField(recordsAnswers.slice(recordsAnswers.length - 7)),
-                        additionalRecords: removeUndefinedForInstanceField(recordsAdditional),
+                        answers: recordsAnswers.slice(recordsAnswers.length - 7),
+                        additionalRecords: recordsAdditional,
                         authorities: [],
                         queries: [],
                     },

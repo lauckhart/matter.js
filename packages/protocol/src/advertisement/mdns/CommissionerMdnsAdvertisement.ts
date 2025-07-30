@@ -51,7 +51,7 @@ export class CommissionerMdnsAdvertisement extends MdnsAdvertisement<ServiceDesc
     }
 
     override get txtValues() {
-        const { vendorId, productId, deviceType, deviceName } = this.description;
+        const { vendorId, productId, deviceType, name: deviceName } = this.description;
 
         return {
             VP: `${vendorId}+${productId}` /* Vendor / Product */,

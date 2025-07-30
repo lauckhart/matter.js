@@ -16,9 +16,17 @@ import {
     NetworkSimulator,
     UdpChannel,
 } from "#general";
-import { CommissioningMode } from "#index.js";
-import { MdnsBroadcaster } from "#mdns/MdnsBroadcaster.js";
-import { MdnsScanner, MdnsScannerTargetCriteria } from "#mdns/MdnsScanner.js";
+import {
+    Advertisement,
+    Advertiser,
+    CommissioningMode,
+    MdnsAdvertiser,
+    MdnsClient,
+    MdnsScannerTargetCriteria,
+    MdnsServer,
+    MdnsSocket,
+    ServiceDescription,
+} from "#index.js";
 import { NodeId, VendorId } from "#types";
 
 const SERVER_IPv4 = "192.168.200.1";
@@ -33,6 +41,20 @@ const PORT3 = 5542;
 
 const OPERATIONAL_ID = Bytes.fromHex("0000000000000018");
 const NODE_ID = NodeId(BigInt(1));
+
+const FABRIC = { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric;
+const OPERATIONAL_SERVICE = ServiceDescription.Operational({
+    fabric: FABRIC,
+});
+
+const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
+    name: "Test Device",
+    mode: CommissioningMode.Basic,
+    deviceType: 1,
+    vendorId: VendorId(1),
+    productId: 0x8000,
+    discriminator: 1234,
+});
 
 [
     { serverHasIpv4Addresses: true, testIpv4Enabled: true },
@@ -79,10 +101,14 @@ const NODE_ID = NodeId(BigInt(1));
         const crypto = MockCrypto();
         before(MockTime.enable);
 
-        let broadcaster: MdnsBroadcaster;
-        let scanner: MdnsScanner;
+        let serverSocket: MdnsSocket;
+        let server: MdnsServer;
+        let clientSocket: MdnsSocket;
+        let client: MdnsClient;
         let scanListener: UdpChannel;
         let broadcastListener: UdpChannel;
+
+        let advertisers = {} as Record<number, Advertiser>;
 
         beforeEach(async () => {
             let multicastIp, type: "udp4" | "udp6";
@@ -94,15 +120,19 @@ const NODE_ID = NodeId(BigInt(1));
                 type = "udp6";
             }
 
-            scanner = await MdnsScanner.create(clientNetwork, {
+            advertisers = {};
+
+            clientSocket = await MdnsSocket.create(clientNetwork, {
                 enableIpv4: testIpv4Enabled,
                 netInterface: "fake0",
             });
+            client = new MdnsClient(clientSocket);
 
-            broadcaster = await MdnsBroadcaster.create(crypto, serverNetwork, {
+            serverSocket = await MdnsSocket.create(serverNetwork, {
                 enableIpv4: testIpv4Enabled,
-                multicastInterface: "fake0",
+                netInterface: "fake0",
             });
+            server = new MdnsServer(serverSocket);
 
             // Add an additional listener on the broadcaster to detect scans
             scanListener = new MockUdpChannel(serverNetwork, {
@@ -124,26 +154,34 @@ const NODE_ID = NodeId(BigInt(1));
         });
 
         afterEach(async () => {
-            await broadcaster.close();
-            await scanner.close();
+            await closeAll();
+            await server.close();
+            await client.close();
             await scanListener.close();
             await broadcastListener.close();
         });
 
-        const processRecordExpiry = async (port: number) => {
-            const promise = broadcaster.expireAllAnnouncements(port);
+        function advertise(service: ServiceDescription, port = PORT) {
+            let advertiser = advertisers[port];
+            if (advertiser === undefined) {
+                advertiser = advertisers[port] = new MdnsAdvertiser(crypto, server, port);
+            }
+            const ad = advertiser.advertise(service)!;
+            expect(ad).not.undefined;
+        }
 
-            await MockTime.yield3();
-            await MockTime.yield3();
-            await MockTime.advance(150);
-            await MockTime.yield3();
-            await MockTime.yield3();
-            await MockTime.advance(150);
-            await MockTime.yield3();
-            await MockTime.yield3();
-            await MockTime.advance(150);
-            await promise;
-        };
+        async function close(port = PORT) {
+            const advertiser = advertisers[port];
+            expect(advertiser.advertisements.size).greaterThan(0);
+            await MockTime.resolve(Advertisement.closeAll(advertiser.advertisements));
+        }
+
+        async function closeAll() {
+            for (const port in advertisers) {
+                await advertisers[port].close();
+                delete advertisers[port];
+            }
+        }
 
         describe("broadcaster", () => {
             it("has correct crypto installed", async () => {
@@ -155,11 +193,11 @@ const NODE_ID = NodeId(BigInt(1));
                 const { promise, resolver } = createPromise<Uint8Array>();
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric], {
+                advertise({
+                    ...OPERATIONAL_SERVICE,
                     idleIntervalMs: 100,
                     activeIntervalMs: 200,
                 });
-                await broadcaster.announce(PORT);
 
                 const result = DnsCodec.decode(await promise);
 
@@ -230,7 +268,7 @@ const NODE_ID = NodeId(BigInt(1));
                 );
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
+                await close();
 
                 const expiryResult = DnsCodec.decode(await expiryPromise);
 
@@ -301,15 +339,7 @@ const NODE_ID = NodeId(BigInt(1));
                 const { promise, resolver } = createPromise<Uint8Array>();
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
 
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: CommissioningMode.Basic,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.announce(PORT);
+                advertise(COMMISSIONABLE_SERVICE);
 
                 const result = DnsCodec.decode(await promise);
 
@@ -451,20 +481,21 @@ const NODE_ID = NodeId(BigInt(1));
                 await listener.close();
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
+                await close();
             });
 
             it("it broadcasts the controller commissioner on one port", async () => {
                 const { promise, resolver } = createPromise<Uint8Array>();
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
 
-                await broadcaster.setCommissionerInfo(PORT, {
-                    deviceName: "Test Commissioner",
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                });
-                await broadcaster.announce(PORT);
+                advertise(
+                    ServiceDescription.Commissioner({
+                        name: "Test Commissioner",
+                        deviceType: 1,
+                        vendorId: VendorId(1),
+                        productId: 0x8000,
+                    }),
+                );
 
                 const result = DnsCodec.decode(await promise);
 
@@ -539,7 +570,7 @@ const NODE_ID = NodeId(BigInt(1));
                 await listener.close();
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
+                await close();
             });
 
             it("it allows announcements of multiple devices on different ports", async () => {
@@ -550,24 +581,16 @@ const NODE_ID = NodeId(BigInt(1));
                     if (dataArr.length === 3) resolver();
                 });
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
-                await broadcaster.setCommissionMode(PORT2, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setCommissionerInfo(PORT3, {
-                    deviceName: "Test Commissioner",
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                });
-                await broadcaster.announce(PORT);
-                await broadcaster.announce(PORT2);
-                await broadcaster.announce(PORT3);
+                advertise(OPERATIONAL_SERVICE);
+                advertise(COMMISSIONABLE_SERVICE, PORT2);
+                advertise(
+                    ServiceDescription.Commissioner({
+                        name: "Test Commissioner",
+                        deviceType: 1,
+                        vendorId: VendorId(1),
+                        productId: 0x8000,
+                    }),
+                );
 
                 await promise;
 
@@ -839,48 +862,31 @@ const NODE_ID = NodeId(BigInt(1));
                 await listener.close();
 
                 // And expire the announcement for all via close
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
-                await processRecordExpiry(PORT3);
+                await closeAll();
             });
         });
 
         describe("Disabled discovery", () => {
             it("the client do not know announced records if scanning is not enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(COMMISSIONABLE_SERVICE);
+                advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await broadcaster.announce(PORT);
-                await broadcaster.announce(PORT2);
                 await MockTime.yield3();
                 await MockTime.yield3();
 
                 // Same result when we just get the records
-                expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
-                        ?.addresses,
-                ).deep.equal(undefined);
+                expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)?.addresses).deep.equal(undefined);
 
                 // No commissionable devices because never queried
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
+                await closeAll();
 
                 // And removed after expiry
-                expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
-                ).deep.equal(undefined);
+                expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)).deep.equal(undefined);
 
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
             });
         });
 
@@ -889,33 +895,21 @@ const NODE_ID = NodeId(BigInt(1));
                 commissionable: true,
                 operationalTargets: [],
             };
-            beforeEach(() => scanner.targetCriteriaProviders.add(criteria));
-            afterEach(() => scanner.targetCriteriaProviders.delete(criteria));
+            beforeEach(() => client.targetCriteriaProviders.add(criteria));
+            afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client do not know announced operational records if scanning is not enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(COMMISSIONABLE_SERVICE);
+                advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await broadcaster.announce(PORT);
-                await broadcaster.announce(PORT2);
                 await MockTime.yield3();
                 await MockTime.yield3();
 
                 // Same result when we just get the records
-                expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
-                        ?.addresses,
-                ).deep.equal(undefined);
+                expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)?.addresses).deep.equal(undefined);
 
                 // No commissionable devices because never queried
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
                     {
                         CM: 1,
                         D: 1234,
@@ -941,15 +935,12 @@ const NODE_ID = NodeId(BigInt(1));
                 ]);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
+                await closeAll();
 
                 // And removed after expiry
-                expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
-                ).deep.equal(undefined);
+                expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)).deep.equal(undefined);
 
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
             });
         });
 
@@ -958,8 +949,8 @@ const NODE_ID = NodeId(BigInt(1));
                 commissionable: false,
                 operationalTargets: [{ operationalId: OPERATIONAL_ID }],
             };
-            beforeEach(() => scanner.targetCriteriaProviders.add(criteria));
-            afterEach(() => scanner.targetCriteriaProviders.delete(criteria));
+            beforeEach(() => client.targetCriteriaProviders.add(criteria));
+            afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client directly returns server record if it has been announced before and records are removed on cancel", async () => {
                 let queryReceived = false;
@@ -971,13 +962,12 @@ const NODE_ID = NodeId(BigInt(1));
                         queryReceived = true;
                     }
                 });
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
-                await broadcaster.announce(PORT);
+                advertise(OPERATIONAL_SERVICE);
 
                 await MockTime.yield3(); // Make sure data were broadcasted async
                 await MockTime.yield3(); // Make sure data were received and processed async
 
-                const result = await scanner.findOperationalDevice(
+                const result = await client.findOperationalDevice(
                     { operationalId: OPERATIONAL_ID } as Fabric,
                     NODE_ID,
                     1,
@@ -990,16 +980,16 @@ const NODE_ID = NodeId(BigInt(1));
 
                 // Same result when we just get the records
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
                         ?.addresses,
                 ).deep.equal(IPIntegrationResultsPort1);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
+                await close();
 
                 // And empty result after expiry
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
                 ).deep.equal(undefined);
             });
 
@@ -1009,9 +999,9 @@ const NODE_ID = NodeId(BigInt(1));
                     sentData.push(data),
                 );
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(OPERATIONAL_SERVICE);
 
-                const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
+                const findPromise = client.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
                 await MockTime.yield3(); // make sure responding promise is created
                 await MockTime.advance(1); // Trigger timer to send query (0ms timer)
@@ -1040,16 +1030,16 @@ const NODE_ID = NodeId(BigInt(1));
 
                 // Same result when we just get the records
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
                         ?.addresses,
                 ).deep.equal(IPIntegrationResultsPort1);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
+                await close();
 
                 // And empty result after expiry
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
                 ).deep.equal(undefined);
             });
 
@@ -1059,17 +1049,10 @@ const NODE_ID = NodeId(BigInt(1));
                     netData.push(data);
                 });
 
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(COMMISSIONABLE_SERVICE);
+                advertise(OPERATIONAL_SERVICE);
 
-                const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
+                const findPromise = client.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
                 await MockTime.yield3(); // make sure responding promise is created
                 await MockTime.advance(1); // Trigger timer to send query (0ms timer)
@@ -1132,20 +1115,19 @@ const NODE_ID = NodeId(BigInt(1));
 
                 // Same result when we just get the records
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
                         ?.addresses,
                 ).deep.equal(IPIntegrationResultsPort2);
 
                 // No commissionable devices because never queried
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
+                await closeAll();
 
                 // And empty result after expiry
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
                 ).deep.equal(undefined);
             });
         });
@@ -1155,33 +1137,24 @@ const NODE_ID = NodeId(BigInt(1));
                 commissionable: true,
                 operationalTargets: [{ operationalId: OPERATIONAL_ID }],
             };
-            beforeEach(() => scanner.targetCriteriaProviders.add(criteria));
-            afterEach(() => scanner.targetCriteriaProviders.delete(criteria));
+            beforeEach(() => client.targetCriteriaProviders.add(criteria));
+            afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client knows announced records if scanning is enabled by criteria", async () => {
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(COMMISSIONABLE_SERVICE);
+                advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await broadcaster.announce(PORT);
-                await broadcaster.announce(PORT2);
                 await MockTime.yield3();
                 await MockTime.yield3();
 
                 // Same result when we just get the records
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
                         ?.addresses,
                 ).deep.equal(IPIntegrationResultsPort2);
 
                 // No commissionable devices because never queried
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
                     {
                         CM: 1,
                         D: 1234,
@@ -1207,15 +1180,14 @@ const NODE_ID = NodeId(BigInt(1));
                 ]);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
+                await closeAll();
 
                 // And removed after expiry
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
                 ).deep.equal(undefined);
 
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
             });
 
             it("the client queries the server record and get correct response when announced before", async () => {
@@ -1229,22 +1201,13 @@ const NODE_ID = NodeId(BigInt(1));
                     }
                 });
 
-                await broadcaster.setCommissionMode(PORT, {
-                    name: "Test Device",
-                    mode: 1,
-                    deviceType: 1,
-                    vendorId: VendorId(1),
-                    productId: 0x8000,
-                    discriminator: 1234,
-                });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                advertise(COMMISSIONABLE_SERVICE);
+                advertise(OPERATIONAL_SERVICE);
 
-                await broadcaster.announce(PORT);
-                await broadcaster.announce(PORT2);
                 await MockTime.yield3();
                 await MockTime.yield3();
 
-                const result = await scanner.findOperationalDevice(
+                const result = await client.findOperationalDevice(
                     { operationalId: OPERATIONAL_ID } as Fabric,
                     NODE_ID,
                     10,
@@ -1258,12 +1221,12 @@ const NODE_ID = NodeId(BigInt(1));
 
                 // Same result when we just get the records
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
                         ?.addresses,
                 ).deep.equal(IPIntegrationResultsPort2);
 
                 // Also commissionable devices known now
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([
                     {
                         CM: 1,
                         D: 1234,
@@ -1289,15 +1252,14 @@ const NODE_ID = NodeId(BigInt(1));
                 ]);
 
                 // And expire the announcement
-                await processRecordExpiry(PORT);
-                await processRecordExpiry(PORT2);
+                await closeAll();
 
                 // And removed after expiry
                 expect(
-                    scanner.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
+                    client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID),
                 ).deep.equal(undefined);
 
-                expect(scanner.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
+                expect(client.getDiscoveredCommissionableDevices({ longDiscriminator: 1234 })).deep.equal([]);
             });
         });
     });

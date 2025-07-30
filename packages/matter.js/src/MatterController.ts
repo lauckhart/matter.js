@@ -60,6 +60,7 @@ import {
     RetransmissionLimitReachedError,
     ScannerSet,
     SecureChannelProtocol,
+    ServiceDescription,
     SessionManager,
     SubscriptionClient,
 } from "#protocol";
@@ -576,7 +577,7 @@ export class MatterController {
 
     announce() {
         // Announce the controller itself
-        return this.#advertiser.start({ kind: "operational", fabric: this.fabric });
+        return this.#advertiser.start(ServiceDescription.Operational({ fabric: this.fabric }));
     }
 
     async close() {

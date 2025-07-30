@@ -9,10 +9,8 @@ import { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { Fabric } from "#fabric/Fabric.js";
 import { FabricManager } from "#fabric/FabricManager.js";
-import { Diagnostic, Environment, Environmental, Logger, ObserverGroup } from "#general";
+import { Environment, Environmental, MatterAggregateError, ObserverGroup } from "#general";
 import { SessionManager } from "#session/SessionManager.js";
-
-const logger = Logger.get("DeviceAdvertiser");
 
 /**
  * Interfaces the {@link DeviceAdvertiser} with other components.
@@ -28,7 +26,6 @@ export interface DeviceAdvertiserContext {
 export class DeviceAdvertiser {
     #context: DeviceAdvertiserContext;
     #advertisers = new Set<Advertiser>();
-    #advertisements = new Set<Advertisement>();
     #observers = new ObserverGroup();
     #isOperational = false;
     #isClosing = false;
@@ -39,18 +36,7 @@ export class DeviceAdvertiser {
 
         // When a fabric is deleted, cancel any active advertisement
         this.#observers.on(this.#context.fabrics.events.deleted, fabric => {
-            Advertisement.cancelAll(
-                [...this.#advertisements].filter(ad => ad.isOperational() && ad.description.fabric === fabric),
-            );
-            for (const ad of this.#advertisements) {
-                if (ad.description.kind !== "operational") {
-                    continue;
-                }
-                if (ad.description.fabric !== fabric) {
-                    continue;
-                }
-                ad.cancel();
-            }
+            Advertisement.cancelAll(this.#advertisements(ad => ad.isOperational() && ad.description.fabric === fabric));
         });
 
         // When a fabric is added, begin advertising automatically if in operational mode
@@ -111,23 +97,19 @@ export class DeviceAdvertiser {
 
     exitCommissioningMode() {
         this.#commissioningService = undefined;
-        for (const ad of this.#advertisements) {
-            if (ad.isCommissioning()) {
-                ad.cancel();
-            }
-        }
+        Advertisement.cancelAll(this.#advertisements(ad => ad.isCommissioning()));
     }
 
     enterOperationalMode() {
         const fabricsAdvertised = new Set(
-            [...this.#advertisements]
-                .map(ad => ad.isOperational() && ad.description.fabric)
-                .filter(fabric => fabric) as Fabric[],
+            this.#advertisements(ad => ad.isOperational()).map(
+                ad => (ad as Advertisement<ServiceDescription.Operational>).description.fabric,
+            ),
         );
 
         for (const fabric of this.#context.fabrics) {
             if (!fabricsAdvertised.has(fabric)) {
-                this.#advertise({ kind: "operational", fabric });
+                this.#advertise(ServiceDescription.Operational({ fabric }));
             }
         }
     }
@@ -135,11 +117,7 @@ export class DeviceAdvertiser {
     exitOperationalMode() {
         this.#isOperational = false;
 
-        for (const ad of this.#advertisements) {
-            if (ad.isOperational()) {
-                ad.cancel();
-            }
-        }
+        Advertisement.cancelAll(this.#advertisements(ad => ad.isOperational()));
     }
 
     async close() {
@@ -158,16 +136,17 @@ export class DeviceAdvertiser {
 
     async deleteAdvertiser(advertiser: Advertiser) {
         this.#advertisers.delete(advertiser);
-        await Advertisement.closeAll([...this.#advertisements].filter(ad => ad.advertiser === advertiser));
+        await advertiser.close();
     }
 
     async clearAdvertisers() {
+        const advertisers = [...this.#advertisers];
         this.#advertisers.clear();
-        await Advertisement.closeAll([...this.#advertisements]);
+        await MatterAggregateError.allSettled(advertisers.map(advertiser => advertiser.close()));
     }
 
     #advertiseFabric(fabric: Fabric) {
-        this.#advertise({ kind: "operational", fabric });
+        this.#advertise(ServiceDescription.Operational({ fabric }));
     }
 
     #advertiseCommissioning() {
@@ -183,17 +162,13 @@ export class DeviceAdvertiser {
         }
 
         for (const advertiser of this.#advertisers) {
-            const ad = advertiser.advertise(description);
-
-            if (ad === undefined) {
-                continue;
-            }
-
-            ad.catch(reason => {
-                logger.error("Error in advertiser", Diagnostic.strong(ad.service), reason);
-            });
-
-            this.#advertisements.add(ad);
+            advertiser.advertise(description);
         }
+    }
+
+    #advertisements(predicate?: (ad: Advertisement) => boolean) {
+        return [...this.#advertisers].flatMap(advertiser =>
+            predicate ? advertiser.filter(predicate) : [...advertiser.advertisements],
+        );
     }
 }

@@ -233,7 +233,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     async #removeBleBroadcaster(bleBroadcaster: InstanceBroadcaster) {
         const advertiser = this.owner.env.get(DeviceAdvertiser);
         await advertiser.deleteAdvertiser(bleBroadcaster);
-        await bleBroadcaster.close();
     }
 
     async #removeBleTransport(bleTransport: TransportInterface) {

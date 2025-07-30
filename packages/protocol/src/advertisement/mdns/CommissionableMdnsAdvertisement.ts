@@ -54,18 +54,20 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
 
         const records = [
             PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_COMMISSION_SERVICE_QNAME),
-            PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, shortDiscriminatorQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, longDiscriminatorQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, commissionModeQname),
             PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, deviceQname),
-            PtrRecord(vendorQname, deviceQname),
             PtrRecord(deviceTypeQname, deviceQname),
             PtrRecord(shortDiscriminatorQname, deviceQname),
             PtrRecord(longDiscriminatorQname, deviceQname),
             PtrRecord(commissionModeQname, deviceQname),
         ];
+
+        if (!this.isExtendedAnnouncement) {
+            records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname), PtrRecord(vendorQname, deviceQname));
+        }
 
         if (deviceType !== undefined) {
             const deviceTypeQname = `_T${deviceType}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
@@ -90,7 +92,6 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
         } = this.description;
 
         const values: Record<string, unknown> = {
-            VP: `${vendorId}+${productId}` /* Vendor / Product */,
             DN: name /* Device Name */,
             DT: deviceType /* Device Type */,
             D: discriminator /* Discriminator */,
@@ -98,6 +99,10 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
             PH: PairingHintBitmapSchema.encode(pairingHint) /* Pairing Hint */,
             PI: pairingInstructions /* Pairing Instruction */,
         };
+
+        if (!this.isExtendedAnnouncement) {
+            values.VP = `${vendorId}+${productId}`; /* Vendor / Product */
+        }
 
         return values;
     }

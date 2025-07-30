@@ -5,6 +5,7 @@
  */
 
 import { asError, CancelablePromise, CanceledError, Diagnostic, Logger, MatterAggregateError, Time } from "#general";
+import { PRIVATE_COMMISSIONING_TIMEOUT_S } from "#types";
 import type { Advertiser } from "./Advertiser.js";
 import { ServiceDescription } from "./ServiceDescription.js";
 
@@ -36,6 +37,7 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
 
     #sleep?: CancelablePromise;
     #cancelReason?: Error;
+    #startedAt = Time.nowMs();
 
     constructor(advertiser: Advertiser, service: string, description: T) {
         let resolve: () => void, reject: (cause: unknown) => void;
@@ -113,6 +115,16 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
 
     isOperational(): this is Advertisement<ServiceDescription.Operational> {
         return ServiceDescription.isOperational(this.description);
+    }
+
+    /**
+     * Indicates this is an extended announcement.
+     *
+     * Per core spec 5.4.2.3.1, the device should emit vendor ID, product ID and extended data during extended
+     * announcement.
+     */
+    protected get isExtendedAnnouncement() {
+        return Time.nowMs() - this.#startedAt < PRIVATE_COMMISSIONING_TIMEOUT_S * 1000;
     }
 
     /**

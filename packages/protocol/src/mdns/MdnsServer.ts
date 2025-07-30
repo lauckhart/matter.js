@@ -166,7 +166,7 @@ export class MdnsServer {
         );
     }
 
-    async announce(...services: string[]) {
+    async broadcast(...services: string[]) {
         await MatterAggregateError.allSettled(
             (await this.#getMulticastInterfacesForAnnounce()).map(async ({ name: netInterface }) => {
                 const records = await this.#records.get(netInterface);

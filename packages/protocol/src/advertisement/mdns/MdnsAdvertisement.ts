@@ -55,12 +55,18 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         const { server, retrySchedule } = this.advertiser;
 
         let announced = false;
+        let isExtended = false;
 
         let interruptedBy: unknown;
         try {
             await server.setRecordsGenerator(this.service, this.#recordsGenerator);
             for (const retryInterval of retrySchedule) {
-                await server.announce(this.service);
+                if (!isExtended && this.isExtendedAnnouncement) {
+                    await server.setRecordsGenerator(this.service, this.#recordsGenerator);
+                    isExtended = true;
+                }
+
+                await server.broadcast(this.service);
                 announced = true;
                 this.sleep("MDNS repeat", retryInterval);
             }

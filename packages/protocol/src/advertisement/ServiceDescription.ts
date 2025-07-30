@@ -7,7 +7,7 @@
 import type { PairingHintBitmap } from "#advertisement/PairingHintBitmap.js";
 import type { Fabric } from "#fabric/Fabric.js";
 import { SessionIntervals } from "#session/SessionIntervals.js";
-import type { ProductDescription, TypeFromPartialBitSchema, VendorId } from "@matter/types";
+import type { ProductDescription, TypeFromPartialBitSchema } from "@matter/types";
 import { CommissioningMode } from "./CommissioningMode.js";
 
 export type ServiceDescription =
@@ -55,6 +55,13 @@ export namespace ServiceDescription {
         pairingInstructions?: string;
     }
 
+    export function Commissionable(definition: Omit<Commissionable, "kind">): Commissionable {
+        return {
+            ...definition,
+            kind: "commissionable",
+        };
+    }
+
     export interface Operational extends Base {
         kind: "operational";
 
@@ -64,27 +71,28 @@ export namespace ServiceDescription {
         fabric: Fabric;
     }
 
-    export interface Commissioner extends Base {
+    export function Operational(definition: Omit<Operational, "kind">): Operational {
+        return {
+            ...definition,
+            kind: "operational",
+        };
+    }
+
+    export interface Commissioner extends Omit<ProductDescription, "deviceType">, Base {
         kind: "commissioner";
 
         /**
-         * Device name for commissionable announcements.
-         */
-        deviceName: string;
-
-        /**
-         * Device type for commissionable announcements.
-         */
-        vendorId: VendorId;
-
-        /**
-         * Vendor ID for commissionable announcements.
-         */
-        productId: number;
-
-        /**
-         * Device type for commissionable announcements.
+         * The device type.
+         *
+         * This is optional for commissioner advertisement.
          */
         deviceType?: number;
+    }
+
+    export function Commissioner(definition: Omit<Commissioner, "kind">): Commissioner {
+        return {
+            ...definition,
+            kind: "commissioner",
+        };
     }
 }

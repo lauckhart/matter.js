@@ -109,7 +109,7 @@ export class MdnsSocket {
                     }
 
                     // New answer do not fit anymore, send out the message
-                    await this.#send(chunk);
+                    await this.#send(chunk, intf, unicastDest);
 
                     // Reset the message, length counter and included answers to count for next message
                     if (chunk.queries.length) {
@@ -137,7 +137,7 @@ export class MdnsSocket {
         }
 
         chunk.messageType = DnsMessageType.Query;
-        await this.#send(chunk);
+        await this.#send(chunk, intf, unicastDest);
     }
 
     async #send(message: DnsMessagePartiallyPreEncoded, intf?: string, unicastDest?: string) {
