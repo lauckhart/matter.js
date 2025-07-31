@@ -32,6 +32,11 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
      */
     advertiser: Advertiser;
 
+    /**
+     * Configuration options.
+     */
+    options: Advertisement.Options;
+
     #resolve: () => void;
     #reject: (cause: unknown) => void;
 
@@ -39,12 +44,15 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
     #cancelReason?: Error;
     #startedAt = Time.nowMs();
 
-    constructor(advertiser: Advertiser, service: string, description: T) {
+    constructor(advertiser: Advertiser, service: string, description: T, options?: Advertisement.Options) {
         let resolve: () => void, reject: (cause: unknown) => void;
         super((res, rej) => {
             resolve = res;
             reject = rej;
         });
+
+        this.options = options ?? {};
+
         this.#resolve = resolve!;
         this.#reject = (cause: unknown) => {
             if (cause instanceof CanceledError) {
@@ -118,13 +126,20 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
     }
 
     /**
-     * Indicates this is an extended announcement.
-     *
-     * Per core spec 5.4.2.3.1, the device should emit vendor ID, product ID and extended data during extended
-     * announcement.
+     * Indicates that broadcasts should omit private details.
      */
-    protected get isExtendedAnnouncement() {
-        return Time.nowMs() - this.#startedAt < PRIVATE_COMMISSIONING_TIMEOUT_S * 1000;
+    protected get isPrivacyMasked() {
+        // Private broadcast configured explicitly
+        if (this.options.omitPrivateDetails) {
+            return true;
+        }
+
+        // Extended announcement
+        if (Time.nowMs() - this.#startedAt < PRIVATE_COMMISSIONING_TIMEOUT_S * 1000) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -148,7 +163,7 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         // There may only be a single commissionable advertisement per advertiser
         if (this.description.kind === "commissionable") {
             const toClose = [...this.advertiser.advertisements].filter(
-                ({ description: { kind } }) => kind === "commissionable",
+                other => other.description.kind === "commissionable" && other !== this,
             );
             if (toClose.length) {
                 await Advertisement.closeAll(toClose);
@@ -162,5 +177,17 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         } finally {
             logger.debug("Done advertising", Diagnostic.strong(this.service));
         }
+    }
+}
+
+export namespace Advertisement {
+    export interface Options {
+        /**
+         * Set this to omit optional details from broadcasts that may affect privacy.
+         *
+         * Per core spec 5.4.2.3.1, the device always omits vendor ID, product ID and extended data during extended
+         * announcement.  Set this value to omit this fields unconditionally.
+         */
+        omitPrivateDetails?: boolean;
     }
 }

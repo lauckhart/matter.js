@@ -53,10 +53,15 @@ export class CommissionerMdnsAdvertisement extends MdnsAdvertisement<ServiceDesc
     override get txtValues() {
         const { vendorId, productId, deviceType, name: deviceName } = this.description;
 
-        return {
-            VP: `${vendorId}+${productId}` /* Vendor / Product */,
+        const values: Record<string, unknown> = {
             DN: deviceName /* Device Name */,
             DT: deviceType /* Device Type */,
         };
+
+        if (!this.isPrivacyMasked) {
+            values.VP = `${vendorId}+${productId}`; /* Vendor / Product */
+        }
+
+        return values;
     }
 }

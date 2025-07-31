@@ -5,6 +5,7 @@
  */
 
 import { DecodedPacket } from "#codec/MessageCodec.js";
+import { SupportedTransportsSchema } from "#common/SupportedTransportsBitmap.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     BasicSet,
@@ -28,7 +29,6 @@ import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
 import { GroupSession } from "#session/GroupSession.js";
 import { CaseAuthenticatedTag, DEFAULT_MAX_PATHS_PER_INVOKE, FabricId, FabricIndex, GroupId, NodeId } from "#types";
 import { UnexpectedDataError } from "@matter/general";
-import { SupportedTransportsSchema } from "../common/Scanner.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { MessageCounter } from "../protocol/MessageCounter.js";
 import { InsecureSession } from "./InsecureSession.js";

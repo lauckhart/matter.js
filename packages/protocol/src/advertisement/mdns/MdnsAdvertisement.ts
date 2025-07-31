@@ -7,6 +7,7 @@
 import { Advertisement } from "#advertisement/Advertisement.js";
 import type { Advertiser } from "#advertisement/Advertiser.js";
 import type { ServiceDescription } from "#advertisement/ServiceDescription.js";
+import { SupportedTransportsSchema } from "#common/SupportedTransportsBitmap.js";
 import {
     AAAARecord,
     ARecord,
@@ -36,6 +37,8 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
      */
     qname: string;
 
+    #needsRecordsGenerator = true;
+
     constructor(advertiser: Advertiser, qname: string, description: T) {
         description = {
             ...description,
@@ -55,18 +58,17 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         const { server, retrySchedule } = this.advertiser;
 
         let announced = false;
-        let isExtended = false;
+        let isPrivacyMasked = false;
 
         let interruptedBy: unknown;
         try {
-            await server.setRecordsGenerator(this.service, this.#recordsGenerator);
             for (const retryInterval of retrySchedule) {
-                if (!isExtended && this.isExtendedAnnouncement) {
-                    await server.setRecordsGenerator(this.service, this.#recordsGenerator);
-                    isExtended = true;
+                if (!isPrivacyMasked && this.isPrivacyMasked) {
+                    this.#needsRecordsGenerator = true;
+                    isPrivacyMasked = true;
                 }
 
-                await server.broadcast(this.service);
+                await this.broadcast();
                 announced = true;
                 this.sleep("MDNS repeat", retryInterval);
             }
@@ -83,6 +85,23 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         }
 
         throw interruptedBy;
+    }
+
+    /**
+     * Begin responding to MDNS requests.
+     */
+    async serve() {
+        if (this.#needsRecordsGenerator) {
+            await this.advertiser.server.setRecordsGenerator(this.service, this.#recordsGenerator);
+        }
+    }
+
+    /**
+     * Send an MDNS broadcast immediately.
+     */
+    async broadcast() {
+        await this.serve();
+        await this.advertiser.server.broadcast(this.service);
     }
 
     get #recordsGenerator(): MdnsServer.RecordGenerator {
@@ -116,14 +135,22 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         return records;
     }
 
-    get #txtValues(): Record<string, unknown> {
-        return {
+    get #txtValues() {
+        const values: Record<string, unknown> = {
             SII: this.description.idleIntervalMs /* Session Idle Interval */,
             SAI: this.description.activeIntervalMs /* Session Active Interval */,
             SAT: this.description.activeThresholdMs /* Session Active Threshold */,
-            //`T=${TCP_SUPPORTED}` /* TODO TCP not supported */,
-            //`ICD=${ICD_SUPPORTED}` /* ICD not supported */,
             ...this.txtValues,
         };
+
+        if (this.description.tcp !== undefined) {
+            values.T = SupportedTransportsSchema.encode(this.description.tcp); /* TCP support */
+        }
+
+        if (this.description.icd !== undefined) {
+            values.ICD = this.description.icd; /* ICD support */
+        }
+
+        return values;
     }
 }

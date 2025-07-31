@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PairingHintBitmap } from "#advertisement/PairingHintBitmap.js";
 import { VendorId } from "#types";
 
 export const MDNS_BROADCAST_IPV4 = "224.0.0.251";
@@ -20,7 +21,7 @@ export const DEFAULT_PAIRING_HINT = {
     deviceManual: true,
 };
 
-export const PAIRING_HINTS_REQUIRING_INSTRUCTION = [
+export const PAIRING_HINTS_REQUIRING_INSTRUCTION = Array<keyof typeof PairingHintBitmap>(
     "customInstruction",
     "pressRestButtonForNumberOfSeconds",
     "pressResetButtonUntilLightBlinks",
@@ -32,7 +33,7 @@ export const PAIRING_HINTS_REQUIRING_INSTRUCTION = [
     "pressSetupButtonForNumberOfSecondsWithApplicationOfPower",
     "pressSetupButtonUntilLightBlinksWithApplicationOfPower",
     "pressSetupButtonNumberOfTimes",
-];
+);
 
 export const getFabricQname = (operationalIdString: string) => `_I${operationalIdString}._sub.${MATTER_SERVICE_QNAME}`;
 export const getOperationalDeviceQname = (operationalIdString: string, nodeIdString: string) =>

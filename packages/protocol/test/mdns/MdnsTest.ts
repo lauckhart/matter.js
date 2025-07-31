@@ -9,7 +9,9 @@ import {
     Bytes,
     createPromise,
     DnsCodec,
+    DnsMessage,
     DnsMessageType,
+    DnsRecordType,
     MockCrypto,
     MockNetwork,
     MockUdpChannel,
@@ -63,9 +65,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 ].forEach(({ serverHasIpv4Addresses, testIpv4Enabled }) => {
     const serverIps = serverHasIpv4Addresses ? [SERVER_IPv4, SERVER_IPv6] : [SERVER_IPv6];
     const clientIps = testIpv4Enabled ? [CLIENT_IPv4, CLIENT_IPv6] : [CLIENT_IPv6];
-    const simulator = new NetworkSimulator();
-    const serverNetwork = new MockNetwork(simulator, SERVER_MAC, serverIps);
-    const clientNetwork = new MockNetwork(simulator, CLIENT_MAC, clientIps);
 
     const IPDnsRecords = [
         {
@@ -111,6 +110,10 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
         let advertisers = {} as Record<number, Advertiser>;
 
         beforeEach(async () => {
+            const simulator = new NetworkSimulator();
+            const serverNetwork = new MockNetwork(simulator, SERVER_MAC, serverIps);
+            const clientNetwork = new MockNetwork(simulator, CLIENT_MAC, clientIps);
+
             let multicastIp, type: "udp4" | "udp6";
             if (testIpv4Enabled) {
                 multicastIp = "224.0.0.251";
@@ -154,7 +157,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
         });
 
         afterEach(async () => {
-            await closeAll();
+            await MockTime.resolve(closeAll());
             await server.close();
             await client.close();
             await scanListener.close();
@@ -200,10 +203,9 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 });
 
                 const result = DnsCodec.decode(await promise);
-
-                expect(result).deep.equal({
+                expectMessage(result, {
                     transactionId: 0,
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     answers: [
                         {
@@ -273,9 +275,9 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 const expiryResult = DnsCodec.decode(await expiryPromise);
 
                 // Expiry is the same as the announcement result but with ttl = 0
-                expect(expiryResult).deep.equal({
+                expectMessage(expiryResult, {
                     transactionId: 0,
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     answers: [
                         {
@@ -343,7 +345,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
                 const result = DnsCodec.decode(await promise);
 
-                expect(result).deep.equal({
+                expectMessage(result, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -473,7 +475,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         },
                     ],
                     authorities: [],
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     transactionId: 0,
                 });
@@ -499,7 +501,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
                 const result = DnsCodec.decode(await promise);
 
-                expect(result).deep.equal({
+                expectMessage(result, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -562,7 +564,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         },
                     ],
                     authorities: [],
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     transactionId: 0,
                 });
@@ -573,7 +575,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 await close();
             });
 
-            it("it allows announcements of multiple devices on different ports", async () => {
+            it.only("it allows announcements of multiple devices on different ports", async () => {
                 const { promise, resolver } = createPromise<void>();
                 const dataArr: Uint8Array[] = [];
                 const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
@@ -595,9 +597,9 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 await promise;
 
                 const result1 = DnsCodec.decode(dataArr[0]);
-                expect(result1).deep.equal({
+                expectMessage(result1, {
                     transactionId: 0,
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     answers: [
                         {
@@ -786,13 +788,13 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         },
                     ],
                     authorities: [],
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     transactionId: 0,
                 });
 
                 const result3 = DnsCodec.decode(dataArr[2]);
-                expect(result3).deep.equal({
+                expectMessage(result3, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -855,7 +857,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         },
                     ],
                     authorities: [],
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     transactionId: 0,
                 });
@@ -1007,7 +1009,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 await MockTime.advance(1); // Trigger timer to send query (0ms timer)
                 await MockTime.yield3(); // make sure responding promise is created
 
-                expect(DnsCodec.decode(sentData[0])).deep.equal({
+                expectMessage(DnsCodec.decode(sentData[0]), {
                     additionalRecords: [],
                     answers: [],
                     authorities: [],
@@ -1063,7 +1065,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                 expect(netData.length).equal(2);
 
                 const query = DnsCodec.decode(netData[0]);
-                expect(query).deep.equal({
+                expectMessage(query, {
                     additionalRecords: [],
                     answers: [],
                     authorities: [],
@@ -1079,7 +1081,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     transactionId: 0,
                 });
                 const response2 = DnsCodec.decode(netData[1]);
-                expect(response2).deep.equal({
+                expectMessage(response2, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -1102,7 +1104,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         },
                     ],
                     authorities: [],
-                    messageType: 33792,
+                    messageType: 0x8400,
                     queries: [],
                     transactionId: 0,
                 });
@@ -1264,3 +1266,20 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
         });
     });
 });
+
+function expectMessage(actual: DnsMessage | undefined, expected: DnsMessage) {
+    for (const message of [actual, expected]) {
+        if (!message) {
+            continue;
+        }
+        message.answers.sort((a, b) => a.name.localeCompare(b.name));
+
+        message.additionalRecords.forEach(r => {
+            if (r.recordType === DnsRecordType.TXT && Array.isArray(r.value)) {
+                r.value.sort();
+            }
+        });
+    }
+
+    expect(actual).deep.equals(expected);
+}

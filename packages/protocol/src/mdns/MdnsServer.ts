@@ -48,7 +48,7 @@ export class MdnsServer {
 
     constructor(socket: MdnsSocket) {
         this.#socket = socket;
-        this.#observers.on(this.#socket.receipt, this.#handleMessage);
+        this.#observers.on(this.#socket.receipt, this.#handleMessage.bind(this));
     }
 
     get network() {
@@ -218,9 +218,7 @@ export class MdnsServer {
             }),
             "Error happened when expiring MDNS announcements",
         ).catch(error => logger.error(error));
-        await this.#records.clear();
-        this.#recordLastSentAsMulticastAnswer.clear();
-        this.#recordLastSentAsUnicastAnswer.clear();
+        await this.#resetServices(services);
     }
 
     async setRecordsGenerator(service: string, generator: MdnsServer.RecordGenerator) {
@@ -228,6 +226,14 @@ export class MdnsServer {
         this.#recordLastSentAsMulticastAnswer.clear();
         this.#recordLastSentAsUnicastAnswer.clear();
         this.#recordsGenerator.set(service, generator);
+    }
+
+    async #resetServices(services: string[]) {
+        for (const service of services) {
+            await this.#records.delete(service);
+            this.#recordLastSentAsMulticastAnswer.delete(service);
+            this.#recordLastSentAsUnicastAnswer.delete(service);
+        }
     }
 
     async close() {

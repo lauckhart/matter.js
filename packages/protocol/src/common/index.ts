@@ -10,3 +10,4 @@ export * from "./FailsafeContext.js";
 export * from "./FailsafeTimer.js";
 export * from "./OperationalCredentialsTypes.js";
 export * from "./Scanner.js";
+export * from "./SupportedTransportsBitmap.js";

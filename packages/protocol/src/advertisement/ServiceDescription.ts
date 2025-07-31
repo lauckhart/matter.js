@@ -5,9 +5,11 @@
  */
 
 import type { PairingHintBitmap } from "#advertisement/PairingHintBitmap.js";
+import { SupportedTransportsBitmap } from "#common/SupportedTransportsBitmap.js";
 import type { Fabric } from "#fabric/Fabric.js";
 import { SessionIntervals } from "#session/SessionIntervals.js";
 import type { ProductDescription, TypeFromPartialBitSchema } from "@matter/types";
+import { IcdManagement } from "@matter/types/clusters/icd-management";
 import { CommissioningMode } from "./CommissioningMode.js";
 
 export type ServiceDescription =
@@ -29,6 +31,16 @@ export namespace ServiceDescription {
          * The IP port for the Matter protocol.
          */
         port?: number;
+
+        /**
+         * Indicate support for TCP.
+         */
+        tcp?: SupportedTransportsBitmap;
+
+        /**
+         * Indicate support for ICD.
+         */
+        icd?: IcdManagement.OperatingMode;
     }
 
     export interface Commissionable extends Base, ProductDescription {

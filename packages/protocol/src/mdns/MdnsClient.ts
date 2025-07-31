@@ -157,7 +157,7 @@ export class MdnsClient implements Scanner {
 
     constructor(socket: MdnsSocket) {
         this.#socket = socket;
-        this.#observers.on(this.#socket.receipt, this.#handleMessage);
+        this.#observers.on(this.#socket.receipt, this.#handleMessage.bind(this));
         this.#periodicTimer = Time.getPeriodicTimer("Discovered node expiration", 60 * 1000 /* 1 mn */, () =>
             this.#expire(),
         ).start();

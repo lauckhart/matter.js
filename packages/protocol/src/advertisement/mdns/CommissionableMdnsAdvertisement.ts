@@ -65,7 +65,7 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
             PtrRecord(commissionModeQname, deviceQname),
         ];
 
-        if (!this.isExtendedAnnouncement) {
+        if (!this.isPrivacyMasked) {
             records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname), PtrRecord(vendorQname, deviceQname));
         }
 
@@ -100,7 +100,7 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
             PI: pairingInstructions /* Pairing Instruction */,
         };
 
-        if (!this.isExtendedAnnouncement) {
+        if (!this.isPrivacyMasked) {
             values.VP = `${vendorId}+${productId}`; /* Vendor / Product */
         }
 
@@ -110,7 +110,8 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
     #validatePairingInstructions() {
         const { pairingHint, pairingInstructions } = this.description;
 
-        const needsInstructions = PAIRING_HINTS_REQUIRING_INSTRUCTION.find(hint => (pairingHint as any)[hint] === true);
+        const needsInstructions =
+            pairingHint && PAIRING_HINTS_REQUIRING_INSTRUCTION.find(hint => pairingHint[hint] === true);
 
         if (needsInstructions && !pairingInstructions) {
             throw new ImplementationError(

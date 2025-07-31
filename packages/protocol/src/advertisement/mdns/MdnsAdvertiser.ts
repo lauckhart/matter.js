@@ -56,11 +56,48 @@ export class MdnsAdvertiser extends Advertiser {
 }
 
 export namespace MdnsAdvertiser {
+    /**
+     * MDNS advertisement configuration options.
+     */
+    export interface Options {
+        /**
+         * The port of the Matter service to advertise.
+         *
+         * Defaults to 5540.
+         */
+        port?: number;
+
+        /**
+         * Omit the vendor and product ID from announcements for privacy reasons.
+         */
+        omitVendorAndProduct?: boolean;
+
+        /**
+         * Broadcast schedule.
+         *
+         * These control the intervals at which the server broadcasts the advertisement.
+         *
+         * By default all broadcasts are configured using {@link RetryDefaults}.
+         */
+        schedules?: BroadcastSchedule[];
+    }
+
+    /**
+     * Configuration for a
+     */
+    export interface BroadcastSchedule extends RetrySchedule.Configuration {
+        serviceKind?: ServiceDescription["kind"];
+        limitTo?: "startup" | "reconnect";
+    }
+
+    /**
+     * Default broadcast conditions
+     */
     export const RetryDefaults: RetrySchedule.Configuration = {
         // Mandated by MDNS specification
         initialInterval: 1_000,
 
-        // Commissioning timeout mandated by Matter specification
+        // Maximum commissioning timeout per Matter specification 5.4.2.3.1, although
         timeout: MAXIMUM_COMMISSIONING_TIMEOUT_S * 1000,
 
         // Minimum per MDNS specification

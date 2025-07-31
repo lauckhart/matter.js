@@ -35,6 +35,7 @@ export class OperationalMdnsAdvertisement extends MdnsAdvertisement<ServiceDescr
         const fabricQname = getFabricQname(operationalIdString);
 
         return [
+            PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_SERVICE_QNAME),
             PtrRecord(SERVICE_DISCOVERY_QNAME, fabricQname),
             PtrRecord(MATTER_SERVICE_QNAME, this.qname),
             PtrRecord(fabricQname, this.qname),

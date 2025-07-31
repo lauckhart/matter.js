@@ -11,6 +11,7 @@ import {
     DnsMessage,
     DnsMessagePartiallyPreEncoded,
     DnsMessageType,
+    ImplementationError,
     Logger,
     MatterAggregateError,
     MAX_MDNS_MESSAGE_SIZE,
@@ -70,13 +71,32 @@ export class MdnsSocket {
     }
 
     async send(message: Partial<DnsMessage>, intf?: string, unicastDest?: string) {
+        let intermediateMessageType: DnsMessageType, finalMessageType: DnsMessageType;
+        switch (message.messageType) {
+            case DnsMessageType.Query:
+            case DnsMessageType.TruncatedQuery:
+                intermediateMessageType = DnsMessageType.TruncatedQuery;
+                finalMessageType = DnsMessageType.Query;
+                break;
+
+            case DnsMessageType.Response:
+            case DnsMessageType.TruncatedResponse:
+                intermediateMessageType = DnsMessageType.TruncatedResponse;
+                finalMessageType = DnsMessageType.Response;
+                break;
+
+            default:
+                throw new ImplementationError(`Invalid DNS message type ${message.messageType}`);
+        }
+
         const chunk: DnsMessagePartiallyPreEncoded = {
-            messageType: DnsMessageType.TruncatedQuery,
             transactionId: 0,
             queries: [],
             authorities: [],
 
             ...message,
+
+            messageType: intermediateMessageType,
 
             answers: [],
             additionalRecords: [],
@@ -136,7 +156,7 @@ export class MdnsSocket {
             chunk.additionalRecords.push(additionalRecordEncoded);
         }
 
-        chunk.messageType = DnsMessageType.Query;
+        chunk.messageType = finalMessageType;
         await this.#send(chunk, intf, unicastDest);
     }
 
