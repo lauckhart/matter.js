@@ -6,6 +6,7 @@
 
 import { BlePeripheralInterface } from "#ble/Ble.js";
 import { ImplementationError } from "#general";
+import { DatatypeModel, FieldElement } from "#model";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
 import { Advertisement } from "../Advertisement.js";
 import { Advertiser } from "../Advertiser.js";
@@ -100,4 +101,16 @@ export namespace BleAdvertiser {
             ...options,
         };
     }
+
+    /**
+     * Data model for BLE advertiser configuration.
+     */
+    export const OptionsSchema = new DatatypeModel(
+        { name: "BleAdvertiserOptions", type: "struct" },
+        FieldElement({ name: "add", type: "octstr" }),
+        FieldElement({ name: "timeout", type: "uint32" }),
+        FieldElement({ name: "earlyInterval", type: "uint32" }),
+        FieldElement({ name: "lateInterval", type: "uint32" }),
+        FieldElement({ name: "extendedInterval", type: "uint32" }),
+    );
 }

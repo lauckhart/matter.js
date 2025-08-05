@@ -8,6 +8,7 @@ import { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { Bytes, Crypto, ImplementationError, InternalError, RetrySchedule, STANDARD_MATTER_PORT } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
+import { DatatypeModel, FieldElement } from "#model";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
 import { CommissionableMdnsAdvertisement } from "./CommissionableMdnsAdvertisement.js";
 import { CommissionerMdnsAdvertisement } from "./CommissionerMdnsAdvertisement.js";
@@ -179,4 +180,25 @@ export namespace MdnsAdvertiser {
         // Not in any specification AFAIK but common sense to reduce thundering herd
         jitterFactor: 0.25,
     };
+
+    /**
+     * Data model for MDNS advertiser configuration.
+     */
+    export const OptionsSchema = new DatatypeModel(
+        { name: "MdnsAdvertiserOptions", type: "struct" },
+        FieldElement({ name: "omitPrivateDetails", type: "bool" }),
+        FieldElement(
+            { name: "schedules", type: "list" },
+            FieldElement(
+                { name: "entry", type: "struct" },
+                FieldElement({ name: "initialInterval", type: "uint32" }),
+                FieldElement({ name: "timeout", type: "uint32" }),
+                FieldElement({ name: "backoffFactor", type: "uint8" }),
+                FieldElement({ name: "maximumInterval", type: "uint32" }),
+                FieldElement({ name: "jitterFactor", type: "single" }),
+                FieldElement({ name: "serviceKind", type: "string" }),
+                FieldElement({ name: "event", type: "string" }),
+            ),
+        ),
+    );
 }
