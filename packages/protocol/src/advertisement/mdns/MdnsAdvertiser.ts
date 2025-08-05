@@ -121,12 +121,12 @@ export namespace MdnsAdvertiser {
          *
          * Defaults to 5540.
          */
-        port?: number;
+        readonly port?: number;
 
         /**
          * Omit the vendor and product ID from announcements for privacy reasons.
          */
-        omitPrivateDetails?: boolean;
+        readonly omitPrivateDetails?: boolean;
 
         /**
          * Broadcast schedule.
@@ -135,7 +135,7 @@ export namespace MdnsAdvertiser {
          *
          * By default all broadcasts are configured using {@link DefaultBroadcastOptions}.
          */
-        schedules?: BroadcastSchedule[];
+        readonly schedules?: readonly BroadcastSchedule[];
     }
 
     /**
@@ -152,12 +152,12 @@ export namespace MdnsAdvertiser {
         /**
          * Limit this schedule to a particular service kind.
          */
-        serviceKind?: ServiceDescription["kind"];
+        readonly serviceKind?: ServiceDescription["kind"];
 
         /**
          * Limit this schedule to initial broadcast or broadcast when reconnecting.
          */
-        event?: BroadcastEvent;
+        readonly event?: BroadcastEvent;
     }
 
     /**

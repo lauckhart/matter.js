@@ -61,33 +61,33 @@ export namespace BleAdvertiser {
         /**
          * Additional advertisement data.
          */
-        aad?: Uint8Array;
+        readonly aad?: Uint8Array;
 
         /**
          * Advertisement timeout.
          */
-        timeout: number;
+        readonly timeout: number;
 
         /**
          * Transmission interval for first 30 seconds.
          *
          * Per core spec 5.4.2.5.3 should be 20-60ms.
          */
-        earlyInterval: number;
+        readonly earlyInterval: number;
 
         /**
          * Transmission interval after first 30 seconds but before 15 minutes.
          *
          * Per core spec 5.4.2.5.3 should be 150-1285ms.
          */
-        lateInterval: number;
+        readonly lateInterval: number;
 
         /**
          * Transmission interval after 15 minutes.
          *
          * Per core spec 5.4.2.5.3 should be ~1285ms.
          */
-        extendedInterval: number;
+        readonly extendedInterval: number;
     }
 
     export interface Options extends Partial<Configuration> {}

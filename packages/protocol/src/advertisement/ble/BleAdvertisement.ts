@@ -7,7 +7,7 @@
 import { BtpCodec } from "#codec/BtpCodec.js";
 import { Advertisement } from "../Advertisement.js";
 import { ServiceDescription } from "../ServiceDescription.js";
-import { BleAdvertiser } from "./BleAdvertiser.js";
+import type { BleAdvertiser } from "./BleAdvertiser.js";
 
 // Period for "fast" broadcast.  See core spec 5.4.2.5.3
 const EARLY_INTERVAL_SLEEP = 30_000;

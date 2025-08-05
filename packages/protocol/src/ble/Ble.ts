@@ -22,9 +22,9 @@ export abstract class Ble {
         return this.get !== BleDisabled;
     }
 
-    abstract getBlePeripheralInterface(): BlePeripheralInterface;
-    abstract getBleCentralInterface(): NetInterface;
-    abstract getBleScanner(): Scanner;
+    abstract get peripheralInterface(): BlePeripheralInterface;
+    abstract get centralInterface(): NetInterface;
+    abstract get scanner(): Scanner;
 }
 
 export interface BlePeripheralInterface extends TransportInterface {

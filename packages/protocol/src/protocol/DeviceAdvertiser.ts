@@ -73,7 +73,7 @@ export class DeviceAdvertiser {
             }
 
             // If we're in commissioning mode, resume advertising for commissioning
-            this.#advertiseCommissioning();
+            this.#startCommissioningAdvertisement();
         });
     }
 
@@ -90,17 +90,57 @@ export class DeviceAdvertiser {
         return instance;
     }
 
+    /**
+     * Advertise the device as commissionable.
+     */
     enterCommissioningMode(description: ServiceDescription.Commissionable) {
         this.#commissioningService = description;
-        this.#advertiseCommissioning();
+        this.#startCommissioningAdvertisement();
     }
 
+    /**
+     * Begin automatic broadcast for commissioning if in commissionable mode.
+     */
+    #startCommissioningAdvertisement() {
+        if (this.#commissioningService === undefined) {
+            return;
+        }
+        this.#advertise(this.#commissioningService);
+    }
+
+    /**
+     * Cease advertising the device as commissionable.
+     */
     exitCommissioningMode() {
+        if (!this.#commissioningService) {
+            return;
+        }
+
         this.#commissioningService = undefined;
         Advertisement.cancelAll(this.#advertisements(ad => ad.isCommissioning()));
     }
 
+    /**
+     * Advertise the device as operational.
+     */
     enterOperationalMode() {
+        if (this.#isOperational) {
+            return;
+        }
+
+        this.#isOperational = true;
+
+        this.#startOperationalAdvertisement();
+    }
+
+    /**
+     * Begin automatic broadcast for fabrics if in operational mode.
+     */
+    #startOperationalAdvertisement() {
+        if (!this.#isOperational) {
+            return;
+        }
+
         const fabricsAdvertised = new Set(
             this.#advertisements(ad => ad.isOperational()).map(
                 ad => (ad as Advertisement<ServiceDescription.Operational>).description.fabric,
@@ -114,10 +154,27 @@ export class DeviceAdvertiser {
         }
     }
 
+    /**
+     * Cease advertising the device as operational.
+     */
     exitOperationalMode() {
+        if (!this.#isOperational) {
+            return;
+        }
+
         this.#isOperational = false;
 
         Advertisement.cancelAll(this.#advertisements(ad => ad.isOperational()));
+    }
+
+    /**
+     * Reset automatic advertisement.
+     *
+     * This is useful when there is a network change.
+     */
+    restartAdvertisement() {
+        this.#startCommissioningAdvertisement();
+        this.#startOperationalAdvertisement();
     }
 
     async close() {
@@ -147,13 +204,6 @@ export class DeviceAdvertiser {
 
     #advertiseFabric(fabric: Fabric) {
         this.#advertise(ServiceDescription.Operational({ fabric }));
-    }
-
-    #advertiseCommissioning() {
-        if (this.#commissioningService === undefined) {
-            return;
-        }
-        this.#advertise(this.#commissioningService);
     }
 
     #advertise(description: ServiceDescription) {

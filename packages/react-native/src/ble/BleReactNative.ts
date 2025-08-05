@@ -17,21 +17,21 @@ export class BleReactNative extends Ble {
         super();
     }
 
-    getBleCentralInterface(): NetInterface {
+    get centralInterface(): NetInterface {
         if (this.bleCentral === undefined) {
             this.bleCentral = new ReactNativeBleClient();
         }
         return new ReactNativeBleCentralInterface();
     }
 
-    getBleScanner(): Scanner {
+    get scanner(): Scanner {
         if (this.bleCentral === undefined) {
             this.bleCentral = new ReactNativeBleClient();
         }
         return new BleScanner(this.bleCentral);
     }
 
-    getBlePeripheralInterface(): BlePeripheralInterface {
+    get peripheralInterface(): BlePeripheralInterface {
         throw new ImplementationError("React Native can only act as a central device, not a peripheral.");
     }
 

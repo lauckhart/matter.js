@@ -59,27 +59,27 @@ export namespace RetrySchedule {
         /**
          * Overall timeout in seconds.
          */
-        timeout?: number;
+        readonly timeout?: number;
 
         /**
          * Interval between first request and final interval.
          */
-        initialInterval: number;
+        readonly initialInterval: number;
 
         /**
          * Multiplier for subsequent retries.
          */
-        backoffFactor: number;
+        readonly backoffFactor: number;
 
         /**
          * Maximum interval between retries (excluding jitter).
          */
-        maximumInterval?: number;
+        readonly maximumInterval?: number;
 
         /**
          * Multiplier for retry jitter.
          */
-        jitterFactor: number;
+        readonly jitterFactor: number;
     }
 
     /**

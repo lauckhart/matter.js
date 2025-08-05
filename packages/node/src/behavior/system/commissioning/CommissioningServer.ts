@@ -22,6 +22,7 @@ import type { Node } from "#node/Node.js";
 import { NodeLifecycle } from "#node/NodeLifecycle.js";
 import type { ServerNode } from "#node/ServerNode.js";
 import {
+    BleAdvertiser,
     CommissioningConfigProvider,
     DeviceAdvertiser,
     DeviceCommissioner,
@@ -29,6 +30,7 @@ import {
     FabricAction,
     FabricManager,
     FailsafeContext,
+    MdnsAdvertiser,
     PaseClient,
     Val,
 } from "#protocol";
@@ -374,6 +376,8 @@ export namespace CommissioningServer {
         flowType = CommissioningFlowType.Standard;
         additionalBleAdvertisementData?: Uint8Array = undefined;
         pairingCodes = {} as PairingCodes;
+        mdns?: MdnsAdvertiser.Options;
+        ble?: BleAdvertiser.Options;
 
         [Val.properties](endpoint: Endpoint) {
             return {

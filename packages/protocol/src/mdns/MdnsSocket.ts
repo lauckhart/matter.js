@@ -11,7 +11,6 @@ import {
     DnsMessage,
     DnsMessagePartiallyPreEncoded,
     DnsMessageType,
-    ImplementationError,
     Logger,
     MatterAggregateError,
     MAX_MDNS_MESSAGE_SIZE,
@@ -71,24 +70,6 @@ export class MdnsSocket {
     }
 
     async send(message: Partial<DnsMessage> & { messageType: DnsMessageType }, intf?: string, unicastDest?: string) {
-        let intermediateMessageType: DnsMessageType, finalMessageType: DnsMessageType;
-        switch (message.messageType) {
-            case DnsMessageType.Query:
-            case DnsMessageType.TruncatedQuery:
-                intermediateMessageType = DnsMessageType.TruncatedQuery;
-                finalMessageType = DnsMessageType.Query;
-                break;
-
-            case DnsMessageType.Response:
-            case DnsMessageType.TruncatedResponse:
-                intermediateMessageType = DnsMessageType.TruncatedResponse;
-                finalMessageType = DnsMessageType.Response;
-                break;
-
-            default:
-                throw new ImplementationError(`Invalid DNS message type ${message.messageType}`);
-        }
-
         const chunk: DnsMessagePartiallyPreEncoded = {
             transactionId: 0,
             queries: [],
@@ -96,21 +77,19 @@ export class MdnsSocket {
 
             ...message,
 
-            messageType: intermediateMessageType,
-
             answers: [],
             additionalRecords: [],
         };
 
         // Note - for size calculations we assume queries are relatively small.  We only split answers across messages
         let encodedChunkWithoutAnswers = DnsCodec.encode(chunk);
-        let currentMessageSize = encodedChunkWithoutAnswers.length;
+        let chunkSize = encodedChunkWithoutAnswers.length;
 
         // Add answers, splitting message as necessary
         for (const answer of message.answers ?? []) {
             const answerEncoded = DnsCodec.encodeRecord(answer);
 
-            if (currentMessageSize > MAX_MDNS_MESSAGE_SIZE) {
+            if (chunkSize + answerEncoded.length > MAX_MDNS_MESSAGE_SIZE) {
                 if (chunk.answers.length === 0) {
                     // The first answer is already too big, log at least a warning
                     logger.warn(
@@ -129,9 +108,9 @@ export class MdnsSocket {
                     encodedChunkWithoutAnswers = DnsCodec.encode(chunk);
                 }
                 chunk.answers.length = 0;
-                currentMessageSize = encodedChunkWithoutAnswers.length + answerEncoded.length;
+                chunkSize = encodedChunkWithoutAnswers.length + answerEncoded.length;
             } else {
-                currentMessageSize += answerEncoded.length;
+                chunkSize += answerEncoded.length;
             }
 
             chunk.answers.push(answerEncoded);
@@ -141,14 +120,13 @@ export class MdnsSocket {
         const additionalRecords = message.additionalRecords ?? [];
         for (const additionalRecord of additionalRecords) {
             const additionalRecordEncoded = DnsCodec.encodeRecord(additionalRecord);
-            currentMessageSize += additionalRecordEncoded.length;
-            if (currentMessageSize > MAX_MDNS_MESSAGE_SIZE) {
+            chunkSize += additionalRecordEncoded.length;
+            if (chunkSize > MAX_MDNS_MESSAGE_SIZE) {
                 break;
             }
             chunk.additionalRecords.push(additionalRecordEncoded);
         }
 
-        chunk.messageType = finalMessageType;
         await this.#send(chunk, intf, unicastDest);
     }
 

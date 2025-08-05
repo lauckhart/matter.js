@@ -12,13 +12,19 @@ import {
     DnsRecord,
     DnsRecordClass,
     DnsRecordType,
+    MockNetwork,
+    Network,
+    NetworkSimulator,
     PtrRecord,
     SrvRecord,
     TxtRecord,
+    UdpMulticastServer,
 } from "#general";
 import { MdnsServer } from "#mdns/MdnsServer.js";
 import { MdnsSocket } from "#mdns/MdnsSocket.js";
 
+const CLIENT_IPv4 = "192.168.200.2";
+const CLIENT_MAC = "CA:FE:00:00:BE:EF";
 const DUMMY_IP = "1.2.3.4";
 const DUMMY_QNAME = "a.b.c.d";
 const INTERFACE_NAME = "fake0";
@@ -26,15 +32,27 @@ const INTERFACE_NAME = "fake0";
 describe("MdnsServer", () => {
     before(MockTime.enable);
 
+    const clientIps = [CLIENT_IPv4];
+    const simulator = new NetworkSimulator();
+    const network: Network = new MockNetwork(simulator, CLIENT_MAC, clientIps);
+
     let send: (message: Uint8Array, remoteIp: string, netInterface: string) => void;
     let onResponse: (message: Uint8Array, netInterface?: string, unicastTarget?: string) => Promise<void>;
     const udpServerSimulator = {
-        onMessage: (listener: (message: Uint8Array, remoteIp: string, netInterface: string) => void) =>
-            (send = listener),
-        send: (message: Uint8Array, netInterface?: string, unicastTarget?: string) =>
-            onResponse(message, netInterface, unicastTarget),
-        close: () => {},
-    } as any;
+        onMessage(listener: (message: Uint8Array, remoteIp: string, netInterface: string) => void) {
+            send = listener;
+        },
+
+        send(message: Uint8Array, netInterface?: string, unicastTarget?: string) {
+            return onResponse(message, netInterface, unicastTarget);
+        },
+
+        async close() {},
+
+        get network() {
+            return network;
+        },
+    } as UdpMulticastServer;
 
     let mdnsServer: MdnsServer;
 
@@ -880,7 +898,9 @@ describe("MdnsServer", () => {
                 INTERFACE_NAME,
             );
 
-            await MockTime.yield3();
+            while (responses.length !== 2) {
+                await MockTime.yield();
+            }
 
             expect(responses).deep.equal([
                 {

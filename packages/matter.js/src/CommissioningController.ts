@@ -285,7 +285,7 @@ export class CommissioningController {
             rootFabric,
         });
         if (this.#mdnsServer) {
-            controller.addAdvertiser(new MdnsAdvertiser(this.#crypto, this.#mdnsServer, port));
+            controller.addAdvertiser(new MdnsAdvertiser(this.#crypto, this.#mdnsServer, { port }));
         }
         return controller;
     }
@@ -834,8 +834,8 @@ export async function configureNetwork(options: {
 
     try {
         const ble = Ble.get();
-        netInterfaces.add(ble.getBleCentralInterface());
-        scanners.add(ble.getBleScanner());
+        netInterfaces.add(ble.centralInterface);
+        scanners.add(ble.scanner);
     } catch (e) {
         if (e instanceof NoProviderError) {
             logger.warn("BLE is not supported on this platform");

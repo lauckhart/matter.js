@@ -6,9 +6,9 @@
 
 import { Environment, NetInterface } from "#general";
 import { Ble, Scanner } from "#protocol";
+import { BlenoBleServer } from "./BlenoBleServer.js";
 import { BlenoPeripheralInterface } from "./BlenoPeripheralInterface.js";
 import { BleScanner } from "./BleScanner.js";
-import { BlenoBleServer } from "./BlenoBleServer.js";
 import { NobleBleCentralInterface } from "./NobleBleChannel.js";
 import { NobleBleClient } from "./NobleBleClient.js";
 
@@ -44,21 +44,21 @@ export class NodeJsBle extends Ble {
         return this.#bleCentralInstance;
     }
 
-    getBlePeripheralInterface(): BlenoPeripheralInterface {
+    get peripheralInterface(): BlenoPeripheralInterface {
         if (this.#blePeripheralInterface === undefined) {
             this.#blePeripheralInterface = new BlenoPeripheralInterface(this.#blePeripheralServer);
         }
         return this.#blePeripheralInterface;
     }
 
-    getBleCentralInterface(): NetInterface {
+    get centralInterface(): NetInterface {
         if (this.#bleCentralInterface === undefined) {
-            this.#bleCentralInterface = new NobleBleCentralInterface(this.getBleScanner() as BleScanner);
+            this.#bleCentralInterface = new NobleBleCentralInterface(this.scanner as BleScanner);
         }
         return this.#bleCentralInterface;
     }
 
-    getBleScanner(): Scanner {
+    get scanner(): Scanner {
         if (this.#bleScanner === undefined) {
             this.#bleScanner = new BleScanner(this.#bleCentralClient);
         }
