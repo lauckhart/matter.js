@@ -5,24 +5,12 @@
  */
 
 import { Advertisement } from "#advertisement/Advertisement.js";
-import type { Advertiser } from "#advertisement/Advertiser.js";
 import type { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { SupportedTransportsSchema } from "#common/SupportedTransportsBitmap.js";
-import {
-    AAAARecord,
-    ARecord,
-    Diagnostic,
-    DnsRecord,
-    Logger,
-    NetworkInterfaceDetails,
-    SrvRecord,
-    TxtRecord,
-} from "#general";
+import { AAAARecord, ARecord, DnsRecord, NetworkInterfaceDetails, SrvRecord, TxtRecord } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { SessionIntervals } from "#session/SessionIntervals.js";
 import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
-
-const logger = Logger.get("MdnsAdvertisement");
 
 /**
  * Base class for MDNS advertisements.
@@ -37,15 +25,16 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
      */
     qname: string;
 
-    #needsRecordsGenerator = true;
+    #isPrivacyMasked: boolean;
 
-    constructor(advertiser: Advertiser, qname: string, description: T) {
+    constructor(advertiser: MdnsAdvertiser, qname: string, description: T) {
         description = {
             ...description,
             ...SessionIntervals(description),
         };
-        super(advertiser, `mdns:${qname}`, description);
+        super(advertiser, `mdns:${qname}`, description, { omitPrivateDetails: advertiser.omitPrivateDetails });
         this.qname = qname;
+        this.#isPrivacyMasked = this.isPrivacyMasked;
     }
 
     protected abstract ptrRecords: DnsRecord[];
@@ -54,54 +43,43 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         return {};
     }
 
-    override async run() {
-        const { server, retrySchedule } = this.advertiser;
-
-        let announced = false;
-        let isPrivacyMasked = false;
-
-        let interruptedBy: unknown;
-        try {
-            for (const retryInterval of retrySchedule) {
-                if (!isPrivacyMasked && this.isPrivacyMasked) {
-                    this.#needsRecordsGenerator = true;
-                    isPrivacyMasked = true;
-                }
-
-                await this.broadcast();
-                announced = true;
-                this.sleep("MDNS repeat", retryInterval);
-            }
-        } catch (e) {
-            interruptedBy = e;
-
-            if (announced) {
-                try {
-                    await server.expireAnnouncements(this.service);
-                } catch (e) {
-                    logger.error("Error expiring announcements for", Diagnostic.strong(this.service), e);
-                }
-            }
-        }
-
-        throw interruptedBy;
-    }
-
-    /**
-     * Begin responding to MDNS requests.
-     */
-    async serve() {
-        if (this.#needsRecordsGenerator) {
-            await this.advertiser.server.setRecordsGenerator(this.service, this.#recordsGenerator);
+    override async run(context: Advertisement.ActivityContext) {
+        for (const retryInterval of this.advertiser.broadcastScheduleFor(this)) {
+            await this.broadcast();
+            await context.sleep("MDNS repeat", retryInterval);
         }
     }
 
     /**
-     * Send an MDNS broadcast immediately.
+     * Broadcast a single announcement immediately.
      */
     async broadcast() {
-        await this.serve();
+        if (!this.#isPrivacyMasked && this.isPrivacyMasked) {
+            this.#isPrivacyMasked = true;
+            await this.advertiser.server.setRecordsGenerator(this.service, this.#recordsGenerator);
+        }
+
         await this.advertiser.server.broadcast(this.service);
+    }
+
+    /**
+     * Broadcast expiration announcement immediately.
+     */
+    async expire() {
+        await this.advertiser.server.expireAnnouncements(this.service);
+    }
+
+    protected override async onCreate() {
+        // Use Promise.resolve() to initialize on next microtick so the constructor completes before invocation
+        await Promise.resolve().then(() =>
+            // Install the records generator.  This will be used for broadcast and to respond to queries
+            this.advertiser.server.setRecordsGenerator(this.service, this.#recordsGenerator),
+        );
+    }
+
+    protected override async onClose() {
+        // The MDNS server doesn't currently track which answers have been sent so just expire unconditionally
+        await this.expire();
     }
 
     get #recordsGenerator(): MdnsServer.RecordGenerator {

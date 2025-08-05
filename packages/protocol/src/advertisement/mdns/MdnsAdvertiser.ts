@@ -4,35 +4,55 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Advertisement } from "#advertisement/Advertisement.js";
 import { Advertiser } from "#advertisement/Advertiser.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
-import { Bytes, Crypto, ImplementationError, RetrySchedule } from "#general";
+import { Bytes, Crypto, ImplementationError, InternalError, RetrySchedule, STANDARD_MATTER_PORT } from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "#types";
 import { CommissionableMdnsAdvertisement } from "./CommissionableMdnsAdvertisement.js";
 import { CommissionerMdnsAdvertisement } from "./CommissionerMdnsAdvertisement.js";
+import type { MdnsAdvertisement } from "./MdnsAdvertisement.js";
 import { OperationalMdnsAdvertisement } from "./OperationalMdnsAdvertisement.js";
 
 /**
  * An {@link Advertiser} that advertises using an in-process MDNS implementation.
  */
 export class MdnsAdvertiser extends Advertiser {
-    readonly retrySchedule: RetrySchedule;
+    readonly port: number;
+    readonly omitPrivateDetails: boolean;
+
+    #schedules = new Array<{ options: MdnsAdvertiser.BroadcastSchedule; schedule?: RetrySchedule }>();
 
     constructor(
         readonly crypto: Crypto,
         readonly server: MdnsServer,
-        readonly port = 5540,
-        retryOptions?: RetrySchedule.Options,
+        options?: MdnsAdvertiser.Options,
     ) {
         super();
 
-        const retryConfig = RetrySchedule.Configuration(MdnsAdvertiser.RetryDefaults, retryOptions);
-        this.retrySchedule = new RetrySchedule(crypto, retryConfig);
+        this.port = options?.port ?? STANDARD_MATTER_PORT;
+        this.omitPrivateDetails = options?.omitPrivateDetails ?? false;
+
+        let hasDefaultSchedule = false;
+        if (options?.schedules) {
+            for (const schedule of options.schedules) {
+                if (schedule.serviceKind === undefined && schedule.event === undefined) {
+                    hasDefaultSchedule = true;
+                }
+
+                this.#schedules.push({ options: schedule });
+            }
+        }
+
+        if (!hasDefaultSchedule) {
+            this.#schedules.push({ options: MdnsAdvertiser.DefaultBroadcastOptions });
+        }
     }
 
-    createAdvertisement(description: ServiceDescription): Advertisement | undefined {
+    /**
+     * Create an advertisement for the specific service.
+     */
+    createAdvertisement(description: ServiceDescription): MdnsAdvertisement | undefined {
         switch (description.kind) {
             case "operational":
                 return new OperationalMdnsAdvertisement(this, description);
@@ -50,8 +70,43 @@ export class MdnsAdvertiser extends Advertiser {
         }
     }
 
+    /**
+     * Generate a random 8-byte Matter instance identifier.
+     */
     createInstanceId() {
         return Bytes.toHex(this.crypto.randomBytes(8)).toUpperCase();
+    }
+
+    /**
+     * Retrieve the broadcast schedule for a specific advertisement.
+     */
+    broadcastScheduleFor(advertisement: MdnsAdvertisement, event?: MdnsAdvertiser.BroadcastEvent): RetrySchedule {
+        if (!event) {
+            event = "startup";
+        }
+
+        for (const entry of this.#schedules) {
+            const { serviceKind, event: event2 } = entry.options;
+
+            if (serviceKind !== undefined && serviceKind !== advertisement.description.kind) {
+                continue;
+            }
+
+            if (event2 !== undefined && event2 !== event) {
+                continue;
+            }
+
+            if (entry.schedule === undefined) {
+                entry.schedule = new RetrySchedule(
+                    this.crypto,
+                    RetrySchedule.Configuration(MdnsAdvertiser.DefaultBroadcastOptions, entry.options),
+                );
+            }
+
+            return entry.schedule;
+        }
+
+        throw new InternalError("Default retry schedule not present");
     }
 }
 
@@ -70,30 +125,44 @@ export namespace MdnsAdvertiser {
         /**
          * Omit the vendor and product ID from announcements for privacy reasons.
          */
-        omitVendorAndProduct?: boolean;
+        omitPrivateDetails?: boolean;
 
         /**
          * Broadcast schedule.
          *
          * These control the intervals at which the server broadcasts the advertisement.
          *
-         * By default all broadcasts are configured using {@link RetryDefaults}.
+         * By default all broadcasts are configured using {@link DefaultBroadcastOptions}.
          */
         schedules?: BroadcastSchedule[];
     }
 
     /**
-     * Configuration for a
+     * A hint for scheduling regarding why broadcast is initiated.
      */
-    export interface BroadcastSchedule extends RetrySchedule.Configuration {
+    export type BroadcastEvent = "startup" | "reconnect";
+
+    /**
+     * Schedule for automatic broadcasts.
+     *
+     * Schedules apply conditionally with {@link DefaultBroadcastOptions} as the fallback.
+     */
+    export interface BroadcastSchedule extends RetrySchedule.Options {
+        /**
+         * Limit this schedule to a particular service kind.
+         */
         serviceKind?: ServiceDescription["kind"];
-        limitTo?: "startup" | "reconnect";
+
+        /**
+         * Limit this schedule to initial broadcast or broadcast when reconnecting.
+         */
+        event?: BroadcastEvent;
     }
 
     /**
-     * Default broadcast conditions
+     * Default broadcast schedule for initial broadcast.
      */
-    export const RetryDefaults: RetrySchedule.Configuration = {
+    export const DefaultBroadcastOptions: RetrySchedule.Configuration = {
         // Mandated by MDNS specification
         initialInterval: 1_000,
 

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { Advertisement } from "#advertisement/Advertisement.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { PtrRecord } from "#general";
 import {
@@ -12,7 +13,7 @@ import {
     SERVICE_DISCOVERY_QNAME,
 } from "#mdns/MdnsConsts.js";
 import { MdnsAdvertisement } from "./MdnsAdvertisement.js";
-import { MdnsAdvertiser } from "./MdnsAdvertiser.js";
+import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 
 /**
  * Advertise a node as a commissioner service.
@@ -63,5 +64,10 @@ export class CommissionerMdnsAdvertisement extends MdnsAdvertisement<ServiceDesc
         }
 
         return values;
+    }
+
+    override isDuplicate(other: Advertisement) {
+        // Only one commissioning advertisement allowed per advertiser
+        return other.isCommissioning();
     }
 }

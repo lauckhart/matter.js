@@ -262,6 +262,7 @@ export class MdnsClient implements Scanner {
         this.#nextAnnounceIntervalSeconds = Math.min(nextAnnounceInterval, 60 * 60 /* 1 hour */);
 
         await this.#socket.send({
+            messageType: DnsMessageType.Query,
             queries,
             answers,
         });

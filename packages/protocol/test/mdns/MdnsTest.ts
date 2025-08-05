@@ -7,20 +7,21 @@
 import { Fabric } from "#fabric/Fabric.js";
 import {
     Bytes,
-    createPromise,
     DnsCodec,
     DnsMessage,
     DnsMessageType,
     DnsRecordType,
+    InternalError,
     MockCrypto,
     MockNetwork,
     MockUdpChannel,
     NetworkSimulator,
+    Time,
+    TransportInterface,
     UdpChannel,
 } from "#general";
 import {
     Advertisement,
-    Advertiser,
     CommissioningMode,
     MdnsAdvertiser,
     MdnsClient,
@@ -107,7 +108,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
         let scanListener: UdpChannel;
         let broadcastListener: UdpChannel;
 
-        let advertisers = {} as Record<number, Advertiser>;
+        let advertisers = {} as Record<number, MdnsAdvertiser>;
 
         beforeEach(async () => {
             const simulator = new NetworkSimulator();
@@ -157,19 +158,28 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
         });
 
         afterEach(async () => {
-            await MockTime.resolve(closeAll());
+            await closeAll();
             await server.close();
             await client.close();
             await scanListener.close();
             await broadcastListener.close();
         });
 
-        function advertise(service: ServiceDescription, port = PORT) {
+        function getAdvertiser(port = PORT) {
             let advertiser = advertisers[port];
             if (advertiser === undefined) {
-                advertiser = advertisers[port] = new MdnsAdvertiser(crypto, server, port);
+                advertiser = advertisers[port] = new MdnsAdvertiser(crypto, server, { port });
             }
-            const ad = advertiser.advertise(service)!;
+            return advertiser;
+        }
+
+        function advertise(service: ServiceDescription, port = PORT) {
+            const ad = getAdvertiser(port).advertise({ ...service, port })!;
+            expect(ad).not.undefined;
+        }
+
+        async function serve(service: ServiceDescription, port = PORT) {
+            const ad = getAdvertiser(port).createAdvertisement({ ...service, port });
             expect(ad).not.undefined;
         }
 
@@ -181,9 +191,53 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
         async function closeAll() {
             for (const port in advertisers) {
-                await advertisers[port].close();
+                await MockTime.resolve(advertisers[port].close());
                 delete advertisers[port];
             }
+        }
+
+        class MessageCollector extends Array<DnsMessage> {
+            #listener: TransportInterface.Listener;
+
+            constructor(onMessage?: (message: DnsMessage) => void) {
+                super();
+                this.#listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
+                    const message = DnsCodec.decode(data);
+                    if (message === undefined) {
+                        throw new InternalError(`DNS message decode failure`);
+                    }
+                    this.push(message);
+                    onMessage?.(message);
+                });
+            }
+
+            close() {
+                return this.#listener.close();
+            }
+        }
+
+        function waitForMessage() {
+            return waitForMessages({ count: 1 }).then(messages => messages[0]);
+        }
+
+        function waitForMessages(config: { count: number } | { seconds: number }) {
+            if ("count" in config) {
+                return new Promise<Array<DnsMessage>>((resolve, reject) => {
+                    const collector = new MessageCollector(() => {
+                        if (collector.length < config.count) {
+                            return;
+                        }
+                        collector.close().then(() => resolve(collector), reject);
+                    });
+                });
+            }
+
+            const collector = new MessageCollector();
+            return MockTime.resolve(
+                Time.sleep("message collector", config.seconds * 1000)
+                    .then(collector.close.bind(collector))
+                    .then(() => collector),
+            );
         }
 
         describe("broadcaster", () => {
@@ -193,8 +247,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             });
 
             it("it broadcasts the device fabric on one port and expires", async () => {
-                const { promise, resolver } = createPromise<Uint8Array>();
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
+                const announcement = waitForMessage();
 
                 advertise({
                     ...OPERATIONAL_SERVICE,
@@ -202,8 +255,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     activeIntervalMs: 200,
                 });
 
-                const result = DnsCodec.decode(await promise);
-                expectMessage(result, {
+                expectMessage(await announcement, {
                     transactionId: 0,
                     messageType: 0x8400,
                     queries: [],
@@ -262,17 +314,13 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         ...IPDnsRecords,
                     ],
                 });
-                await listener.close();
 
-                const { promise: expiryPromise, resolver: expiryResolver } = createPromise<Uint8Array>();
-                const expiryListener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) =>
-                    expiryResolver(data),
-                );
+                const expiration = waitForMessage();
 
                 // And expire the announcement
                 await close();
 
-                const expiryResult = DnsCodec.decode(await expiryPromise);
+                const expiryResult = await expiration;
 
                 // Expiry is the same as the announcement result but with ttl = 0
                 expectMessage(expiryResult, {
@@ -334,18 +382,14 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         ...IPDnsRecords.map(record => ({ ...record, ttl: 0 })),
                     ],
                 });
-                await expiryListener.close();
             });
 
             it("it broadcasts the device commissionable info on one port", async () => {
-                const { promise, resolver } = createPromise<Uint8Array>();
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
+                const announcement = waitForMessage();
 
                 advertise(COMMISSIONABLE_SERVICE);
 
-                const result = DnsCodec.decode(await promise);
-
-                expectMessage(result, {
+                expectMessage(await announcement, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -371,7 +415,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                                 "D=1234",
                                 "CM=1",
                                 "PH=33",
-                                "PI=",
                             ],
                         },
                         ...IPDnsRecords,
@@ -480,15 +523,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     transactionId: 0,
                 });
 
-                await listener.close();
-
                 // And expire the announcement
                 await close();
             });
 
             it("it broadcasts the controller commissioner on one port", async () => {
-                const { promise, resolver } = createPromise<Uint8Array>();
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => resolver(data));
+                const announcement = waitForMessage();
 
                 advertise(
                     ServiceDescription.Commissioner({
@@ -499,9 +539,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     }),
                 );
 
-                const result = DnsCodec.decode(await promise);
-
-                expectMessage(result, {
+                expectMessage(await announcement, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -569,19 +607,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     transactionId: 0,
                 });
 
-                await listener.close();
-
                 // And expire the announcement
                 await close();
             });
 
-            it.only("it allows announcements of multiple devices on different ports", async () => {
-                const { promise, resolver } = createPromise<void>();
-                const dataArr: Uint8Array[] = [];
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
-                    dataArr.push(data);
-                    if (dataArr.length === 3) resolver();
-                });
+            it("it allows announcements of multiple devices on different ports", async () => {
+                const announcements = waitForMessages({ count: 3 });
 
                 advertise(OPERATIONAL_SERVICE);
                 advertise(COMMISSIONABLE_SERVICE, PORT2);
@@ -592,12 +623,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         vendorId: VendorId(1),
                         productId: 0x8000,
                     }),
+                    PORT3,
                 );
 
-                await promise;
+                const [message1, message2, message3] = await announcements;
 
-                const result1 = DnsCodec.decode(dataArr[0]);
-                expectMessage(result1, {
+                expectMessage(message1, {
                     transactionId: 0,
                     messageType: 0x8400,
                     queries: [],
@@ -657,8 +688,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     ],
                 });
 
-                const result2 = DnsCodec.decode(dataArr[1]);
-                expect(result2).deep.equal({
+                expectMessage(message2, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -684,7 +714,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                                 "D=1234",
                                 "CM=1",
                                 "PH=33",
-                                "PI=",
                             ],
                         },
                         ...IPDnsRecords,
@@ -793,8 +822,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     transactionId: 0,
                 });
 
-                const result3 = DnsCodec.decode(dataArr[2]);
-                expectMessage(result3, {
+                expectMessage(message3, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -861,7 +889,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     queries: [],
                     transactionId: 0,
                 });
-                await listener.close();
 
                 // And expire the announcement for all via close
                 await closeAll();
@@ -870,11 +897,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
         describe("Disabled discovery", () => {
             it("the client do not know announced records if scanning is not enabled by criteria", async () => {
+                const collection = waitForMessages({ count: 2 });
+
                 advertise(COMMISSIONABLE_SERVICE);
                 advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await MockTime.yield3();
-                await MockTime.yield3();
+                await collection;
 
                 // Same result when we just get the records
                 expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)?.addresses).deep.equal(undefined);
@@ -901,11 +929,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client do not know announced operational records if scanning is not enabled by criteria", async () => {
+                const collection = waitForMessages({ count: 2 });
+
                 advertise(COMMISSIONABLE_SERVICE);
                 advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await MockTime.yield3();
-                await MockTime.yield3();
+                await collection;
 
                 // Same result when we just get the records
                 expect(client.getDiscoveredOperationalDevice(FABRIC, NODE_ID)?.addresses).deep.equal(undefined);
@@ -919,7 +948,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         DT: 1,
                         P: 32768,
                         PH: 33,
-                        PI: "",
                         SAI: 300,
                         SD: 4,
                         SII: 500,
@@ -955,19 +983,10 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client directly returns server record if it has been announced before and records are removed on cancel", async () => {
-                let queryReceived = false;
-                let dataWereSent = false;
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
-                    dataWereSent = true;
-                    const dataDecoded = DnsCodec.decode(data);
-                    if (dataDecoded?.messageType === DnsMessageType.Query) {
-                        queryReceived = true;
-                    }
-                });
+                const collection = waitForMessages({ seconds: 10 });
                 advertise(OPERATIONAL_SERVICE);
 
-                await MockTime.yield3(); // Make sure data were broadcasted async
-                await MockTime.yield3(); // Make sure data were received and processed async
+                const messages = await collection;
 
                 const result = await client.findOperationalDevice(
                     { operationalId: OPERATIONAL_ID } as Fabric,
@@ -975,10 +994,10 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     1,
                 );
 
-                expect(dataWereSent).equal(true);
-                expect(queryReceived).equal(false);
+                // Ensure no queries sent
+                expect(messages.findIndex(m => m?.messageType === DnsMessageType.Query)).equals(-1);
+
                 expect(result?.addresses).deep.equal(IPIntegrationResultsPort1);
-                await listener.close();
 
                 // Same result when we just get the records
                 expect(
@@ -1005,9 +1024,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
                 const findPromise = client.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-                await MockTime.yield3(); // make sure responding promise is created
-                await MockTime.advance(1); // Trigger timer to send query (0ms timer)
-                await MockTime.yield3(); // make sure responding promise is created
+                await MockTime.resolve(findPromise);
 
                 expectMessage(DnsCodec.decode(sentData[0]), {
                     additionalRecords: [],
@@ -1046,25 +1063,15 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             });
 
             it("the client queries the server record and get correct response also with multiple announced instances", async () => {
-                const netData = new Array<Uint8Array>();
-                const listener = broadcastListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
-                    netData.push(data);
-                });
+                const messages = waitForMessages({ count: 2 });
 
-                advertise(COMMISSIONABLE_SERVICE);
-                advertise(OPERATIONAL_SERVICE);
+                await serve(COMMISSIONABLE_SERVICE, PORT);
+                await serve(OPERATIONAL_SERVICE, PORT2);
 
                 const findPromise = client.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-                await MockTime.yield3(); // make sure responding promise is created
-                await MockTime.advance(1); // Trigger timer to send query (0ms timer)
-                await MockTime.yield3(); // Make sure data were queried async
-                await MockTime.yield3(); // Make sure data were queried async
-                await MockTime.yield3(); // Make sure data were queried async
+                const [query, response] = await MockTime.resolve(messages);
 
-                expect(netData.length).equal(2);
-
-                const query = DnsCodec.decode(netData[0]);
                 expectMessage(query, {
                     additionalRecords: [],
                     answers: [],
@@ -1080,8 +1087,7 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     ],
                     transactionId: 0,
                 });
-                const response2 = DnsCodec.decode(netData[1]);
-                expectMessage(response2, {
+                expectMessage(response, {
                     additionalRecords: [
                         {
                             flushCache: false,
@@ -1113,8 +1119,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
 
                 expect(result?.addresses).deep.equal(IPIntegrationResultsPort2);
 
-                await listener.close();
-
                 // Same result when we just get the records
                 expect(
                     client.getDiscoveredOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID)
@@ -1143,11 +1147,11 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             afterEach(() => client.targetCriteriaProviders.delete(criteria));
 
             it("the client knows announced records if scanning is enabled by criteria", async () => {
+                const messages = waitForMessages({ count: 2 });
                 advertise(COMMISSIONABLE_SERVICE);
                 advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await MockTime.yield3();
-                await MockTime.yield3();
+                await messages;
 
                 // Same result when we just get the records
                 expect(
@@ -1164,7 +1168,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         DT: 1,
                         P: 32768,
                         PH: 33,
-                        PI: "",
                         SAI: 300,
                         SD: 4,
                         SII: 500,
@@ -1193,21 +1196,12 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
             });
 
             it("the client queries the server record and get correct response when announced before", async () => {
-                let dataWereSent = false;
-                let queryReceived = false;
-                const listener = scanListener.onData((_netInterface, _peerAddress, _peerPort, data) => {
-                    dataWereSent = true;
-                    const dataDecoded = DnsCodec.decode(data);
-                    if (dataDecoded?.messageType === DnsMessageType.Query) {
-                        queryReceived = true;
-                    }
-                });
+                const collection = waitForMessages({ seconds: 10 });
 
                 advertise(COMMISSIONABLE_SERVICE);
-                advertise(OPERATIONAL_SERVICE);
+                advertise(OPERATIONAL_SERVICE, PORT2);
 
-                await MockTime.yield3();
-                await MockTime.yield3();
+                const messages = await collection;
 
                 const result = await client.findOperationalDevice(
                     { operationalId: OPERATIONAL_ID } as Fabric,
@@ -1215,11 +1209,10 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                     10,
                 );
 
-                expect(dataWereSent).equal(true);
-                expect(queryReceived).equal(false);
-                expect(result?.addresses).deep.equal(IPIntegrationResultsPort2);
+                // Ensure no queries sent
+                expect(messages.findIndex(m => m?.messageType === DnsMessageType.Query)).equals(-1);
 
-                await listener.close();
+                expect(result?.addresses).deep.equal(IPIntegrationResultsPort2);
 
                 // Same result when we just get the records
                 expect(
@@ -1236,7 +1229,6 @@ const COMMISSIONABLE_SERVICE = ServiceDescription.Commissionable({
                         DT: 1,
                         P: 32768,
                         PH: 33,
-                        PI: "",
                         SAI: 300,
                         SD: 4,
                         SII: 500,
@@ -1272,7 +1264,10 @@ function expectMessage(actual: DnsMessage | undefined, expected: DnsMessage) {
         if (!message) {
             continue;
         }
-        message.answers.sort((a, b) => a.name.localeCompare(b.name));
+        message.answers.sort((a, b) => a.name.localeCompare(b.name) || a.value.localeCompare(b.value));
+        message.additionalRecords.sort(
+            (a, b) => a.name.localeCompare(b.name) || a.value.toString().localeCompare(b.value),
+        );
 
         message.additionalRecords.forEach(r => {
             if (r.recordType === DnsRecordType.TXT && Array.isArray(r.value)) {

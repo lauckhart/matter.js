@@ -14,7 +14,7 @@ const logger = Logger.get("Advertisement");
 /**
  * An advertisement for a discrete service.
  */
-export abstract class Advertisement<T extends ServiceDescription = ServiceDescription> extends CancelablePromise<void> {
+export abstract class Advertisement<T extends ServiceDescription = ServiceDescription> {
     /**
      * The service advertised.
      *
@@ -37,55 +37,240 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
      */
     options: Advertisement.Options;
 
-    #resolve: () => void;
-    #reject: (cause: unknown) => void;
-
-    #sleep?: CancelablePromise;
-    #cancelReason?: Error;
+    #closed?: Promise<void>;
     #startedAt = Time.nowMs();
 
+    /**
+     * Current activity.  This is a promise with helpers for base implementations.
+     */
+    #activity?: ActivityContext;
+
     constructor(advertiser: Advertiser, service: string, description: T, options?: Advertisement.Options) {
-        let resolve: () => void, reject: (cause: unknown) => void;
+        this.options = options ?? {};
+        this.service = service;
+        this.advertiser = advertiser;
+        this.description = description;
+
+        advertiser.advertisements.add(this);
+
+        // Initial activity just handles async setup
+        this.#start(this.onCreate.bind(this));
+    }
+
+    /**
+     * Begin automatic broadcast.
+     */
+    start() {
+        if (this.#closed) {
+            return;
+        }
+
+        // Run broadcast as the current activity
+        this.#start(context => this.#run(context));
+    }
+
+    /**
+     * Stop automatic broadcast.
+     */
+    stop() {
+        this.#activity?.cancel();
+    }
+
+    /**
+     * Close the advertisement but do not wait for the close to finish.
+     *
+     * The advertisement is still tracked by the advertiser until closed.
+     */
+    cancel() {
+        this.close().catch(e => {
+            // This shouldn't happen because close should log errors itself
+            logger.error("Unhandled error closing advertisement for", Diagnostic.strong(this.service), e);
+        });
+    }
+
+    /**
+     * Close the advertisement.
+     */
+    close() {
+        if (this.#closed) {
+            return this.#closed;
+        }
+
+        return (this.#closed = this.#close());
+    }
+
+    async #close() {
+        try {
+            this.#activity?.cancel();
+            await this.#activity;
+
+            try {
+                await this.onClose();
+            } catch (e) {
+                logger.error("Unhandled error closing advertisement for", Diagnostic.strong(this.service), e);
+            }
+        } finally {
+            this.advertiser.advertisements.delete(this);
+        }
+    }
+
+    /**
+     * Async setup logic.
+     */
+    protected async onCreate() {
+        // Deduplicate advertisements.  There may only be a single commissioning advertisement per advertiser and a
+        // single operational advertisement per advertiser+service
+        const duplicates = [...this.advertiser.advertisements].filter(this.isDuplicate.bind(this));
+        if (duplicates.length) {
+            await Advertisement.closeAll(duplicates);
+        }
+    }
+
+    /**
+     * Async cleanup logic.
+     */
+    protected async onClose() {}
+
+    /**
+     * Indicates that broadcasts should omit private details.
+     */
+    protected get isPrivacyMasked() {
+        // Private broadcast configured explicitly
+        if (this.options.omitPrivateDetails) {
+            return true;
+        }
+
+        // Extended announcement
+        if (Time.nowMs() - this.#startedAt >= PRIVATE_COMMISSIONING_TIMEOUT_S * 1000) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Implement automatic advertising.
+     */
+    protected abstract run(context: Advertisement.ActivityContext): Promise<void>;
+
+    isCommissioning(): this is
+        | Advertisement<ServiceDescription.Commissionable>
+        | Advertisement<ServiceDescription.Commissioner> {
+        return ServiceDescription.isCommissioning(this.description);
+    }
+
+    isOperational(): this is Advertisement<ServiceDescription.Operational> {
+        return ServiceDescription.isOperational(this.description);
+    }
+
+    /**
+     * Cancel a set of advertisements.
+     */
+    static cancelAll(ads: Iterable<Advertisement>) {
+        for (const ad of ads) {
+            ad.cancel();
+        }
+    }
+
+    /**
+     * Cancel a set of advertisements and wait for them to complete.
+     */
+    static async closeAll(ads: Iterable<Advertisement>) {
+        await MatterAggregateError.allSettled([...ads].map(ad => ad.close()));
+    }
+
+    /**
+     * Identify other advertisers for the same service.  The advertiser will close these automatically.
+     */
+    abstract isDuplicate(other: Advertisement): boolean;
+
+    #start(executor: (context: ActivityContext) => Promise<void>) {
+        // Only one activity may be active
+        const previous = this.#activity;
+        previous?.cancel();
+
+        this.#activity = new ActivityContext(async context => {
+            // Wait for previous activity to complete
+            if (previous) {
+                await previous;
+            }
+
+            // Run the new activity
+            try {
+                await executor(context);
+            } finally {
+                // Clear the current activity if it's this one
+                if (this.#activity === context) {
+                    this.#activity = undefined;
+                }
+            }
+        });
+    }
+
+    async #run(context: ActivityContext, previous?: ActivityContext) {
+        // If automatic advertisement starts when it is already active, kill the previous version
+        if (previous) {
+            await previous;
+        }
+
+        logger.info("Advertising", Diagnostic.strong(this.service));
+
+        // Perform advertisement
+        try {
+            await this.run(context);
+        } catch (e) {
+            if (!(e instanceof CanceledError)) {
+                logger.error("Unhandled error during automatic advertisement for", Diagnostic.strong(this.service), e);
+            }
+        }
+
+        logger.debug("Done advertising", Diagnostic.strong(this.service));
+    }
+}
+
+export namespace Advertisement {
+    export interface Options {
+        /**
+         * Set this to omit optional details from broadcasts that may affect privacy.
+         *
+         * Per core spec 5.4.2.3.1, the device always omits vendor ID, product ID and extended data during extended
+         * announcement.  Set this value to omit this fields unconditionally.
+         */
+        omitPrivateDetails?: boolean;
+    }
+
+    export interface ActivityContext {
+        /**
+         * Enter cancelable sleep.
+         *
+         * Throws {@link CanceledError} if interrupted.  If thrown from {@link run} this will result in the promise
+         * resolving.
+         */
+        sleep(name: string, intervalMs: number): Promise<void>;
+    }
+}
+
+class ActivityContext extends CancelablePromise implements Advertisement.ActivityContext {
+    #sleep?: CancelablePromise;
+    #cancelReason?: Error;
+
+    constructor(executor: (context: ActivityContext) => Promise<void>) {
+        let resolve, reject;
         super((res, rej) => {
             resolve = res;
             reject = rej;
         });
 
-        this.options = options ?? {};
-
-        this.#resolve = resolve!;
-        this.#reject = (cause: unknown) => {
+        executor(this).then(resolve, cause => {
             if (cause instanceof CanceledError) {
-                resolve();
+                resolve!();
             } else {
                 reject!(cause);
             }
-        };
-
-        this.service = service;
-        this.advertiser = advertiser;
-        this.description = description;
+        });
     }
 
-    /**
-     * Begin advertising.
-     */
-    start() {
-        this.#run().then(this.#resolve, this.#reject);
-    }
-
-    /**
-     * Implement advertising.
-     */
-    protected abstract run(): Promise<void>;
-
-    /**
-     * Enter cancelable sleep.
-     *
-     * Throws {@link CanceledError} if interrupted.  If thrown from {@link run} this will result in the promise
-     * resolving.
-     */
-    protected sleep(name: string, intervalMs: number) {
+    sleep(name: string, intervalMs: number) {
         this.abortIfCanceled();
 
         const sleep = Time.sleep(name, intervalMs).finally(() => {
@@ -113,81 +298,5 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         if (this.#sleep) {
             this.#sleep.cancel(reason);
         }
-    }
-
-    isCommissioning(): this is
-        | Advertisement<ServiceDescription.Commissionable>
-        | Advertisement<ServiceDescription.Commissioner> {
-        return ServiceDescription.isCommissioning(this.description);
-    }
-
-    isOperational(): this is Advertisement<ServiceDescription.Operational> {
-        return ServiceDescription.isOperational(this.description);
-    }
-
-    /**
-     * Indicates that broadcasts should omit private details.
-     */
-    protected get isPrivacyMasked() {
-        // Private broadcast configured explicitly
-        if (this.options.omitPrivateDetails) {
-            return true;
-        }
-
-        // Extended announcement
-        if (Time.nowMs() - this.#startedAt < PRIVATE_COMMISSIONING_TIMEOUT_S * 1000) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Cancel a set of advertisements.
-     */
-    static cancelAll(ads: Iterable<Advertisement>) {
-        for (const ad of ads) {
-            ad.cancel();
-        }
-    }
-
-    /**
-     * Cancel a set of advertisements and wait for them to complete.
-     */
-    static async closeAll(ads: Iterable<Advertisement>) {
-        this.cancelAll(ads);
-        await MatterAggregateError.allSettled(ads);
-    }
-
-    async #run() {
-        // There may only be a single commissionable advertisement per advertiser
-        if (this.description.kind === "commissionable") {
-            const toClose = [...this.advertiser.advertisements].filter(
-                other => other.description.kind === "commissionable" && other !== this,
-            );
-            if (toClose.length) {
-                await Advertisement.closeAll(toClose);
-            }
-        }
-
-        logger.info("Advertising", Diagnostic.strong(this.service));
-
-        try {
-            await this.run();
-        } finally {
-            logger.debug("Done advertising", Diagnostic.strong(this.service));
-        }
-    }
-}
-
-export namespace Advertisement {
-    export interface Options {
-        /**
-         * Set this to omit optional details from broadcasts that may affect privacy.
-         *
-         * Per core spec 5.4.2.3.1, the device always omits vendor ID, product ID and extended data during extended
-         * announcement.  Set this value to omit this fields unconditionally.
-         */
-        omitPrivateDetails?: boolean;
     }
 }

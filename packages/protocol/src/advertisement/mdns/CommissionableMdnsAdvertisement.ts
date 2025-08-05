@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { Advertisement } from "#advertisement/Advertisement.js";
 import { PairingHintBitmapSchema } from "#advertisement/PairingHintBitmap.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { ImplementationError, PtrRecord } from "#general";
@@ -16,12 +17,11 @@ import {
     getShortDiscriminatorQname,
     getVendorQname,
     MATTER_COMMISSION_SERVICE_QNAME,
-    MATTER_COMMISSIONER_SERVICE_QNAME,
     PAIRING_HINTS_REQUIRING_INSTRUCTION,
     SERVICE_DISCOVERY_QNAME,
 } from "#mdns/MdnsConsts.js";
 import { MdnsAdvertisement } from "./MdnsAdvertisement.js";
-import { MdnsAdvertiser } from "./MdnsAdvertiser.js";
+import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 
 /**
  * Advertise a node as commissionable.
@@ -44,13 +44,11 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
         const { discriminator, deviceType, vendorId } = this.description;
 
         const shortDiscriminator = (discriminator >> 8) & 0x0f;
-        const instanceId = this.advertiser.createInstanceId();
         const vendorQname = getVendorQname(vendorId);
         const deviceTypeQname = getDeviceTypeQname(deviceType);
         const shortDiscriminatorQname = getShortDiscriminatorQname(shortDiscriminator);
         const longDiscriminatorQname = getLongDiscriminatorQname(discriminator);
         const commissionModeQname = getCommissioningModeQname();
-        const deviceQname = getCommissionableDeviceQname(instanceId);
 
         const records = [
             PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_COMMISSION_SERVICE_QNAME),
@@ -58,22 +56,15 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
             PtrRecord(SERVICE_DISCOVERY_QNAME, shortDiscriminatorQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, longDiscriminatorQname),
             PtrRecord(SERVICE_DISCOVERY_QNAME, commissionModeQname),
-            PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, deviceQname),
-            PtrRecord(deviceTypeQname, deviceQname),
-            PtrRecord(shortDiscriminatorQname, deviceQname),
-            PtrRecord(longDiscriminatorQname, deviceQname),
-            PtrRecord(commissionModeQname, deviceQname),
+            PtrRecord(MATTER_COMMISSION_SERVICE_QNAME, this.qname),
+            PtrRecord(deviceTypeQname, this.qname),
+            PtrRecord(shortDiscriminatorQname, this.qname),
+            PtrRecord(longDiscriminatorQname, this.qname),
+            PtrRecord(commissionModeQname, this.qname),
         ];
 
         if (!this.isPrivacyMasked) {
-            records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname), PtrRecord(vendorQname, deviceQname));
-        }
-
-        if (deviceType !== undefined) {
-            const deviceTypeQname = `_T${deviceType}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
-
-            records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname));
-            records.push(PtrRecord(deviceTypeQname, this.qname));
+            records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, vendorQname), PtrRecord(vendorQname, this.qname));
         }
 
         return records;
@@ -105,6 +96,11 @@ export class CommissionableMdnsAdvertisement extends MdnsAdvertisement<ServiceDe
         }
 
         return values;
+    }
+
+    override isDuplicate(other: Advertisement) {
+        // Only one commissioning advertisement allowed per advertiser
+        return other.isCommissioning();
     }
 
     #validatePairingInstructions() {

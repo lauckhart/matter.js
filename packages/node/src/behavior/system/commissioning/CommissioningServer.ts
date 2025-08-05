@@ -256,7 +256,11 @@ export class CommissioningServer extends Behavior {
      * commissioning.
      */
     protected enterOperationalMode() {
-        this.beginAdvertising();
+        if (!(this.endpoint.lifecycle as NodeLifecycle).isOnline) {
+            throw new ImplementationError("Cannot advertise offline server");
+        }
+
+        this.env.get(DeviceAdvertiser).enterOperationalMode();
     }
 
     /**
@@ -325,18 +329,6 @@ export class CommissioningServer extends Behavior {
             FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
         ],
     });
-
-    /**
-     * Advertise and continue advertising at regular intervals until timeout per Matter specification.  If already
-     * advertising, the advertisement timeout resets.
-     */
-    beginAdvertising() {
-        if (!(this.endpoint.lifecycle as NodeLifecycle).isOnline) {
-            throw new ImplementationError("Cannot advertise offline server");
-        }
-
-        this.env.get(DeviceAdvertiser).startAdvertising();
-    }
 
     #initializeNode() {
         this.state.commissioned = !!this.agent.get(OperationalCredentialsBehavior).state.commissionedFabrics;

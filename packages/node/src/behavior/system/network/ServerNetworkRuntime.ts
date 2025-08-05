@@ -24,12 +24,12 @@ import { NodePeerAddressStore } from "#node/client/NodePeerAddressStore.js";
 import { InteractionServer } from "#node/server/InteractionServer.js";
 import {
     Ble,
+    BleAdvertiser,
     ChannelManager,
     DeviceAdvertiser,
     DeviceCommissioner,
     ExchangeManager,
-    InstanceBroadcaster,
-    MdnsInstanceBroadcaster,
+    MdnsAdvertiser,
     MdnsService,
     PeerAddressStore,
     PeerSet,
@@ -58,8 +58,8 @@ function convertNetworkEnvironmentType(type: string | number) {
  * Handles network functionality for {@link NodeServer}.
  */
 export class ServerNetworkRuntime extends NetworkRuntime {
-    #mdnsBroadcaster?: MdnsInstanceBroadcaster;
-    #bleBroadcaster?: InstanceBroadcaster;
+    #mdnsAdvertiser?: MdnsAdvertiser;
+    #bleAdvertiser?: BleAdvertiser;
     #bleTransport?: TransportInterface;
     #ipv6UdpInterface?: UdpInterface;
     #observers = new ObserverGroup(this);
@@ -74,8 +74,8 @@ export class ServerNetworkRuntime extends NetworkRuntime {
      * Access the MDNS broadcaster for the node.
      */
     get mdnsBroadcaster() {
-        if (!this.#mdnsBroadcaster) {
-            this.#mdnsBroadcaster = this.owner.env
+        if (!this.#mdnsAdvertiser) {
+            this.#mdnsAdvertiser = this.owner.env
                 .get(MdnsService)
                 .createInstanceBroadcaster(this.owner.state.network.operationalPort);
         }

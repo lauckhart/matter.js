@@ -70,7 +70,7 @@ export class MdnsSocket {
         return this.#receipt;
     }
 
-    async send(message: Partial<DnsMessage>, intf?: string, unicastDest?: string) {
+    async send(message: Partial<DnsMessage> & { messageType: DnsMessageType }, intf?: string, unicastDest?: string) {
         let intermediateMessageType: DnsMessageType, finalMessageType: DnsMessageType;
         switch (message.messageType) {
             case DnsMessageType.Query:
@@ -107,42 +107,34 @@ export class MdnsSocket {
         let currentMessageSize = encodedChunkWithoutAnswers.length;
 
         // Add answers, splitting message as necessary
-        const answers = message.answers ?? [];
-        while (true) {
-            if (answers.length > 0) {
-                const nextAnswer = answers.shift();
-                if (nextAnswer === undefined) {
-                    break;
+        for (const answer of message.answers ?? []) {
+            const answerEncoded = DnsCodec.encodeRecord(answer);
+
+            if (currentMessageSize > MAX_MDNS_MESSAGE_SIZE) {
+                if (chunk.answers.length === 0) {
+                    // The first answer is already too big, log at least a warning
+                    logger.warn(
+                        `MDNS message with ${Diagnostic.json(
+                            chunk.queries,
+                        )} is too big to fit into a single MDNS message. Send anyway, but please report!`,
+                    );
                 }
 
-                const nextAnswerEncoded = DnsCodec.encodeRecord(nextAnswer);
-                currentMessageSize += nextAnswerEncoded.length; // Add additional record as long as size is ok
+                // New answer do not fit anymore, send out the message
+                await this.#send(chunk, intf, unicastDest);
 
-                if (currentMessageSize > MAX_MDNS_MESSAGE_SIZE) {
-                    if (chunk.answers.length === 0) {
-                        // The first answer is already too big, log at least a warning
-                        logger.warn(
-                            `MDNS message with ${Diagnostic.json(
-                                chunk.queries,
-                            )} is too big to fit into a single MDNS message. Send anyway, but please report!`,
-                        );
-                    }
-
-                    // New answer do not fit anymore, send out the message
-                    await this.#send(chunk, intf, unicastDest);
-
-                    // Reset the message, length counter and included answers to count for next message
-                    if (chunk.queries.length) {
-                        chunk.queries.length = 0;
-                        encodedChunkWithoutAnswers = DnsCodec.encode(chunk);
-                    }
-                    chunk.answers.length = 0;
-                    currentMessageSize = encodedChunkWithoutAnswers.length + nextAnswerEncoded.length;
+                // Reset the message, length counter and included answers to count for next message
+                if (chunk.queries.length) {
+                    chunk.queries.length = 0;
+                    encodedChunkWithoutAnswers = DnsCodec.encode(chunk);
                 }
-                chunk.answers.push(nextAnswerEncoded);
+                chunk.answers.length = 0;
+                currentMessageSize = encodedChunkWithoutAnswers.length + answerEncoded.length;
             } else {
-                break;
+                currentMessageSize += answerEncoded.length;
             }
+
+            chunk.answers.push(answerEncoded);
         }
 
         // Add "additional records"...  We include these but only if they fit

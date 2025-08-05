@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { Advertisement } from "#advertisement/Advertisement.js";
 import { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { Bytes, PtrRecord } from "#general";
 import {
@@ -14,7 +15,7 @@ import {
 } from "#mdns/MdnsConsts.js";
 import { NodeId } from "#types";
 import { MdnsAdvertisement } from "./MdnsAdvertisement.js";
-import { MdnsAdvertiser } from "./MdnsAdvertiser.js";
+import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
 
 /**
  * Advertise a node as a fabric member.
@@ -40,5 +41,10 @@ export class OperationalMdnsAdvertisement extends MdnsAdvertisement<ServiceDescr
             PtrRecord(MATTER_SERVICE_QNAME, this.qname),
             PtrRecord(fabricQname, this.qname),
         ];
+    }
+
+    override isDuplicate(other: Advertisement) {
+        // There may only be one operational advertisement per service per advertiser
+        return other.isOperational() && other.service === this.service;
     }
 }

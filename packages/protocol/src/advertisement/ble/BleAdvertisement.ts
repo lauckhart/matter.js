@@ -25,7 +25,7 @@ export class BleAdvertisement extends Advertisement<ServiceDescription.Commissio
         super(advertiser, "ble:commissioning", description);
     }
 
-    protected override async run() {
+    protected override async run(context: Advertisement.ActivityContext) {
         const {
             peripheral,
             config: { earlyInterval, lateInterval, extendedInterval },
@@ -57,8 +57,8 @@ export class BleAdvertisement extends Advertisement<ServiceDescription.Commissio
                 // Configure BLE peripheral broadcasts at specified interval
                 await peripheral.advertise(advertisementData, aad, broadcastInterval);
 
-                // Wait for timeout of at this broadcast interval
-                await this.sleep("BLE advertisement interval", Math.min(timeout, sleepTime));
+                // Wait for timeout at this broadcast interval
+                await context.sleep("BLE advertisement interval", Math.min(timeout, sleepTime));
 
                 timeout -= sleepTime;
                 if ((timeout -= sleepTime) <= 0) {
@@ -81,5 +81,10 @@ export class BleAdvertisement extends Advertisement<ServiceDescription.Commissio
             !isExtendedAnnouncement && !!this.advertiser.config.aad?.length,
             isExtendedAnnouncement,
         );
+    }
+
+    isDuplicate() {
+        // We only allow a single advertisement per BLE interface
+        return true;
     }
 }

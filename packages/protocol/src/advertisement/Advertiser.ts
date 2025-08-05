@@ -4,11 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Diagnostic, Logger } from "#general";
 import { Advertisement } from "./Advertisement.js";
 import { ServiceDescription } from "./ServiceDescription.js";
-
-const logger = Logger.get("Advertiser");
 
 /**
  * A component that advertises a Matter service.
@@ -29,16 +26,15 @@ export abstract class Advertiser {
 
         const ad = this.createAdvertisement(description);
         if (ad) {
-            ad.catch(error => logger.error("Error in advertiser", Diagnostic.strong(ad.service), error)).finally(() =>
-                this.#advertisements.delete(ad),
-            );
-            this.#advertisements.add(ad);
             ad.start();
         }
 
         return ad;
     }
 
+    /**
+     * Create an advertiser.
+     */
     protected abstract createAdvertisement(description: ServiceDescription): Advertisement | undefined;
 
     /**

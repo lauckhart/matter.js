@@ -17,7 +17,7 @@ import {
     FabricAuthority,
     FabricAuthorityConfigurationProvider,
     FabricManager,
-    MdnsScanner,
+    MdnsClient,
     MdnsScannerTargetCriteria,
     MdnsService,
     Scanner,
@@ -54,7 +54,7 @@ export class ControllerBehavior extends Behavior {
             this.state.ip = true;
         }
         if (this.state.ip !== false) {
-            this.env.get(ScannerSet).add((await this.env.load(MdnsService)).scanner);
+            this.env.get(ScannerSet).add((await this.env.load(MdnsService)).client);
         }
 
         if (this.state.ble === undefined) {
@@ -166,7 +166,7 @@ export class ControllerBehavior extends Behavior {
     }
 
     #enableScanningForScanner(scanner: Scanner) {
-        if (!(scanner instanceof MdnsScanner)) {
+        if (!(scanner instanceof MdnsClient)) {
             return;
         }
         scanner.targetCriteriaProviders.add(this.internal.mdnsTargetCriteria);
