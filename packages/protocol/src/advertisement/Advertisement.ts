@@ -184,6 +184,13 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
      */
     abstract isDuplicate(other: Advertisement): boolean;
 
+    /**
+     * Total duration so far.
+     */
+    get duration() {
+        return Time.nowMs() - this.#startedAt;
+    }
+
     #start(executor: (context: ActivityContext) => Promise<void>) {
         // Only one activity may be active
         const previous = this.#activity;

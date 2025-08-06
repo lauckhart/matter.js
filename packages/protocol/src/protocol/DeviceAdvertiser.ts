@@ -203,7 +203,20 @@ export class DeviceAdvertiser {
     }
 
     #advertiseFabric(fabric: Fabric) {
-        this.#advertise(ServiceDescription.Operational({ fabric }));
+        if (this.#isClosing) {
+            return;
+        }
+
+        nextAdvertiser: for (const advertiser of this.#advertisers) {
+            // Skip fabrics that are already advertising.  This prevents redundant advertisement on startup
+            for (const ad of advertiser.advertisements) {
+                if (ad.isOperational() && ad.description.fabric === fabric) {
+                    continue nextAdvertiser;
+                }
+            }
+
+            advertiser.advertise(ServiceDescription.Operational({ fabric }));
+        }
     }
 
     #advertise(description: ServiceDescription) {

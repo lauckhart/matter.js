@@ -6,7 +6,6 @@
 
 import {
     AsyncCache,
-    Diagnostic,
     DnsMessageType,
     DnsRecord,
     DnsRecordType,
@@ -195,20 +194,6 @@ export class MdnsServer {
                             instanceSet.add(record.name);
                         }
                     });
-                    const instanceName =
-                        instanceSet.size > 1
-                            ? "multiple"
-                            : instanceSet.size === 1
-                              ? Array.from(instanceSet.values())[0]
-                              : "";
-                    logger.debug(
-                        `Expiring records`,
-                        Diagnostic.dict({
-                            service,
-                            instanceName,
-                            netInterface,
-                        }),
-                    );
 
                     // TODO: try to combine the messages to avoid sending multiple messages but keep under 1500 bytes per message
                     await this.#announceRecordsForInterface(netInterface, serviceRecords);

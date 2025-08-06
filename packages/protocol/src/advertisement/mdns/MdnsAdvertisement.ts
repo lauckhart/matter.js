@@ -7,10 +7,21 @@
 import { Advertisement } from "#advertisement/Advertisement.js";
 import type { ServiceDescription } from "#advertisement/ServiceDescription.js";
 import { SupportedTransportsSchema } from "#common/SupportedTransportsBitmap.js";
-import { AAAARecord, ARecord, DnsRecord, NetworkInterfaceDetails, SrvRecord, TxtRecord } from "#general";
+import {
+    AAAARecord,
+    ARecord,
+    Diagnostic,
+    DnsRecord,
+    Logger,
+    NetworkInterfaceDetails,
+    SrvRecord,
+    TxtRecord,
+} from "#general";
 import type { MdnsServer } from "#mdns/MdnsServer.js";
 import { SessionIntervals } from "#session/SessionIntervals.js";
 import type { MdnsAdvertiser } from "./MdnsAdvertiser.js";
+
+const logger = Logger.get("MdnsAdvertisement");
 
 /**
  * Base class for MDNS advertisements.
@@ -43,8 +54,11 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
         return {};
     }
 
-    override async run(context: Advertisement.ActivityContext) {
-        for (const retryInterval of this.advertiser.broadcastScheduleFor(this)) {
+    override async run(context: Advertisement.ActivityContext, event: MdnsAdvertiser.BroadcastEvent = "startup") {
+        let number = 0;
+        for (const retryInterval of this.advertiser.broadcastScheduleFor(this, event)) {
+            number++;
+            logger.debug("Broadcast", Diagnostic.dict({ qname: this.qname, number, time: this.duration }));
             await this.broadcast();
             await context.sleep("MDNS repeat", retryInterval);
         }
@@ -66,6 +80,7 @@ export abstract class MdnsAdvertisement<T extends ServiceDescription = ServiceDe
      * Broadcast expiration announcement immediately.
      */
     async expire() {
+        logger.debug("Expired", Diagnostic.dict({ qname: this.qname, time: this.duration }));
         await this.advertiser.server.expireAnnouncements(this.service);
     }
 

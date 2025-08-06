@@ -13,7 +13,7 @@ import {
     MINIMUM_COMMISSIONING_TIMEOUT_S,
     PAKE_PASSCODE_VERIFIER_LENGTH,
     STANDARD_COMMISSIONING_TIMEOUT_S,
-    StatusCode,
+    Status,
     StatusResponseError,
     TlvByteString,
     TlvField,
@@ -186,14 +186,14 @@ export class AdministratorCommissioningServer extends AdministratorCommissioning
         if (commissioningTimeout > this.internal.maximumCommissioningTimeoutS) {
             throw new StatusResponseError(
                 `Commissioning timeout must not exceed ${this.internal.maximumCommissioningTimeoutS} seconds.`,
-                StatusCode.InvalidCommand,
+                Status.InvalidCommand,
             );
         }
 
         if (commissioningTimeout < this.internal.minimumCommissioningTimeoutS) {
             throw new StatusResponseError(
                 `Commissioning timeout must not be lower then ${this.internal.minimumCommissioningTimeoutS} seconds.`,
-                StatusCode.InvalidCommand,
+                Status.InvalidCommand,
             );
         }
 
