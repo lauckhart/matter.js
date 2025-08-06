@@ -49,10 +49,6 @@ describe("CADMIN", () => {
     chip("CADMIN/*").exclude(
         // Handled below
         "CADMIN/1.19",
-
-        // TODO - we fail 1.22 because we open a second commissioning window.  Unsure why we shouldn't, requires more
-        //  research
-        // "CADMIN/1.22",
     );
 
     chip("CADMIN/1.19").beforeTest(subject => {

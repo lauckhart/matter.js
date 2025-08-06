@@ -117,7 +117,7 @@ export class DeviceAdvertiser {
         }
 
         this.#commissioningService = undefined;
-        Advertisement.cancelAll(this.#advertisements(ad => ad.isCommissioning()));
+        return Advertisement.closeAll(this.#advertisements(ad => ad.isCommissioning()));
     }
 
     /**

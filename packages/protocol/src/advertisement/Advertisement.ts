@@ -5,7 +5,7 @@
  */
 
 import { asError, CancelablePromise, CanceledError, Diagnostic, Logger, MatterAggregateError, Time } from "#general";
-import { PRIVATE_COMMISSIONING_TIMEOUT_S } from "#types";
+import { STANDARD_COMMISSIONING_TIMEOUT_S } from "#types";
 import type { Advertiser } from "./Advertiser.js";
 import { ServiceDescription } from "./ServiceDescription.js";
 
@@ -141,7 +141,7 @@ export abstract class Advertisement<T extends ServiceDescription = ServiceDescri
         }
 
         // Extended announcement
-        if (Time.nowMs() - this.#startedAt >= PRIVATE_COMMISSIONING_TIMEOUT_S * 1000) {
+        if (Time.nowMs() - this.#startedAt >= STANDARD_COMMISSIONING_TIMEOUT_S * 1000) {
             return true;
         }
 

@@ -24,7 +24,7 @@ import {
 import { SecureChannelProtocol } from "#securechannel/SecureChannelProtocol.js";
 import { PaseServer } from "#session/pase/PaseServer.js";
 import { SessionManager } from "#session/SessionManager.js";
-import { CommissioningOptions, PRIVATE_COMMISSIONING_TIMEOUT_S, StatusCode, StatusResponseError } from "#types";
+import { CommissioningOptions, STANDARD_COMMISSIONING_TIMEOUT_S, StatusCode, StatusResponseError } from "#types";
 import type { ControllerCommissioner } from "../peer/ControllerCommissioner.js";
 import { DeviceAdvertiser } from "./DeviceAdvertiser.js";
 
@@ -161,7 +161,7 @@ export class DeviceCommissioner {
 
         this.#windowStatus = windowStatus;
         const commissioningConfig = this.#context.commissioningConfig.values;
-        const advertisementWindowS = commissioningConfig.advertisementWindowS ?? PRIVATE_COMMISSIONING_TIMEOUT_S;
+        const advertisementWindowS = commissioningConfig.advertisementWindowS ?? STANDARD_COMMISSIONING_TIMEOUT_S;
 
         const mode =
             windowStatus === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen
@@ -233,8 +233,6 @@ export class DeviceCommissioner {
             return;
         }
 
-        logger.debug("Commissioning mode ended, stop announcements.");
-
         this.#cancelTimeout();
 
         this.#context.secureChannelProtocol.removePaseCommissioner();
@@ -247,9 +245,9 @@ export class DeviceCommissioner {
             await activeCommissioningEndCallback();
         }
 
-        this.#context.advertiser.exitCommissioningMode();
+        await this.#context.advertiser.exitCommissioningMode();
 
-        logger.info("All commissioning announcements stopped");
+        logger.info("No longer commissioning");
     }
 
     async close() {
