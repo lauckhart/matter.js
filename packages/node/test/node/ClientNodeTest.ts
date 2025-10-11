@@ -280,7 +280,6 @@ const PEER1_STATE = {
         pairingInstructions: undefined,
         sessionParameters: { idleInterval: 500, activeInterval: 300, activeThreshold: 4000 },
         tcpSupport: 0,
-        longIdleOperatingMode: undefined,
     },
     network: {
         isDisabled: false,

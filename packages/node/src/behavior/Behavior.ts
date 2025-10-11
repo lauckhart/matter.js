@@ -14,12 +14,11 @@ import {
     Observable,
     Transaction,
 } from "#general";
-import { Schema } from "#model";
+import { ClassDecoration, Schema } from "#model";
 import type { ClusterType } from "#types";
 import { Reactor } from "./Reactor.js";
 import type { BehaviorBacking } from "./internal/BehaviorBacking.js";
 import { DerivedState, EmptyState } from "./state/StateType.js";
-import { BehaviorSupervisor } from "./supervision/BehaviorSupervisor.js";
 import { RootSupervisor } from "./supervision/RootSupervisor.js";
 
 // Internal fields
@@ -139,7 +138,7 @@ export abstract class Behavior {
         if (Object.hasOwn(this, SUPERVISOR)) {
             return (this as StaticInternal)[SUPERVISOR] as RootSupervisor;
         }
-        return ((this as StaticInternal)[SUPERVISOR] = BehaviorSupervisor(this));
+        return ((this as StaticInternal)[SUPERVISOR] = RootSupervisor.for(Schema(this)));
     }
 
     /**
@@ -309,6 +308,35 @@ Object.defineProperties(Behavior.prototype, {
         enumerable: true,
     },
 });
+
+/**
+ * Install {@link ClassDecoration} extension logic to integrate schema metadata.
+ */
+Object.defineProperty(
+    Behavior,
+    ClassDecoration.extend,
+
+    {
+        value(this: Behavior.Type, decoration: ClassDecoration) {
+            if (!decoration.new) {
+                decoration.new = this;
+            }
+
+            const { State, defaults, schema } = decoration.new as Behavior.Type;
+            if (!State || !defaults) {
+                return;
+            }
+
+            // Use schema property as the base type
+            if (!decoration.type) {
+                decoration.type = schema;
+            }
+
+            // Inject unknown state properties as untyped field elements
+            decoration.defineUnknownMembers(defaults);
+        },
+    },
+);
 
 export namespace Behavior {
     /**

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { ClassDecoration } from "#decoration/index.js";
 import { camelize, decamelize, ImplementationError } from "#general";
 import { DefinitionError, ElementTag, Metatype, Specification } from "../common/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
@@ -747,6 +748,13 @@ export namespace Model {
         | T;
 
     /**
+     * An object that may be used in some places where a model is required.
+     *
+     * This is either a model, a class constructor or a DecoratorContext.
+     */
+    export type Source = Model | NewableFunction | DecoratorContext | ClassDecoration;
+
+    /**
      * Tagged input.  Like {@link Definition} but for places where model type is not implied.
      */
     export type TaggedDefinition<T extends Model> =
@@ -769,7 +777,10 @@ export namespace Model {
     /**
      * A model constructor for a specific element type.
      */
-    export type ConcreteType<T extends Model = Model> = (new (definition: any) => T) & { Tag: ElementTag };
+    export type ConcreteType<T extends Model = Model> = (new (definition: any) => T) & {
+        Tag: ElementTag;
+        requiresId?: boolean;
+    };
 
     /**
      * A patch to a model tree.

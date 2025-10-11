@@ -19,7 +19,23 @@ import {
     Time,
     Timestamp,
 } from "#general";
-import { DatatypeModel, FieldElement } from "#model";
+import {
+    DatatypeModel,
+    element,
+    fabricId,
+    field,
+    FieldElement,
+    listOf,
+    nodeId,
+    nonvolatile,
+    nullable,
+    string,
+    systimeMs,
+    uint16,
+    uint32,
+    uint8,
+    vendorId,
+} from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
 import { IdentityService } from "#node/server/IdentityService.js";
@@ -32,7 +48,7 @@ import {
     FabricAuthority,
     FabricManager,
     LocatedNodeCommissioningOptions,
-    PeerAddress,
+    PeerAddress as ProtocolPeerAddress,
     SessionParameters,
     Subscribe,
 } from "#protocol";
@@ -40,6 +56,7 @@ import {
     CaseAuthenticatedTag,
     DeviceTypeId,
     DiscoveryCapabilitiesBitmap,
+    FabricIndex,
     ManualPairingCodeCodec,
     NodeId,
     TypeFromPartialBitSchema,
@@ -194,7 +211,7 @@ export class CommissioningClient extends Behavior {
             throw new ImplementationError("Cannot decommission node that is not commissioned");
         }
 
-        const formerAddress = PeerAddress(peerAddress).toString();
+        const formerAddress = ProtocolPeerAddress(peerAddress).toString();
 
         const opcreds = this.agent.get(OperationalCredentialsClient);
 
@@ -218,7 +235,7 @@ export class CommissioningClient extends Behavior {
      * If you override, matter.js commissions to the point where commissioning over PASE is complete.  You must then
      * complete commissioning yourself by connecting to the device and invokeint the "CommissioningComplete" command.
      */
-    protected async finalizeCommissioning(_address: PeerAddress, _discoveryData?: DiscoveryData) {
+    protected async finalizeCommissioning(_address: ProtocolPeerAddress, _discoveryData?: DiscoveryData) {
         throw new NotImplementedError();
     }
 
@@ -235,7 +252,7 @@ export class CommissioningClient extends Behavior {
         endpoint.lifecycle.initialized.emit(this.state.peerAddress !== undefined);
     }
 
-    #peerAddressChanged(addr?: PeerAddress) {
+    #peerAddressChanged(addr?: ProtocolPeerAddress) {
         const node = this.endpoint as ClientNode;
 
         if (addr) {
@@ -321,76 +338,144 @@ export class CommissioningClient extends Behavior {
             ],
         }),
         FieldElement({ name: "tcpSupport", type: "uint8", quality: "N" }),
-        FieldElement({ name: "longIdleOperatingMode", type: "bool", quality: "N" }),
+        FieldElement({ name: "longIdleTimeOperatingMode", type: "bool", quality: "N" }),
     );
 }
 
 export namespace CommissioningClient {
+    /**
+     * Concrete version of {@link ProtocolPeerAddress}.
+     */
+    export abstract class PeerAddress implements ProtocolPeerAddress {
+        @fabricId
+        fabricIndex: FabricIndex;
+
+        @nodeId
+        nodeId: NodeId;
+
+        constructor(fabricIndex: FabricIndex, nodeId: NodeId) {
+            this.fabricIndex = fabricIndex;
+            this.nodeId = nodeId;
+        }
+    }
+
+    /**
+     * The network address of a the node.
+     */
+    export class NetworkAddress implements ServerAddress.Definition {
+        @string
+        type: "udp" | "tcp" | "ble";
+
+        @string
+        @nullable
+        ip?: string;
+
+        @uint16
+        @nullable
+        port?: number;
+
+        @string
+        peripheralAddress?: string;
+
+        ttl?: Duration | undefined;
+        discoveredAt?: Timestamp | undefined;
+
+        constructor(address: NetworkAddress) {
+            this.type = address.type;
+            this.ip = address.ip;
+            this.port = address.port;
+            this.peripheralAddress = address.peripheralAddress;
+            this.ttl = address.ttl;
+            this.discoveredAt = address.discoveredAt;
+        }
+    }
+
     export class State {
         /**
          * Fabric index and node ID for paired peers.  If this is undefined the node is uncommissioned.
          */
+        @element(PeerAddress)
+        @nullable
+        @nonvolatile
         peerAddress?: PeerAddress;
 
         /**
          * Known network addresses for the device.  If this is undefined the node has not been located on any network
          * interface.
          */
+        @listOf(NetworkAddress)
+        @nullable
+        @nonvolatile
         addresses?: ServerAddress.Definition[];
 
         /**
          * Time at which the device was discovered.
          */
+        @systimeMs
+        @nullable
+        @nonvolatile
         discoveredAt?: Timestamp;
 
         /**
          * Time at which we discovered the device's current operational addresses.
          */
+        @systimeMs
+        @nullable
         onlineAt?: Timestamp;
 
         /**
          * Time at which we concluded the device's current operational address is unreachable.
          */
+        @systimeMs
+        @nullable
         offlineAt?: Timestamp;
 
         /**
          * The TTL of the discovery record if applicable (in seconds).
          */
+        @field(uint32, nullable, nonvolatile)
         ttl?: Duration;
 
         /**
          * The canonical global ID of the device.
          */
+        @field(string, nullable, nonvolatile)
         deviceIdentifier?: string;
 
         /**
          * The device's long discriminator.
          */
+        @field(uint16, nullable, nonvolatile)
         discriminator?: number;
 
         /**
          * The last know commissioning mode of the device.
          */
+        @field(uint8, nullable, nonvolatile)
         commissioningMode?: CommissioningMode;
 
         /**
          * Vendor.
          */
+        @field(vendorId, nullable, nonvolatile)
         vendorId?: VendorId;
 
         /**
          * Product.
          */
+        @field(uint16, nullable, nonvolatile)
         productId?: number;
 
         /**
          * Advertised device type.
          */
+        @field(uint16, nullable, nonvolatile)
         deviceType?: DeviceTypeId;
 
         /**
          * The advertised device name specified by the user.
          */
+        @field(string, nullable, nonvolatile)
         deviceName?: string;
 
         /**
@@ -425,7 +510,9 @@ export namespace CommissioningClient {
     }
 
     export class Events extends BaseEvents {
-        peerAddress$Changed = new Observable<[value: PeerAddress | undefined, oldValue: PeerAddress | undefined]>();
+        peerAddress$Changed = new Observable<
+            [value: ProtocolPeerAddress | undefined, oldValue: ProtocolPeerAddress | undefined]
+        >();
     }
 
     /**
