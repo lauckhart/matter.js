@@ -54,6 +54,9 @@ export function element<
                 case "object":
                     if (modifier instanceof Model) {
                         decoration.model.operationalBase = modifier;
+                        if (decoration.model.id === undefined) {
+                            decoration.model.id = modifier.id;
+                        }
                         continue;
                     }
                     break;
@@ -90,17 +93,17 @@ export namespace element {
      *
      * Modifiers affect decoration as follows:
      *
-     *   * A model type sets the "kind" property of the decoration
+     *   * A model type forces {@link Decoration#model} to that type
      *
-     *   * A model instances sets the "type" property of the decoration
+     *   * A model instance sets the {@link Model#operationalBase} of {@link Decoration#model}
      *
-     *   * A constructor instance sets the "type" property of the decoration
+     *   * A constructor instance also sets the {@link Model#operationalBase} of {@link Decoration#model}
      *
      *   * A decorator is invoked to decorate the element
      *
-     *   * A number sets the "id" property of the decoration
+     *   * A number sets the {@link Model#id} of {@link Decoration#model}
      *
-     *   * A string sets the "name" property of the decoration
+     *   * A string sets the {@link Model#name} of {@link Decoration#model}
      */
     export type Modifier<
         T extends

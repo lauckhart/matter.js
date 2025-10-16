@@ -11,6 +11,7 @@ import { cluster } from "#decoration/decorators/cluster.js";
 import { datatype } from "#decoration/decorators/datatype.js";
 import { field } from "#decoration/decorators/field.js";
 import { Schema } from "#decoration/Schema.js";
+import { AttributeModel, ClusterModel } from "#index.js";
 import { FieldModel } from "#models/FieldModel.js";
 import { any, locationdesc, struct, uint32, WindowCovering } from "../../../src/standard/elements/models.js";
 
@@ -85,24 +86,42 @@ describe("ClassDecoration", () => {
             expect(schema.tag).equals("cluster");
             expect(schema.name).equals("OverengineeredBlinds");
 
-            const foo = schema.children.get(FieldModel, "foo");
+            const operationalStatus = schema.conformant.properties.for("operationalStatus");
+            expect(operationalStatus).not.undefined;
+
+            const foo = schema.conformant.properties.for("foo");
             expect(foo).not.undefined;
         });
     });
 
-    it("extends with undecorated fields", () => {
+    it("extends with unknown fields but not known fields", () => {
+        const BaseCluster = new ClusterModel({ id: 1, name: "Foo" }, new AttributeModel({ id: 2, name: "Baz" }));
+
+        @cluster(BaseCluster)
         class Foo {
+            @field()
+            foo = 3;
+        }
+
+        class Bar extends Foo {
+            // Known via base class decorator
+            override foo = 3;
+
+            // Unknown - should be added
             bar = 4;
 
+            // Known via base inheritance
+            baz = 5;
+
             static [ClassDecoration.extend](decoration: ClassDecoration) {
-                decoration.defineUnknownMembers(new Foo());
+                decoration.defineUnknownMembers(new Bar());
             }
         }
 
-        const schema = Schema(Foo);
+        const schema = Schema(Bar);
         expect(schema.children.length).equals(1);
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
         expect(bar!.base).equals(any);
-    }).timeout(1e9);
+    });
 });

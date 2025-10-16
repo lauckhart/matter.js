@@ -77,6 +77,8 @@ export abstract class Decoration {
         if ("quality" in original && "quality" in replacement) {
             replacement.quality = original.quality;
         }
+
+        this.#model = replacement;
     }
 
     protected abstract createModel(type?: Model.ConcreteType): Model;

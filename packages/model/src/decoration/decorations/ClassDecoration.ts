@@ -9,7 +9,7 @@ import { DatatypeModel, Model } from "#models/index.js";
 
 import { camelize } from "#general";
 import { Scope } from "#logic/Scope.js";
-import { any } from "#standard/elements/models.js";
+import { any, struct } from "#standard/elements/models.js";
 import { InvalidMetadataError } from "../errors.js";
 import { Decoration } from "./Decoration.js";
 import { FieldDecoration } from "./FieldDecoration.js";
@@ -49,7 +49,7 @@ export class ClassDecoration extends Decoration {
     #definedElements?: Map<string, FieldDecoration>;
 
     protected override createModel(type: Model.ConcreteType = DatatypeModel) {
-        return new type({ name: "Unnamed" });
+        return new type({ name: "Unnamed", operationalBase: struct });
     }
 
     /**
@@ -63,9 +63,39 @@ export class ClassDecoration extends Decoration {
      * Assign the constructor for the class.
      */
     set new(fn: ClassDecoration.Constructor) {
+        if (this.#new === fn) {
+            return;
+        }
+
         this.#new = fn;
-        const decoration = Decoration.classDecorationOf(fn);
-        this.model.operationalBase = decoration.model;
+
+        // If I do not yet have a base, I extend my parent class's model
+        const { type, operationalBase } = this.model;
+        if (type === undefined && (operationalBase === undefined || operationalBase === struct)) {
+            const prototype = Object.getPrototypeOf(fn.prototype) as unknown;
+            if (typeof prototype === "object" && prototype !== null && prototype.constructor !== Object) {
+                this.model.operationalBase = Decoration.modelOf(prototype.constructor);
+            }
+        }
+
+        // If my base is not a datatype, it forces the type of my model
+        const { base } = this.model;
+        if (base && base.tag !== "datatype") {
+            this.modelType = base.constructor as Model.ConcreteType;
+        }
+
+        // Set name to match class
+        this.model.name = fn.name;
+
+        // If ID is not already set, force ID to match base
+        if (this.model.id === undefined) {
+            this.model.id = base?.id;
+        }
+
+        // Allow for custom extension logic
+        if (ClassDecoration.extend in fn) {
+            fn[ClassDecoration.extend]?.(this);
+        }
     }
 
     /**
@@ -156,8 +186,8 @@ export class ClassDecoration extends Decoration {
                 decoration = metadata[matter] as ClassDecoration;
             }
 
-            if (!decoration.#new) {
-                decoration.#new = source;
+            if (!decoration.new) {
+                decoration.new = source;
             }
         } else {
             const metadata = source.metadata as MatterMetadata;

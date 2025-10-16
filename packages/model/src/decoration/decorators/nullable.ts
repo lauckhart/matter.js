@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Quality } from "#aspects/Quality.js";
 import { FieldDecoration } from "#decoration/decorations/FieldDecoration.js";
 import { InvalidMetadataError } from "#decoration/errors.js";
 import { Decorator } from "#general";
@@ -17,5 +18,5 @@ export const nullable = Decorator<Decorator.PropertyCollector>((_target, context
     if (!(model instanceof ValueModel)) {
         throw new InvalidMetadataError("Only a value models may be nullable");
     }
-    model.quality.nullable = true;
+    model.quality = new Quality({ ...model.quality, nullable: true });
 });

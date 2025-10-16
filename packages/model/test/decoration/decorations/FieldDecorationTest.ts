@@ -86,7 +86,7 @@ describe("FieldDecoration", () => {
 
         const schema = Schema(Obj2);
 
-        const foo = schema.get(FieldModel, "foo");
+        const foo = schema.conformant.properties.for("foo");
         expect(foo).not.undefined;
         expect(foo!.base).equals(uint16);
 

@@ -66,7 +66,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     set id(value: E["id"]) {
         const oldId = this.effectiveId;
         this.#id = value;
-        (this.#parent?.children as InternalChildren).updateId(this, oldId);
+        (this.#parent?.children as InternalChildren | undefined)?.updateId(this, oldId);
     }
 
     get name() {
@@ -76,7 +76,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     set name(value: string) {
         const oldName = this.#name;
         this.#name = value;
-        (this.#parent?.children as InternalChildren).updateName(this, oldName);
+        (this.#parent?.children as InternalChildren | undefined)?.updateName(this, oldName);
     }
 
     /**
@@ -599,6 +599,10 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         if (children.length) {
             this.children.push(...children);
         }
+
+        if (!isClone && definition.parent) {
+            this.parent = definition.parent;
+        }
     }
 
     /**
@@ -744,7 +748,11 @@ export namespace Model {
      * In most places elements and models are interchangeable on input.
      */
     export type Definition<T extends Model> =
-        | (BaseElement.Properties<ElementOf<T>> & { operationalBase?: Model; operationalShadow?: Model })
+        | (BaseElement.Properties<ElementOf<T>> & {
+              parent?: Model;
+              operationalBase?: Model;
+              operationalShadow?: Model;
+          })
         | T;
 
     /**
