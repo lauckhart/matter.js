@@ -20,11 +20,10 @@ import {
     Timestamp,
 } from "#general";
 import {
-    DatatypeModel,
-    element,
+    bool,
+    duration,
     fabricId,
     field,
-    FieldElement,
     listOf,
     nodeId,
     nonvolatile,
@@ -49,7 +48,7 @@ import {
     FabricManager,
     LocatedNodeCommissioningOptions,
     PeerAddress as ProtocolPeerAddress,
-    SessionParameters,
+    SessionIntervals as ProtocolSessionIntervals,
     Subscribe,
 } from "#protocol";
 import {
@@ -275,82 +274,17 @@ export class CommissioningClient extends Behavior {
             node.lifecycle.decommissioned.emit(this.context);
         }
     }
-
-    /**
-     * Define logical schema.  This enables runtime validation, make fields persistent and makes subfields editable.
-     */
-    static override readonly schema = new DatatypeModel(
-        {
-            name: "CommissioningState",
-            type: "struct",
-        },
-
-        FieldElement({
-            name: "peerAddress",
-            type: "struct",
-            quality: "N",
-            children: [
-                FieldElement({ name: "fabricIndex", type: "fabric-id" }),
-                FieldElement({ name: "nodeId", type: "node-id" }),
-            ],
-        }),
-
-        FieldElement({
-            name: "addresses",
-            type: "list",
-            quality: "N",
-            children: [
-                FieldElement({
-                    name: "entry",
-                    type: "struct",
-                    children: [
-                        FieldElement({ name: "type", type: "string" }),
-                        FieldElement({ name: "ip", type: "string" }),
-                        FieldElement({ name: "port", type: "uint16" }),
-                        FieldElement({ name: "peripheralAddress", type: "string" }),
-                    ],
-                }),
-            ],
-        }),
-
-        FieldElement({ name: "discoveredAt", type: "systime-ms", quality: "N", conformance: "M" }),
-        FieldElement({ name: "onlineAt", type: "systime-ms" }),
-        FieldElement({ name: "offlineAt", type: "systime-ms" }),
-        FieldElement({ name: "ttl", type: "uint32", quality: "N" }),
-        FieldElement({ name: "deviceIdentifier", type: "string", quality: "N" }),
-        FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
-        FieldElement({ name: "commissioningMode", type: "uint8", quality: "N" }),
-        FieldElement({ name: "vendorId", type: "vendor-id", quality: "N" }),
-        FieldElement({ name: "productId", type: "uint16", quality: "N" }),
-        FieldElement({ name: "deviceType", type: "uint16", quality: "N" }),
-        FieldElement({ name: "deviceName", type: "string", quality: "N" }),
-        FieldElement({ name: "rotatingIdentifier", type: "string", quality: "N" }),
-        FieldElement({ name: "pairingHint", type: "uint32", quality: "N" }),
-        FieldElement({ name: "pairingInstructions", type: "string", quality: "N" }),
-        FieldElement({
-            name: "sessionParameters",
-            type: "struct",
-            quality: "N",
-            children: [
-                FieldElement({ name: "idleInterval", type: "duration", constraint: "max 3600000" }),
-                FieldElement({ name: "activeInterval", type: "duration", constraint: "max 3600000" }),
-                FieldElement({ name: "activeThreshold", type: "duration", constraint: "max 65535" }),
-            ],
-        }),
-        FieldElement({ name: "tcpSupport", type: "uint8", quality: "N" }),
-        FieldElement({ name: "longIdleTimeOperatingMode", type: "bool", quality: "N" }),
-    );
 }
 
 export namespace CommissioningClient {
     /**
      * Concrete version of {@link ProtocolPeerAddress}.
      */
-    export abstract class PeerAddress implements ProtocolPeerAddress {
-        @fabricId
+    export class PeerAddress implements ProtocolPeerAddress {
+        @field(fabricId)
         fabricIndex: FabricIndex;
 
-        @nodeId
+        @field(nodeId)
         nodeId: NodeId;
 
         constructor(fabricIndex: FabricIndex, nodeId: NodeId) {
@@ -360,24 +294,45 @@ export namespace CommissioningClient {
     }
 
     /**
-     * The network address of a the node.
+     * Concrete version of {@link SessionIntervals}.
+     */
+    export class SessionIntervals implements ProtocolSessionIntervals {
+        @field(duration.extend({ constraint: "max 3600000" }))
+        idleInterval: Duration;
+
+        @field(duration.extend({ constraint: "max 3600000" }))
+        activeInterval: Duration;
+
+        @field(duration.extend({ constraint: "max 65535" }))
+        activeThreshold: Duration;
+
+        constructor(intervals: SessionIntervals) {
+            this.idleInterval = intervals.idleInterval;
+            this.activeInterval = intervals.activeInterval;
+            this.activeThreshold = intervals.activeThreshold;
+        }
+    }
+
+    /**
+     * The network address of a node.
      */
     export class NetworkAddress implements ServerAddress.Definition {
-        @string
+        @field(string)
         type: "udp" | "tcp" | "ble";
 
-        @string
-        @nullable
+        @field(string, nullable)
         ip?: string;
 
-        @uint16
-        @nullable
+        @field(uint16, nullable)
         port?: number;
 
-        @string
+        @field(string, nullable)
         peripheralAddress?: string;
 
+        @field(uint32, nullable)
         ttl?: Duration | undefined;
+
+        @field(systimeMs, nullable)
         discoveredAt?: Timestamp | undefined;
 
         constructor(address: NetworkAddress) {
@@ -394,46 +349,38 @@ export namespace CommissioningClient {
         /**
          * Fabric index and node ID for paired peers.  If this is undefined the node is uncommissioned.
          */
-        @element(PeerAddress)
-        @nullable
-        @nonvolatile
+        @field(PeerAddress, nullable, nonvolatile)
         peerAddress?: PeerAddress;
 
         /**
          * Known network addresses for the device.  If this is undefined the node has not been located on any network
          * interface.
          */
-        @listOf(NetworkAddress)
-        @nullable
-        @nonvolatile
+        @field(listOf(NetworkAddress), nullable, nonvolatile)
         addresses?: ServerAddress.Definition[];
 
         /**
          * Time at which the device was discovered.
          */
-        @systimeMs
-        @nullable
-        @nonvolatile
+        @field(systimeMs, nullable, nonvolatile)
         discoveredAt?: Timestamp;
 
         /**
          * Time at which we discovered the device's current operational addresses.
          */
-        @systimeMs
-        @nullable
+        @field(systimeMs, nullable)
         onlineAt?: Timestamp;
 
         /**
          * Time at which we concluded the device's current operational address is unreachable.
          */
-        @systimeMs
-        @nullable
+        @field(systimeMs, nullable)
         offlineAt?: Timestamp;
 
         /**
          * The TTL of the discovery record if applicable (in seconds).
          */
-        @field(uint32, nullable, nonvolatile)
+        @field(duration, nullable, nonvolatile)
         ttl?: Duration;
 
         /**
@@ -481,31 +428,37 @@ export namespace CommissioningClient {
         /**
          * An optional manufacturer-specific unique rotating ID for uniquely identifying the device.
          */
+        @field(string, nullable, nonvolatile)
         rotatingIdentifier?: string;
 
         /**
          * A bitmap indicating how to transition the device to commissioning mode from its current state.
          */
+        @field(uint32, nullable, nonvolatile)
         pairingHint?: number;
 
         /**
          * Textual pairing instructions associated with pairing hint.
          */
+        @field(string, nullable, nonvolatile)
         pairingInstructions?: string;
 
         /**
-         * The remote node's session parameters.
+         * The remote node's session intervals.
          */
-        sessionParameters?: Partial<SessionParameters>;
+        @field(SessionIntervals, nullable, nonvolatile)
+        sessionIntervals?: Partial<ProtocolSessionIntervals>;
 
         /**
          * TCP support bitmap.
          */
+        @field(uint8, nullable, nonvolatile)
         tcpSupport?: number;
 
         /**
          * Indicates whether node is ICD with a slow (15 s+) polling interval.
          */
+        @field(bool, nullable, nonvolatile)
         longIdleTimeOperatingMode?: boolean;
     }
 

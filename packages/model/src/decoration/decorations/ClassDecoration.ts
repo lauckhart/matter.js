@@ -9,8 +9,8 @@ import { DatatypeModel, Model } from "#models/index.js";
 
 import { camelize } from "#general";
 import { Scope } from "#logic/Scope.js";
-import { any, struct } from "#standard/elements/models.js";
-import { InvalidMetadataError, MetadataConflictError } from "../errors.js";
+import { any } from "#standard/elements/models.js";
+import { InvalidMetadataError } from "../errors.js";
 import { Decoration } from "./Decoration.js";
 import { FieldDecoration } from "./FieldDecoration.js";
 
@@ -39,56 +39,17 @@ interface MatterMetadata {
  * Currently there are JavaScript/TypeScript limitations to be aware of when decorating type definitions:
  *
  *   * Decorators may only be applied to JavaScript classes.  So if you want to define an interface without
- *     implementation, you must implement as a pure abstract class.  That's why this is "class" metadata.
+ *     implementation, you must implement as a class and use as an interface.  That's why this is "class" metadata.
  *
  *   * Decorators may not affect the TypeScript type of an object.  This means that you must define both the Matter type
  *     (e.g. {@link uint32}) and TypeScript type (e.g. `number`).
  */
 export class ClassDecoration extends Decoration {
-    #name?: string;
     #new?: ClassDecoration.Constructor;
     #definedElements?: Map<string, FieldDecoration>;
 
-    // Note - we attempt to clear this cache if metadata changes but do not track field changes.  Probably OK as the
-    // model generally shouldn't be generated until all fields are annotated but could revisit if necessary
-    #cache?: {
-        model?: Model;
-        fields?: Map<string, FieldDecoration>;
-    };
-
-    /**
-     * Obtain {@link Model} defined by this metadata.
-     */
-    get model() {
-        let model = this.#cache?.model;
-
-        if (!model) {
-            model = this.#generateModel();
-            if (this.#cache) {
-                this.#cache.model = model;
-            } else {
-                this.#cache = { model };
-            }
-        }
-
-        return model;
-    }
-
-    /**
-     * Set the name for the class's schema.
-     */
-    get name() {
-        return this.#name ?? this.#new?.name;
-    }
-
-    set name(name: string | undefined) {
-        if (this.#name && this.#name !== name) {
-            throw new MetadataConflictError(
-                `Cannot assign schema name ${name} because name is already assigned as ${this.#name}`,
-            );
-        }
-        this.#name = name;
-        this.#cache = undefined;
+    protected override createModel(type: Model.ConcreteType = DatatypeModel) {
+        return new type({ name: "Unnamed" });
     }
 
     /**
@@ -103,78 +64,8 @@ export class ClassDecoration extends Decoration {
      */
     set new(fn: ClassDecoration.Constructor) {
         this.#new = fn;
-        this.#cache = undefined;
-    }
-
-    override get type(): Model | undefined {
-        return super.type;
-    }
-
-    override set type(type: Model.Source | undefined) {
-        super.type = type;
-        this.#cache = undefined;
-    }
-
-    override get response(): Model | undefined {
-        return super.response;
-    }
-
-    override set response(response: Model.Source | undefined) {
-        super.response = response;
-        this.#cache = undefined;
-    }
-
-    override get kind() {
-        return super.kind;
-    }
-
-    override set kind(kind: Model.ConcreteType | undefined) {
-        super.kind = kind;
-        this.#cache = undefined;
-    }
-
-    override get id() {
-        return super.id;
-    }
-
-    override set id(id: number | undefined) {
-        super.id = id;
-        this.#cache = undefined;
-    }
-
-    /**
-     * A model that represents this class's base type.
-     *
-     * This may be {@link type} or the type of any decorated class in the inheritance hierarchy.
-     */
-    get base(): Model | undefined {
-        if (this.type) {
-            return this.type;
-        }
-        if (this.#new === undefined) {
-            return;
-        }
-
-        let prototype = Object.getPrototypeOf(this.#new.prototype);
-        while (prototype) {
-            const prototypeNew = prototype.constructor as ClassDecoration.Constructor | undefined;
-            if (prototypeNew === undefined) {
-                break;
-            }
-
-            const prototypeDecoration = prototypeNew[Symbol.metadata]?.[matter] as ClassDecoration | undefined;
-            if (prototypeDecoration) {
-                if (!prototypeDecoration.#new) {
-                    prototypeDecoration.#new = prototypeNew;
-                }
-                return prototypeDecoration.base;
-            }
-
-            prototype = Object.getPrototypeOf(prototypeNew.prototype);
-        }
-
-        // Fallback to bare struct.  This ensures metatype indicates an object
-        return struct;
+        const decoration = Decoration.classDecorationOf(fn);
+        this.model.operationalBase = decoration.model;
     }
 
     /**
@@ -191,7 +82,6 @@ export class ClassDecoration extends Decoration {
         let field = this.#definedElements.get(name);
         if (field === undefined) {
             this.#definedElements.set(name, (field = new FieldDecoration(this, name)));
-            this.#cache = undefined;
         }
         return field;
     }
@@ -206,7 +96,11 @@ export class ClassDecoration extends Decoration {
             return;
         }
 
-        const known = this.#knownElementNames;
+        const known = new Set(
+            Scope(this.model)
+                .membersOf(this.model)
+                .map(model => camelize(model.name)),
+        );
 
         const descriptors = Object.getOwnPropertyDescriptors(instance);
 
@@ -237,118 +131,54 @@ export class ClassDecoration extends Decoration {
                 continue;
             }
 
-            this.fieldFor(name).type = any;
+            this.fieldFor(name).model.operationalBase = any;
         }
     }
 
     /**
-     * Create the model represented by the decoration information contained herein.
-     *
-     * This involves collecting and merging both Matter and JavaScript semantics.
+     * Obtain the {@link ClassDecoration} for {@link source}.
      */
-    #generateModel() {
-        const fields = this.#fields;
-
-        const name = this.name ?? "Anon";
-        const operationalBase = this.base ?? struct;
-        const id = this.id ?? operationalBase?.id;
-        const kind = this.kind ?? ((operationalBase.constructor ?? DatatypeModel) as Model.ConcreteType);
-
-        const model = new kind({ name, id, operationalBase });
-
-        const scope = Scope(model);
-        for (const [name, definition] of fields) {
-            const extension = definition.generateExtension(name, scope, model);
-            if (extension) {
-                (model.children as Model[]).push(extension);
+    static override of(source: ClassDecoration.Source) {
+        let decoration: ClassDecoration;
+        if (source instanceof ClassDecoration) {
+            return source;
+        } else if (typeof source === "function") {
+            let metadata: MatterMetadata;
+            if (!Object.hasOwn(source, Symbol.metadata)) {
+                metadata = source[Symbol.metadata] = {};
+            } else {
+                metadata = source[Symbol.metadata] as MatterMetadata;
             }
-        }
 
-        return model;
+            if (!Object.hasOwn(metadata, matter)) {
+                decoration = metadata[matter] = new ClassDecoration();
+            } else {
+                decoration = metadata[matter] as ClassDecoration;
+            }
+
+            if (!decoration.#new) {
+                decoration.#new = source;
+            }
+        } else {
+            const metadata = source.metadata as MatterMetadata;
+            if (Object.hasOwn(metadata, matter)) {
+                return metadata[matter]!;
+            }
+            return (metadata[matter] = new ClassDecoration());
+        }
+        return decoration;
     }
-
     /**
-     * Retrieve defined {@link FieldDecoration}s for this class.
+     * Access the {@link ClassDecoration} of a constructor if it is defined.
      */
-    get #fields() {
-        if (this.#cache?.fields) {
-            return this.#cache.fields;
+    static maybeOf(source: ClassDecoration.Constructor) {
+        if (Symbol.metadata in source && matter in (source[Symbol.metadata] as MatterMetadata)) {
+            return ClassDecoration.of(source);
         }
-
-        // Give class opportunity to modify metadata prior to generation
-        this.#new?.[ClassDecoration.extend]?.(this);
-
-        // Collect fields contributed here
-        const fields = new Map(this.#definedElements);
-
-        // Collect fields contributed by prototype
-        if (this.#new) {
-            const base = Object.getPrototypeOf(this.#new.prototype)?.constructor;
-            if (base) {
-                for (const [name, field] of Decoration.classDecorationOf(base).#fields) {
-                    if (!fields.has(name)) {
-                        fields.set(name, field);
-                    }
-                }
-            }
-        }
-
-        // We cache fields because we may generate them multiple times if our class is extended
-        (this.#cache ??= {}).fields = fields;
-
-        return fields;
     }
 
     static {
-        Decoration.classDecorationOf = (source: ClassDecoration.Source) => {
-            let decoration: ClassDecoration;
-            if (source instanceof ClassDecoration) {
-                return source;
-            } else if (typeof source === "function") {
-                let metadata: MatterMetadata;
-                if (!Object.hasOwn(source, Symbol.metadata)) {
-                    metadata = source[Symbol.metadata] = {};
-                } else {
-                    metadata = source[Symbol.metadata] as MatterMetadata;
-                }
-
-                if (!Object.hasOwn(metadata, matter)) {
-                    decoration = metadata[matter] = new ClassDecoration();
-                } else {
-                    decoration = metadata[matter] as ClassDecoration;
-                }
-
-                if (!decoration.#new) {
-                    decoration.#new = source;
-                }
-            } else {
-                const metadata = source.metadata as MatterMetadata;
-                if (Object.hasOwn(metadata, matter)) {
-                    return metadata[matter]!;
-                }
-                return (metadata[matter] = new ClassDecoration());
-            }
-            return decoration;
-        };
-    }
-
-    get #knownElementNames() {
-        const known = new Set();
-
-        if (this.#definedElements) {
-            for (const [name] of this.#definedElements) {
-                known.add(camelize(name));
-            }
-        }
-
-        const base = this.base;
-        if (base) {
-            for (const { name } of Scope(base).membersOf(base)) {
-                known.add(camelize(name));
-            }
-        }
-
-        return known;
+        Decoration.classDecorationOf = this.of;
     }
 }
 
@@ -367,15 +197,6 @@ export namespace ClassDecoration {
      * An object for which a {@link ClassDecoration} may be obtained.
      */
     export type Source = Constructor | DecoratorContext | ClassDecoration;
-
-    /**
-     * Access the {@link ClassDecoration} of a constructor if it is defined.
-     */
-    export function maybeOf(source: ClassDecoration.Constructor) {
-        if (Symbol.metadata in source && matter in (source[Symbol.metadata] as MatterMetadata)) {
-            return Decoration.classDecorationOf(source);
-        }
-    }
 
     export const extend = Symbol("extend");
 }

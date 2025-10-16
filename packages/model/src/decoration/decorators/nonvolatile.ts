@@ -4,12 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Decoration } from "#decoration/decorations/Decoration.js";
+import { FieldDecoration } from "#decoration/decorations/FieldDecoration.js";
+import { InvalidMetadataError } from "#decoration/errors.js";
 import { Decorator } from "#general";
+import { ValueModel } from "#models/ValueModel.js";
 
 /**
  * Mark a field as nonvolatile (persistent).
  */
 export const nonvolatile = Decorator<Decorator.PropertyCollector>((_target, context) => {
-    Decoration.classDecorationOf(context).fieldFor(context.name).nonvolatile = true;
+    const model = FieldDecoration.of(context).model;
+    if (!(model instanceof ValueModel)) {
+        throw new InvalidMetadataError("Only a value models may be nonvolatile");
+    }
+    model.quality.nonvolatile = true;
 });

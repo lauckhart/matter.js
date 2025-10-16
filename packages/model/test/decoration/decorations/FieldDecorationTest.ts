@@ -10,6 +10,7 @@ import "#decoration/decorations/index.js";
 import { Schema } from "#decoration/Schema.js";
 import { attribute } from "#decoration/decorators/attribute.js";
 import { field } from "#decoration/decorators/field.js";
+import { listOf } from "#decoration/decorators/listOf.js";
 import { nonvolatile } from "#decoration/decorators/nonvolatile.js";
 import { nullable } from "#decoration/decorators/nullable.js";
 import { AttributeModel } from "#models/AttributeModel.js";
@@ -92,5 +93,27 @@ describe("FieldDecoration", () => {
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
         expect(bar!.base).equals(uint32);
+    });
+
+    it("creates list of struct", () => {
+        class Item {
+            @field(uint16)
+            foo = 4;
+        }
+
+        class Container {
+            @field(listOf(Item))
+            items = Array<Item>;
+        }
+
+        const schema = Schema(Container);
+
+        const items = schema.get(FieldModel, "items");
+        expect(items).not.undefined;
+
+        const entry = items!.member("entry");
+        expect(entry).not.undefined;
+        expect(entry!.base).not.undefined;
+        expect(entry!.base!.name).equals("Item");
     });
 });

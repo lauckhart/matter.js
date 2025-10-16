@@ -14,7 +14,7 @@ import {
     Observable,
     Transaction,
 } from "#general";
-import { ClassDecoration, Schema } from "#model";
+import { ClassDecoration, Decoration, Schema } from "#model";
 import type { ClusterType } from "#types";
 import { Reactor } from "./Reactor.js";
 import type { BehaviorBacking } from "./internal/BehaviorBacking.js";
@@ -318,21 +318,31 @@ Object.defineProperty(
 
     {
         value(this: Behavior.Type, decoration: ClassDecoration) {
-            if (!decoration.new) {
-                decoration.new = this;
+            // Ensure base class is fully wired
+            if (ClassDecoration.extend in this.constructor.prototype) {
+                Decoration.modelOf(this.constructor.prototype);
             }
 
-            const { State, defaults, schema } = decoration.new as Behavior.Type;
+            // Obtain state and base schema
+            const { State, Events, defaults, schema } = decoration.new as Behavior.Type;
             if (!State || !defaults) {
                 return;
             }
 
-            // Use schema property as the base type
-            if (!decoration.type) {
-                decoration.type = schema;
+            // If present, my decoration should extend my schema
+            if (schema) {
+                decoration.model.operationalBase = schema;
             }
 
-            // Inject unknown state properties as untyped field elements
+            // Merge state properties into my schema
+            const stateDecoration = Decoration.classDecorationOf(State);
+            stateDecoration.model = decoration.model;
+
+            // Merge events into my schema
+            const eventsDecoration = Decoration.classDecorationOf(Events);
+            eventsDecoration.model = decoration.model;
+
+            // Augment with fields for untyped state members
             decoration.defineUnknownMembers(defaults);
         },
     },

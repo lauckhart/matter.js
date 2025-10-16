@@ -12,9 +12,9 @@ import type { Model } from "#models/Model.js";
 /**
  * Decorate a property as an array.
  */
-export function listOf(entry: Model): Decorator.PropertyCollector {
-    return (_target, context) => {
-        Decoration.of(context).type = new FieldModel(
+export function listOf(entry: Model.Source): Decorator.PropertyCollector {
+    return Decorator((_target, context) => {
+        Decoration.of(context).model.operationalBase = new FieldModel(
             {
                 name: context.name.toString(),
                 type: "list",
@@ -25,5 +25,5 @@ export function listOf(entry: Model): Decorator.PropertyCollector {
                 operationalBase: Decoration.modelOf(entry),
             }),
         );
-    };
+    });
 }

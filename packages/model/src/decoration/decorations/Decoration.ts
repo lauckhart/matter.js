@@ -4,13 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementTag } from "#common/ElementTag.js";
 import { InternalError } from "#general";
 import type { Model } from "#models/Model.js";
-import { MetadataConflictError } from "../errors.js";
 import type { ClassDecoration } from "./ClassDecoration.js";
-
-const TYPED_TAGS = new Set([ElementTag.Attribute, ElementTag.Field, ElementTag.Command, ElementTag.Event]);
 
 /**
  * Base class for decoration applied to classes and fields.
@@ -19,116 +15,71 @@ const TYPED_TAGS = new Set([ElementTag.Attribute, ElementTag.Field, ElementTag.C
  * common to both classes and fields.
  */
 export abstract class Decoration {
-    abstract name?: string;
-    #kind?: Model.ConcreteType;
-    #type?: Model;
-    #response?: Model;
-    #id?: number;
+    #model?: Model;
 
-    get kind() {
-        return this.#kind;
-    }
-
-    set kind(kind: Model.ConcreteType | undefined) {
-        if (this.#kind) {
-            if (this.#kind === kind) {
-                return;
-            }
-
-            throw new MetadataConflictError(
-                `Cannot define ${this.name} as ${kind?.Tag} because it is already defined as ${this.#kind}`,
-            );
+    /**
+     * Obtain the {@link Model} defined by this metadata.
+     */
+    get model() {
+        if (this.#model === undefined) {
+            this.#model = this.createModel();
         }
-
-        if (!this.#validateKindAndType(kind, this.#type)) {
-            throw new MetadataConflictError(
-                `Cannot assign ${this.name} as ${kind?.Tag} because it is already ${this.#type?.tag}`,
-            );
-        }
-
-        this.#kind = kind;
-    }
-
-    get id() {
-        return this.#id;
-    }
-
-    set id(id: number | undefined) {
-        if (this.#id !== undefined) {
-            if (this.#id === id) {
-                return;
-            }
-
-            throw new MetadataConflictError(
-                `Cannot define ${this.name} as #${id} because it is already defined as #${this.#id}`,
-            );
-        }
-
-        this.#id = id;
-    }
-
-    get type(): Model | undefined {
-        return this.#type;
-    }
-
-    set type(type: Model.Source | undefined) {
-        const newType = type && Decoration.modelOf(type);
-        const currentType = this.type;
-        if (currentType) {
-            if (newType !== currentType) {
-                throw new MetadataConflictError(
-                    `Cannot define ${this.name} as ${newType?.name} because it is already defined as ${currentType.name}`,
-                );
-            }
-            return;
-        }
-
-        if (!this.#validateKindAndType(this.#kind, newType)) {
-            throw new MetadataConflictError(
-                `Cannot define ${this.name} as ${newType?.tag} because it is already defined as ${this.#kind?.Tag}`,
-            );
-        }
-
-        this.#type = newType;
-    }
-
-    get response(): Model | undefined {
-        return this.#response;
-    }
-
-    set response(response: Model.Source | undefined) {
-        const newResponse = response && Decoration.modelOf(response);
-        const currentResponse = this.response;
-        if (currentResponse) {
-            if (newResponse !== currentResponse) {
-                throw new MetadataConflictError(
-                    `Cannot set ${this.name} response type as ${newResponse?.name} because it is already ${currentResponse.name}`,
-                );
-            }
-            return;
-        }
-
-        this.#response = newResponse;
+        return this.#model;
     }
 
     /**
-     * Ensure that a {@link kind} model can extend a {@link type} instance.
+     * Replace the model.
      *
-     * They're considered compatible if:
-     *
-     *   * Either is undefined
-     *
-     *   * They have the same tag
-     *
-     *   * {@link kind} represents a value and {@link type} is a datatype
+     * Children will move but other properties are lost.
      */
-    #validateKindAndType(kind: Model.ConcreteType | undefined, type: Model | undefined) {
-        if (kind === undefined || type === undefined || type.tag === kind.Tag) {
-            return true;
+    set model(model: Model) {
+        if (this.#model !== undefined) {
+            model.children.push(...this.#model.children);
+        }
+        this.#model = model;
+    }
+
+    /**
+     * The model's {@link Model.Type}.
+     *
+     * Field decorators operate prior to class decorators, so we may need to transition the model to a new type when the
+     * class is decorated.  This is slightly lossy so type-specific decoration should always occur after assigning kind.
+     */
+    get modelType() {
+        return this.model.constructor as Model.ConcreteType;
+    }
+
+    set modelType(type: Model.ConcreteType) {
+        if (this.#model === undefined) {
+            this.#model = this.createModel(type);
+            return;
         }
 
-        return type.tag === ElementTag.Datatype && TYPED_TAGS.has(kind.Tag);
+        if (this.#model instanceof type) {
+            return;
+        }
+
+        // Detach original model
+        const original = this.#model as Model;
+        const { parent } = original;
+        original.parent = undefined;
+
+        // Create replacement
+        const replacement = new type({
+            name: original.name,
+            id: original.id,
+            type: original.type,
+            parent,
+            operationalBase: original.operationalBase,
+            children: original.children,
+        });
+
+        if ("quality" in original && "quality" in replacement) {
+            replacement.quality = original.quality;
+        }
     }
+
+    protected abstract createModel(type?: Model.ConcreteType): Model;
 }
 
 export namespace Decoration {

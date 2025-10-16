@@ -4,15 +4,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Decoration } from "#decoration/decorations/Decoration.js";
+import { FieldDecoration } from "#decoration/decorations/FieldDecoration.js";
+import { CommandElement } from "#elements/CommandElement.js";
 import { Decorator } from "#general";
+import { CommandModel } from "#models/CommandModel.js";
 import { DatatypeModel } from "#models/DatatypeModel.js";
 
 /**
- * Specifies the response type for a command.
+ * Specify the response type for a command.
  */
 export function response(type: DatatypeModel): Decorator.ClassMethod {
     return Decorator((_target, context) => {
-        Decoration.classDecorationOf(context).fieldFor(context.name).response = type;
+        const requestDecoration = FieldDecoration.of(context);
+
+        requestDecoration.modelType = CommandModel;
+        const request = requestDecoration.model as CommandModel;
+
+        const name = `${request.name}Response`;
+        new CommandModel({
+            name,
+            id: request.id,
+            parent: request.parent,
+            direction: CommandElement.Direction.Response,
+            operationalBase: type,
+        });
+
+        request.response = name;
     });
 }

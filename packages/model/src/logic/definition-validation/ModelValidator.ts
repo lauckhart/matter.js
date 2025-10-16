@@ -21,7 +21,7 @@ export class ModelValidator<T extends Model> {
         this.validateProperty({ name: "children", type: Array });
         this.validateProperty({ name: "type", type: "string" });
         this.validateProperty({ name: "xref", type: CrossReference });
-        this.validateProperty({ name: "root", type: "function", required: true });
+        this.validateProperty({ name: "root", type: "object", required: true });
 
         if (this.model.type) {
             const base = this.model.base;

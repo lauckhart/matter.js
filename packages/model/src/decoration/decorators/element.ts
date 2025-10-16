@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { ClassDecoration } from "#decoration/decorations/ClassDecoration.js";
 import { Decoration } from "#decoration/decorations/Decoration.js";
 import { InvalidMetadataError, MetadataConflictError } from "#decoration/errors.js";
 import { Decorator } from "#general";
@@ -17,20 +18,28 @@ export function element<
 >(kind: Model.ConcreteType, ...modifiers: element.Modifier<T>[]) {
     return Decorator((target: any, context: DecoratorContext) => {
         const decoration = Decoration.of(context);
-        decoration.kind = kind;
+        decoration.modelType = kind;
+
+        if (context.kind === "class") {
+            (decoration as ClassDecoration).new = target as NewableFunction;
+        }
 
         let result: Function | void = undefined;
-        for (const mod of modifiers) {
-            switch (typeof mod) {
+        for (const modifier of modifiers) {
+            switch (typeof modifier) {
                 case "number":
-                    decoration.id = mod;
+                    decoration.model.id = modifier;
+                    continue;
+
+                case "string":
+                    decoration.model.name = modifier;
                     continue;
 
                 case "function":
-                    if ("Tag" in mod) {
-                        decoration.kind = mod;
-                    } else if (Decorator.is(mod)) {
-                        const subresult = (mod as any)(target, context);
+                    if ("Tag" in modifier) {
+                        decoration.modelType = modifier;
+                    } else if (Decorator.is(modifier)) {
+                        const subresult = (modifier as any)(target, context);
                         if (subresult) {
                             if (result) {
                                 throw new MetadataConflictError(`Multiple decorators returned a value`);
@@ -38,19 +47,19 @@ export function element<
                             result = subresult;
                         }
                     } else {
-                        decoration.type = Decoration.modelOf(mod as NewableFunction);
+                        decoration.model.operationalBase = Decoration.modelOf(modifier as NewableFunction);
                     }
                     continue;
 
                 case "object":
-                    if (mod instanceof Model) {
-                        decoration.type = mod;
+                    if (modifier instanceof Model) {
+                        decoration.model.operationalBase = modifier;
                         continue;
                     }
                     break;
             }
 
-            throw new InvalidMetadataError(`Unsupported marker ${mod}`);
+            throw new InvalidMetadataError(`Unsupported marker ${modifier}`);
         }
 
         return result;
