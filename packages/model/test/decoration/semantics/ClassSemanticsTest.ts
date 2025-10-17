@@ -5,7 +5,7 @@
  */
 
 // Import from index to ensure correct initialization order
-import { ClassDecoration } from "#decoration/decorations/index.js";
+import { ClassSemantics } from "#decoration/semantics/index.js";
 
 import { cluster } from "#decoration/decorators/cluster.js";
 import { datatype } from "#decoration/decorators/datatype.js";
@@ -15,7 +15,7 @@ import { AttributeModel, ClusterModel } from "#index.js";
 import { FieldModel } from "#models/FieldModel.js";
 import { any, locationdesc, struct, uint32, WindowCovering } from "../../../src/standard/elements/models.js";
 
-describe("ClassDecoration", () => {
+describe("ClassSemantics", () => {
     describe("defines datatypes", () => {
         it("derived", () => {
             @datatype(locationdesc)
@@ -117,7 +117,7 @@ describe("ClassDecoration", () => {
             // Known via base inheritance
             baz = 5;
 
-            static [ClassDecoration.before](decoration: ClassDecoration) {
+            static [ClassSemantics.extend](decoration: ClassSemantics) {
                 decoration.defineUnknownMembers(new Bar());
             }
         }

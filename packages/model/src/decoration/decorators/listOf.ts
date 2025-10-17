@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Decoration } from "#decoration/decorations/Decoration.js";
+import { Semantics } from "#decoration/semantics/Semantics.js";
 import { Decorator } from "#general";
 import { FieldModel } from "#models/FieldModel.js";
 import type { Model } from "#models/Model.js";
@@ -14,7 +14,7 @@ import type { Model } from "#models/Model.js";
  */
 export function listOf(entry: Model.Source): Decorator.PropertyCollector {
     return Decorator((_target, context) => {
-        Decoration.of(context).mutableModel.operationalBase = new FieldModel(
+        Semantics.of(context).mutableModel.operationalBase = new FieldModel(
             {
                 name: context.name.toString(),
                 type: "list",
@@ -22,7 +22,7 @@ export function listOf(entry: Model.Source): Decorator.PropertyCollector {
 
             new FieldModel({
                 name: "entry",
-                operationalBase: Decoration.modelOf(entry),
+                operationalBase: Semantics.modelOf(entry),
             }),
         );
     });

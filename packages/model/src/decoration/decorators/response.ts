@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FieldDecoration } from "#decoration/decorations/FieldDecoration.js";
+import { FieldSemantics } from "#decoration/semantics/FieldSemantics.js";
 import { CommandElement } from "#elements/CommandElement.js";
 import { Decorator } from "#general";
 import { CommandModel } from "#models/CommandModel.js";
@@ -15,10 +15,10 @@ import { DatatypeModel } from "#models/DatatypeModel.js";
  */
 export function response(type: DatatypeModel): Decorator.ClassMethod {
     return Decorator((_target, context) => {
-        const requestDecoration = FieldDecoration.of(context);
+        const requestSemantics = FieldSemantics.of(context);
 
-        requestDecoration.modelType = CommandModel;
-        const request = requestDecoration.mutableModel as CommandModel;
+        requestSemantics.modelType = CommandModel;
+        const request = requestSemantics.mutableModel as CommandModel;
 
         const name = `${request.name}Response`;
         new CommandModel({

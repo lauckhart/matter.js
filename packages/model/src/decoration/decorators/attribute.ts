@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClassDecoration } from "#decoration/decorations/ClassDecoration.js";
+import { ClassSemantics } from "#decoration/semantics/ClassSemantics.js";
 import { Decorator } from "#general";
 import { AttributeModel } from "#models/AttributeModel.js";
 import { ClusterModel } from "#models/ClusterModel.js";
@@ -17,8 +17,8 @@ export function attribute(...modifiers: element.Modifier<Decorator.PropertyColle
     const decorate = element.property(AttributeModel)(...modifiers);
     return Decorator((target, context) => {
         // When adding attributes, force class to cluster
-        const decoration = ClassDecoration.of(context);
-        decoration.modelType = ClusterModel;
+        const semantics = ClassSemantics.of(context);
+        semantics.modelType = ClusterModel;
 
         // Now decorate as normal
         decorate(target, context);

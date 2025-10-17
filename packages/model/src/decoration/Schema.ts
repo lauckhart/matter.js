@@ -10,8 +10,8 @@ import type { ClusterModel } from "#models/ClusterModel.js";
 import { DatatypeModel } from "#models/DatatypeModel.js";
 import type { Model } from "#models/Model.js";
 import type { ValueModel } from "#models/ValueModel.js";
-import { Decoration } from "./decorations/Decoration.js";
 import { MissingMetadataError } from "./errors.js";
+import { Semantics } from "./semantics/Semantics.js";
 
 /**
  * Here we use the term "schema" to mean any model element that defines a datatype.  For schema we allow any Matter
@@ -30,7 +30,7 @@ export type Schema = ClusterModel | ValueModel;
  * Obtain {@link Schema} for a {@link Schema.Source} if present.
  */
 export function Schema(source: Model.Source) {
-    const model = Decoration.modelOf(source);
+    const model = Semantics.modelOf(source);
     if (!model) {
         return;
     }

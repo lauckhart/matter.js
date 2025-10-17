@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClassDecoration } from "#decoration/decorations/ClassDecoration.js";
-import { Decoration } from "#decoration/decorations/Decoration.js";
 import { InvalidMetadataError, MetadataConflictError } from "#decoration/errors.js";
+import type { ClassSemantics } from "#decoration/semantics/ClassSemantics.js";
+import { Semantics } from "#decoration/semantics/Semantics.js";
 import { Decorator } from "#general";
 import { Model } from "#models/Model.js";
 
@@ -17,27 +17,27 @@ export function element<
     T extends Decorator.Collector | Decorator.ClassCollector | Decorator.PropertyCollector | Decorator.MethodCollector,
 >(kind: Model.ConcreteType, ...modifiers: element.Modifier<T>[]) {
     return Decorator((target: any, context: DecoratorContext) => {
-        const decoration = Decoration.of(context);
-        decoration.modelType = kind;
+        const semantics = Semantics.of(context);
+        semantics.modelType = kind;
 
         if (context.kind === "class") {
-            (decoration as ClassDecoration).new = target as NewableFunction;
+            (semantics as ClassSemantics).new = target as NewableFunction;
         }
 
         let result: Function | void = undefined;
         for (const modifier of modifiers) {
             switch (typeof modifier) {
                 case "number":
-                    decoration.mutableModel.id = modifier;
+                    semantics.mutableModel.id = modifier;
                     continue;
 
                 case "string":
-                    decoration.mutableModel.name = modifier;
+                    semantics.mutableModel.name = modifier;
                     continue;
 
                 case "function":
                     if ("Tag" in modifier) {
-                        decoration.modelType = modifier;
+                        semantics.modelType = modifier;
                     } else if (Decorator.is(modifier)) {
                         const subresult = (modifier as any)(target, context);
                         if (subresult) {
@@ -47,15 +47,15 @@ export function element<
                             result = subresult;
                         }
                     } else {
-                        decoration.mutableModel.operationalBase = Decoration.modelOf(modifier as NewableFunction);
+                        semantics.mutableModel.operationalBase = Semantics.modelOf(modifier as NewableFunction);
                     }
                     continue;
 
                 case "object":
                     if (modifier instanceof Model) {
-                        decoration.mutableModel.operationalBase = modifier;
-                        if (decoration.mutableModel.id === undefined) {
-                            decoration.mutableModel.id = modifier.id;
+                        semantics.mutableModel.operationalBase = modifier;
+                        if (semantics.mutableModel.id === undefined) {
+                            semantics.mutableModel.id = modifier.id;
                         }
                         continue;
                     }
@@ -93,17 +93,17 @@ export namespace element {
      *
      * Modifiers affect decoration as follows:
      *
-     *   * A model type forces {@link Decoration#localModel} to that type
+     *   * A model type forces {@link Semantics#localModel} to that type
      *
-     *   * A model instance sets the {@link Model#operationalBase} of {@link Decoration#localModel}
+     *   * A model instance sets the {@link Model#operationalBase} of {@link Semantics#localModel}
      *
-     *   * A constructor instance also sets the {@link Model#operationalBase} of {@link Decoration#localModel}
+     *   * A constructor instance also sets the {@link Model#operationalBase} of {@link Semantics#localModel}
      *
      *   * A decorator is invoked to decorate the element
      *
-     *   * A number sets the {@link Model#id} of {@link Decoration#localModel}
+     *   * A number sets the {@link Model#id} of {@link Semantics#localModel}
      *
-     *   * A string sets the {@link Model#name} of {@link Decoration#localModel}
+     *   * A string sets the {@link Model#name} of {@link Semantics#localModel}
      */
     export type Modifier<
         T extends

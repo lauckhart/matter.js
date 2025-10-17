@@ -5,7 +5,7 @@
  */
 
 // Ensure correct initialization order
-import "#decoration/decorations/index.js";
+import "#decoration/semantics/index.js";
 
 import { Schema } from "#decoration/Schema.js";
 import { attribute } from "#decoration/decorators/attribute.js";
@@ -17,7 +17,7 @@ import { AttributeModel } from "#models/AttributeModel.js";
 import { FieldModel } from "#models/index.js";
 import { uint16, uint32 } from "#standard/elements/models.js";
 
-describe("FieldDecoration", () => {
+describe("FieldSemantics", () => {
     it("sets type", () => {
         class Foo {
             @field(uint32)

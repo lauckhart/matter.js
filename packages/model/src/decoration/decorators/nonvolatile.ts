@@ -5,8 +5,8 @@
  */
 
 import { Quality } from "#aspects/Quality.js";
-import { FieldDecoration } from "#decoration/decorations/FieldDecoration.js";
 import { InvalidMetadataError } from "#decoration/errors.js";
+import { FieldSemantics } from "#decoration/semantics/FieldSemantics.js";
 import { Decorator } from "#general";
 import { ValueModel } from "#models/ValueModel.js";
 
@@ -14,7 +14,7 @@ import { ValueModel } from "#models/ValueModel.js";
  * Mark a field as nonvolatile (persistent).
  */
 export const nonvolatile = Decorator<Decorator.PropertyCollector>((_target, context) => {
-    const model = FieldDecoration.of(context).mutableModel;
+    const model = FieldSemantics.of(context).mutableModel;
     if (!(model instanceof ValueModel)) {
         throw new InvalidMetadataError("Only a value models may be nonvolatile");
     }

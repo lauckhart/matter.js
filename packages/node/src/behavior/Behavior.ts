@@ -14,7 +14,7 @@ import {
     Observable,
     Transaction,
 } from "#general";
-import { ClassDecoration, Decoration, Schema } from "#model";
+import { ClassSemantics, Schema, Semantics } from "#model";
 import type { ClusterType } from "#types";
 import { Reactor } from "./Reactor.js";
 import type { BehaviorBacking } from "./internal/BehaviorBacking.js";
@@ -312,11 +312,11 @@ Object.defineProperties(Behavior.prototype, {
 });
 
 /**
- * Install {@link ClassDecoration} extension logic to integrate schema metadata.
+ * Install {@link ClassSemantics} extension logic to integrate schema metadata.
  */
 Object.defineProperties(Behavior, {
-    [ClassDecoration.before]: {
-        value(this: Behavior.Type, decoration: ClassDecoration) {
+    [ClassSemantics.extend]: {
+        value(this: Behavior.Type, decoration: ClassSemantics) {
             // Obtain state and base schema
             const { State, Events, defaults } = decoration.new as Behavior.Type;
             if (!State || !defaults) {
@@ -327,15 +327,15 @@ Object.defineProperties(Behavior, {
             decoration.defineUnknownMembers(defaults);
 
             // Merge state properties into my schema
-            if (ClassDecoration.hasOwnDecoration(State)) {
-                const stateDecoration = Decoration.classDecorationOf(State);
-                stateDecoration.mutableModel = decoration.mutableModel;
+            if (ClassSemantics.hasOwnSemantics(State)) {
+                const stateSemantics = Semantics.classOf(State);
+                stateSemantics.mutableModel = decoration.mutableModel;
             }
 
             // Merge events into my schema
-            if (ClassDecoration.hasOwnDecoration(Events)) {
-                const eventsDecoration = Decoration.classDecorationOf(Events);
-                eventsDecoration.mutableModel = decoration.mutableModel;
+            if (ClassSemantics.hasOwnSemantics(Events)) {
+                const eventSemantics = Semantics.classOf(Events);
+                eventSemantics.mutableModel = decoration.mutableModel;
             }
         },
     },

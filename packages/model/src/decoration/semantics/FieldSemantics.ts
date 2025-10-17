@@ -7,17 +7,17 @@
 import { InvalidMetadataError } from "#decoration/errors.js";
 import { FieldModel } from "#models/FieldModel.js";
 import type { Model } from "#models/Model.js";
-import type { ClassDecoration } from "./ClassDecoration.js";
-import { Decoration } from "./Decoration.js";
+import type { ClassSemantics } from "./ClassSemantics.js";
+import { Semantics } from "./Semantics.js";
 
 /**
  * Decorator metadata associated with a specific class field.
  */
-export class FieldDecoration extends Decoration {
+export class FieldSemantics extends Semantics {
     name: string;
-    #owner: ClassDecoration;
+    #owner: ClassSemantics;
 
-    constructor(owner: ClassDecoration, name: string) {
+    constructor(owner: ClassSemantics, name: string) {
         super();
 
         this.#owner = owner;
@@ -28,16 +28,16 @@ export class FieldDecoration extends Decoration {
         return new type({ name: this.name, parent: this.#owner.mutableModel });
     }
 
-    static override of(source: FieldDecoration.Source) {
+    static override of(source: FieldSemantics.Source) {
         if (source.kind === "class") {
             throw new InvalidMetadataError(
                 `Cannot retrieve field decorator for class decorator ${source.name ?? "of anonymous class"}`,
             );
         }
-        return Decoration.classDecorationOf(source).fieldFor(source.name);
+        return Semantics.classOf(source).fieldFor(source.name);
     }
 }
 
-export namespace FieldDecoration {
+export namespace FieldSemantics {
     export type Source = DecoratorContext;
 }

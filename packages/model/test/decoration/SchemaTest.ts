@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClassDecoration, cluster, field, FieldModel, Schema, uint8 } from "#index.js";
+import { ClassSemantics, cluster, field, FieldModel, Schema, uint8 } from "#index.js";
 
 describe("Schema", () => {
     it("doesn't exist without decoration", () => {
@@ -30,7 +30,9 @@ describe("Schema", () => {
 
     it("exists with extend", () => {
         class Foo {
-            static [ClassDecoration.before]() {}
+            static [ClassSemantics.extend](decoration: ClassSemantics) {
+                decoration.mutableModel;
+            }
         }
 
         expect(Schema(Foo)).not.undefined;
@@ -58,7 +60,9 @@ describe("Schema", () => {
 
     it("exists with extend on base", () => {
         class Foo {
-            static [ClassDecoration.before]() {}
+            static [ClassSemantics.extend](decoration: ClassSemantics) {
+                decoration.mutableModel;
+            }
         }
 
         class Bar extends Foo {}
