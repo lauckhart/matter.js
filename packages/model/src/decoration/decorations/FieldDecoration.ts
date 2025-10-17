@@ -25,7 +25,7 @@ export class FieldDecoration extends Decoration {
     }
 
     protected override createModel(type: Model.ConcreteType = FieldModel) {
-        return new type({ name: this.name, parent: this.#owner.model });
+        return new type({ name: this.name, parent: this.#owner.mutableModel });
     }
 
     static override of(source: FieldDecoration.Source) {

@@ -7,7 +7,7 @@
 // Must import these via index to ensure proper initialization
 import { DatatypeModel, Model } from "#models/index.js";
 
-import { camelize } from "#general";
+import { camelize, InternalError } from "#general";
 import { Scope } from "#logic/Scope.js";
 import { any, struct } from "#standard/elements/models.js";
 import { InvalidMetadataError } from "../errors.js";
@@ -48,8 +48,24 @@ export class ClassDecoration extends Decoration {
     #new?: ClassDecoration.Constructor;
     #definedElements?: Map<string, FieldDecoration>;
 
-    protected override createModel(type: Model.ConcreteType = DatatypeModel) {
-        return new type({ name: "Unnamed", operationalBase: struct });
+    /**
+     * The model that represents the semantics for this class.
+     *
+     * This may be {@link localModel} or {@link decorationBaseModel}
+     */
+    get semanticModel() {
+        if (this.localModel) {
+            // Model is defined here
+            return this.localModel;
+        }
+
+        if (this.#definedElements) {
+            // Model has not been defined but should be due to field decoration, so define it now
+            return this.mutableModel;
+        }
+
+        // Return model inherited via prototype, if any.  Otherwise we do not express semantics
+        return this.decorationBaseModel;
     }
 
     /**
@@ -69,32 +85,38 @@ export class ClassDecoration extends Decoration {
 
         this.#new = fn;
 
-        // If I do not yet have a base, I extend my parent class's model
-        const { type, operationalBase } = this.model;
-        if (type === undefined && (operationalBase === undefined || operationalBase === struct)) {
-            const prototype = Object.getPrototypeOf(fn.prototype) as unknown;
-            if (typeof prototype === "object" && prototype !== null && prototype.constructor !== Object) {
-                this.model.operationalBase = Decoration.modelOf(prototype.constructor);
+        if (!this.localModel) {
+            return;
+        }
+
+        this.#addBaseSemantics();
+    }
+
+    /**
+     * The class {@link Model} inherited from {@link new}'s prototype chain, if any.
+     */
+    get decorationBaseModel(): Model | undefined {
+        let current = this.#new?.prototype;
+        let base;
+
+        while (current) {
+            current = Object.getPrototypeOf(current) as unknown;
+            if (typeof current !== "object" || current === null) {
+                return;
             }
-        }
+            const constructor = current.constructor;
+            if (constructor === Object) {
+                return;
+            }
+            base = ClassDecoration.maybeOf(constructor);
 
-        // If my base is not a datatype, it forces the type of my model
-        const { base } = this.model;
-        if (base && base.tag !== "datatype") {
-            this.modelType = base.constructor as Model.ConcreteType;
-        }
+            if (base?.localModel) {
+                // Decoration and model may not mutate once acting as a base
+                Object.freeze(base);
+                base.localModel.freeze();
 
-        // Set name to match class
-        this.model.name = fn.name;
-
-        // If ID is not already set, force ID to match base
-        if (this.model.id === undefined) {
-            this.model.id = base?.id;
-        }
-
-        // Allow for custom extension logic
-        if (ClassDecoration.extend in fn) {
-            fn[ClassDecoration.extend]?.(this);
+                return base.localModel;
+            }
         }
     }
 
@@ -127,8 +149,8 @@ export class ClassDecoration extends Decoration {
         }
 
         const known = new Set(
-            Scope(this.model)
-                .membersOf(this.model)
+            Scope(this.mutableModel)
+                .membersOf(this.mutableModel)
                 .map(model => camelize(model.name)),
         );
 
@@ -161,7 +183,7 @@ export class ClassDecoration extends Decoration {
                 continue;
             }
 
-            this.fieldFor(name).model.operationalBase = any;
+            this.fieldFor(name).mutableModel.operationalBase = any;
         }
     }
 
@@ -198,17 +220,82 @@ export class ClassDecoration extends Decoration {
         }
         return decoration;
     }
+
     /**
-     * Access the {@link ClassDecoration} of a constructor if it is defined.
+     * Determine {@link new} has semantic decoration.
+     */
+    static hasOwnDecoration(source: ClassDecoration.Constructor) {
+        return Object.hasOwn(source, Symbol.metadata) && Object.hasOwn(source[Symbol.metadata]!, matter);
+    }
+
+    /**
+     * Access the {@link ClassDecoration} of {@link new} if it is defined.
      */
     static maybeOf(source: ClassDecoration.Constructor) {
-        if (Symbol.metadata in source && matter in (source[Symbol.metadata] as MatterMetadata)) {
+        if (this.hasOwnDecoration(source)) {
             return ClassDecoration.of(source);
         }
     }
 
     static {
         Decoration.classDecorationOf = this.of;
+    }
+
+    override get mutableModel() {
+        if (this.localModel === undefined && this.new !== undefined) {
+            void super.mutableModel;
+            this.#addBaseSemantics();
+        }
+
+        // Do not return mutable model from above it may have been replaced if semantics changed
+        return super.mutableModel;
+    }
+
+    override set mutableModel(model) {
+        super.mutableModel = model;
+    }
+
+    protected override createModel(type: Model.ConcreteType = DatatypeModel) {
+        return new type({ name: "Unnamed", operationalBase: struct });
+    }
+
+    /**
+     * Add semantics from the base class of {@link new} to my model.
+     */
+    #addBaseSemantics() {
+        if (this.#new === undefined) {
+            throw new InternalError(`Base wiring attempted without constructor`);
+        }
+        let model = this.mutableModel;
+
+        // If my model does not yet have an explicit base, I extend my parent class's model
+        const { type, base: modelBase } = model;
+        if (type === undefined && (modelBase === undefined || modelBase === struct)) {
+            const operationalBase = this.decorationBaseModel;
+            if (operationalBase) {
+                model.operationalBase = operationalBase;
+            }
+        }
+
+        // If my base is not a datatype, it forces the type of my model
+        const { base } = model;
+        if (base && base.tag !== "datatype") {
+            this.modelType = base.constructor as Model.ConcreteType;
+            model = this.mutableModel;
+        }
+
+        // Set name to match class
+        model.name = this.#new.name;
+
+        // If ID is not already set, force ID to match base
+        if (model.id === undefined) {
+            model.id = base?.id;
+        }
+
+        // Enable custom extension logic
+        if (ClassDecoration.extend in this.#new) {
+            this.#new[ClassDecoration.extend]?.(this);
+        }
     }
 }
 

@@ -22,3 +22,8 @@ export class InvalidMetadataError extends MetadataError {}
  * Thrown when an error occurs instantiating a dummy instance of a class for introspection purposes.
  */
 export class ClassIntrospectionError extends MetadataError {}
+
+/**
+ * Thrown when required metadata is missing.
+ */
+export class MissingMetadataError extends MetadataError {}

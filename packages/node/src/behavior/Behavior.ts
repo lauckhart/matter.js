@@ -67,7 +67,9 @@ export abstract class Behavior {
      * Schema is inferred from the methods and properties of the behavior but you can specify explicitly for additional
      * control.
      */
-    static readonly schema?: Schema;
+    static get schema() {
+        return Schema(this);
+    }
 
     /**
      * By default behaviors load lazily as they are accessed.  You can set this flag to true to force behaviors to load
@@ -138,7 +140,7 @@ export abstract class Behavior {
         if (Object.hasOwn(this, SUPERVISOR)) {
             return (this as StaticInternal)[SUPERVISOR] as RootSupervisor;
         }
-        return ((this as StaticInternal)[SUPERVISOR] = RootSupervisor.for(Schema(this)));
+        return ((this as StaticInternal)[SUPERVISOR] = RootSupervisor.for(Schema(this) ?? Schema.empty));
     }
 
     /**
@@ -318,29 +320,19 @@ Object.defineProperty(
 
     {
         value(this: Behavior.Type, decoration: ClassDecoration) {
-            // Ensure base class is fully wired
-            if (ClassDecoration.extend in this.constructor.prototype) {
-                Decoration.modelOf(this.constructor.prototype);
-            }
-
             // Obtain state and base schema
-            const { State, Events, defaults, schema } = decoration.new as Behavior.Type;
+            const { State, Events, defaults } = decoration.new as Behavior.Type;
             if (!State || !defaults) {
                 return;
             }
 
-            // If present, my decoration should extend my schema
-            if (schema) {
-                decoration.model.operationalBase = schema;
-            }
-
             // Merge state properties into my schema
             const stateDecoration = Decoration.classDecorationOf(State);
-            stateDecoration.model = decoration.model;
+            stateDecoration.mutableModel = decoration.mutableModel;
 
             // Merge events into my schema
             const eventsDecoration = Decoration.classDecorationOf(Events);
-            eventsDecoration.model = decoration.model;
+            eventsDecoration.mutableModel = decoration.mutableModel;
 
             // Augment with fields for untyped state members
             decoration.defineUnknownMembers(defaults);

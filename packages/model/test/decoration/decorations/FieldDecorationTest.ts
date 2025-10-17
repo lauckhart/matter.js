@@ -24,7 +24,7 @@ describe("FieldDecoration", () => {
             bar = 4;
         }
 
-        const schema = Schema(Foo);
+        const schema = Schema.Required(Foo);
         expect(schema.children.length).equals(1);
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
@@ -37,7 +37,7 @@ describe("FieldDecoration", () => {
             bar = 4;
         }
 
-        const schema = Schema(Foo);
+        const schema = Schema.Required(Foo);
         expect(schema.children.length).equals(1);
         const bar = schema.get(AttributeModel, "bar");
         expect(bar).not.undefined;
@@ -51,7 +51,7 @@ describe("FieldDecoration", () => {
             bar = 4;
         }
 
-        const schema = Schema(Foo);
+        const schema = Schema.Required(Foo);
         expect(schema.children.length).equals(1);
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
@@ -65,7 +65,7 @@ describe("FieldDecoration", () => {
             bar = 4;
         }
 
-        const schema = Schema(Foo);
+        const schema = Schema.Required(Foo);
         expect(schema.children.length).equals(1);
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
@@ -84,7 +84,7 @@ describe("FieldDecoration", () => {
             bar = 4;
         }
 
-        const schema = Schema(Obj2);
+        const schema = Schema.Required(Obj2);
 
         const foo = schema.conformant.properties.for("foo");
         expect(foo).not.undefined;
@@ -106,7 +106,7 @@ describe("FieldDecoration", () => {
             items = Array<Item>;
         }
 
-        const schema = Schema(Container);
+        const schema = Schema.Required(Container);
 
         const items = schema.get(FieldModel, "items");
         expect(items).not.undefined;

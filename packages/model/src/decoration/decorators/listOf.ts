@@ -14,7 +14,7 @@ import type { Model } from "#models/Model.js";
  */
 export function listOf(entry: Model.Source): Decorator.PropertyCollector {
     return Decorator((_target, context) => {
-        Decoration.of(context).model.operationalBase = new FieldModel(
+        Decoration.of(context).mutableModel.operationalBase = new FieldModel(
             {
                 name: context.name.toString(),
                 type: "list",

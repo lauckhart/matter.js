@@ -18,7 +18,7 @@ export function response(type: DatatypeModel): Decorator.ClassMethod {
         const requestDecoration = FieldDecoration.of(context);
 
         requestDecoration.modelType = CommandModel;
-        const request = requestDecoration.model as CommandModel;
+        const request = requestDecoration.mutableModel as CommandModel;
 
         const name = `${request.name}Response`;
         new CommandModel({

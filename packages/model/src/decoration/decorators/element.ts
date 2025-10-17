@@ -28,11 +28,11 @@ export function element<
         for (const modifier of modifiers) {
             switch (typeof modifier) {
                 case "number":
-                    decoration.model.id = modifier;
+                    decoration.mutableModel.id = modifier;
                     continue;
 
                 case "string":
-                    decoration.model.name = modifier;
+                    decoration.mutableModel.name = modifier;
                     continue;
 
                 case "function":
@@ -47,22 +47,22 @@ export function element<
                             result = subresult;
                         }
                     } else {
-                        decoration.model.operationalBase = Decoration.modelOf(modifier as NewableFunction);
+                        decoration.mutableModel.operationalBase = Decoration.modelOf(modifier as NewableFunction);
                     }
                     continue;
 
                 case "object":
                     if (modifier instanceof Model) {
-                        decoration.model.operationalBase = modifier;
-                        if (decoration.model.id === undefined) {
-                            decoration.model.id = modifier.id;
+                        decoration.mutableModel.operationalBase = modifier;
+                        if (decoration.mutableModel.id === undefined) {
+                            decoration.mutableModel.id = modifier.id;
                         }
                         continue;
                     }
                     break;
             }
 
-            throw new InvalidMetadataError(`Unsupported marker ${modifier}`);
+            throw new InvalidMetadataError(`Unsupported modifier ${modifier}`);
         }
 
         return result;
@@ -93,17 +93,17 @@ export namespace element {
      *
      * Modifiers affect decoration as follows:
      *
-     *   * A model type forces {@link Decoration#model} to that type
+     *   * A model type forces {@link Decoration#localModel} to that type
      *
-     *   * A model instance sets the {@link Model#operationalBase} of {@link Decoration#model}
+     *   * A model instance sets the {@link Model#operationalBase} of {@link Decoration#localModel}
      *
-     *   * A constructor instance also sets the {@link Model#operationalBase} of {@link Decoration#model}
+     *   * A constructor instance also sets the {@link Model#operationalBase} of {@link Decoration#localModel}
      *
      *   * A decorator is invoked to decorate the element
      *
-     *   * A number sets the {@link Model#id} of {@link Decoration#model}
+     *   * A number sets the {@link Model#id} of {@link Decoration#localModel}
      *
-     *   * A string sets the {@link Model#name} of {@link Decoration#model}
+     *   * A string sets the {@link Model#name} of {@link Decoration#localModel}
      */
     export type Modifier<
         T extends

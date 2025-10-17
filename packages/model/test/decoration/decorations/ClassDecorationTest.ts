@@ -5,7 +5,7 @@
  */
 
 // Import from index to ensure correct initialization order
-import { ClassDecoration, Decoration } from "#decoration/decorations/index.js";
+import { ClassDecoration } from "#decoration/decorations/index.js";
 
 import { cluster } from "#decoration/decorators/cluster.js";
 import { datatype } from "#decoration/decorators/datatype.js";
@@ -21,16 +21,17 @@ describe("ClassDecoration", () => {
             @datatype(locationdesc)
             class MyLocation {}
 
-            const schema = Schema(MyLocation);
+            const schema = Schema.Required(MyLocation);
             expect(schema.tag).equals("datatype");
             expect(schema.name).equals("MyLocation");
             expect(schema.base).equals(locationdesc);
         });
 
         it("standalone", () => {
+            @datatype()
             class MyState {}
 
-            const schema = Schema(MyState);
+            const schema = Schema.Required(MyState);
             expect(schema.tag).equals("datatype");
             expect(schema.name).equals("MyState");
             expect(schema.base).equals(struct);
@@ -42,7 +43,7 @@ describe("ClassDecoration", () => {
             @cluster(WindowCovering)
             class MyWindowCoveringState {}
 
-            const schema = Decoration.modelOf(MyWindowCoveringState);
+            const schema = Schema.Required(MyWindowCoveringState);
             expect(schema.tag).equals("cluster");
             expect(schema.name).equals("MyWindowCoveringState");
             expect(schema.base).equals(WindowCovering);
@@ -53,7 +54,8 @@ describe("ClassDecoration", () => {
             @cluster(12)
             class MyState {}
 
-            const schema = Decoration.modelOf(MyState);
+            const schema = Schema.Required(MyState);
+            expect(schema).not.undefined;
             expect(schema.tag).equals("cluster");
             expect(schema.name).equals("MyState");
             expect(schema.base).equals(struct);
@@ -66,9 +68,10 @@ describe("ClassDecoration", () => {
             @cluster(WindowCovering)
             class BasicBlinds {}
 
+            @cluster()
             class OverengineeredBlinds extends BasicBlinds {}
 
-            const schema = Schema(OverengineeredBlinds);
+            const schema = Schema.Required(OverengineeredBlinds);
             expect(schema.tag).equals("cluster");
             expect(schema.name).equals("OverengineeredBlinds");
         });
@@ -82,7 +85,7 @@ describe("ClassDecoration", () => {
                 foo = 4;
             }
 
-            const schema = Schema(OverengineeredBlinds);
+            const schema = Schema.Required(OverengineeredBlinds);
             expect(schema.tag).equals("cluster");
             expect(schema.name).equals("OverengineeredBlinds");
 
@@ -103,6 +106,7 @@ describe("ClassDecoration", () => {
             foo = 3;
         }
 
+        @datatype()
         class Bar extends Foo {
             // Known via base class decorator
             override foo = 3;
@@ -118,7 +122,7 @@ describe("ClassDecoration", () => {
             }
         }
 
-        const schema = Schema(Bar);
+        const schema = Schema.Required(Bar);
         expect(schema.children.length).equals(1);
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;

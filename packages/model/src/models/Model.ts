@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClassDecoration } from "#decoration/index.js";
 import { camelize, decamelize, ImplementationError } from "#general";
 import { DefinitionError, ElementTag, Metatype, Specification } from "../common/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
@@ -32,7 +31,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
 
     #id: E["id"];
     #name: string;
-    #frozen?: boolean;
+    #isFrozen?: boolean;
     #resource?: Resource;
 
     /**
@@ -614,17 +613,21 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      * To make changes to a frozen model use {@link clone}.
      */
     freeze() {
-        if (this.#frozen) {
+        if (this.#isFrozen) {
             return;
         }
 
         const base = this.operationalBase ?? (this.operationalBase = this.base ?? null);
         const shadow = this.operationalShadow ?? (this.operationalShadow = this.shadow ?? null);
-        this.#frozen = true;
+        this.#isFrozen = true;
         (this.children as InternalChildren<C>).freeze();
         Object.freeze(this);
         base?.freeze();
         shadow?.freeze();
+    }
+
+    get isFrozen() {
+        return this.#isFrozen;
     }
 
     toString() {
@@ -760,7 +763,7 @@ export namespace Model {
      *
      * This is either a model, a class constructor or a DecoratorContext.
      */
-    export type Source = Model | NewableFunction | DecoratorContext | ClassDecoration;
+    export type Source = Model | NewableFunction;
 
     /**
      * Tagged input.  Like {@link Definition} but for places where model type is not implied.

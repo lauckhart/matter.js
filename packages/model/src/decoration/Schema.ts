@@ -11,6 +11,7 @@ import { DatatypeModel } from "#models/DatatypeModel.js";
 import type { Model } from "#models/Model.js";
 import type { ValueModel } from "#models/ValueModel.js";
 import { Decoration } from "./decorations/Decoration.js";
+import { MissingMetadataError } from "./errors.js";
 
 /**
  * Here we use the term "schema" to mean any model element that defines a datatype.  For schema we allow any Matter
@@ -26,17 +27,35 @@ import { Decoration } from "./decorations/Decoration.js";
 export type Schema = ClusterModel | ValueModel;
 
 /**
- * Obtain {@link Schema} for a {@link Schema.Source}.
+ * Obtain {@link Schema} for a {@link Schema.Source} if present.
  */
-export function Schema(source: Model.Source): Schema {
+export function Schema(source: Model.Source) {
     const model = Decoration.modelOf(source);
+    if (!model) {
+        return;
+    }
+
     if (model.tag !== ElementTag.Cluster && model.tag !== ElementTag.Datatype) {
         throw new ImplementationError(`Model ${model.name} tag ${model.tag} is not legal for schema`);
     }
+
     return model as Schema;
 }
 
 export namespace Schema {
+    /**
+     * Obtain {@link Schema} that is required for operation.
+     */
+    export function Required(source: Model.Source) {
+        const schema = Schema(source);
+
+        if (schema === undefined) {
+            throw new MissingMetadataError(`Metadata missing for class ${source.name}`);
+        }
+
+        return schema;
+    }
+
     export type Source = Schema | NewableFunction;
 
     export const empty = new DatatypeModel({ name: "Empty", type: "struct" });

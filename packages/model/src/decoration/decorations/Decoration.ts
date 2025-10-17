@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MissingMetadataError } from "#decoration/errors.js";
 import { InternalError } from "#general";
 import type { Model } from "#models/Model.js";
 import type { ClassDecoration } from "./ClassDecoration.js";
@@ -15,28 +16,35 @@ import type { ClassDecoration } from "./ClassDecoration.js";
  * common to both classes and fields.
  */
 export abstract class Decoration {
-    #model?: Model;
+    #localModel?: Model;
 
     /**
-     * Obtain the {@link Model} defined by this metadata.
+     * The {@link Model} defined by local decoration, if any.
      */
-    get model() {
-        if (this.#model === undefined) {
-            this.#model = this.createModel();
-        }
-        return this.#model;
+    get localModel() {
+        return this.#localModel;
     }
 
     /**
-     * Replace the model.
+     * Set the model.
      *
-     * Children will move but other properties are lost.
+     * If you replace the model, children will move but other properties are lost.
      */
-    set model(model: Model) {
-        if (this.#model !== undefined) {
-            model.children.push(...this.#model.children);
+    set mutableModel(model: Model) {
+        if (this.#localModel !== undefined) {
+            model.children.push(...this.#localModel.children);
         }
-        this.#model = model;
+        this.#localModel = model;
+    }
+
+    /**
+     * Obtain a model unconditionally for mutation purposes.
+     */
+    get mutableModel() {
+        if (this.#localModel === undefined) {
+            this.#localModel = this.createModel();
+        }
+        return this.#localModel;
     }
 
     /**
@@ -45,22 +53,25 @@ export abstract class Decoration {
      * Field decorators operate prior to class decorators, so we may need to transition the model to a new type when the
      * class is decorated.  This is slightly lossy so type-specific decoration should always occur after assigning kind.
      */
-    get modelType() {
-        return this.model.constructor as Model.ConcreteType;
+    get modelType(): Model.Type | undefined {
+        if (this.#localModel === undefined) {
+            return;
+        }
+        return this.mutableModel.constructor as Model.ConcreteType;
     }
 
     set modelType(type: Model.ConcreteType) {
-        if (this.#model === undefined) {
-            this.#model = this.createModel(type);
+        if (this.#localModel === undefined) {
+            this.#localModel = this.createModel(type);
             return;
         }
 
-        if (this.#model instanceof type) {
+        if (this.#localModel instanceof type) {
             return;
         }
 
         // Detach original model
-        const original = this.#model as Model;
+        const original = this.#localModel as Model;
         const { parent } = original;
         original.parent = undefined;
 
@@ -78,7 +89,7 @@ export abstract class Decoration {
             replacement.quality = original.quality;
         }
 
-        this.#model = replacement;
+        this.#localModel = replacement;
     }
 
     protected abstract createModel(type?: Model.ConcreteType): Model;
@@ -112,6 +123,14 @@ export namespace Decoration {
         if ("tag" in source) {
             return source;
         }
-        return classDecorationOf(source).model;
+        const decoration = classDecorationOf(source);
+
+        const model = decoration.semanticModel;
+
+        if (model && (model.constructor as Model.ConcreteType).requiresId) {
+            throw new MissingMetadataError(`Model ${source.name} is missing mandatory numeric ID`);
+        }
+
+        return model;
     }
 }

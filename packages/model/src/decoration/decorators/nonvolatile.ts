@@ -14,7 +14,7 @@ import { ValueModel } from "#models/ValueModel.js";
  * Mark a field as nonvolatile (persistent).
  */
 export const nonvolatile = Decorator<Decorator.PropertyCollector>((_target, context) => {
-    const model = FieldDecoration.of(context).model;
+    const model = FieldDecoration.of(context).mutableModel;
     if (!(model instanceof ValueModel)) {
         throw new InvalidMetadataError("Only a value models may be nonvolatile");
     }

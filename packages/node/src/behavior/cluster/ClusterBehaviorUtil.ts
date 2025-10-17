@@ -7,6 +7,7 @@
 import { Events, OfflineEvent, OnlineEvent, QuietEvent } from "#behavior/Events.js";
 import { camelize, EventEmitter, GeneratedClass, ImplementationError, Observable } from "#general";
 import {
+    ClassDecoration,
     ClusterModel,
     DefaultValue,
     ElementTag,
@@ -110,14 +111,12 @@ export function createType<const C extends ClusterType>(
                 value: cluster,
                 enumerable: true,
             },
-
-            schema: {
-                value: schema,
-            },
         },
 
         instanceDescriptors: createDefaultCommandDescriptors(cluster, base),
     }) as ClusterBehavior.Type;
+
+    ClassDecoration.of(type).mutableModel = schema;
 
     if (useCache) {
         ClusterBehaviorCache.set(cluster, base, schema, type);

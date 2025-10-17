@@ -14,9 +14,9 @@ import { ValueModel } from "#models/ValueModel.js";
  * Mark a field as nullable.
  */
 export const nullable = Decorator<Decorator.PropertyCollector>((_target, context) => {
-    const model = FieldDecoration.of(context).model;
+    const model = FieldDecoration.of(context).mutableModel;
     if (!(model instanceof ValueModel)) {
-        throw new InvalidMetadataError("Only a value models may be nullable");
+        throw new InvalidMetadataError("Only value models may be nullable");
     }
     model.quality = new Quality({ ...model.quality, nullable: true });
 });
