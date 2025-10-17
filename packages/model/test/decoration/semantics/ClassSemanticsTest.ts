@@ -11,9 +11,9 @@ import { cluster } from "#decoration/decorators/cluster.js";
 import { datatype } from "#decoration/decorators/datatype.js";
 import { field } from "#decoration/decorators/field.js";
 import { Schema } from "#decoration/Schema.js";
-import { AttributeModel, ClusterModel } from "#index.js";
+import { AttributeModel, ClusterModel, DatatypeModel, MetadataConflictError } from "#index.js";
 import { FieldModel } from "#models/FieldModel.js";
-import { any, locationdesc, struct, uint32, WindowCovering } from "../../../src/standard/elements/models.js";
+import { any, locationdesc, string, struct, uint32, WindowCovering } from "../../../src/standard/elements/models.js";
 
 describe("ClassSemantics", () => {
     describe("defines datatypes", () => {
@@ -22,9 +22,7 @@ describe("ClassSemantics", () => {
             class MyLocation {}
 
             const schema = Schema.Required(MyLocation);
-            expect(schema.tag).equals("datatype");
-            expect(schema.name).equals("MyLocation");
-            expect(schema.base).equals(locationdesc);
+            expect(schema).equals(locationdesc);
         });
 
         it("standalone", () => {
@@ -44,10 +42,7 @@ describe("ClassSemantics", () => {
             class MyWindowCoveringState {}
 
             const schema = Schema.Required(MyWindowCoveringState);
-            expect(schema.tag).equals("cluster");
-            expect(schema.name).equals("MyWindowCoveringState");
-            expect(schema.base).equals(WindowCovering);
-            expect(schema.id).equals(WindowCovering.id);
+            expect(schema).equals(WindowCovering);
         });
 
         it("standalone", () => {
@@ -127,5 +122,42 @@ describe("ClassSemantics", () => {
         const bar = schema.get(FieldModel, "bar");
         expect(bar).not.undefined;
         expect(bar!.base).equals(any);
+    });
+
+    describe("frozen base", () => {
+        const frigid = new DatatypeModel({ name: "Frigid" }, new FieldModel({ name: "temp", type: "temperature" }));
+        frigid.freeze();
+
+        it("becomes identity without decoration", () => {
+            @datatype(frigid)
+            class Fridge {}
+
+            expect(Schema(Fridge)).equals(frigid);
+        });
+
+        it("becomes base with decoration", () => {
+            @datatype(frigid)
+            class Fridge {
+                @field(string)
+                color = "white";
+            }
+
+            expect(Schema(Fridge)?.operationalBase).equals(frigid);
+        });
+
+        it("throws if local model is frozen", () => {
+            class Fridge {
+                @field(string)
+                color = "white";
+            }
+
+            const semantics = ClassSemantics.of(Fridge);
+
+            semantics.mutableModel.freeze();
+
+            expect(() => {
+                semantics.mutableModel = frigid;
+            }).throws(MetadataConflictError, "Cannot assign frozen Frigid as base of frozen Fridge");
+        });
     });
 });

@@ -85,8 +85,6 @@ export class ClassSemantics extends Semantics {
 
         this.#new = fn;
 
-        fn[ClassSemantics.extend]?.(this);
-
         // Update local semantics based on inherited semantics
         if (this.localModel) {
             // I have a model defined already so update according to base semantics

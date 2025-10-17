@@ -16,9 +16,15 @@ import { Model } from "#models/Model.js";
 export function element<
     T extends Decorator.Collector | Decorator.ClassCollector | Decorator.PropertyCollector | Decorator.MethodCollector,
 >(kind: Model.ConcreteType, ...modifiers: element.Modifier<T>[]) {
+    // We want to force the element to the specific type.  Do this explicitly unless the initial modifier will do it for
+    // us.  This prevents us from creating a separate local model if there is no further annotation
+    const forceType = !(modifiers[0] instanceof kind);
+
     return Decorator((target: any, context: DecoratorContext) => {
         const semantics = Semantics.of(context);
-        semantics.modelType = kind;
+        if (forceType) {
+            semantics.modelType = kind;
+        }
 
         if (context.kind === "class") {
             (semantics as ClassSemantics).new = target as NewableFunction;
@@ -53,10 +59,7 @@ export function element<
 
                 case "object":
                     if (modifier instanceof Model) {
-                        semantics.mutableModel.operationalBase = modifier;
-                        if (semantics.mutableModel.id === undefined) {
-                            semantics.mutableModel.id = modifier.id;
-                        }
+                        semantics.mutableModel = modifier;
                         continue;
                     }
                     break;

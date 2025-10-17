@@ -112,7 +112,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    }).timeout(1e9);
+    });
 
     it("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
@@ -211,7 +211,7 @@ describe("ClientNode", () => {
 
         // Toggle should now complete
         await MockTime.resolve(toggle);
-    }).timeout(1e9);
+    });
 
     it("emits Matter events", async () => {
         // *** SETUP ***
