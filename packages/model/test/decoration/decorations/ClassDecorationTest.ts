@@ -117,7 +117,7 @@ describe("ClassDecoration", () => {
             // Known via base inheritance
             baz = 5;
 
-            static [ClassDecoration.extend](decoration: ClassDecoration) {
+            static [ClassDecoration.before](decoration: ClassDecoration) {
                 decoration.defineUnknownMembers(new Bar());
             }
         }

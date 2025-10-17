@@ -314,11 +314,8 @@ Object.defineProperties(Behavior.prototype, {
 /**
  * Install {@link ClassDecoration} extension logic to integrate schema metadata.
  */
-Object.defineProperty(
-    Behavior,
-    ClassDecoration.extend,
-
-    {
+Object.defineProperties(Behavior, {
+    [ClassDecoration.before]: {
         value(this: Behavior.Type, decoration: ClassDecoration) {
             // Obtain state and base schema
             const { State, Events, defaults } = decoration.new as Behavior.Type;
@@ -326,19 +323,23 @@ Object.defineProperty(
                 return;
             }
 
-            // Merge state properties into my schema
-            const stateDecoration = Decoration.classDecorationOf(State);
-            stateDecoration.mutableModel = decoration.mutableModel;
-
-            // Merge events into my schema
-            const eventsDecoration = Decoration.classDecorationOf(Events);
-            eventsDecoration.mutableModel = decoration.mutableModel;
-
             // Augment with fields for untyped state members
             decoration.defineUnknownMembers(defaults);
+
+            // Merge state properties into my schema
+            if (ClassDecoration.hasOwnDecoration(State)) {
+                const stateDecoration = Decoration.classDecorationOf(State);
+                stateDecoration.mutableModel = decoration.mutableModel;
+            }
+
+            // Merge events into my schema
+            if (ClassDecoration.hasOwnDecoration(Events)) {
+                const eventsDecoration = Decoration.classDecorationOf(Events);
+                eventsDecoration.mutableModel = decoration.mutableModel;
+            }
         },
     },
-);
+});
 
 export namespace Behavior {
     /**

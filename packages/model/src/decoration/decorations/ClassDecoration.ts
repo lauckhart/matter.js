@@ -60,7 +60,7 @@ export class ClassDecoration extends Decoration {
         }
 
         if (this.#definedElements) {
-            // Model has not been defined but should be due to field decoration, so define it now
+            // Model has not been defined but should be due to decoration, so define it now
             return this.mutableModel;
         }
 
@@ -84,6 +84,8 @@ export class ClassDecoration extends Decoration {
         }
 
         this.#new = fn;
+
+        fn[ClassDecoration.before]?.(this);
 
         if (!this.localModel) {
             return;
@@ -148,11 +150,13 @@ export class ClassDecoration extends Decoration {
             return;
         }
 
-        const known = new Set(
-            Scope(this.mutableModel)
-                .membersOf(this.mutableModel)
-                .map(model => camelize(model.name)),
-        );
+        const known = this.semanticModel
+            ? new Set(
+                  Scope(this.semanticModel)
+                      .membersOf(this.semanticModel)
+                      .map(model => camelize(model.name)),
+              )
+            : new Set();
 
         const descriptors = Object.getOwnPropertyDescriptors(instance);
 
@@ -243,7 +247,9 @@ export class ClassDecoration extends Decoration {
 
     override get mutableModel() {
         if (this.localModel === undefined && this.new !== undefined) {
+            // Ensure model is initialized prior to installing semantics
             void super.mutableModel;
+
             this.#addBaseSemantics();
         }
 
@@ -293,9 +299,7 @@ export class ClassDecoration extends Decoration {
         }
 
         // Enable custom extension logic
-        if (ClassDecoration.extend in this.#new) {
-            this.#new[ClassDecoration.extend]?.(this);
-        }
+        this.#new[ClassDecoration.after]?.(this);
     }
 }
 
@@ -305,9 +309,14 @@ export namespace ClassDecoration {
      */
     export interface Constructor extends NewableFunction {
         /**
-         * If present, invoked prior to model generation.
+         * If present, invoked prior to connecting constructor.
          */
-        [extend]?: (decoration: ClassDecoration) => void;
+        [before]?: (decoration: ClassDecoration) => void;
+
+        /**
+         * If present, invoked after connecting constructor.
+         */
+        [after]?: (decoration: ClassDecoration) => void;
     }
 
     /**
@@ -315,5 +324,6 @@ export namespace ClassDecoration {
      */
     export type Source = Constructor | DecoratorContext | ClassDecoration;
 
-    export const extend = Symbol("extend");
+    export const before = Symbol("before");
+    export const after = Symbol("after");
 }

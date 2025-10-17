@@ -32,6 +32,9 @@ export abstract class Decoration {
      */
     set mutableModel(model: Model) {
         if (this.#localModel !== undefined) {
+            if (model.isFrozen) {
+                model = model.extend();
+            }
             model.children.push(...this.#localModel.children);
         }
         this.#localModel = model;
@@ -43,6 +46,8 @@ export abstract class Decoration {
     get mutableModel() {
         if (this.#localModel === undefined) {
             this.#localModel = this.createModel();
+        } else if (this.#localModel.isFrozen) {
+            this.#localModel = this.#localModel.extend();
         }
         return this.#localModel;
     }

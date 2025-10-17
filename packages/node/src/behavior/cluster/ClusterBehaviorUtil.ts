@@ -82,9 +82,6 @@ export function createType<const C extends ClusterType>(
         }
     }
 
-    // Mutation of schema will almost certainly result in logic errors so ensure that can't happen
-    schema.freeze();
-
     const newProps = {} as Record<string, ValueModel>;
     const scope = Scope(schema);
 
@@ -116,7 +113,11 @@ export function createType<const C extends ClusterType>(
         instanceDescriptors: createDefaultCommandDescriptors(cluster, base),
     }) as ClusterBehavior.Type;
 
+    // Decorate the class
     ClassDecoration.of(type).mutableModel = schema;
+
+    // Mutation of schema will almost certainly result in logic errors so ensure that can't happen
+    schema.freeze();
 
     if (useCache) {
         ClusterBehaviorCache.set(cluster, base, schema, type);
