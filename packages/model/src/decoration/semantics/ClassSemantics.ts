@@ -92,7 +92,7 @@ export class ClassSemantics extends Semantics {
         this.#new = fn;
 
         // Set name to match class
-        if (this.localModel && !this.localModel.isFrozen && this.localModel.name !== this.#new?.name) {
+        if (this.localModel && !this.localModel.isFinal && this.localModel.name !== this.#new?.name) {
             this.localModel.name = this.#new?.name;
         }
 
@@ -150,7 +150,7 @@ export class ClassSemantics extends Semantics {
         let field = this.#definedFields.get(name);
         if (field === undefined) {
             if (this.isFinal) {
-                throw new MetadataConflictError(`Cannot install field ${field} because semantics are final`);
+                throw new MetadataConflictError(`Cannot install field ${name} because semantics are final`);
             }
 
             this.#definedFields.set(name, (field = new FieldSemantics(this, name)));

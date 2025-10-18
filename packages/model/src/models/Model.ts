@@ -626,7 +626,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         shadow?.finalize();
     }
 
-    get isFrozen() {
+    get isFinal() {
         return this.#isFinal;
     }
 

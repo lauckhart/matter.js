@@ -56,18 +56,6 @@ export abstract class Semantics {
      *
      * When "setting" the model we need to merge semantics coming from decorators, the prototype hierarchy, and models
      * provided programmatically.
-     *
-     * The rules for this are as follows:
-     *
-     *   * If there is no {@link localModel}, we set to {@link model}
-     *
-     *   * If neither model is frozen, we replace {@link localModel} and move its children to {@link model}
-     *
-     *   * If only {@link model} is frozen, it becomes the base of {@link localModel}
-     *
-     *   * If only {@link localModel} is frozen, we replace with {@link model} and it becomes the base of {@link model}
-     *
-     *   * If both models are frozen throws {@link MetadataConflictError}
      */
     set mutableModel(model: Model) {
         if (this.#isFinal) {
@@ -78,33 +66,27 @@ export abstract class Semantics {
             return;
         }
 
-        // We don't freeze global models by default for performance reasons, but do freeze them here to prevent
+        // We don't finalize global models by default for performance reasons, but do finalize them here to prevent
         // accidental mutation
         if (standardModels.has(model)) {
             model.finalize();
         }
 
-        if (this.#localModel === undefined) {
+        // If local model is not yet set or is final, we have not extended; this is "swap base with no decoration" case
+        if (this.#localModel === undefined || this.#localModel.isFinal) {
             this.#localModel = model;
             return;
         }
 
-        if (this.#localModel.isFrozen) {
-            if (model.isFrozen) {
-                throw new MetadataConflictError(
-                    `Cannot assign frozen ${model.name} as base of frozen ${this.#localModel.name}`,
-                );
-            }
-            model.operationalBase = this.#localModel;
-            this.#localModel = model;
-            return;
-        }
-
-        if (model.isFrozen) {
+        // If incoming model is final, replace operational base of local model.  This is "swap base with decoration"
+        // case
+        if (model.isFinal) {
             this.#localModel.operationalBase = model;
             return;
         }
 
+        // Neither model is final.  Move children to new model.  This is "replace temporary model created by decorators"
+        // case
         model.children.push(...this.#localModel.children);
         this.#localModel = model;
     }
@@ -119,7 +101,7 @@ export abstract class Semantics {
 
         if (this.#localModel === undefined) {
             this.#localModel = this.createModel();
-        } else if (this.#localModel.isFrozen) {
+        } else if (this.#localModel.isFinal) {
             this.#localModel = this.#localModel.extend();
         }
         return this.#localModel;

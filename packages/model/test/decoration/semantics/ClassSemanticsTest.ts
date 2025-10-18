@@ -124,7 +124,7 @@ describe("ClassSemantics", () => {
         expect(bar!.base).equals(any);
     });
 
-    describe("frozen base", () => {
+    describe("final base", () => {
         const frigid = new DatatypeModel({ name: "Frigid" }, new FieldModel({ name: "temp", type: "temperature" }));
         frigid.finalize();
 
@@ -144,20 +144,45 @@ describe("ClassSemantics", () => {
 
             expect(Schema(Fridge)?.operationalBase).equals(frigid);
         });
+    });
 
-        it("throws if local model is frozen", () => {
-            class Fridge {
-                @field(string)
-                color = "white";
-            }
+    describe("mutable model", () => {
+        it("is available when not final", () => {
+            @datatype()
+            class Foo {}
 
-            const semantics = ClassSemantics.of(Fridge);
+            ClassSemantics.of(Foo).mutableModel;
+        });
 
-            semantics.mutableModel.finalize();
+        it("is not available when final", () => {
+            @datatype()
+            class Foo {}
+
+            Schema(Foo);
 
             expect(() => {
-                semantics.mutableModel = frigid;
-            }).throws(MetadataConflictError, "Cannot assign frozen Frigid as base of frozen Fridge");
+                ClassSemantics.of(Foo).mutableModel;
+            }).throws(MetadataConflictError, "Cannot modify final semantics of Foo");
+        });
+    });
+
+    describe("new field", () => {
+        it("is possible when not final", () => {
+            @datatype()
+            class Foo {}
+
+            ClassSemantics.of(Foo).fieldFor("hockey");
+        });
+
+        it("is not available when final", () => {
+            @datatype()
+            class Foo {}
+
+            Schema(Foo);
+
+            expect(() => {
+                ClassSemantics.of(Foo).fieldFor("football");
+            }).throws(MetadataConflictError, "Cannot install field football because semantics are final");
         });
     });
 });
