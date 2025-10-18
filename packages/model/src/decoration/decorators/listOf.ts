@@ -8,6 +8,7 @@ import { Semantics } from "#decoration/semantics/Semantics.js";
 import { Decorator } from "#general";
 import { FieldModel } from "#models/FieldModel.js";
 import type { Model } from "#models/Model.js";
+import { Schema } from "#models/Schema.js";
 
 /**
  * Decorate a property as an array.
@@ -22,7 +23,7 @@ export function listOf(entry: Model.Source): Decorator.PropertyCollector {
 
             new FieldModel({
                 name: "entry",
-                operationalBase: Semantics.modelOf(entry),
+                operationalBase: Schema(entry),
             }),
         );
     });

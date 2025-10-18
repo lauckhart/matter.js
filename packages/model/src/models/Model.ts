@@ -31,7 +31,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
 
     #id: E["id"];
     #name: string;
-    #isFrozen?: boolean;
+    #isFinal?: boolean;
     #resource?: Resource;
 
     /**
@@ -605,29 +605,29 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     /**
-     * Freeze the model hierarchy rooted at this model.
+     * Finalize the model hierarchy rooted at this model.
      *
      * When using a model as operational schema we implement various optimizations that assume the schema is immutable.
      * This function enforces that assumption and caches a few values that only make sense with frozen schema.
      *
-     * To make changes to a frozen model use {@link clone}.
+     * To make changes to a final model use {@link clone}.
      */
-    freeze() {
-        if (this.#isFrozen) {
+    finalize() {
+        if (this.#isFinal) {
             return;
         }
 
         const base = this.operationalBase ?? (this.operationalBase = this.base ?? null);
         const shadow = this.operationalShadow ?? (this.operationalShadow = this.shadow ?? null);
-        this.#isFrozen = true;
+        this.#isFinal = true;
         (this.children as InternalChildren<C>).freeze();
         Object.freeze(this);
-        base?.freeze();
-        shadow?.freeze();
+        base?.finalize();
+        shadow?.finalize();
     }
 
     get isFrozen() {
-        return this.#isFrozen;
+        return this.#isFinal;
     }
 
     toString() {

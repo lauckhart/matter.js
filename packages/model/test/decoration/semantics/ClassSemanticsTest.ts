@@ -10,10 +10,10 @@ import { ClassSemantics } from "#decoration/semantics/index.js";
 import { cluster } from "#decoration/decorators/cluster.js";
 import { datatype } from "#decoration/decorators/datatype.js";
 import { field } from "#decoration/decorators/field.js";
-import { Schema } from "#decoration/Schema.js";
 import { AttributeModel, ClusterModel, DatatypeModel, MetadataConflictError } from "#index.js";
 import { FieldModel } from "#models/FieldModel.js";
-import { any, locationdesc, string, struct, uint32, WindowCovering } from "../../../src/standard/elements/models.js";
+import { Schema } from "#models/Schema.js";
+import { any, locationdesc, string, struct, uint32, WindowCovering } from "#standard/elements/models.js";
 
 describe("ClassSemantics", () => {
     describe("defines datatypes", () => {
@@ -126,7 +126,7 @@ describe("ClassSemantics", () => {
 
     describe("frozen base", () => {
         const frigid = new DatatypeModel({ name: "Frigid" }, new FieldModel({ name: "temp", type: "temperature" }));
-        frigid.freeze();
+        frigid.finalize();
 
         it("becomes identity without decoration", () => {
             @datatype(frigid)
@@ -153,7 +153,7 @@ describe("ClassSemantics", () => {
 
             const semantics = ClassSemantics.of(Fridge);
 
-            semantics.mutableModel.freeze();
+            semantics.mutableModel.finalize();
 
             expect(() => {
                 semantics.mutableModel = frigid;

@@ -10,7 +10,7 @@ import { DatatypeModel, Model } from "#models/index.js";
 import { camelize } from "#general";
 import { Scope } from "#logic/Scope.js";
 import { any, struct } from "#standard/elements/models.js";
-import { InvalidMetadataError } from "../errors.js";
+import { InvalidMetadataError, MetadataConflictError } from "../errors.js";
 import { FieldSemantics } from "./FieldSemantics.js";
 import { Semantics } from "./Semantics.js";
 
@@ -46,7 +46,7 @@ interface MatterMetadata {
  */
 export class ClassSemantics extends Semantics {
     #new?: ClassSemantics.Constructor;
-    #definedElements?: Map<string, FieldSemantics>;
+    #definedFields?: Map<string, FieldSemantics>;
 
     /**
      * The model that represents the semantics for this class.
@@ -59,7 +59,7 @@ export class ClassSemantics extends Semantics {
             return this.localModel;
         }
 
-        if (this.#definedElements) {
+        if (this.#definedFields) {
             // Model has not been defined but should be due to decoration, so define it now
             return this.mutableModel;
         }
@@ -83,7 +83,18 @@ export class ClassSemantics extends Semantics {
             return;
         }
 
+        if (this.isFinal) {
+            throw new MetadataConflictError(
+                `Cannot install semantic constructor ${fn.name} because semantics are final`,
+            );
+        }
+
         this.#new = fn;
+
+        // Set name to match class
+        if (this.localModel && !this.localModel.isFrozen && this.localModel.name !== this.#new?.name) {
+            this.localModel.name = this.#new?.name;
+        }
 
         // Update local semantics based on inherited semantics
         if (this.localModel) {
@@ -95,40 +106,6 @@ export class ClassSemantics extends Semantics {
             if (base !== undefined) {
                 this.mutableModel = base;
             }
-        }
-
-        // Enable custom extension logic
-        this.#new[ClassSemantics.extend]?.(this);
-    }
-
-    #applyBaseSemantics() {
-        // Set name to match class
-        if (this.#new && this.mutableModel.name !== this.#new?.name) {
-            this.mutableModel.name = this.#new?.name;
-        }
-
-        const base = this.prototypeBaseModel;
-        if (base === undefined) {
-            return;
-        }
-
-        // If my model does not yet have an explicit base, I extend my parent class's model
-        const { type, base: currentBase } = this.mutableModel;
-        if (type === undefined && (currentBase === undefined || currentBase === struct)) {
-            const operationalBase = this.prototypeBaseModel;
-            if (operationalBase) {
-                this.mutableModel.operationalBase = operationalBase;
-            }
-        }
-
-        // If my base is not a datatype, it forces the type of my model
-        if (base && base.tag !== "datatype" && this.mutableModel.tag !== base.tag) {
-            this.modelType = base.constructor as Model.ConcreteType;
-        }
-
-        // If ID is not already set, force ID to match base
-        if (this.mutableModel.id === undefined && base.id !== undefined) {
-            this.mutableModel.id = base.id;
         }
     }
 
@@ -152,8 +129,7 @@ export class ClassSemantics extends Semantics {
 
             if (base?.localModel) {
                 // Semantics and model may not mutate once acting as a base
-                Object.freeze(base);
-                base.localModel.freeze();
+                base.finalize();
 
                 return base.localModel;
             }
@@ -168,12 +144,16 @@ export class ClassSemantics extends Semantics {
             throw new InvalidMetadataError(`Cannot decorate symbolic function ${String(name)}`);
         }
 
-        if (this.#definedElements === undefined) {
-            this.#definedElements = new Map();
+        if (this.#definedFields === undefined) {
+            this.#definedFields = new Map();
         }
-        let field = this.#definedElements.get(name);
+        let field = this.#definedFields.get(name);
         if (field === undefined) {
-            this.#definedElements.set(name, (field = new FieldSemantics(this, name)));
+            if (this.isFinal) {
+                throw new MetadataConflictError(`Cannot install field ${field} because semantics are final`);
+            }
+
+            this.#definedFields.set(name, (field = new FieldSemantics(this, name)));
         }
         return field;
     }
@@ -233,33 +213,41 @@ export class ClassSemantics extends Semantics {
      * Obtain the {@link ClassSemantics} for {@link source}.
      */
     static override of(source: ClassSemantics.Source) {
-        let semantics: ClassSemantics;
+        // Source is the semantics
         if (source instanceof ClassSemantics) {
             return source;
-        } else if (typeof source === "function") {
-            let metadata: MatterMetadata;
-            if (!Object.hasOwn(source, Symbol.metadata)) {
-                metadata = source[Symbol.metadata] = {};
-            } else {
-                metadata = source[Symbol.metadata] as MatterMetadata;
-            }
+        }
 
-            if (!Object.hasOwn(metadata, matter)) {
-                semantics = metadata[matter] = new ClassSemantics();
-            } else {
-                semantics = metadata[matter] as ClassSemantics;
-            }
-
-            if (!semantics.new) {
-                semantics.new = source;
-            }
-        } else {
+        // Source is decorator context
+        if (typeof source !== "function") {
             const metadata = source.metadata as MatterMetadata;
             if (Object.hasOwn(metadata, matter)) {
                 return metadata[matter]!;
             }
             return (metadata[matter] = new ClassSemantics());
         }
+
+        // Source is a constructor
+        let metadata: MatterMetadata;
+        if (!Object.hasOwn(source, Symbol.metadata)) {
+            metadata = source[Symbol.metadata] = {};
+        } else {
+            metadata = source[Symbol.metadata] as MatterMetadata;
+        }
+
+        let semantics: ClassSemantics;
+        if (!Object.hasOwn(metadata, matter)) {
+            semantics = metadata[matter] = new ClassSemantics();
+        } else {
+            semantics = metadata[matter] as ClassSemantics;
+        }
+
+        // If the parent class is not decorated then this may be the first time we've seen the constructor associated
+        // with the metadata.  So always inform the metadata of its constructor
+        if (!semantics.new) {
+            semantics.new = source;
+        }
+
         return semantics;
     }
 
@@ -283,8 +271,57 @@ export class ClassSemantics extends Semantics {
         Semantics.classOf = this.of;
     }
 
+    override finalize() {
+        if (this.isFinal) {
+            return;
+        }
+
+        // Invoke any custom extension logic
+        this.#new?.[ClassSemantics.extend]?.(this);
+
+        // Apply base finalization
+        super.finalize();
+
+        // Finalize fields
+        if (this.#definedFields) {
+            for (const field of this.#definedFields.values()) {
+                field.finalize();
+            }
+        }
+    }
+
+    #applyBaseSemantics() {
+        const base = this.prototypeBaseModel;
+        if (base === undefined) {
+            return;
+        }
+
+        // If my model does not yet have an explicit base, I extend my parent class's model
+        const { type, base: currentBase } = this.mutableModel;
+        if (type === undefined && (currentBase === undefined || currentBase === struct)) {
+            const operationalBase = this.prototypeBaseModel;
+            if (operationalBase) {
+                this.mutableModel.operationalBase = operationalBase;
+            }
+        }
+
+        // If my base is not a datatype, it forces the type of my model
+        if (base && base.tag !== "datatype" && this.mutableModel.tag !== base.tag) {
+            this.modelType = base.constructor as Model.ConcreteType;
+        }
+
+        // If ID is not already set, force ID to match base
+        if (this.mutableModel.id === undefined && base.id !== undefined) {
+            this.mutableModel.id = base.id;
+        }
+    }
+
     protected override createModel(type: Model.ConcreteType = DatatypeModel) {
-        return new type({ name: "Unnamed", operationalBase: struct });
+        let name = this.#new?.name;
+        if (name === undefined || name === "") {
+            name = "Unnamed";
+        }
+        return new type({ name, operationalBase: struct });
     }
 }
 
@@ -300,7 +337,7 @@ export namespace ClassSemantics {
     }
 
     /**
-     * An object for which a {@link ClassSemantics} may be obtained.
+     * An object for which you may obtain {@link ClassSemantics}.
      */
     export type Source = Constructor | DecoratorContext | ClassSemantics;
 

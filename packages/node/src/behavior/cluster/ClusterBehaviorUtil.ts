@@ -117,7 +117,7 @@ export function createType<const C extends ClusterType>(
     ClassSemantics.of(type).mutableModel = schema;
 
     // Mutation of schema will almost certainly result in logic errors so ensure that can't happen
-    schema.freeze();
+    schema.finalize();
 
     if (useCache) {
         ClusterBehaviorCache.set(cluster, base, schema, type);

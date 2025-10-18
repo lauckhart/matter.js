@@ -22,6 +22,9 @@ export class FieldSemantics extends Semantics {
 
         this.#owner = owner;
         this.name = name;
+
+        // Force creation
+        void this.mutableModel;
     }
 
     protected override createModel(type: Model.ConcreteType = FieldModel) {
@@ -31,7 +34,7 @@ export class FieldSemantics extends Semantics {
     static override of(source: FieldSemantics.Source) {
         if (source.kind === "class") {
             throw new InvalidMetadataError(
-                `Cannot retrieve field decorator for class decorator ${source.name ?? "of anonymous class"}`,
+                `Cannot retrieve field semantics for class decorator ${source.name ?? "of anonymous class"}`,
             );
         }
         return Semantics.classOf(source).fieldFor(source.name);

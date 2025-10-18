@@ -4,10 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MetadataConflictError, MissingMetadataError } from "#decoration/errors.js";
+import { MetadataConflictError } from "#decoration/errors.js";
 import { InternalError } from "#general";
 import type { Model } from "#models/Model.js";
+import * as models from "#standard/elements/models.js";
 import type { ClassSemantics } from "./ClassSemantics.js";
+
+const standardModels = new Set(Object.values(models) as Model[]);
 
 /**
  * Base class for Matter semantics associated with JavaScript classes and properties.
@@ -17,6 +20,29 @@ import type { ClassSemantics } from "./ClassSemantics.js";
  */
 export abstract class Semantics {
     #localModel?: Model;
+    #isFinal = false;
+
+    /**
+     * Determine whether these semantics are final.
+     *
+     * Once final no further mutation is allowed.
+     */
+    get isFinal(): boolean {
+        return this.#isFinal;
+    }
+
+    /**
+     * Finalize the model.
+     */
+    finalize() {
+        if (this.#isFinal) {
+            return;
+        }
+
+        this.#isFinal = true;
+        Object.freeze(this);
+        this.#localModel?.finalize();
+    }
 
     /**
      * The {@link Model} defined by local decoration, if any.
@@ -44,8 +70,18 @@ export abstract class Semantics {
      *   * If both models are frozen throws {@link MetadataConflictError}
      */
     set mutableModel(model: Model) {
+        if (this.#isFinal) {
+            throw new MetadataConflictError(`Cannot modify final semantics of ${this.#localModel?.name ?? "(none)"}`);
+        }
+
         if (this.#localModel === model) {
             return;
+        }
+
+        // We don't freeze global models by default for performance reasons, but do freeze them here to prevent
+        // accidental mutation
+        if (standardModels.has(model)) {
+            model.finalize();
         }
 
         if (this.#localModel === undefined) {
@@ -77,6 +113,10 @@ export abstract class Semantics {
      * Obtain a model unconditionally for mutation purposes.
      */
     get mutableModel() {
+        if (this.#isFinal) {
+            throw new MetadataConflictError(`Cannot modify final semantics of ${this.#localModel?.name ?? "(none)"}`);
+        }
+
         if (this.#localModel === undefined) {
             this.#localModel = this.createModel();
         } else if (this.#localModel.isFrozen) {
@@ -153,22 +193,4 @@ export namespace Semantics {
         // This should be replaced by ClassSemantics
         throw new InternalError(`Class decoration lookup not installed`);
     };
-
-    /**
-     * Access the {@link Model} of a {@link Source}.
-     */
-    export function modelOf(source: Model.Source) {
-        if ("tag" in source) {
-            return source;
-        }
-        const semantics = classOf(source);
-
-        const model = semantics.semanticModel;
-
-        if (model && (model.constructor as Model.ConcreteType).requiresId) {
-            throw new MissingMetadataError(`Model ${source.name} is missing mandatory numeric ID`);
-        }
-
-        return model;
-    }
 }

@@ -6,5 +6,4 @@
 
 export * from "./decorators/index.js";
 export * from "./errors.js";
-export * from "./Schema.js";
 export * from "./semantics/index.js";

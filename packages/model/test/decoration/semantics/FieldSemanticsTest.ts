@@ -7,7 +7,6 @@
 // Ensure correct initialization order
 import "#decoration/semantics/index.js";
 
-import { Schema } from "#decoration/Schema.js";
 import { attribute } from "#decoration/decorators/attribute.js";
 import { field } from "#decoration/decorators/field.js";
 import { listOf } from "#decoration/decorators/listOf.js";
@@ -15,6 +14,7 @@ import { nonvolatile } from "#decoration/decorators/nonvolatile.js";
 import { nullable } from "#decoration/decorators/nullable.js";
 import { AttributeModel } from "#models/AttributeModel.js";
 import { FieldModel } from "#models/index.js";
+import { Schema } from "#models/Schema.js";
 import { uint16, uint32 } from "#standard/elements/models.js";
 
 describe("FieldSemantics", () => {

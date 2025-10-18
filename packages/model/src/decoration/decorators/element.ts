@@ -9,6 +9,7 @@ import type { ClassSemantics } from "#decoration/semantics/ClassSemantics.js";
 import { Semantics } from "#decoration/semantics/Semantics.js";
 import { Decorator } from "#general";
 import { Model } from "#models/Model.js";
+import { Schema } from "#models/Schema.js";
 
 /**
  * Decorate a class or field as a specific Matter element type.
@@ -48,12 +49,21 @@ export function element<
                         const subresult = (modifier as any)(target, context);
                         if (subresult) {
                             if (result) {
-                                throw new MetadataConflictError(`Multiple decorators returned a value`);
+                                throw new MetadataConflictError(`Multiple modifiers returned a value`);
                             }
                             result = subresult;
                         }
                     } else {
-                        semantics.mutableModel.operationalBase = Semantics.modelOf(modifier as NewableFunction);
+                        const model = Schema(modifier as NewableFunction);
+                        if (model === undefined) {
+                            throw new InvalidMetadataError(
+                                `Cannot use undecorated class ${modifier.name || "(anonymous)"} as type for ${String(context.name || "(anonymous)")}`,
+                            );
+                        }
+
+                        model.finalize();
+
+                        semantics.mutableModel = model;
                     }
                     continue;
 

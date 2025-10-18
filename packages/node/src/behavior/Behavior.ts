@@ -323,9 +323,6 @@ Object.defineProperties(Behavior, {
                 return;
             }
 
-            // Augment with fields for untyped state members
-            decoration.defineUnknownMembers(defaults);
-
             // Merge state properties into my schema
             if (ClassSemantics.hasOwnSemantics(State)) {
                 const stateSemantics = Semantics.classOf(State);
@@ -337,6 +334,9 @@ Object.defineProperties(Behavior, {
                 const eventSemantics = Semantics.classOf(Events);
                 eventSemantics.mutableModel = decoration.mutableModel;
             }
+
+            // Augment with fields for untyped state members
+            decoration.defineUnknownMembers(defaults);
         },
     },
 });

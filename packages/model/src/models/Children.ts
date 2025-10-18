@@ -558,7 +558,7 @@ export function Children<T extends Model = Model>(
 
     function freeze() {
         for (const child of self) {
-            (child as Model).freeze();
+            (child as Model).finalize();
         }
         Object.freeze(children);
     }
