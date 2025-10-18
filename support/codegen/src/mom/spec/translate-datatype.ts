@@ -289,7 +289,7 @@ function applyAccessNotes(
     // Determine what the access flag should be
     let flag: string | undefined;
     for (const n of fields.tables[0].notes) {
-        const match = n.textContent?.match(/access (?:quality|modifier): fabric[\s-](\w+)/i);
+        const match = n.textContent?.match(/access quality: fabric[\s-](\w+)/i);
         if (match) {
             const quality = match[1].toLowerCase();
 

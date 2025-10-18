@@ -5,7 +5,7 @@
  */
 
 // Must import these via index to ensure proper initialization
-import { DatatypeModel, Model } from "#models/index.js";
+import { DatatypeModel, FieldModel, Model } from "#models/index.js";
 
 import { camelize } from "#general";
 import { Scope } from "#logic/Scope.js";
@@ -203,6 +203,15 @@ export class ClassSemantics extends Semantics {
             } catch (e) {
                 // We do not support inaccessible fields
                 continue;
+            }
+
+            const model = this.fieldFor(name).mutableModel as FieldModel;
+
+            model.operationalBase = any;
+
+            // Default to fixed if read-only
+            if (!descriptor.writable && !descriptor.set) {
+                model.quality = { ...model.quality, fixed: true };
             }
 
             this.fieldFor(name).mutableModel.operationalBase = any;

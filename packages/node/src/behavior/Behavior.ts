@@ -317,8 +317,15 @@ Object.defineProperties(Behavior.prototype, {
 Object.defineProperties(Behavior, {
     [ClassSemantics.extend]: {
         value(this: Behavior.Type, decoration: ClassSemantics) {
+            const type = decoration.new as Behavior.Type;
+
+            // Support static override of schema
+            if (Object.hasOwn(type, "schema") && type.schema !== undefined) {
+                decoration.mutableModel = type.schema;
+            }
+
             // Obtain state and base schema
-            const { State, Events, defaults } = decoration.new as Behavior.Type;
+            const { State, Events, defaults } = type;
             if (!State || !defaults) {
                 return;
             }
