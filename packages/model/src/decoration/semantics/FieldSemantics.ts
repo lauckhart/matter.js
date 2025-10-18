@@ -5,6 +5,7 @@
  */
 
 import { InvalidMetadataError } from "#decoration/errors.js";
+import { InternalError } from "#general";
 import { FieldModel } from "#models/FieldModel.js";
 import type { Model } from "#models/Model.js";
 import type { ClassSemantics } from "./ClassSemantics.js";
@@ -14,21 +15,23 @@ import { Semantics } from "./Semantics.js";
  * Decorator metadata associated with a specific class field.
  */
 export class FieldSemantics extends Semantics {
-    name: string;
-    #owner: ClassSemantics;
-
     constructor(owner: ClassSemantics, name: string) {
         super();
 
-        this.#owner = owner;
-        this.name = name;
-
-        // Force creation
-        void this.mutableModel;
+        this.mutableModel = new FieldModel({ name, parent: owner.mutableModel });
     }
 
-    protected override createModel(type: Model.ConcreteType = FieldModel) {
-        return new type({ name: this.name, parent: this.#owner.mutableModel });
+    protected override createModel(): Model {
+        // We create our model unconditionally so this shouldn't happen
+        throw new InternalError("Unexpected FieldSemantics.createModel");
+    }
+
+    protected override integrateModel(model: Model): Model {
+        if (this.localModel === undefined) {
+            return model;
+        }
+        this.mutableModel.operationalBase = model;
+        return this.mutableModel;
     }
 
     static override of(source: FieldSemantics.Source) {

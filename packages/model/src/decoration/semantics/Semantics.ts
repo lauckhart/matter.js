@@ -56,6 +56,9 @@ export abstract class Semantics {
      *
      * When "setting" the model we need to merge semantics coming from decorators, the prototype hierarchy, and models
      * provided programmatically.
+     *
+     * This may set the local model, change it or set its operational base.  We use local state and the finalization
+     * status of the model to determine how to integrate.
      */
     set mutableModel(model: Model) {
         if (this.#isFinal) {
@@ -72,24 +75,13 @@ export abstract class Semantics {
             model.finalize();
         }
 
-        // If local model is not yet set or is final, we have not extended; this is "swap base with no decoration" case
-        if (this.#localModel === undefined || this.#localModel.isFinal) {
-            this.#localModel = model;
-            return;
-        }
-
-        // If incoming model is final, replace operational base of local model.  This is "swap base with decoration"
-        // case
-        if (model.isFinal) {
-            this.#localModel.operationalBase = model;
-            return;
-        }
-
-        // Neither model is final.  Move children to new model.  This is "replace temporary model created by decorators"
-        // case
-        model.children.push(...this.#localModel.children);
-        this.#localModel = model;
+        this.#localModel = this.integrateModel(model);
     }
+
+    /**
+     * Replace the "base" of {@link localModel} and return an updated model.
+     */
+    protected abstract integrateModel(model: Model): Model;
 
     /**
      * Obtain a model unconditionally for mutation purposes.

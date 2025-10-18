@@ -316,6 +316,26 @@ export class ClassSemantics extends Semantics {
         }
     }
 
+    protected override integrateModel(model: Model) {
+        // If local model is not yet set or is final, we have not extended; this is "swap base with no decoration" case
+        if (this.localModel === undefined || this.localModel.isFinal) {
+            return model;
+        }
+
+        // If incoming model is final, replace operational base of local model.  This is "swap base with decoration"
+        // case
+        if (model.isFinal) {
+            this.localModel.operationalBase = model;
+            return this.localModel;
+        }
+
+        // Neither model is final.  Move any children to new model.  This is "replace temporary model created by
+        // decorators" case
+        model.children.push(...this.localModel.children);
+
+        return model;
+    }
+
     protected override createModel(type: Model.ConcreteType = DatatypeModel) {
         let name = this.#new?.name;
         if (name === undefined || name === "") {
