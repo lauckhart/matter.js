@@ -9,6 +9,7 @@ import { camelize, EventEmitter, GeneratedClass, ImplementationError, Observable
 import {
     ClassSemantics,
     ClusterModel,
+    Conformance,
     DefaultValue,
     ElementTag,
     FeatureMap,
@@ -82,8 +83,7 @@ export function createType<const C extends ClusterType>(
         }
     }
 
-    const newProps = {} as Record<string, ValueModel>;
-    const scope = Scope(schema);
+    const context = DerivationContext(schema, cluster, base);
 
     const type = GeneratedClass({
         name,
@@ -93,9 +93,9 @@ export function createType<const C extends ClusterType>(
         // namespace overrides.  If we instead override as static properties then we lose the automatic interface type.
         // So just publish as static properties.
         staticProperties: {
-            State: createDerivedState(cluster, scope, base, newProps),
+            State: createDerivedState(context),
 
-            Events: createDerivedEvents(cluster, scope, base, newProps),
+            Events: createDerivedEvents(context),
         },
 
         staticDescriptors: {
@@ -140,27 +140,18 @@ export type ExtensionInterfaceOf<B extends Behavior.Type> = B extends { Extensio
     ? I
     : {};
 
-/**
- * Create a new state subclass that inherits relevant default values from a base Behavior.Type and adds new default
- * values from cluster attributes.
- *
- * Note - we only use the cluster here for default values
- */
-function createDerivedState(
-    cluster: ClusterType,
-    scope: Scope,
-    base: Behavior.Type,
-    newProps: Record<string, ValueModel>,
-) {
-    const BaseState = base["State"];
-    if (BaseState === undefined) {
-        throw new ImplementationError(`No state class defined for behavior class ${base.name}`);
-    }
+interface DerivationContext {
+    cluster: ClusterType;
+    scope: Scope;
+    featuresAvailable: FeatureSet;
+    featuresSupported: FeatureSet;
+    base: Behavior.Type;
+    newProps: Record<string, ValueModel>;
+}
 
-    const oldDefaults = new BaseState() as Record<string, any>;
-    let knownDefaults = (BaseState as HasKnownDefaults)[KNOWN_DEFAULTS];
-
-    // Determine the set of features so we can test attribute applicability
+function DerivationContext(schema: Schema, cluster: ClusterType, base: Behavior.Type): DerivationContext {
+    const scope = Scope(schema);
+    // Determine the set of features so we can test element applicability
     let featuresAvailable, featuresSupported;
     if (scope.owner instanceof ClusterModel) {
         const normalized = FeatureSet.normalize(scope.owner.featureMap, scope.owner.supportedFeatures);
@@ -170,6 +161,38 @@ function createDerivedState(
         featuresAvailable = new FeatureSet();
         featuresSupported = new FeatureSet();
     }
+
+    return {
+        cluster,
+        scope: Scope(schema),
+        featuresAvailable,
+        featuresSupported,
+        base,
+        newProps: {},
+    };
+}
+
+/**
+ * Create a new state subclass that inherits relevant default values from a base Behavior.Type and adds new default
+ * values from cluster attributes.
+ *
+ * Note - we only use the cluster here for default values
+ */
+function createDerivedState({
+    cluster,
+    scope,
+    base,
+    newProps,
+    featuresAvailable,
+    featuresSupported,
+}: DerivationContext) {
+    const BaseState = base["State"];
+    if (BaseState === undefined) {
+        throw new ImplementationError(`No state class defined for behavior class ${base.name}`);
+    }
+
+    const oldDefaults = new BaseState() as Record<string, any>;
+    let knownDefaults = (BaseState as HasKnownDefaults)[KNOWN_DEFAULTS];
 
     // Index schema members by name
     const props = {} as Record<string, ValueModel[]>;
@@ -191,8 +214,9 @@ function createDerivedState(
         let propSchema: ValueModel | undefined;
 
         // Determine whether the attribute applies
+        let applicability;
         for (const attr of attrs) {
-            const applicability = attr.effectiveConformance.applicabilityOf(featuresAvailable, featuresSupported);
+            applicability = attr.effectiveConformance.applicabilityOf(featuresAvailable, featuresSupported);
 
             // Inapplicable; ignore
             if (!applicability) {
@@ -240,6 +264,7 @@ function createDerivedState(
             oldDefaults[name] === undefined ? knownDefaults?.[name] : oldDefaults[name],
             attribute,
             propSchema,
+            applicability,
         );
     }
 
@@ -259,19 +284,21 @@ function createDerivedState(
 /**
  * Extend events with additional implementations.
  */
-function createDerivedEvents(
-    cluster: ClusterType,
-    scope: Scope,
-    base: Behavior.Type,
-    newProps: Record<string, ValueModel>,
-) {
+function createDerivedEvents({
+    cluster,
+    scope,
+    base,
+    newProps,
+    featuresAvailable,
+    featuresSupported,
+}: DerivationContext) {
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
     const baseInstance = new base.Events() as unknown as Record<string, unknown>;
 
     const eventNames = new Set<string>();
 
-    // Add mandatory events that are not present in the base class
+    // Add events that are mandatory or marked as supported and not present in the base class
     const applicableClusterEvents = new Set();
     for (const event of scope.membersOf(scope.owner as Schema, {
         conformance: "conformant",
@@ -413,19 +440,25 @@ function createDefaultCommandDescriptors(cluster: ClusterType, base: Behavior.Ty
     return result;
 }
 
-function selectDefaultValue(scope: Scope, oldDefault: Val, clusterAttr?: Attribute<any, any>, schemaProp?: ValueModel) {
+function selectDefaultValue(
+    scope: Scope,
+    oldDefault: Val,
+    clusterAttr: Attribute<any, any>,
+    schemaProp: ValueModel,
+    applicability?: Conformance.Applicability,
+) {
     if (oldDefault !== undefined) {
         return oldDefault;
     }
 
-    // Use cluster attribute rather than model attribute because currently "enable" modifies the cluster, not the schema
-    if (clusterAttr?.optional) {
+    // No default unless mandatory or explicitly marked as implemented
+    if (applicability !== Conformance.Applicability.Unconditional && !schemaProp.isSupported) {
         return;
     }
 
-    // Use cluster attribute rather than model attribute because currently "set" modifies the cluster, not the schema
-    if (clusterAttr?.default !== undefined) {
-        return clusterAttr.default;
+    // If there's an explicit default value, use that
+    if (schemaProp.default !== undefined) {
+        return schemaProp.default;
     }
 
     // Following checks use the schema
