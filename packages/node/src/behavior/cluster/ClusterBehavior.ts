@@ -153,7 +153,10 @@ export class ClusterBehavior extends Behavior {
         This extends ClusterBehavior.Type,
         const FlagsT extends ClusterTypeModifier.ElementFlags<This["cluster"]>,
     >(this: This, flags: FlagsT) {
-        return this.for(new ClusterTypeModifier(this.cluster).enable(flags));
+        const cluster = new ClusterTypeModifier(this.cluster).enable(flags);
+        const schema =
+            this.schema instanceof ClusterModel ? ClusterModifier.applyPresence(this.schema, flags) : undefined;
+        return this.for(cluster, schema);
     }
 
     /**

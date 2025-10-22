@@ -695,6 +695,7 @@ function computeApplicability(features: Set<string>, supportedFeatures: Set<stri
                 return assessOuterExpression(ast.param.expr);
 
             case Conformance.Flag.Optional:
+            case Conformance.Special.Empty:
                 return Optional;
 
             case Conformance.Special.OptionalIf:
@@ -709,7 +710,6 @@ function computeApplicability(features: Set<string>, supportedFeatures: Set<stri
             case Conformance.Flag.Provisional:
                 return None;
 
-            case Conformance.Special.Empty:
             case Conformance.Flag.Mandatory:
                 return Mandatory;
 

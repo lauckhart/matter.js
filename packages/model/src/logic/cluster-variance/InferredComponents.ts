@@ -133,7 +133,7 @@ const VarianceMatchers: VarianceMatcher[] = [
     {
         pattern: pattern(FEATURE, AND, FIELD),
         processor(add, match) {
-            add(true, { allOf: match });
+            add(false, { allOf: match });
         },
     },
 

@@ -14,7 +14,7 @@ import {
     OptionalEvent,
 } from "#cluster/Cluster.js";
 import { ClusterType } from "#cluster/ClusterType.js";
-import { ClusterTypeModifier } from "#cluster/mutation/ClusterTypeModfier.js";
+import { ClusterTypeModifier } from "#cluster/mutation/ClusterTypeModifier.js";
 import { Priority } from "#globals/Priority.js";
 import { TlvBoolean } from "#tlv/TlvBoolean.js";
 import { TlvUInt8 } from "#tlv/TlvNumber.js";
@@ -89,8 +89,7 @@ describe("ElementModifier", () => {
         it("has correct input values", () => {
             type IsNever<T> = [T] extends [never] ? true : false;
 
-            // Test InputAttributeValues and constituents first as they are
-            // the key to set
+            // Test InputAttributeValues and constituents first as they are the key to set
 
             // Type: Test AttributesOf
             type Attrs = ClusterType.AttributesOf<ClusterType>;

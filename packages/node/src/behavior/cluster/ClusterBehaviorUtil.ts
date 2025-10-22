@@ -223,13 +223,13 @@ function createDerivedState({
                 continue;
             }
 
-            // Applicable; add new default.  If conditional then cluster logic must modify
+            // Use this model for the property
             propSchema = attr;
             break;
         }
 
         // If the attribute doesn't apply, erase any previous default unless conditionally applicable
-        if (propSchema === undefined) {
+        if (!propSchema) {
             // Inapplicable; ensure no default is present
             if (oldDefaults[name] !== undefined) {
                 // Save the default value so we can recreate it if a future derivative re-enables this element
@@ -258,7 +258,8 @@ function createDerivedState({
             continue;
         }
 
-        // Make sure a default value is present
+        // Make sure a default value is present if mandatory or marked as supported (note that the default value may
+        // be "undefined" to indicate that an attribute is available optionally)
         defaults[name] = selectDefaultValue(
             scope,
             oldDefaults[name] === undefined ? knownDefaults?.[name] : oldDefaults[name],
