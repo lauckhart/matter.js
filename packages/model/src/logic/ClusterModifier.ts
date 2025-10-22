@@ -89,10 +89,10 @@ export namespace ClusterModifier {
     export function apply<T>(
         target: ClusterModel,
         modifications: ClusterModifier.ModificationSet<T>,
-        apply: (model: ValueModel, modification: T) => Schema | undefined,
+        apply: (model: ClusterModel.Child, modification: T) => ClusterModel.Child | undefined,
     ) {
         const scope = Scope(target);
-        let model: Schema | undefined;
+        let model: ClusterModel | undefined;
 
         for (const [pluralTag, mods] of Object.entries(modifications)) {
             const tag = (
@@ -102,20 +102,20 @@ export namespace ClusterModifier {
                 throw new StructuralModelError(`Unknown modifier set key ${pluralTag}`);
             }
 
-            const members = scope.membersOf(target, { conformance: Scope.DeconflictedConformance, tags: [tag] });
+            const members = scope.membersOf(target, { conformance: Scope.ConformantConformance, tags: [tag] });
 
             for (const [name, mod] of Object.entries(mods)) {
-                const target = members.for(name);
-                if (target === undefined) {
-                    throw new StructuralModelError(`${target} has no ${tag} "${name}"`);
+                const member = members.for(name);
+                if (member === undefined) {
+                    throw new StructuralModelError(`${member} has no ${tag} "${name}"`);
                 }
 
-                if (!(target instanceof ValueModel)) {
+                if (!(member instanceof ValueModel)) {
                     throw new StructuralModelError(`Tag ${tag} cannot be modified because it is not a value element`);
                 }
 
-                const replacement = apply(target, mod as T);
-                if (replacement === target || replacement === undefined) {
+                const replacement = apply(member, mod as T);
+                if (replacement === member || replacement === undefined) {
                     return;
                 }
 
@@ -167,5 +167,5 @@ export namespace ClusterModifier {
     /**
      * A set of element modifications keyed by tag and name
      */
-    export interface ModificationSet<T> extends Record<`${ElementTag}s`, Record<string, T>> {}
+    export interface ModificationSet<T> extends Partial<Record<`${ElementTag}s`, Record<string, T | undefined>>> {}
 }

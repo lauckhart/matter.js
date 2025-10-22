@@ -21,7 +21,7 @@ import {
     ValueModel,
 } from "#model";
 import { Val } from "#protocol";
-import { Attribute, ClusterType } from "#types";
+import { ClusterType } from "#types";
 import { Behavior } from "../Behavior.js";
 import { DerivedState } from "../state/StateType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
@@ -262,7 +262,6 @@ function createDerivedState({
         defaults[name] = selectDefaultValue(
             scope,
             oldDefaults[name] === undefined ? knownDefaults?.[name] : oldDefaults[name],
-            attribute,
             propSchema,
             applicability,
         );
@@ -284,14 +283,7 @@ function createDerivedState({
 /**
  * Extend events with additional implementations.
  */
-function createDerivedEvents({
-    cluster,
-    scope,
-    base,
-    newProps,
-    featuresAvailable,
-    featuresSupported,
-}: DerivationContext) {
+function createDerivedEvents({ scope, base, newProps, featuresAvailable, featuresSupported }: DerivationContext) {
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
     const baseInstance = new base.Events() as unknown as Record<string, unknown>;
@@ -306,7 +298,12 @@ function createDerivedEvents({
     })) {
         const name = camelize(event.name);
         applicableClusterEvents.add(name);
-        if (!cluster.events[name]?.optional && baseInstance[name] === undefined) {
+        if (
+            (event.conformance.applicabilityOf(featuresAvailable, featuresSupported) ===
+                Conformance.Applicability.Mandatory ||
+                event.isSupported) &&
+            baseInstance[name] === undefined
+        ) {
             eventNames.add(name);
             instanceDescriptors[name] = createEventDescriptor(
                 name,
@@ -339,7 +336,7 @@ function createDerivedEvents({
     // TODO - if necessary, mask out (set to undefined) events present in base cluster but not derived cluster
 
     return GeneratedClass({
-        name: `${cluster.name}$Events`,
+        name: `${base.name}$Events`,
         base: base.Events,
 
         instanceDescriptors,
@@ -443,8 +440,7 @@ function createDefaultCommandDescriptors(cluster: ClusterType, base: Behavior.Ty
 function selectDefaultValue(
     scope: Scope,
     oldDefault: Val,
-    clusterAttr: Attribute<any, any>,
-    schemaProp: ValueModel,
+    member: ValueModel,
     applicability?: Conformance.Applicability,
 ) {
     if (oldDefault !== undefined) {
@@ -452,37 +448,29 @@ function selectDefaultValue(
     }
 
     // No default unless mandatory or explicitly marked as implemented
-    if (applicability !== Conformance.Applicability.Unconditional && !schemaProp.isSupported) {
+    if (applicability !== Conformance.Applicability.Mandatory && !member.isSupported) {
         return;
     }
 
-    // If there's an explicit default value, use that
-    if (schemaProp.default !== undefined) {
-        return schemaProp.default;
-    }
-
-    // Following checks use the schema
-    if (!schemaProp) {
-        return;
-    }
-
-    if (schemaProp.nullable) {
-        return null;
-    }
-
-    const effectiveDefault = DefaultValue(scope, schemaProp);
-    if (effectiveDefault) {
+    // If there's an explicit default, use that
+    const effectiveDefault = DefaultValue(scope, member);
+    if (effectiveDefault !== undefined) {
         return effectiveDefault;
+    }
+
+    // Default for nullable is null
+    if (member.nullable) {
+        return null;
     }
 
     // TODO - skip the following defaults if conformance is not absolutely mandatory.  This is pretty limited, may need
     // to use more sophisticated evaluation if insufficient
-    const conformance = schemaProp.effectiveConformance;
+    const conformance = member.effectiveConformance;
     if (!conformance.isMandatory) {
         return;
     }
 
-    switch (schemaProp.effectiveMetatype) {
+    switch (member.effectiveMetatype) {
         case Metatype.bitmap:
         case Metatype.object:
             // This is not a very good default but it is better than undefined

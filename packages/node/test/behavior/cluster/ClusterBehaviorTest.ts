@@ -25,7 +25,7 @@ import {
     Attribute,
     ClusterId,
     ClusterType,
-    ElementModifier,
+    ClusterTypeModifier,
     TlvBoolean,
     TlvInt32,
     TlvNullable,
@@ -265,7 +265,7 @@ describe("ClusterBehavior", () => {
             // Test constituent parts
             MyCluster.name satisfies "MyCluster";
 
-            const AlteredCluster = new ElementModifier(MyCluster).alter({});
+            const AlteredCluster = new ClusterTypeModifier(MyCluster).alter({});
             AlteredCluster.name satisfies "MyCluster";
 
             const BehaviorForAlteredCluster = MyBehavior.for(AlteredCluster);
