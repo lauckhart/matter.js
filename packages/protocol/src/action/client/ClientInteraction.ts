@@ -15,6 +15,7 @@ import { ReadResult } from "#action/response/ReadResult.js";
 import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
 import {
+    Abort,
     BasicSet,
     Diagnostic,
     Duration,
@@ -90,7 +91,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         return instance;
     }
 
-    async *read(request: Read, _session?: SessionT): ReadResult {
+    async *read(request: Read, session?: SessionT): ReadResult {
         const readPathsCount = (request.attributeRequests?.length ?? 0) + (request.eventRequests?.length ?? 0);
         if (readPathsCount > 9) {
             logger.debug(
@@ -100,20 +101,26 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
         this.#begin(request);
 
+        const checkAbort = Abort.checkerFor(session);
+
         let messenger: undefined | InteractionClientMessenger;
         try {
             messenger = await InteractionClientMessenger.create(this.#exchanges);
+            checkAbort();
 
             logger.debug("Read »", messenger.exchange.via, request);
             await messenger.sendReadRequest(request);
+            checkAbort();
 
             let attributeReportCount = 0;
             let eventReportCount = 0;
 
             for await (const report of messenger.readDataReports()) {
+                checkAbort();
                 attributeReportCount += report.attributeReports?.length ?? 0;
                 eventReportCount += report.eventReports?.length ?? 0;
                 yield InputChunk(report);
+                checkAbort();
             }
 
             logger.debug(
@@ -136,20 +143,25 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
      * The returned attribute write status information is returned. No error is thrown for individual attribute write
      * failures.
      */
-    async write<T extends Write>(request: T, _session?: SessionT): WriteResult<T> {
+    async write<T extends Write>(request: T, session?: SessionT): WriteResult<T> {
         this.#begin(request);
+
+        const checkAbort = Abort.checkerFor(session);
 
         let messenger: undefined | InteractionClientMessenger;
         try {
             messenger = await InteractionClientMessenger.create(this.#exchanges);
+            checkAbort();
 
             if (request.timedRequest) {
                 await messenger.sendTimedRequest(request.timeout ?? DEFAULT_TIMED_REQUEST_TIMEOUT);
+                checkAbort();
             }
 
             logger.info("Write »", messenger.exchange.via, request);
 
             const response = await messenger.sendWriteCommand(request);
+            checkAbort();
             if (request.suppressResponse) {
                 return undefined as Awaited<WriteResult<T>>;
             }
@@ -201,15 +213,19 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async *invoke(request: ClientInvoke, _session?: SessionT): DecodedInvokeResult {
+    async *invoke(request: ClientInvoke, session?: SessionT): DecodedInvokeResult {
+        const checkAbort = Abort.checkerFor(session);
+
         this.#begin(request);
 
         let messenger: InteractionClientMessenger | undefined;
         try {
             messenger = await InteractionClientMessenger.create(this.#exchanges);
+            checkAbort();
 
             if (request.timedRequest) {
                 await messenger.sendTimedRequest(request.timeout ?? DEFAULT_TIMED_REQUEST_TIMEOUT);
+                checkAbort();
             }
 
             logger.info(
@@ -227,6 +243,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                         ? DEFAULT_MINIMUM_RESPONSE_TIMEOUT_WITH_FAILSAFE
                         : undefined),
             );
+            checkAbort();
             if (!request.suppressResponse) {
                 if (result && result.invokeResponses?.length) {
                     const chunk: InvokeResult.Chunk = result.invokeResponses
@@ -299,6 +316,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 } else {
                     yield [];
                 }
+                checkAbort();
             }
         } finally {
             await messenger?.close();
@@ -306,7 +324,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async subscribe(request: Subscribe, _session?: SessionT): SubscribeResult {
+    async subscribe(request: Subscribe, session?: SessionT): SubscribeResult {
         const subscriptionPathsCount = (request.attributeRequests?.length ?? 0) + (request.eventRequests?.length ?? 0);
         if (subscriptionPathsCount > 3) {
             logger.debug("Subscribe interactions with more then 3 paths might be not allowed by the device.");
@@ -323,9 +341,12 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
         this.#begin(request);
 
+        const checkAbort = Abort.checkerFor(session);
+
         let messenger: undefined | InteractionClientMessenger;
         try {
             messenger = await InteractionClientMessenger.create(this.#exchanges);
+            checkAbort();
 
             logger.info(
                 "Subscribe »",
@@ -343,8 +364,10 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 maxIntervalCeilingSeconds: Seconds.of(DEFAULT_MIN_INTERVAL_FLOOR), // TODO use better max fallback
                 ...request,
             });
+            checkAbort();
 
             await this.#handleSubscriptionResponse(request, readChunks(messenger));
+            checkAbort();
 
             const responseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
             const response = TlvSubscribeResponse.decode(responseMessage.payload);
@@ -358,15 +381,11 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 }),
             );
 
-            return this.#subscriptions.add(request, response);
+            return this.#subscriptions.add(request, response, session);
         } finally {
             await messenger?.close();
             this.#end(request);
         }
-    }
-
-    cancelSubscription(id: number) {
-        this.#subscriptions.get(id)?.close();
     }
 
     async #handleSubscriptionResponse(request: Subscribe, result: ReadResult) {

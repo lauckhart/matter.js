@@ -6,6 +6,7 @@
 
 import type { ActionContext } from "#behavior/context/ActionContext.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
+import { Crypto } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import {
     ClientInteraction,
@@ -16,6 +17,7 @@ import {
     ReadResult,
     Subscribe,
     SubscribeResult,
+    SustainedSubscription,
     Write,
     WriteResult,
 } from "#protocol";
@@ -45,8 +47,12 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
     }
 
     /**
-     * Subscribe to chosen attributes remotely from the node. Data are automatically updated in the storage and not
-     * returned. The subscription response message with the subscription id and the maxInterval is returned.
+     * Subscribe to remote events and attributes as defined by {@link request}.
+     *
+     * matter.js updates local state
+     *
+     * By default matter.js subscribes to all attributes and events of the peer and updates {@link ClientNode} state
+     * automatically.  So you normally do not need to subscribe manually.
      */
     async subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
         const intermediateRequest: Subscribe = {
@@ -66,15 +72,16 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
                 request.closed?.(cause);
             },
         };
-        const interaction = await this.#connect();
-        return interaction.subscribe(intermediateRequest, context);
-    }
 
-    cancelSubscription(id: number): void {
-        if (!this.#node.lifecycle.isOnline) {
-            return;
-        }
-        this.#node.env.get(ClientInteraction).cancelSubscription(id);
+        const interaction = await this.#connect();
+
+        return new SustainedSubscription({
+            interaction,
+            request: intermediateRequest,
+            peer: this.#node.state.commissioning.peerAddress,
+            entropy: this.#node.env.get(Crypto),
+            abort: context?.abort,
+        });
     }
 
     /**

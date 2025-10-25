@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { InteractionSession } from "#action/Interactable.js";
 import { Subscribe } from "#action/request/Subscribe.js";
 import { ReadResult } from "#action/response/ReadResult.js";
 import { ActiveSubscription } from "#action/response/SubscribeResult.js";
 import {
+    AbortError,
     BasicSet,
-    CanceledError,
     Diagnostic,
     Environment,
     Environmental,
@@ -22,9 +23,19 @@ import {
 } from "#general";
 import { SubscriptionId } from "#interaction/Subscription.js";
 import { SubscribeResponse } from "#types";
-import { ClientSubscription } from "./ClientSubscription.js";
 
 const logger = Logger.get("ClientSubscriptions");
+
+/**
+ * The client view of an established Matter subscription.
+ */
+interface ClientSubscription extends ActiveSubscription {
+    request: Subscribe;
+    timeoutAt?: Timestamp;
+    isClosed: boolean;
+    isReading: boolean;
+    unregisterAbortListener?: () => void;
+}
 
 /**
  * A managed set of {@link ClientSubscription} instances.
@@ -43,11 +54,11 @@ export class ClientSubscriptions {
     /**
      * Register an active subscription.
      */
-    add(request: Subscribe, response: SubscribeResponse): ActiveSubscription {
+    add(request: Subscribe, response: SubscribeResponse, session?: InteractionSession): ActiveSubscription {
         const subscription: ClientSubscription = {
             ...response,
             request,
-            close: () => this.#closeOne(subscription, new CanceledError()),
+            close: () => this.#closeOne(subscription, new AbortError()),
             timeoutAt: undefined,
             isClosed: false,
             isReading: true,
@@ -55,6 +66,19 @@ export class ClientSubscriptions {
 
         this.#subscriptions.add(subscription);
         this.resetTimer();
+
+        const signal = session?.abort;
+        if (signal) {
+            function onAbort() {
+                subscription.close();
+            }
+
+            subscription.unregisterAbortListener = () => {
+                signal.removeEventListener("abort", onAbort);
+            };
+
+            signal.addEventListener("abort", onAbort);
+        }
 
         return subscription;
     }
@@ -140,17 +164,23 @@ export class ClientSubscriptions {
         }
     }
 
-    #closeOne(subscription: ClientSubscription, cause: CanceledError | TimeoutError) {
+    #closeOne(subscription: ClientSubscription, cause: AbortError | TimeoutError) {
         if (subscription.isClosed) {
             return;
         }
+
         subscription.isClosed = true;
+        subscription.unregisterAbortListener?.();
         this.#subscriptions.delete(subscription);
 
         try {
             subscription.request.closed?.(cause);
         } catch (e) {
-            logger.error("Error canceling subscription", Diagnostic.strong(subscription.subscriptionId), e);
+            logger.error(
+                "Error notifiying subscription close listener",
+                Diagnostic.strong(subscription.subscriptionId),
+                e,
+            );
         }
     }
 

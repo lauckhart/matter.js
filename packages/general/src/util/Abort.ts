@@ -73,6 +73,17 @@ export namespace Abort {
     }
 
     /**
+     * Perform abortable sleep.
+     */
+    export function sleep(description: string, abort: Signal | undefined, duration: Duration) {
+        let timer!: Timer;
+        const rested = new Promise<void>(resolve => {
+            timer = Time.getTimer(description, duration, resolve);
+        });
+        return race(abort, rested).finally(timer.stop.bind(timer));
+    }
+
+    /**
      * Create independently abortable subtask with a new {@link AbortController} that is aborted if another controller
      * aborts.
      *
@@ -114,5 +125,30 @@ export namespace Abort {
         }
 
         return controller;
+    }
+
+    /**
+     * Generate a function that will throw if aborted.
+     */
+    export function checkerFor(signal?: Signal | { abort?: Signal }) {
+        if (!signal) {
+            return () => {};
+        }
+
+        if ("abort" in signal && typeof signal.abort === "object") {
+            signal = signal.abort;
+        }
+        if (!signal) {
+            return () => {};
+        }
+
+        if ("signal" in signal) {
+            signal = signal.signal;
+        }
+        if (!signal) {
+            return () => {};
+        }
+
+        return (signal as AbortSignal).throwIfAborted.bind(signal);
     }
 }

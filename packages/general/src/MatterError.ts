@@ -318,3 +318,29 @@ export class TimeoutError extends MatterError {
         super(message, options);
     }
 }
+
+/**
+ * Thrown on abort when there is not an underlying error.
+ */
+export class AbortError extends CanceledError {
+    /**
+     * Determine whether a cause signifies abort.
+     *
+     * We include {@link DOMException} with name "AbortError" which is the standard error thrown if you invoke
+     * {@link AbortController#abort} without a cause.
+     */
+    static is(cause: unknown) {
+        return cause instanceof AbortError || (cause instanceof DOMException && cause.name === "AbortError");
+    }
+
+    /**
+     * Accept both {@link AbortError} and {@link DOMException} with name "AbortError".
+     */
+    static override accept(cause: unknown) {
+        if (AbortError.is(cause)) {
+            return;
+        }
+
+        return super.accept(cause);
+    }
+}
