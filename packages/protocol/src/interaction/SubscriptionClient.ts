@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Duration, Environment, Environmental, Logger, MaybePromise, Millis, Time, Timer } from "#general";
+import { Duration, Logger, MaybePromise, Millis, Time, Timer } from "#general";
 import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
@@ -31,14 +31,6 @@ export class SubscriptionClient implements ProtocolHandler {
     readonly requiresSecureSession = true;
     readonly #listeners = new Map<number, (dataReport: DecodedDataReport) => MaybePromise<void>>();
     readonly #timeouts = new Map<number, Timer>();
-
-    constructor() {}
-
-    static [Environmental.create](env: Environment) {
-        const client = new SubscriptionClient();
-        env.set(SubscriptionClient, client);
-        return client;
-    }
 
     /**
      * Register a subscription.

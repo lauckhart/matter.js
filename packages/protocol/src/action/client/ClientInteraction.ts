@@ -12,34 +12,40 @@ import { Subscribe } from "#action/request/Subscribe.js";
 import { Write } from "#action/request/Write.js";
 import { DecodedInvokeResult, InvokeResult } from "#action/response/InvokeResult.js";
 import { ReadResult } from "#action/response/ReadResult.js";
-import { SubscribeResult } from "#action/response/SubscribeResult.js";
 import { WriteResult } from "#action/response/WriteResult.js";
 import {
     Abort,
     BasicSet,
     Diagnostic,
     Duration,
+    Entropy,
     Environment,
-    Environmental,
     ImplementationError,
     isObject,
     Logger,
-    PromiseQueue,
+    RetrySchedule,
     Seconds,
 } from "#general";
 import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
-import { InteractionQueue } from "#peer/InteractionQueue.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
+import { SecureSession } from "#session/SecureSession.js";
 import { Status, TlvNoResponse, TlvSubscribeResponse } from "#types";
-import { ClientSubscriptions } from "./ClientSubscriptions.js";
 import { InputChunk } from "./InputChunk.js";
+import { ClientSubscription } from "./subscription/ClientSubscription.js";
+import { ClientSubscriptions } from "./subscription/ClientSubscriptions.js";
+import { PeerSubscription } from "./subscription/PeerSubscription.js";
+import { SustainedSubscription } from "./subscription/SustainedSubscription.js";
 
 const logger = Logger.get("ClientInteraction");
 
 export interface ClientInteractionContext {
-    exchanges: ExchangeProvider;
-    subscriptions: ClientSubscriptions;
-    queue: PromiseQueue;
+    environment: Environment;
+    abort?: Abort.Signal;
+    sustainRetries?: RetrySchedule.Configuration;
+}
+
+export interface ClientSubscribe extends Subscribe {
+    sustain?: boolean;
 }
 
 export const DEFAULT_MIN_INTERVAL_FLOOR = Seconds(1);
@@ -55,18 +61,22 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 {
     readonly #exchanges: ExchangeProvider;
     readonly #subscriptions: ClientSubscriptions;
-    readonly #queue?: PromiseQueue;
     readonly #interactions = new BasicSet<Read | Write | Invoke | Subscribe>();
-    #closed = false;
+    readonly #abort;
+    readonly #sustainRetries: RetrySchedule;
 
-    constructor(context: ClientInteractionContext) {
-        this.#exchanges = context.exchanges;
-        this.#subscriptions = context.subscriptions;
-        this.#queue = context.queue;
+    constructor({ environment, abort, sustainRetries }: ClientInteractionContext) {
+        this.#exchanges = environment.get(ExchangeProvider);
+        this.#subscriptions = environment.get(ClientSubscriptions);
+        this.#abort = Abort.subtask(abort);
+        this.#sustainRetries = new RetrySchedule(
+            environment.get(Entropy),
+            RetrySchedule.Configuration(SustainedSubscription.DefaultRetrySchedule, sustainRetries),
+        );
     }
 
     async close() {
-        this.#closed = true;
+        this.#abort();
 
         while (this.#interactions.size) {
             await this.#interactions.deleted;
@@ -75,20 +85,6 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
     get subscriptions() {
         return this.#subscriptions;
-    }
-
-    get queue() {
-        return this.#queue;
-    }
-
-    static [Environmental.create](env: Environment) {
-        const instance = new ClientInteraction({
-            exchanges: env.get(ExchangeProvider),
-            subscriptions: env.get(ClientSubscriptions),
-            queue: env.get(InteractionQueue),
-        });
-        env.set(ClientInteraction, instance);
-        return instance;
     }
 
     async *read(request: Read, session?: SessionT): ReadResult {
@@ -324,7 +320,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async subscribe(request: Subscribe, session?: SessionT): SubscribeResult {
+    async subscribe(request: ClientSubscribe, session?: SessionT) {
         const subscriptionPathsCount = (request.attributeRequests?.length ?? 0) + (request.eventRequests?.length ?? 0);
         if (subscriptionPathsCount > 3) {
             logger.debug("Subscribe interactions with more then 3 paths might be not allowed by the device.");
@@ -335,57 +331,89 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 logger.debug(
                     `Removing subscription with ID ${subscription.subscriptionId} because new subscription replaces it`,
                 );
-                subscription.close();
+                await subscription.close();
             }
         }
 
-        this.#begin(request);
+        SecureSession.assert(this.#exchanges.session);
+        const peer = this.#exchanges.session.peerAddress;
 
-        const checkAbort = Abort.checkerFor(session);
+        const subscribe = async (request: ClientSubscribe) => {
+            this.#begin(request);
 
-        let messenger: undefined | InteractionClientMessenger;
-        try {
-            messenger = await InteractionClientMessenger.create(this.#exchanges);
-            checkAbort();
+            const checkAbort = Abort.checkerFor(session);
 
-            logger.info(
-                "Subscribe »",
-                messenger.exchange.via,
-                Diagnostic.asFlags({ keepSubscriptions: request.keepSubscriptions }),
-                Diagnostic.dict({
-                    min: Duration.format(request.minIntervalFloor),
-                    max: Duration.format(request.maxIntervalCeiling),
-                }),
+            let messenger: undefined | InteractionClientMessenger;
+            try {
+                messenger = await InteractionClientMessenger.create(this.#exchanges);
+                checkAbort();
+
+                logger.info(
+                    "Subscribe »",
+                    messenger.exchange.via,
+                    Diagnostic.asFlags({ keepSubscriptions: request.keepSubscriptions }),
+                    Diagnostic.dict({
+                        min: Duration.format(request.minIntervalFloor),
+                        max: Duration.format(request.maxIntervalCeiling),
+                    }),
+                    request,
+                );
+
+                await messenger.sendSubscribeRequest({
+                    minIntervalFloorSeconds: Seconds.of(DEFAULT_MIN_INTERVAL_FLOOR),
+                    maxIntervalCeilingSeconds: Seconds.of(DEFAULT_MIN_INTERVAL_FLOOR), // TODO use better max fallback
+                    ...request,
+                });
+                checkAbort();
+
+                await this.#handleSubscriptionResponse(request, readChunks(messenger));
+                checkAbort();
+
+                const responseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
+                const response = TlvSubscribeResponse.decode(responseMessage.payload);
+
+                logger.info(
+                    "Subscription successful «",
+                    messenger.exchange.via,
+                    Diagnostic.dict({
+                        id: response.subscriptionId,
+                        interval: Duration.format(Seconds(response.maxInterval)),
+                    }),
+                );
+
+                const subscription = new PeerSubscription({
+                    request,
+                    peer,
+                    closed: () => this.#subscriptions.delete(subscription),
+                    response,
+                    abort: session?.abort,
+                });
+                this.#subscriptions.addPeer(subscription);
+
+                return subscription;
+            } finally {
+                await messenger?.close();
+                this.#end(request);
+            }
+        };
+
+        let subscription: ClientSubscription;
+        if (request.sustain) {
+            subscription = new SustainedSubscription({
+                subscribe,
+                peer,
+                closed: () => this.#subscriptions.delete(subscription),
                 request,
-            );
-
-            await messenger.sendSubscribeRequest({
-                minIntervalFloorSeconds: Seconds.of(DEFAULT_MIN_INTERVAL_FLOOR),
-                maxIntervalCeilingSeconds: Seconds.of(DEFAULT_MIN_INTERVAL_FLOOR), // TODO use better max fallback
-                ...request,
+                abort: session?.abort,
+                retries: this.#sustainRetries,
             });
-            checkAbort();
-
-            await this.#handleSubscriptionResponse(request, readChunks(messenger));
-            checkAbort();
-
-            const responseMessage = await messenger.nextMessage(MessageType.SubscribeResponse);
-            const response = TlvSubscribeResponse.decode(responseMessage.payload);
-
-            logger.info(
-                "Subscription successful «",
-                messenger.exchange.via,
-                Diagnostic.dict({
-                    subId: response.subscriptionId,
-                    interval: Duration.format(Seconds(response.maxInterval)),
-                }),
-            );
-
-            return this.#subscriptions.add(request, response, session);
-        } finally {
-            await messenger?.close();
-            this.#end(request);
+        } else {
+            subscription = await subscribe(request);
         }
+
+        this.#subscriptions.addActive(subscription);
+
+        return subscription;
     }
 
     async #handleSubscriptionResponse(request: Subscribe, result: ReadResult) {
@@ -402,7 +430,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     }
 
     #begin(request: Read | Write | Invoke | Subscribe) {
-        if (this.#closed) {
+        if (this.#abort.aborted) {
             throw new ImplementationError("Client interaction unavailable after close");
         }
         this.#interactions.add(request);

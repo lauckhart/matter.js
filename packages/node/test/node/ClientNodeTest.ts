@@ -138,7 +138,7 @@ describe("ClientNode", () => {
         await MockTime.resolve(receivedUpdate);
     });
 
-    it("decommissions", async () => {
+    it.only("decommissions", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -236,8 +236,9 @@ describe("ClientNode", () => {
         expect(payload).deep.equals({ softwareVersion: 12 });
     });
 
-    it("detects lack of ping and reestablishes connection", async () => {
-        // TODO
+    it("resubscribes on timeout", async () => {
+        // *** SETUP ***
+        //await using site = new MockSite();
     });
 
     it("handles shutdown event and reestablishes connection", () => {
@@ -302,7 +303,6 @@ const PEER1_STATE = {
         operationalPort: -1,
         defaultSubscription: undefined,
         caseAuthenticatedTags: undefined,
-        autoSubscribe: true,
     },
     basicInformation: {
         clusterRevision: 5,

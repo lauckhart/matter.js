@@ -1,0 +1,154 @@
+/**
+ * @license
+ * Copyright 2022-2025 Matter.js Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { ReadResult } from "#action/response/ReadResult.js";
+import { ActiveSubscription } from "#action/response/SubscribeResult.js";
+import { BasicSet, Environment, Environmental, Millis, Time, Timer, Timestamp } from "#general";
+import { SubscriptionId } from "#interaction/Subscription.js";
+import { PeerAddress } from "#peer/PeerAddress.js";
+import { ClientSubscription } from "./ClientSubscription.js";
+import type { PeerSubscription } from "./PeerSubscription.js";
+
+/**
+ * A managed set of {@link ActiveSubscription} instances.
+ */
+export class ClientSubscriptions {
+    #active = new BasicSet<ClientSubscription>();
+    #peers = new Map<PeerAddress, Map<number, PeerSubscription>>();
+    #timeout?: Timer;
+    #nextTimeoutAt?: number;
+
+    static [Environmental.create](env: Environment) {
+        const instance = new ClientSubscriptions();
+        env.set(ClientSubscriptions, instance);
+        return instance;
+    }
+
+    /**
+     * Register a user-facing {@link ClientSubscription}.
+     */
+    addActive(subscription: ClientSubscription) {
+        this.#active.add(subscription);
+    }
+
+    /**
+     * Register a {@link PeerSubscription}.
+     */
+    addPeer(subscription: PeerSubscription) {
+        let forPeer = this.#peers.get(subscription.peer);
+        if (forPeer === undefined) {
+            this.#peers.set(subscription.peer, (forPeer = new Map()));
+        }
+        forPeer.set(subscription.subscriptionId, subscription);
+
+        this.resetTimer();
+    }
+
+    /**
+     * Retrieve a {@link PeerSubscription} by ID.
+     */
+    getPeer(address: PeerAddress, id: SubscriptionId) {
+        return this.#peers.get(address)?.get(id);
+    }
+
+    /**
+     * Unregister a {@link PeerSubscription}.
+     */
+    delete(subscription: ClientSubscription) {
+        const forPeer = this.#peers.get(subscription.peer);
+        if (forPeer?.delete(subscription.subscriptionId)) {
+            if (!forPeer.size) {
+                this.#peers.delete(subscription.peer);
+            }
+        }
+        this.#active.delete(subscription);
+    }
+
+    /**
+     * Iterate over active subscriptions.
+     */
+    [Symbol.iterator]() {
+        return this.#active[Symbol.iterator]();
+    }
+
+    /**
+     * Terminate all subscriptions.
+     */
+    async close() {
+        if (this.#timeout) {
+            this.#timeout.stop();
+            this.#timeout = undefined;
+        }
+
+        for (const subscription of this.#active) {
+            subscription.close();
+        }
+
+        await this.#active.empty;
+    }
+
+    /**
+     * Restart the timeout timer for the current set of active subscriptions.
+     */
+    resetTimer() {
+        const now = Time.nowMs;
+        let nextTimeoutAt: Timestamp | undefined;
+
+        // Process each subscription
+        for (const peer of this.#peers.values()) {
+            for (const subscription of peer.values()) {
+                // If reading data reports, ignore for timeout purposes
+                if (subscription.isReading) {
+                    continue;
+                }
+
+                // Update timeout or expire if timed out
+                let { timeoutAt: timeoutAtMs } = subscription;
+                if (timeoutAtMs === undefined) {
+                    // Set timeout time
+                    timeoutAtMs = subscription.timeoutAt = Timestamp(now + subscription.timeout);
+                } else if (timeoutAtMs < now) {
+                    // Timeout
+                    subscription.timedOut();
+                    continue;
+                }
+
+                // If this is the earliest timeout, record
+                if (nextTimeoutAt === undefined || nextTimeoutAt > timeoutAtMs) {
+                    nextTimeoutAt = timeoutAtMs;
+                }
+            }
+        }
+
+        // If no subscriptions require timeout, disable timer
+        if (nextTimeoutAt === undefined) {
+            this.#nextTimeoutAt = undefined;
+            this.#timeout?.stop();
+            return;
+        }
+
+        // Create or update timer if not set for correct interval
+        if (nextTimeoutAt !== this.#nextTimeoutAt) {
+            this.#nextTimeoutAt = nextTimeoutAt;
+            if (this.#timeout) {
+                this.#timeout?.stop();
+                this.#timeout.interval = Millis(nextTimeoutAt - now);
+            } else {
+                this.#timeout = Time.getTimer(
+                    "SubscriptionTimeout",
+                    Millis(nextTimeoutAt - now),
+                    this.resetTimer.bind(this),
+                );
+            }
+        }
+    }
+}
+
+export namespace ClientSubscriptions {
+    export interface Listener {
+        (reports: AsyncIterable<ReadResult.Chunk>): Promise<void>;
+    }
+}

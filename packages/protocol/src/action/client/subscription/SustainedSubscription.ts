@@ -4,24 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Interactable } from "#action/Interactable.js";
 import { Subscribe } from "#action/request/Subscribe.js";
 import type { ActiveSubscription } from "#action/response/SubscribeResult.js";
-import {
-    Abort,
-    AbortError,
-    asError,
-    Diagnostic,
-    Duration,
-    Entropy,
-    Hours,
-    Logger,
-    RetrySchedule,
-    Seconds,
-    TimeoutError,
-} from "#general";
+import { asError, Diagnostic, Duration, Hours, Logger, RetrySchedule, Seconds } from "#general";
 import { Specification } from "#model";
-import { PeerAddress } from "#peer/PeerAddress.js";
+import { ClientSubscription } from "./ClientSubscription.js";
+import { PeerSubscription } from "./PeerSubscription.js";
 
 const logger = Logger.get("ClientSubscription");
 
@@ -31,77 +19,67 @@ const logger = Logger.get("ClientSubscription");
  * This class performs retries in response to connection errors and timeouts.  The underlying Matter subscription and
  * thus {@link ActiveSubscription#subscriptionId} may change if the peer goes offline or experiences transient errors.
  */
-export class SustainedSubscription implements ActiveSubscription {
+export class SustainedSubscription extends ClientSubscription {
     #request: Subscribe;
-    #abort: AbortController;
-    #entropy: Entropy;
-    #peer?: PeerAddress;
     #subscription?: ActiveSubscription;
-    #interaction: Interactable;
-    #finished: Promise<void>;
     #retries: RetrySchedule;
+    #subscribe: (request: Subscribe) => Promise<PeerSubscription>;
 
-    constructor({ interaction, request, peer, entropy, abort, retry }: SustainedSubscription.Configuration) {
-        this.#interaction = interaction;
+    constructor(config: SustainedSubscription.Configuration) {
+        super(config);
+
+        const { request, retries, subscribe } = config;
+
         this.#request = request;
-        this.#entropy = entropy;
-        this.#abort = Abort.subtask(abort);
-        this.#peer = PeerAddress(peer);
-        this.#retries = new RetrySchedule(
-            this.#entropy,
-            RetrySchedule.Configuration(SustainedSubscription.DefaultRetrySchedule, retry),
-        );
-        this.#finished = this.#run();
+        this.#retries = retries;
+        this.#subscribe = subscribe;
+        this.done = this.#run();
     }
 
     async #run() {
         const updated = this.#request.updated?.bind(this.#request);
 
         while (true) {
-            // Create request and promise that will inform us when the underlying subscription closes but otherwise
-            // respond to the original
+            // Create request and promise that will inform us when the underlying subscription closes
             const request = { ...this.#request, updated };
             if (this.#request.updated) {
                 request.updated = this.#request.updated.bind(request);
             }
-            const closed = new Promise<AbortError | TimeoutError>(resolve => {
-                request.closed = reason => resolve(reason);
+            const closed = new Promise<void>(resolve => {
+                request.closed = () => resolve();
             });
 
             // Subscribe
             for (const retry of this.#retries) {
                 try {
-                    this.#subscription = await this.#interaction.subscribe(request, {
-                        abort: this.#abort.signal,
-                    });
+                    this.#subscription = this.#subscription = await this.#subscribe(request);
+                    break;
                 } catch (e) {
-                    if (this.#abort.signal.aborted) {
+                    if (this.abort.aborted) {
                         return;
                     }
 
                     logger.error(
-                        `Failed to establish subscription to ${this.#peerStr}, retry in ${Duration.format(retry)}:`,
+                        `Failed to establish subscription to ${this.peer}, retry in ${Duration.format(retry)}:`,
                         Diagnostic.errorMessage(asError(e)),
                     );
                 }
             }
 
             // Wait for the subscription to close
-            const closeReason = await closed;
+            await closed;
 
             // If aborted then we're done
-            if (this.#abort.signal.aborted) {
+            if (this.abort.aborted) {
                 break;
             }
 
-            // If we aren't aborted then we are here due to error which currently can only be a timeout
-            logger.error(
-                `Retrying subscription to ${this.#peerStr} due to error:`,
-                Diagnostic.errorMessage(asError(closeReason)),
-            );
+            // If we aren't aborted then we are here due to timeout
+            logger.error(`Replacing subscription to ${this.peer} due to timeout`);
         }
 
-        this.#request?.closed?.(new AbortError());
+        // We only arrive here when closed
+        this.#request.closed?.();
     }
 
     get interactionModelRevision() {
@@ -115,55 +93,17 @@ export class SustainedSubscription implements ActiveSubscription {
     get subscriptionId() {
         return this.#subscription?.subscriptionId ?? SustainedSubscription.NO_SUBSCRIPTION;
     }
-
-    /**
-     * Terminate the subscription.
-     *
-     * You must use {@link finish} to ensure proper cleanup.
-     */
-    close(): void {
-        this.#abort.abort();
-    }
-
-    async finish() {
-        this.close();
-        await this.#finished;
-    }
-
-    get #peerStr() {
-        return this.#peer ? this.#peer.toString() : "(unknown peer)";
-    }
 }
 
 export namespace SustainedSubscription {
     /**
      * Configuration for {@link SustainedSubscription}.
      */
-    export interface Configuration {
+    export interface Configuration extends ClientSubscription.Configuration {
         /**
-         * The interactable used for underlying subscription.
+         * Function to establish underlying subscription.
          */
-        interaction: Interactable;
-
-        /**
-         * The subscription configuration.
-         */
-        request: Subscribe;
-
-        /**
-         * Address of the peer used when logging errors.
-         */
-        peer?: PeerAddress;
-
-        /**
-         * Used to randomize backoff.
-         */
-        entropy: Entropy;
-
-        /**
-         * If defined we abort when this signal aborts.
-         */
-        abort?: Abort.Signal;
+        subscribe: (request: Subscribe) => Promise<PeerSubscription>;
 
         /**
          * The schedule we use for retrying subscription connections.
@@ -171,7 +111,7 @@ export namespace SustainedSubscription {
          * We handle reconnection separately at the exchange level.  This retry schedule only applies to establishing a
          * subscription once we have an active exchange.  Exchange reconnection is handled by lower-level components.
          */
-        retry?: RetrySchedule.Configuration;
+        retries: RetrySchedule;
     }
 
     export const NO_SUBSCRIPTION = -1;
