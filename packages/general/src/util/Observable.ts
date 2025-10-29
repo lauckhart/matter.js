@@ -471,7 +471,7 @@ export class BasicObservableValue<T extends [any, ...any[]] = [boolean]>
         reject?: ((reason: any) => void) | null;
     }[];
 
-    constructor(value?: T, handleError?: ObserverErrorHandler, asyncConfig?: ObserverPromiseHandler | boolean) {
+    constructor(value?: T[0], handleError?: ObserverErrorHandler, asyncConfig?: ObserverPromiseHandler | boolean) {
         super(handleError, asyncConfig);
         this.#value = value;
         this.on(this.#maybeResolve.bind(this) as unknown as Observer<T, void>);
@@ -558,12 +558,12 @@ export class BasicObservableValue<T extends [any, ...any[]] = [boolean]>
  * Create an {@link ObservableValue}.
  */
 export const ObservableValue = constructObservableValue as unknown as {
-    new <T extends [any, ...any[]]>(value?: T, errorHandler?: ObserverErrorHandler): ObservableValue<T>;
-    <T extends [any, ...any[]]>(value?: T, errorHandler?: ObserverErrorHandler): ObservableValue<T>;
+    new <T extends [any, ...any[]]>(value?: T[0], errorHandler?: ObserverErrorHandler): ObservableValue<T>;
+    <T extends [any, ...any[]]>(value?: T[0], errorHandler?: ObserverErrorHandler): ObservableValue<T>;
 };
 
-function constructObservableValue(value?: [unknown, ...unknown[]], handleError?: ObserverErrorHandler) {
-    return new ObservableValue(value, handleError);
+function constructObservableValue(value?: unknown, handleError?: ObserverErrorHandler) {
+    return new BasicObservableValue<any>(value, handleError);
 }
 
 /**

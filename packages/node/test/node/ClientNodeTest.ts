@@ -57,7 +57,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it("commissions and initializes endpoints after commissioning and restart", async () => {
+    it.only("commissions and initializes endpoints after commissioning and restart", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -138,7 +138,7 @@ describe("ClientNode", () => {
         await MockTime.resolve(receivedUpdate);
     });
 
-    it.only("decommissions", async () => {
+    it("decommissions", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();

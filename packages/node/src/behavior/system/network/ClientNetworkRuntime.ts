@@ -62,6 +62,7 @@ export class ClientNetworkRuntime extends NetworkRuntime {
         env.set(ExchangeProvider, exchangeProvider);
 
         this.#client = new ClientInteraction({ environment: env, abort: this.abortSignal });
+        env.set(ClientInteraction, this.#client);
 
         // Monitor sessions to maintain online state.  We consider the node "online" if there is an active session.  If
         // not, we consider the node offline.  This is the only real way we have of determining whether the node is

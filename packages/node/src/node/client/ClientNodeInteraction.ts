@@ -6,18 +6,16 @@
 
 import type { ActionContext } from "#behavior/context/ActionContext.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Crypto } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import {
     ClientInteraction,
     ClientInvoke,
+    ClientSubscribe,
     DecodedInvokeResult,
     Interactable,
     Read,
     ReadResult,
-    Subscribe,
     SubscribeResult,
-    SustainedSubscription,
     Write,
     WriteResult,
 } from "#protocol";
@@ -54,34 +52,27 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
      * By default matter.js subscribes to all attributes and events of the peer and updates {@link ClientNode} state
      * automatically.  So you normally do not need to subscribe manually.
      */
-    async subscribe(request: Subscribe, context?: ActionContext): SubscribeResult {
-        const intermediateRequest: Subscribe = {
+    async subscribe(request: ClientSubscribe, context?: ActionContext): SubscribeResult {
+        const intermediateRequest: ClientSubscribe = {
             ...this.structure.injectVersionFilters(request),
+
+            sustain: request.sustain ?? true,
 
             updated: async data => {
                 const result = this.structure.mutate(request, data);
                 if (request.updated) {
                     await request.updated(result);
                 } else {
-                    for await (const _chunk of result);
+                    await result.return();
                 }
             },
 
-            closed(cause) {
-                // TODO - log cause?
-                request.closed?.(cause);
+            closed() {
+                request.closed?.();
             },
         };
 
-        const interaction = await this.#connect();
-
-        return new SustainedSubscription({
-            interaction,
-            request: intermediateRequest,
-            peer: this.#node.state.commissioning.peerAddress,
-            entropy: this.#node.env.get(Crypto),
-            abort: context?.abort,
-        });
+        return (await this.#connect()).subscribe(intermediateRequest, context);
     }
 
     /**
