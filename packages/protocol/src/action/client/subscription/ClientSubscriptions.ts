@@ -19,7 +19,6 @@ export class ClientSubscriptions {
     #active = new BasicSet<ClientSubscription>();
     #peers = new Map<PeerAddress, Map<number, PeerSubscription>>();
     #timeout?: Timer;
-    #nextTimeoutAt?: number;
 
     static [Environmental.create](env: Environment) {
         const instance = new ClientSubscriptions();
@@ -106,44 +105,41 @@ export class ClientSubscriptions {
                 }
 
                 // Update timeout or expire if timed out
-                let { timeoutAt: timeoutAtMs } = subscription;
-                if (timeoutAtMs === undefined) {
+                let { timeoutAt } = subscription;
+                if (timeoutAt === undefined) {
                     // Set timeout time
-                    timeoutAtMs = subscription.timeoutAt = Timestamp(now + subscription.timeout);
-                } else if (timeoutAtMs < now) {
+                    timeoutAt = subscription.timeoutAt = Timestamp(now + subscription.timeout);
+                } else if (timeoutAt < now) {
                     // Timeout
                     subscription.timedOut();
                     continue;
                 }
 
                 // If this is the earliest timeout, record
-                if (nextTimeoutAt === undefined || nextTimeoutAt > timeoutAtMs) {
-                    nextTimeoutAt = timeoutAtMs;
+                if (nextTimeoutAt === undefined || nextTimeoutAt > timeoutAt) {
+                    nextTimeoutAt = timeoutAt;
                 }
             }
         }
 
         // If no subscriptions require timeout, disable timer
         if (nextTimeoutAt === undefined) {
-            this.#nextTimeoutAt = undefined;
             this.#timeout?.stop();
             return;
         }
 
         // Create or update timer if not set for correct interval
-        if (nextTimeoutAt !== this.#nextTimeoutAt) {
-            this.#nextTimeoutAt = nextTimeoutAt;
-            if (this.#timeout) {
-                this.#timeout?.stop();
-                this.#timeout.interval = Millis(nextTimeoutAt - now);
-            } else {
-                this.#timeout = Time.getTimer(
-                    "SubscriptionTimeout",
-                    Millis(nextTimeoutAt - now),
-                    this.resetTimer.bind(this),
-                );
-            }
+        if (this.#timeout) {
+            this.#timeout?.stop();
+            this.#timeout.interval = Millis(nextTimeoutAt - now);
+        } else {
+            this.#timeout = Time.getTimer(
+                "Subscription timeout",
+                Millis(nextTimeoutAt - now),
+                this.resetTimer.bind(this),
+            );
         }
+        this.#timeout.start();
     }
 }
 

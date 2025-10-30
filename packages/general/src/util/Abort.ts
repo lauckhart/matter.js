@@ -88,6 +88,15 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
     }
 
     /**
+     * Race one or more promises with my abort signal.
+     *
+     * If aborted returns undefined.
+     */
+    async race<T>(...promises: Array<T | PromiseLike<T>>): Promise<Awaited<T> | void> {
+        return Abort.race(this, ...promises);
+    }
+
+    /**
      * Free resources.
      *
      * You must abort or invoke {@link close} when finished if you construct with {@link Abort.Options#abort} or

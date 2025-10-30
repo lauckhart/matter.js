@@ -25,8 +25,8 @@ export class NetworkClient extends NetworkBehavior {
             this.state.autoSubscribe = false;
             this.state.defaultSubscription = undefined;
         } else {
-            this.reactTo(this.events.autoSubscribe$Changed, this.#handleSubscription, { offline: true });
-            this.reactTo(this.events.defaultSubscription$Changed, this.#handleChangedDefaultSubscription);
+            this.reactTo(this.events.autoSubscribe$Changed, this.#handleAutoSubscribeChanged, { offline: true });
+            this.reactTo(this.events.defaultSubscription$Changed, this.#handleDefaultSubscriptionChange);
         }
     }
 
@@ -48,19 +48,19 @@ export class NetworkClient extends NetworkBehavior {
             }
         }
 
-        await this.#handleSubscription();
+        await this.#handleAutoSubscribeChanged();
     }
 
-    async #handleChangedDefaultSubscription() {
+    async #handleDefaultSubscriptionChange() {
         // Terminate any existing subscription
-        await this.#handleSubscription(false);
+        await this.#handleAutoSubscribeChanged(false);
 
         if (this.state.autoSubscribe && !this.state.isDisabled) {
-            await this.#handleSubscription(true);
+            await this.#handleAutoSubscribeChanged(true);
         }
     }
 
-    async #handleSubscription(desiredState = this.state.autoSubscribe) {
+    async #handleAutoSubscribeChanged(desiredState = this.state.autoSubscribe) {
         const { isDisabled } = this.state;
         const subscriptionDesired = desiredState && !isDisabled;
 

@@ -11,9 +11,9 @@ import { IdentifyClient } from "#behaviors/identify";
 import { OnOffClient } from "#behaviors/on-off";
 import { OnOffLightDevice } from "#devices/on-off-light";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { b$, deepCopy, Hours, Seconds, Time, TimeoutError } from "#general";
+import { b$, Crypto, deepCopy, MockCrypto, Seconds, Time, TimeoutError } from "#general";
 import { Specification } from "#model";
-import { SustainedSubscription } from "../../../protocol/src/action/client/subscription/SustainedSubscription.js";
+import { SustainedSubscription } from "#protocol";
 import { MockSite } from "./mock-site.js";
 
 describe("ClientNode", () => {
@@ -231,16 +231,48 @@ describe("ClientNode", () => {
         const initialSubscriptionId = subscription.subscriptionId;
         expect(initialSubscriptionId).not.equals(SustainedSubscription.NO_SUBSCRIPTION);
 
+        SustainedSubscription.assert(subscription);
+        expect(subscription.active.value).equals(true);
+
         // *** SUBSCRIPTION TIMEOUT ***
 
+        // Close peer
         await MockTime.resolve(device.cancel());
-        await MockTime.resolve(Time.sleep("wait for subscription timeout", Hours(1)));
+
+        // Wait for subscription to timeout
+        await MockTime.resolve(subscription.inactive);
+
+        // Ensure subscription ID is gone
         expect(subscription.subscriptionId).equals(SustainedSubscription.NO_SUBSCRIPTION);
 
         // *** NEW SUBSCRIPTION ***
 
+        // Need entropy for this bit so we can verify we have a new subscription ID
+        const crypto = device.env.get(Crypto) as MockCrypto;
+        crypto.entropic = true;
+
+        // Bring peer back online
         await MockTime.resolve(device.start());
-        await MockTime.resolve(Time.sleep("wait for new subscription", Minutes(20)));
+
+        // Wait for subscription to stablish
+        await MockTime.resolve(subscription.active);
+        crypto.entropic = false;
+
+        expect(subscription.subscriptionId).not.equals(SustainedSubscription.NO_SUBSCRIPTION);
+        expect(subscription.subscriptionId).not.equals(initialSubscriptionId);
+
+        // *** CONFIRM SUBSCRIPTION FUNCTIONS ***
+
+        expect(ep1.stateOf(OnOffClient).onOff).false;
+        const toggled = new Promise(resolve => {
+            ep1.eventsOf(OnOffClient).onOff$Changed.once(resolve);
+        });
+
+        await ep1.commandsOf(OnOffClient).toggle();
+
+        await MockTime.resolve(toggled);
+
+        expect(ep1.stateOf(OnOffClient).onOff).true;
     });
 
     it("emits Matter events", async () => {

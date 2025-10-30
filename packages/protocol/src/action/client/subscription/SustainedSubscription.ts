@@ -16,6 +16,7 @@ import {
     Logger,
     RetrySchedule,
     Seconds,
+    Time,
 } from "#general";
 import { Specification } from "#model";
 import { SubscribeResponse } from "#types";
@@ -50,6 +51,20 @@ export class SustainedSubscription extends ClientSubscription {
         this.done = this.#run();
     }
 
+    /**
+     * Emits when active state changes.
+     */
+    get active() {
+        return this.#active;
+    }
+
+    /**
+     * Emits when inactive state changes.
+     */
+    get inactive() {
+        return this.#inactive;
+    }
+
     async #run() {
         const updated = this.#request.updated?.bind(this.#request);
 
@@ -81,11 +96,21 @@ export class SustainedSubscription extends ClientSubscription {
                         Diagnostic.errorMessage(asError(e)),
                     );
                 }
+
+                const readyForRetry = Time.sleep("subscription retry", retry);
+                await this.abort.race(readyForRetry);
+                readyForRetry.cancel();
+                if (this.abort.aborted) {
+                    break;
+                }
             }
 
             // Notify listeners of active subscription
             await this.#inactive.emit(false);
             await this.#active.emit(true);
+            if (this.abort.aborted) {
+                break;
+            }
 
             // Wait for the subscription to close
             await closed;
@@ -93,6 +118,9 @@ export class SustainedSubscription extends ClientSubscription {
             // Notify listeners of inactive subscription
             await this.#active.emit(false);
             await this.#inactive.emit(true);
+            if (this.abort.aborted) {
+                break;
+            }
 
             // If aborted then we're done
             if (this.abort.aborted) {

@@ -67,5 +67,3 @@ export class BasicMultiplex implements PromiseLike<void> {
 
     [Symbol.asyncDispose] = this.close.bind(this);
 }
-
-export namespace BasicMultiplex {}
