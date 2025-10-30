@@ -6,8 +6,20 @@
 
 import { Subscribe } from "#action/request/Subscribe.js";
 import type { ActiveSubscription } from "#action/response/SubscribeResult.js";
-import { asError, Diagnostic, Duration, Hours, Logger, RetrySchedule, Seconds } from "#general";
+import {
+    asError,
+    AsyncObservableValue,
+    Diagnostic,
+    Duration,
+    Hours,
+    ImplementationError,
+    Logger,
+    RetrySchedule,
+    Seconds,
+} from "#general";
 import { Specification } from "#model";
+import { SubscribeResponse } from "#types";
+import type { ClientSubscribe } from "./ClientSubscribe.js";
 import { ClientSubscription } from "./ClientSubscription.js";
 import { PeerSubscription } from "./PeerSubscription.js";
 
@@ -20,10 +32,12 @@ const logger = Logger.get("ClientSubscription");
  * thus {@link ActiveSubscription#subscriptionId} may change if the peer goes offline or experiences transient errors.
  */
 export class SustainedSubscription extends ClientSubscription {
-    #request: Subscribe;
+    #request: ClientSubscribe;
     #subscription?: ActiveSubscription;
     #retries: RetrySchedule;
     #subscribe: (request: Subscribe) => Promise<PeerSubscription>;
+    #active = AsyncObservableValue(false);
+    #inactive = AsyncObservableValue(true);
 
     constructor(config: SustainedSubscription.Configuration) {
         super(config);
@@ -46,13 +60,16 @@ export class SustainedSubscription extends ClientSubscription {
                 request.updated = this.#request.updated.bind(request);
             }
             const closed = new Promise<void>(resolve => {
-                request.closed = () => resolve();
+                request.closed = () => {
+                    this.#subscription = undefined;
+                    resolve();
+                };
             });
 
             // Subscribe
             for (const retry of this.#retries) {
                 try {
-                    this.#subscription = this.#subscription = await this.#subscribe(request);
+                    this.#subscription = await this.#subscribe(request);
                     break;
                 } catch (e) {
                     if (this.abort.aborted) {
@@ -66,8 +83,16 @@ export class SustainedSubscription extends ClientSubscription {
                 }
             }
 
+            // Notify listeners of active subscription
+            await this.#inactive.emit(false);
+            await this.#active.emit(true);
+
             // Wait for the subscription to close
             await closed;
+
+            // Notify listeners of inactive subscription
+            await this.#active.emit(false);
+            await this.#inactive.emit(true);
 
             // If aborted then we're done
             if (this.abort.aborted) {
@@ -112,6 +137,12 @@ export namespace SustainedSubscription {
          * subscription once we have an active exchange.  Exchange reconnection is handled by lower-level components.
          */
         retries: RetrySchedule;
+    }
+
+    export function assert(subscription: SubscribeResponse): asserts subscription is SustainedSubscription {
+        if (!(subscription instanceof SustainedSubscription)) {
+            throw new ImplementationError(`Non-sustained subscription provided where sustained subscription required`);
+        }
     }
 
     export const NO_SUBSCRIPTION = -1;

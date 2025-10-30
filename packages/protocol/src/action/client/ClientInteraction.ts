@@ -31,6 +31,7 @@ import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
 import { SecureSession } from "#session/SecureSession.js";
 import { Status, TlvNoResponse, TlvSubscribeResponse } from "#types";
 import { InputChunk } from "./InputChunk.js";
+import { ClientSubscribe } from "./subscription/ClientSubscribe.js";
 import { ClientSubscription } from "./subscription/ClientSubscription.js";
 import { ClientSubscriptions } from "./subscription/ClientSubscriptions.js";
 import { PeerSubscription } from "./subscription/PeerSubscription.js";
@@ -42,10 +43,6 @@ export interface ClientInteractionContext {
     environment: Environment;
     abort?: Abort.Signal;
     sustainRetries?: RetrySchedule.Configuration;
-}
-
-export interface ClientSubscribe extends Subscribe {
-    sustain?: boolean;
 }
 
 export const DEFAULT_MIN_INTERVAL_FLOOR = Seconds(1);
@@ -394,7 +391,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
             // we handle this case
             //
             // We need to await the generator or the interactable will hang
-            await result.return?.();
+            for await (const _chunk of result);
         }
     }
 

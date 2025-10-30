@@ -63,7 +63,7 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
                 if (request.updated) {
                     await request.updated(result);
                 } else {
-                    await result.return();
+                    for await (const _chunk of result);
                 }
             },
 

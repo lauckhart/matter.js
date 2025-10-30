@@ -8,6 +8,7 @@ import type { Subscribe } from "#action/request/Subscribe.js";
 import type { ActiveSubscription } from "#action/response/SubscribeResult.js";
 import { Abort, Diagnostic, Logger } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
+import { ClientSubscribe } from "./ClientSubscribe.js";
 
 const logger = Logger.get("ClientSubscription");
 
@@ -79,7 +80,7 @@ export abstract class ClientSubscription implements ActiveSubscription {
 
 export namespace ClientSubscription {
     export interface Configuration {
-        request: Subscribe;
+        request: ClientSubscribe;
         peer: PeerAddress;
         closed: () => void;
         abort?: AbortSignal;

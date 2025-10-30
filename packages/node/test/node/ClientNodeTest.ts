@@ -5,13 +5,15 @@
  */
 
 import { DiscoveryError } from "#behavior/system/controller/discovery/DiscoveryError.js";
+import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
 import { IdentifyClient } from "#behaviors/identify";
 import { OnOffClient } from "#behaviors/on-off";
 import { OnOffLightDevice } from "#devices/on-off-light";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { b$, deepCopy, Seconds, Time, TimeoutError } from "#general";
+import { b$, deepCopy, Hours, Seconds, Time, TimeoutError } from "#general";
 import { Specification } from "#model";
+import { SustainedSubscription } from "../../../protocol/src/action/client/subscription/SustainedSubscription.js";
 import { MockSite } from "./mock-site.js";
 
 describe("ClientNode", () => {
@@ -57,7 +59,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it.only("commissions and initializes endpoints after commissioning and restart", async () => {
+    it("commissions and initializes endpoints after commissioning and restart", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -113,7 +115,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    }).timeout(1e9);
+    });
 
     it("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
@@ -214,6 +216,33 @@ describe("ClientNode", () => {
         await MockTime.resolve(toggle);
     });
 
+    it("resubscribes on timeout", async () => {
+        // *** SETUP ***
+
+        await using site = new MockSite();
+        const { controller, device } = await site.addCommissionedPair();
+        const peer1 = controller.peers.get("peer1")!;
+        const ep1 = peer1.parts.get("ep1")!;
+
+        // *** INITIAL SUBSCRIPTION ***
+
+        const subscription = peer1.behaviors.internalsOf(NetworkClient).defaultSubscription!;
+        expect(subscription).not.undefined;
+        const initialSubscriptionId = subscription.subscriptionId;
+        expect(initialSubscriptionId).not.equals(SustainedSubscription.NO_SUBSCRIPTION);
+
+        // *** SUBSCRIPTION TIMEOUT ***
+
+        await MockTime.resolve(device.cancel());
+        await MockTime.resolve(Time.sleep("wait for subscription timeout", Hours(1)));
+        expect(subscription.subscriptionId).equals(SustainedSubscription.NO_SUBSCRIPTION);
+
+        // *** NEW SUBSCRIPTION ***
+
+        await MockTime.resolve(device.start());
+        await MockTime.resolve(Time.sleep("wait for new subscription", Minutes(20)));
+    });
+
     it("emits Matter events", async () => {
         // *** SETUP ***
 
@@ -234,11 +263,6 @@ describe("ClientNode", () => {
         // *** VALIDATE ***
 
         expect(payload).deep.equals({ softwareVersion: 12 });
-    });
-
-    it("resubscribes on timeout", async () => {
-        // *** SETUP ***
-        //await using site = new MockSite();
     });
 
     it("handles shutdown event and reestablishes connection", () => {
@@ -298,6 +322,7 @@ const PEER1_STATE = {
         tcpSupport: 0,
     },
     network: {
+        autoSubscribe: true,
         isDisabled: false,
         port: 0x15a4,
         operationalPort: -1,
