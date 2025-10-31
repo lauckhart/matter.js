@@ -83,6 +83,17 @@ export abstract class ValueModel<T extends ValueElement = ValueElement>
     }
 
     /**
+     * Determine whether this model is supported by the implementation.
+     */
+    get isSupported() {
+        if (this.operationalIsSupported !== undefined) {
+            return this.operationalIsSupported;
+        }
+
+        return this.conformance.applicabilityFor(Scope(this)) === Conformance.Applicability.Mandatory;
+    }
+
+    /**
      * Metatype is only present on global types with specific semantic meaning. This model is significant because it
      * gives us information about how to manipulate the data.  This accessor retrieves this model.
      */

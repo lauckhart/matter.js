@@ -19,7 +19,7 @@ export interface PhysicalDeviceProperties {
     threadConnected: boolean;
     wifiConnected: boolean;
     ethernetConnected: boolean;
-    rootEndpointServerList: number[];
+    rootEndpointServerList: readonly number[];
     isBatteryPowered: boolean;
     isIntermittentlyConnected: boolean;
     isThreadSleepyEndDevice: boolean;

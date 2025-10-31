@@ -13,6 +13,7 @@ import {
     ClientSubscribe,
     DecodedInvokeResult,
     Interactable,
+    PhysicalDeviceProperties,
     Read,
     ReadResult,
     SubscribeResult,
@@ -55,6 +56,13 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
     async subscribe(request: ClientSubscribe, context?: ActionContext): SubscribeResult {
         const intermediateRequest: ClientSubscribe = {
             ...this.structure.injectVersionFilters(request),
+            ...PhysicalDeviceProperties.determineSubscriptionParameters({
+                description: this.#node.toString(),
+                properties: physicalProps,
+                ...request,
+            }),
+
+            sustain: request.sustain ?? true,
 
             sustain: request.sustain === undefined ? true : request.sustain,
 

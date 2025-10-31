@@ -712,17 +712,40 @@ export class ModelTraversal {
     /**
      * Visit all nodes in the model tree.
      */
-    visit(model: Model, visitor: (model: Model) => boolean | void): boolean | undefined {
-        return this.operation(() => {
-            if (visitor(model) === false) {
-                return false;
-            }
+    visit(model: Model, visitor: (model: Model) => boolean | void): boolean | undefined;
+
+    /**
+     * Visit all nodes in the model tree with branch pruning.
+     *
+     * Only descends if the visitor invokes {@link descend}.
+     */
+    visit(model: Model, visitor: (model: Model) => boolean | void, descend: () => boolean): boolean | undefined;
+
+    visit(model: Model, visitor: (model: Model, descend?: () => boolean) => boolean | void): boolean | undefined {
+        const descend = () => {
             for (const c of model.children) {
                 if (this.visit(c, visitor) === false) {
                     return false;
                 }
             }
+
             return true;
+        };
+
+        return this.operation(() => {
+            if (visitor.arguments.length > 1) {
+                if (visitor(model, descend) === false) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (visitor(model) === false) {
+                return false;
+            }
+
+            return descend();
         });
     }
 

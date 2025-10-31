@@ -331,6 +331,15 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     }
 
     /**
+     * Query whether this endpoint supports a specific behavior type.
+     */
+    supports<T extends Behavior.Type>(type: T) {
+        if (this.behaviors.has(type)) {
+            return true;
+        }
+    }
+
+    /**
      * Commands for a specific behavior.
      */
     commandsOf<T extends Behavior.Type>(type: T) {

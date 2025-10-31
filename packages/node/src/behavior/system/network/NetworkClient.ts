@@ -69,12 +69,8 @@ export class NetworkClient extends NetworkBehavior {
         }
 
         if (subscriptionDesired) {
-            // TODO - configure subscription min/max timing based on physical device properties
-            // TODO run whole process including reconnections in a "mutex" like process
             const subscribe = Subscribe({
                 fabricFilter: true,
-                minIntervalFloor: DEFAULT_MIN_INTERVAL_FLOOR,
-                maxIntervalCeiling: 0,
                 attributes: [{}],
                 events: [{ isUrgent: true }],
                 ...this.state.defaultSubscription,
@@ -182,7 +178,7 @@ export namespace NetworkClient {
          *
          * Newly commissioned nodes default to true.
          */
-        autoSubscribe = false;
+        autoSubscribe = true;
 
         /**
          * Case Authenticated Tags (CATs) to use for operational CASE sessions with this node.
