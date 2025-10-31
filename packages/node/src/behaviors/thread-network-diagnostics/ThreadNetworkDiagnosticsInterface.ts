@@ -28,3 +28,4 @@ export namespace ThreadNetworkDiagnosticsInterface {
 export type ThreadNetworkDiagnosticsInterface = {
     components: [{ flags: { errorCounts: true }, methods: ThreadNetworkDiagnosticsInterface.ErrorCounts }]
 };
+ 

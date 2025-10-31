@@ -41,6 +41,7 @@ import type { SupportedBehaviors } from "./SupportedBehaviors.js";
 const logger = Logger.get("Behaviors");
 
 export interface SupportedElements {
+    features: Set<string>;
     attributes: Set<string>;
     commands: Set<string>;
     events: Set<string>;

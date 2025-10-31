@@ -13,6 +13,7 @@ import {
     ClientSubscribe,
     DecodedInvokeResult,
     Interactable,
+    PhysicalDeviceProperties,
     Read,
     ReadResult,
     SubscribeResult,
@@ -20,6 +21,7 @@ import {
     WriteResult,
 } from "#protocol";
 import { ClientEndpointInitializer } from "./ClientEndpointInitializer.js";
+import { NodePhysicalProperties } from "./NodePhysicalProperties.js";
 
 /**
  * A {@link ClientInteraction} that brings the node online before attempting interaction.
@@ -53,8 +55,15 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
      * automatically.  So you normally do not need to subscribe manually.
      */
     async subscribe(request: ClientSubscribe, context?: ActionContext): SubscribeResult {
+        const physicalProps = NodePhysicalProperties(this.#node);
+
         const intermediateRequest: ClientSubscribe = {
             ...this.structure.injectVersionFilters(request),
+            ...PhysicalDeviceProperties.determineSubscriptionParameters({
+                description: this.#node.toString(),
+                properties: physicalProps,
+                ...request,
+            }),
 
             sustain: request.sustain ?? true,
 
@@ -67,9 +76,7 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
                 }
             },
 
-            closed() {
-                request.closed?.();
-            },
+            closed: request.closed?.bind(request),
         };
 
         return (await this.#connect()).subscribe(intermediateRequest, context);

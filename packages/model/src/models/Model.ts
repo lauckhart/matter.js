@@ -54,7 +54,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      *
      * This is an operational implementation hint and does not override conformance.
      */
-    isSupported?: boolean;
+    operationalIsSupported?: boolean;
 
     #id: E["id"];
     #name: string;
@@ -532,16 +532,15 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      */
     extend<This extends Model>(
         this: This,
-        properties?: Partial<BaseElement.Properties<E>>,
+        properties?: Partial<Model.Definition<This>>,
         ...children: Model.ChildDefinition<Model>[]
     ): This {
         const constructor = this.constructor as new (properties: unknown) => This;
-
         const definition = {
             id: this.id,
             name: this.name,
 
-            ...properties,
+            ...properties!, // This assertion may be a lie, but necessary due to apparent TS bug
 
             tag: this.tag,
             operationalBase: this,
@@ -573,7 +572,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         this.isSeed = definition.isSeed;
         this.operationalBase = definition.operationalBase;
         this.operationalShadow = definition.operationalShadow;
-        this.isSupported = definition.isSupported;
+        this.operationalIsSupported = definition.operationalIsSupported;
 
         if (isClone) {
             if (definition.hasLocalResource) {
@@ -762,7 +761,7 @@ export namespace Model {
               parent?: Model;
               operationalBase?: Model;
               operationalShadow?: Model;
-              isSupported?: boolean;
+              operationalIsSupported?: boolean;
           })
         | T;
 
