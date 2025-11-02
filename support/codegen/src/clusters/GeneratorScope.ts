@@ -228,7 +228,8 @@ function identifyNamedModels(scope: Scope): Locations {
     }
 
     // Visit all direct descendents and identify locations
-    owner.visit(define);
+    const visitor = (model: Model) => define(model);
+    owner.visit(visitor);
 
     // For clusters, also visit inherited attributes, commands and events
     if (owner instanceof ClusterModel) {
@@ -238,7 +239,7 @@ function identifyNamedModels(scope: Scope): Locations {
                 continue;
             }
 
-            ace.visit(define);
+            ace.visit(visitor);
         }
     }
 

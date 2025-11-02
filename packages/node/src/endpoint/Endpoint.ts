@@ -19,6 +19,7 @@ import {
     Logger,
     MaybePromise,
     Observable,
+    PassUndefined,
     toHex,
     UninitializedDependencyError,
 } from "#general";
@@ -180,7 +181,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * Behavior type including all enabled features. Because of this the returned state is typed as a plain string
      * indexed record (Val.Struct). Please ensure to have proper checks in place when using this method with string type.
      */
-    stateOf(type: string): Immutable<Val.Struct>;
+    stateOf<T extends string | undefined>(type: T): PassUndefined<T, Immutable<Val.Struct>>;
 
     /**
      * Current state for a specific behavior.
@@ -188,7 +189,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * This is the recommended way to access state for a specific behavior because it provides proper type checking
      * and enforces the correctness of the used Behavior type including all enabled features.
      */
-    stateOf<T extends Behavior.Type>(type: T): Immutable<Behavior.StateOf<T>>;
+    stateOf<T extends Behavior.Type | undefined>(
+        type: T,
+    ): PassUndefined<T, Immutable<Behavior.StateOf<Exclude<T, undefined>>>>;
 
     stateOf(type: Behavior.Type | string) {
         if (typeof type === "string") {

@@ -143,3 +143,5 @@ export function isObject(it: unknown): it is Record<string, unknown> {
     return Object.prototype.toString.call(it) === "[object Object]"; // this code is 25% faster than below one
     // return it && typeof it === 'object' && !(it instanceof Array);
 }
+
+export type PassUndefined<I, O> = I extends undefined ? O | undefined : O;

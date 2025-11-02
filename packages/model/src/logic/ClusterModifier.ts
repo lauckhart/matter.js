@@ -80,7 +80,7 @@ export namespace ClusterModifier {
             if (element.isFinal) {
                 element = element.clone();
             }
-            element.isSupported = isSupported;
+            element.operationalIsSupported = isSupported;
 
             return element;
         });

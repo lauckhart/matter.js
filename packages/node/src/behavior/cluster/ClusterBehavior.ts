@@ -170,12 +170,24 @@ export class ClusterBehavior extends Behavior {
     }
 
     static override supports(other: Behavior.Type) {
-        if (!Behavior.supports.call(this, other)) {
+        const otherCluster = (other as { cluster?: ClusterType }).cluster;
+        if (!otherCluster) {
             return false;
         }
 
-        const otherCluster = (other as { cluster?: ClusterType }).cluster;
-        if (!otherCluster) {
+        // Special case for "client" behaviors.  We implement these with the "complete" cluster so the interface offers
+        // type-safe access to the entire cluster.  The only exception to this is for non-nullable mandatory state
+        // values.  If the peer does not implement such a value then it will be undefined even though our type says it
+        // won't be.  This however is not an issue specific to the complete cluster so we do not need to worry about it
+        // here
+        //
+        // Further, we know the "Client" classes can have no extension methods or properties, so we don't need to do an
+        // exact class match for type safety
+        if (other.name.endsWith("Client") && otherCluster.id === this.cluster.id) {
+            return true;
+        }
+
+        if (!Behavior.supports.call(this, other)) {
             return false;
         }
 

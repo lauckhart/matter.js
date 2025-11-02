@@ -144,30 +144,14 @@ export type ExtensionInterfaceOf<B extends Behavior.Type> = B extends { Extensio
 interface DerivationContext {
     cluster: ClusterType;
     scope: Scope;
-    featuresAvailable: FeatureSet;
-    featuresSupported: FeatureSet;
     base: Behavior.Type;
     newProps: Record<string, ValueModel>;
 }
 
 function DerivationContext(schema: Schema, cluster: ClusterType, base: Behavior.Type): DerivationContext {
-    const scope = Scope(schema);
-    // Determine the set of features so we can test element applicability
-    let featuresAvailable, featuresSupported;
-    if (scope.owner instanceof ClusterModel) {
-        const normalized = FeatureSet.normalize(scope.owner.featureMap, scope.owner.supportedFeatures);
-        featuresAvailable = normalized.featuresAvailable;
-        featuresSupported = normalized.featuresSupported;
-    } else {
-        featuresAvailable = new FeatureSet();
-        featuresSupported = new FeatureSet();
-    }
-
     return {
         cluster,
         scope: Scope(schema),
-        featuresAvailable,
-        featuresSupported,
         base,
         newProps: {},
     };
@@ -179,14 +163,7 @@ function DerivationContext(schema: Schema, cluster: ClusterType, base: Behavior.
  *
  * Note - we only use the cluster here for default values
  */
-function createDerivedState({
-    cluster,
-    scope,
-    base,
-    newProps,
-    featuresAvailable,
-    featuresSupported,
-}: DerivationContext) {
+function createDerivedState({ cluster, scope, base, newProps }: DerivationContext) {
     const BaseState = base["State"];
     if (BaseState === undefined) {
         throw new ImplementationError(`No state class defined for behavior class ${base.name}`);
@@ -217,10 +194,8 @@ function createDerivedState({
         // Determine whether the attribute applies
         let applicability;
         for (const attr of attrs) {
-            applicability = attr.effectiveConformance.applicabilityOf(featuresAvailable, featuresSupported);
-
-            // Inapplicable; ignore
-            if (!applicability) {
+            // Ignore if inapplicable
+            if (!attr.isSupported) {
                 continue;
             }
 
@@ -285,7 +260,7 @@ function createDerivedState({
 /**
  * Extend events with additional implementations.
  */
-function createDerivedEvents({ scope, base, newProps, featuresAvailable, featuresSupported }: DerivationContext) {
+function createDerivedEvents({ scope, base, newProps }: DerivationContext) {
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
     const baseInstance = new base.Events() as unknown as Record<string, unknown>;
@@ -300,12 +275,7 @@ function createDerivedEvents({ scope, base, newProps, featuresAvailable, feature
     })) {
         const name = camelize(event.name);
         applicableClusterEvents.add(name);
-        if (
-            (event.conformance.applicabilityOf(featuresAvailable, featuresSupported) ===
-                Conformance.Applicability.Mandatory ||
-                event.isSupported) &&
-            baseInstance[name] === undefined
-        ) {
+        if (event.isSupported && baseInstance[name] === undefined) {
             eventNames.add(name);
             instanceDescriptors[name] = createEventDescriptor(
                 name,
