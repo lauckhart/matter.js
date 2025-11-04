@@ -393,7 +393,11 @@ export class Behaviors {
     /**
      * Determine if a specified behavior is supported and active.
      */
-    isActive(type: Behavior.Type) {
+    isActive(type: Behavior.Type | string) {
+        if (typeof type === "string") {
+            return this.#backings[type] !== undefined;
+        }
+
         const backing = this.#backings[type.id];
         return !!backing && backing.type.supports(type);
     }
