@@ -264,15 +264,14 @@ function createDerivedEvents({ scope, base, newProps }: DerivationContext) {
 
     const eventNames = new Set<string>();
 
-    // Add events that are mandatory or marked as supported and not present in the base class
-    const applicableClusterEvents = new Set();
+    // Ensure all known Matter events have a descriptor present regardless of support.  Metadata and types will only
+    // expose supported events
     for (const event of scope.membersOf(scope.owner as Schema, {
-        conformance: "conformant",
+        conformance: "deconflicted",
         tags: [ElementTag.Event],
     })) {
         const name = camelize(event.name);
-        applicableClusterEvents.add(name);
-        if (scope.hasOperationalSupport(event) && baseInstance[name] === undefined) {
+        if (baseInstance[name] === undefined) {
             eventNames.add(name);
             instanceDescriptors[name] = createEventDescriptor(
                 name,

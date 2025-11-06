@@ -223,8 +223,8 @@ function createFingerprint(analysis: ShapeAnalysis) {
     /**
      * Create a fingerprint for a specific type of ACE element.
      *
-     * For elements we divide create series of bitmaps, one for each range of BIT_BLOCK_SIZE unique integers with an
-     * ID present.  Note that these bitmaps may not be consecutive due to gaps in IDs.  We then serialize all bitmaps
+     * For elements we create a series of bitmaps, one for each range of BIT_BLOCK_SIZE unique integers with an ID
+     * present.  Note that these bitmaps may not be consecutive due to gaps in IDs.  We then serialize all bitmaps
      * present as "<block index>:<bitmap value>" and concatenate to create a unique fingerprint.
      *
      * The goal is to efficiently create a compact unique identifier.

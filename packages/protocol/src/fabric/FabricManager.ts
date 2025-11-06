@@ -251,7 +251,7 @@ export class FabricManager {
             }
         }
 
-        throw new FabricNotFoundError();
+        throw new FabricNotFoundError("Fabric not found");
     }
 
     findByKeypair(keypair: Key) {
