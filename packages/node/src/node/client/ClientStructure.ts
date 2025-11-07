@@ -491,6 +491,7 @@ export class ClientStructure {
         }
 
         cluster = {
+            kind: "discovered",
             id,
             store: this.#nodeStore.storeForEndpoint(endpoint.endpoint).createStoreForBehavior(id.toString()),
         };
@@ -541,7 +542,8 @@ interface EndpointStructure {
     clusters: Record<ClusterId, ClusterStructure>;
 }
 
-interface ClusterStructure extends Partial<PeerBehavior.ClusterShape> {
+interface ClusterStructure extends Partial<PeerBehavior.DiscoveredClusterShape> {
+    kind: "discovered";
     id: ClusterId;
     behavior?: ClusterBehavior.Type;
     store: Datasource.ExternallyMutableStore;

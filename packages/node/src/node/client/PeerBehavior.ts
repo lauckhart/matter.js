@@ -6,6 +6,7 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
+import { ClusterBehaviorType } from "#behavior/index.js";
 import { camelize, capitalize, InternalError } from "#general";
 import {
     AttributeModel,
@@ -18,9 +19,6 @@ import {
     Matter,
     type ValueModel,
 } from "#model";
-import type { ClientNode } from "#node/ClientNode.js";
-import { Node } from "#node/Node.js";
-import { ClientInteraction, Invoke } from "#protocol";
 import {
     Attribute,
     AttributeId,
@@ -30,24 +28,76 @@ import {
     Command,
     CommandId,
     MutableCluster,
-    Status,
-    StatusResponseError,
     TlvAny,
     TlvNoResponse,
 } from "#types";
 
 const BIT_BLOCK_SIZE = Math.log2(Number.MAX_SAFE_INTEGER);
 
-const cache = {} as Record<string, ClusterBehavior.Type>;
+const discoveredCache = {} as Record<string, ClusterBehavior.Type>;
+const knownCache = new WeakMap<ClusterBehavior.Type, ClusterBehavior.Type>();
+
+const isPeer = Symbol("is-peer");
 
 /**
  * Obtain a {@link ClusterBehavior.Type} for a remote cluster.
  */
 export function PeerBehavior(shape: PeerBehavior.ClusterShape): ClusterBehavior.Type {
-    const analysis = ShapeAnalysis(shape);
+    let type: ClusterBehavior.Type;
+
+    switch (shape.kind) {
+        case "known":
+            if (Object.hasOwn(shape.behavior, isPeer)) {
+                return shape.behavior;
+            }
+            type = instrumentKnownShape(shape);
+            break;
+
+        case "discovered":
+            type = instrumentDiscoveredShape(shape);
+            break;
+
+        default:
+            throw new InternalError(`Unknown cluster shape kind ${(shape as any).kind}`);
+    }
+
+    (type as any)[isPeer] = true;
+
+    return type;
+}
+
+export namespace PeerBehavior {
+    export type ClusterShape = DiscoveredClusterShape | KnownClusterShape;
+
+    /**
+     * A cluster shape that we assemble using a combination of Matter standards and metadata discovered by reading from
+     * a peer.
+     */
+    export interface DiscoveredClusterShape {
+        kind: "discovered";
+        id: ClusterId;
+        revision: number;
+        features: FeatureBitmap | number;
+        attributes: AttributeId[];
+        commands: CommandId[];
+        attributeNames: Record<AttributeId, string>;
+        commandNames: Record<CommandId, string>;
+    }
+
+    /**
+     * A known cluster shape that we instrument as is.
+     */
+    export interface KnownClusterShape {
+        kind: "known";
+        behavior: ClusterBehavior.Type;
+    }
+}
+
+function instrumentDiscoveredShape(shape: PeerBehavior.DiscoveredClusterShape) {
+    const analysis = DiscoveredShapeAnalysis(shape);
 
     const fingerprint = createFingerprint(analysis);
-    let type = cache[fingerprint];
+    let type = discoveredCache[fingerprint];
     if (type) {
         return type;
     }
@@ -60,27 +110,36 @@ export function PeerBehavior(shape: PeerBehavior.ClusterShape): ClusterBehavior.
         baseType = ClusterBehavior;
     }
 
-    type = cache[fingerprint] = generateType(analysis, baseType);
+    type = discoveredCache[fingerprint] = generateDiscoveredType(analysis, baseType);
 
     return type;
 }
 
-export namespace PeerBehavior {
-    export interface ClusterShape {
-        id: ClusterId;
-        revision: number;
-        features: FeatureBitmap | number;
-        attributes: AttributeId[];
-        commands: CommandId[];
-        attributeNames: Record<AttributeId, string>;
-        commandNames: Record<CommandId, string>;
+function instrumentKnownShape(shape: PeerBehavior.KnownClusterShape) {
+    let type = knownCache.get(shape.behavior);
+    if (type) {
+        return type;
     }
+
+    const base = shape.behavior;
+
+    type = ClusterBehaviorType({
+        base,
+        cluster: base.cluster,
+        schema: base.schema,
+        name: `${base.schema.name}Client`,
+        isClient: true,
+    });
+
+    knownCache.set(shape.behavior, type);
+
+    return type;
 }
 
-function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): ClusterBehavior.Type {
+function generateDiscoveredType(analysis: DiscoveredShapeAnalysis, baseType: Behavior.Type): ClusterBehavior.Type {
     // Ensure the input type is a ClusterBehavior
     if (!ClusterBehavior.is(baseType)) {
-        throw new InternalError(`Base Behavior for cluster ${analysis.schema.name} is not a ClusterBehavior`);
+        throw new InternalError(`Base for cluster ${analysis.schema.name} is not a ClusterBehavior`);
     }
 
     let { schema } = analysis;
@@ -115,13 +174,6 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
         cluster = new ClusterComposer(cluster, true).compose(featureNames.map(capitalize));
     }
 
-    // Since the disappearance of EventList the set of supported events is unknowable from the client.  Mark all
-    // optional events as supported so listeners can be bound
-    const eventSupportOverrides = new Map<EventModel, boolean>();
-    for (const event of schema.conformant.events) {
-        maybeOverrideSupport(schema, event, true, eventSupportOverrides);
-    }
-
     // If the schema does not match what the device actually returned, further augment both the ClusterModel and
     // ClusterType with unknown attributes and/or commands
     if (
@@ -129,8 +181,7 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
         extraAttrs.size ||
         extraCommands.size ||
         attrSupportOverrides.size ||
-        commandSupportOverrides.size ||
-        eventSupportOverrides.size
+        commandSupportOverrides.size
     ) {
         extendSchema();
 
@@ -164,27 +215,16 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
             cluster.commands[camelize(name, false)] = Command(id, TlvAny, 0, TlvNoResponse);
             schema.children.push(new CommandModel({ id, name, type: "any" }));
         }
-
-        if (eventSupportOverrides.size) {
-            for (const [event, isSupported] of eventSupportOverrides.entries()) {
-                schema.children.push(event.extend({ operationalIsSupported: isSupported }));
-            }
-        }
     }
 
     // Specialize for the specific cluster and schema
-    const type = baseType.for(cluster, schema, `${schema.name}Client`);
-
-    // Add command implementations
-    for (const id of analysis.shape.commands) {
-        const name = schema.get(CommandModel, id)?.name;
-        if (name === undefined) {
-            throw new InternalError(`Command ${id} specified but not added to schema ${schema.name}`);
-        }
-        type.prototype[camelize(name, false)] = implementCommand(camelize(name));
-    }
-
-    return type;
+    return ClusterBehaviorType({
+        base: baseType,
+        cluster,
+        schema,
+        name: `${schema.name}Client`,
+        isClient: true,
+    });
 
     function extendSchema() {
         if (isExtended) {
@@ -194,47 +234,12 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
         schema.supportedFeatures = featureNames;
         isExtended = true;
     }
-
-    function implementCommand(command: string) {
-        return async function (this: ClusterBehavior, fields?: {}) {
-            const node = this.env.get(Node) as ClientNode;
-
-            const chunks = (node.interaction as ClientInteraction).invoke(
-                Invoke({
-                    commands: [
-                        Invoke.ConcreteCommandRequest<any>({
-                            endpoint: this.endpoint,
-                            cluster,
-                            command,
-                            fields,
-                        }),
-                    ],
-                }),
-            );
-
-            for await (const chunk of chunks) {
-                for (const entry of chunk) {
-                    // We send only one command, so we only get one response back
-                    switch (entry.kind) {
-                        case "cmd-status":
-                            if (entry.status !== Status.Success) {
-                                throw StatusResponseError.create(entry.status, undefined, entry.clusterStatus);
-                            }
-                            return;
-
-                        case "cmd-response":
-                            return entry.data;
-                    }
-                }
-            }
-        };
-    }
 }
 
 /**
  * Create a compact string that uniquely identifies a shape for matching purposes.
  */
-function createFingerprint(analysis: ShapeAnalysis) {
+function createFingerprint(analysis: DiscoveredShapeAnalysis) {
     const fingerprint = [analysis.shape.id] as (number | string | bigint)[];
 
     if (analysis.featureBitmap) {
@@ -324,10 +329,10 @@ function createUnknownName(prefix: string, id: number) {
     return `${prefix}$${id.toString(16)}`;
 }
 
-interface ShapeAnalysis {
+interface DiscoveredShapeAnalysis {
     schema: ClusterModel & { id: ClusterId };
     featureBitmap: number | bigint;
-    shape: PeerBehavior.ClusterShape;
+    shape: PeerBehavior.DiscoveredClusterShape;
     attrSupportOverrides: Map<AttributeModel, boolean>;
     extraAttrs: Set<number>;
     commandSupportOverrides: Map<CommandModel, boolean>;
@@ -335,9 +340,9 @@ interface ShapeAnalysis {
 }
 
 /**
- * Analyze the cluster shape to determine how we should override the behavior and schema.
+ * Analyze a discovered cluster shape to determine how we should override the behavior and schema.
  */
-function ShapeAnalysis(shape: PeerBehavior.ClusterShape): ShapeAnalysis {
+function DiscoveredShapeAnalysis(shape: PeerBehavior.DiscoveredClusterShape): DiscoveredShapeAnalysis {
     const standardCluster = Matter.get(ClusterModel, shape.id);
     const schema =
         standardCluster ??
@@ -397,11 +402,13 @@ function maybeOverrideSupport<T extends AttributeModel | CommandModel | EventMod
     const isSupported = supported === true || supported.has(element.id);
     const applicability = element.effectiveConformance.applicabilityFor(standardCluster);
     if (!isSupported) {
-        if (applicability) {
+        if (applicability === Conformance.Applicability.Mandatory) {
+            // We don't really pay attention to "unsupported mandatory attributes" but mark them anyway
             overrides.set(element, false);
         }
     } else {
         if (applicability !== Conformance.Applicability.Mandatory) {
+            // Indicate support for optional feature
             overrides.set(element, true);
         }
     }

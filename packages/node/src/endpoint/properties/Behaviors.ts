@@ -467,11 +467,6 @@ export class Behaviors {
             this.#supported = { ...this.#supported };
         }
 
-        // TODO how to better solve that?
-        if (this.#endpoint.env.has(EndpointInitializer)) {
-            type = this.#endpoint.env.get(EndpointInitializer).finalizeType(type);
-        }
-
         this.#supported[type.id] = type;
 
         this.#augmentEndpoint(type);
@@ -676,6 +671,13 @@ export class Behaviors {
 
         const backing = this.#endpoint.env.get(EndpointInitializer).createBacking(this.#endpoint, myType);
         this.#backings[backing.type.id] = backing;
+
+        // The EndpointInitializer may choose to replace the behavior implementation.  If so the replacement should be
+        // compatible, but update our support map to designate the specific implementation
+        if (backing.type !== myType) {
+            this.#supported[backing.type.id] = backing.type;
+        }
+
         if (!this.#protocol) {
             this.#protocol = this.#endpoint.env.get(ProtocolService);
         }

@@ -31,7 +31,7 @@ export function ClientBehavior<const T extends ClusterType>(cluster: T): Cluster
 
 export namespace ClientBehavior {
     /**
-     * Determine whether a behavior is a client.
+     * Determine whether a behavior is an unextended client.
      */
     export function is(type: Behavior.Type) {
         // Use hasOwn so any derivation voids the client assertion

@@ -6,6 +6,7 @@
 
 export * from "./ClientBehavior.js";
 export * from "./ClusterBehavior.js";
+export * from "./ClusterBehaviorType.js";
 export * from "./ClusterBehaviorUtil.js";
 export * from "./ClusterEvents.js";
 export * from "./ClusterInterface.js";

@@ -14,7 +14,8 @@ import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
 import { NetworkBehavior } from "../system/network/NetworkBehavior.js";
 import { ClientBehavior } from "./ClientBehavior.js";
-import { ExtensionInterfaceOf, createType, type ClusterOf } from "./ClusterBehaviorUtil.js";
+import { ClusterBehaviorType } from "./ClusterBehaviorType.js";
+import { ExtensionInterfaceOf, type ClusterOf } from "./ClusterBehaviorUtil.js";
 import type { ClusterEvents } from "./ClusterEvents.js";
 import { ClusterInterface } from "./ClusterInterface.js";
 import type { ClusterState } from "./ClusterState.js";
@@ -105,7 +106,12 @@ export class ClusterBehavior extends Behavior {
         schema?: Schema.Cluster,
         name?: string,
     ) {
-        return createType(cluster, this, schema, name) as ClusterBehavior.Type<ClusterT, This>;
+        return ClusterBehaviorType({
+            cluster,
+            base: this,
+            schema,
+            name,
+        }) as ClusterBehavior.Type<ClusterT, This>;
     }
 
     /**
