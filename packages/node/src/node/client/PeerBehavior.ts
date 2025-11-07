@@ -7,7 +7,17 @@
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { camelize, capitalize, InternalError } from "#general";
-import { AttributeModel, ClusterModel, CommandModel, Conformance, FeatureBitmap, Matter } from "#model";
+import {
+    AttributeModel,
+    ClusterModel,
+    CommandModel,
+    Conformance,
+    EncodedBitmap,
+    EventModel,
+    FeatureBitmap,
+    Matter,
+    type ValueModel,
+} from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
 import { ClientInteraction, Invoke } from "#protocol";
@@ -74,7 +84,7 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
     }
 
     let { schema } = analysis;
-    let isCloned = false;
+    let isExtended = false;
     const { attrSupportOverrides, extraAttrs, commandSupportOverrides, extraCommands } = analysis;
 
     // Obtain a ClusterType.  This provides TLV for known elements
@@ -99,10 +109,17 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
         .map(([k]) => k);
     if (featureNames.length) {
         // Update ClusterModel
-        cloneSchema();
+        extendSchema();
 
         // Update the cluster.  Note that we do not validate feature combinations.  What the device sends we work with
         cluster = new ClusterComposer(cluster, true).compose(featureNames.map(capitalize));
+    }
+
+    // Since the disappearance of EventList the set of supported events is unknowable from the client.  Mark all
+    // optional events as supported so listeners can be bound
+    const eventSupportOverrides = new Map<EventModel, boolean>();
+    for (const event of schema.conformant.events) {
+        maybeOverrideSupport(schema, event, true, eventSupportOverrides);
     }
 
     // If the schema does not match what the device actually returned, further augment both the ClusterModel and
@@ -111,10 +128,11 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
         schema.revision !== analysis.shape.revision ||
         extraAttrs.size ||
         extraCommands.size ||
-        Object.keys(attrSupportOverrides).length ||
-        Object.keys(commandSupportOverrides).length
+        attrSupportOverrides.size ||
+        commandSupportOverrides.size ||
+        eventSupportOverrides.size
     ) {
-        cloneSchema();
+        extendSchema();
 
         cluster = {
             ...cluster,
@@ -123,7 +141,7 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
             commands: { ...cluster.commands },
         };
 
-        if (attrSupportOverrides) {
+        if (attrSupportOverrides.size) {
             for (const [attr, isSupported] of attrSupportOverrides.entries()) {
                 schema.children.push(attr.extend({ operationalIsSupported: isSupported }));
             }
@@ -135,7 +153,7 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
             schema.children.push(new AttributeModel({ id, name, type: "any" }));
         }
 
-        if (commandSupportOverrides) {
+        if (commandSupportOverrides.size) {
             for (const [command, isSupported] of commandSupportOverrides.entries()) {
                 schema.children.push(command.extend({ operationalIsSupported: isSupported }));
             }
@@ -146,6 +164,12 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
             cluster.commands[camelize(name, false)] = Command(id, TlvAny, 0, TlvNoResponse);
             schema.children.push(new CommandModel({ id, name, type: "any" }));
         }
+
+        if (eventSupportOverrides.size) {
+            for (const [event, isSupported] of eventSupportOverrides.entries()) {
+                schema.children.push(event.extend({ operationalIsSupported: isSupported }));
+            }
+        }
     }
 
     // Specialize for the specific cluster and schema
@@ -153,19 +177,22 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
 
     // Add command implementations
     for (const id of analysis.shape.commands) {
-        const name = schema.get(CommandModel, id)?.name ?? createUnknownName("command", id);
+        const name = schema.get(CommandModel, id)?.name;
+        if (name === undefined) {
+            throw new InternalError(`Command ${id} specified but not added to schema ${schema.name}`);
+        }
         type.prototype[camelize(name, false)] = implementCommand(camelize(name));
     }
 
     return type;
 
-    function cloneSchema() {
-        if (isCloned) {
+    function extendSchema() {
+        if (isExtended) {
             return;
         }
-        schema = schema.clone();
+        schema = schema.extend();
         schema.supportedFeatures = featureNames;
-        isCloned = true;
+        isExtended = true;
     }
 
     function implementCommand(command: string) {
@@ -208,10 +235,22 @@ function generateType(analysis: ShapeAnalysis, baseType: Behavior.Type): Cluster
  * Create a compact string that uniquely identifies a shape for matching purposes.
  */
 function createFingerprint(analysis: ShapeAnalysis) {
-    const fingerprint = [analysis.shape.id] as (number | string)[];
+    const fingerprint = [analysis.shape.id] as (number | string | bigint)[];
+
+    if (analysis.featureBitmap) {
+        fingerprint.push("f", analysis.featureBitmap);
+    }
+
+    if (analysis.attrSupportOverrides.size) {
+        addSupportFingerprints("a", analysis.attrSupportOverrides);
+    }
 
     if (analysis.extraAttrs.size) {
         fingerprint.push("a", createElementFingerprint(analysis.extraAttrs));
+    }
+
+    if (analysis.commandSupportOverrides.size) {
+        addSupportFingerprints("c", analysis.commandSupportOverrides);
     }
 
     if (analysis.extraCommands.size) {
@@ -242,6 +281,43 @@ function createFingerprint(analysis: ShapeAnalysis) {
             .map(([block, map]) => (block ? `${block}:${map}` : map))
             .join(",");
     }
+
+    /**
+     * Add fingerprints for overrides of element support.
+     *
+     * This adds an "x-" component for unsupported elements and "x+" for supported elements.
+     */
+    function addSupportFingerprints(prefix: string, elements: Map<ValueModel, boolean>) {
+        let supported: Array<number> | undefined;
+        let unsupported: Array<number> | undefined;
+
+        for (const [{ id }, isSupported] of elements) {
+            if (id === undefined) {
+                continue;
+            }
+
+            if (isSupported) {
+                if (supported) {
+                    supported.push(id);
+                } else {
+                    supported = [id];
+                }
+            } else {
+                if (unsupported) {
+                    unsupported.push(id);
+                } else {
+                    unsupported = [id];
+                }
+            }
+        }
+
+        if (supported) {
+            fingerprint.push(`${prefix}+`, createElementFingerprint(supported));
+        }
+        if (unsupported) {
+            fingerprint.push(`${prefix}-`, createElementFingerprint(unsupported));
+        }
+    }
 }
 
 function createUnknownName(prefix: string, id: number) {
@@ -250,6 +326,7 @@ function createUnknownName(prefix: string, id: number) {
 
 interface ShapeAnalysis {
     schema: ClusterModel & { id: ClusterId };
+    featureBitmap: number | bigint;
     shape: PeerBehavior.ClusterShape;
     attrSupportOverrides: Map<AttributeModel, boolean>;
     extraAttrs: Set<number>;
@@ -266,23 +343,17 @@ function ShapeAnalysis(shape: PeerBehavior.ClusterShape): ShapeAnalysis {
         standardCluster ??
         new ClusterModel({ id: shape.id, name: createUnknownName("Cluster", shape.id), revision: shape.revision });
 
+    let featureBitmap: bigint | number;
+    if (typeof shape.features === "number") {
+        featureBitmap = shape.features;
+    } else {
+        featureBitmap = EncodedBitmap(schema.featureMap, shape.features);
+    }
+
     const attrSupportOverrides = new Map<AttributeModel, boolean>();
     const extraAttrs = new Set<number>(shape.attributes);
     for (const attr of schema.attributes) {
         maybeOverrideSupport(standardCluster, attr, extraAttrs, attrSupportOverrides);
-        if (standardCluster) {
-            const supported = extraAttrs.has(attr.id);
-            const applicability = attr.conformance.applicabilityFor(standardCluster);
-            if (!supported) {
-                if (applicability) {
-                    attrSupportOverrides.set(attr, false);
-                }
-            } else {
-                if (applicability !== Conformance.Applicability.Mandatory) {
-                    attrSupportOverrides.set(attr, true);
-                }
-            }
-        }
         extraAttrs.delete(attr.id as AttributeId);
     }
 
@@ -295,6 +366,7 @@ function ShapeAnalysis(shape: PeerBehavior.ClusterShape): ShapeAnalysis {
 
     return {
         schema: schema as ClusterModel & { id: ClusterId },
+        featureBitmap,
         shape,
         attrSupportOverrides,
         extraAttrs,
@@ -312,18 +384,18 @@ function ShapeAnalysis(shape: PeerBehavior.ClusterShape): ShapeAnalysis {
  *
  * * the element is optional according to the standard and is implemented on the peer
  */
-function maybeOverrideSupport<T extends AttributeModel | CommandModel>(
+function maybeOverrideSupport<T extends AttributeModel | CommandModel | EventModel>(
     standardCluster: ClusterModel | undefined,
     element: T,
-    supported: Set<number>,
+    supported: Set<number> | true,
     overrides: Map<T, boolean>,
 ) {
     if (!standardCluster) {
         return;
     }
 
-    const isSupported = supported.has(element.id);
-    const applicability = element.conformance.applicabilityFor(standardCluster);
+    const isSupported = supported === true || supported.has(element.id);
+    const applicability = element.effectiveConformance.applicabilityFor(standardCluster);
     if (!isSupported) {
         if (applicability) {
             overrides.set(element, false);

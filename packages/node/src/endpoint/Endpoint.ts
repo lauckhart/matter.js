@@ -390,8 +390,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
                 throw new ImplementationError(`Behavior ${type} is not supported by ${this}`);
             }
         } else {
+            if (type.name === "BasicInformationClient") debugger;
             if (!this.behaviors.has(type)) {
-                throw new ImplementationError(`Behavior ${type.id} is not supported by this endpoint`);
+                throw new ImplementationError(`Behavior ${type.id} is not supported by ${this}`);
             }
             type = type.id;
         }

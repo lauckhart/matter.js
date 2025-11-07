@@ -201,12 +201,7 @@ export class ClientStructure {
 
             switch (opcode) {
                 case "reparent":
-                    try {
-                        endpoint.endpoint.owner = endpoint.pendingOwner?.endpoint;
-                        endpoint.pendingOwner = undefined;
-                    } catch (e) {
-                        logger.error(`Error installing peer endpoint ${endpoint.endpoint}:`, e);
-                    }
+                    this.#install(endpoint);
                     break;
 
                 case "erase":

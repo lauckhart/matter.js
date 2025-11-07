@@ -119,7 +119,7 @@ describe("ClientNode", () => {
         expect(ep1b.state).deep.equals(expectedEp1State);
     }).timeout(1e9);
 
-    it("invokes, receives state updates and emits changed events", async () => {
+    it.only("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -343,7 +343,7 @@ describe("ClientNode", () => {
         expect(aggregatorClient.parts.size).equals(0);
     });
 
-    it.only("erases node after leave event", async () => {
+    it("erases node after leave event", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -351,18 +351,19 @@ describe("ClientNode", () => {
         const peer1 = controller.peers.get("peer1")!;
 
         // *** CONFIRM FABRIC IDENTITY ***
+
         const deviceFabric = device.env.get(FabricManager).fabrics[0];
         expect(deviceFabric).not.undefined;
         const controllerFabric = controller.env.get(FabricManager).fabrics[0];
         expect(controllerFabric).not.undefined;
         expect(deviceFabric.fabricId).equals(controllerFabric.fabricId);
 
-        // *** REMOVE FABRIC ON PEER ***
+        // *** LEAVE FABRIC ON PEER ***
 
         const deleted = Promise.resolve(peer1.lifecycle.destroyed);
-        await deviceFabric.remove();
+        await deviceFabric.leave();
 
-        // *** NOTE DELETEION ON CONTROLLER ***
+        // *** NOTE DELETION ON CONTROLLER ***
 
         await MockTime.resolve(deleted);
         expect(controller.peers.size).equals(0);

@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningClient, type ClusterBehavior } from "#behavior/index.js";
+import { CommissioningClient, LocalActorContext, type ClusterBehavior } from "#behavior/index.js";
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
 import { CommissioningDiscovery } from "#behavior/system/controller/discovery/CommissioningDiscovery.js";
 import { ContinuousDiscovery } from "#behavior/system/controller/discovery/ContinuousDiscovery.js";
 import { Discovery } from "#behavior/system/controller/discovery/Discovery.js";
 import { InstanceDiscovery } from "#behavior/system/controller/discovery/InstanceDiscovery.js";
 import { BasicInformationClient } from "#behaviors/basic-information";
-import { OperationalCredentialsClient, OperationalCredentialsServer } from "#behaviors/operational-credentials";
+import { OperationalCredentialsClient } from "#behaviors/operational-credentials";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
 import { EndpointType } from "#endpoint/type/EndpointType.js";
@@ -325,7 +325,7 @@ export class Peers extends EndpointContainer<ClientNode> {
     #onLeave(node: ClientNode, fabricIndex: FabricIndex) {
         this.#mutex.run(async () => {
             const { fabrics: peerFabrics } = node.maybeStateOf(OperationalCredentialsClient);
-            const peerFabric = peerFabrics[fabricIndex];
+            const peerFabric = peerFabrics.find(fabric => fabric.fabricIndex === fabricIndex);
             if (!peerFabric) {
                 return;
             }
@@ -335,14 +335,15 @@ export class Peers extends EndpointContainer<ClientNode> {
                 return;
             }
 
-            const { fabrics: localFabrics } = this.owner.stateOf(OperationalCredentialsServer);
-            const localFabric = localFabrics.find(fabric => fabric.fabricId === peerFabric.fabricId);
+            const localFabrics = this.owner.env.get(FabricManager);
+            const localFabric = localFabrics.forDescriptor(peerFabric);
             if (!localFabric || localFabric.fabricIndex !== peerAddress.fabricIndex) {
                 return;
             }
 
             logger.notice("Peer", Diagnostic.strong(node.id), "has left the fabric");
-            await node.erase();
+            node.lifecycle.decommissioned.emit(LocalActorContext.ReadOnly);
+            await node.delete();
         });
     }
 

@@ -603,7 +603,7 @@ export class ServerSubscription extends Subscription {
     /**
      * Closes the subscription and flushes all outstanding data updates if requested.
      */
-    override async close(graceful = false, cancelledByPeer = false) {
+    override async close(flush = false, cancelledByPeer = false) {
         if (this.isClosed) {
             return;
         }
@@ -611,7 +611,8 @@ export class ServerSubscription extends Subscription {
             this.isCanceledByPeer = true;
         }
         await this.destroy();
-        if (graceful) {
+
+        if (flush) {
             await this.#flush();
         }
         if (this.#currentUpdatePromise) {
