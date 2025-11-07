@@ -6,7 +6,7 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { ClusterBehaviorType } from "#behavior/index.js";
+import { ClusterBehaviorType } from "#behavior/cluster/ClusterBehaviorType.js";
 import { camelize, capitalize, InternalError } from "#general";
 import {
     AttributeModel,
@@ -31,6 +31,7 @@ import {
     TlvAny,
     TlvNoResponse,
 } from "#types";
+import { ClientCommandMethod } from "./ClientCommandMethod.js";
 
 const BIT_BLOCK_SIZE = Math.log2(Number.MAX_SAFE_INTEGER);
 
@@ -128,7 +129,8 @@ function instrumentKnownShape(shape: PeerBehavior.KnownClusterShape) {
         cluster: base.cluster,
         schema: base.schema,
         name: `${base.schema.name}Client`,
-        isClient: true,
+        forClient: true,
+        commandFactory: ClientCommandMethod,
     });
 
     knownCache.set(shape.behavior, type);
@@ -223,7 +225,8 @@ function generateDiscoveredType(analysis: DiscoveredShapeAnalysis, baseType: Beh
         cluster,
         schema,
         name: `${schema.name}Client`,
-        isClient: true,
+        forClient: true,
+        commandFactory: ClientCommandMethod,
     });
 
     function extendSchema() {

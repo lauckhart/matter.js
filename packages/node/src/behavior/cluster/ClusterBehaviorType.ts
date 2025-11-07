@@ -20,15 +20,13 @@ import {
     Scope,
     ValueModel,
 } from "#model";
-import type { ClientNode } from "#node/ClientNode.js";
-import { Node } from "#node/Node.js";
-import { ClientInteraction, Invoke, Val } from "#protocol";
-import { ClusterType, Status, StatusResponseError } from "#types";
+import { Val } from "#protocol";
+import { ClusterType } from "#types";
 import { Behavior } from "../Behavior.js";
 import { DerivedState } from "../state/StateType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ClusterBehaviorCache } from "./ClusterBehaviorCache.js";
-import { introspectionInstanceOf } from "./ClusterBehaviorUtil.js";
+import { introspectionInstanceOf } from "./cluster-behavior-utils.js";
 
 /**
  * Generates a {@link ClusterBehavior.Type}.
@@ -41,7 +39,8 @@ export function ClusterBehaviorType<const C extends ClusterType>({
     base,
     schema,
     name,
-    isClient,
+    forClient,
+    commandFactory,
 }: ClusterBehaviorType.Configuration<C>) {
     if (schema === undefined) {
         if (base.schema.tag === ElementTag.Cluster) {
@@ -59,7 +58,7 @@ export function ClusterBehaviorType<const C extends ClusterType>({
     // If we are provided a name, the caller is creating a specialized version of the behavior.  Disable caching and
     // do not create a name automatically
     if (useCache) {
-        const cached = ClusterBehaviorCache.get(cluster, base, schema);
+        const cached = ClusterBehaviorCache.get(cluster, base, schema, forClient);
         if (cached) {
             return cached;
         }
@@ -76,7 +75,8 @@ export function ClusterBehaviorType<const C extends ClusterType>({
         cluster,
         base,
         newProps: {},
-        isClient: isClient,
+        forClient,
+        commandFactory,
     };
 
     const type = GeneratedClass({
@@ -122,11 +122,48 @@ export function ClusterBehaviorType<const C extends ClusterType>({
 
 export namespace ClusterBehaviorType {
     export interface Configuration<C extends ClusterType> {
+        /**
+         * The ClusterType for the new behavior.
+         */
         cluster: C;
+
+        /**
+         * The behavior to extend.
+         */
         base: Behavior.Type;
+
+        /**
+         * The schema for the new behavior.
+         *
+         * If omitted uses the schema from the standard Matter data model.
+         */
         schema?: Schema.Cluster;
+
+        /**
+         * Name used for the generated class.
+         *
+         * If omitted derives name from the schema.
+         */
         name?: string;
-        isClient?: boolean;
+
+        /**
+         * Modify generation for client instrumentation.
+         *
+         * This affects a few things like how quieter events generate.
+         */
+        forClient?: boolean;
+
+        /**
+         * Factory for command implementations.
+         *
+         * By default commands install as {@link Behavior.unimplemented}.  In client scenarios this allows the caller to
+         * provide a useful default implementation.
+         */
+        commandFactory?: CommandFactory;
+    }
+
+    export interface CommandFactory {
+        (name: string): (this: ClusterBehavior, fields?: {}) => unknown;
     }
 }
 
@@ -135,7 +172,8 @@ interface DerivationContext {
     scope: Scope;
     base: Behavior.Type;
     newProps: Record<string, ValueModel>;
-    isClient?: boolean;
+    forClient?: boolean;
+    commandFactory?: ClusterBehaviorType.CommandFactory;
 }
 
 const KNOWN_DEFAULTS = Symbol("knownDefaults");
@@ -251,12 +289,15 @@ function createDerivedState({ cluster, scope, base, newProps }: DerivationContex
 /**
  * Extend events with additional implementations.
  */
-function createDerivedEvents({ scope, base, newProps, isClient }: DerivationContext) {
+function createDerivedEvents({ scope, base, newProps, forClient }: DerivationContext) {
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
     const baseInstance = new base.Events() as unknown as Record<string, unknown>;
 
     const eventNames = new Set<string>();
+
+    // Events are generally OnlineEvent except in the case of server-side elements marked Q
+    const quieterImplementation = forClient ? OnlineEvent : QuietEvent;
 
     // Add events that are mandatory or marked as supported and not present in the base class
     const applicableClusterEvents = new Set();
@@ -269,13 +310,13 @@ function createDerivedEvents({ scope, base, newProps, isClient }: DerivationCont
 
         // Do not implement if already supported
         if (baseInstance[name] !== undefined) {
-            return;
+            continue;
         }
 
         // For clients we implement all events because we can't know what's supported now that EventList is gone.  For
         // servers we only add events that are explicitly
-        if (!isClient && !scope.hasOperationalSupport(event)) {
-            return;
+        if (!forClient && !scope.hasOperationalSupport(event)) {
+            continue;
         }
 
         // Add the event
@@ -283,7 +324,7 @@ function createDerivedEvents({ scope, base, newProps, isClient }: DerivationCont
         instanceDescriptors[name] = createEventDescriptor(
             name,
             event,
-            event.quality.quieter ? QuietEvent : OnlineEvent,
+            event.quality.quieter ? quieterImplementation : OnlineEvent,
         );
     }
 
@@ -300,16 +341,11 @@ function createDerivedEvents({ scope, base, newProps, isClient }: DerivationCont
         if (baseInstance[changed] === undefined) {
             eventNames.add(changed);
 
-            // Choose implementation.  This is OnlineEvent except in the case of server-side events marked with Q
-            let implementation;
-            if (prop.quality.quieter && !isClient) {
-                // TODO - for clients the type will lie; create a class that throws if .quiet is accessed?
-                implementation = OnlineEvent;
-            } else {
-                implementation = QuietEvent;
-            }
-
-            instanceDescriptors[changed] = createEventDescriptor(changed, prop, implementation);
+            instanceDescriptors[changed] = createEventDescriptor(
+                changed,
+                prop,
+                prop.quality.quieter ? quieterImplementation : OnlineEvent,
+            );
         }
     }
 
@@ -397,25 +433,33 @@ function syncFeatures(schema: Schema.Cluster, cluster: ClusterType) {
     return schema;
 }
 
+const sourceFactory = Symbol("source-factory");
+
+interface MarkedCommand {
+    [sourceFactory]?: ClusterBehaviorType.CommandFactory;
+}
+
 /**
  * Create descriptors for any command methods that are not already present in the base class.
  */
-function createDefaultCommandDescriptors({ scope, base, isClient }: DerivationContext) {
+function createDefaultCommandDescriptors({ scope, base, commandFactory }: DerivationContext) {
     const result = {} as Record<string, PropertyDescriptor>;
     const instance = introspectionInstanceOf(base);
 
     // We add functions for all commands, not just those that are conformant.  This ensures that the interface is
     // compatible with the "client" clusters.  Commands that are nonconformant will not appear in the type and if
     // somehow invoked will result in an "unimplemented" error
-    const names = new Set(scope.membersOf(scope.owner, { tags: [ElementTag.Command] }).map(command => command.name));
+    const names = new Set(
+        scope.membersOf(scope.owner, { tags: [ElementTag.Command] }).map(command => camelize(command.name)),
+    );
 
     const conformantNames = new Set(
         scope
             .membersOf(scope.owner, { tags: [ElementTag.Command], conformance: "conformant" })
-            .map(command => command.name),
+            .map(command => camelize(command.name)),
     );
 
-    for (const name in names) {
+    for (const name of names) {
         let implementation;
 
         // Choose implementation, or skip if appropriate implementation is already present
@@ -425,12 +469,15 @@ function createDefaultCommandDescriptors({ scope, base, isClient }: DerivationCo
                 continue;
             }
             implementation = Behavior.unimplemented;
-        } else if (isClient) {
-            // For clients, install if missing or unimplemented
-            if (instance[name] && instance[name] !== Behavior.unimplemented) {
+        } else if (commandFactory) {
+            // With a factory, replace any existing implementation not provided by the factory
+            if ((instance[name] as MarkedCommand | undefined)?.[sourceFactory] === commandFactory) {
                 continue;
             }
-            implementation = implementClientCommand(name);
+
+            implementation = commandFactory(name);
+
+            (implementation as MarkedCommand)[sourceFactory] = commandFactory;
         } else {
             // Otherwise make sure we at least have an "unimplemented"... um, implementation
             if (instance[name]) {
@@ -512,55 +559,4 @@ function createEventDescriptor(
         },
         enumerable: true,
     };
-}
-
-/**
- * Create the command method for a client behavior.
- */
-function implementClientCommand(name: string) {
-    // This is our usual hack to give a function a proper name in stack traces
-    const temp = {
-        // The actual implementation
-        [name](this: ClusterBehavior, fields?: {}) {
-            return invokeOnPeer(this, name, fields);
-        },
-    };
-
-    return temp[name];
-}
-
-/**
- * Invokes a command remotely on behalf of client behaviors.
- */
-async function invokeOnPeer(behavior: ClusterBehavior, command: string, fields?: {}) {
-    const node = behavior.env.get(Node) as ClientNode;
-
-    const chunks = (node.interaction as ClientInteraction).invoke(
-        Invoke({
-            commands: [
-                Invoke.ConcreteCommandRequest<any>({
-                    endpoint: behavior.endpoint,
-                    cluster: behavior.cluster,
-                    command,
-                    fields,
-                }),
-            ],
-        }),
-    );
-
-    for await (const chunk of chunks) {
-        for (const entry of chunk) {
-            // We send only one command, so we only get one response back
-            switch (entry.kind) {
-                case "cmd-status":
-                    if (entry.status !== Status.Success) {
-                        throw StatusResponseError.create(entry.status, undefined, entry.clusterStatus);
-                    }
-                    return;
-
-                case "cmd-response":
-                    return entry.data;
-            }
-        }
-    }
 }

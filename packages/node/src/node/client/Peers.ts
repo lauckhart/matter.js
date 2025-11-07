@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningClient, LocalActorContext, type ClusterBehavior } from "#behavior/index.js";
+import { type ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
+import { LocalActorContext } from "#behavior/context/server/LocalActorContext.js";
+import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
 import { CommissioningDiscovery } from "#behavior/system/controller/discovery/CommissioningDiscovery.js";
 import { ContinuousDiscovery } from "#behavior/system/controller/discovery/ContinuousDiscovery.js";

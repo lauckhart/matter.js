@@ -119,7 +119,7 @@ describe("ClientNode", () => {
         expect(ep1b.state).deep.equals(expectedEp1State);
     }).timeout(1e9);
 
-    it.only("invokes, receives state updates and emits changed events", async () => {
+    it("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();

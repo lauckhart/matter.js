@@ -27,3 +27,22 @@ export type ClusterOf<B extends Behavior.Type> = B extends { cluster: infer C ex
 export type ExtensionInterfaceOf<B extends Behavior.Type> = B extends { ExtensionInterface: infer I extends {} }
     ? I
     : {};
+
+const isClient = Symbol("is-client");
+
+type ClientBehaviorType = { [isClient]?: boolean };
+
+/**
+ * Mark a behavior as a cluster client.
+ */
+export function markClientBehavior(type: Behavior.Type) {
+    (type as ClientBehaviorType)[isClient] = true;
+}
+
+/**
+ * Test whether a behavior is a cluster client.
+ */
+export function isClientBehavior(type: Behavior.Type) {
+    // Use hasOwn so any derivation voids the client assertion
+    return (type as ClientBehaviorType)[isClient] && Object.hasOwn(type, isClient);
+}
