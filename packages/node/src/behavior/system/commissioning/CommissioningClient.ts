@@ -39,7 +39,6 @@ import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import {
-    ChannelManager,
     CommissioningMode,
     ControllerCommissioner,
     DiscoveryData,
@@ -47,6 +46,7 @@ import {
     FabricAuthority,
     FabricManager,
     LocatedNodeCommissioningOptions,
+    PaseChannelManager,
     PeerAddress as ProtocolPeerAddress,
     SessionIntervals as ProtocolSessionIntervals,
     Subscribe,
@@ -261,7 +261,7 @@ export class CommissioningClient extends Behavior {
         const node = this.endpoint as ClientNode;
 
         if (addr) {
-            const channels = node.env.get(ChannelManager);
+            const channels = node.env.get(PaseChannelManager);
             if (channels.hasChannel(addr)) {
                 const channel = channels.getChannel(addr).channel;
                 const operationalAddress = isIpNetworkChannel(channel) ? channel.networkAddress : undefined;

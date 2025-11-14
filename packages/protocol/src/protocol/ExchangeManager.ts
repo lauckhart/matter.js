@@ -35,9 +35,9 @@ import { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
-import { ChannelManager } from "./ChannelManager.js";
 import { MessageExchange, MessageExchangeContext } from "./MessageExchange.js";
 import { DuplicateMessageError } from "./MessageReceptionState.js";
+import { PaseChannelManager } from "./PaseChannelManager.js";
 import { ProtocolHandler } from "./ProtocolHandler.js";
 
 const logger = Logger.get("ExchangeManager");
@@ -51,13 +51,13 @@ export interface ExchangeManagerContext {
     entropy: Entropy;
     netInterface: ConnectionlessTransportSet;
     sessionManager: SessionManager;
-    channelManager: ChannelManager;
+    channelManager: PaseChannelManager;
 }
 
 export class ExchangeManager {
     readonly #transports: ConnectionlessTransportSet;
     readonly #sessionManager: SessionManager;
-    readonly #channelManager: ChannelManager;
+    readonly #channelManager: PaseChannelManager;
     readonly #exchangeCounter: ExchangeCounter;
     readonly #exchanges = new Map<number, MessageExchange>();
     readonly #protocols = new Map<number, ProtocolHandler>();
@@ -92,7 +92,7 @@ export class ExchangeManager {
             entropy: env.get(Entropy),
             netInterface: env.get(ConnectionlessTransportSet),
             sessionManager: env.get(SessionManager),
-            channelManager: env.get(ChannelManager),
+            channelManager: env.get(PaseChannelManager),
         });
         env.set(ExchangeManager, instance);
         return instance;

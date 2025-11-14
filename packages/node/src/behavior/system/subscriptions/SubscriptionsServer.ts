@@ -9,9 +9,9 @@ import { DatatypeModel, FieldElement } from "#model";
 import { InteractionServer, PeerSubscription } from "#node/server/InteractionServer.js";
 import { ServerSubscription } from "#node/server/ServerSubscription.js";
 import {
-    ChannelManager,
     NoChannelError,
     NodeDiscoveryType,
+    PaseChannelManager,
     PeerAddress,
     PeerAddressSet,
     PeerSet,
@@ -153,7 +153,7 @@ export class SubscriptionsBehavior extends Behavior {
         // TODO Remove when we store peer addresses also for operational nodes
         let operationalAddress: ServerAddressUdp | undefined;
         try {
-            const channel = this.env.get(ChannelManager).getChannel(peerAddress, session).channel;
+            const channel = this.env.get(PaseChannelManager).getChannel(peerAddress, session).channel;
             operationalAddress = isIpNetworkChannel(channel) ? channel.networkAddress : undefined;
         } catch (error) {
             // Can happen in edge cases, so better catch it and proceed without operational address
@@ -232,7 +232,7 @@ export class SubscriptionsBehavior extends Behavior {
             }
             logger.debug(`Try to reestablish former subscription ${subscriptionId} to ${peerAddress}`);
             if (sessions.getSessionForNode(peerAddress) !== undefined) {
-                logger.debug(`We already have and existing session for peer ${peerAddress}`);
+                logger.debug(`We already have an existing session for peer ${peerAddress}`);
             } else {
                 try {
                     await peers.connect(peerAddress, {

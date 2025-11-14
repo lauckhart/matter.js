@@ -5,7 +5,6 @@
  */
 import { ChannelType, Duration, Observable } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
-import { ChannelManager } from "#protocol/ChannelManager.js";
 import { ExchangeManager } from "#protocol/ExchangeManager.js";
 import {
     ChannelNotConnectedError,
@@ -13,6 +12,7 @@ import {
     MessageChannel,
 } from "#protocol/MessageChannel.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
+import { PaseChannelManager } from "#protocol/PaseChannelManager.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
 import { Session } from "#session/Session.js";
 import { INTERACTION_PROTOCOL_ID } from "#types";
@@ -88,7 +88,7 @@ export class ReconnectableExchangeProvider extends ExchangeProvider {
 
     constructor(
         exchangeManager: ExchangeManager,
-        protected readonly channelManager: ChannelManager,
+        protected readonly channelManager: PaseChannelManager,
         address: PeerAddress,
         reconnectChannelFunc: () => Promise<void>,
     ) {

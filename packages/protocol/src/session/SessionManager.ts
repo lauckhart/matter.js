@@ -143,6 +143,9 @@ export class SessionManager {
     readonly #subscriptionUpdateMutex = new Mutex(this);
     #idUpperBound = ID_SPACE_UPPER_BOUND;
 
+    // TODO - replace with per-fabric session limit and per-node exchange limit
+    caseSessionsPerFabricAndNode = 3;
+
     constructor(context: SessionManagerContext) {
         this.#context = context;
         const {

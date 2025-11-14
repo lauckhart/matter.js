@@ -10,12 +10,12 @@ import { Crypto, InternalError } from "#general";
 import { CommissioningServer, InteractionServer } from "#index.js";
 import { Specification } from "#model";
 import {
-    ChannelManager,
     Fabric,
     FabricManager,
     InteractionServerMessenger,
     Message,
     MessageType,
+    PaseChannelManager,
     SessionType,
     TestFabric,
     TlvCertSigningRequest,
@@ -333,7 +333,7 @@ export namespace interaction {
     ) {
         const { exchange, interactionServer } = await connect(node, fabric);
 
-        const channels = node.env.get(ChannelManager);
+        const channels = node.env.get(PaseChannelManager);
         channels.getChannel = () => exchange.channel;
 
         await interactionServer.handleSubscribeRequest(exchange, request, BarelyMockedMessenger, BarelyMockedMessage);

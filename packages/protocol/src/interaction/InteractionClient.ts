@@ -121,6 +121,8 @@ export class InteractionClientProvider {
             operationalAddress?: ServerAddressUdp;
         },
     ): Promise<InteractionClient> {
+        if (allowUnknownPeer === false) {
+        }
         await this.#peers.connect(address, options);
 
         return this.getInteractionClient(address, options);
