@@ -367,7 +367,7 @@ describe("ClientNode", () => {
 
         await MockTime.resolve(deleted);
         expect(controller.peers.size).equals(0);
-    }).timeout(1e9);
+    });
 
     it("handles shutdown event and reestablishes connection", () => {
         // TODO

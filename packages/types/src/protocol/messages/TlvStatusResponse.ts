@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { TypeFromSchema } from "#tlv/TlvSchema.js";
 import { StatusCode } from "../../common/StatusCode.js";
 import { TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../../tlv/TlvObject.js";
@@ -15,3 +16,5 @@ export const TlvStatusResponse = TlvObject({
     status: TlvField(0, TlvEnum<StatusCode>()),
     interactionModelRevision: TlvField(0xff, TlvUInt8),
 });
+
+export type StatusResponseType = TypeFromSchema<typeof TlvStatusResponse>;

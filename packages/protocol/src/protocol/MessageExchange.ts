@@ -58,14 +58,10 @@ export type ExchangeLogContext = Record<string, unknown>;
 
 export type ExchangeSendOptions = {
     /**
-     * The response to this send should be an ack only and no StatusResponse or such. If a StatusResponse is returned
-     * then this is handled as error.
-     */
-    expectAckOnly?: boolean;
-
-    /**
      * If the message is part of a multiple message interaction, this flag indicates that it is not allowed
      * to establish a new exchange
+     *
+     * @deprecated
      */
     multipleMessageInteraction?: boolean;
 
@@ -158,8 +154,8 @@ export class MessageExchange {
         }
     });
     #sentMessageToAck: Message | undefined;
-    #sentMessageAckSuccess: ((...args: any[]) => void) | undefined;
-    #sentMessageAckFailure: ((error?: Error) => void) | undefined;
+    #sentMessageAckSuccess?: () => void;
+    #sentMessageAckFailure?: (error?: Error) => void;
     #retransmissionTimer: Timer | undefined;
     #retransmissionCounter = 0;
     #closeTimer: Timer | undefined;
@@ -192,6 +188,8 @@ export class MessageExchange {
         this.#peerNodeId = peerNodeId;
         this.#exchangeId = exchangeId;
         this.#protocolId = protocolId;
+
+        channel.exchanges.add(this);
 
         const { activeThreshold, activeInterval, idleInterval } = this.session.parameters;
 
@@ -324,7 +322,7 @@ export class MessageExchange {
                 // The other side has received our previous message
                 this.#retransmissionTimer?.stop();
                 this.#retransmissionCounter = 0;
-                this.#sentMessageAckSuccess?.(message);
+                this.#sentMessageAckSuccess?.();
                 this.#sentMessageAckSuccess = undefined;
                 this.#sentMessageAckFailure = undefined;
                 this.#sentMessageToAck = undefined;
@@ -357,7 +355,6 @@ export class MessageExchange {
         }
 
         const {
-            expectAckOnly = false,
             disableMrpLogic,
             expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME,
             requiresAck,
@@ -443,7 +440,7 @@ export class MessageExchange {
             payload,
         };
 
-        let ackPromise: Promise<Message> | undefined;
+        let ackPromise: Promise<void> | undefined;
         if (this.channel.usesMrp && message.payloadHeader.requiresAck && !disableMrpLogic) {
             this.#sentMessageToAck = message;
             this.#retransmissionTimer = Time.getTimer(
@@ -451,7 +448,7 @@ export class MessageExchange {
                 this.channel.getMrpResubmissionBackOffTime(0),
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
-            const { promise, resolver, rejecter } = createPromise<Message>();
+            const { promise, resolver, rejecter } = createPromise<void>();
             ackPromise = promise;
             this.#sentMessageAckSuccess = resolver;
             this.#sentMessageAckFailure = rejecter;
@@ -463,16 +460,9 @@ export class MessageExchange {
             this.#retransmissionCounter = 0;
             this.#retransmissionTimer?.start();
             // Await Response to be received (or Message retransmit limit reached which rejects the promise)
-            const responseMessage = await ackPromise;
+            await ackPromise;
             this.#sentMessageAckSuccess = undefined;
             this.#sentMessageAckFailure = undefined;
-            // If we only expect an Ack without data but got data, throw an error
-            const {
-                payloadHeader: { protocolId, messageType },
-            } = responseMessage;
-            if (expectAckOnly && !SecureMessageType.isStandaloneAck(protocolId, messageType)) {
-                throw new UnexpectedMessageError("Expected ack only", responseMessage);
-            }
         }
     }
 
@@ -490,6 +480,10 @@ export class MessageExchange {
             );
         }
         return this.#messagesQueue.read(timeout);
+    }
+
+    nextMessageIfReady() {
+        return this.#messagesQueue.readIfReady();
     }
 
     #retransmitMessage(message: Message, expectedProcessingTime?: Duration) {
@@ -667,6 +661,8 @@ export class MessageExchange {
         for (let i = this.#retransmissionCounter; i <= MRP.MAX_TRANSMISSIONS; i++) {
             maxResubmissionTime = Millis(maxResubmissionTime + this.channel.getMrpResubmissionBackOffTime(i));
         }
+        // TODO - we should not have a running timer after close; this also creates a dangling promise.  Need to convert
+        // to interruptable await
         this.#closeTimer = Time.getTimer(
             `Message exchange cleanup ${this.session.name} / ${this.#exchangeId}`,
             maxResubmissionTime,
@@ -684,6 +680,7 @@ export class MessageExchange {
         this.#timedInteractionTimer?.stop();
         this.#messagesQueue.close();
         await this.#closed.emit();
+        this.context.channel.exchanges.delete(this);
     }
 
     get via() {

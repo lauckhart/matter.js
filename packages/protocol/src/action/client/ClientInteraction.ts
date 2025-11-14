@@ -27,7 +27,8 @@ import {
     RetrySchedule,
     Seconds,
 } from "#general";
-import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
+import { DeprecatedClientMessenger } from "#interaction/messenger/DeprecatedClientMessenger.js";
+import { MessageType } from "#interaction/messenger/MessageType.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
 import { SecureSession } from "#session/SecureSession.js";
 import { Status, TlvNoResponse, TlvSubscribeResponse } from "#types";
@@ -112,13 +113,13 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         const { checkAbort, messenger } = context;
 
         logger.debug("Read »", messenger.exchange.via, request);
-        await messenger.sendReadRequest(request);
+        await messenger.requestRead(request);
         checkAbort();
 
         let attributeReportCount = 0;
         let eventReportCount = 0;
 
-        for await (const report of messenger.readDataReports()) {
+        for await (const report of messenger.receiveDataReports()) {
             checkAbort();
             attributeReportCount += report.attributeReports?.length ?? 0;
             eventReportCount += report.eventReports?.length ?? 0;
@@ -356,7 +357,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
                 request,
             );
 
-            await messenger.sendSubscribeRequest({
+            await messenger.requestSubscribe({
                 ...request,
                 minIntervalFloorSeconds: Seconds.of(minIntervalFloor),
                 maxIntervalCeilingSeconds: Seconds.of(maxIntervalCeiling),
@@ -430,7 +431,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
         const checkAbort = Abort.checkerFor(session);
 
-        const messenger = await InteractionClientMessenger.create(this.#exchanges);
+        const messenger = await DeprecatedClientMessenger.create(this.#exchanges);
 
         const context: RequestContext = {
             checkAbort,
@@ -453,13 +454,13 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
 interface RequestContext {
     checkAbort(): void;
-    messenger: InteractionClientMessenger;
+    messenger: DeprecatedClientMessenger;
 
     [Symbol.asyncDispose](): Promise<void>;
 }
 
-async function* readChunks(messenger: InteractionClientMessenger) {
-    for await (const report of messenger.readDataReports()) {
+async function* readChunks(messenger: DeprecatedClientMessenger) {
+    for await (const report of messenger.receiveDataReports()) {
         yield InputChunk(report);
     }
 }

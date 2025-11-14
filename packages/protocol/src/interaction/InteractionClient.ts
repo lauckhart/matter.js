@@ -41,6 +41,7 @@ import {
     FabricIndex,
     NodeId,
     ObjectSchema,
+    ReadRequest,
     RequestType,
     ResponseType,
     StatusCode,
@@ -61,7 +62,7 @@ import { MessageChannel } from "../protocol/MessageChannel.js";
 import { DecodedAttributeReportStatus, DecodedAttributeReportValue } from "./AttributeDataDecoder.js";
 import { DecodedDataReport } from "./DecodedDataReport.js";
 import { DecodedEventData, DecodedEventReportStatus, DecodedEventReportValue } from "./EventDataDecoder.js";
-import { InteractionClientMessenger, ReadRequest } from "./InteractionMessenger.js";
+import { DeprecatedClientMessenger } from "./messenger/DeprecatedClientMessenger.js";
 import { RegisteredSubscription, SubscriptionClient } from "./SubscriptionClient.js";
 
 const logger = Logger.get("InteractionClient");
@@ -544,7 +545,7 @@ export class InteractionClient {
     }
 
     private async processReadRequest(
-        messenger: InteractionClientMessenger,
+        messenger: DeprecatedClientMessenger,
         request: ReadRequest,
         attributeChangeListener?: (
             data: DecodedAttributeReportValue<any>,
@@ -579,7 +580,7 @@ export class InteractionClient {
         ]);
 
         // Send read request and combine all (potentially chunked) responses
-        await messenger.sendReadRequest(request);
+        await messenger.requestRead(request);
         const scope = ReadScope(request);
         const response = await messenger.readAggregateDataReport(chunk =>
             this.processAttributeUpdates(scope, chunk, attributeChangeListener),
@@ -859,7 +860,7 @@ export class InteractionClient {
                 }),
             ]);
 
-            await messenger.sendSubscribeRequest(request);
+            await messenger.requestSubscribe(request);
             const { subscribeResponse, report } = await messenger.readAggregateSubscribeResponse();
             return {
                 subscribeResponse,
@@ -963,7 +964,7 @@ export class InteractionClient {
                 }),
             ]);
 
-            await messenger.sendSubscribeRequest({
+            await messenger.requestSubscribe({
                 interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
                 eventRequests: [{ endpointId, clusterId, eventId, isUrgent }],
                 eventFilters: minimumEventNumber !== undefined ? [{ eventMin: minimumEventNumber }] : undefined,
@@ -1151,7 +1152,7 @@ export class InteractionClient {
                 }),
             ]);
 
-            await messenger.sendSubscribeRequest(request);
+            await messenger.requestSubscribe(request);
             const { subscribeResponse, report } = await messenger.readAggregateSubscribeResponse(attributeReports =>
                 this.processAttributeUpdates(scope, attributeReports, attributeListener),
             );
@@ -1489,10 +1490,10 @@ export class InteractionClient {
     }
 
     private async withMessenger<T>(
-        invoke: (messenger: InteractionClientMessenger) => Promise<T>,
+        invoke: (messenger: DeprecatedClientMessenger) => Promise<T>,
         executeQueued = false,
     ): Promise<T> {
-        const messenger = await InteractionClientMessenger.create(this.#exchangeProvider);
+        const messenger = await DeprecatedClientMessenger.create(this.#exchangeProvider);
         let result: T;
         try {
             if (executeQueued) {

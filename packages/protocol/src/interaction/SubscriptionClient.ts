@@ -10,7 +10,7 @@ import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
 import { INTERACTION_PROTOCOL_ID } from "#types";
-import { IncomingInteractionClientMessenger } from "./InteractionMessenger.js";
+import { DeprecatedClientMessenger } from "./messenger/DeprecatedClientMessenger.js";
 
 const logger = Logger.get("SubscriptionClient");
 
@@ -74,7 +74,7 @@ export class SubscriptionClient implements ProtocolHandler {
     }
 
     async onNewExchange(exchange: MessageExchange) {
-        const messenger = new IncomingInteractionClientMessenger(exchange);
+        const messenger = new DeprecatedClientMessenger(exchange);
 
         let dataReport: DecodedDataReport;
         try {

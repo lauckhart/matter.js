@@ -9,13 +9,14 @@ import { Construction, MaybePromise } from "#general";
 import { DecodedAttributeReportValue } from "#interaction/AttributeDataDecoder.js";
 import { AttributeId, ClusterId, EndpointNumber, EventNumber } from "#types";
 import { OperationalPeer } from "./OperationalPeer.js";
+import type { Peer } from "./Peer.js";
 import { PeerAddress } from "./PeerAddress.js";
 import type { PeerSet } from "./PeerSet.js";
 
 /**
  * The interface {@link PeerSet} uses for persisting operational information.
  */
-export abstract class PeerAddressStore {
+export abstract class PeerAddressStore implements Peer.Store {
     abstract loadPeers(): MaybePromise<Iterable<OperationalPeer>>;
     abstract updatePeer(peer: OperationalPeer): MaybePromise<void>;
     abstract deletePeer(address: PeerAddress): MaybePromise<void>;

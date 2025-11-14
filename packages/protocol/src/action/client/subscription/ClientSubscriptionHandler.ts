@@ -7,7 +7,7 @@
 import { ReadResult } from "#action/response/ReadResult.js";
 import { Diagnostic, InternalError, Logger } from "#general";
 import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
-import { IncomingInteractionClientMessenger } from "#interaction/InteractionMessenger.js";
+import { ClientMessenger } from "#interaction/messenger/ClientMessenger.js";
 import { SubscriptionId } from "#interaction/Subscription.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
@@ -32,9 +32,9 @@ export class ClientSubscriptionHandler implements ProtocolHandler {
     }
 
     async onNewExchange(exchange: MessageExchange) {
-        const messenger = new IncomingInteractionClientMessenger(exchange);
+        const messenger = new ClientMessenger(exchange);
         // Read the initial report
-        const reports = messenger.readDataReports();
+        const reports = messenger.receiveDataReports();
 
         const initialIteration = await reports.next();
         if (initialIteration.done) {
@@ -91,7 +91,7 @@ export class ClientSubscriptionHandler implements ProtocolHandler {
     async close() {}
 }
 
-async function sendInvalid(messenger: IncomingInteractionClientMessenger, subscriptionId?: SubscriptionId) {
+async function sendInvalid(messenger: ClientMessenger, subscriptionId?: SubscriptionId) {
     await messenger.sendStatus(Status.InvalidSubscription, {
         multipleMessageInteraction: true,
         logContext: {
@@ -109,7 +109,7 @@ async function sendInvalid(messenger: IncomingInteractionClientMessenger, subscr
 async function* processReports(
     initialReport: DataReport,
     otherReports: AsyncIterable<DataReport>,
-    messenger: IncomingInteractionClientMessenger,
+    messenger: ClientMessenger,
 ): ReadResult {
     yield InputChunk(initialReport);
 

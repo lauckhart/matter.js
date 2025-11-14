@@ -48,6 +48,7 @@ import { CaseAuthenticatedTag, GroupId, NodeId, SECURE_CHANNEL_PROTOCOL_ID, Secu
 import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedError } from "./ControllerDiscovery.js";
 import { InteractionQueue } from "./InteractionQueue.js";
 import { OperationalPeer } from "./OperationalPeer.js";
+import { Peer } from "./Peer.js";
 import { PeerAddressStore, PeerDataStore } from "./PeerAddressStore.js";
 
 const logger = Logger.get("PeerSet");
@@ -114,15 +115,15 @@ export interface PeerSetContext {
 /**
  * Manages operational connections to peers on shared fabric.
  */
-export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<OperationalPeer> {
+export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #sessions: SessionManager;
     readonly #channels: ChannelManager;
     readonly #exchanges: ExchangeManager;
     readonly #scanners: ScannerSet;
     readonly #transports: ConnectionlessTransportSet;
     readonly #caseClient: CaseClient;
-    readonly #peers = new BasicSet<OperationalPeer>();
-    readonly #peersByAddress = new PeerAddressMap<OperationalPeer>();
+    readonly #peers = new BasicSet<Peer>();
+    readonly #peersByAddress = new PeerAddressMap<Peer>();
     readonly #runningPeerDiscoveries = new PeerAddressMap<RunningDiscovery>();
     readonly #runningPeerReconnections = new PeerAddressMap<{
         promise: Promise<MessageChannel>;
@@ -133,6 +134,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
     readonly #interactionQueue = new InteractionQueue();
     readonly #nodeCachedData = new PeerAddressMap<PeerDataStore>(); // Temporarily until we store it in new API
     readonly #disconnected = AsyncObservable<[address: PeerAddress]>();
+    readonly #peerContext: Peer.Context;
 
     constructor(context: PeerSetContext) {
         const { sessions, channels, exchanges, scanners, transports: netInterfaces, store } = context;
@@ -145,8 +147,9 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
         this.#store = store;
         this.#caseClient = new CaseClient(this.#sessions);
 
+        this.#peerContext = { store, maxExchanges: 15 /* TODO */, exchanges };
+
         this.#peers.added.on(peer => {
-            peer.address = PeerAddress(peer.address);
             this.#peersByAddress.set(peer.address, peer);
         });
 
@@ -172,7 +175,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
 
         this.#construction = Construction(this, async () => {
             for (const peer of await this.#store.loadPeers()) {
-                this.#peers.add(peer);
+                this.#peers.add(new Peer(peer, this.#peerContext));
             }
         });
     }
@@ -195,7 +198,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
 
     has(item: PeerAddress | OperationalPeer) {
         if ("address" in item) {
-            return this.#peers.has(item);
+            return this.#peersByAddress.has(item.address);
         }
         return this.#peersByAddress.has(item);
     }
@@ -204,15 +207,15 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
         return this.#peers.size;
     }
 
-    find(predicate: (item: OperationalPeer) => boolean | undefined) {
+    find(predicate: (item: Peer) => boolean | undefined) {
         return this.#peers.find(predicate);
     }
 
-    filter(predicate: (item: OperationalPeer) => boolean | undefined) {
+    filter(predicate: (item: Peer) => boolean | undefined) {
         return this.#peers.filter(predicate);
     }
 
-    map<T>(mapper: (item: OperationalPeer) => T) {
+    map<T>(mapper: (item: Peer) => T) {
         return this.#peers.map(mapper);
     }
 
@@ -239,6 +242,10 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
 
     get peers() {
         return this.#peers;
+    }
+
+    get sessions() {
+        return this.#sessions;
     }
 
     get interactionQueue() {
@@ -821,7 +828,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
     ) {
         let peer = this.#peersByAddress.get(address);
         if (peer === undefined) {
-            peer = { address, dataStore: await this.#store.createNodeStore(address) };
+            peer = new Peer({ address, dataStore: await this.#store.createNodeStore(address) }, this.#peerContext);
             this.#peers.add(peer);
         }
         peer.operationalAddress = operationalServerAddress ?? peer.operationalAddress;

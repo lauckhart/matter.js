@@ -44,6 +44,10 @@ export class DataReadQueue<T> {
         this.push(data);
     }
 
+    readIfReady() {
+        return this.#queue.shift();
+    }
+
     get size() {
         return this.#queue.length;
     }

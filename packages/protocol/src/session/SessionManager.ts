@@ -143,6 +143,10 @@ export class SessionManager {
     readonly #subscriptionUpdateMutex = new Mutex(this);
     #idUpperBound = ID_SPACE_UPPER_BOUND;
 
+    maxSessionsPerFabric = 1000;
+    maxExchangesPerSimpleDevice = 5;
+    maxExchangesPerAggregator = 30;
+
     constructor(context: SessionManagerContext) {
         this.#context = context;
         const {

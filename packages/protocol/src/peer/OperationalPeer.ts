@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DiscoveryData } from "#common/Scanner.js";
+import { OperationalDevice } from "#common/Scanner.js";
 import { ServerAddressUdp } from "#general";
 import type { PeerDataStore } from "#peer/PeerAddressStore.js";
 import { SessionParameters } from "#session/Session.js";
@@ -22,7 +22,7 @@ export interface OperationalPeer {
     address: PeerAddress;
 
     /**
-     * A physical address the peer may be accessed at, if known.
+     * The current preferred physical address the peer may be accessed at, if known.
      */
     operationalAddress?: ServerAddressUdp;
 
@@ -34,10 +34,12 @@ export interface OperationalPeer {
     /**
      * Additional information collected while locating the peer.
      */
-    discoveryData?: DiscoveryData;
+    discoveryData?: OperationalDevice;
 
     /**
      * The data store for the peer.
+     *
+     * @deprecated
      */
     dataStore?: PeerDataStore;
 }

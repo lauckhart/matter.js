@@ -14,9 +14,9 @@ import {
     NotImplementedError,
     UnexpectedDataError,
 } from "#general";
+import { MessageType } from "#interaction/messenger/MessageType.js";
 import type { ExchangeLogContext } from "#protocol/MessageExchange.js";
 import { GroupId, INTERACTION_PROTOCOL_ID, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
-import { MessageType } from "../interaction/InteractionMessenger.js";
 
 export interface PacketHeader {
     sessionId: number;

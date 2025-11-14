@@ -5,7 +5,8 @@
  */
 
 import { Bytes } from "#general";
-import { InteractionClientMessenger, MessageType } from "#interaction/InteractionMessenger.js";
+import { DeprecatedClientMessenger } from "#interaction/messenger/DeprecatedClientMessenger.js";
+import { MessageType } from "#interaction/messenger/MessageType.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import {
@@ -77,7 +78,7 @@ function handleSubscribeRequest(
     return {};
 }
 
-describe("InteractionClientMessenger", () => {
+describe("DeprecatedClientMessenger", () => {
     it("reads attributes", async () => {
         let request: ReadRequest | undefined = undefined;
 
@@ -88,7 +89,7 @@ describe("InteractionClientMessenger", () => {
             }
             return response;
         });
-        const messenger = new InteractionClientMessenger(exchange, {} as ExchangeProvider);
+        const messenger = new DeprecatedClientMessenger(exchange, {} as ExchangeProvider);
 
         const requestData = {
             interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
@@ -96,7 +97,7 @@ describe("InteractionClientMessenger", () => {
             attributeRequests: [{}],
         } as ReadRequest;
 
-        await messenger.sendReadRequest(requestData);
+        await messenger.requestRead(requestData);
         await messenger.readAggregateDataReport();
 
         expect(request).to.deep.equal(requestData);
@@ -112,7 +113,7 @@ describe("InteractionClientMessenger", () => {
             }
             return response;
         });
-        const messenger = new InteractionClientMessenger(exchange, {} as ExchangeProvider);
+        const messenger = new DeprecatedClientMessenger(exchange, {} as ExchangeProvider);
 
         const dataVersionFilters = [];
         for (let i = 0; i < 70; i++) {
@@ -128,7 +129,7 @@ describe("InteractionClientMessenger", () => {
             dataVersionFilters,
         } as ReadRequest;
 
-        await messenger.sendReadRequest(requestData);
+        await messenger.requestRead(requestData);
         await messenger.readAggregateDataReport();
 
         expect(request).to.exist;
@@ -159,7 +160,7 @@ describe("InteractionClientMessenger", () => {
             }
             return response;
         });
-        const messenger = new InteractionClientMessenger(exchange, {} as ExchangeProvider);
+        const messenger = new DeprecatedClientMessenger(exchange, {} as ExchangeProvider);
 
         const requestData = {
             interactionModelRevision: Specification.INTERACTION_MODEL_REVISION,
@@ -170,7 +171,7 @@ describe("InteractionClientMessenger", () => {
             attributeRequests: [{}],
         } as SubscribeRequest;
 
-        await messenger.sendSubscribeRequest(requestData);
+        await messenger.requestSubscribe(requestData);
         await messenger.readAggregateSubscribeResponse();
 
         expect(request).to.deep.equal(requestData);
@@ -199,7 +200,7 @@ describe("InteractionClientMessenger", () => {
             }
             return response;
         });
-        const messenger = new InteractionClientMessenger(exchange, {} as ExchangeProvider);
+        const messenger = new DeprecatedClientMessenger(exchange, {} as ExchangeProvider);
 
         const dataVersionFilters = [];
         for (let i = 0; i < 70; i++) {
@@ -218,7 +219,7 @@ describe("InteractionClientMessenger", () => {
             dataVersionFilters,
         } as SubscribeRequest;
 
-        await messenger.sendSubscribeRequest(requestData);
+        await messenger.requestSubscribe(requestData);
         await messenger.readAggregateSubscribeResponse();
 
         expect(request).to.exist;

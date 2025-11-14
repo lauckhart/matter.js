@@ -141,7 +141,16 @@ export interface Observable<T extends any[] = any[], R = void> extends AsyncIter
 export interface ObservableValue<T extends [any, ...any[]] = [boolean], R extends MaybePromise<void> = void>
     extends Observable<T, R>,
         Promise<T[0]> {
+    /**
+     * The current value.
+     *
+     * This will resolve the promise interface but you must use {@link emit} to also emit an event.
+     */
     value: T[0] | undefined;
+
+    /**
+     * An error if last settlement was rejection.
+     */
     error?: Error;
 
     /**
@@ -484,11 +493,6 @@ export class BasicObservableValue<T extends [any, ...any[]] = [boolean]>
         this.on(this.#maybeResolve.bind(this) as unknown as Observer<T, void>);
     }
 
-    /**
-     * The current value.
-     *
-     * This will resolve the promise interface but you must use {@link emit} to also emit an event..
-     */
     get value(): T[0] | undefined {
         return this.#value;
     }

@@ -5,8 +5,19 @@
  */
 
 import { Message, MessageCodec } from "#codec/MessageCodec.js";
-import { Bytes, Channel, Diagnostic, Duration, Logger, MatterError, MatterFlowError, Millis, Seconds } from "#general";
-import type { ExchangeLogContext } from "#protocol/MessageExchange.js";
+import {
+    BasicSet,
+    Bytes,
+    Channel,
+    Diagnostic,
+    Duration,
+    Logger,
+    MatterError,
+    MatterFlowError,
+    Millis,
+    Seconds,
+} from "#general";
+import type { ExchangeLogContext, MessageExchange } from "#protocol/MessageExchange.js";
 import { Session, SessionParameters } from "#session/Session.js";
 
 const logger = new Logger("MessageChannel");
@@ -50,7 +61,9 @@ export namespace MRP {
 }
 
 export class MessageChannel implements Channel<Message> {
-    public closed = false;
+    closed = false;
+    exchanges = new BasicSet<MessageExchange>();
+
     #closeCallback?: () => Promise<void>;
     // When the session is supporting MRP and the channel is not reliable, use MRP handling
 
