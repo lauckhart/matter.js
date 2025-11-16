@@ -21,10 +21,9 @@ import {
     Time,
     Timer,
 } from "#general";
-import { DEFAULT_EXPECTED_PROCESSING_TIME, MessageChannel, MRP } from "#protocol/MessageChannel.js";
 import { GroupSession } from "#session/GroupSession.js";
 import { SecureSession } from "#session/SecureSession.js";
-import { SessionParameters } from "#session/Session.js";
+import { Session, SessionParameters } from "#session/Session.js";
 import {
     GroupId,
     NodeId,
@@ -34,6 +33,7 @@ import {
     StatusResponseError,
 } from "#types";
 import { RetransmissionLimitReachedError, SessionClosedError, UnexpectedMessageError } from "./errors.js";
+import { DEFAULT_EXPECTED_PROCESSING_TIME, MRP } from "./MessageChannel.js";
 
 const logger = Logger.get("MessageExchange");
 
@@ -90,16 +90,14 @@ export const MATTER_MESSAGE_OVERHEAD = 26 + 12 + CRYPTO_AEAD_MIC_LENGTH_BYTES;
  * Interfaces {@link MessageExchange} with other components.
  */
 export interface MessageExchangeContext {
-    channel: MessageChannel;
+    session: Session;
     retry(number: number): void;
     localSessionParameters: SessionParameters;
 }
 
 export class MessageExchange {
     static fromInitialMessage(context: MessageExchangeContext, initialMessage: Message) {
-        const {
-            channel: { session },
-        } = context;
+        const { session } = context;
         return new MessageExchange(
             context,
             false,
@@ -108,14 +106,11 @@ export class MessageExchange {
             initialMessage.packetHeader.sourceNodeId,
             initialMessage.payloadHeader.exchangeId,
             initialMessage.payloadHeader.protocolId,
-            session.isSecure,
         );
     }
 
     static initiate(context: MessageExchangeContext, exchangeId: number, protocolId: number) {
-        const {
-            channel: { session },
-        } = context;
+        const { session } = context;
         return new MessageExchange(
             context,
             true,
@@ -124,7 +119,6 @@ export class MessageExchange {
             session.peerNodeId,
             exchangeId,
             protocolId,
-            session.isSecure,
         );
     }
 
@@ -166,10 +160,8 @@ export class MessageExchange {
         peerNodeId: NodeId | undefined,
         exchangeId: number,
         protocolId: number,
-        readonly requiresSecureSession: boolean,
     ) {
-        const { channel } = context;
-        const { session } = channel;
+        const { session } = context;
         this.#peerSessionId = peerSessionId;
         this.#nodeId = nodeId;
         this.#peerNodeId = peerNodeId;
@@ -183,7 +175,7 @@ export class MessageExchange {
         logger.debug(
             "New exchange",
             isInitiator ? "»" : "«",
-            channel.name,
+            session.name,
             Diagnostic.dict({
                 protocol: this.#protocolId,
                 exId: this.#exchangeId,
@@ -222,12 +214,12 @@ export class MessageExchange {
         return this.#exchangeId;
     }
 
-    get channel() {
-        return this.context.channel;
+    get session() {
+        return this.context.session;
     }
 
-    get session() {
-        return this.channel.session;
+    get channel() {
+        return this.session.channel;
     }
 
     /**

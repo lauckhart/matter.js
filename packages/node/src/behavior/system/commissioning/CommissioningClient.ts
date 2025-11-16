@@ -39,7 +39,6 @@ import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import {
-    ChannelManager,
     CommissioningMode,
     ControllerCommissioner,
     DiscoveryData,

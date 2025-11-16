@@ -6,6 +6,7 @@
 
 import {
     Bytes,
+    Channel,
     Crypto,
     Diagnostic,
     ec,
@@ -91,7 +92,7 @@ export class PaseServer implements ProtocolHandler {
             try {
                 this.#pairingMessenger = messenger;
                 // Ok new pairing try, handle it
-                await this.handlePairingRequest(this.sessions.crypto);
+                await this.handlePairingRequest(this.sessions.crypto, messenger.channel.channel);
             } catch (error) {
                 this.#pairingErrors++;
                 logger.error(
@@ -121,7 +122,7 @@ export class PaseServer implements ProtocolHandler {
         await messenger.close();
     }
 
-    private async handlePairingRequest(crypto: Crypto) {
+    private async handlePairingRequest(crypto: Crypto, channel: Channel<Bytes>) {
         const messenger = this.#pairingMessenger!;
 
         logger.info("Received pairing request «", Diagnostic.via(messenger.channelName));
@@ -177,6 +178,7 @@ export class PaseServer implements ProtocolHandler {
 
         // All good! Creating the secure PASE session
         await this.sessions.createSecureSession({
+            channel,
             sessionId: responderSessionId,
             fabric: undefined,
             peerNodeId: NodeId.UNSPECIFIED_NODE_ID,

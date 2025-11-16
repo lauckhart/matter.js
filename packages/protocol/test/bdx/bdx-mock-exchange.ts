@@ -6,6 +6,7 @@
 
 import { Message } from "#codec/MessageCodec.js";
 import { DataReadQueue, Observable, StandardCrypto } from "#general";
+import type { MessageChannel } from "#index.js";
 import { MessageType } from "#interaction/InteractionMessenger.js";
 import { Specification } from "#model";
 import { PeerAddress } from "#peer/PeerAddress.js";
@@ -36,7 +37,7 @@ export function createSession(options?: Partial<Parameters<SessionManager["creat
  * This provides an intermediate level of mock communication, higher level than network mocking but lower level than
  * direct method calls.
  *
- * Our mocking of the message exchange context is a bit half assed, we don't use a real channel or session and just
+ * Our mocking of the message exchange context is a bit half assed; we don't use a real channel or session and just
  * stub out methods as necessary.
  */
 export class MockExchange extends MessageExchange {
@@ -45,24 +46,24 @@ export class MockExchange extends MessageExchange {
     #dataWritten = Observable();
     address: PeerAddress;
 
-    constructor(address: PeerAddress, options: { id?: number; session: Session }) {
-        const context = {
-            channel: {
-                name: "test",
-                usesMrp: false,
-                isReliable: true,
-                maxPayloadSize: 1024,
-                send: async message => {
-                    await this.#requests.write(message);
-                    this.#dataWritten.emit();
-                },
-                session: options.session,
+    constructor(address: PeerAddress, { id, session }: { id?: number; session: Session }) {
+        Object.assign(session, "channel", {
+            name: "test",
+            usesMrp: false,
+            isReliable: true,
+            maxPayloadSize: 1024,
+            send: async message => {
+                await this.#requests.write(message);
+                this.#dataWritten.emit();
             },
-            retry(_number: number) {},
+            session,
+        } as MessageChannel;
+        const context = {
+            session,
             localSessionParameters: {},
         } as MessageExchangeContext;
 
-        super(context, true, 1, NodeId(1), NodeId(address.nodeId), options.id ?? 1, BDX_PROTOCOL_ID, true);
+        super(context, true, 1, NodeId(1), NodeId(address.nodeId), id ?? 1, BDX_PROTOCOL_ID);
 
         this.address = address;
     }

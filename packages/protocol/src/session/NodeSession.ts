@@ -11,6 +11,7 @@ import {
     BasicSet,
     Bytes,
     CRYPTO_SYMMETRIC_KEY_LENGTH,
+    Channel,
     Crypto,
     Diagnostic,
     Duration,
@@ -51,9 +52,10 @@ export class NodeSession extends SecureSession {
     readonly supportsMRP = true;
     readonly type = SessionType.Unicast;
 
-    static async create(args: {
+    static async create(options: {
         crypto: Crypto;
         manager?: SessionManager;
+        channel?: Channel<Bytes>;
         id: number;
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
@@ -68,6 +70,7 @@ export class NodeSession extends SecureSession {
         const {
             crypto,
             manager,
+            channel,
             id,
             fabric,
             peerNodeId,
@@ -78,9 +81,9 @@ export class NodeSession extends SecureSession {
             isResumption,
             peerSessionParameters,
             caseAuthenticatedTags,
-        } = args;
+        } = options;
         const keys = Bytes.of(
-            await args.crypto.createHkdfKey(
+            await options.crypto.createHkdfKey(
                 sharedSecret,
                 salt,
                 isResumption ? SESSION_RESUMPTION_KEYS_INFO : SESSION_KEYS_INFO,
@@ -93,6 +96,7 @@ export class NodeSession extends SecureSession {
         return new NodeSession({
             crypto,
             manager,
+            channel,
             id,
             fabric,
             peerNodeId,
@@ -106,9 +110,10 @@ export class NodeSession extends SecureSession {
         });
     }
 
-    constructor(args: {
+    constructor(options: {
         crypto: Crypto;
         manager?: SessionManager;
+        channel?: Channel<Bytes>;
         id: number;
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
@@ -132,10 +137,10 @@ export class NodeSession extends SecureSession {
             attestationKey,
             caseAuthenticatedTags,
             isInitiator,
-        } = args;
+        } = options;
 
         super({
-            ...args,
+            ...options,
             setActiveTimestamp: true, // We always set the active timestamp for Secure sessions
             // Can be changed to a PersistedMessageCounter if we implement session storage
             messageCounter: new MessageCounter(crypto, () => {
