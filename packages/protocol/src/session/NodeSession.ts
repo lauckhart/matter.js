@@ -11,15 +11,16 @@ import {
     BasicSet,
     Bytes,
     CRYPTO_SYMMETRIC_KEY_LENGTH,
+    Channel,
     Crypto,
     Diagnostic,
     Duration,
     Logger,
-    MatterError,
     MatterFlowError,
 } from "#general";
 import type { Subscription } from "#interaction/Subscription.js";
 import { PeerAddress } from "#peer/PeerAddress.js";
+import { SessionClosedError } from "#protocol/errors.js";
 import { MessageCounter } from "#protocol/MessageCounter.js";
 import { MessageReceptionStateEncryptedWithoutRollover } from "#protocol/MessageReceptionState.js";
 import { SecureChannelMessenger } from "#securechannel/SecureChannelMessenger.js";
@@ -32,8 +33,6 @@ const logger = Logger.get("SecureSession");
 
 const SESSION_KEYS_INFO = Bytes.fromString("SessionKeys");
 const SESSION_RESUMPTION_KEYS_INFO = Bytes.fromString("SessionResumptionKeys");
-
-export class NoChannelError extends MatterError {}
 
 export class NoAssociatedFabricError extends StatusResponseError {
     constructor(message: string) {
@@ -62,6 +61,7 @@ export class NodeSession extends SecureSession {
     static async create(args: {
         crypto: Crypto;
         manager?: SessionManager;
+        channel?: Channel<Bytes>;
         id: number;
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
@@ -76,6 +76,7 @@ export class NodeSession extends SecureSession {
         const {
             crypto,
             manager,
+            channel,
             id,
             fabric,
             peerNodeId,
@@ -101,6 +102,7 @@ export class NodeSession extends SecureSession {
         return new NodeSession({
             crypto,
             manager,
+            channel,
             id,
             fabric,
             peerNodeId,
@@ -114,9 +116,10 @@ export class NodeSession extends SecureSession {
         });
     }
 
-    constructor(args: {
+    constructor(options: {
         crypto: Crypto;
         manager?: SessionManager;
+        channel?: Channel<Bytes>;
         id: number;
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
@@ -140,10 +143,10 @@ export class NodeSession extends SecureSession {
             attestationKey,
             caseAuthenticatedTags,
             isInitiator,
-        } = args;
+        } = options;
 
         super({
-            ...args,
+            ...options,
             setActiveTimestamp: true, // We always set the active timestamp for Secure sessions
             // Can be changed to a PersistedMessageCounter if we implement session storage
             messageCounter: new MessageCounter(crypto, () => {
@@ -357,7 +360,7 @@ export class NodeSession extends SecureSession {
                 try {
                     await this.closer;
                 } catch (error) {
-                    NoChannelError.accept(error);
+                    SessionClosedError.accept(error);
                 } finally {
                     await super.destroy();
                     await this.destroyed.emit();

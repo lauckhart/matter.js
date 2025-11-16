@@ -10,6 +10,8 @@ import { FabricManager } from "#fabric/FabricManager.js";
 import {
     BasicSet,
     Bytes,
+    Channel,
+    ConnectionlessTransportSet,
     Construction,
     Duration,
     Environment,
@@ -28,6 +30,7 @@ import {
 import { Subscription } from "#interaction/Subscription.js";
 import { Specification } from "#model";
 import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
+import { SessionClosedError } from "#protocol/errors.js";
 import { GroupSession } from "#session/GroupSession.js";
 import { CaseAuthenticatedTag, DEFAULT_MAX_PATHS_PER_INVOKE, FabricId, FabricIndex, GroupId, NodeId } from "#types";
 import { UnexpectedDataError } from "@matter/general";
@@ -252,13 +255,14 @@ export class SessionManager {
     }
 
     createInsecureSession(options: {
+        channel: Channel<Bytes>;
         initiatorNodeId?: NodeId;
         sessionParameters?: SessionParameterOptions;
         isInitiator?: boolean;
     }) {
         this.#construction.assert();
 
-        const { initiatorNodeId, sessionParameters, isInitiator } = options;
+        const { channel, initiatorNodeId, sessionParameters, isInitiator } = options;
         if (initiatorNodeId !== undefined) {
             if (this.#insecureSessions.has(initiatorNodeId)) {
                 throw new MatterFlowError(`UnsecureSession with NodeId ${initiatorNodeId} already exists.`);
@@ -268,6 +272,7 @@ export class SessionManager {
             const session = new InsecureSession({
                 crypto: this.#context.fabrics.crypto,
                 manager: this,
+                channel,
                 messageCounter: this.#globalUnencryptedMessageCounter,
                 initiatorNodeId,
                 sessionParameters,
@@ -283,6 +288,7 @@ export class SessionManager {
     }
 
     async createSecureSession(args: {
+        channel?: Channel<Bytes>;
         sessionId: number;
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
@@ -297,6 +303,7 @@ export class SessionManager {
         await this.construction;
 
         const {
+            channel,
             sessionId,
             fabric,
             peerNodeId,
@@ -311,6 +318,7 @@ export class SessionManager {
         const session = await NodeSession.create({
             crypto: this.crypto,
             manager: this,
+            channel,
             id: sessionId,
             fabric,
             peerNodeId,
@@ -433,7 +441,16 @@ export class SessionManager {
         );
     }
 
-    getSessionForNode(address: PeerAddress) {
+    sessionFor(peer: PeerAddress) {
+        const session = this.maybeSessionFor(peer);
+        if (session) {
+            return session;
+        }
+
+        throw new SessionClosedError(`Not currently connected to ${PeerAddress(peer)}`);
+    }
+
+    maybeSessionFor(address: PeerAddress) {
         this.#construction.assert();
 
         //TODO: It can have multiple sessions for one node ...
@@ -443,7 +460,7 @@ export class SessionManager {
         });
     }
 
-    async removeAllSessionsForNode(address: PeerAddress, sendClose = false, closeBeforeCreatedTimestamp?: number) {
+    async removeSessionsFor(address: PeerAddress, sendClose = false, closeBeforeCreatedTimestamp?: number) {
         await this.#construction;
 
         for (const session of this.#sessions) {
@@ -471,7 +488,7 @@ export class SessionManager {
      * This is used for sending group messages because it returns the session for the current
      * Group Epoch key. The Source Node Id is the own Node.
      */
-    groupSessionForAddress(address: PeerAddress) {
+    async groupSessionForAddress(address: PeerAddress, transports: ConnectionlessTransportSet) {
         const groupId = GroupId.fromNodeId(address.nodeId);
         GroupId.assertGroupId(groupId);
 
@@ -485,7 +502,8 @@ export class SessionManager {
 
         let session = this.#groupSessions.get(fabric.nodeId)?.get("id", sessionId);
         if (session === undefined) {
-            session = new GroupSession({
+            session = await GroupSession.create({
+                transports,
                 manager: this,
                 id: sessionId,
                 fabric,
@@ -501,7 +519,7 @@ export class SessionManager {
      * Creates or Returns the Group session based on an incoming packet.
      * The Session ID is determined by trying to decrypt te packet with possible keys.
      */
-    groupSessionFromPacket(packet: DecodedPacket, aad: Bytes) {
+    async groupSessionFromPacket(packet: DecodedPacket, aad: Bytes, transports: ConnectionlessTransportSet) {
         const groupId = packet.header.destGroupId;
         if (groupId === undefined) {
             throw new UnexpectedDataError("Group ID is required for GroupSession fromPacket.");
@@ -516,8 +534,9 @@ export class SessionManager {
 
         let session = this.#groupSessions.get(sourceNodeId)?.get("id", sessionId);
         if (session === undefined) {
-            session = new GroupSession({
+            session = await GroupSession.create({
                 manager: this,
+                transports,
                 id: sessionId,
                 fabric,
                 keySetId,

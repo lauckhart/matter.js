@@ -5,13 +5,11 @@
  */
 
 import { Message, MessageCodec } from "#codec/MessageCodec.js";
-import { Bytes, Channel, Diagnostic, Duration, Logger, MatterError, MatterFlowError, Millis, Seconds } from "#general";
+import { Bytes, Channel, Diagnostic, Duration, Logger, MatterFlowError, MaybePromise, Millis, Seconds } from "#general";
 import type { ExchangeLogContext } from "#protocol/MessageExchange.js";
 import type { Session, SessionParameters } from "#session/Session.js";
 
 const logger = new Logger("MessageChannel");
-
-export class ChannelNotConnectedError extends MatterError {}
 
 /**
  * Default expected processing time for a messages in milliseconds. The value is derived from kExpectedIMProcessingTime
@@ -51,13 +49,13 @@ export namespace MRP {
 
 export class MessageChannel implements Channel<Message> {
     public closed = false;
-    #closeCallback?: () => Promise<void>;
+    #closeCallback?: () => MaybePromise<void>;
     // When the session is supporting MRP and the channel is not reliable, use MRP handling
 
     constructor(
         readonly channel: Channel<Bytes>,
         readonly session: Session,
-        closeCallback?: () => Promise<void>,
+        closeCallback?: () => MaybePromise<void>,
     ) {
         this.#closeCallback = closeCallback;
     }

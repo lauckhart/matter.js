@@ -9,13 +9,18 @@ import type { Fabric } from "#fabric/Fabric.js";
 import type { FabricManager } from "#fabric/FabricManager.js";
 import {
     Bytes,
+    Channel,
+    ChannelType,
+    ConnectionlessTransportSet,
     CryptoDecryptError,
     ImplementationError,
     InternalError,
     Logger,
     MatterFlowError,
+    STANDARD_MATTER_PORT,
     UnexpectedDataError,
 } from "#general";
+import { PairRetransmissionLimitReachedError } from "#peer/ControllerDiscovery.js";
 import { PeerAddress } from "#peer/PeerAddress.js";
 import type { SessionManager } from "#session/SessionManager.js";
 import { FabricIndex, GroupId, NodeId } from "#types";
@@ -35,17 +40,18 @@ export class GroupSession extends SecureSession {
 
     readonly keySetId: number;
 
-    constructor(args: {
+    constructor(options: {
         manager?: SessionManager;
+        channel: Channel<Bytes>;
         id: number; // Records the Group Session ID derived from the Operational Group Key used to encrypt the message.
         fabric: Fabric;
         keySetId: number; // The Group Key Set ID that was used to encrypt the incoming group message.
         peerNodeId: NodeId; //The Target Group Node Id
         operationalGroupKey: Bytes; // The Operational Group Key that was used to encrypt the incoming group message.
     }) {
-        const { manager, fabric, operationalGroupKey, id, peerNodeId, keySetId } = args;
+        const { manager, fabric, operationalGroupKey, id, peerNodeId, keySetId } = options;
         super({
-            ...args,
+            ...options,
             setActiveTimestamp: false, // We always set the active timestamp for Secure sessions TODO Check
             messageCounter: fabric.groups.messaging.counterFor(operationalGroupKey),
         });
@@ -59,6 +65,44 @@ export class GroupSession extends SecureSession {
         fabric.addSession(this);
 
         logger.debug(`Created secure GROUP session for fabric index ${fabric.fabricIndex}`, this.name);
+    }
+
+    static async create(options: {
+        manager?: SessionManager;
+        transports: ConnectionlessTransportSet;
+        id: number;
+        fabric: Fabric;
+        keySetId: number;
+        peerNodeId: NodeId;
+        operationalGroupKey: Bytes;
+    }) {
+        const { manager, transports, id, fabric, keySetId, peerNodeId, operationalGroupKey } = options;
+
+        const groupId = GroupId.fromNodeId(peerNodeId);
+        GroupId.assertGroupId(groupId);
+        const multicastAddress = fabric.groups.multicastAddressFor(groupId);
+
+        const operationalInterface = transports.interfaceFor(ChannelType.UDP, multicastAddress);
+        if (operationalInterface === undefined) {
+            // TODO - better error class
+            throw new PairRetransmissionLimitReachedError(`IPv6 interface not initialized`);
+        }
+
+        const channel = await operationalInterface.openChannel({
+            type: ChannelType.UDP,
+            ip: multicastAddress,
+            port: STANDARD_MATTER_PORT,
+        });
+
+        return new GroupSession({
+            manager,
+            channel,
+            id,
+            fabric,
+            keySetId,
+            peerNodeId,
+            operationalGroupKey,
+        });
     }
 
     override get type() {

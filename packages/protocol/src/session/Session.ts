@@ -75,7 +75,7 @@ export type SessionParameterOptions = Partial<SessionParameters>;
 
 export class NonOperationalSession extends ImplementationError {
     constructor(session: Session) {
-        super(`Session ${session.name} has no channel assigned`);
+        super(`Session ${session.name} has ended`);
     }
 }
 
@@ -110,15 +110,10 @@ export abstract class Session {
     #destroyed = AsyncObservable<[]>();
     #closedByPeer = AsyncObservable<[]>();
 
-    constructor(args: {
-        manager?: SessionManager;
-        messageCounter: MessageCounter;
-        messageReceptionState?: MessageReceptionState;
-        sessionParameters?: SessionParameterOptions;
-        setActiveTimestamp: boolean;
-    }) {
+    constructor(options: Session.Options) {
         const {
             manager,
+            channel,
             messageCounter,
             messageReceptionState,
             sessionParameters: {
@@ -133,8 +128,11 @@ export abstract class Session {
                 maxTcpMessageSize = FALLBACK_MAX_TCP_MESSAGE_SIZE,
             } = {},
             setActiveTimestamp,
-        } = args;
+        } = options;
         this.#manager = manager;
+        if (channel) {
+            this.#channel = new MessageChannel(channel, this);
+        }
         this.messageCounter = messageCounter;
         this.messageReceptionState = messageReceptionState;
         this.idleInterval = idleInterval;
@@ -251,15 +249,20 @@ export abstract class Session {
         return this.#manager?.owner;
     }
 
-    get hasChannel() {
-        return !!this.#channel;
+    get isClosed() {
+        return !this.#channel;
     }
 
-    set channel(channel: Channel<Bytes>) {
-        if (this.#channel === undefined) {
+    /**
+     * The channel.
+     *
+     * Write access is primarily for testing.
+     */
+    set channel(channel: MessageChannel) {
+        if (this.#channel !== undefined) {
             throw new ImplementationError("Cannot reassign session channel");
         }
-        this.#channel = new MessageChannel(channel, this);
+        this.#channel = channel;
     }
 
     get channel(): MessageChannel {
@@ -267,5 +270,16 @@ export abstract class Session {
             throw new NonOperationalSession(this);
         }
         return this.#channel;
+    }
+}
+
+export namespace Session {
+    export interface Options {
+        manager?: SessionManager;
+        channel?: Channel<Bytes>;
+        messageCounter: MessageCounter;
+        messageReceptionState?: MessageReceptionState;
+        sessionParameters?: SessionParameterOptions;
+        setActiveTimestamp: boolean;
     }
 }
