@@ -339,7 +339,7 @@ export class Peers extends EndpointContainer<ClientNode> {
         node.eventsOf(type).capabilityMinima$Changed.on(setPeerLimits);
 
         function setPeerLimits() {
-            const peerAddress = node.maybeStateOf(CommissioningClient).peerAddress;
+            const peerAddress = node.maybeStateOf(CommissioningClient)?.peerAddress;
             if (peerAddress) {
                 node.env.get(PeerSet).for(peerAddress).limits = node.stateOf(type).capabilityMinima;
             }
@@ -347,7 +347,15 @@ export class Peers extends EndpointContainer<ClientNode> {
     }
 
     #onLeave(node: ClientNode, fabricIndex: FabricIndex) {
+        if (!node.lifecycle.isReady) {
+            return;
+        }
+
         this.#mutex.run(async () => {
+            if (!node.lifecycle.isReady) {
+                return;
+            }
+
             const { fabrics: peerFabrics } = node.maybeStateOf(OperationalCredentialsClient) ?? {};
             const peerFabric = peerFabrics?.find(fabric => fabric.fabricIndex === fabricIndex);
             if (!peerFabric) {
