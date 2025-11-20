@@ -117,7 +117,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    }).timeout(1e9);
+    });
 
     it("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
@@ -153,11 +153,11 @@ describe("ClientNode", () => {
 
         // *** DECOMMISSION ***
 
-        await Promise.resolve(controller.peers.get("peer1")!.delete());
+        await MockTime.resolve(controller.peers.get("peer1")!.delete());
 
         expect(controller.peers.size).equals(0);
         expect(device.lifecycle.isCommissioned).is.false;
-    });
+    }).timeout(1e9);
 
     it("writes attributes on commit", async () => {
         // *** SETUP ***
@@ -343,7 +343,7 @@ describe("ClientNode", () => {
         expect(aggregatorClient.parts.size).equals(0);
     });
 
-    it.only("erases node after leave event", async () => {
+    it("erases node after leave event", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -367,7 +367,7 @@ describe("ClientNode", () => {
 
         await MockTime.resolve(deleted);
         expect(controller.peers.size).equals(0);
-    }).timeout(1e9);
+    });
 
     it("handles shutdown event and reestablishes connection", () => {
         // TODO
