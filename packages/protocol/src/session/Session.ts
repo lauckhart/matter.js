@@ -4,45 +4,50 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { SupportedTransportsBitmap } from "#common/SupportedTransportsBitmap.js";
+import type { SupportedTransportsBitmap } from "#common/SupportedTransportsBitmap.js";
 import {
     AsyncObservable,
     Bytes,
     Channel,
     DataWriter,
+    Diagnostic,
     Duration,
     Endian,
     ImplementationError,
     InternalError,
+    Logger,
+    ObservableValue,
     Time,
     Timespan,
     Timestamp,
 } from "#general";
+import { SessionClosedError } from "#protocol/errors.js";
 import { MessageChannel } from "#protocol/MessageChannel.js";
-import { NodeId, TypeFromPartialBitSchema } from "#types";
-import { DecodedMessage, DecodedPacket, Message, Packet, SessionType } from "../codec/MessageCodec.js";
-import { Fabric } from "../fabric/Fabric.js";
-import { MessageCounter } from "../protocol/MessageCounter.js";
-import { MessageReceptionState } from "../protocol/MessageReceptionState.js";
-import { type SessionManager } from "./SessionManager.js";
+import type { MessageExchange } from "#protocol/MessageExchange.js";
+import type { NodeId, TypeFromPartialBitSchema } from "#types";
+import type { DecodedMessage, DecodedPacket, Message, Packet, SessionType } from "../codec/MessageCodec.js";
+import type { Fabric } from "../fabric/Fabric.js";
+import type { MessageCounter } from "../protocol/MessageCounter.js";
+import type { MessageReceptionState } from "../protocol/MessageReceptionState.js";
+import type { SessionManager } from "./SessionManager.js";
 import { SessionParameters } from "./SessionParameters.js";
 
-export class NonOperationalSession extends ImplementationError {
-    constructor(session: Session) {
-        super(`Session ${session.name} has ended`);
-    }
-}
+const logger = Logger.get("Session");
 
 export abstract class Session {
     #channel?: MessageChannel;
 
     abstract get name(): string;
-    abstract get closingAfterExchangeFinished(): boolean;
     #manager?: SessionManager;
     timestamp = Time.nowMs;
     readonly createdAt = Time.nowMs;
     activeTimestamp: Timestamp = 0;
     abstract type: SessionType;
+
+    #closing = ObservableValue();
+    #gracefulClose = AsyncObservable<[]>();
+    readonly #exchanges = new Set<MessageExchange>();
+
     protected readonly idleInterval: Duration;
     protected readonly activeInterval: Duration;
     protected readonly activeThreshold: Duration;
@@ -54,15 +59,6 @@ export abstract class Session {
     protected readonly messageReceptionState?: MessageReceptionState;
     protected readonly supportedTransports: TypeFromPartialBitSchema<typeof SupportedTransportsBitmap>;
     protected readonly maxTcpMessageSize?: number;
-
-    /**
-     * If the ExchangeManager performs async work to clean up a session it sets this promise.  This is because
-     * historically we didn't return from destroy() until ExchangeManager was complete.  Not sure if this is entirely
-     * necessary, but it makes sense so this allows us to maintain the old behavior.
-     */
-    closer?: Promise<void>;
-    #destroyed = AsyncObservable<[]>();
-    #closedByPeer = AsyncObservable<[]>();
 
     constructor(config: Session.Configuration) {
         const { manager, channel, messageCounter, messageReceptionState, sessionParameters, setActiveTimestamp } =
@@ -100,12 +96,20 @@ export abstract class Session {
         }
     }
 
-    get destroyed() {
-        return this.#destroyed;
+    get exchanges() {
+        return this.#exchanges;
     }
 
-    get closedByPeer() {
-        return this.#closedByPeer;
+    addExchange(exchange: MessageExchange) {
+        this.#exchanges.add(exchange);
+    }
+
+    deleteExchange(exchange: MessageExchange) {
+        this.#exchanges.delete(exchange);
+    }
+
+    get closing() {
+        return this.#closing;
     }
 
     notifyActivity(messageReceived: boolean) {
@@ -116,7 +120,7 @@ export abstract class Session {
         }
     }
 
-    isPeerActive(): boolean {
+    get isPeerActive(): boolean {
         return Timespan(this.activeTimestamp, Time.nowMs).duration < this.activeThreshold;
     }
 
@@ -129,6 +133,22 @@ export abstract class Session {
             throw new InternalError("MessageReceptionState is not defined for this session");
         }
         this.messageReceptionState.updateMessageCounter(messageCounter);
+    }
+
+    /**
+     * Emits on graceful close.
+     *
+     * During normal operation this should trigger a close message to notify the peer of closure.
+     */
+    get gracefulClose() {
+        return this.#gracefulClose;
+    }
+
+    /**
+     * Once set this flag prevents establishment of new exchanges.
+     */
+    get isClosing(): boolean {
+        return this.#closing.value;
     }
 
     protected static generateNonce(securityFlags: number, messageId: number, nodeId: NodeId) {
@@ -177,27 +197,46 @@ export abstract class Session {
 
     abstract decode(packet: DecodedPacket, aad?: Bytes): DecodedMessage;
     abstract encode(message: Message): Packet;
-    abstract end(sendClose: boolean): Promise<void>;
-    async destroy(
-        _sendClose?: boolean,
-        _closeAfterExchangeFinished?: boolean,
-        _flushSubscriptions?: boolean,
-    ): Promise<void> {
-        if (this.#channel) {
-            await this.#channel.close();
-            this.#channel = undefined;
-        }
-    }
 
-    protected get manager() {
-        return this.#manager;
+    /**
+     * Close the exchange.
+     *
+     * Note that with current design we may not have fully removed the session once close returns because we defer the
+     * close if there are active exchanges.
+     */
+    async initiateClose(shutdownLogic?: () => Promise<boolean | void>): Promise<void> {
+        if (this.isClosing) {
+            return;
+        }
+
+        this.#closing.emit(true);
+
+        if (await shutdownLogic?.()) {
+            // Return of true indicates that close is deferred
+            return;
+        }
+
+        await this.close();
     }
 
     /**
-     * @deprecated
+     * Force-close the session.
+     *
+     * This terminates subscriptions and exchanges without notifying peers.  It places the session in a closing state
+     * so no further exchanges are accepted.
+     *
+     * @param except an exchange to skip; this allows the current exchange to remain open
      */
-    get owner() {
-        return this.#manager?.owner;
+    async initiateForceClose(except?: MessageExchange) {
+        await this.initiateClose(async () => {
+            await this.closeSubscriptions();
+            for (const exchange of this.#exchanges) {
+                if (exchange === except) {
+                    continue;
+                }
+                await exchange.close(true);
+            }
+        });
     }
 
     get isClosed() {
@@ -209,9 +248,38 @@ export abstract class Session {
      */
     get channel(): MessageChannel {
         if (this.#channel === undefined) {
-            throw new NonOperationalSession(this);
+            throw new SessionClosedError(`Session ${this.name} has ended`);
         }
         return this.#channel;
+    }
+
+    get usesMrp() {
+        return this.supportsMRP && !this.#channel?.isReliable;
+    }
+
+    get supportsLargeMessages() {
+        return this.#channel !== undefined && !!this.#channel?.supportsLargeMessages;
+    }
+
+    get hasActiveExchanges() {
+        return !!this.#exchanges.size;
+    }
+
+    async closeSubscriptions(_cancelledByPeer = false): Promise<number> {
+        return 0;
+    }
+
+    protected async close() {
+        if (this.#channel) {
+            await this.#channel.close();
+            this.#channel = undefined;
+        }
+
+        logger.info("Session", Diagnostic.strong(this.name), "ended");
+    }
+
+    protected get manager() {
+        return this.#manager;
     }
 
     /**
@@ -222,14 +290,6 @@ export abstract class Session {
             throw new ImplementationError("Cannot replace active channel");
         }
         this.#channel = channel;
-    }
-
-    get usesMrp() {
-        return this.supportsMRP && !this.channel.isReliable;
-    }
-
-    get supportsLargeMessages() {
-        return this.#channel !== undefined && this.channel.supportsLargeMessages;
     }
 }
 

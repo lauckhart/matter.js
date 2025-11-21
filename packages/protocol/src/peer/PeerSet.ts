@@ -317,9 +317,9 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             }
 
             if (!this.#sessions.maybeSessionFor(address)) {
-                throw new RetransmissionLimitReachedError(`Device ${PeerAddress(address)} is currently not reachable.`);
+                throw new RetransmissionLimitReachedError(`Device ${PeerAddress(address)} is unreachable`);
             }
-            await this.#sessions.removeSessionsFor(address);
+            await this.#sessions.handlePeerLoss(address);
 
             // Enrich discoveryData with data from the node store when not provided
             const { discoveryData } = discoveryOptions ?? {
@@ -332,7 +332,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                     `Re-discovering device failed (no address found), remove all sessions for ${PeerAddress(address)}`,
                 );
                 // We remove all sessions, this also informs the PairedNode class
-                await this.#sessions.removeSessionsFor(address);
+                await this.#sessions.handlePeerLoss(address);
                 throw new RetransmissionLimitReachedError(`No operational address found for ${PeerAddress(address)}`);
             }
             if (
@@ -388,7 +388,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             ) {
                 logger.info(`Resume failed, remove all sessions for ${PeerAddress(address)}`);
                 // We remove all sessions, this also informs the PairedNode class
-                await this.#sessions.removeSessionsFor(address);
+                await this.#sessions.handlePeerLoss(address);
             }
             throw error;
         }
@@ -605,7 +605,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                     error.message ? error.message : error,
                 );
                 // We remove all sessions, this also informs the PairedNode class
-                await this.#sessions.removeSessionsFor(address, false, startTime);
+                await this.#sessions.handlePeerLoss(address, startTime);
                 return undefined;
             } else {
                 throw error;
@@ -636,7 +636,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
         const operationalChannel = await operationalInterface.openChannel(operationalServerAddress);
         const { sessionParameters } = this.#sessions.findResumptionRecordByAddress(address) ?? {};
-        const insecureSession = this.#sessions.createInsecureSession({
+        const unsecuredSession = this.#sessions.createUnsecuredSession({
             channel: operationalChannel,
             // Use the session parameters from MDNS announcements when available and rest is assumed to be fallbacks
             sessionParameters: {
@@ -649,14 +649,14 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         });
 
         try {
-            return await this.#doCasePair(insecureSession, address, options);
+            return await this.#doCasePair(unsecuredSession, address, options);
         } catch (error) {
             NoResponseTimeoutError.accept(error);
 
             // Convert error
             throw new PairRetransmissionLimitReachedError(error.message);
         } finally {
-            await insecureSession.destroy();
+            await unsecuredSession.initiateClose();
         }
     }
 

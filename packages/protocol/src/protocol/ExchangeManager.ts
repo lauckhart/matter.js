@@ -26,10 +26,10 @@ import {
 import { PeerAddress } from "#peer/PeerAddress.js";
 import { DEFAULT_EXPECTED_PROCESSING_TIME } from "#protocol/MessageChannel.js";
 import { SecureChannelMessenger } from "#securechannel/SecureChannelMessenger.js";
-import { UNICAST_UNSECURE_SESSION_ID } from "#session/InsecureSession.js";
 import { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
+import { UNICAST_UNSECURE_SESSION_ID } from "#session/UnsecuredSession.js";
 import { NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
 import { MessageExchange, MessageExchangeContext } from "./MessageExchange.js";
 import { DuplicateMessageError } from "./MessageReceptionState.js";
@@ -45,45 +45,41 @@ const MAXIMUM_CONCURRENT_EXCHANGES_PER_SESSION = 5;
 export interface ExchangeManagerContext {
     entropy: Entropy;
     netInterface: ConnectionlessTransportSet;
-    sessionManager: SessionManager;
+    sessions: SessionManager;
 }
 
 export class ExchangeManager {
     readonly #transports: ConnectionlessTransportSet;
-    readonly #sessionManager: SessionManager;
+    readonly #sessions: SessionManager;
     readonly #exchangeCounter: ExchangeCounter;
     readonly #exchanges = new Map<number, MessageExchange>();
     readonly #protocols = new Map<number, ProtocolHandler>();
     readonly #listeners = new Map<ConnectionlessTransport, ConnectionlessTransport.Listener>();
     readonly #closers = new Set<Promise<void>>();
     readonly #observers = new ObserverGroup(this);
-    #closing = false;
+    readonly #sessionObservers = new Map<Session, ObserverGroup>();
+    #isClosing = false;
 
     constructor(context: ExchangeManagerContext) {
         this.#transports = context.netInterface;
-        this.#sessionManager = context.sessionManager;
+        this.#sessions = context.sessions;
         this.#exchangeCounter = new ExchangeCounter(context.entropy);
 
         for (const netInterface of this.#transports) {
-            this.#addListener(netInterface);
+            this.#addTransport(netInterface);
         }
 
-        this.#observers.on(this.#transports.added, this.#addListener);
-        this.#observers.on(this.#transports.deleted, this.#deleteListener);
-
-        this.#observers.on(this.#sessionManager.sessions.deleted, session => {
-            if (!session.closingAfterExchangeFinished) {
-                // Delayed closing is executed when exchange is closed
-                session.closer = this.#closeSession(session);
-            }
-        });
+        this.#observers.on(this.#transports.added, this.#addTransport);
+        this.#observers.on(this.#transports.deleted, this.#deleteTransport);
+        this.#observers.on(this.#sessions.sessions.added, this.#addSession);
+        this.#observers.on(this.#sessions.sessions.deleted, this.#deleteSession);
     }
 
     static [Environmental.create](env: Environment) {
         const instance = new ExchangeManager({
             entropy: env.get(Entropy),
             netInterface: env.get(ConnectionlessTransportSet),
-            sessionManager: env.get(SessionManager),
+            sessions: env.get(SessionManager),
         });
         env.set(ExchangeManager, instance);
         return instance;
@@ -105,7 +101,7 @@ export class ExchangeManager {
     }
 
     initiateExchange(address: PeerAddress, protocolId: number) {
-        return this.initiateExchangeForSession(this.#sessionManager.sessionFor(address), protocolId);
+        return this.initiateExchangeForSession(this.#sessions.sessionFor(address), protocolId);
     }
 
     initiateExchangeForSession(session: Session, protocolId: number) {
@@ -117,12 +113,16 @@ export class ExchangeManager {
     }
 
     async close() {
-        this.#closing = true;
+        if (this.#isClosing) {
+            return;
+        }
+        this.#isClosing = true;
+
         for (const protocol of this.#protocols.values()) {
             await protocol.close();
         }
         for (const listeners of this.#listeners.keys()) {
-            this.#deleteListener(listeners);
+            this.#deleteTransport(listeners);
         }
         await MatterAggregateError.allSettled(this.#closers, "Error closing exchanges").catch(error =>
             logger.error(error),
@@ -132,6 +132,7 @@ export class ExchangeManager {
             "Error closing exchanges",
         ).catch(error => logger.error(error));
         this.#exchanges.clear();
+        this.#observers.close();
     }
 
     private async onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
@@ -146,16 +147,16 @@ export class ExchangeManager {
         let message: DecodedMessage | undefined;
         if (packet.header.sessionType === SessionType.Unicast) {
             if (packet.header.sessionId === UNICAST_UNSECURE_SESSION_ID) {
-                if (this.#closing) return;
+                if (this.#isClosing) return;
                 const initiatorNodeId = packet.header.sourceNodeId ?? NodeId.UNSPECIFIED_NODE_ID;
                 session =
-                    this.#sessionManager.getUnsecureSession(initiatorNodeId) ??
-                    this.#sessionManager.createInsecureSession({
+                    this.#sessions.getUnsecureSession(initiatorNodeId) ??
+                    this.#sessions.createUnsecuredSession({
                         channel,
                         initiatorNodeId,
                     });
             } else {
-                session = this.#sessionManager.getSession(packet.header.sessionId);
+                session = this.#sessions.getSession(packet.header.sessionId);
             }
 
             if (session === undefined) {
@@ -178,13 +179,13 @@ export class ExchangeManager {
                 isDuplicate = true;
             }
         } else if (packet.header.sessionType === SessionType.Group) {
-            if (this.#closing) return;
+            if (this.#isClosing) return;
             if (packet.header.sourceNodeId === undefined) {
                 throw new UnexpectedDataError("Group session message must include a source NodeId");
             }
 
             let key: Bytes;
-            ({ session, message, key } = await this.#sessionManager.groupSessionFromPacket(packet, aad));
+            ({ session, message, key } = await this.#sessions.groupSessionFromPacket(packet, aad));
 
             try {
                 session.updateMessageCounter(messageId, packet.header.sourceNodeId, key);
@@ -239,8 +240,8 @@ export class ExchangeManager {
 
             await exchange.onMessageReceived(message, isDuplicate);
         } else {
-            if (this.#closing) return;
-            if (session.closingAfterExchangeFinished) {
+            if (this.#isClosing) return;
+            if (session.isClosing) {
                 throw new MatterFlowError(
                     `Session with ID ${packet.header.sessionId} marked for closure, decline new exchange creation.`,
                 );
@@ -303,55 +304,7 @@ export class ExchangeManager {
     }
 
     async deleteExchange(exchangeIndex: number) {
-        const exchange = this.#exchanges.get(exchangeIndex);
-        if (exchange === undefined) {
-            logger.info(`Exchange with index ${exchangeIndex} to delete not found or already deleted.`);
-            return;
-        }
-        const { session } = exchange;
         this.#exchanges.delete(exchangeIndex);
-        if (NodeSession.is(session) && session.closingAfterExchangeFinished) {
-            logger.debug(
-                `Exchange index ${exchangeIndex} on Session ${session.name} is already marked for closure. Close session now.`,
-            );
-            try {
-                await this.#closeSession(session);
-            } catch (error) {
-                logger.error(`Error closing session ${session.name}. Ignoring.`, error);
-            }
-        }
-    }
-
-    async #closeSession(session: NodeSession) {
-        const sessionId = session.id;
-        const sessionName = session.name;
-
-        const asExchangeSession = session as { closedByExchange?: boolean };
-        if (asExchangeSession.closedByExchange) {
-            // Session already removed, so we do not need to close again
-            return;
-        }
-        asExchangeSession.closedByExchange = true;
-
-        for (const [_exchangeIndex, exchange] of this.#exchanges.entries()) {
-            if (exchange.session.id === sessionId) {
-                await exchange.destroy();
-            }
-        }
-        if (session.sendCloseMessageWhenClosing) {
-            await using exchange = this.initiateExchangeForSession(session, SECURE_CHANNEL_PROTOCOL_ID);
-            logger.debug(`Initiated exchange ${exchange.id} to close session ${sessionName}`);
-            try {
-                const messenger = new SecureChannelMessenger(exchange);
-                await messenger.sendCloseSession();
-                await messenger.close();
-            } catch (error) {
-                logger.error("Error closing session", error);
-            }
-        }
-        if (session.closingAfterExchangeFinished) {
-            await session.destroy(false, false);
-        }
     }
 
     #addExchange(exchangeIndex: number, exchange: MessageExchange) {
@@ -384,7 +337,7 @@ export class ExchangeManager {
     calculateMaximumPeerResponseTimeMsFor(session: Session, expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
         return session.channel.calculateMaximumPeerResponseTime(
             session.parameters,
-            this.#sessionManager.sessionParameters,
+            this.#sessions.sessionParameters,
             expectedProcessingTime,
         );
     }
@@ -392,12 +345,12 @@ export class ExchangeManager {
     #messageExchangeContextFor(session: Session): MessageExchangeContext {
         return {
             session,
-            localSessionParameters: this.#sessionManager.sessionParameters,
-            retry: number => this.#sessionManager.retry.emit(session, number),
+            localSessionParameters: this.#sessions.sessionParameters,
+            retry: number => this.#sessions.retry.emit(session, number),
         };
     }
 
-    #addListener(netInterface: ConnectionlessTransport) {
+    #addTransport(netInterface: ConnectionlessTransport) {
         const udpInterface = netInterface instanceof UdpInterface;
         this.#listeners.set(
             netInterface,
@@ -426,7 +379,7 @@ export class ExchangeManager {
         );
     }
 
-    #deleteListener(netInterface: ConnectionlessTransport) {
+    #deleteTransport(netInterface: ConnectionlessTransport) {
         const listener = this.#listeners.get(netInterface);
         if (listener === undefined) {
             return;
@@ -438,6 +391,41 @@ export class ExchangeManager {
             .catch(e => logger.error("Error closing network listener", e))
             .finally(() => this.#closers.delete(closer));
         this.#closers.add(closer);
+    }
+
+    #addSession(session: Session) {
+        if (!(session instanceof NodeSession)) {
+            return;
+        }
+
+        let observers = this.#sessionObservers.get(session);
+        if (!observers) {
+            this.#sessionObservers.set(session, (observers = new ObserverGroup()));
+        }
+
+        observers.on(session.gracefulClose, () => this.#sendCloseSession(session));
+    }
+
+    #deleteSession(session: Session) {
+        const observers = this.#sessionObservers.get(session);
+        if (!observers) {
+            return;
+        }
+
+        observers.close();
+        this.#sessionObservers.delete(session);
+    }
+
+    async #sendCloseSession(session: NodeSession) {
+        await using exchange = this.initiateExchangeForSession(session, SECURE_CHANNEL_PROTOCOL_ID);
+        logger.debug(`Initiated exchange ${exchange.id} to close session ${session.name}`);
+        try {
+            const messenger = new SecureChannelMessenger(exchange);
+            await messenger.sendCloseSession();
+            await messenger.close();
+        } catch (error) {
+            logger.error("Error closing session:", error);
+        }
     }
 }
 

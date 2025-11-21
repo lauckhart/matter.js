@@ -8,7 +8,7 @@ import { Fabric } from "#fabric/Fabric.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import { TestFabric } from "#fabric/TestFabric.js";
 import { b$, Bytes, MockCrypto, StorageBackendMemory, StorageManager } from "#general";
-import { ProtocolMocks } from "#index.js";
+import { ProtocolMocks } from "#protocol/ProtocolMocks.js";
 import { NodeSession } from "#session/NodeSession.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { FabricId, NodeId, VendorId } from "#types";
@@ -117,10 +117,10 @@ describe("Fabric", () => {
 
             const fabric = await TestFabric();
 
-            let session1Destroyed = false;
-            let session2Destroyed = false;
+            let session1Deleted = false;
+            let session2Deleted = false;
             const manager = await createManager();
-            const secureSession1 = new NodeSession({
+            const session1 = new NodeSession({
                 crypto,
                 manager,
                 id: 1,
@@ -133,8 +133,8 @@ describe("Fabric", () => {
                 isInitiator: true,
             });
 
-            fabric.addSession(secureSession1);
-            const secureSession2 = new NodeSession({
+            fabric.addSession(session1);
+            const session2 = new NodeSession({
                 crypto,
                 manager,
                 id: 2,
@@ -146,14 +146,14 @@ describe("Fabric", () => {
                 attestationKey: NO_BYTES,
                 isInitiator: true,
             });
-            fabric.addSession(secureSession2);
+            fabric.addSession(session2);
 
             manager.sessions.deleted.on(session => {
-                if (session === secureSession1) {
-                    session1Destroyed = true;
+                if (session === session1) {
+                    session1Deleted = true;
                 }
-                if (session === secureSession2) {
-                    session2Destroyed = true;
+                if (session === session2) {
+                    session2Deleted = true;
                 }
             });
 
@@ -162,14 +162,16 @@ describe("Fabric", () => {
                 deleted = true;
             });
 
-            await fabric.delete(secureSession2.id);
+            const activeExchange = new ProtocolMocks.Exchange({ fabric, context: { session: session2 } });
+            session2.addExchange(activeExchange);
 
-            expect(session1Destroyed).to.be.true;
-            expect(secureSession1.closingAfterExchangeFinished).to.be.false;
-            expect(secureSession1.sendCloseMessageWhenClosing).to.be.false;
-            expect(session2Destroyed).to.be.false; // Not destroyed directly because delayed because was session of fabric removal
-            expect(secureSession2.closingAfterExchangeFinished).to.be.true;
-            expect(secureSession2.sendCloseMessageWhenClosing).to.be.false;
+            await fabric.delete(activeExchange);
+
+            expect(session1Deleted).to.be.true;
+            expect(session1.isPeerLost).to.be.true;
+            expect(session2Deleted).to.be.false; // Not destroyed directly because delayed because was session of fabric removal
+            expect(session2.isClosing).to.be.true;
+            expect(session2.isPeerLost).to.be.true;
             expect(deleted).to.be.true;
         });
 
@@ -218,7 +220,7 @@ describe("Fabric", () => {
                 }
             });
 
-            fabric.removeSession(secureSession1);
+            fabric.deleteSession(secureSession1);
 
             expect(session1Destroyed).to.be.false;
             expect(session2Destroyed).to.be.false;

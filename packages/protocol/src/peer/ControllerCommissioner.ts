@@ -350,7 +350,7 @@ export class ControllerCommissioner {
         }
 
         // Do PASE pairing
-        const insecureSession = this.#context.sessions.createInsecureSession({
+        const unsecuredSession = this.#context.sessions.createUnsecuredSession({
             channel: paseChannel,
             // Use the session parameters from MDNS announcements when available and rest is assumed to be fallbacks
             sessionParameters: {
@@ -361,7 +361,7 @@ export class ControllerCommissioner {
             isInitiator: true,
         });
         const paseExchange = this.#context.exchanges.initiateExchangeForSession(
-            insecureSession,
+            unsecuredSession,
             SECURE_CHANNEL_PROTOCOL_ID,
         );
 
@@ -477,7 +477,7 @@ export class ControllerCommissioner {
                         commissioning flow the commissioning channel SHALL terminate after successful step 12 (trigger
                         joining of operational network at Commissionee).
                      */
-                    await paseSession.close(); // We reconnect using Case, so close PASE connection
+                    await paseSession.initiateClose(); // We reconnect using Case, so close PASE connection
                 }
 
                 if (performCaseCommissioning !== undefined) {
@@ -510,7 +510,7 @@ export class ControllerCommissioner {
                     successful step 15 (CommissioningComplete command invocation).
                     If PaseSecureMessageChannel is not already closed, we are in non-concurrent connection commissioning flow.
                  */
-                await paseSession.close(); // We are done, so close PASE session
+                await paseSession.initiateClose(); // We are done, so close PASE session
             }
         }
 

@@ -6,7 +6,7 @@
 
 import { Message, MessageCodec, PacketHeader, SessionType } from "#codec/MessageCodec.js";
 import {
-    AsyncObservable,
+    AsyncObservableValue,
     Bytes,
     createPromise,
     CRYPTO_AEAD_MIC_LENGTH_BYTES,
@@ -96,6 +96,11 @@ export interface MessageExchangeContext {
     localSessionParameters: SessionParameters;
 }
 
+/**
+ * A Matter "message exchange" is a sequence of messages associated with a single interaction.
+ *
+ * TODO - rewrite using promises and abort controller
+ */
 export class MessageExchange {
     static fromInitialMessage(context: MessageExchangeContext, initialMessage: Message) {
         const { session } = context;
@@ -143,7 +148,6 @@ export class MessageExchange {
     #retransmissionTimer: Timer | undefined;
     #retransmissionCounter = 0;
     #closeTimer: Timer | undefined;
-    #isClosing = false;
     #isDestroyed = false;
     #timedInteractionTimer: Timer | undefined;
     #used: boolean;
@@ -153,8 +157,8 @@ export class MessageExchange {
     readonly #peerNodeId: NodeId | undefined;
     readonly #exchangeId: number;
     readonly #protocolId: number;
-    readonly #closed = AsyncObservable<[]>();
-    readonly #closing = AsyncObservable<[]>();
+    readonly #closed = AsyncObservableValue();
+    readonly #closing = AsyncObservableValue();
 
     constructor(config: MessageExchange.Config) {
         const { context, isInitiator, peerSessionId, nodeId, peerNodeId, exchangeId, protocolId } = config;
@@ -191,6 +195,8 @@ export class MessageExchange {
                 }),
             }),
         );
+
+        session.addExchange(this);
     }
 
     get context() {
@@ -215,7 +221,7 @@ export class MessageExchange {
     }
 
     get isClosing() {
-        return this.#isClosing;
+        return this.#closing.value;
     }
 
     get id() {
@@ -477,10 +483,10 @@ export class MessageExchange {
 
     #retransmitMessage(message: Message, expectedProcessingTime?: Duration) {
         this.#retransmissionCounter++;
-        if (this.#isClosing || this.#retransmissionCounter >= MRP.MAX_TRANSMISSIONS) {
+        if (this.isClosing || this.#retransmissionCounter >= MRP.MAX_TRANSMISSIONS) {
             // Ok all 4 resubmissions are done, but we need to wait a bit longer because of processing time and
             // the resubmissions from the other side
-            if (expectedProcessingTime && !this.#isClosing) {
+            if (expectedProcessingTime && !this.isClosing) {
                 // We already have waited after the last message was sent, so deduct this time from the final wait time
                 const finalWaitTime = Millis(
                     this.channel.calculateMaximumPeerResponseTime(
@@ -630,8 +636,7 @@ export class MessageExchange {
             logger.info(`Exchange ${this.session.name} / ${this.#exchangeId} was never used, closing directly`);
             return this.#close();
         }
-        this.#isClosing = true;
-        this.#closing.emit();
+        this.#closing.emit(true);
 
         if (this.#receivedMessageToAck !== undefined) {
             this.#receivedMessageAckTimer.stop();
@@ -669,15 +674,11 @@ export class MessageExchange {
     }
 
     async #close() {
-        if (!this.#isClosing) {
-            this.#closing.emit();
-        }
-        this.#isClosing = true;
         this.#retransmissionTimer?.stop();
         this.#closeTimer?.stop();
         this.#timedInteractionTimer?.stop();
         this.#messagesQueue.close();
-        await this.#closed.emit();
+        await this.#closed.emit(true);
     }
 
     get via() {

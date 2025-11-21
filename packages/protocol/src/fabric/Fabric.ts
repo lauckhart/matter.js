@@ -29,7 +29,8 @@ import {
 import { FabricGroups, GROUP_SECURITY_INFO } from "#groups/FabricGroups.js";
 import { FabricAccessControl } from "#interaction/FabricAccessControl.js";
 import { PeerAddress } from "#peer/PeerAddress.js";
-import { Session } from "#session/Session.js";
+import { MessageExchange } from "#protocol/MessageExchange.js";
+import { SecureSession } from "#session/SecureSession.js";
 import { CaseAuthenticatedTag, FabricId, FabricIndex, GroupId, NodeId, StatusResponse, VendorId } from "#types";
 
 const logger = Logger.get("Fabric");
@@ -62,7 +63,7 @@ export class Fabric {
     readonly intermediateCACert: Bytes | undefined;
     readonly operationalCert: Bytes;
     readonly #keyPair: Key;
-    readonly #sessions = new Set<Session>();
+    readonly #sessions = new Set<SecureSession>();
     readonly #groups: FabricGroups;
     readonly #accessControl: FabricAccessControl;
 
@@ -280,11 +281,11 @@ export class Fabric {
         return await Promise.all(destinationIds);
     }
 
-    addSession(session: Session) {
+    addSession(session: SecureSession) {
         this.#sessions.add(session);
     }
 
-    removeSession(session: Session) {
+    deleteSession(session: SecureSession) {
         this.#sessions.delete(session);
     }
 
@@ -307,22 +308,30 @@ export class Fabric {
      * Devices should use this to cleanly exit a fabric.  It flushes subscriptions to ensure the "leave" event emits
      * and closes sessions.
      */
-    async leave(currentSessionId?: number) {
+    async leave(currentExchange?: MessageExchange) {
         await this.#leaving.emit();
 
-        await this.delete(currentSessionId, true);
+        for (const session of [...this.#sessions]) {
+            await session.initiateClose(async () => {
+                await session.closeSubscriptions(true);
+            });
+        }
+
+        await this.delete(currentExchange);
     }
 
     /**
      * Permanently remove the fabric.
+     *
+     * Does not emit the leave event.
      */
-    async delete(currentSessionId?: number, graceful = false) {
+    async delete(currentExchange?: MessageExchange) {
         this.#isDeleting = true;
 
         await this.#deleting.emit();
 
         for (const session of [...this.#sessions]) {
-            await session.destroy(graceful, session.id === currentSessionId, graceful); // Delay Close for current session only
+            await session.initiateForceClose(currentExchange);
         }
 
         await this.#deleted.emit();
