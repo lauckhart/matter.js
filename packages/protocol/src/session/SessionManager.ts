@@ -660,6 +660,7 @@ export class SessionManager {
         await this.#subscriptionUpdateMutex;
 
         await this.#storeResumptionRecords();
+
         const closePromises = this.#sessions.map(async session => {
             await session.closeSubscriptions(true);
             await session.initiateClose();
