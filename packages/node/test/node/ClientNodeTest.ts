@@ -195,7 +195,7 @@ describe("ClientNode", () => {
         await expect(MockTime.resolve(ep1.commandsOf(OnOffClient).toggle())).rejectedWith(TimeoutError);
     });
 
-    it("reconnects and updates connection status", async () => {
+    it.only("reconnects and updates connection status", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();

@@ -36,15 +36,15 @@ export class DummyMessageExchange {
         public closeCallback?: () => void,
     ) {}
 
-    async injectMessage(message: Message) {
-        return this.messagesQueue.write(message);
+    injectMessage(message: Message) {
+        this.messagesQueue.write(message);
     }
 
     async send(messageType: number, payload: Bytes, options?: ExchangeSendOptions) {
         const { payload: responsePayload, messageType: responseMessageType } =
             this.writeCallback?.(messageType, payload, options) ?? {};
         if (payload) {
-            return this.messagesQueue.write({
+            this.messagesQueue.write({
                 ...interaction.BarelyMockedMessage,
                 payloadHeader: { messageType: responseMessageType },
                 payload: responsePayload,

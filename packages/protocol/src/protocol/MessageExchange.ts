@@ -324,7 +324,7 @@ export class MessageExchange {
             this.#receivedMessageToAck = message;
             this.#receivedMessageAckTimer.start();
         }
-        await this.#messagesQueue.write(message);
+        this.#messagesQueue.write(message);
     }
 
     async send(messageType: number, payload: Bytes, options?: ExchangeSendOptions) {
