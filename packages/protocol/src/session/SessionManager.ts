@@ -189,7 +189,7 @@ export class SessionManager {
     }
 
     /**
-     * Active insecure sessions.
+     * Active unsecured sessions.
      */
     get unsecuredSessions() {
         return this.#unsecuredSessions;
@@ -648,13 +648,42 @@ export class SessionManager {
         this.#observers.close();
         await this.#storeResumptionRecords();
 
-        await this.#closeAllSessions();
+        await this.closeAllSessions();
     }
 
     async clear() {
-        await this.#closeAllSessions();
+        if (this.#construction.status === Lifecycle.Status.Initializing) {
+            await this.#construction;
+        }
+
+        await this.closeAllSessions();
         await this.#context.storage.clear();
         this.#resumptionRecords.clear();
+    }
+
+    async closeAllSessions() {
+        if (this.#construction.status === Lifecycle.Status.Initializing) {
+            await this.#construction;
+        }
+
+        await this.#subscriptionUpdateMutex;
+
+        const closePromises = this.#sessions.map(async session => {
+            await session.closeSubscriptions(true);
+            await session.initiateClose();
+            this.#sessions.delete(session);
+        });
+        for (const session of this.#unsecuredSessions.values()) {
+            closePromises.push(session.initiateClose());
+        }
+        for (const sessions of this.#groupSessions.values()) {
+            for (const session of sessions) {
+                closePromises.push(session.initiateClose());
+            }
+        }
+        await MatterAggregateError.allSettled(closePromises, "Error closing sessions").catch(error =>
+            logger.error(error),
+        );
     }
 
     updateAllSubscriptions() {
@@ -674,27 +703,6 @@ export class SessionManager {
         this.#idUpperBound = upperBound;
         this.#nextSessionId = this.#context.fabrics.crypto.randomUint32 % upperBound;
         if (this.#nextSessionId === 0) this.#nextSessionId++;
-    }
-
-    async #closeAllSessions() {
-        await this.#subscriptionUpdateMutex;
-
-        const closePromises = this.#sessions.map(async session => {
-            await session.closeSubscriptions(true);
-            await session.initiateClose();
-            this.#sessions.delete(session);
-        });
-        for (const session of this.#unsecuredSessions.values()) {
-            closePromises.push(session.initiateClose());
-        }
-        for (const sessions of this.#groupSessions.values()) {
-            for (const session of sessions) {
-                closePromises.push(session.initiateClose());
-            }
-        }
-        await MatterAggregateError.allSettled(closePromises, "Error closing sessions").catch(error =>
-            logger.error(error),
-        );
     }
 }
 
