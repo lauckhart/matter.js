@@ -670,7 +670,12 @@ export class SessionManager {
 
         const closePromises = this.#sessions.map(async session => {
             await session.closeSubscriptions(true);
-            await session.initiateClose();
+
+            // TODO - some CHIP tests (CASERecovery for one) expect us to exit without closing the session and will fail
+            // if we end gracefully.  Not clear why this behavior would be desirable as it leads to a timeout when the
+            // node attempts contact even if we've already restarted
+            await session.initiateForceClose();
+
             this.#sessions.delete(session);
         });
         for (const session of this.#unsecuredSessions.values()) {
