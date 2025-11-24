@@ -270,7 +270,7 @@ export abstract class FailsafeContext {
     }
 
     protected async rollback(currentExchange?: MessageExchange) {
-        if (this.associatedFabric && !this.#forUpdateNoc) {
+        if (this.fabricIndex !== undefined && !this.#forUpdateNoc) {
             logger.debug(`Revoking fabric index ${this.fabricIndex}`);
             await this.#associatedFabric?.delete();
         }
