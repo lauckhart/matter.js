@@ -14,7 +14,8 @@ import {
     UnexpectedDataError,
     UninitializedDependencyError,
 } from "#general";
-import { SecureSession } from "#session/SecureSession.js";
+import type { MessageExchange } from "#protocol/MessageExchange.js";
+import type { NodeSession } from "#session/NodeSession.js";
 import { CaseAuthenticatedTag, NodeId, ValidationError, VendorId } from "#types";
 import { Fabric, FabricBuilder } from "../fabric/Fabric.js";
 import { FabricManager } from "../fabric/FabricManager.js";
@@ -178,16 +179,16 @@ export abstract class FailsafeContext {
     async removePaseSession() {
         const session = this.#sessions.getPaseSession();
         if (session !== undefined) {
-            await session.close(true);
+            await session.initiateClose();
         }
     }
 
-    async close() {
+    async close(currentExchange?: MessageExchange) {
         await this.#construction.close(async () => {
             if (this.#failsafe) {
                 await this.#failsafe.close();
                 this.#failsafe = undefined;
-                await this.rollback();
+                await this.rollback(currentExchange);
             }
         });
     }
@@ -268,8 +269,8 @@ export abstract class FailsafeContext {
         await this.close();
     }
 
-    protected async rollback() {
-        if (this.associatedFabric && !this.#forUpdateNoc) {
+    protected async rollback(currentExchange?: MessageExchange) {
+        if (this.fabricIndex !== undefined && !this.#forUpdateNoc) {
             logger.debug(`Revoking fabric index ${this.fabricIndex}`);
             await this.#associatedFabric?.delete();
         }
@@ -286,9 +287,8 @@ export abstract class FailsafeContext {
             const fabricIndex = this.fabricIndex;
             if (this.#fabrics.has(fabricIndex)) {
                 fabric = this.#fabrics.for(fabricIndex);
-                const session = this.#sessions.maybeSessionFor(fabric.addressOf(fabric.rootNodeId));
-                if (session !== undefined && session.isSecure) {
-                    await session.close(false);
+                for (const session of this.#sessions.sessionsForFabricIndex(fabricIndex)) {
+                    await session.initiateForceClose(currentExchange);
                 }
             }
         }
@@ -344,6 +344,6 @@ export namespace FailsafeContext {
         fabrics: FabricManager;
         expiryLength: Duration;
         maxCumulativeFailsafe: Duration;
-        session: SecureSession;
+        session: NodeSession;
     }
 }
