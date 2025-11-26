@@ -6,6 +6,7 @@
 
 import { DecodedMessage, MessageCodec, SessionType } from "#codec/MessageCodec.js";
 import {
+    BasicMultiplex,
     Bytes,
     Channel,
     ConnectionlessTransport,
@@ -16,8 +17,6 @@ import {
     Environmental,
     ImplementationError,
     Logger,
-    MatterAggregateError,
-    MatterError,
     MatterFlowError,
     ObserverGroup,
     UdpInterface,
@@ -55,7 +54,7 @@ export class ExchangeManager {
     readonly #exchanges = new Map<number, MessageExchange>();
     readonly #protocols = new Map<number, ProtocolHandler>();
     readonly #listeners = new Map<ConnectionlessTransport, ConnectionlessTransport.Listener>();
-    readonly #closers = new Set<Promise<void>>();
+    readonly #workers = new BasicMultiplex();
     readonly #observers = new ObserverGroup(this);
     #closing = false;
 
@@ -121,20 +120,25 @@ export class ExchangeManager {
         for (const protocol of this.#protocols.values()) {
             await protocol.close();
         }
+
+        await this.#workers;
+
         for (const listeners of this.#listeners.keys()) {
             this.#deleteListener(listeners);
         }
-        await MatterAggregateError.allSettled(this.#closers, "Error closing exchanges").catch(error =>
-            logger.error(error),
-        );
-        await MatterAggregateError.allSettled(
-            Array.from(this.#exchanges.values()).map(exchange => exchange.close(true)),
-            "Error closing exchanges",
-        ).catch(error => logger.error(error));
+
+        await this.#workers;
+
+        for (const exchange of this.#exchanges.values()) {
+            this.#workers.add(exchange.close(true), `closing exchange ${exchange.id}`);
+        }
+
+        await this.#workers;
+
         this.#exchanges.clear();
     }
 
-    private async onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
+    async #onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
         const packet = MessageCodec.decodePacket(messageBytes);
         const bytes = Bytes.of(messageBytes);
         const aad = bytes.slice(0, bytes.length - packet.applicationPayload.byteLength); // Header+Extensions
@@ -378,7 +382,7 @@ export class ExchangeManager {
         // let's use the first entry in the Map as the oldest exchange and close it
         const exchangeToClose = sessionExchanges[0];
         logger.debug(`Closing oldest exchange ${exchangeToClose.id} for session ${sessionId}`);
-        exchangeToClose.close().catch(error => logger.error("Error closing exchange", error)); // TODO Promise??
+        this.#workers.add(exchangeToClose.close(), `closing exchange ${exchangeToClose.id}`);
     }
 
     calculateMaximumPeerResponseTimeMsFor(session: Session, expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
@@ -409,19 +413,7 @@ export class ExchangeManager {
                     return;
                 }
 
-                try {
-                    this.onMessage(socket, data).catch(error =>
-                        logger.info(
-                            `Error on channel ${socket.name}:`,
-                            error instanceof MatterError ? error.message : error,
-                        ),
-                    );
-                } catch (error) {
-                    logger.info(
-                        `Ignoring UDP message on channel ${socket.name} with error`,
-                        error instanceof MatterError ? error.message : error,
-                    );
-                }
+                this.#workers.add(this.#onMessage(socket, data), `receiving from ${socket.name}`);
             }),
         );
     }
@@ -433,11 +425,7 @@ export class ExchangeManager {
         }
         this.#listeners.delete(netInterface);
 
-        const closer = listener
-            .close()
-            .catch(e => logger.error("Error closing network listener", e))
-            .finally(() => this.#closers.delete(closer));
-        this.#closers.add(closer);
+        this.#workers.add(listener.close(), `closing network listener`);
     }
 }
 
