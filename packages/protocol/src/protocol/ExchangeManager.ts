@@ -129,8 +129,8 @@ export class ExchangeManager {
 
         await this.#workers;
 
-        for (const exchange of this.#exchanges.values()) {
-            this.#workers.add(exchange.close(true), `closing exchange ${exchange.id}`);
+        for (const protocol of this.#protocols.values()) {
+            await protocol.close();
         }
 
         await this.#workers;
@@ -226,10 +226,11 @@ export class ExchangeManager {
         if (exchange !== undefined) {
             if (exchange.session.id !== packet.header.sessionId || (exchange.isClosing && !isStandaloneAck)) {
                 logger.debug(
+                    exchange.via,
                     "Ignore « message because",
                     exchange.isClosing
                         ? "exchange is closing"
-                        : `session ID mismatch ${exchange.session.id} vs ${packet.header.sessionId}`,
+                        : `session ID mismatch (header session is ${Session.idStrOf(packet)}`,
                     messageDiagnostics,
                 );
 
@@ -316,19 +317,19 @@ export class ExchangeManager {
         this.#exchanges.delete(exchangeIndex);
         if (NodeSession.is(session) && session.closingAfterExchangeFinished) {
             logger.debug(
-                `Exchange index ${exchangeIndex} on Session ${session.name} is already marked for closure. Close session now.`,
+                `Exchange index ${exchangeIndex} on Session ${session.via} is already marked for closure. Close session now.`,
             );
             try {
                 await this.#closeSession(session);
             } catch (error) {
-                logger.error(`Error closing session ${session.name}. Ignoring.`, error);
+                logger.error(`Error closing session ${session.via}. Ignoring.`, error);
             }
         }
     }
 
     async #closeSession(session: NodeSession) {
         const sessionId = session.id;
-        const sessionName = session.name;
+        const sessionName = session.via;
 
         const asExchangeSession = session as { closedByExchange?: boolean };
         if (asExchangeSession.closedByExchange) {
@@ -381,7 +382,7 @@ export class ExchangeManager {
         }
         // let's use the first entry in the Map as the oldest exchange and close it
         const exchangeToClose = sessionExchanges[0];
-        logger.debug(`Closing oldest exchange ${exchangeToClose.id} for session ${sessionId}`);
+        logger.debug(exchangeToClose.via, "Closing oldest exchange");
         this.#workers.add(exchangeToClose.close(), `closing exchange ${exchangeToClose.id}`);
     }
 
