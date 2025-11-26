@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes, DerObject, X520 } from "#general";
+import { Bytes, DerObject, hex, X520 } from "#general";
 import { FabricId, NodeId, VendorId } from "#types";
 import { InternalError } from "@matter/general";
 
@@ -66,7 +66,7 @@ const GenericMatterObject = <T>(
     fieldName: string,
     valueConverter?: (value: T) => string,
 ) => {
-    const oidHex = `${oidBase}${id.toString(16).padStart(2, "0")}`;
+    const oidHex = `${oidBase}${hex.byte(id)}`;
     // Register in reverse lookup map immediately at function creation time
     if (MATTER_OID_TO_FIELD_MAP[oidHex] !== undefined && MATTER_OID_TO_FIELD_MAP[oidHex] !== fieldName) {
         throw new InternalError(
