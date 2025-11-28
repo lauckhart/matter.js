@@ -218,12 +218,12 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         this.ensureMdnsAdvertiser();
 
         if (this.#bleAdvertiser) {
-            this.owner.env.runtime.add(this.#deleteAdvertiser(this.#bleAdvertiser));
+            this.owner.env.runtime.add("closing BLE advertiser", this.#deleteAdvertiser(this.#bleAdvertiser));
             this.#bleAdvertiser = undefined;
         }
 
         if (this.#bleTransport) {
-            this.owner.env.runtime.add(this.#deleteTransport(this.#bleTransport));
+            this.owner.env.runtime.add("clsoing BLE transport", this.#deleteTransport(this.#bleTransport));
             this.#bleTransport = undefined;
         }
     }
@@ -303,7 +303,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
         const { env } = this.owner;
 
-        await env.close(DeviceCommissioner);
+        {
+            using _lifetime = this.construction.join("commissioner");
+            await env.close(DeviceCommissioner);
+        }
+
         // Shutdown the Broadcaster if DeviceAdvertiser is not initialized
         // We kick-off the Advertiser shutdown to prevent re-announces when removing sessions and wait a bit later
         const advertisementShutdown = this.owner.env.has(DeviceAdvertiser)
@@ -311,7 +315,10 @@ export class ServerNetworkRuntime extends NetworkRuntime {
             : this.#mdnsAdvertiser?.close();
         this.#mdnsAdvertiser = undefined;
 
-        await this.owner.prepareRuntimeShutdown();
+        {
+            using _lifetime = this.construction.join("preparing");
+            await this.owner.prepareRuntimeShutdown();
+        }
 
         this.#groupNetworking?.close();
         this.#groupNetworking = undefined;
@@ -319,11 +326,30 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         // Now all sessions are closed, so we wait for Advertiser to be gone
         await advertisementShutdown;
 
-        await env.close(ExchangeManager);
-        await env.close(SecureChannelProtocol);
-        await env.close(ConnectionlessTransportSet);
-        await env.close(InteractionServer);
-        await env.close(PeerSet);
+        {
+            using _lifetime = this.construction.join("exchanges");
+            await env.close(ExchangeManager);
+        }
+
+        {
+            using _lifetime = this.construction.join("protocols");
+            await env.close(SecureChannelProtocol);
+        }
+
+        {
+            using _lifetime = this.construction.join("transports");
+            await env.close(ConnectionlessTransportSet);
+        }
+
+        {
+            using _lifetime = this.construction.join("interactions");
+            await env.close(InteractionServer);
+        }
+
+        {
+            using _lifetime = this.construction.join("peers");
+            await env.close(PeerSet);
+        }
     }
 
     async #initializeGroupNetworking() {

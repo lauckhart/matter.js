@@ -589,7 +589,7 @@ export class CommissioningController {
 
             this.#environment = env;
             const runtime = env.runtime;
-            runtime.add(this);
+            runtime.add("controller", this);
         }
 
         this.#started = true;

@@ -16,6 +16,7 @@ import {
     Immutable,
     ImplementationError,
     Lifecycle,
+    Lifetime,
     Logger,
     MaybePromise,
     Observable,
@@ -900,6 +901,10 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             }),
             Diagnostic.list([...this.behaviors.detailedDiagnostic, ...this.parts]),
         ];
+    }
+
+    get [Lifetime.owner]() {
+        return this.#owner?.construction;
     }
 
     /**

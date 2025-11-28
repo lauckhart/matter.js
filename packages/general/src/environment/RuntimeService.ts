@@ -5,6 +5,7 @@
  */
 
 import { asError } from "#util/Error.js";
+import { Lifetime } from "#util/Lifetime.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
 import { Logger } from "../log/Logger.js";
@@ -22,6 +23,7 @@ const logger = Logger.get("Runtime");
  */
 export class RuntimeService implements Multiplex {
     #env: Environment;
+    #lifetime: Lifetime;
     #workers = new Set<RuntimeService.Worker>();
     #cancelled = new Set<RuntimeService.Worker>();
     #workerDeleted = Observable<[]>();
@@ -32,6 +34,7 @@ export class RuntimeService implements Multiplex {
 
     constructor(environment: Environment) {
         this.#env = environment;
+        this.#lifetime = this.#env.join("runtime");
         environment.set(RuntimeService, this);
         DiagnosticSource.add(this);
     }
@@ -47,14 +50,14 @@ export class RuntimeService implements Multiplex {
      * Once added, the {@link worker} is owned by the RuntimeService until closed, resolved or removed via
      * {@link delete}.
      */
-    add(worker: RuntimeService.NewWorker) {
+    add(name: string, worker: RuntimeService.NewWorker) {
         if (!worker) {
             return;
         }
 
         if (typeof worker === "function") {
             try {
-                this.add(worker(this.#env));
+                this.add(name, worker(this.#env));
             } catch (e) {
                 this.#crash(asError(e));
             }
@@ -72,9 +75,13 @@ export class RuntimeService implements Multiplex {
 
         // For PromiseLike just track until resolution
         if (worker.then) {
+            const lifetime = this.#lifetime.join(name);
             Promise.resolve(worker)
                 .catch(error => this.#crash(error))
-                .finally(() => this.delete(worker));
+                .finally(() => {
+                    this.delete(worker);
+                    lifetime[Symbol.dispose]();
+                });
             return;
         }
 
@@ -159,7 +166,7 @@ export class RuntimeService implements Multiplex {
         for (const worker of this.#workers) {
             const disposal = this.#cancelWorker(worker);
             if (disposal) {
-                this.add(disposal);
+                this.add("closing runtime", disposal);
             }
         }
     }
@@ -197,6 +204,8 @@ export class RuntimeService implements Multiplex {
     }
 
     async close() {
+        using _closing = this.#lifetime.closing();
+
         this.cancel();
         await this.inactive;
         this.#env.delete(RuntimeService, this);
@@ -208,7 +217,7 @@ export class RuntimeService implements Multiplex {
     }
 
     get [Diagnostic.value]() {
-        return Diagnostic.node("🛠", "Workers", {
+        return Diagnostic.node("⚙️", "Workers", {
             children: [...this.#workers].map(worker => {
                 let diagnostic: unknown = worker[RuntimeService.label];
 

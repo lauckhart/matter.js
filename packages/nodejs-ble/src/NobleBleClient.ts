@@ -37,7 +37,7 @@ export class NobleBleClient {
 
     constructor(options?: BleOptions) {
         const { environment } = options ?? {};
-        environment?.runtime.add(this);
+        environment?.runtime.add("BLE client", this);
 
         loadNoble(options?.hciId);
         /*try {

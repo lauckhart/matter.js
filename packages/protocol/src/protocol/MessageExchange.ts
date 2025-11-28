@@ -16,6 +16,7 @@ import {
     hex,
     Instant,
     InternalError,
+    Lifetime,
     Logger,
     MatterFlowError,
     Millis,
@@ -132,6 +133,7 @@ export class MessageExchange {
     readonly #context: MessageExchangeContext;
     readonly #isInitiator: boolean;
     readonly #messagesQueue = new DataReadQueue<Message>();
+    readonly #lifetime: Lifetime;
     #receivedMessageToAck: Message | undefined;
     #receivedMessageAckTimer = Time.getTimer("Ack receipt timeout", MRP.STANDALONE_ACK_TIMEOUT, () => {
         if (this.#receivedMessageToAck !== undefined) {
@@ -197,6 +199,7 @@ export class MessageExchange {
         );
 
         session.addExchange(this);
+        this.#lifetime = this.#context.session.join("exchange");
     }
 
     get context() {
@@ -625,6 +628,9 @@ export class MessageExchange {
         if (this.#isDestroyed) {
             return;
         }
+
+        this.#lifetime.closing();
+
         if (this.#closeTimer !== undefined) {
             if (force) {
                 // Force close does not wait any longer
@@ -640,7 +646,7 @@ export class MessageExchange {
             logger.info(this.via, `Exchange never used, closing directly`);
             return this.#close();
         }
-        this.#closing.emit(true);
+        await this.#closing.emit(true);
 
         if (this.#receivedMessageToAck !== undefined) {
             this.#receivedMessageAckTimer.stop();
@@ -675,6 +681,8 @@ export class MessageExchange {
     }
 
     async #close() {
+        using _closing = this.#lifetime.closing();
+
         this.#retransmissionTimer?.stop();
         this.#closeTimer?.stop();
         this.#timedInteractionTimer?.stop();

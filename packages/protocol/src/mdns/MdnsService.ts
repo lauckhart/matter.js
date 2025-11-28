@@ -39,7 +39,7 @@ export class MdnsService {
         const network = environment.get(Network);
         const rootEnvironment = environment.root;
         rootEnvironment.set(MdnsService, this);
-        rootEnvironment.runtime.add(this);
+        rootEnvironment.runtime.add("mdns", this);
 
         const vars = environment.get(VariableService);
         this.#enableIpv4 = vars.boolean("mdns.ipv4") ?? options?.ipv4 ?? true;

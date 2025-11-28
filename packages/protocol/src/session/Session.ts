@@ -15,6 +15,7 @@ import {
     hex,
     ImplementationError,
     InternalError,
+    Lifetime,
     Logger,
     ObservableValue,
     Time,
@@ -43,6 +44,7 @@ const logger = Logger.get("Session");
 
 export abstract class Session {
     #channel?: MessageChannel;
+    #lifetime?: Lifetime;
 
     abstract get via(): string;
     #manager?: SessionManager;
@@ -238,6 +240,8 @@ export abstract class Session {
             return;
         }
 
+        this.#lifetime?.closing();
+
         this.#closing.emit(true);
 
         if (await shutdownLogic?.()) {
@@ -299,6 +303,8 @@ export abstract class Session {
     }
 
     protected async close() {
+        using _closting = this.#lifetime?.closing();
+
         if (this.#channel) {
             await this.#channel.close();
             this.#channel = undefined;
@@ -319,6 +325,21 @@ export abstract class Session {
             throw new ImplementationError("Cannot replace active channel");
         }
         this.#channel = channel;
+    }
+
+    join(...name: unknown[]): Lifetime {
+        return this.activate().join(...name);
+    }
+
+    /**
+     * Invoked by manager when the session is "live".
+     */
+    activate(): Lifetime {
+        if (!this.#lifetime) {
+            this.#lifetime = Lifetime("session", this.via);
+        }
+
+        return this.#lifetime;
     }
 }
 

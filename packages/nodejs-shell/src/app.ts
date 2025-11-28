@@ -189,4 +189,4 @@ const sigIntHandler = () => {
 
 process.on("SIGINT", sigIntHandler);
 
-Environment.default.runtime.add(main());
+Environment.default.runtime.add("interrupt", main());

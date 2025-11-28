@@ -6,6 +6,7 @@
 
 import { Logger } from "#log/Logger.js";
 import { MatterAggregateError } from "#MatterError.js";
+import { Lifetime } from "./Lifetime.js";
 import { MaybePromise } from "./Promises.js";
 import { BasicSet } from "./Set.js";
 
@@ -15,38 +16,43 @@ const logger = Logger.get("Multiplex");
  * A "multiplex" tracks an extensible set of promises.
  */
 export interface Multiplex {
-    add(worker: Promise<unknown>, description?: string): void;
+    add(description: string, worker: Promise<unknown>): void;
     close(): Promise<void>;
     [Symbol.asyncDispose](): Promise<void>;
 }
 
 interface WorkerEntry {
+    lifetime: Lifetime;
     done: Promise<unknown>;
-    description?: string;
 }
 
 /**
  * A basic multiplex that tracks all promises given to it.
  */
-export class BasicMultiplex implements PromiseLike<void> {
+export class BasicMultiplex implements Multiplex, PromiseLike<void> {
+    #lifetime: Lifetime;
     #workers = new BasicSet<WorkerEntry>();
 
-    add(worker: MaybePromise<unknown>, description?: string) {
+    constructor(lifetime: Lifetime.Owner, name = "workers") {
+        this.#lifetime = lifetime.join(name);
+    }
+
+    add(name: string, worker: MaybePromise<unknown>) {
         if (!MaybePromise.is(worker)) {
             return;
         }
 
         const entry = {
+            lifetime: this.#lifetime.join(name),
             done: Promise.resolve(worker)
                 .catch(e => {
-                    let message = "Error";
-                    if (description) {
-                        message = `${message} ${description}`;
-                    }
-                    logger.error(`${message}:`, e);
+                    logger.error(`Error ${name}:`, e);
                 })
-                .finally(() => this.#workers.delete(entry)),
-            description,
+                .finally(() => {
+                    this.#workers.delete(entry);
+                    entry.lifetime[Symbol.dispose]();
+                }),
+            name,
         };
 
         this.#workers.add(entry);
@@ -56,6 +62,7 @@ export class BasicMultiplex implements PromiseLike<void> {
         while (this.#workers.size) {
             await MatterAggregateError.allSettled([...this.#workers].map(entry => entry.done));
         }
+        this.#lifetime[Symbol.dispose]();
     }
 
     then<TResult1 = void, TResult2 = never>(

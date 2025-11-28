@@ -73,5 +73,5 @@ export namespace DiagnosticPresentation {
     /**
      * Property name that redirects diagnostic presentation.
      */
-    export const value: unique symbol = Symbol.for("value");
+    export const value: unique symbol = Symbol.for("matter.diagnostic.value");
 }

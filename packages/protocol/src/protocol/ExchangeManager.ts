@@ -16,6 +16,7 @@ import {
     Environment,
     Environmental,
     ImplementationError,
+    Lifetime,
     Logger,
     MatterFlowError,
     ObserverGroup,
@@ -42,24 +43,28 @@ const MAXIMUM_CONCURRENT_EXCHANGES_PER_SESSION = 5;
  * Interfaces {@link ExchangeManager} with other components.
  */
 export interface ExchangeManagerContext {
+    lifetime: Lifetime.Owner;
     entropy: Entropy;
     netInterface: ConnectionlessTransportSet;
     sessions: SessionManager;
 }
 
 export class ExchangeManager {
+    readonly #lifetime: Lifetime;
     readonly #transports: ConnectionlessTransportSet;
     readonly #sessions: SessionManager;
     readonly #exchangeCounter: ExchangeCounter;
     readonly #exchanges = new Map<number, MessageExchange>();
     readonly #protocols = new Map<number, ProtocolHandler>();
     readonly #listeners = new Map<ConnectionlessTransport, ConnectionlessTransport.Listener>();
-    readonly #workers = new BasicMultiplex();
+    readonly #workers: BasicMultiplex;
     readonly #observers = new ObserverGroup(this);
     readonly #sessionObservers = new Map<Session, ObserverGroup>();
     #isClosing = false;
 
     constructor(context: ExchangeManagerContext) {
+        this.#lifetime = context.lifetime.join("exchanges");
+        this.#workers = new BasicMultiplex(this.#lifetime);
         this.#transports = context.netInterface;
         this.#sessions = context.sessions;
         this.#exchangeCounter = new ExchangeCounter(context.entropy);
@@ -76,6 +81,7 @@ export class ExchangeManager {
 
     static [Environmental.create](env: Environment) {
         const instance = new ExchangeManager({
+            lifetime: env,
             entropy: env.get(Entropy),
             netInterface: env.get(ConnectionlessTransportSet),
             sessions: env.get(SessionManager),
@@ -115,22 +121,25 @@ export class ExchangeManager {
         if (this.#isClosing) {
             return;
         }
+
+        using _closing = this.#lifetime.closing();
+
         this.#isClosing = true;
 
+        const exchangesClosed = new BasicMultiplex(this.#lifetime, "closing exchanges");
+
         for (const exchange of this.#exchanges.values()) {
-            this.#workers.add(exchange.close(true), `closing exchange ${exchange.via}`);
+            exchangesClosed.add(`closing exchange ${exchange.via}`, exchange.close(true));
         }
 
-        await this.#workers;
+        await exchangesClosed;
 
-        for (const listeners of this.#listeners.keys()) {
-            this.#deleteTransport(listeners);
+        for (const listener of this.#listeners.keys()) {
+            this.#deleteTransport(listener);
         }
-
-        await this.#workers;
 
         for (const protocol of this.#protocols.values()) {
-            await protocol.close();
+            this.#workers.add(`closing protocol ${protocol.id}`, protocol.close());
         }
 
         await this.#workers;
@@ -336,7 +345,7 @@ export class ExchangeManager {
         // let's use the first entry in the Map as the oldest exchange and close it
         const exchangeToClose = sessionExchanges[0];
         logger.debug(exchangeToClose.via, "Closing oldest exchange");
-        this.#workers.add(exchangeToClose.close(), `closing exchange ${exchangeToClose.id}`);
+        this.#workers.add(`closing exchange ${exchangeToClose.id}`, exchangeToClose.close());
     }
 
     calculateMaximumPeerResponseTimeMsFor(session: Session, expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
@@ -367,7 +376,7 @@ export class ExchangeManager {
                     return;
                 }
 
-                this.#workers.add(this.#onMessage(socket, data), `receiving from ${socket.name}`);
+                this.#workers.add(`processing message from ${socket.name}`, this.#onMessage(socket, data));
             }),
         );
     }
@@ -379,7 +388,7 @@ export class ExchangeManager {
         }
         this.#listeners.delete(netInterface);
 
-        this.#workers.add(listener.close(), `closing network listener`);
+        this.#workers.add(`closing network listener`, listener.close());
     }
 
     #addSession(session: Session) {

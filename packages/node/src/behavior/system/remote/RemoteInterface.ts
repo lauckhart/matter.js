@@ -4,7 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Abort, AppAddress, BasicMultiplex, ImplementationError, Logger } from "#general";
+import {
+    Abort,
+    AppAddress,
+    BasicMultiplex,
+    decamelize,
+    ImplementationError,
+    Lifetime,
+    Logger,
+    Multiplex,
+} from "#general";
 import type { ServerNode } from "#node/ServerNode.js";
 import { ApiPath } from "./api/ApiPath.js";
 
@@ -15,10 +24,11 @@ const logger = Logger.get("RemoteAdapter");
  */
 export abstract class RemoteInterface {
     #node: ServerNode;
+    #lifetime: Lifetime;
     #address: AppAddress;
     #abort = new Abort();
     #root: ApiPath;
-    #workers = new BasicMultiplex();
+    #workers: Multiplex;
 
     constructor(node: ServerNode, address: AppAddress) {
         if (address.appProtocol !== (this.constructor as unknown as RemoteInterface.Type).protocol) {
@@ -27,6 +37,8 @@ export abstract class RemoteInterface {
             );
         }
         this.#node = node;
+        this.#lifetime = node.env.join(decamelize(this.constructor.name, " "));
+        this.#workers = new BasicMultiplex(this.#lifetime);
         this.#address = address;
         this.#root = new ApiPath(address);
     }
@@ -75,6 +87,8 @@ export abstract class RemoteInterface {
             return;
         }
 
+        using _closing = this.#lifetime.closing();
+
         this.#abort();
 
         try {
@@ -93,7 +107,7 @@ export abstract class RemoteInterface {
     }
 
     protected addWorker(worker: Promise<void>, description: string) {
-        this.#workers.add(worker, description);
+        this.#workers.add(description, worker);
     }
 
     static protocol = "";

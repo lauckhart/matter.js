@@ -26,7 +26,7 @@ export class MatterNode {
 
     constructor(nodeNum: number, netInterface?: string) {
         this.#environment = Environment.default;
-        this.#environment.runtime.add(this);
+        this.#environment.runtime.add(`node ${nodeNum}`, this);
         this.#nodeNum = nodeNum;
         this.#netInterface = netInterface;
     }

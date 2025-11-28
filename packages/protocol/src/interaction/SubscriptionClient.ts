@@ -5,7 +5,7 @@
  */
 
 import type { ClientSubscriptionHandler } from "#action/client/subscription/ClientSubscriptionHandler.js";
-import { Duration, Logger, MaybePromise, Millis, Time, Timer } from "#general";
+import { Duration, Lifetime, Logger, MaybePromise, Millis, Time, Timer } from "#general";
 import { DecodedDataReport } from "#interaction/DecodedDataReport.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
@@ -19,7 +19,7 @@ export interface RegisteredSubscription {
     maximumPeerResponseTime: Duration;
     maxInterval: Duration;
     onData: (dataReport: DecodedDataReport) => MaybePromise<void>;
-    onTimeout?: () => void;
+    onTimeout?: (lifetime: Lifetime) => void;
 }
 
 /**
@@ -51,10 +51,10 @@ export class SubscriptionClient implements ProtocolHandler {
 
             const maxInterval = Millis(subscription.maxInterval + subscription.maximumPeerResponseTime);
 
-            timer = Time.getTimer("Subscription timeout", maxInterval, () => {
+            timer = Time.getTimer("Subscription timeout", maxInterval, lifetime => {
                 logger.info(`Subscription ${id} timed out after ${Duration.format(maxInterval)}`);
                 this.delete(id);
-                onTimeout();
+                onTimeout(lifetime);
             }).start();
 
             this.#timeouts.set(id, timer);

@@ -7,7 +7,9 @@
 import { Logger } from "../log/Logger.js";
 import { ImplementationError } from "../MatterError.js";
 import { asError, errorOf } from "./Error.js";
+import { decamelize } from "./identifier-case.js";
 import { CrashedDependenciesError, CrashedDependencyError, Lifecycle } from "./Lifecycle.js";
+import { Lifetime } from "./Lifetime.js";
 import { Observable } from "./Observable.js";
 import { MaybePromise } from "./Promises.js";
 
@@ -140,6 +142,11 @@ export interface Construction<T> extends Promise<T> {
     ): void;
 
     /**
+     * Join {@link subject}'s lifetime.
+     */
+    join(...name: unknown[]): Lifetime;
+
+    /**
      * Invoke destruction logic then move to destroyed status.
      *
      * Typically you invoke this in the subject's "close" method.
@@ -237,8 +244,11 @@ export function Construction<const T extends Constructable>(
     let error: undefined | Error;
     let errorForDependencies: undefined | CrashedDependencyError;
     let primaryCauseHandled = false;
-    let status = Lifecycle.Status.Inactive;
     let change: Observable<[status: Lifecycle.Status, subject: T]> | undefined;
+
+    // Lifecycle information that exists
+    let status = Lifecycle.Status.Inactive;
+    let lifetime: Lifetime | undefined;
 
     const self: Construction<any> = {
         [Symbol.toStringTag]: "Construction",
@@ -262,6 +272,24 @@ export function Construction<const T extends Constructable>(
             return primaryCauseHandled;
         },
 
+        join(...name: unknown[]) {
+            // If we are not in fact alive, join to a zombie lifetime.  Generally this shouldn't be called but if it is
+            // this allows us to handle without crashing
+            if (lifetime === undefined) {
+                const lifetime = joinOwner();
+                const span = lifetime.join(name);
+                lifetime[Symbol.dispose]();
+                return span;
+            }
+
+            // If destroying, join the "closing" lifetime
+            if (status === Lifecycle.Status.Destroying) {
+                return lifetime.closing().join(name);
+            }
+
+            return lifetime.join(name);
+        },
+
         start<const T, const A extends [], const This extends Construction<Constructable.Deferred<T, A>>>(
             this: This,
             ...args: A
@@ -272,7 +300,7 @@ export function Construction<const T extends Constructable>(
 
             assertDeferred(subject);
 
-            status = Lifecycle.Status.Initializing;
+            setStatus(Lifecycle.Status.Initializing);
 
             try {
                 const initializeDeferred = () => subject[Construction.construct](...args);
@@ -284,7 +312,7 @@ export function Construction<const T extends Constructable>(
         },
 
         assert(description?: string, dependency?: any) {
-            Lifecycle.assertActive(status, description ?? subject.constructor.name);
+            Lifecycle.assertActive(status, description ?? nameOf(subject));
 
             if (arguments.length < 2) {
                 return;
@@ -582,7 +610,7 @@ export function Construction<const T extends Constructable>(
 
     // Begin initialization.  May throw synchronously or asynchronously
     function invokeInitializer(initializer: () => MaybePromise<void>) {
-        status = Lifecycle.Status.Initializing;
+        setStatus(Lifecycle.Status.Initializing);
 
         initializerPromise = initializer();
 
@@ -609,14 +637,7 @@ export function Construction<const T extends Constructable>(
             return errorForDependencies;
         }
 
-        let what;
-        if (subject.toString === Object.prototype.toString) {
-            what = subject.constructor.name;
-        } else {
-            what = subject.toString();
-        }
-
-        errorForDependencies = new CrashedDependencyError(what, "unavailable due to initialization error");
+        errorForDependencies = new CrashedDependencyError(nameOf(subject), "unavailable due to initialization error");
         errorForDependencies.subject = subject;
         errorForDependencies.cause = error;
         return errorForDependencies;
@@ -628,6 +649,28 @@ export function Construction<const T extends Constructable>(
         }
 
         status = newStatus;
+
+        switch (status) {
+            case Lifecycle.Status.Initializing:
+            case Lifecycle.Status.Active:
+            case Lifecycle.Status.Destroying:
+                if (!lifetime) {
+                    lifetime = joinOwner();
+                }
+
+                if (status === Lifecycle.Status.Destroying) {
+                    lifetime.closing();
+                }
+                break;
+
+            default:
+                if (lifetime) {
+                    lifetime.closing()[Symbol.dispose]();
+                    lifetime[Symbol.dispose]();
+                    lifetime = undefined;
+                }
+                break;
+        }
 
         if (change) {
             change.emit(status, subject);
@@ -677,12 +720,13 @@ export function Construction<const T extends Constructable>(
 
     function createErrorHandler(name: string) {
         return (e: any) => {
-            let what = subject.toString();
-            if (what === "[object Object]") {
-                what = subject.constructor.name;
-            }
-            unhandledError(`Unhandled error in ${what} ${name}:`, e);
+            unhandledError(`Unhandled error in ${nameOf(subject)} ${name}:`, e);
         };
+    }
+
+    function joinOwner() {
+        const lifetime = Lifetime.of(subject);
+        return lifetime.join(decamelize(nameOf(subject), " "));
     }
 }
 
@@ -738,4 +782,12 @@ function assertDeferred<T>(subject: Constructable<T>): asserts subject is Constr
     if (typeof (subject as Constructable.Deferred<any, any>)?.[Construction.construct] !== "function") {
         throw new ImplementationError(`No initializer defined for ${subject}`);
     }
+}
+
+function nameOf(subject: {}) {
+    if (subject.toString === Object.prototype.toString) {
+        return subject.constructor.name;
+    }
+
+    return subject.toString();
 }

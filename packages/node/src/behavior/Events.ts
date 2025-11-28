@@ -204,7 +204,7 @@ export class OnlineEvent<T extends any[] = any[], S extends ValueModel = ValueMo
             });
 
             if (MaybePromise.is(maybePromise)) {
-                this.owner.endpoint!.env.runtime.add(maybePromise);
+                this.owner.endpoint!.env.runtime.add(`adding occurrence`, maybePromise);
             }
         };
         this.online.on(trigger as unknown as Observer<T, void>);

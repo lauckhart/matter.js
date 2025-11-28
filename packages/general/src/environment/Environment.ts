@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Diagnostic } from "#log/Diagnostic.js";
 import { InternalError } from "#MatterError.js";
 import { Instant } from "#time/TimeUnit.js";
+import { Lifetime } from "#util/Lifetime.js";
 import { MaybePromise } from "#util/Promises.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
 import { Logger } from "../log/Logger.js";
@@ -36,6 +38,7 @@ export class Environment {
     #services?: Map<Environmental.ServiceType, Environmental.Service | null>;
     #name: string;
     #parent?: Environment;
+    #lifetime: Lifetime;
     #added = Observable<[type: Environmental.ServiceType, instance: {}]>();
     #deleted = Observable<[type: Environmental.ServiceType, instance: {}]>();
     #serviceEvents = new Map<Environmental.ServiceType, Environmental.ServiceEvents<any>>();
@@ -43,6 +46,14 @@ export class Environment {
     constructor(name: string, parent?: Environment) {
         this.#name = name;
         this.#parent = parent;
+        this.#lifetime = (parent ?? Lifetime.process).join(Diagnostic.strong(name), "environment");
+    }
+
+    /**
+     * Join the environment's lifetime.
+     */
+    join(...name: unknown[]) {
+        return this.#lifetime?.join(...name);
     }
 
     /**
@@ -238,11 +249,11 @@ export class Environment {
                 added(this, existing);
             }
 
-            events.added.on(service => this.runtime.add(() => added(this, service)));
+            events.added.on(service => this.runtime.add(`adding ${type.name}`, () => added(this, service)));
         }
 
         if (deleted) {
-            events.deleted.on(service => this.runtime.add(() => deleted(this, service)));
+            events.deleted.on(service => this.runtime.add(`deleting ${type.name}`, () => deleted(this, service)));
         }
     }
 
@@ -259,6 +270,8 @@ export class Environment {
      * Set the default environment.
      */
     static set default(env: Environment) {
+        global[Symbol.dispose]();
+
         global = env;
 
         env.vars.use(() => {
@@ -290,7 +303,7 @@ export class Environment {
      * Display tasks that supply diagnostics.
      */
     diagnose() {
-        Time.getTimer("Diagnostics", Instant, () => {
+        Time.getTimer("diagnostics", Instant, () => {
             try {
                 logger.notice("Diagnostics follow", DiagnosticSource);
             } catch (e) {
@@ -301,6 +314,11 @@ export class Environment {
 
     protected loadVariables(): Record<string, any> {
         return {};
+    }
+
+    [Symbol.dispose]() {
+        // Currently this is just a method for terminating our lifetime
+        this.#lifetime[Symbol.dispose]();
     }
 }
 

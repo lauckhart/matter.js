@@ -280,6 +280,7 @@ export class SessionManager {
             if (this.#unsecuredSessions.has(ephemeralNodeId)) continue;
 
             this.#unsecuredSessions.set(ephemeralNodeId, session);
+            session.activate();
             return session;
         }
     }
@@ -678,9 +679,11 @@ export class SessionManager {
 
             this.#sessions.delete(session);
         });
+
         for (const session of this.#unsecuredSessions.values()) {
             closePromises.push(session.initiateClose());
         }
+
         for (const sessions of this.#groupSessions.values()) {
             for (const session of sessions) {
                 closePromises.push(session.initiateClose());

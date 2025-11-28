@@ -105,7 +105,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
     }
 
     protected async startWithMutex() {
-        this.env.runtime.add(this);
+        this.env.runtime.add(`node ${this.identity}`, this);
 
         try {
             await this.construction.ready;
@@ -240,6 +240,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         await this.cancelWithMutex();
         await super[Construction.destruct]();
         DiagnosticSource.delete(this);
+        this.#environment[Symbol.dispose]();
     }
 }
 

@@ -244,7 +244,7 @@ export class AdministratorCommissioningServer extends AdministratorCommissioning
      * Close commissioning window on timeout when there's nobody to await the resulting promise
      * */
     #commissioningTimeout() {
-        this.env.runtime.add(this.#closeCommissioningWindow());
+        this.env.runtime.add("close commissioning window", this.#closeCommissioningWindow());
     }
 
     /**

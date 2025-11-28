@@ -158,7 +158,7 @@ export class BlenoBleServer extends BleChannel<Bytes> {
         super();
 
         const { environment } = options ?? {};
-        environment?.runtime.add(this);
+        environment?.runtime.add("BLE server", this);
 
         this.matterBleService = initializeBleno(this, options?.hciId);
 
