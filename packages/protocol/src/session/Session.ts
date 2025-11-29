@@ -333,10 +333,13 @@ export abstract class Session {
 
     /**
      * Invoked by manager when the session is "live".
+     *
+     * This is separate from construction because we sometimes discard sessions without installing in a manager or
+     * closing.
      */
     activate(): Lifetime {
         if (!this.#lifetime) {
-            this.#lifetime = Lifetime("session", this.via);
+            this.#lifetime = (this.#manager?.construction ?? Lifetime.process).join("session", this.via);
         }
 
         return this.#lifetime;

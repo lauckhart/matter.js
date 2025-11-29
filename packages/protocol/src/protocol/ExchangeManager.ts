@@ -198,7 +198,7 @@ export class ExchangeManager {
             }
 
             let key: Bytes;
-            ({ session, message, key } = await this.#sessions.groupSessionFromPacket(packet, aad));
+            ({ session, message, key } = this.#sessions.groupSessionFromPacket(packet, aad));
 
             try {
                 session.updateMessageCounter(messageId, packet.header.sourceNodeId, key);

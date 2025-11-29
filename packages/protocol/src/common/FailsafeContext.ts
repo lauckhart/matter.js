@@ -142,7 +142,7 @@ export abstract class FailsafeContext {
         // TODO 3. Any temporary administrative privileges automatically granted to any open PASE session SHALL be revoked (see Section 6.6.2.8, “Bootstrapping of the Access Control Cluster”).
 
         // 4. The Secure Session Context of any PASE session still established at the Server SHALL be cleared.
-        await this.removePaseSession();
+        await this.closePaseSession();
 
         await this.close();
     }
@@ -176,10 +176,10 @@ export abstract class FailsafeContext {
         return result;
     }
 
-    async removePaseSession() {
+    async closePaseSession(activeExchange?: MessageExchange) {
         const session = this.#sessions.getPaseSession();
-        if (session !== undefined) {
-            await session.initiateClose();
+        if (session) {
+            await session.initiateForceClose(activeExchange);
         }
     }
 
@@ -277,7 +277,7 @@ export abstract class FailsafeContext {
 
         // On expiry of the fail-safe timer, the following actions SHALL be performed in order:
         // 1. Terminate any open PASE secure session by clearing any associated Secure Session Context at the Server.
-        await this.removePaseSession();
+        await this.closePaseSession(currentExchange);
 
         // TODO 2. Revoke the temporary administrative privileges granted to any open PASE session (see Section 6.6.2.8, “Bootstrapping of the Access Control Cluster”) at the Server.
 

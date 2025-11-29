@@ -202,8 +202,8 @@ export namespace Lifetime {
     /**
      * Determine the lifetime of the owner of a component.
      */
-    export function of(subject: {}) {
-        return (subject as Partial<Contributor>)[owner] ?? process;
+    export function of(subject?: {}) {
+        return (subject as Partial<Contributor> | undefined)?.[owner] ?? process;
     }
 
     export const owner = Symbol("owner");

@@ -60,7 +60,7 @@ export class GeneralCommissioningServer extends GeneralCommissioningBehavior {
         ) {
             return;
         }
-        logger.debug(`New PASE session added: ${session.idStr}. Arming Failsafe for 60s.`);
+        logger.debug(session.via, `New PASE session, arming Failsafe for 60s`);
         await this.#armFailSafe({ breadcrumb: this.state.breadcrumb, expiryLengthSeconds: 60 }, session);
     }
 

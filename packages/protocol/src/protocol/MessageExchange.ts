@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Message, MessageCodec, PacketHeader, SessionType } from "#codec/MessageCodec.js";
+import { Message, PacketHeader, SessionType } from "#codec/MessageCodec.js";
 import {
     AsyncObservableValue,
     Bytes,
@@ -24,7 +24,8 @@ import {
     Timer,
 } from "#general";
 import { GroupSession } from "#session/GroupSession.js";
-import { SecureSession } from "#session/SecureSession.js";
+import type { NodeSession } from "#session/NodeSession.js";
+import type { SecureSession } from "#session/SecureSession.js";
 import { Session } from "#session/Session.js";
 import { SessionParameters } from "#session/SessionParameters.js";
 import {
@@ -254,7 +255,7 @@ export class MessageExchange {
     }
 
     async onMessageReceived(message: Message, duplicate = false) {
-        logger.debug("Message «", MessageCodec.messageDiagnostics(message, { duplicate }));
+        logger.debug("Message «", Message.diagnosticsOf(this.session, message, { duplicate }));
 
         // Adjust the incoming message when ack was required, but this exchange does not use it to skip all relevant logic
         if (message.payloadHeader.requiresAck && !this.session.usesMrp) {
@@ -334,25 +335,26 @@ export class MessageExchange {
         this.#messagesQueue.write(message);
     }
 
-    async send(messageType: number, payload: Bytes, options?: ExchangeSendOptions) {
-        if (options?.requiresAck && !this.session.usesMrp) {
-            options.requiresAck = false;
-        }
-
+    async send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         const {
             expectAckOnly = false,
             disableMrpLogic,
             expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME,
-            requiresAck,
             includeAcknowledgeMessageId,
             logContext,
             protocolId = this.#protocolId,
-        } = options ?? {};
+        } = options;
+
         if (!this.session.usesMrp && includeAcknowledgeMessageId !== undefined) {
             throw new InternalError("Cannot include an acknowledge message ID when MRP is not used");
         }
-        const isStandaloneAck = SecureMessageType.isStandaloneAck(protocolId, messageType);
 
+        let { requiresAck } = options;
+        if (requiresAck && !(this.session.usesMrp || (this.session as NodeSession).isPeerLost)) {
+            requiresAck = false;
+        }
+
+        const isStandaloneAck = SecureMessageType.isStandaloneAck(protocolId, messageType);
         if (isStandaloneAck) {
             if (!this.session.usesMrp) {
                 return;
@@ -430,7 +432,7 @@ export class MessageExchange {
         if (this.session.usesMrp && message.payloadHeader.requiresAck && !disableMrpLogic) {
             this.#sentMessageToAck = message;
             this.#retransmissionTimer = Time.getTimer(
-                `Message retransmission ${message.packetHeader.messageId}`,
+                `Retransmitting ${Message.identityOf(this.session, message)}`,
                 this.channel.getMrpResubmissionBackOffTime(0),
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
@@ -454,7 +456,7 @@ export class MessageExchange {
                 payloadHeader: { protocolId, messageType },
             } = responseMessage;
             if (expectAckOnly && !SecureMessageType.isStandaloneAck(protocolId, messageType)) {
-                throw new UnexpectedMessageError("Expected ack only", responseMessage);
+                throw new UnexpectedMessageError("Expected ack only", this.session, responseMessage);
             }
         }
     }
@@ -505,10 +507,10 @@ export class MessageExchange {
                 if (finalWaitTime > 0) {
                     this.#retransmissionCounter--; // We will not resubmit the message again
                     logger.debug(
-                        `Message ${message.packetHeader.messageId}: Wait additional ${Duration.format(finalWaitTime)} for processing time and peer resubmissions after all our resubmissions`,
+                        `Message ${Message.identityOf(this.session, message)}: Wait additional ${Duration.format(finalWaitTime)} for processing time and peer resubmissions after all our resubmissions`,
                     );
                     this.#retransmissionTimer = Time.getTimer(
-                        `Message wait time after resubmissions ${message.packetHeader.messageId}`,
+                        `Message wait time after resubmissions ${Message.identityOf(this.session, message)}`,
                         finalWaitTime,
                         () => this.#retransmitMessage(message),
                     ).start();
@@ -535,7 +537,7 @@ export class MessageExchange {
         this.context.retry(this.#retransmissionCounter);
         const resubmissionBackoffTime = this.channel.getMrpResubmissionBackOffTime(this.#retransmissionCounter);
         logger.debug(
-            `Resubmit message ${message.packetHeader.messageId} (retransmission attempt ${this.#retransmissionCounter}, backoff time ${Duration.format(resubmissionBackoffTime)}))`,
+            `Resubmit message ${Message.identityOf(this.session, message)} (retransmission attempt ${this.#retransmissionCounter}, backoff time ${Duration.format(resubmissionBackoffTime)}))`,
         );
 
         this.channel

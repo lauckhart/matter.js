@@ -21,7 +21,7 @@ export interface Multiplex {
     [Symbol.asyncDispose](): Promise<void>;
 }
 
-interface WorkerEntry {
+interface Worker {
     lifetime: Lifetime;
     done: Promise<unknown>;
 }
@@ -31,7 +31,7 @@ interface WorkerEntry {
  */
 export class BasicMultiplex implements Multiplex, PromiseLike<void> {
     #lifetime: Lifetime;
-    #workers = new BasicSet<WorkerEntry>();
+    #workers = new BasicSet<Worker>();
 
     constructor(lifetime: Lifetime.Owner, name = "workers") {
         this.#lifetime = lifetime.join(name);

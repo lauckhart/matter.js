@@ -276,12 +276,12 @@ export class NodeSession extends SecureSession {
         await this.handlePeerLoss();
     }
 
-    async handlePeerLoss() {
+    async handlePeerLoss(activeExchange?: MessageExchange) {
         this.#isPeerLost = true;
-        await this.initiateForceClose();
+        await this.initiateForceClose(activeExchange);
     }
 
-    get isPeerLost() {
+    get isPeerLost(): boolean {
         return this.#isPeerLost;
     }
 
@@ -385,10 +385,10 @@ export namespace NodeSession {
         peerNodeId: NodeId,
     ) {
         logger.info(
+            session.via,
             `${operation} session with`,
             Diagnostic.strong(PeerAddress({ fabricIndex: fabric.fabricIndex, nodeId: peerNodeId }).toString()),
             Diagnostic.dict({
-                id: session.id,
                 address: messenger.channelName,
                 fabric: `${NodeId.toHexString(fabric.nodeId)} (#${fabric.fabricIndex})`,
                 ...session.parameterDiagnostics,

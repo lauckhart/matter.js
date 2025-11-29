@@ -139,7 +139,7 @@ export class AdministratorCommissioningServer extends AdministratorCommissioning
             );
         }
 
-        logger.debug("Revoking commissioning window.");
+        logger.debug("Revoking commissioning window");
 
         await this.#closeCommissioningWindow();
 

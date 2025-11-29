@@ -482,7 +482,7 @@ export class SessionManager {
      * Note that the resulting session is non-operational in the sense that attempting outbound communication will
      * result in an error.
      */
-    async groupSessionFromPacket(packet: DecodedPacket, aad: Bytes) {
+    groupSessionFromPacket(packet: DecodedPacket, aad: Bytes) {
         const groupId = packet.header.destGroupId;
         if (groupId === undefined) {
             throw new UnexpectedDataError("Group ID is required for GroupSession fromPacket.");
