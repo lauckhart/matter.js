@@ -387,7 +387,7 @@ export class WindowCoveringBaseServer extends WindowCoveringBase {
                 Worker({
                     name: `calibrating ${this}`,
                     done: this.#executeCalibrationAndMove(type, direction, targetPercent100ths),
-                    lifetime: this,
+                    lifetime: this.lifetime,
                 }),
             );
         }
@@ -457,7 +457,7 @@ export class WindowCoveringBaseServer extends WindowCoveringBase {
                 Worker({
                     name: `moving ${this}`,
                     done,
-                    lifetime: this,
+                    lifetime: this.lifetime,
                 }),
             );
         }
@@ -470,15 +470,10 @@ export class WindowCoveringBaseServer extends WindowCoveringBase {
             calibration = this.executeCalibration();
         }
 
-        calibration = MaybePromise.then(calibration, () => {
+        return MaybePromise.then(calibration, () => {
             this.internal.calibrationMode = CalibrationMode.Disabled;
             return this.#prepareMovement(type, direction, targetPercent100ths);
         });
-
-        if (calibration) {
-            const calibrating = this.join("calibrating");
-            return Promise.resolve(calibration).finally(() => calibrating[Symbol.dispose]());
-        }
     }
 
     /**

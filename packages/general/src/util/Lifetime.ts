@@ -220,8 +220,15 @@ function removeSpan(owner: Lifetime | undefined, span: Lifetime) {
 export namespace Lifetime {
     /**
      * The lifetime of the system process.
+     *
+     * This is effectively a "global" lifetime.  It parents all other lifetimes.
      */
     export const process: Lifetime.Owner = new LifetimeImplementation(["process"]);
+
+    /**
+     * Obtain a lifetime not attached to {@link process} for testing purposes.
+     */
+    export declare const mock: Lifetime;
 
     /**
      * An object associated with a lifetime.
@@ -249,5 +256,11 @@ export namespace Lifetime {
 
     export const owner = Symbol("owner");
 }
+
+Object.defineProperty(Lifetime, "mock", {
+    get() {
+        return new LifetimeImplementation(["mock"]);
+    },
+});
 
 DiagnosticSource.add(Lifetime.process as Lifetime);

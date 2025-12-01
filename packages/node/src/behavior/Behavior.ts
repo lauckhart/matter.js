@@ -9,6 +9,7 @@ import {
     AsyncObservable,
     EventEmitter,
     GeneratedClass,
+    Lifetime,
     MaybePromise,
     NotImplementedError,
     Observable,
@@ -180,8 +181,15 @@ export abstract class Behavior {
         return `${this.endpoint}.${this.type.id}`;
     }
 
-    join(...name: unknown[]) {
-        return (this as unknown as Internal)[BACKING].construction.join(...name);
+    /**
+     * Lifetime associated with this behavior type for {@link endpoint}.
+     */
+    get lifetime(): Lifetime.Owner {
+        return {
+            join: (...name: unknown[]) => {
+                return (this as unknown as Internal)[BACKING].construction.join(...name);
+            },
+        };
     }
 
     /**

@@ -344,6 +344,10 @@ export abstract class Session {
 
         return this.#lifetime;
     }
+
+    protected set lifetime(lifetime: Lifetime) {
+        this.#lifetime = lifetime;
+    }
 }
 
 export namespace Session {

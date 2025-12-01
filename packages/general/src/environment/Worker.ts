@@ -8,6 +8,7 @@ import { DiagnosticPresentation } from "#log/DiagnosticPresentation.js";
 import { Construction } from "#util/Construction.js";
 import { Cancellable, Destructable } from "#util/Lifecycle.js";
 import { Lifetime } from "#util/Lifetime.js";
+import { MaybePromise } from "#util/Promises.js";
 
 /**
  * An self-describing object that adheres to matter.js conventions for lifecycle and diagnostics.
@@ -59,7 +60,7 @@ export function Worker({
     lifetime,
 }: {
     name: string;
-    done?: PromiseLike<unknown>;
+    done?: MaybePromise<void>;
     lifetime?: Lifetime.Owner;
 }): Worker | undefined {
     if (!done) {

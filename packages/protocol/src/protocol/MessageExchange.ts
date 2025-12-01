@@ -254,6 +254,10 @@ export class MessageExchange {
         return this.channel.maxPayloadSize - MATTER_MESSAGE_OVERHEAD;
     }
 
+    join(...name: unknown[]) {
+        return this.#lifetime.join(...name);
+    }
+
     async onMessageReceived(message: Message, duplicate = false) {
         logger.debug("Message «", Message.diagnosticsOf(this.session, message, { duplicate }));
 

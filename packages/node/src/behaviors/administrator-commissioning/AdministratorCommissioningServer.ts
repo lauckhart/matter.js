@@ -237,7 +237,7 @@ export class AdministratorCommissioningServer extends AdministratorCommissioning
      * Closes the commissioning window per the matter specification.
      */
     async #closeCommissioningWindow() {
-        using _closing = this.join("closing commissioning window");
+        using _closing = this.lifetime.join("closing commissioning window");
         await this.env.get(DeviceCommissioner).endCommissioning();
     }
 
