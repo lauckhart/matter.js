@@ -714,7 +714,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             context => {
                 return actor(this.agentFor(context));
             },
-            { activity: this.#activity },
+            { activity: this.#activity, lifetime: this.construction },
         );
     }
 

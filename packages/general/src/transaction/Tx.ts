@@ -360,6 +360,10 @@ class Tx implements Transaction, Transaction.Finalization {
     }
 
     join(...name: unknown[]) {
+        if (this.#isolation === "ro") {
+            throw new ReadOnlyError();
+        }
+
         return this.#lifetime.join(...name);
     }
 

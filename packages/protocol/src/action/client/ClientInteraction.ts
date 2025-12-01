@@ -22,6 +22,7 @@ import {
     Environment,
     ImplementationError,
     isObject,
+    Lifetime,
     Logger,
     Minutes,
     RetrySchedule,
@@ -65,6 +66,7 @@ const DEFAULT_MINIMUM_RESPONSE_TIMEOUT_WITH_FAILSAFE = Seconds(30);
 export class ClientInteraction<SessionT extends InteractionSession = InteractionSession>
     implements Interactable<SessionT>
 {
+    readonly #lifetime: Lifetime;
     readonly #exchanges: ExchangeProvider;
     readonly #subscriptions: ClientSubscriptions;
     readonly #interactions = new BasicSet<Read | Write | Invoke | Subscribe>();
@@ -79,6 +81,17 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
             environment.get(Entropy),
             RetrySchedule.Configuration(SustainedSubscription.DefaultRetrySchedule, sustainRetries),
         );
+
+        this.#lifetime = environment.join("interactions");
+        Object.defineProperties(this.#lifetime.details, {
+            "# active": {
+                get: () => {
+                    return this.#interactions.size;
+                },
+
+                enumerable: true,
+            },
+        });
     }
 
     get session() {
@@ -86,6 +99,8 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
     }
 
     async close() {
+        using _closing = this.#lifetime.closing();
+
         this.#abort();
 
         while (this.#interactions.size) {
@@ -108,7 +123,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
             );
         }
 
-        await using context = await this.#begin(request, session);
+        await using context = await this.#begin("reading", request, session);
         const { checkAbort, messenger } = context;
 
         logger.debug("Read »", messenger.exchange.via, request);
@@ -144,7 +159,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
      * You must check each {@link WriteResult.AttributeStatus} to determine whether individual updates failed.
      */
     async write<T extends Write>(request: T, session?: SessionT): WriteResult<T> {
-        await using context = await this.#begin(request, session);
+        await using context = await this.#begin("writing", request, session);
         const { checkAbort, messenger } = context;
 
         if (request.timedRequest) {
@@ -207,7 +222,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
      * Invoke one or more commands.
      */
     async *invoke(request: ClientInvoke, session?: SessionT): DecodedInvokeResult {
-        await using context = await this.#begin(request, session);
+        await using context = await this.#begin("invoking", request, session);
         const { checkAbort, messenger } = context;
 
         if (request.timedRequest) {
@@ -342,7 +357,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         const peer = this.#exchanges.session.peerAddress;
 
         const subscribe = async (request: ClientSubscribe) => {
-            await using context = await this.#begin(request, session);
+            await using context = await this.#begin("subscribing", request, session);
             const { checkAbort, messenger } = context;
 
             logger.info(
@@ -424,7 +439,9 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         }
     }
 
-    async #begin(request: Read | Write | Invoke | Subscribe, session: SessionT | undefined) {
+    async #begin(what: string, request: Read | Write | Invoke | Subscribe, session: SessionT | undefined) {
+        using lifetime = this.#lifetime.join(what);
+
         if (this.#abort.aborted) {
             throw new ImplementationError("Client interaction unavailable after close");
         }
@@ -434,10 +451,18 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
 
         const messenger = await InteractionClientMessenger.create(this.#exchanges);
 
+        // Provide via dynamically so is up-to-date if exchange changes due to retry
+        Object.defineProperty(lifetime.details, "via", {
+            get() {
+                return messenger.exchange.via;
+            },
+        });
+
         const context: RequestContext = {
             checkAbort,
             messenger,
             [Symbol.asyncDispose]: async () => {
+                using _closing = lifetime.closing();
                 await messenger.close();
                 this.#interactions.delete(request);
             },
