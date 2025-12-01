@@ -45,7 +45,7 @@ export class Peer {
 
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
         this.#lifetime = context.lifetime.join(descriptor.address.toString());
-        this.#workers = new BasicMultiplex(this.#lifetime);
+        this.#workers = new BasicMultiplex();
 
         this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
             if (this.#isSaving) {
@@ -53,7 +53,7 @@ export class Peer {
             }
 
             this.#isSaving = true;
-            this.#workers.add(`persisting ${this}`, this.#save());
+            this.#workers.add(this.#save());
         });
         this.#context = context;
 
@@ -139,6 +139,7 @@ export class Peer {
     }
 
     async #save() {
+        using _lifetime = this.#lifetime.join("saving");
         this.#isSaving = false;
         await this.#context.savePeer(this);
     }

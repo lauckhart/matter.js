@@ -34,7 +34,7 @@ const logger = Logger.get("Environment");
  *
  * TODO - could remove global singletons by moving here
  */
-export class Environment {
+export class Environment implements Lifetime.Owner {
     #services?: Map<Environmental.ServiceType, Environmental.Service | null>;
     #name: string;
     #parent?: Environment;
@@ -49,9 +49,6 @@ export class Environment {
         this.#lifetime = (parent ?? Lifetime.process).join(Diagnostic.strong(name), "environment");
     }
 
-    /**
-     * Join the environment's lifetime.
-     */
     join(...name: unknown[]) {
         return this.#lifetime?.join(...name);
     }
@@ -249,11 +246,21 @@ export class Environment {
                 added(this, existing);
             }
 
-            events.added.on(service => this.runtime.add(`adding ${type.name}`, () => added(this, service)));
+            events.added.on(service =>
+                this.runtime.add(async () => {
+                    using _adding = this.join(`adding ${type.name}`);
+                    await added(this, service);
+                }),
+            );
         }
 
         if (deleted) {
-            events.deleted.on(service => this.runtime.add(`deleting ${type.name}`, () => deleted(this, service)));
+            events.deleted.on(service =>
+                this.runtime.add(async () => {
+                    using _deleting = this.join(`adding ${type.name}`);
+                    await deleted(this, service);
+                }),
+            );
         }
     }
 

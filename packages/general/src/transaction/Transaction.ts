@@ -218,7 +218,7 @@ export namespace Transaction {
 
     export interface Finalization {
         /**
-         * Finish the transaction.  If {@link result} is a promise this may result on commit or rollback.
+         * Finish the transaction.  If {@link result} is a promise this may result in commit or rollback.
          */
         resolve<T>(result: T): MaybePromise<Awaited<T>>;
 

@@ -71,7 +71,10 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     get mdnsAdvertiser() {
         if (!this.#mdnsAdvertiser) {
             const port = this.owner.state.network.operationalPort;
-            const options = this.owner.state.commissioning.mdns;
+            const options = {
+                lifetime: this.construction,
+                ...this.owner.state.commissioning.mdns,
+            };
             const crypto = this.owner.env.get(Crypto);
             const { server } = this.owner.env.get(MdnsService);
             this.#mdnsAdvertiser = new MdnsAdvertiser(crypto, server, { ...options, port });
@@ -111,7 +114,10 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     protected get bleAdvertiser() {
         if (this.#bleAdvertiser === undefined) {
             const { peripheralInterface } = this.owner.env.get(Ble);
-            const options = this.owner.state.commissioning.ble;
+            const options = {
+                lifetime: this.construction,
+                ...this.owner.state.commissioning.ble,
+            };
             this.#bleAdvertiser = new BleAdvertiser(peripheralInterface, options);
         }
         return this.#bleAdvertiser;
@@ -218,12 +224,12 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         this.ensureMdnsAdvertiser();
 
         if (this.#bleAdvertiser) {
-            this.owner.env.runtime.add("closing BLE advertiser", this.#deleteAdvertiser(this.#bleAdvertiser));
+            this.owner.env.runtime.add(this.#deleteAdvertiser(this.#bleAdvertiser));
             this.#bleAdvertiser = undefined;
         }
 
         if (this.#bleTransport) {
-            this.owner.env.runtime.add("clsoing BLE transport", this.#deleteTransport(this.#bleTransport));
+            this.owner.env.runtime.add(this.#deleteTransport(this.#bleTransport));
             this.#bleTransport = undefined;
         }
     }
@@ -324,7 +330,10 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         this.#groupNetworking = undefined;
 
         // Now all sessions are closed, so we wait for Advertiser to be gone
-        await advertisementShutdown;
+        {
+            using _lifetime = this.construction.join("shutting down");
+            await advertisementShutdown;
+        }
 
         {
             using _lifetime = this.construction.join("exchanges");

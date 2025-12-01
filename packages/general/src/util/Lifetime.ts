@@ -7,6 +7,7 @@
 import { Diagnostic } from "#log/Diagnostic.js";
 import { DiagnosticPresentation } from "#log/DiagnosticPresentation.js";
 import { DiagnosticSource } from "#log/DiagnosticSource.js";
+import { InternalError } from "#MatterError.js";
 import { Duration } from "#time/Duration.js";
 import "#time/StandardTime.js";
 import { Time } from "#time/Time.js";
@@ -26,7 +27,7 @@ export interface Lifetime extends Disposable, Diagnostic, Lifetime.Owner {
      *
      * Any diagnostic (so, any value) may serve as a name.
      */
-    readonly name: unknown;
+    name: unknown;
 
     /**
      * The time at which the lifetime began.
@@ -49,6 +50,13 @@ export interface Lifetime extends Disposable, Diagnostic, Lifetime.Owner {
     readonly zombie: boolean;
 
     /**
+     * The lifetime enclosing this lifetime.
+     *
+     * Only the process lifetime should have no owner.  This field is writable so you can move ownership of a lifetime.
+     */
+    owner?: Lifetime;
+
+    /**
      * Mark this lifetime as closing.
      *
      * Creates a sublifetime specifically for closing this lifetime.  This supports the common pattern of tracking the
@@ -63,8 +71,8 @@ export function Lifetime(...name: unknown[]) {
     return Lifetime.process.join(...name);
 }
 
-class LifetimeImplementation implements Lifetime {
-    #name: unknown[];
+class LifetimeImplementation implements Lifetime, Lifetime.Owner {
+    #name: unknown;
     #owner?: Lifetime;
     #startedAt: Timestamp;
     #details?: Record<string, unknown>;
@@ -75,7 +83,7 @@ class LifetimeImplementation implements Lifetime {
     declare [Diagnostic.presentation]: unknown;
 
     constructor(name: unknown[], owner?: Lifetime) {
-        this.#name = name;
+        this.#name = name.length > 1 ? name : name[0];
         this.#startedAt = Time.nowMs;
         this.#owner = owner;
 
@@ -95,6 +103,10 @@ class LifetimeImplementation implements Lifetime {
         return this.#name;
     }
 
+    set name(name: unknown) {
+        this.#name = name;
+    }
+
     get startedAt() {
         return this.#startedAt;
     }
@@ -105,6 +117,26 @@ class LifetimeImplementation implements Lifetime {
 
     get zombie() {
         return this.#zombie;
+    }
+
+    get owner() {
+        return this.#owner;
+    }
+
+    set owner(owner: Lifetime | undefined) {
+        if (!this.#owner) {
+            throw new InternalError("Cannot move ownership of root lifetime");
+        }
+
+        if (this.#owner === owner) {
+            return;
+        }
+
+        removeSpan(this.owner, this);
+
+        this.#owner = owner;
+
+        this.#owner?.spans.add(this);
     }
 
     join(...name: unknown[]): Lifetime {
@@ -135,7 +167,7 @@ class LifetimeImplementation implements Lifetime {
             });
         }
 
-        const header: unknown[] = [...this.#name];
+        const header: unknown[] = [this.#name];
 
         if (this.zombie) {
             header.push(Diagnostic.weak("(zombie)"));
@@ -169,10 +201,19 @@ class LifetimeImplementation implements Lifetime {
             return;
         }
 
-        this.#owner.spans?.delete(this);
-        if (this.#owner.zombie) {
-            this.#owner[Symbol.dispose]();
-        }
+        removeSpan(this.#owner, this);
+    }
+}
+
+function removeSpan(owner: Lifetime | undefined, span: Lifetime) {
+    if (!owner) {
+        return;
+    }
+
+    owner.spans.delete(span);
+    if (owner.zombie && !owner.spans?.size) {
+        removeSpan(owner.owner, owner);
+        owner[Symbol.dispose]();
     }
 }
 
@@ -180,14 +221,14 @@ export namespace Lifetime {
     /**
      * The lifetime of the system process.
      */
-    export const process: Lifetime = new LifetimeImplementation(["process"]);
+    export const process: Lifetime.Owner = new LifetimeImplementation(["process"]);
 
     /**
      * An object associated with a lifetime.
      */
     export interface Owner {
         /**
-         * Create a sublifetime.
+         * Create or move a sublifetime.
          */
         join(...name: unknown[]): Lifetime;
     }
@@ -209,4 +250,4 @@ export namespace Lifetime {
     export const owner = Symbol("owner");
 }
 
-DiagnosticSource.add(Lifetime.process);
+DiagnosticSource.add(Lifetime.process as Lifetime);

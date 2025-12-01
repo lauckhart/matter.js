@@ -38,9 +38,13 @@ export abstract class RemoteInterface {
         }
         this.#node = node;
         this.#lifetime = node.env.join(decamelize(this.constructor.name, " "));
-        this.#workers = new BasicMultiplex(this.#lifetime);
+        this.#workers = new BasicMultiplex();
         this.#address = address;
         this.#root = new ApiPath(address);
+    }
+
+    join(...name: unknown[]) {
+        return this.#lifetime.join(...name);
     }
 
     get root() {
@@ -106,8 +110,8 @@ export abstract class RemoteInterface {
         }
     }
 
-    protected addWorker(worker: Promise<void>, description: string) {
-        this.#workers.add(description, worker);
+    protected addWorker(worker: Promise<void>) {
+        this.#workers.add(worker);
     }
 
     static protocol = "";

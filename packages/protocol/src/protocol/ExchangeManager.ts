@@ -64,7 +64,7 @@ export class ExchangeManager {
 
     constructor(context: ExchangeManagerContext) {
         this.#lifetime = context.lifetime.join("exchanges");
-        this.#workers = new BasicMultiplex(this.#lifetime);
+        this.#workers = new BasicMultiplex();
         this.#transports = context.netInterface;
         this.#sessions = context.sessions;
         this.#exchangeCounter = new ExchangeCounter(context.entropy);
@@ -122,33 +122,40 @@ export class ExchangeManager {
             return;
         }
 
-        using _closing = this.#lifetime.closing();
+        using closing = this.#lifetime.closing();
 
         this.#isClosing = true;
 
-        const exchangesClosed = new BasicMultiplex(this.#lifetime, "closing exchanges");
+        const exchangesClosed = new BasicMultiplex();
 
         for (const exchange of this.#exchanges.values()) {
-            exchangesClosed.add(`closing exchange ${exchange.via}`, exchange.close(true));
+            exchangesClosed.add(exchange.close(true));
         }
 
-        await exchangesClosed;
+        {
+            using _closing = closing.join("exchanges");
+            await exchangesClosed;
+        }
 
         for (const listener of this.#listeners.keys()) {
             this.#deleteTransport(listener);
         }
 
         for (const protocol of this.#protocols.values()) {
-            this.#workers.add(`closing protocol ${protocol.id}`, protocol.close());
+            this.#workers.add(protocol.close());
         }
 
-        await this.#workers;
+        {
+            using _closing = closing.join("workers");
+            await this.#workers;
+        }
 
         this.#exchanges.clear();
         this.#observers.close();
     }
 
     async #onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
+        using _lifetime = this.#lifetime.join("receiving from", Diagnostic.strong(channel.name));
         const packet = MessageCodec.decodePacket(messageBytes);
         const bytes = Bytes.of(messageBytes);
         const aad = bytes.slice(0, bytes.length - packet.applicationPayload.byteLength); // Header+Extensions
@@ -233,7 +240,9 @@ export class ExchangeManager {
             exId: message.payloadHeader.exchangeId,
             via: channel.name,
         });
+
         if (exchange !== undefined) {
+            this.#lifetime.details.exchange = exchange.idStr;
             if (exchange.session.id !== packet.header.sessionId || (exchange.isClosing && !isStandaloneAck)) {
                 logger.debug(
                     exchange.via,
@@ -287,11 +296,13 @@ export class ExchangeManager {
                 }
 
                 const exchange = MessageExchange.fromInitialMessage(this.#messageExchangeContextFor(session), message);
+                this.#lifetime.details.exchange = exchange.idStr;
                 this.#addExchange(exchangeIndex, exchange);
                 await exchange.onMessageReceived(message);
                 await protocolHandler.onNewExchange(exchange, message);
             } else if (message.payloadHeader.requiresAck) {
                 const exchange = MessageExchange.fromInitialMessage(this.#messageExchangeContextFor(session), message);
+                this.#lifetime.details.exchange = exchange.idStr;
                 this.#addExchange(exchangeIndex, exchange);
                 await exchange.send(SecureMessageType.StandaloneAck, new Uint8Array(0), {
                     includeAcknowledgeMessageId: message.packetHeader.messageId,
@@ -345,7 +356,7 @@ export class ExchangeManager {
         // let's use the first entry in the Map as the oldest exchange and close it
         const exchangeToClose = sessionExchanges[0];
         logger.debug(exchangeToClose.via, "Closing oldest exchange");
-        this.#workers.add(`closing exchange ${exchangeToClose.id}`, exchangeToClose.close());
+        this.#workers.add(exchangeToClose.close());
     }
 
     calculateMaximumPeerResponseTimeMsFor(session: Session, expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
@@ -376,7 +387,7 @@ export class ExchangeManager {
                     return;
                 }
 
-                this.#workers.add(`processing message from ${socket.name}`, this.#onMessage(socket, data));
+                this.#workers.add(this.#onMessage(socket, data));
             }),
         );
     }
@@ -388,7 +399,7 @@ export class ExchangeManager {
         }
         this.#listeners.delete(netInterface);
 
-        this.#workers.add(`closing network listener`, listener.close());
+        this.#workers.add(listener.close());
     }
 
     #addSession(session: Session) {

@@ -39,7 +39,7 @@ export class MdnsService {
         const network = environment.get(Network);
         const rootEnvironment = environment.root;
         rootEnvironment.set(MdnsService, this);
-        rootEnvironment.runtime.add("mdns", this);
+        rootEnvironment.runtime.add(this);
 
         const vars = environment.get(VariableService);
         this.#enableIpv4 = vars.boolean("mdns.ipv4") ?? options?.ipv4 ?? true;
@@ -47,12 +47,13 @@ export class MdnsService {
 
         this.#construction = Construction(this, async () => {
             this.#socket = await MdnsSocket.create(network, {
+                lifetime: this.#construction,
                 enableIpv4: this.enableIpv4,
                 netInterface: this.limitedToNetInterface,
             });
 
-            this.#server = new MdnsServer(this.#socket);
-            this.#client = new MdnsClient(this.#socket);
+            this.#server = new MdnsServer(this.#socket, this.#construction);
+            this.#client = new MdnsClient(this.#socket, this.#construction);
         });
     }
 

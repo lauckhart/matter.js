@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { DiagnosticPresentation } from "#log/DiagnosticPresentation.js";
+import { LogFormat } from "#log/LogFormat.js";
 import { Logger } from "../log/Logger.js";
 import { ImplementationError } from "../MatterError.js";
 import { asError, errorOf } from "./Error.js";
@@ -90,7 +92,7 @@ export namespace Constructable {
 /**
  * The promise implementing by an {@link Constructable#construction}.
  */
-export interface Construction<T> extends Promise<T> {
+export interface Construction<T> extends Promise<T>, Lifetime.Owner {
     /**
      * If construction ends with an error, the error is saved here.
      */
@@ -140,11 +142,6 @@ export interface Construction<T> extends Promise<T> {
         this: This,
         ...args: A
     ): void;
-
-    /**
-     * Join {@link subject}'s lifetime.
-     */
-    join(...name: unknown[]): Lifetime;
 
     /**
      * Invoke destruction logic then move to destroyed status.
@@ -273,21 +270,7 @@ export function Construction<const T extends Constructable>(
         },
 
         join(...name: unknown[]) {
-            // If we are not in fact alive, join to a zombie lifetime.  Generally this shouldn't be called but if it is
-            // this allows us to handle without crashing
-            if (lifetime === undefined) {
-                const lifetime = joinOwner();
-                const span = lifetime.join(name);
-                lifetime[Symbol.dispose]();
-                return span;
-            }
-
-            // If destroying, join the "closing" lifetime
-            if (status === Lifecycle.Status.Destroying) {
-                return lifetime.closing().join(name);
-            }
-
-            return lifetime.join(name);
+            return activeLifetime().join(...name);
         },
 
         start<const T, const A extends [], const This extends Construction<Constructable.Deferred<T, A>>>(
@@ -724,6 +707,22 @@ export function Construction<const T extends Constructable>(
         };
     }
 
+    function activeLifetime() {
+        if (lifetime) {
+            if (status === Lifecycle.Status.Destroying) {
+                return lifetime.closing();
+            }
+
+            return lifetime;
+        }
+
+        // We are not in fact alive so create a zombie lifetime.  Generally this is a bug but if it happens this allows
+        // us to handle without crashing and properly track lifetime spans
+        const zombie = joinOwner();
+        zombie[Symbol.dispose]();
+        return zombie;
+    }
+
     function joinOwner() {
         const lifetime = Lifetime.of(subject);
         return lifetime.join(decamelize(nameOf(subject), " "));
@@ -785,6 +784,13 @@ function assertDeferred<T>(subject: Constructable<T>): asserts subject is Constr
 }
 
 function nameOf(subject: {}) {
+    if (DiagnosticPresentation.name in subject) {
+        const name = subject[DiagnosticPresentation.name];
+        if (name !== undefined) {
+            return LogFormat("plain")(name);
+        }
+    }
+
     if (subject.toString === Object.prototype.toString) {
         return subject.constructor.name;
     }

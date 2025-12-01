@@ -118,7 +118,7 @@ export class PaseCommissioner {
     /** Initialize the controller. */
     async start() {
         const runtime = this.environment.runtime;
-        runtime.add("pase commissioner", this);
+        runtime.add(this);
         if (this.controllerInstance === undefined) {
             this.controllerInstance = await this.initializeController();
         }

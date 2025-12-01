@@ -174,10 +174,7 @@ export class CommissioningServer extends Behavior {
     }
 
     #triggerFactoryReset() {
-        this.env.runtime.add(
-            `erasing ${this.endpoint.id}`,
-            (this.endpoint as ServerNode).erase().catch(e => MutexClosedError.accept(e)),
-        );
+        this.env.runtime.add((this.endpoint as ServerNode).erase().catch(e => MutexClosedError.accept(e)));
     }
 
     #monitorFailsafe(failsafe: FailsafeContext) {

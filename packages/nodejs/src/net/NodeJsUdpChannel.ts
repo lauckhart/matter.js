@@ -14,6 +14,7 @@ import {
     ImplementationError,
     isIPv4,
     isIPv6,
+    Lifetime,
     Logger,
     MAX_UDP_MESSAGE_SIZE,
     Millis,
@@ -81,63 +82,84 @@ function createDgramSocket(host: string | undefined, port: number | undefined, o
 }
 
 export class NodeJsUdpChannel implements UdpChannel {
+    readonly #lifetime: Lifetime;
     readonly #type: UdpSocketType;
     readonly #socket: dgram.Socket;
     readonly #netInterface: string | undefined;
 
-    static async create({ listeningPort, type, listeningAddress, netInterface, reuseAddress }: UdpChannelOptions) {
-        let dgramType: "udp4" | "udp6";
-        switch (type) {
-            case "udp":
-            case "udp6":
-                dgramType = "udp6";
-                break;
+    static async create({
+        lifetime: lifetimeOwner,
+        listeningPort,
+        type,
+        listeningAddress,
+        netInterface,
+        reuseAddress,
+    }: UdpChannelOptions) {
+        const name = `${listeningAddress?.includes(":") ? `[${listeningAddress}]` : (listeningAddress ?? "*")}:${listeningPort}`;
+        const lifetime = (lifetimeOwner ?? Lifetime.process).join("socket", Diagnostic.strong(name));
 
-            case "udp4":
-                dgramType = "udp4";
-                break;
+        try {
+            let dgramType: "udp4" | "udp6";
+            switch (type) {
+                case "udp":
+                case "udp6":
+                    dgramType = "udp6";
+                    break;
 
-            default:
-                throw new ImplementationError(`Unrecognized UDP socket type ${type}`);
-        }
+                case "udp4":
+                    dgramType = "udp4";
+                    break;
 
-        const socketOptions: dgram.SocketOptions = { type: dgramType };
-        if (type === "udp6") {
-            socketOptions.ipv6Only = true;
-        }
-
-        if (reuseAddress) {
-            socketOptions.reuseAddr = true;
-        }
-
-        const socket = await createDgramSocket(listeningAddress, listeningPort, socketOptions);
-        socket.setBroadcast(true);
-        let netInterfaceZone: string | undefined;
-        if (netInterface !== undefined) {
-            netInterfaceZone = NodeJsNetwork.getNetInterfaceZoneIpv6(netInterface);
-            let multicastInterface: string | undefined;
-            if (type === "udp4") {
-                multicastInterface = NodeJsNetwork.getMulticastInterfaceIpv4(netInterface);
-                if (multicastInterface === undefined) {
-                    throw new NoAddressAvailableError(`No IPv4 addresses on interface "${netInterface}"`);
-                }
-            } else {
-                if (netInterfaceZone === undefined) {
-                    throw new NoAddressAvailableError(`No IPv6 addresses on interface "${netInterface}"`);
-                }
-                multicastInterface = `::%${netInterfaceZone}`;
+                default:
+                    throw new ImplementationError(`Unrecognized UDP socket type ${type}`);
             }
-            logger.debug(
-                "Initialize multicast",
-                Diagnostic.dict({
-                    address: `${multicastInterface}:${listeningPort}`,
-                    interface: netInterface,
-                    type: type,
-                }),
-            );
-            socket.setMulticastInterface(multicastInterface);
+
+            const socketOptions: dgram.SocketOptions = { type: dgramType };
+            if (type === "udp6") {
+                socketOptions.ipv6Only = true;
+            }
+
+            if (reuseAddress) {
+                socketOptions.reuseAddr = true;
+            }
+
+            let socket;
+            {
+                using _creating = lifetime.join("creating");
+                socket = await createDgramSocket(listeningAddress, listeningPort, socketOptions);
+            }
+
+            socket.setBroadcast(true);
+            let netInterfaceZone: string | undefined;
+            if (netInterface !== undefined) {
+                netInterfaceZone = NodeJsNetwork.getNetInterfaceZoneIpv6(netInterface);
+                let multicastInterface: string | undefined;
+                if (type === "udp4") {
+                    multicastInterface = NodeJsNetwork.getMulticastInterfaceIpv4(netInterface);
+                    if (multicastInterface === undefined) {
+                        throw new NoAddressAvailableError(`No IPv4 addresses on interface "${netInterface}"`);
+                    }
+                } else {
+                    if (netInterfaceZone === undefined) {
+                        throw new NoAddressAvailableError(`No IPv6 addresses on interface "${netInterface}"`);
+                    }
+                    multicastInterface = `::%${netInterfaceZone}`;
+                }
+                logger.debug(
+                    "Initialize multicast",
+                    Diagnostic.dict({
+                        address: `${multicastInterface}:${listeningPort}`,
+                        interface: netInterface,
+                        type: type,
+                    }),
+                );
+                socket.setMulticastInterface(multicastInterface);
+            }
+            return new NodeJsUdpChannel(lifetime, type, socket, netInterfaceZone);
+        } catch (e) {
+            lifetime[Symbol.dispose]();
+            throw e;
         }
-        return new NodeJsUdpChannel(type, socket, netInterfaceZone);
     }
 
     readonly maxPayloadSize = MAX_UDP_MESSAGE_SIZE;
@@ -151,7 +173,8 @@ export class NodeJsUdpChannel implements UdpChannel {
     );
     readonly #sendsInProgress = new Map<Promise<void>, { sendMs: number; rejecter: (reason?: any) => void }>();
 
-    constructor(type: UdpSocketType, socket: dgram.Socket, netInterface?: string) {
+    constructor(lifetime: Lifetime, type: UdpSocketType, socket: dgram.Socket, netInterface?: string) {
+        this.#lifetime = lifetime;
         this.#type = type;
         this.#socket = socket;
         this.#netInterface = netInterface;
@@ -268,8 +291,9 @@ export class NodeJsUdpChannel implements UdpChannel {
     }
 
     async close() {
+        using _closing = this.#lifetime.closing();
         try {
-            this.#socket.close();
+            await new Promise<void>(resolve => this.#socket.close(resolve));
         } catch (error) {
             if (!(error instanceof Error) || error.message !== "Not running") {
                 logger.debug("Error on closing socket", error);

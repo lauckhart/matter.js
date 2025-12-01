@@ -379,6 +379,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
             );
 
             const subscription = new PeerSubscription({
+                lifetime: this.#subscriptions,
                 request,
                 peer,
                 closed: () => this.#subscriptions.delete(subscription),
@@ -393,6 +394,7 @@ export class ClientInteraction<SessionT extends InteractionSession = Interaction
         let subscription: ClientSubscription;
         if (request.sustain) {
             subscription = new SustainedSubscription({
+                lifetime: this.#subscriptions,
                 subscribe,
                 peer,
                 closed: () => this.#subscriptions.delete(subscription),

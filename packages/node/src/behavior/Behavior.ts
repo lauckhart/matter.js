@@ -180,6 +180,10 @@ export abstract class Behavior {
         return `${this.endpoint}.${this.type.id}`;
     }
 
+    join(...name: unknown[]) {
+        return (this as unknown as Internal)[BACKING].construction.join(...name);
+    }
+
     /**
      * Install a {@link Reactor}.
      *
