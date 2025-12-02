@@ -146,6 +146,14 @@ export interface Transaction extends Lifetime.Owner {
     rollback(): MaybePromise;
 
     /**
+     * Destroy the transaction without proper commit or rollback.
+     *
+     * This guarantees a synchronous resolution but will result in an error if {@link Transaction#status} is not shared,
+     * read-only or destroyed.
+     */
+    [Symbol.dispose](): void;
+
+    /**
      * Wait for a set of transactions to complete.
      *
      * @param others the set of transactions to await; cleared on return

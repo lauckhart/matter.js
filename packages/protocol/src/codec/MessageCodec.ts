@@ -89,7 +89,7 @@ export namespace Message {
                 ...log,
                 id: Message.identityOf(session, message),
                 type,
-                acked: ackedMessageId,
+                acked: ackedMessageId === undefined ? undefined : hex.fixed(ackedMessageId, 8),
                 msgFlags: Diagnostic.asFlags({
                     reqAck: requiresAck,
                     dup: duplicate,

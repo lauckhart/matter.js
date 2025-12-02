@@ -97,6 +97,7 @@ export class NodeJsUdpChannel implements UdpChannel {
     }: UdpChannelOptions) {
         const name = `${listeningAddress?.includes(":") ? `[${listeningAddress}]` : (listeningAddress ?? "*")}:${listeningPort}`;
         const lifetime = (lifetimeOwner ?? Lifetime.process).join("socket", Diagnostic.strong(name));
+        lifetime.details.intf = netInterface;
 
         try {
             let dgramType: "udp4" | "udp6";
