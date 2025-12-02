@@ -17,6 +17,7 @@ import {
     Environmental,
     hex,
     ImplementationError,
+    Lifetime,
     Logger,
     MatterFlowError,
     ObserverGroup,
@@ -43,24 +44,28 @@ const MAXIMUM_CONCURRENT_EXCHANGES_PER_SESSION = 5;
  * Interfaces {@link ExchangeManager} with other components.
  */
 export interface ExchangeManagerContext {
+    lifetime: Lifetime.Owner;
     entropy: Entropy;
     netInterface: ConnectionlessTransportSet;
     sessions: SessionManager;
 }
 
 export class ExchangeManager {
+    readonly #lifetime: Lifetime;
     readonly #transports: ConnectionlessTransportSet;
     readonly #sessions: SessionManager;
     readonly #exchangeCounter: ExchangeCounter;
     readonly #exchanges = new Map<number, MessageExchange>();
     readonly #protocols = new Map<number, ProtocolHandler>();
     readonly #listeners = new Map<ConnectionlessTransport, ConnectionlessTransport.Listener>();
-    readonly #workers = new BasicMultiplex();
+    readonly #workers: BasicMultiplex;
     readonly #observers = new ObserverGroup(this);
     readonly #sessionObservers = new Map<Session, ObserverGroup>();
     #isClosing = false;
 
     constructor(context: ExchangeManagerContext) {
+        this.#lifetime = context.lifetime.join("exchanges");
+        this.#workers = new BasicMultiplex();
         this.#transports = context.netInterface;
         this.#sessions = context.sessions;
         this.#exchangeCounter = new ExchangeCounter(context.entropy);
@@ -77,6 +82,7 @@ export class ExchangeManager {
 
     static [Environmental.create](env: Environment) {
         const instance = new ExchangeManager({
+            lifetime: env,
             entropy: env.get(Entropy),
             netInterface: env.get(ConnectionlessTransportSet),
             sessions: env.get(SessionManager),
@@ -116,31 +122,42 @@ export class ExchangeManager {
         if (this.#isClosing) {
             return;
         }
+
+        using closing = this.#lifetime.closing();
+
         this.#isClosing = true;
 
+        const exchangesClosed = new BasicMultiplex();
+
         for (const exchange of this.#exchanges.values()) {
-            this.#workers.add(exchange.close(true), `closing exchange ${exchange.via}`);
+            exchangesClosed.add(exchange.close(true));
         }
 
-        await this.#workers;
-
-        for (const listeners of this.#listeners.keys()) {
-            this.#deleteTransport(listeners);
+        {
+            using _closing = closing.join("exchanges");
+            await exchangesClosed;
         }
 
-        await this.#workers;
+        for (const listener of this.#listeners.keys()) {
+            this.#deleteTransport(listener);
+        }
 
         for (const protocol of this.#protocols.values()) {
-            await protocol.close();
+            this.#workers.add(protocol.close());
         }
 
-        await this.#workers;
+        {
+            using _closing = closing.join("workers");
+            await this.#workers;
+        }
 
         this.#exchanges.clear();
         this.#observers.close();
     }
 
     async #onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
+        using _lifetime = this.#lifetime.join("receiving from", Diagnostic.strong(channel.name));
+
         const packet = MessageCodec.decodePacket(messageBytes);
         const bytes = Bytes.of(messageBytes);
         const aad = bytes.slice(0, bytes.length - packet.applicationPayload.byteLength); // Header+Extensions
@@ -191,7 +208,7 @@ export class ExchangeManager {
             }
 
             let key: Bytes;
-            ({ session, message, key } = await this.#sessions.groupSessionFromPacket(packet, aad));
+            ({ session, message, key } = this.#sessions.groupSessionFromPacket(packet, aad));
 
             try {
                 session.updateMessageCounter(messageId, packet.header.sourceNodeId, key);
@@ -226,7 +243,9 @@ export class ExchangeManager {
             exId: message.payloadHeader.exchangeId,
             via: channel.name,
         });
+
         if (exchange !== undefined) {
+            this.#lifetime.details.exchange = exchange.idStr;
             if (exchange.session.id !== packet.header.sessionId || (exchange.isClosing && !isStandaloneAck)) {
                 logger.debug(
                     exchange.via,
@@ -280,11 +299,13 @@ export class ExchangeManager {
                 }
 
                 const exchange = MessageExchange.fromInitialMessage(this.#messageExchangeContextFor(session), message);
+                this.#lifetime.details.exchange = exchange.idStr;
                 this.#addExchange(exchangeIndex, exchange);
                 await exchange.onMessageReceived(message);
                 await protocolHandler.onNewExchange(exchange, message);
             } else if (message.payloadHeader.requiresAck) {
                 const exchange = MessageExchange.fromInitialMessage(this.#messageExchangeContextFor(session), message);
+                this.#lifetime.details.exchange = exchange.idStr;
                 this.#addExchange(exchangeIndex, exchange);
                 await exchange.send(SecureMessageType.StandaloneAck, new Uint8Array(0), {
                     includeAcknowledgeMessageId: message.packetHeader.messageId,
@@ -338,7 +359,7 @@ export class ExchangeManager {
         // let's use the first entry in the Map as the oldest exchange and close it
         const exchangeToClose = sessionExchanges[0];
         logger.debug(exchangeToClose.via, "Closing oldest exchange");
-        this.#workers.add(exchangeToClose.close(), `closing exchange ${exchangeToClose.id}`);
+        this.#workers.add(exchangeToClose.close());
     }
 
     calculateMaximumPeerResponseTimeMsFor(session: Session, expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
@@ -369,7 +390,7 @@ export class ExchangeManager {
                     return;
                 }
 
-                this.#workers.add(this.#onMessage(socket, data), `receiving from ${socket.name}`);
+                this.#workers.add(this.#onMessage(socket, data));
             }),
         );
     }
@@ -381,7 +402,7 @@ export class ExchangeManager {
         }
         this.#listeners.delete(netInterface);
 
-        this.#workers.add(listener.close(), `closing network listener`);
+        this.#workers.add(listener.close());
     }
 
     #addSession(session: Session) {
