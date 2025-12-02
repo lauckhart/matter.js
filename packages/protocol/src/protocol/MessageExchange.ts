@@ -102,7 +102,7 @@ export interface MessageExchangeContext {
 /**
  * A Matter "message exchange" is a sequence of messages associated with a single interaction.
  *
- * TODO - rewrite using promises and abort controller
+ * TODO - rewrite using sleeps and abort controller
  */
 export class MessageExchange {
     static fromInitialMessage(context: MessageExchangeContext, initialMessage: Message) {
@@ -147,7 +147,7 @@ export class MessageExchange {
         }
     });
     #sentMessageToAck: Message | undefined;
-    #sentMessageAckSuccess: ((...args: any[]) => void) | undefined;
+    #sentMessageAckSuccess: ((message: Message | undefined) => void) | undefined;
     #sentMessageAckFailure: ((error?: Error) => void) | undefined;
     #retransmissionTimer: Timer | undefined;
     #retransmissionCounter = 0;
@@ -432,7 +432,7 @@ export class MessageExchange {
             payload,
         };
 
-        let ackPromise: Promise<Message> | undefined;
+        let ackPromise: Promise<Message | undefined> | undefined;
         if (this.session.usesMrp && message.payloadHeader.requiresAck && !disableMrpLogic) {
             this.#sentMessageToAck = message;
             this.#retransmissionTimer = Time.getTimer(
@@ -440,7 +440,7 @@ export class MessageExchange {
                 this.channel.getMrpResubmissionBackOffTime(0),
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
-            const { promise, resolver, rejecter } = createPromise<Message>();
+            const { promise, resolver, rejecter } = createPromise<Message | undefined>();
             ackPromise = promise;
             this.#sentMessageAckSuccess = resolver;
             this.#sentMessageAckFailure = rejecter;
@@ -451,16 +451,21 @@ export class MessageExchange {
         if (ackPromise !== undefined) {
             this.#retransmissionCounter = 0;
             this.#retransmissionTimer?.start();
-            // Await Response to be received (or Message retransmit limit reached which rejects the promise)
+
+            // Await response.  Resolves with message when received, undefined when aborted, and rejects on timeout
             const responseMessage = await ackPromise;
+
             this.#sentMessageAckSuccess = undefined;
             this.#sentMessageAckFailure = undefined;
-            // If we only expect an Ack without data but got data, throw an error
-            const {
-                payloadHeader: { protocolId, messageType },
-            } = responseMessage;
-            if (expectAckOnly && !SecureMessageType.isStandaloneAck(protocolId, messageType)) {
-                throw new UnexpectedMessageError("Expected ack only", this.session, responseMessage);
+
+            if (responseMessage) {
+                // If we only expect an Ack without data but got data, throw an error
+                const {
+                    payloadHeader: { protocolId, messageType },
+                } = responseMessage;
+                if (expectAckOnly && !SecureMessageType.isStandaloneAck(protocolId, messageType)) {
+                    throw new UnexpectedMessageError("Expected ack only", this.session, responseMessage);
+                }
             }
         }
     }
@@ -690,9 +695,12 @@ export class MessageExchange {
         using _closing = this.#lifetime.closing();
 
         this.#retransmissionTimer?.stop();
+        this.#sentMessageAckSuccess?.(undefined);
+
         this.#closeTimer?.stop();
         this.#timedInteractionTimer?.stop();
         this.#messagesQueue.close();
+
         await this.#closed.emit(true);
     }
 
