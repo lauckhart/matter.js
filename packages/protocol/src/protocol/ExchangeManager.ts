@@ -15,6 +15,7 @@ import {
     Entropy,
     Environment,
     Environmental,
+    hex,
     ImplementationError,
     Lifetime,
     Logger,
@@ -156,6 +157,7 @@ export class ExchangeManager {
 
     async #onMessage(channel: Channel<Bytes>, messageBytes: Bytes) {
         using _lifetime = this.#lifetime.join("receiving from", Diagnostic.strong(channel.name));
+
         const packet = MessageCodec.decodePacket(messageBytes);
         const bytes = Bytes.of(messageBytes);
         const aad = bytes.slice(0, bytes.length - packet.applicationPayload.byteLength); // Header+Extensions
@@ -180,13 +182,14 @@ export class ExchangeManager {
             }
 
             if (session === undefined) {
-                throw new MatterFlowError(
-                    `Cannot find a session for ID ${packet.header.sessionId}${
+                logger.warn(
+                    `Ignoring message for unknown session ${Session.idStrOf(packet)}${
                         packet.header.sourceNodeId !== undefined
-                            ? ` and source NodeId ${packet.header.sourceNodeId}`
+                            ? ` from node ${hex.fixed(packet.header.sourceNodeId, 16)}`
                             : ""
                     }`,
                 );
+                return;
             }
 
             message = session.decode(packet, aad);

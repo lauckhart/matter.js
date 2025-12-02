@@ -64,8 +64,11 @@ export abstract class FailsafeContext {
 
             // If ExpiryLengthSeconds is non-zero and the fail-safe timer was not currently armed, then the fail-safe
             // timer SHALL be armed for that duration.
-            this.#failsafe = new FailsafeTimer(this.#associatedFabric, expiryLength, maxCumulativeFailsafe, () =>
-                this.#failSafeExpired(),
+            this.#failsafe = new FailsafeTimer(
+                this.#associatedFabric,
+                expiryLength,
+                maxCumulativeFailsafe,
+                this.#failSafeExpired.bind(this),
             );
             logger.debug(`Arm failSafe timer for ${Duration.format(expiryLength)}`);
 
@@ -79,9 +82,9 @@ export abstract class FailsafeContext {
         });
     }
 
-    async extend(fabric: Fabric | undefined, expiryLength: Duration) {
+    async extend(fabric: Fabric | undefined, expiryLength: Duration, currentExchange?: MessageExchange) {
         await this.#construction;
-        await this.#failsafe?.reArm(fabric, expiryLength);
+        await this.#failsafe?.reArm(fabric, expiryLength, currentExchange);
         if (expiryLength > 0) {
             logger.debug(`Extend failSafe timer for ${Duration.format(expiryLength)}`);
         }
@@ -263,16 +266,16 @@ export abstract class FailsafeContext {
         return this.#associatedFabric;
     }
 
-    async #failSafeExpired() {
+    async #failSafeExpired(currentExchange?: MessageExchange) {
         logger.info("Failsafe timer expired; resetting fabric builder");
 
-        await this.close();
+        await this.close(currentExchange);
     }
 
     protected async rollback(currentExchange?: MessageExchange) {
         if (this.fabricIndex !== undefined && !this.#forUpdateNoc) {
             logger.debug(`Revoking fabric index ${this.fabricIndex}`);
-            await this.#associatedFabric?.delete();
+            await this.#associatedFabric?.delete(currentExchange);
         }
 
         // On expiry of the fail-safe timer, the following actions SHALL be performed in order:

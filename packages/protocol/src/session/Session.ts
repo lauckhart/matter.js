@@ -56,6 +56,7 @@ export abstract class Session {
     #closing = ObservableValue();
     #gracefulClose = AsyncObservable<[]>();
     readonly #exchanges = new Set<MessageExchange>();
+    protected deferredClose = false;
 
     protected readonly idleInterval: Duration;
     protected readonly activeInterval: Duration;
@@ -235,7 +236,7 @@ export abstract class Session {
      * Note that with current design we may not have fully removed the session once close returns because we defer the
      * close if there are active exchanges.
      */
-    async initiateClose(shutdownLogic?: () => Promise<boolean | void>): Promise<void> {
+    async initiateClose(shutdownLogic?: () => Promise<void>) {
         if (this.isClosing) {
             return;
         }
@@ -244,8 +245,9 @@ export abstract class Session {
 
         this.#closing.emit(true);
 
-        if (await shutdownLogic?.()) {
-            // Return of true indicates that close is deferred
+        await shutdownLogic?.();
+
+        if (this.deferredClose && this.hasActiveExchanges) {
             return;
         }
 

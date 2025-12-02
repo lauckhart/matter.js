@@ -51,7 +51,6 @@ export class NodeSession extends SecureSession {
     readonly type = SessionType.Unicast;
     readonly #closedByPeer = AsyncObservableValue();
     #isPeerLost = false;
-    #deferredClose = false;
 
     // TODO - currently server specific; should move out or be integrated with client
     readonly #subscriptions = new BasicSet<Subscription>();
@@ -298,15 +297,14 @@ export class NodeSession extends SecureSession {
      *
      * A final exchange will be opened to notify the peer of closure unless the peer is marked as lost.
      */
-    override async initiateClose(shutdownLogic?: () => Promise<boolean | void>) {
+    override async initiateClose(shutdownLogic?: () => Promise<void>) {
         await super.initiateClose(async () => {
-            const defer = await shutdownLogic?.();
+            await shutdownLogic?.();
 
             // If there are active exchanges defer closing until they complete
-            if (defer || this.hasActiveExchanges) {
+            if (this.hasActiveExchanges) {
                 logger.debug(this.via, "Session ends when exchanges end");
-                this.#deferredClose = true;
-                return true;
+                this.deferredClose = true;
             }
         });
     }
@@ -320,8 +318,8 @@ export class NodeSession extends SecureSession {
         super.addExchange(exchange);
         exchange.closed.on(async () => {
             this.exchanges.delete(exchange);
-            if (this.#deferredClose && !this.exchanges.size) {
-                this.#deferredClose = false;
+            if (this.deferredClose && !this.exchanges.size) {
+                this.deferredClose = false;
                 await this.close();
             }
         });
