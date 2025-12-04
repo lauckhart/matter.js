@@ -6,6 +6,7 @@
 
 import { Subject } from "#action/server/Subject.js";
 import { DecodedMessage, DecodedPacket, Message, MessageCodec, Packet, SessionType } from "#codec/MessageCodec.js";
+import { Marker } from "#common/Marker.js";
 import { Fabric } from "#fabric/Fabric.js";
 import {
     AsyncObservableValue,
@@ -230,7 +231,7 @@ export class NodeSession extends SecureSession {
     }
 
     get via() {
-        return Diagnostic.via(`${this.peerAddress.toString()}/${hex.word(this.id)}`);
+        return Diagnostic.via(`${this.peerAddress.toString()}${Marker.SESSION}${hex.word(this.id)}`);
     }
 
     get peerSessionId(): number {

@@ -5,6 +5,7 @@
  */
 
 import { Message, PacketHeader, SessionType } from "#codec/MessageCodec.js";
+import { Marker } from "#common/Marker.js";
 import {
     AsyncObservableValue,
     Bytes,
@@ -711,10 +712,10 @@ export class MessageExchange {
 
     get via() {
         if (this.session === undefined) {
-            return Diagnostic.via(`exchange#${this.idStr}`);
+            return Diagnostic.via(`${Marker.EXCHANGE}${this.idStr}`);
         }
 
-        return Diagnostic.via(`${this.session.via}:${this.idStr}`);
+        return Diagnostic.via(`${this.session.via}${Marker.EXCHANGE}${this.idStr}`);
     }
 }
 

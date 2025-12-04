@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Marker } from "#common/Marker.js";
 import { Bytes, Crypto, Diagnostic, hex, MatterFlowError } from "#general";
 import { NoAssociatedFabricError } from "#protocol/errors.js";
 import { NodeId } from "#types";
@@ -57,7 +58,7 @@ export class UnsecuredSession extends Session {
     }
 
     get via() {
-        return Diagnostic.via(`unsecured#${hex.fixed(this.#initiatorNodeId, 16)}`);
+        return Diagnostic.via(`${Marker.SESSION}unsecured#${hex.fixed(this.#initiatorNodeId, 16)}`);
     }
 
     get id(): number {
