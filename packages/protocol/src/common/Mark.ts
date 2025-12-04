@@ -7,7 +7,9 @@
 /**
  * Visual demarcators for specific log elements.
  */
-export namespace Marker {
+export namespace Mark {
+    export const INBOUND = "«";
+    export const OUTBOUND = "»";
     export const SESSION = "⚐"; // Makes more sense but renders poorly: "⚭"
     export const EXCHANGE = "⇵";
     export const MESSAGE = "✉";

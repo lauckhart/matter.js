@@ -5,7 +5,7 @@
  */
 
 import { Message, PacketHeader, SessionType } from "#codec/MessageCodec.js";
-import { Marker } from "#common/Marker.js";
+import { Mark } from "#common/Mark.js";
 import {
     AsyncObservableValue,
     Bytes,
@@ -182,7 +182,7 @@ export class MessageExchange {
         const { session } = context;
         logger.debug(
             "New exchange",
-            isInitiator ? "»" : "«",
+            isInitiator ? Mark.OUTBOUND : Mark.INBOUND,
             this.via,
             Diagnostic.dict({
                 protocol: this.#protocolId,
@@ -260,7 +260,7 @@ export class MessageExchange {
     }
 
     async onMessageReceived(message: Message, duplicate = false) {
-        logger.debug("Message «", Message.diagnosticsOf(this.session, message, { duplicate }));
+        logger.debug("Message", Mark.INBOUND, Message.diagnosticsOf(this.session, message, { duplicate }));
 
         // Adjust the incoming message when ack was required, but this exchange does not use it to skip all relevant logic
         if (message.payloadHeader.requiresAck && !this.session.usesMrp) {
@@ -606,7 +606,8 @@ export class MessageExchange {
         }
 
         logger.debug(
-            "Starting timed interaction «",
+            "Starting timed interaction",
+            Mark.INBOUND,
             this.channel.name,
             Diagnostic.dict({ exId: this.#exchangeId, timeout: Duration.format(timeout) }),
         );
@@ -712,10 +713,10 @@ export class MessageExchange {
 
     get via() {
         if (this.session === undefined) {
-            return Diagnostic.via(`${Marker.EXCHANGE}${this.idStr}`);
+            return Diagnostic.via(`${Mark.EXCHANGE}${this.idStr}`);
         }
 
-        return Diagnostic.via(`${this.session.via}${Marker.EXCHANGE}${this.idStr}`);
+        return Diagnostic.via(`${this.session.via}${Mark.EXCHANGE}${this.idStr}`);
     }
 }
 
