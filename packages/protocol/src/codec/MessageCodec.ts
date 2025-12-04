@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Marker } from "#common/Marker.js";
 import {
     Bytes,
     DataReader,
@@ -68,7 +69,7 @@ export namespace Message {
         { id: sessionId }: Session,
         { packetHeader: { messageId }, payloadHeader: { exchangeId } }: Message,
     ) {
-        return `${hex.word(sessionId)}:${hex.word(exchangeId)}:${hex.fixed(messageId, 8)}`;
+        return `${Marker.SESSION}${hex.word(sessionId)}${Marker.EXCHANGE}${hex.word(exchangeId)}${Marker.MESSAGE}${hex.fixed(messageId, 8)}`;
     }
 
     export function diagnosticsOf(session: Session, message: Message, logContext?: ExchangeLogContext) {
