@@ -13,6 +13,7 @@ import {
     hex,
     Hours,
     InternalError,
+    Lifetime,
     Logger,
     MatterError,
     Millis,
@@ -122,10 +123,10 @@ export interface ServerSubscriptionContext {
  * Implements the server side of a single subscription.
  */
 export class ServerSubscription implements Subscription {
+    #lifetime?: Lifetime;
     readonly #context: ServerSubscriptionContext;
 
     #id: SubscriptionId;
-    #isClosed = false;
     #isCanceledByPeer = false;
     #request: Omit<SubscribeRequest, "interactionModelRevision" | "keepSubscriptions">;
     #cancelled = AsyncObservable<[subscription: Subscription]>();
@@ -195,16 +196,16 @@ export class ServerSubscription implements Subscription {
         return this.#context.session;
     }
 
+    get request() {
+        return this.#request;
+    }
+
     get isClosed() {
-        return this.#isClosed;
+        return this.#lifetime === undefined || this.#lifetime.isClosed;
     }
 
     get isCanceledByPeer() {
         return this.#isCanceledByPeer;
-    }
-
-    get request() {
-        return this.#request;
     }
 
     get cancelled() {
@@ -227,7 +228,7 @@ export class ServerSubscription implements Subscription {
 
     async handlePeerCancel() {
         this.#isCanceledByPeer = true;
-        await this.#cancel(true);
+        await this.close(true);
     }
 
     #determineSendingIntervals(
@@ -350,6 +351,7 @@ export class ServerSubscription implements Subscription {
     activate() {
         this.session.subscriptions.add(this);
         logger.debug(this.session.via, "New subscription", Diagnostic.strong(hex.fixed(this.#id, 8)));
+        this.#lifetime = this.#context.session.join("subscription", Diagnostic.strong(this.#id));
 
         // We do not need these data anymore, so we can free some memory
         if (this.request.eventFilters !== undefined) this.request.eventFilters.length = 0;
@@ -424,7 +426,9 @@ export class ServerSubscription implements Subscription {
      * Determine all attributes that have changed since the last update and send them out to the subscriber.
      */
     async #sendUpdate(onlyWithData = false) {
-        while (true) {
+        using updating = this.#lifetime?.join("updating");
+
+        while (this.#lifetime && !this.#lifetime.isClosed) {
             // Get all outstanding updates, make sure the order is correct per endpoint and cluster
             const attributeFilter = this.#outstandingAttributeUpdates;
             this.#outstandingAttributeUpdates = undefined;
@@ -433,19 +437,21 @@ export class ServerSubscription implements Subscription {
             this.#outstandingEventsMinNumber = undefined;
 
             if (onlyWithData && attributeFilter === undefined && eventsMinNumber === undefined) {
-                return;
+                break;
             }
 
             this.#lastUpdateTime = Time.nowMs;
 
             try {
-                if (await this.#sendUpdateMessage(attributeFilter, eventsMinNumber, onlyWithData)) {
+                using sending = updating?.join("sending");
+                if (await this.#sendUpdateMessage(sending, attributeFilter, eventsMinNumber, onlyWithData)) {
                     this.#sendUpdateErrorCounter = 0;
                 }
             } catch (error) {
-                if (this.isClosed) {
+                if (!this.#lifetime?.isClosed) {
                     // No need to care about resubmissions when the server is closing
-                    return;
+                    // TODO - implement proper abort so we don't need to ignore errors
+                    break;
                 }
 
                 this.#sendUpdateErrorCounter++;
@@ -481,6 +487,7 @@ export class ServerSubscription implements Subscription {
                     ) {
                         // Let's consider this subscription as dead and wait for a reconnect.  We handle as if the
                         // controller cancelled
+                        using _messaging = updating?.join("canceling");
                         this.#isCanceledByPeer = true;
                         await this.#cancel();
                         break;
@@ -494,9 +501,9 @@ export class ServerSubscription implements Subscription {
                 break;
             }
 
-            logger.debug("Sending delayed update immediately after last one was sent.");
+            logger.debug("Sending delayed update immediately after last one was sent");
             this.#sendNextUpdateImmediately = false;
-            onlyWithData = true; // In subsequent iterations only send if non-empty
+            onlyWithData = true; // Send but only if non-empty
         }
     }
 
@@ -642,24 +649,27 @@ export class ServerSubscription implements Subscription {
      * Closes the subscription and flushes all outstanding data updates if requested.
      */
     async close(flush = false) {
-        if (this.isClosed) {
+        if (this.#lifetime?.isClosing) {
             return;
         }
-        this.#isClosed = true;
 
         await this.#cancel(flush);
 
         if (this.#currentUpdatePromise) {
+            using _waiting = this.#lifetime?.closing()?.join("waiting");
             await this.#currentUpdatePromise;
         }
     }
 
     async #cancel(flush = false) {
+        using closing = this.#lifetime?.closing();
+
         this.#sendUpdatesActivated = false;
 
         this.#changeHandlers.close();
 
         if (flush) {
+            using _flushing = closing?.join("flushing");
             await this.#flush();
         }
 
@@ -730,6 +740,7 @@ export class ServerSubscription implements Subscription {
     }
 
     async #sendUpdateMessage(
+        lifetime: Lifetime | undefined,
         attributeFilter: DirtyState.ForCluster | undefined,
         eventsMinNumber: EventNumber | undefined,
         onlyWithData: boolean,
@@ -741,6 +752,7 @@ export class ServerSubscription implements Subscription {
 
         try {
             if (attributeFilter === undefined && eventsMinNumber === undefined) {
+                using _sending = lifetime?.join("sending keepalive");
                 await messenger.sendDataReport({
                     baseDataReport: {
                         suppressResponse: true, // suppressResponse true for empty DataReports
@@ -751,6 +763,7 @@ export class ServerSubscription implements Subscription {
                     waitForAck: !this.isClosed, // Do not wait for ack when closed
                 });
             } else {
+                using _sending = lifetime?.join("sending data");
                 // TODO: Add correct handling for reports that would have data but in the end not send any because of
                 //  filtered out. Correct handling needs refactoring to create messenger and exchange on the fly
                 //  when data are there.
@@ -770,13 +783,16 @@ export class ServerSubscription implements Subscription {
             if (StatusResponseError.is(error, StatusCode.InvalidSubscription, StatusCode.Failure)) {
                 logger.info(`Subscription ${this.subscriptionId} cancelled by peer`);
                 this.#isCanceledByPeer = true;
+                using _canceling = lifetime?.join("canceling");
                 await this.#cancel();
             } else {
                 StatusResponseError.accept(error);
                 logger.info(`Subscription ${this.subscriptionId} update failed:`, error);
+                using _canceling = lifetime?.join("canceling");
                 await this.#cancel();
             }
         } finally {
+            using _closing = lifetime?.join("closing messenger");
             await messenger.close();
         }
         return true;
