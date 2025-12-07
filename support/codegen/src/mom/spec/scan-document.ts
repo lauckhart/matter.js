@@ -12,10 +12,10 @@ import { Str } from "./html-translators.js";
 import { scanTables } from "./scan-tables.js";
 import { HtmlReference, Table } from "./spec-types.js";
 
-function findNextLink(html: Document) {
+export function nextPathOf(html: Document, path: string) {
     for (const a of html.querySelectorAll(".top_nav a")) {
         if (a.textContent === "Next >") {
-            return a as HTMLAnchorElement;
+            return join(dirname(path), (a as HTMLAnchorElement).href);
         }
     }
 }
@@ -39,19 +39,16 @@ export function* scanDocument(docRef: HtmlReference) {
     };
 
     // Scan the index page
-    let path = docRef.path;
+    let path: string | undefined = docRef.path;
     let html = loadHtml(path);
     yield* scanPage(docRef, html);
+    path = nextPathOf(html, path);
 
     // Scan all subpages referenced from the index page
-    while (true) {
-        const link = findNextLink(html);
-        if (!link) {
-            break;
-        }
-        path = join(dirname(path), link.href);
+    while (path) {
         html = loadHtml(path);
-        yield* scanPage({ ...docRef, path: path }, html);
+        yield* scanPage({ ...docRef, path }, html);
+        path = nextPathOf(html, path);
     }
 
     // Handle final emit outside of scanPage

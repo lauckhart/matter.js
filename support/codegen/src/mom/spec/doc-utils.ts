@@ -9,9 +9,10 @@ import { Specification } from "#model";
 import { JSDOM } from "jsdom";
 import { readFileSync } from "node:fs";
 import { Str } from "./html-translators.js";
+import { nextPathOf } from "./scan-document.js";
 import { HtmlReference } from "./spec-types.js";
 
-const logger = Logger.get("scan-index");
+const logger = Logger.get("doc-utils");
 
 export const DEFAULT_MATTER_VERSION = Specification.REVISION;
 
@@ -52,14 +53,19 @@ export function loadHtml(path: string) {
 
 // Read an index file to find the portions of the spec we care about
 export function identifyDocument(path: string): IndexDetail {
-    const source = loadHtml(path);
-    let titleEl: Element | null | undefined = source.querySelector("h1");
+    let source = loadHtml(path);
+    let titleEl = findTitle(source);
 
-    if (!titleEl) {
-        titleEl = findTitleWithoutHeader(source);
+    // Title may be on the second page as of Matter 1.5, though may just be an Acrobat change
+    if (titleEl === undefined) {
+        const nextPath = nextPathOf(source, path);
+        if (nextPath) {
+            source = loadHtml(nextPath);
+            titleEl = findTitle(source);
+        }
     }
 
-    if (!titleEl || !titleEl.textContent) {
+    if (!titleEl) {
         throw new Error(`Cannot find specification title in ${path}`);
     }
 
@@ -125,6 +131,20 @@ export function identifyDocument(path: string): IndexDetail {
         hasDevices,
         hasNamespaces,
     };
+}
+
+function findTitle(source: Document) {
+    let titleEl: Element | null | undefined = source.querySelector("h1");
+
+    if (!titleEl) {
+        titleEl = findTitleWithoutHeader(source);
+    }
+
+    if (!titleEl || !titleEl.textContent) {
+        return;
+    }
+
+    return titleEl;
 }
 
 function findTitleWithoutHeader(source: Document) {

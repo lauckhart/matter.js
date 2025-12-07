@@ -83,7 +83,7 @@ export class SpecFile {
         const path =
             options.path ??
             process.env.MATTER_SPECIFICATION_PATH ??
-            resolve(homedir(), "Dropbox", "matter", options.version ?? DEFAULT_MATTER_VERSION);
+            resolve(homedir(), "Dropbox", "matter", (options.version ?? DEFAULT_MATTER_VERSION).replace(/\.0$/, ""));
 
         let indices: string[];
 
