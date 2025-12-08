@@ -6,10 +6,9 @@
 
 import { Diagnostic, Logger } from "#general";
 import { Specification } from "#model";
-import { JSDOM } from "jsdom";
 import { readFileSync } from "node:fs";
+import { DefaultTreeAdapterTypes, parse } from "parse5";
 import { Str } from "./html-translators.js";
-import { nextPathOf } from "./scan-document.js";
 import { HtmlReference } from "./spec-types.js";
 
 const logger = Logger.get("doc-utils");
@@ -46,30 +45,109 @@ export type IndexDetail = {
     hasNamespaces: boolean;
 };
 
-export function loadHtml(path: string) {
-    const html = readFileSync(path);
-    return new JSDOM(html).window.document;
-}
+export namespace Html {
+    export type Document = DefaultTreeAdapterTypes.Document;
+    export type Node = DefaultTreeAdapterTypes.Node;
+    export type ChildNode = DefaultTreeAdapterTypes.ChildNode;
+    export type ParentNode = DefaultTreeAdapterTypes.ParentNode;
 
-// Read an index file to find the portions of the spec we care about
-export function identifyDocument(path: string): IndexDetail {
-    let source = loadHtml(path);
-    let titleEl = findTitle(source);
+    export interface ScanActions {
+        emit?: boolean;
+        enter?: boolean;
+    }
 
-    // Title may be on the second page as of Matter 1.5, though may just be an Acrobat change
-    if (titleEl === undefined) {
-        const nextPath = nextPathOf(source, path);
-        if (nextPath) {
-            source = loadHtml(nextPath);
-            titleEl = findTitle(source);
+    export interface ScanController {
+        (node: Node): undefined | ScanActions;
+    }
+
+    export function* scan(node: Node, controller?: ScanController): Generator<Node> {
+        yield* visitOne(node);
+
+        function* visitOne(node: Node) {
+            const actions = controller?.(node);
+
+            if (actions?.emit !== false) {
+                yield node;
+            }
+
+            if (actions?.enter === false || !("childNodes" in node)) {
+                return;
+            }
+
+            for (const child of node.childNodes) {
+                visitOne(child);
+            }
         }
     }
 
-    if (!titleEl) {
-        throw new Error(`Cannot find specification title in ${path}`);
+    export function textOf(node: Node) {
+        const parts = Array<string>();
+
+        let needBreak = false;
+
+        visit(node);
+
+        return parts.join("");
+
+        function visit(node: Node) {
+            if (node.nodeName === "#text") {
+                if (needBreak) {
+                    parts.push("\n");
+                }
+                parts.push((node as DefaultTreeAdapterTypes.TextNode).value);
+                return;
+            }
+
+            if ("childNodes" in node) {
+                for (const child of node.childNodes) {
+                    visit(child);
+
+                    // Not trying very hard to identify block vs inline
+                    if (child.nodeName === "BR" || child.nodeName === "P") {
+                        needBreak = true;
+                    }
+                }
+            }
+        }
+    }
+}
+
+export function loadHtml(path: string): Html.Document {
+    const html = readFileSync(path);
+    return parse(new TextDecoder().decode(html));
+}
+
+// Read an index file to find the portions of the spec we care about
+export function identifyDocument(path: string, html: Html.Document): IndexDetail {
+    let foundDocCell = false;
+
+    let version: undefined | string, title: undefined | string;
+    for (const node of Html.scan(html)) {
+        switch (node.nodeName) {
+            case "TD":
+                if (!foundDocCell) {
+                    if (Html.textOf(node) === "Document:") {
+                        foundDocCell = true;
+                        break;
+                    }
+                    throw new Error("No document identifier in first table cell");
+                }
+
+                const match = Html.textOf(node).match(/-(\d+(?:\.[\d+])*)-([a-z-]+)\.pdf/i);
+                if (!match) {
+                    throw new Error("Cannot parse document title");
+                }
+
+                version = match[1];
+                title = match[2];
+
+                break;
+        }
     }
 
-    let title = titleEl.textContent;
+    if (!title || !version) {
+        throw new Error("Did not locate document title or version");
+    }
 
     let spec: Specification;
     let hasClusters = false;
@@ -89,20 +167,6 @@ export function identifyDocument(path: string): IndexDetail {
         hasNamespaces = true;
     } else {
         throw new Error(`Matter specification name ${title} unrecognized in ${path}`);
-    }
-
-    let version;
-    const titleAndVersion = title.split(/ version /i);
-    if (titleAndVersion.length === 2 && titleAndVersion[1].match(/(?:\d\.)+/)) {
-        title = titleAndVersion[0];
-        version = titleAndVersion[1].replace(/-adopted/, "");
-    } else {
-        const versionEl = titleEl.nextElementSibling;
-        if (!versionEl || !versionEl.textContent || !versionEl.textContent.match(/version (?:\d\.)+/i)) {
-            throw new Error(`No version found for ${title} in ${path}`);
-        }
-
-        version = versionEl.textContent.replace(/.*version ([\d.]+).*/i, "$1");
     }
 
     // Drop dotted elements except the first two unless the third one is non-zero
@@ -131,30 +195,4 @@ export function identifyDocument(path: string): IndexDetail {
         hasDevices,
         hasNamespaces,
     };
-}
-
-function findTitle(source: Document) {
-    let titleEl: Element | null | undefined = source.querySelector("h1");
-
-    if (!titleEl) {
-        titleEl = findTitleWithoutHeader(source);
-    }
-
-    if (!titleEl || !titleEl.textContent) {
-        return;
-    }
-
-    return titleEl;
-}
-
-function findTitleWithoutHeader(source: Document) {
-    for (const el of source.body.children) {
-        switch (el.textContent?.toLowerCase().replace(/[^a-z]/g, "")) {
-            case "matterspecification":
-            case "matterapplicationclusters":
-            case "matterdevicelibrary":
-            case "mattersemantictagnamespaces":
-                return el;
-        }
-    }
 }

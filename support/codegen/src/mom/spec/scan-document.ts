@@ -4,21 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { dirname, join } from "node:path";
-
-import { loadHtml, parseHeading } from "./doc-utils.js";
+import { Html, loadHtml, parseHeading } from "./doc-utils.js";
 import { looksLikeDatatype, looksLikeField } from "./header-detection-heuristics.js";
 import { Str } from "./html-translators.js";
 import { scanTables } from "./scan-tables.js";
 import { HtmlReference, Table } from "./spec-types.js";
-
-export function nextPathOf(html: Document, path: string) {
-    for (const a of html.querySelectorAll(".top_nav a")) {
-        if (a.textContent === "Next >") {
-            return join(dirname(path), (a as HTMLAnchorElement).href);
-        }
-    }
-}
 
 // Parses all pages in a specific section
 export function* scanDocument(docRef: HtmlReference) {
@@ -39,17 +29,9 @@ export function* scanDocument(docRef: HtmlReference) {
     };
 
     // Scan the index page
-    let path: string | undefined = docRef.path;
-    let html = loadHtml(path);
+    const path = docRef.path;
+    const html = loadHtml(path);
     yield* scanPage(docRef, html);
-    path = nextPathOf(html, path);
-
-    // Scan all subpages referenced from the index page
-    while (path) {
-        html = loadHtml(path);
-        yield* scanPage({ ...docRef, path }, html);
-        path = nextPathOf(html, path);
-    }
 
     // Handle final emit outside of scanPage
     yield* emit();
@@ -64,7 +46,7 @@ export function* scanDocument(docRef: HtmlReference) {
     }
 
     // Parse a single page that is confirmed to be part of a "section of interest"
-    function* scanPage(ref: HtmlReference, html: Document): Generator<HtmlReference> {
+    function* scanPage(ref: HtmlReference, html: Html.Document): Generator<HtmlReference> {
         const elements = html.querySelectorAll("h1, h2, h3, h4, h5, h6, body > p, table");
 
         for (let i = 1; i < elements.length; i++) {

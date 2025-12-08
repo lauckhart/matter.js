@@ -34,13 +34,17 @@
         "@matter/general": "*",
         "@matter/intermediate-models": "*",
         "@matter/model": "*",
-        "@matter/tools": "*",
         "@matter/protocol": "*",
+        "@matter/tools": "*",
         "@matter/types": "*"
     },
     "devDependencies": {
+        "@types/entities": "^1.1.1",
         "@types/jsdom": "^27.0.0",
+        "@types/parse5": "^6.0.3",
+        "entities": "^6.0.1",
         "jsdom": "^27.2.0",
+        "parse5": "^7.3.0",
         "word-list": "^4.1.0",
         "yargs": "^18.0.0"
     },

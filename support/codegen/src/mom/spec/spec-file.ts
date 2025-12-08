@@ -9,7 +9,7 @@ import { lstatSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve } from "node:path";
 import { IntermediateModel } from "../common/intermediate-model.js";
-import { DEFAULT_MATTER_VERSION, IndexDetail, identifyDocument } from "./doc-utils.js";
+import { DEFAULT_MATTER_VERSION, Html, IndexDetail, identifyDocument, loadHtml } from "./doc-utils.js";
 import { loadClusters } from "./load-clusters.js";
 import { loadDevices } from "./load-devices.js";
 import { loadNamespaces } from "./load-namespaces.js";
@@ -25,11 +25,18 @@ export interface LoadOptions {
     version?: string;
     path?: string;
 }
+
 export class SpecFile {
     #index: IndexDetail;
+    #html: Html.Document;
 
     constructor(path: string) {
-        this.#index = identifyDocument(path);
+        this.#html = loadHtml(path);
+        this.#index = identifyDocument(path, this.#html);
+    }
+
+    get html(): Html.Document {
+        return this.#html;
     }
 
     get path() {
