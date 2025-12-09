@@ -304,6 +304,7 @@ export class SessionManager {
         if (result) {
             await this.#storeResumptionRecords();
         }
+
         return result;
     }
 

@@ -21,6 +21,7 @@ import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
+import { SessionEstablishment } from "./SessionEstablishment.js";
 
 const logger = Logger.get("Peer");
 
@@ -36,9 +37,20 @@ export class Peer {
     #workers: BasicMultiplex;
     #isSaving = false;
     #abort = new Abort();
+    #sessionEstablishment?: SessionEstablishment;
 
-    // TODO - manage these internally and/or factor away
+    /**
+     * TODO - remove when no longer used
+     *
+     * @deprecated
+     */
     activeDiscovery?: Peer.ActiveDiscovery;
+
+    /**
+     * TODO - remove when no longer used
+     *
+     * @deprecated
+     */
     activeReconnection?: Peer.ActiveReconnection;
 
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
@@ -89,6 +101,60 @@ export class Peer {
 
     get sessions() {
         return this.#sessions;
+    }
+
+    async initiateExchange(signal?: Abort.Signal) {
+        const signals = Array<Abort.Signal>(this.#abort);
+        if (signal) {
+            signals.push(signal);
+        }
+        const abort = new Abort({ abort: signals });
+
+        const { exchangesPerPeer, exchangesPerSession } = this.#descriptor.limits;
+
+        while (!true) {
+            // Wait for a free exchange slot
+            while (this.#exchanges.size > exchangesPerPeer) {
+                using _waitingForExchange = this.#lifetime.join("waiting for exchange");
+                await abort.race(this.#exchanges.deleted);
+                abort.throwIfAborted();
+            }
+
+            // Find an existing live session with a free exchange slot.  Prefer newer sessions because older ones are
+            // more likely to have been closed by the peer
+            let session: undefined | NodeSession;
+            for (const candidateSession of this.#sessions) {
+                if (
+                    candidateSession.isClosing ||
+                    candidateSession.isPeerLost ||
+                    candidateSession.exchanges.size > exchangesPerSession
+                ) {
+                    continue;
+                }
+
+                if (session && candidateSession.activeTimestamp < session.activeTimestamp) {
+                    continue;
+                }
+
+                session = candidateSession;
+            }
+
+            // If we have a session, create the exchange
+            if (session) {
+                return this.#context.exchanges.initiateExchangeForSession(session);
+            }
+
+            // Initialize establishment of new session
+            if (!this.#sessionEstablishment) {
+                this.#sessionEstablishment = new SessionEstablishment(this, this.#context);
+            }
+            using _dependent = this.#sessionEstablishment.addDependent();
+
+            // Wait for the new session, then cycle again
+            using _waitingForSession = this.#lifetime.join("waiting for new session");
+            await abort.race(this.#sessions.added);
+            abort.throwIfAborted();
+        }
     }
 
     /**
@@ -150,6 +216,7 @@ export namespace Peer {
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;
+        interfaceFor(address: string): void;
     }
 
     export interface Limits {}

@@ -32,7 +32,7 @@ import { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { UNICAST_UNSECURE_SESSION_ID } from "#session/UnsecuredSession.js";
-import { NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
+import { INTERACTION_PROTOCOL_ID, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
 import { MessageExchange, MessageExchangeContext } from "./MessageExchange.js";
 import { DuplicateMessageError } from "./MessageReceptionState.js";
 import { ProtocolHandler } from "./ProtocolHandler.js";
@@ -117,11 +117,11 @@ export class ExchangeManager {
         this.#protocols.set(protocol.id, protocol);
     }
 
-    initiateExchange(address: PeerAddress, protocolId: number) {
+    initiateExchange(address: PeerAddress, protocolId = INTERACTION_PROTOCOL_ID) {
         return this.initiateExchangeForSession(this.#sessions.sessionFor(address), protocolId);
     }
 
-    initiateExchangeForSession(session: Session, protocolId: number) {
+    initiateExchangeForSession(session: Session, protocolId = INTERACTION_PROTOCOL_ID) {
         const exchangeId = this.#exchangeCounter.getIncrementedCounter();
         const exchangeIndex = exchangeId | 0x10000; // Ensure initiated and received exchange index are different, since the exchangeID can be the same
         const exchange = MessageExchange.initiate(this.#messageExchangeContextFor(session), exchangeId, protocolId);
