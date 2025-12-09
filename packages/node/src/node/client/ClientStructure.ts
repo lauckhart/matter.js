@@ -14,6 +14,7 @@ import { RootEndpoint } from "#endpoints/root";
 import { Diagnostic, InternalError, isDeepEqual, Logger } from "#general";
 import {
     AcceptedCommandList,
+    AggregatorDt,
     AttributeList,
     ClusterRevision,
     DeviceClassification,
@@ -52,6 +53,7 @@ export class ClientStructure {
     #pendingStructureEvents = Array<PendingEvent>();
     #delayedClusterEvents = new Array<ReadResult.EventValue>();
     #events: ClientStructureEvents;
+    #hasAggregator = false;
 
     constructor(node: ClientNode) {
         this.#node = node;
@@ -62,6 +64,13 @@ export class ClientStructure {
         });
         this.#eventEmitter = ClientEventEmitter(node, this);
         this.#events = this.#node.env.get(ClientStructureEvents);
+    }
+
+    /**
+     * Convenience for networking logic, used to determine maximum number of exchanges for a peer.
+     */
+    get hasAggregator() {
+        return this.#hasAggregator;
     }
 
     /**
@@ -449,6 +458,10 @@ export class ClientStructure {
                 const model = Matter.get(DeviceTypeModel, dt.deviceType);
                 if (model !== undefined) {
                     isApp = DeviceClassification.isApplication(model.classification);
+                }
+
+                if (dt.deviceType === AggregatorDt.id) {
+                    this.#hasAggregator = true;
                 }
 
                 // Root endpoint really needs to be a root endpoint so ignore any noise that would disrupt that
