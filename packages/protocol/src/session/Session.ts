@@ -7,6 +7,7 @@
 import type { SupportedTransportsBitmap } from "#common/SupportedTransportsBitmap.js";
 import {
     AsyncObservable,
+    BasicSet,
     Bytes,
     Channel,
     DataWriter,
@@ -55,7 +56,7 @@ export abstract class Session {
 
     #closing = ObservableValue();
     #gracefulClose = AsyncObservable<[]>();
-    readonly #exchanges = new Set<MessageExchange>();
+    readonly #exchanges = new BasicSet<MessageExchange>();
     protected deferredClose = false;
 
     protected readonly idleInterval: Duration;
