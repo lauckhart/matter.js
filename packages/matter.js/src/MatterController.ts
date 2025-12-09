@@ -47,6 +47,7 @@ import {
     FabricAuthority,
     FabricManager,
     InteractionClientProvider,
+    MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
     NodeDiscoveryType,
     PeerAddress,
     PeerAddressStore,
@@ -635,6 +636,12 @@ class CommissionedNodeStore extends PeerAddressStore {
                 discoveryData,
                 deviceData,
                 dataStore: await this.createNodeStore(address),
+                limits: {
+                    caseSessionsPerFabric: 3,
+                    subscriptionsPerFabric: 3,
+                    exchangesPerPeer: MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
+                    exchangesPerSession: MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
+                },
             } satisfies CommissionedPeer);
         }
         return nodes;

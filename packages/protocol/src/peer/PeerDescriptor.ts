@@ -7,6 +7,7 @@
 import { DiscoveryData } from "#common/Scanner.js";
 import { isDeepEqual, ServerAddressUdp } from "#general";
 import type { PeerDataStore } from "#peer/PeerAddressStore.js";
+import { BasicInformation } from "@matter/types/clusters/basic-information";
 import { PeerAddress } from "./PeerAddress.js";
 
 /**
@@ -18,7 +19,7 @@ export interface PeerDescriptor {
     /**
      * The logical address of the peer.
      */
-    address: PeerAddress;
+    readonly address: PeerAddress;
 
     /**
      * A physical address the peer may be accessed at, if known.
@@ -31,6 +32,11 @@ export interface PeerDescriptor {
     discoveryData?: DiscoveryData;
 
     /**
+     * Operational limits to sessions, exchanges and subscriptions.
+     */
+    readonly limits: PeerDescriptor.Limits;
+
+    /**
      * The data store for the peer.
      *
      * @deprecated
@@ -38,18 +44,21 @@ export interface PeerDescriptor {
     dataStore?: PeerDataStore;
 }
 
+export namespace PeerDescriptor {
+    export interface Limits extends BasicInformation.CapabilityMinima {
+        exchangesPerPeer: number;
+        exchangesPerSession: number;
+    }
+}
+
 export class ObservablePeerDescriptor implements PeerDescriptor {
     #address: PeerAddress;
-    #operationalAddress?: ServerAddressUdp;
-    #discoveryData?: DiscoveryData;
-    #dataStore?: PeerDataStore;
+    #descriptor: PeerDescriptor;
     #onChange: () => void;
 
-    constructor({ address, operationalAddress, discoveryData, dataStore }: PeerDescriptor, onChange: () => void) {
-        this.#address = PeerAddress(address);
-        this.#operationalAddress = operationalAddress;
-        this.#discoveryData = discoveryData;
-        this.#dataStore = dataStore;
+    constructor(descriptor: PeerDescriptor, onChange: () => void) {
+        this.#address = PeerAddress(descriptor.address);
+        this.#descriptor = descriptor;
         this.#onChange = onChange;
     }
 
@@ -58,32 +67,36 @@ export class ObservablePeerDescriptor implements PeerDescriptor {
     }
 
     get operationalAddress() {
-        return this.#operationalAddress;
+        return this.#descriptor.operationalAddress;
     }
 
     set operationalAddress(value: ServerAddressUdp | undefined) {
-        if (isDeepEqual(this.#operationalAddress, value)) {
+        if (isDeepEqual(this.operationalAddress, value)) {
             return;
         }
 
-        this.#operationalAddress = value;
+        this.#descriptor.operationalAddress = value;
         this.#onChange();
     }
 
     get discoveryData() {
-        return this.#discoveryData;
+        return this.#descriptor.discoveryData;
     }
 
     set discoveryData(value: DiscoveryData | undefined) {
-        if (isDeepEqual(value, this.#discoveryData)) {
+        if (isDeepEqual(this.discoveryData, value)) {
             return;
         }
 
-        this.#discoveryData = { ...this.#discoveryData, ...value };
+        this.#descriptor.discoveryData = { ...this.discoveryData, ...value };
         this.#onChange();
     }
 
+    get limits() {
+        return this.#descriptor.limits;
+    }
+
     get dataStore() {
-        return this.#dataStore;
+        return this.#descriptor.dataStore;
     }
 }

@@ -6,7 +6,7 @@
 
 import { Logger } from "#general";
 import { ServerSubscriptionConfig } from "#node/server/ServerSubscription.js";
-import { Ble } from "#protocol";
+import { Ble, MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION } from "#protocol";
 import { DiscoveryCapabilitiesBitmap, TypeFromPartialBitSchema } from "#types";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
@@ -75,5 +75,8 @@ export namespace NetworkServer {
             onIpNetwork: true,
         };
         subscriptionOptions?: ServerSubscriptionConfig = undefined;
+        exchangesPerSession = MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION;
+        exchangesPerDevice = 5;
+        exchangesPerBridge = this.exchangesPerSession;
     }
 }

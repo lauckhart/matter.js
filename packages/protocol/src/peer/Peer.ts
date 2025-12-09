@@ -4,12 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BasicInformation } from "#clusters/basic-information";
-import { BasicMultiplex, BasicSet, Diagnostic, isIpNetworkChannel, Lifetime, Logger, MaybePromise } from "#general";
+import {
+    Abort,
+    BasicMultiplex,
+    BasicSet,
+    Diagnostic,
+    isIpNetworkChannel,
+    Lifetime,
+    Logger,
+    MaybePromise,
+} from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
+import { ExchangeManager } from "#protocol/ExchangeManager.js";
+import { MessageExchange } from "#protocol/MessageExchange.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
-import type { SessionManager } from "#session/SessionManager.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
 
@@ -23,12 +32,10 @@ export class Peer {
     #descriptor: PeerDescriptor;
     #context: Peer.Context;
     #sessions = new BasicSet<NodeSession>();
+    #exchanges = new BasicSet<MessageExchange>();
     #workers: BasicMultiplex;
     #isSaving = false;
-    #limits: BasicInformation.CapabilityMinima = {
-        caseSessionsPerFabric: 3,
-        subscriptionsPerFabric: 3,
-    };
+    #abort = new Abort();
 
     // TODO - manage these internally and/or factor away
     activeDiscovery?: Peer.ActiveDiscovery;
@@ -59,19 +66,17 @@ export class Peer {
             if (isIpNetworkChannel(channel)) {
                 this.#descriptor.operationalAddress = channel.networkAddress;
             }
+
+            // Track exchanges
+            session.exchanges.added.on(this.#exchanges.add.bind(this.#exchanges));
+            session.exchanges.deleted.on(() => {
+                this.#exchanges.delete.bind(this.#exchanges);
+            });
         });
     }
 
     get fabric() {
-        return this.#context.sessions.fabricFor(this.address);
-    }
-
-    get limits() {
-        return this.#limits;
-    }
-
-    set limits(limits: BasicInformation.CapabilityMinima) {
-        this.#limits = limits;
+        return this.#context.exchanges.sessions.fabricFor(this.address);
     }
 
     get address() {
@@ -93,7 +98,7 @@ export class Peer {
         logger.info("Removing", Diagnostic.strong(this.toString()));
         await this.close();
         await this.#context.deletePeer(this);
-        await this.#context.sessions.deleteResumptionRecord(this.address);
+        await this.#context.exchanges.sessions.deleteResumptionRecord(this.address);
     }
 
     /**
@@ -101,6 +106,8 @@ export class Peer {
      */
     async close() {
         using _lifetime = this.#lifetime.closing();
+
+        this.#abort();
 
         if (this.activeDiscovery) {
             this.activeDiscovery.stopTimerFunc?.();
@@ -116,7 +123,7 @@ export class Peer {
             this.activeReconnection = undefined;
         }
 
-        for (const session of this.#context.sessions.sessionsFor(this.address)) {
+        for (const session of this.#context.exchanges.sessions.sessionsFor(this.address)) {
             await session.initiateClose();
         }
 
@@ -139,11 +146,13 @@ export class Peer {
 export namespace Peer {
     export interface Context {
         lifetime: Lifetime.Owner;
-        sessions: SessionManager;
+        exchanges: ExchangeManager;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;
     }
+
+    export interface Limits {}
 
     // TODO - factor away
     export interface ActiveDiscovery {

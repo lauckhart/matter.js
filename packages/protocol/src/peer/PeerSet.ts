@@ -134,7 +134,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
         this.#peerContext = {
             lifetime: this.#lifetime,
-            sessions,
+            exchanges,
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),
