@@ -45,7 +45,7 @@ const logger = Logger.get("ExchangeManager");
  * counter window tracks 32 messages. So we have "2 spare messages" if really someone uses that many parallel exchanges.
  * TODO: Change this into an exchange creation queue instead of hard limiting it.
  */
-const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = 30;
+export const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = 30;
 
 /**
  * Interfaces {@link ExchangeManager} with other components.
@@ -96,6 +96,10 @@ export class ExchangeManager {
         });
         env.set(ExchangeManager, instance);
         return instance;
+    }
+
+    get sessions() {
+        return this.#sessions;
     }
 
     hasProtocolHandler(protocolId: number) {
