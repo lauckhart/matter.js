@@ -5,14 +5,15 @@
  */
 
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
-import { BasicInformationClient } from "#behaviors/basic-information";
+import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import type { ClientNode } from "#node/ClientNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import type { ServerNode } from "#node/ServerNode.js";
 import { PeerAddress, PeerAddressMap, PeerAddressStore, PeerDescriptor } from "#protocol";
 import { FabricIndex, NodeId } from "#types";
 import { Crypto, ServerAddress, ServerAddressUdp } from "@matter/general";
-import { ClientStructure } from "./ClientStructure.js";
+
+const defaultLimits = PeerDescriptor.defaultLimits;
 
 /**
  * This is an adapter for lower-level components in the protocol package.
@@ -54,7 +55,6 @@ export class NodePeerAddressStore extends PeerAddressStore {
 
     loadPeers(): PeerDescriptor[] {
         this.#assignedAddresses = new PeerAddressMap();
-        const network = this.#owner.state.network;
         return [...this.#owner.peers]
             .map(node => {
                 const commissioning = node.state.commissioning;
@@ -71,27 +71,8 @@ export class NodePeerAddressStore extends PeerAddressStore {
                     operationalAddress: addr && (ServerAddress(addr) as ServerAddressUdp),
                     discoveryData: RemoteDescriptor.fromLongForm(commissioning),
 
-                    limits: {
-                        get caseSessionsPerFabric() {
-                            const bi = node.maybeStateOf(BasicInformationClient);
-                            return bi?.capabilityMinima.caseSessionsPerFabric ?? 3;
-                        },
-
-                        get subscriptionsPerFabric() {
-                            const bi = node.maybeStateOf(BasicInformationClient);
-                            return bi?.capabilityMinima.subscriptionsPerFabric ?? 3;
-                        },
-
-                        get exchangesPerSession() {
-                            return network.exchangesPerSession;
-                        },
-
-                        get exchangesPerPeer() {
-                            if (node.env.get(ClientStructure).hasAggregator) {
-                                return network.exchangesPerBridge;
-                            }
-                            return network.exchangesPerDevice;
-                        },
+                    get limits() {
+                        return NetworkClient.limitsFor(node);
                     },
                 } satisfies PeerDescriptor;
             })

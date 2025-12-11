@@ -132,12 +132,26 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         this.#store = store;
         this.#caseClient = new CaseClient(this.#sessions);
 
+        const self = this;
+
         this.#peerContext = {
             lifetime: this.#lifetime,
             exchanges,
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),
+
+            get mdns() {
+                const mdns = self.#scanners.scannerFor(ChannelType.UDP) as MdnsClient | undefined;
+                if (!mdns) {
+                    throw new ImplementationError("No MDNS client available");
+                }
+                return mdns;
+            },
+
+            transportFor(ip: string) {
+                return self.#transports.interfaceFor(ChannelType.UDP, ip);
+            },
         };
 
         this.#peers.added.on(peer => {
@@ -256,7 +270,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         address: PeerAddress,
         options: PeerConnectionOptions & {
             allowUnknownPeer?: boolean;
-            operationalAddress?: ServerAddressUdp;
+            operationalAddresses?: ServerAddressUdp[];
         },
     ) {
         address = PeerAddress(address);
@@ -265,7 +279,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             return;
         }
 
-        const { allowUnknownPeer, operationalAddress } = options;
+        const { allowUnknownPeer, operationalAddresses } = options;
         if (!this.has(address) && !allowUnknownPeer) {
             throw new UnknownNodeError(`Cannot connect to unknown device ${PeerAddress(address)}`);
         }
@@ -284,7 +298,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         const { promise, resolver, rejecter } = createPromise<SecureSession>();
         peer.activeReconnection = { promise, rejecter };
 
-        this.#resume(address, options, operationalAddress)
+        this.#resume(address, options, operationalAddresses)
             .then(channel => {
                 peer.activeReconnection = undefined;
                 resolver(channel);
@@ -340,8 +354,8 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                 discoveryData: this.get(address)?.descriptor.discoveryData,
             };
             // Try to use first result for one last try before we need to reconnect
-            const operationalAddress = this.#knownOperationalAddressFor(address, true);
-            if (operationalAddress === undefined) {
+            const operationalAddresses = this.#knownOperationalAddressesFor(address, true);
+            if (!operationalAddresses?.length) {
                 logger.info(
                     `Re-discovering device failed (no address found), remove all sessions for ${PeerAddress(address)}`,
                 );
@@ -351,7 +365,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
             // Try to reconnect to last known address
             if (
-                (await this.#reconnectKnownAddress(address, operationalAddress, discoveryData, {
+                (await this.#reconnectKnownAddress(address, operationalAddresses, discoveryData, {
                     expectedProcessingTime: Seconds(2),
                 })) === undefined
             ) {
@@ -386,22 +400,22 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
      * device is discovered again using its operational instance details.
      * It returns the operational MessageChannel on success.
      */
-    async #resume(address: PeerAddress, options: PeerConnectionOptions, tryOperationalAddress?: ServerAddressUdp) {
+    async #resume(address: PeerAddress, options: PeerConnectionOptions, tryOperationalAddresses?: ServerAddressUdp[]) {
         const { discoveryOptions: { discoveryType } = {} } = options;
 
-        const operationalAddress =
-            tryOperationalAddress ??
+        const operationalAddresses =
+            tryOperationalAddresses ??
             (discoveryType === NodeDiscoveryType.None
-                ? this.#getLastOperationalAddress(address)
-                : this.#knownOperationalAddressFor(address));
+                ? this.#getLastOperationalAddresses(address)
+                : this.#knownOperationalAddressesFor(address));
 
         try {
-            return await this.#connectOrDiscoverNode(address, operationalAddress, options);
+            return await this.#connectOrDiscoverNode(address, operationalAddresses, options);
         } catch (error) {
             if (
                 (error instanceof DiscoveryError || error instanceof NoResponseTimeoutError) &&
                 this.has(address) &&
-                tryOperationalAddress === undefined
+                !tryOperationalAddresses?.length
             ) {
                 logger.info(`Resume failed, remove all sessions for ${PeerAddress(address)}`);
                 // We remove all sessions, this also informs the PairedNode class
@@ -413,7 +427,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
     async #connectOrDiscoverNode(
         address: PeerAddress,
-        operationalAddress?: ServerAddressUdp,
+        operationalAddresses?: ServerAddressUdp[],
         options?: PeerConnectionOptions,
     ) {
         address = PeerAddress(address);
@@ -457,12 +471,12 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         // If we have a last known address try to reach the device directly when we are not already discovering
         // In worst case parallel cases we do this step twice, but that's ok
         if (
-            operationalAddress !== undefined &&
+            operationalAddresses?.length &&
             (runningDiscoveryType === NodeDiscoveryType.None || requestedDiscoveryType === NodeDiscoveryType.None)
         ) {
             const directReconnection = await this.#reconnectKnownAddress(
                 address,
-                operationalAddress,
+                operationalAddresses,
                 discoveryData,
                 // When we use a timeout for discovery also use this for reconnecting to the node
                 { expectedProcessingTime: timeout, caseAuthenticatedTags },
@@ -475,7 +489,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             }
         }
 
-        if (operationalAddress === undefined && requestedDiscoveryType === NodeDiscoveryType.None) {
+        if (!operationalAddresses?.length && requestedDiscoveryType === NodeDiscoveryType.None) {
             throw new DiscoveryError(`${address} has no known address and No discovery was requested.`);
         }
 
@@ -493,24 +507,26 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         let reconnectionPollingTimer: Timer | undefined;
         let stopTimerFunc: (() => void) | undefined;
 
-        const lastOperationalAddress = this.#getLastOperationalAddress(address);
-        if (lastOperationalAddress !== undefined) {
+        const lastOperationalAddresses = this.#getLastOperationalAddresses(address);
+        if (lastOperationalAddresses?.length) {
             // Additionally to general discovery we also try to poll the formerly known operational address
             if (requestedDiscoveryType === NodeDiscoveryType.FullDiscovery) {
                 const { promise, resolver, rejecter } = createPromise<SecureSession>();
 
                 logger.debug(
-                    `Starting reconnection polling for ${ServerAddress.urlFor(lastOperationalAddress)} (interval ${Duration.format(RECONNECTION_POLLING_INTERVAL)})`,
+                    `Starting reconnection polling for ${ServerAddress.urlFor(lastOperationalAddresses[0])} (interval ${Duration.format(RECONNECTION_POLLING_INTERVAL)})`,
                 );
                 reconnectionPollingTimer = Time.getPeriodicTimer(
                     "Controller reconnect",
                     RECONNECTION_POLLING_INTERVAL,
                     async () => {
                         try {
-                            logger.debug(`Polling for device at ${ServerAddress.urlFor(lastOperationalAddress)} ...`);
+                            logger.debug(
+                                `Polling for device at ${ServerAddress.urlFor(lastOperationalAddresses[0])} ...`,
+                            );
                             const result = await this.#reconnectKnownAddress(
                                 address,
-                                lastOperationalAddress,
+                                lastOperationalAddresses,
                                 discoveryData,
                                 { caseAuthenticatedTags },
                             );
@@ -569,8 +585,10 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                     return device !== undefined ? [device] : [];
                 },
                 async (operationalAddress, peer) => {
-                    const result = await this.#pair(address, operationalAddress, peer, { caseAuthenticatedTags });
-                    await this.#addOrUpdatePeer(address, operationalAddress, {
+                    const result = await this.#pair(address, [operationalAddress], peer, {
+                        caseAuthenticatedTags,
+                    });
+                    await this.#addOrUpdatePeer(address, operationalAddresses, {
                         ...discoveryData,
                         ...peer,
                     });
@@ -595,13 +613,13 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
     async #reconnectKnownAddress(
         address: PeerAddress,
-        operationalAddress: ServerAddressUdp,
+        operationalAddresses: ServerAddressUdp[],
         discoveryData?: DiscoveryData,
         options?: CaseClient.PairOptions,
     ): Promise<SecureSession | undefined> {
         address = PeerAddress(address);
 
-        const { ip, port } = operationalAddress;
+        const { ip, port } = operationalAddresses[0];
         const { expectedProcessingTime } = options ?? {};
         const startTime = Time.nowMs;
         try {
@@ -612,8 +630,8 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                         : ""
                 }`,
             );
-            const session = await this.#pair(address, operationalAddress, discoveryData, options);
-            await this.#addOrUpdatePeer(address, operationalAddress);
+            const session = await this.#pair(address, operationalAddresses, discoveryData, options);
+            await this.#addOrUpdatePeer(address, operationalAddresses);
             return session;
         } catch (error) {
             if (error instanceof NoResponseTimeoutError || error instanceof ChannelStatusResponseError) {
@@ -633,10 +651,11 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     /** Pair with an operational device (already commissioned) and establish a CASE session. */
     async #pair(
         address: PeerAddress,
-        operationalServerAddress: ServerAddressUdp,
+        operationalServerAddresses: ServerAddressUdp[],
         discoveryData?: DiscoveryData,
         options?: CaseClient.PairOptions,
     ) {
+        const [operationalServerAddress] = operationalServerAddresses;
         logger.debug(`Pair with ${address} at ${ServerAddress.urlFor(operationalServerAddress)}`);
         const { ip, port } = operationalServerAddress;
         // Do CASE pairing
@@ -717,10 +736,10 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     /**
      * Obtain an operational address for a logical address from cache.
      */
-    #knownOperationalAddressFor(address: PeerAddress, ignoreDiscoveredAddresses = false) {
-        const lastKnownAddress = this.#getLastOperationalAddress(address);
-        if (lastKnownAddress !== undefined && ignoreDiscoveredAddresses) {
-            return lastKnownAddress;
+    #knownOperationalAddressesFor(address: PeerAddress, ignoreDiscoveredAddresses = false) {
+        const lastKnownAddresses = this.#getLastOperationalAddresses(address);
+        if (lastKnownAddresses !== undefined && ignoreDiscoveredAddresses) {
+            return lastKnownAddresses;
         }
 
         const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsClient | undefined;
@@ -730,10 +749,10 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         );
 
         if (
-            lastKnownAddress !== undefined &&
+            lastKnownAddresses !== undefined &&
             discoveredAddresses !== undefined &&
             discoveredAddresses.addresses.some(
-                ({ ip, port }) => ip === lastKnownAddress.ip && port === lastKnownAddress.port,
+                ({ ip, port }) => ip === lastKnownAddresses[0].ip && port === lastKnownAddresses[0].port,
             )
         ) {
             // We found the same address, so assume somehow cached response because we just tried to connect,
@@ -742,12 +761,12 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
 
         // Try to use first result for one last try before we need to reconnect
-        return discoveredAddresses?.addresses[0];
+        return discoveredAddresses?.addresses;
     }
 
     async #addOrUpdatePeer(
         address: PeerAddress,
-        operationalServerAddress?: ServerAddressUdp,
+        operationalAddresses?: ServerAddressUdp[],
         discoveryData?: DiscoveryData,
     ) {
         let peer = this.get(address);
@@ -755,7 +774,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             peer = new Peer({ address, dataStore: await this.#store.createNodeStore(address) }, this.#peerContext);
             this.#peers.add(peer);
         }
-        peer.descriptor.operationalAddress = operationalServerAddress ?? peer.descriptor.operationalAddress;
+        peer.descriptor.operationalAddresses = operationalAddresses ?? peer.descriptor.operationalAddresses;
         if (discoveryData !== undefined) {
             peer.descriptor.discoveryData = {
                 ...peer.descriptor.discoveryData,
@@ -764,7 +783,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
 
         // If we got a new channel and have a running discovery we can end it
-        if (peer.descriptor.operationalAddress !== undefined && peer.activeDiscovery) {
+        if (peer.descriptor.operationalAddresses?.length && peer.activeDiscovery) {
             logger.info(`Found ${address} during discovery, cancel discovery.`);
             // We are currently discovering this node, so we need to update the discovery data
             const { mdnsClient: mdnsScanner } = peer.activeDiscovery ?? {};
@@ -774,12 +793,12 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
     }
 
-    addKnownPeer(address: PeerAddress, operationalServerAddress?: ServerAddressUdp, discoveryData?: DiscoveryData) {
-        return this.#addOrUpdatePeer(address, operationalServerAddress, discoveryData);
+    addKnownPeer(address: PeerAddress, operationalServerAddresses?: ServerAddressUdp[], discoveryData?: DiscoveryData) {
+        return this.#addOrUpdatePeer(address, operationalServerAddresses, discoveryData);
     }
 
-    #getLastOperationalAddress(address: PeerAddress) {
-        return this.get(address)?.descriptor.operationalAddress;
+    #getLastOperationalAddresses(address: PeerAddress) {
+        return this.get(address)?.descriptor.operationalAddresses;
     }
 
     #handleFirstRetry(session: Session) {

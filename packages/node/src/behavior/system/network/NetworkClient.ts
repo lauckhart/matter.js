@@ -5,14 +5,18 @@
  */
 
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
+import { BasicInformationBehavior } from "#behaviors/basic-information";
+import { AggregatorEndpoint } from "#endpoints/aggregator";
 import { Observable, ServerAddress, ServerAddressUdp } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
+import { ClientStructureEvents } from "#node/client/ClientStructureEvents.js";
 import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
-import { ActiveSubscription, PeerSet, Subscribe } from "#protocol";
+import { ActiveSubscription, PeerDescriptor, PeerSet, Subscribe } from "#protocol";
 import { CaseAuthenticatedTag } from "#types";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
+import type { NetworkServer } from "./NetworkServer.js";
 
 export class NetworkClient extends NetworkBehavior {
     declare internal: NetworkClient.Internal;
@@ -27,7 +31,27 @@ export class NetworkClient extends NetworkBehavior {
         } else {
             this.reactTo(this.events.autoSubscribe$Changed, this.#handleAutoSubscribeChanged, { offline: true });
             this.reactTo(this.events.defaultSubscription$Changed, this.#handleDefaultSubscriptionChange);
+
+            const structureEvents = this.env.get(ClientStructureEvents);
+            this.reactTo(structureEvents.clusterInstalled(BasicInformationBehavior), this.#updateDiscoveredLimits);
+            this.reactTo(structureEvents.endpointInstalled(AggregatorEndpoint), this.#configureAsBridge);
         }
+    }
+
+    #updateDiscoveredLimits() {
+        const capabilityMinima = this.#node.maybeStateOf(BasicInformationBehavior)?.capabilityMinima;
+        const defaults = this.internal.isBridge
+            ? this.#node.owner?.state.network.defaultBridgeLimits
+            : this.#node.owner?.state.network.defaultDeviceLimits;
+        this.internal.limits = { ...PeerDescriptor.defaultLimits, ...defaults, ...capabilityMinima };
+    }
+
+    #configureAsBridge() {
+        if (this.internal.isBridge) {
+            return;
+        }
+        this.internal.isBridge = true;
+        this.#updateDiscoveredLimits();
     }
 
     override async startup() {
@@ -148,6 +172,16 @@ export namespace NetworkClient {
          * The active default subscription.
          */
         activeSubscription?: ActiveSubscription;
+
+        /**
+         * Discovered limits.  These are used if {@link State#limits} are not configured.
+         */
+        limits?: PeerDescriptor.Limits;
+
+        /**
+         * Set when we determine the peer is a bridge.
+         */
+        isBridge?: boolean;
     }
 
     export class State extends NetworkBehavior.State {
@@ -188,6 +222,34 @@ export namespace NetworkClient {
          * commissioning process.
          */
         caseAuthenticatedTags?: CaseAuthenticatedTag[];
+
+        /**
+         * Limits that control networking behavior.
+         *
+         * If undefined, matter.js uses properties returned by the device and values from
+         * {@link NetworkServer.State#defaultDeviceLimits} for normal Matter devices or
+         * {@link NetworkServer.State#defaultBridgeLimits} for bridges.
+         */
+        limits?: Partial<PeerDescriptor.Limits>;
+    }
+
+    export function limitsFor(node: ClientNode) {
+        let { limits } = node.behaviors.internalsOf(NetworkClient);
+
+        if (!limits) {
+            limits = node.owner?.state.network.defaultDeviceLimits;
+
+            if (!limits) {
+                limits = PeerDescriptor.defaultLimits;
+            }
+        }
+
+        const overrides = node.state.network.limits;
+        if (overrides) {
+            limits = { ...limits, ...overrides };
+        }
+
+        return limits;
     }
 
     export class Events extends NetworkBehavior.Events {

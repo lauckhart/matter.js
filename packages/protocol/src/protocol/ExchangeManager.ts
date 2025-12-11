@@ -26,6 +26,7 @@ import {
     UnexpectedDataError,
 } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
+import { PeerDescriptor } from "#peer/PeerDescriptor.js";
 import { DEFAULT_EXPECTED_PROCESSING_TIME } from "#protocol/MessageChannel.js";
 import { SecureChannelMessenger } from "#securechannel/SecureChannelMessenger.js";
 import { NodeSession } from "#session/NodeSession.js";
@@ -45,7 +46,7 @@ const logger = Logger.get("ExchangeManager");
  * counter window tracks 32 messages. So we have "2 spare messages" if really someone uses that many parallel exchanges.
  * TODO: Change this into an exchange creation queue instead of hard limiting it.
  */
-export const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = 30;
+export const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = PeerDescriptor.defaultLimits.exchangesPerSession;
 
 /**
  * Interfaces {@link ExchangeManager} with other components.

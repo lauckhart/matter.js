@@ -22,9 +22,9 @@ export interface PeerDescriptor {
     readonly address: PeerAddress;
 
     /**
-     * A physical address the peer may be accessed at, if known.
+     * Physical addresses the peer may be accessed at, if known.
      */
-    operationalAddress?: ServerAddressUdp;
+    operationalAddresses?: ServerAddressUdp[];
 
     /**
      * Additional information collected while locating the peer.
@@ -34,7 +34,7 @@ export interface PeerDescriptor {
     /**
      * Operational limits to sessions, exchanges and subscriptions.
      */
-    readonly limits: PeerDescriptor.Limits;
+    readonly limits?: PeerDescriptor.Limits;
 
     /**
      * The data store for the peer.
@@ -49,6 +49,21 @@ export namespace PeerDescriptor {
         exchangesPerPeer: number;
         exchangesPerSession: number;
     }
+
+    export const defaultLimits: Limits = {
+        caseSessionsPerFabric: 3,
+        subscriptionsPerFabric: 3,
+        exchangesPerPeer: 30,
+        exchangesPerSession: 30,
+    };
+
+    export const defaultDeviceLimits: Limits = {
+        ...defaultLimits,
+        exchangesPerPeer: 5,
+        exchangesPerSession: 5,
+    };
+
+    export const defaultBridgeLimits = defaultLimits;
 }
 
 export class ObservablePeerDescriptor implements PeerDescriptor {
@@ -66,16 +81,16 @@ export class ObservablePeerDescriptor implements PeerDescriptor {
         return this.#address;
     }
 
-    get operationalAddress() {
-        return this.#descriptor.operationalAddress;
+    get operationalAddresses() {
+        return this.#descriptor.operationalAddresses;
     }
 
-    set operationalAddress(value: ServerAddressUdp | undefined) {
-        if (isDeepEqual(this.operationalAddress, value)) {
+    set operationalAddresses(value: ServerAddressUdp[] | undefined) {
+        if (isDeepEqual(this.operationalAddresses, value)) {
             return;
         }
 
-        this.#descriptor.operationalAddress = value;
+        this.#descriptor.operationalAddresses = value;
         this.#onChange();
     }
 

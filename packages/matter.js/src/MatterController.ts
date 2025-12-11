@@ -47,7 +47,6 @@ import {
     FabricAuthority,
     FabricManager,
     InteractionClientProvider,
-    MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
     NodeDiscoveryType,
     PeerAddress,
     PeerAddressStore,
@@ -490,10 +489,12 @@ export class MatterController {
     getCommissionedNodesDetails() {
         this.#construction.assert();
         return this.#peers!.map(peer => {
-            const { address, operationalAddress, discoveryData, deviceData } = peer.descriptor as CommissionedPeer;
+            const { address, operationalAddresses, discoveryData, deviceData } = peer.descriptor as CommissionedPeer;
             return {
                 nodeId: address.nodeId,
-                operationalAddress: operationalAddress ? ServerAddress.urlFor(operationalAddress) : undefined,
+                operationalAddress: operationalAddresses?.[0]
+                    ? ServerAddress.urlFor(operationalAddresses[0])
+                    : undefined,
                 advertisedName: discoveryData?.DN,
                 discoveryData,
                 deviceData,
@@ -507,10 +508,10 @@ export class MatterController {
         if (nodeDetails === undefined) {
             throw new Error(`Node ${nodeId} is not commissioned.`);
         }
-        const { address, operationalAddress, discoveryData, deviceData } = nodeDetails;
+        const { address, operationalAddresses, discoveryData, deviceData } = nodeDetails;
         return {
             nodeId: address.nodeId,
-            operationalAddress: operationalAddress ? ServerAddress.urlFor(operationalAddress) : undefined,
+            operationalAddress: operationalAddresses?.[0] ? ServerAddress.urlFor(operationalAddresses[0]) : undefined,
             advertisedName: discoveryData?.DN,
             discoveryData,
             deviceData,
@@ -632,16 +633,10 @@ class CommissionedNodeStore extends PeerAddressStore {
             const address = this.#fabric.addressOf(nodeId);
             nodes.push({
                 address,
-                operationalAddress: operationalServerAddress,
+                operationalAddresses: operationalServerAddress && [operationalServerAddress],
                 discoveryData,
                 deviceData,
                 dataStore: await this.createNodeStore(address),
-                limits: {
-                    caseSessionsPerFabric: 3,
-                    subscriptionsPerFabric: 3,
-                    exchangesPerPeer: MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
-                    exchangesPerSession: MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION,
-                },
             } satisfies CommissionedPeer);
         }
         return nodes;
@@ -660,15 +655,15 @@ class CommissionedNodeStore extends PeerAddressStore {
         await this.#controllerStore.nodesStorage.set(
             "commissionedNodes",
             this.peers.map(peer => {
-                const {
-                    address,
-                    operationalAddress: operationalServerAddress,
-                    discoveryData,
-                    deviceData,
-                } = peer.descriptor as CommissionedPeer;
+                const { address, operationalAddresses, discoveryData, deviceData } =
+                    peer.descriptor as CommissionedPeer;
                 return [
                     address.nodeId,
-                    { operationalServerAddress, discoveryData, deviceData },
+                    {
+                        operationalServerAddress: operationalAddresses?.[0] && operationalAddresses[0],
+                        discoveryData,
+                        deviceData,
+                    },
                 ] satisfies StoredOperationalPeer;
             }),
         );

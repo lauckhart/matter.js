@@ -13,25 +13,33 @@ export type ServerAddressUdp = {
     type: "udp";
     ip: string;
     port: number;
-};
+} & NetworkAddressStatus;
 
 export type ServerAddressTcp = {
     type: "tcp";
     ip: string;
     port: number;
-};
+} & NetworkAddressStatus;
 
 export type ServerAddressBle = {
     type: "ble";
     peripheralAddress: string;
-};
+} & NetworkAddressStatus;
 
 export interface Lifespan {
     /** Beginning of lifespan (system time in milliseconds) */
     discoveredAt: Timestamp;
 
-    /** Length of lifespan, if known (seconds) */
+    /** Length of lifespan, if known */
     ttl: Duration;
+}
+
+export interface NetworkAddressStatus {
+    /** Last recorded successful connection */
+    connectedAt?: Timestamp;
+
+    /** Last recorded unsuccessful connection */
+    disconnectedAt?: Timestamp;
 }
 
 export type ServerAddress = (ServerAddressUdp | ServerAddressTcp | ServerAddressBle) & Partial<Lifespan>;

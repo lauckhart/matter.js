@@ -8,11 +8,14 @@ import {
     Abort,
     BasicMultiplex,
     BasicSet,
+    ConnectionlessTransport,
     Diagnostic,
     isIpNetworkChannel,
     Lifetime,
     Logger,
     MaybePromise,
+    ServerAddress,
+    Time,
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import { ExchangeManager } from "#protocol/ExchangeManager.js";
@@ -21,7 +24,7 @@ import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
-import { SessionEstablishment } from "./SessionEstablishment.js";
+import { establishSession } from "./establish-session.js";
 
 const logger = Logger.get("Peer");
 
@@ -37,7 +40,7 @@ export class Peer {
     #workers: BasicMultiplex;
     #isSaving = false;
     #abort = new Abort();
-    #sessionEstablishment?: SessionEstablishment;
+    #abortSessionEstablishment?: Abort;
 
     /**
      * TODO - remove when no longer used
@@ -63,7 +66,7 @@ export class Peer {
             }
 
             this.#isSaving = true;
-            this.#workers.add(this.#save());
+            this.#workers.add(this.#save(), `saving peer ${this}`);
         });
         this.#context = context;
 
@@ -73,10 +76,14 @@ export class Peer {
                 this.#sessions.delete(session);
             });
 
-            // Ensure operational address is always the most recent IP
+            // Update set of known operational addresses
             const { channel } = session.channel;
-            if (isIpNetworkChannel(channel)) {
-                this.#descriptor.operationalAddress = channel.networkAddress;
+            if (isIpNetworkChannel(channel) && this.#descriptor.operationalAddresses) {
+                for (const address of this.#descriptor.operationalAddresses) {
+                    if (ServerAddress.isEqual(address, channel.networkAddress)) {
+                        address.connectedAt = Time.nowMs;
+                    }
+                }
             }
 
             // Track exchanges
@@ -110,7 +117,7 @@ export class Peer {
         }
         const abort = new Abort({ abort: signals });
 
-        const { exchangesPerPeer, exchangesPerSession } = this.#descriptor.limits;
+        const { exchangesPerPeer, exchangesPerSession } = this.#descriptor.limits ?? PeerDescriptor.defaultLimits;
 
         while (!true) {
             // Wait for a free exchange slot
@@ -145,10 +152,22 @@ export class Peer {
             }
 
             // Initialize establishment of new session
-            if (!this.#sessionEstablishment) {
-                this.#sessionEstablishment = new SessionEstablishment(this, this.#context);
+            if (!this.#abortSessionEstablishment) {
+                const signals = [this.#abort];
+                if (signal) {
+                    signals.push(abort);
+                }
+                const controller = new Abort({ abort: signals });
+                this.#abortSessionEstablishment = controller;
+                this.#workers.add(
+                    establishSession(this, this.#context, controller.signal).finally(() => {
+                        if (this.#abortSessionEstablishment === controller) {
+                            this.#abortSessionEstablishment = undefined;
+                        }
+                    }),
+                    `connecting to ${this}`,
+                );
             }
-            using _dependent = this.#sessionEstablishment.addDependent();
 
             // Wait for the new session, then cycle again
             using _waitingForSession = this.#lifetime.join("waiting for new session");
@@ -216,7 +235,8 @@ export namespace Peer {
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;
-        interfaceFor(address: string): void;
+        mdns: MdnsClient;
+        transportFor(ip: string): ConnectionlessTransport | undefined;
     }
 
     export interface Limits {}
