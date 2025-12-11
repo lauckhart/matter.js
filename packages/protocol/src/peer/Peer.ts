@@ -4,14 +4,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BasicInformation } from "#clusters/basic-information";
-import { BasicMultiplex, BasicSet, Diagnostic, isIpNetworkChannel, Lifetime, Logger, MaybePromise } from "#general";
+import {
+    Abort,
+    BasicMultiplex,
+    BasicSet,
+    ConnectionlessTransport,
+    Diagnostic,
+    isIpNetworkChannel,
+    Lifetime,
+    Logger,
+    MaybePromise,
+    ServerAddress,
+    Time,
+} from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
+import { ExchangeManager } from "#protocol/ExchangeManager.js";
+import { MessageExchange } from "#protocol/MessageExchange.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
-import type { SessionManager } from "#session/SessionManager.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
+import { establishSession } from "./establish-session.js";
 
 const logger = Logger.get("Peer");
 
@@ -23,15 +36,24 @@ export class Peer {
     #descriptor: PeerDescriptor;
     #context: Peer.Context;
     #sessions = new BasicSet<NodeSession>();
+    #exchanges = new BasicSet<MessageExchange>();
     #workers: BasicMultiplex;
     #isSaving = false;
-    #limits: BasicInformation.CapabilityMinima = {
-        caseSessionsPerFabric: 3,
-        subscriptionsPerFabric: 3,
-    };
+    #abort = new Abort();
+    #abortSessionEstablishment?: Abort;
 
-    // TODO - manage these internally and/or factor away
+    /**
+     * TODO - remove when no longer used
+     *
+     * @deprecated
+     */
     activeDiscovery?: Peer.ActiveDiscovery;
+
+    /**
+     * TODO - remove when no longer used
+     *
+     * @deprecated
+     */
     activeReconnection?: Peer.ActiveReconnection;
 
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
@@ -44,7 +66,7 @@ export class Peer {
             }
 
             this.#isSaving = true;
-            this.#workers.add(this.#save());
+            this.#workers.add(this.#save(), `saving peer ${this}`);
         });
         this.#context = context;
 
@@ -54,24 +76,26 @@ export class Peer {
                 this.#sessions.delete(session);
             });
 
-            // Ensure operational address is always the most recent IP
+            // Update set of known operational addresses
             const { channel } = session.channel;
-            if (isIpNetworkChannel(channel)) {
-                this.#descriptor.operationalAddress = channel.networkAddress;
+            if (isIpNetworkChannel(channel) && this.#descriptor.operationalAddresses) {
+                for (const address of this.#descriptor.operationalAddresses) {
+                    if (ServerAddress.isEqual(address, channel.networkAddress)) {
+                        address.connectedAt = Time.nowMs;
+                    }
+                }
             }
+
+            // Track exchanges
+            session.exchanges.added.on(this.#exchanges.add.bind(this.#exchanges));
+            session.exchanges.deleted.on(() => {
+                this.#exchanges.delete.bind(this.#exchanges);
+            });
         });
     }
 
     get fabric() {
-        return this.#context.sessions.fabricFor(this.address);
-    }
-
-    get limits() {
-        return this.#limits;
-    }
-
-    set limits(limits: BasicInformation.CapabilityMinima) {
-        this.#limits = limits;
+        return this.#context.exchanges.sessions.fabricFor(this.address);
     }
 
     get address() {
@@ -86,6 +110,72 @@ export class Peer {
         return this.#sessions;
     }
 
+    async initiateExchange(signal?: Abort.Signal) {
+        const signals = Array<Abort.Signal>(this.#abort);
+        if (signal) {
+            signals.push(signal);
+        }
+        const abort = new Abort({ abort: signals });
+
+        const { exchangesPerPeer, exchangesPerSession } = this.#descriptor.limits ?? PeerDescriptor.defaultLimits;
+
+        while (!true) {
+            // Wait for a free exchange slot
+            while (this.#exchanges.size > exchangesPerPeer) {
+                using _waitingForExchange = this.#lifetime.join("waiting for exchange");
+                await abort.race(this.#exchanges.deleted);
+                abort.throwIfAborted();
+            }
+
+            // Find an existing live session with a free exchange slot.  Prefer newer sessions because older ones are
+            // more likely to have been closed by the peer
+            let session: undefined | NodeSession;
+            for (const candidateSession of this.#sessions) {
+                if (
+                    candidateSession.isClosing ||
+                    candidateSession.isPeerLost ||
+                    candidateSession.exchanges.size > exchangesPerSession
+                ) {
+                    continue;
+                }
+
+                if (session && candidateSession.activeTimestamp < session.activeTimestamp) {
+                    continue;
+                }
+
+                session = candidateSession;
+            }
+
+            // If we have a session, create the exchange
+            if (session) {
+                return this.#context.exchanges.initiateExchangeForSession(session);
+            }
+
+            // Initialize establishment of new session
+            if (!this.#abortSessionEstablishment) {
+                const signals = [this.#abort];
+                if (signal) {
+                    signals.push(abort);
+                }
+                const controller = new Abort({ abort: signals });
+                this.#abortSessionEstablishment = controller;
+                this.#workers.add(
+                    establishSession(this, this.#context, controller.signal).finally(() => {
+                        if (this.#abortSessionEstablishment === controller) {
+                            this.#abortSessionEstablishment = undefined;
+                        }
+                    }),
+                    `connecting to ${this}`,
+                );
+            }
+
+            // Wait for the new session, then cycle again
+            using _waitingForSession = this.#lifetime.join("waiting for new session");
+            await abort.race(this.#sessions.added);
+            abort.throwIfAborted();
+        }
+    }
+
     /**
      * Permanently forget the peer.
      */
@@ -93,7 +183,7 @@ export class Peer {
         logger.info("Removing", Diagnostic.strong(this.toString()));
         await this.close();
         await this.#context.deletePeer(this);
-        await this.#context.sessions.deleteResumptionRecord(this.address);
+        await this.#context.exchanges.sessions.deleteResumptionRecord(this.address);
     }
 
     /**
@@ -101,6 +191,8 @@ export class Peer {
      */
     async close() {
         using _lifetime = this.#lifetime.closing();
+
+        this.#abort();
 
         if (this.activeDiscovery) {
             this.activeDiscovery.stopTimerFunc?.();
@@ -116,7 +208,7 @@ export class Peer {
             this.activeReconnection = undefined;
         }
 
-        for (const session of this.#context.sessions.sessionsFor(this.address)) {
+        for (const session of this.#context.exchanges.sessions.sessionsFor(this.address)) {
             await session.initiateClose();
         }
 
@@ -139,11 +231,15 @@ export class Peer {
 export namespace Peer {
     export interface Context {
         lifetime: Lifetime.Owner;
-        sessions: SessionManager;
+        exchanges: ExchangeManager;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;
+        mdns: MdnsClient;
+        transportFor(ip: string): ConnectionlessTransport | undefined;
     }
+
+    export interface Limits {}
 
     // TODO - factor away
     export interface ActiveDiscovery {

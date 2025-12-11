@@ -39,7 +39,8 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
     #timeout?: Timer;
 
     constructor({ abort, timeout, handler }: Abort.Options = {}) {
-        super(() => this.abort());
+        const Abort = (reason?: any) => this.abort(reason);
+        super(Abort);
 
         this.#controller = new AbortController();
 

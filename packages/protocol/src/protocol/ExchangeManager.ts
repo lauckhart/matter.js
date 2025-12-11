@@ -26,13 +26,14 @@ import {
     UnexpectedDataError,
 } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
+import { PeerDescriptor } from "#peer/PeerDescriptor.js";
 import { DEFAULT_EXPECTED_PROCESSING_TIME } from "#protocol/MessageChannel.js";
 import { SecureChannelMessenger } from "#securechannel/SecureChannelMessenger.js";
 import { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { UNICAST_UNSECURE_SESSION_ID } from "#session/UnsecuredSession.js";
-import { NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
+import { INTERACTION_PROTOCOL_ID, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
 import { MessageExchange, MessageExchangeContext } from "./MessageExchange.js";
 import { DuplicateMessageError } from "./MessageReceptionState.js";
 import { ProtocolHandler } from "./ProtocolHandler.js";
@@ -45,7 +46,7 @@ const logger = Logger.get("ExchangeManager");
  * counter window tracks 32 messages. So we have "2 spare messages" if really someone uses that many parallel exchanges.
  * TODO: Change this into an exchange creation queue instead of hard limiting it.
  */
-const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = 30;
+export const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = PeerDescriptor.defaultLimits.exchangesPerSession;
 
 /**
  * Interfaces {@link ExchangeManager} with other components.
@@ -98,6 +99,10 @@ export class ExchangeManager {
         return instance;
     }
 
+    get sessions() {
+        return this.#sessions;
+    }
+
     hasProtocolHandler(protocolId: number) {
         return this.#protocols.has(protocolId);
     }
@@ -113,11 +118,11 @@ export class ExchangeManager {
         this.#protocols.set(protocol.id, protocol);
     }
 
-    initiateExchange(address: PeerAddress, protocolId: number) {
+    initiateExchange(address: PeerAddress, protocolId = INTERACTION_PROTOCOL_ID) {
         return this.initiateExchangeForSession(this.#sessions.sessionFor(address), protocolId);
     }
 
-    initiateExchangeForSession(session: Session, protocolId: number) {
+    initiateExchangeForSession(session: Session, protocolId = INTERACTION_PROTOCOL_ID) {
         const exchangeId = this.#exchangeCounter.getIncrementedCounter();
         const exchangeIndex = exchangeId | 0x10000; // Ensure initiated and received exchange index are different, since the exchangeID can be the same
         const exchange = MessageExchange.initiate(this.#messageExchangeContextFor(session), exchangeId, protocolId);

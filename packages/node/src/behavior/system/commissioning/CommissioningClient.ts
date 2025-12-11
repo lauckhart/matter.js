@@ -274,8 +274,8 @@ export class CommissioningClient extends Behavior {
         if (addr) {
             const peer = node.env.get(PeerSet).for(addr);
             if (peer) {
-                if (peer.descriptor.operationalAddress) {
-                    this.state.addresses = [peer.descriptor.operationalAddress];
+                if (peer.descriptor.operationalAddresses) {
+                    this.state.addresses = peer.descriptor.operationalAddresses;
                 }
                 this.descriptor = peer.descriptor.discoveryData;
             }
@@ -346,6 +346,12 @@ export namespace CommissioningClient {
         @field(systimeMs)
         discoveredAt?: Timestamp | undefined;
 
+        @field(systimeMs)
+        connectedAt?: Timestamp | undefined;
+
+        @field(systimeMs)
+        disconnectedAt?: Timestamp | undefined;
+
         constructor(address: NetworkAddress) {
             this.type = address.type;
             this.ip = address.ip;
@@ -353,6 +359,8 @@ export namespace CommissioningClient {
             this.peripheralAddress = address.peripheralAddress;
             this.ttl = address.ttl;
             this.discoveredAt = address.discoveredAt;
+            this.connectedAt = address.connectedAt;
+            this.disconnectedAt = address.disconnectedAt;
         }
     }
 

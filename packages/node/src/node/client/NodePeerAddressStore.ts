@@ -5,7 +5,8 @@
  */
 
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
-import { Crypto, ServerAddress, ServerAddressUdp } from "#general";
+import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
+import { Crypto, ServerAddressUdp } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import type { ServerNode } from "#node/ServerNode.js";
@@ -61,13 +62,17 @@ export class NodePeerAddressStore extends PeerAddressStore {
 
                 this.#assignedAddresses.set(commissioning.peerAddress, node);
 
-                const addr = commissioning.addresses?.find(addr => addr.type === "udp");
-
                 return {
                     address: commissioning.peerAddress,
-                    operationalAddress: addr && (ServerAddress(addr) as ServerAddressUdp),
+                    operationalAddresses: commissioning.addresses?.filter(addr => addr.type === "udp") as
+                        | ServerAddressUdp[]
+                        | undefined,
                     discoveryData: RemoteDescriptor.fromLongForm(commissioning),
-                };
+
+                    get limits() {
+                        return NetworkClient.limitsFor(node);
+                    },
+                } satisfies PeerDescriptor;
             })
             .filter(addr => addr !== undefined);
     }
@@ -83,9 +88,8 @@ export class NodePeerAddressStore extends PeerAddressStore {
             await agent.context.transaction.begin();
             const state = agent.commissioning.state;
             RemoteDescriptor.toLongForm(peer.discoveryData, state);
-            if (peer.operationalAddress) {
-                // TODO - modify lower tiers to pass along full set of operational addresses
-                state.addresses = [peer.operationalAddress];
+            if (peer.operationalAddresses?.length) {
+                state.addresses = peer.operationalAddresses;
             }
             await agent.context.transaction.commit();
         });
