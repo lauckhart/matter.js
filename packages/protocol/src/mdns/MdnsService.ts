@@ -12,12 +12,13 @@ import {
     Logger,
     MatterAggregateError,
     MaybePromise,
+    MdnsSocket,
     Network,
+    SdNames,
     VariableService,
 } from "#general";
 import { MdnsServer } from "../mdns/MdnsServer.js";
 import { MdnsClient } from "./MdnsClient.js";
-import { MdnsSocket } from "./MdnsSocket.js";
 
 const logger = Logger.get("MDNS");
 
@@ -25,6 +26,7 @@ export class MdnsService {
     #socket?: MdnsSocket;
     #server?: MdnsServer;
     #client?: MdnsClient;
+    #names?: SdNames;
     readonly #construction: Construction<MdnsService>;
     readonly #enableIpv4: boolean;
     readonly limitedToNetInterface?: string;
@@ -65,6 +67,17 @@ export class MdnsService {
 
     get client() {
         return this.#construction.assert("MDNS service", this.#client);
+    }
+
+    get names() {
+        if (this.#names === undefined) {
+            this.#names = new SdNames({
+                socket: this.#construction.assert("MDNS socket", this.#socket),
+                lifetime: this.#construction,
+                filter: ({ name }) => !!name.match(/_matter(?:[cd]\._udp|\._tcp)\.local$/i),
+            });
+        }
+        return this.#names;
     }
 
     get [Diagnostic.value]() {

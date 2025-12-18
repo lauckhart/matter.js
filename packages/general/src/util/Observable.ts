@@ -55,6 +55,11 @@ export interface Observable<T extends any[] = any[], R = void> extends AsyncIter
     on(observer: Observer<T, R>): void;
 
     /**
+     * Add an observer that is may be released via disposal.
+     */
+    use(observer: Observer<T, R>): Disposable;
+
+    /**
      * Remove an observer.
      */
     off(observer: Observer<T, R>): void;
@@ -410,6 +415,15 @@ export class BasicObservable<T extends any[] = any[], R = void> implements Obser
         this.#observers.add(observer);
     }
 
+    use(observer: Observer<T, R>) {
+        this.on(observer);
+        return {
+            [Symbol.dispose]: () => {
+                this.off(observer);
+            },
+        };
+    }
+
     off(observer: Observer<T, R>) {
         this.#observers?.delete(observer);
     }
@@ -552,9 +566,9 @@ function event<E, N extends string>(emitter: E, name: N) {
 /**
  * A concrete {@link ObservableValue} implementation.
  */
-export class BasicObservableValue<T extends [any, ...any[]] = [boolean]>
-    extends BasicObservable<T, void>
-    implements ObservableValue<T>
+export class BasicObservableValue<T extends [any, ...any[]] = [boolean], R extends MaybePromise<void> = void>
+    extends BasicObservable<T, R>
+    implements ObservableValue<T, R>
 {
     #value: T | undefined;
     #error?: Error;
@@ -566,7 +580,7 @@ export class BasicObservableValue<T extends [any, ...any[]] = [boolean]>
     constructor(value?: T[0], handleError?: ObserverErrorHandler, asyncConfig?: ObserverPromiseHandler | boolean) {
         super(handleError, asyncConfig);
         this.#value = value;
-        this.on(this.#maybeResolve.bind(this) as unknown as Observer<T, void>);
+        this.on(this.#maybeResolve.bind(this) as unknown as Observer<T, R>);
     }
 
     /**

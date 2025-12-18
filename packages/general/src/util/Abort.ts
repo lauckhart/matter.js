@@ -115,6 +115,12 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
         this.close();
     }
 
+    if(condition?: unknown, reason?: Error) {
+        if (condition) {
+            this.abort(reason);
+        }
+    }
+
     get aborted() {
         return this.signal.aborted;
     }
