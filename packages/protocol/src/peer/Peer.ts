@@ -5,7 +5,16 @@
  */
 
 import { BasicInformation } from "#clusters/basic-information";
-import { BasicMultiplex, BasicSet, Diagnostic, isIpNetworkChannel, Lifetime, Logger, MaybePromise } from "#general";
+import {
+    Abort,
+    BasicMultiplex,
+    BasicSet,
+    Diagnostic,
+    isIpNetworkChannel,
+    Lifetime,
+    Logger,
+    MaybePromise,
+} from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
@@ -29,6 +38,8 @@ export class Peer {
         caseSessionsPerFabric: 3,
         subscriptionsPerFabric: 3,
     };
+    #abort = new Abort();
+    #isConnecting = false;
 
     // TODO - manage these internally and/or factor away
     activeDiscovery?: Peer.ActiveDiscovery;
@@ -86,6 +97,37 @@ export class Peer {
         return this.#sessions;
     }
 
+    async connect(abort?: AbortSignal) {
+        const aborts = new Array<AbortSignal>(this.#abort);
+        if (abort) {
+            aborts.push(abort);
+        }
+        const localAbort = new Abort({ abort: aborts });
+        while (true) {
+            const session = this.#sessions.find(session => !session.isClosing && !session.isPeerLost);
+            if (session) {
+                return session;
+            }
+
+            if (!this.#isConnecting) {
+                this.#isConnecting = true;
+                this.#workers.add(this.#connect());
+            }
+
+            const added = new Promise(resolve => this.#sessions.added.once(resolve));
+            await localAbort.race(added);
+            localAbort.throwIfAborted();
+        }
+    }
+
+    async #connect(): Promise<NodeSession> {
+        using _connecting = this.#lifetime.join("connecting");
+        try {
+        } finally {
+            this.#isConnecting = false;
+        }
+    }
+
     /**
      * Permanently forget the peer.
      */
@@ -101,6 +143,8 @@ export class Peer {
      */
     async close() {
         using _lifetime = this.#lifetime.closing();
+
+        this.#abort();
 
         if (this.activeDiscovery) {
             this.activeDiscovery.stopTimerFunc?.();

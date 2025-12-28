@@ -48,7 +48,7 @@ export class SdService {
     }
 
     /**
-     * Discovered addresses.
+     * Known addresses.
      */
     get addresses() {
         return this.#addresses.values();
