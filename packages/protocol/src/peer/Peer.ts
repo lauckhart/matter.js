@@ -10,12 +10,15 @@ import {
     BasicMultiplex,
     BasicSet,
     Diagnostic,
+    DiscoveryNames,
+    DiscoveryService,
     isIpNetworkChannel,
     Lifetime,
     Logger,
     MaybePromise,
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
+import { getOperationalDeviceQname } from "#mdns/MdnsConsts.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
 import type { SessionManager } from "#session/SessionManager.js";
@@ -40,6 +43,7 @@ export class Peer {
     };
     #abort = new Abort();
     #isConnecting = false;
+    #service: DiscoveryService;
 
     // TODO - manage these internally and/or factor away
     activeDiscovery?: Peer.ActiveDiscovery;
@@ -48,6 +52,13 @@ export class Peer {
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
         this.#lifetime = context.lifetime.join(descriptor.address.toString());
         this.#workers = new BasicMultiplex();
+        this.#service = new DiscoveryService(
+            getOperationalDeviceQname(
+                context.sessions.fabricFor(descriptor.address).globalId,
+                descriptor.address.nodeId,
+            ),
+            context.names,
+        );
 
         this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
             if (this.#isSaving) {
@@ -97,6 +108,11 @@ export class Peer {
         return this.#sessions;
     }
 
+    get service() {
+        return this.#service;
+    }
+
+    // WIP
     async connect(abort?: AbortSignal) {
         const aborts = new Array<AbortSignal>(this.#abort);
         if (abort) {
@@ -120,9 +136,16 @@ export class Peer {
         }
     }
 
-    async #connect(): Promise<NodeSession> {
-        using _connecting = this.#lifetime.join("connecting");
+    // WIP
+    async #connect() {
+        using connecting = this.#lifetime.join("connecting");
+        let attempt = 0;
         try {
+            while (!this.#abort.aborted) {
+                connecting.details.attempt = ++attempt;
+            }
+
+            // TODO
         } finally {
             this.#isConnecting = false;
         }
@@ -166,6 +189,8 @@ export class Peer {
 
         await this.#workers;
 
+        await this.#service.close();
+
         this.#context.closed(this);
     }
 
@@ -184,6 +209,7 @@ export namespace Peer {
     export interface Context {
         lifetime: Lifetime.Owner;
         sessions: SessionManager;
+        names: DiscoveryNames;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;

@@ -8,28 +8,28 @@ import { DnsRecord, DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
 import { Time } from "#time/Time.js";
 import { Timestamp } from "#time/Timestamp.js";
 import { AsyncObservable, AsyncObserver } from "#util/Observable.js";
-import { logger } from "./SdNames.js";
+import { logger } from "./DiscoveryNames.js";
 
 /**
  * Manages records associated with a single DNS-SD name.
  *
- * An {@link SdName} is created when a new name is discovered or requested by another component.  The name automatically
- * deletes when there are no longer observers or unexpired records.
+ * An {@link DiscoveryName} is created when a new name is discovered or requested by another component.  The name
+ * automatically deletes when there are no longer observers or unexpired records.
  */
-export class SdName extends AsyncObservable<[changes: SdName.Changes]> {
-    #context: SdName.Context;
-    #records = new Map<string, SdName.Record>();
+export class DiscoveryName extends AsyncObservable<[changes: DiscoveryName.Changes]> {
+    #context: DiscoveryName.Context;
+    #records = new Map<string, DiscoveryName.Record>();
     #recordCount = 0;
-    #changes?: Map<string, { kind: "update" | "delete"; record: SdName.Record }>;
+    #changes?: Map<string, { kind: "update" | "delete"; record: DiscoveryName.Record }>;
     #notified?: Promise<void>;
     #maybeDeleting?: Promise<void>;
     #kvs?: Map<string, string>;
 
     constructor(
-        readonly name: string,
-        context: SdName.Context,
+        readonly qname: string,
+        context: DiscoveryName.Context,
     ) {
-        super(e => logger.error(`Unhandled error in observer for DNS name "${name}":`, e));
+        super(e => logger.error(`Unhandled error in observer for DNS name "${qname}":`, e));
         this.#context = context;
     }
 
@@ -89,7 +89,7 @@ export class SdName extends AsyncObservable<[changes: SdName.Changes]> {
             this.#recordCount++;
         }
 
-        const recordWithExpire = { ...record, expiresAt: Time.nowMs + record.ttl } as SdName.Record;
+        const recordWithExpire = { ...record, expiresAt: Time.nowMs + record.ttl } as DiscoveryName.Record;
 
         this.#records.set(key, recordWithExpire);
 
@@ -157,7 +157,7 @@ export class SdName extends AsyncObservable<[changes: SdName.Changes]> {
      *
      * This is async so we coalesce changes into a single notification.
      */
-    #notify(kind: "update" | "delete", key: string, record: SdName.Record) {
+    #notify(kind: "update" | "delete", key: string, record: DiscoveryName.Record) {
         if (this.#changes === undefined) {
             this.#changes = new Map();
         }
@@ -169,7 +169,7 @@ export class SdName extends AsyncObservable<[changes: SdName.Changes]> {
 
         const notify = async () => {
             while (this.#changes?.size) {
-                const changes: SdName.Changes = { name: this };
+                const changes: DiscoveryName.Changes = { name: this };
                 for (const { kind, record } of this.#changes.values()) {
                     const key: "updated" | "deleted" = `${kind}d`;
                     const list = changes[key];
@@ -207,9 +207,9 @@ function keyOf(record: DnsRecord): string | undefined {
     }
 }
 
-export namespace SdName {
+export namespace DiscoveryName {
     export interface Context {
-        delete(name: SdName): void;
+        delete(name: DiscoveryName): void;
         registerForExpiration(record: Record): void;
         unregisterForExpiration(record: Record): void;
     }
@@ -233,7 +233,7 @@ export namespace SdName {
     export type Record = PointerRecord | ServiceRecord | HostRecord;
 
     export interface Changes {
-        name: SdName;
+        name: DiscoveryName;
         updated?: Record[];
         deleted?: Record[];
     }

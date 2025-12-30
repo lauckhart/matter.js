@@ -9,22 +9,22 @@ import { Lifespan, ServerAddressUdp } from "#net/ServerAddress.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { AsyncObservable, ObserverGroup } from "#util/Observable.js";
-import { SdName } from "./SdName.js";
-import { SdNames } from "./SdNames.js";
+import { DiscoveryName } from "./DiscoveryName.js";
+import { DiscoveryNames } from "./DiscoveryNames.js";
 
 /**
- * A service that updates as {@link SdNames} change.
+ * A service that updates as {@link DiscoveryNames} change.
  */
-export class SdService {
-    readonly #name: SdName;
-    readonly #names: SdNames;
+export class DiscoveryService {
+    readonly #name: DiscoveryName;
+    readonly #names: DiscoveryNames;
     readonly #observers = new ObserverGroup(this);
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addresses = new Map<string, ServerAddressUdp>();
     #notified?: Promise<void>;
 
-    constructor(name: string, names: SdNames) {
+    constructor(name: string, names: DiscoveryNames) {
         this.#name = names.get(name);
         this.#names = names;
         this.#observers.on(this.#name, this.#onServiceChanged);
@@ -68,7 +68,7 @@ export class SdService {
         return this.#changed;
     }
 
-    #onServiceChanged = async ({ updated, deleted }: SdName.Changes) => {
+    #onServiceChanged = async ({ updated, deleted }: DiscoveryName.Changes) => {
         if (updated) {
             for (const record of updated) {
                 const service = serviceOf(record);
@@ -129,7 +129,7 @@ export class SdService {
         return;
     }
 
-    #onAddressChanged = (service: Service, { updated, deleted }: SdName.Changes) => {
+    #onAddressChanged = (service: Service, { updated, deleted }: DiscoveryName.Changes) => {
         if (updated) {
             for (const record of updated) {
                 const addr = addressOf(record);
@@ -191,14 +191,14 @@ export class SdService {
 }
 
 interface Service extends Lifespan {
-    name: SdName;
+    name: DiscoveryName;
     priority: number;
     weight: number;
     port: number;
-    onChange(changes: SdName.Changes): void;
+    onChange(changes: DiscoveryName.Changes): void;
 }
 
-function serviceOf(record: SdName.Record) {
+function serviceOf(record: DiscoveryName.Record) {
     if (record.type !== DnsRecordType.SRV) {
         return;
     }
@@ -217,7 +217,7 @@ function ipKeyOf(ip: string, port: number) {
     return hostKeyOf(ip, port);
 }
 
-function addressOf(record: SdName.Record) {
+function addressOf(record: DiscoveryName.Record) {
     if (record.type !== DnsRecordType.A && record.type !== DnsRecordType.AAAA) {
         return;
     }

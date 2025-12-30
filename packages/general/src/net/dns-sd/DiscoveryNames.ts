@@ -9,27 +9,30 @@ import { Logger } from "#log/Logger.js";
 import { Lifetime } from "#util/Lifetime.js";
 import { Observable, ObserverGroup } from "#util/Observable.js";
 import { Scheduler } from "#util/Scheduler.js";
+import { DiscoveryName } from "./DiscoveryName.js";
+import { DiscoverySolicitor, QueryMulticaster } from "./DiscoverySolicitor.js";
 import { MdnsSocket } from "./MdnsSocket.js";
-import { SdName } from "./SdName.js";
 
-export const logger = Logger.get("SdNames");
+export const logger = Logger.get("DiscoveryNames");
 
 /**
  * Names collected via DNS-SD.
  */
-export class SdNames {
+export class DiscoveryNames implements DiscoverySolicitor {
     readonly #socket: MdnsSocket;
     readonly #lifetime: Lifetime;
     readonly #filter?: (record: DnsRecord) => boolean;
+    readonly #solicitor: QueryMulticaster;
     readonly #observers = new ObserverGroup();
-    readonly #names = new Map<string, SdName>();
-    readonly #expiration: Scheduler<SdName.Record>;
-    readonly #discovered = new Observable<[name: SdName]>();
+    readonly #names = new Map<string, DiscoveryName>();
+    readonly #expiration: Scheduler<DiscoveryName.Record>;
+    readonly #discovered = new Observable<[name: DiscoveryName]>();
 
-    constructor({ socket, filter, lifetime = Lifetime.process }: SdNames.Context) {
+    constructor({ socket, filter, lifetime = Lifetime.process }: DiscoveryNames.Context) {
         this.#socket = socket;
         this.#lifetime = lifetime.join("mdns client");
         this.#filter = filter;
+        this.#solicitor = new QueryMulticaster(socket);
         this.#observers.on(this.#socket.receipt, this.#handleMessage.bind(this));
 
         this.#expiration = new Scheduler({
@@ -37,9 +40,9 @@ export class SdNames {
             lifetime: this.#lifetime,
             timeOf: a => a.expiresAt,
             run: record => {
-                const sdName = this.#names.get(record.name);
-                if (sdName) {
-                    sdName.deleteRecord(record);
+                const discoveryName = this.#names.get(record.name);
+                if (discoveryName) {
+                    discoveryName.deleteRecord(record);
                 }
             },
         });
@@ -73,19 +76,26 @@ export class SdNames {
     }
 
     /**
-     * Retrieve the {@link SdName} for {@link name}.
+     * Retrieve the {@link DiscoveryName} for {@link name}.
      *
      * This will create the name if it does not exist, and if you do not add an observer then it will not automatically
      * delete if there are no records.  So if you may not use the record test for existence with {@link has} first.
      */
-    get(name: string): SdName {
-        name = name.toLowerCase();
-        let sdn = this.#names.get(name);
-        if (sdn === undefined) {
-            sdn = new SdName(name, this.#nameContext);
-            this.#names.set(name, sdn);
+    get(qname: string): DiscoveryName {
+        let name = this.maybeGet(qname);
+        if (name === undefined) {
+            name = new DiscoveryName(qname, this.#nameContext);
+            this.#names.set(qname, name);
         }
-        return sdn;
+        return name;
+    }
+
+    /**
+     * Retrieve the {@link DiscoveryName} if known.
+     */
+    maybeGet(name: string) {
+        name = name.toLowerCase();
+        return this.#names.get(name);
     }
 
     /**
@@ -97,22 +107,30 @@ export class SdNames {
         await this.#expiration.close();
         for (const name of this.#names.values()) {
             await name.close();
-            this.#names.delete(name.name);
+            this.#names.delete(name.qname);
         }
+        await this.#solicitor.close();
     }
 
     /**
-     * Emits when a {@link SdName} is first discovered.
+     * Emits when a {@link DiscoveryName} is first discovered.
      */
     get discovered() {
         return this.#discovered;
     }
 
-    #nameContext: SdName.Context = {
+    /**
+     * Solicit new records for names.
+     */
+    solicit(solicitation: DiscoverySolicitor.Solicitation) {
+        this.#solicitor.solicit(solicitation);
+    }
+
+    #nameContext: DiscoveryName.Context = {
         delete: name => {
-            const known = this.#names.get(name.name);
+            const known = this.#names.get(name.qname);
             if (known === name) {
-                this.#names.delete(name.name);
+                this.#names.delete(name.qname);
             }
         },
 
@@ -126,7 +144,7 @@ export class SdNames {
     };
 }
 
-export namespace SdNames {
+export namespace DiscoveryNames {
     export interface Context {
         socket: MdnsSocket;
         filter?: (record: DnsRecord) => boolean;

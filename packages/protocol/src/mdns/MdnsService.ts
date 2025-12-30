@@ -7,6 +7,7 @@
 import {
     Construction,
     Diagnostic,
+    DiscoveryNames,
     Environment,
     Environmental,
     Logger,
@@ -14,7 +15,6 @@ import {
     MaybePromise,
     MdnsSocket,
     Network,
-    SdNames,
     VariableService,
 } from "#general";
 import { MdnsServer } from "../mdns/MdnsServer.js";
@@ -26,7 +26,7 @@ export class MdnsService {
     #socket?: MdnsSocket;
     #server?: MdnsServer;
     #client?: MdnsClient;
-    #names?: SdNames;
+    #names?: DiscoveryNames;
     readonly #construction: Construction<MdnsService>;
     readonly #enableIpv4: boolean;
     readonly limitedToNetInterface?: string;
@@ -71,7 +71,7 @@ export class MdnsService {
 
     get names() {
         if (this.#names === undefined) {
-            this.#names = new SdNames({
+            this.#names = new DiscoveryNames({
                 socket: this.#construction.assert("MDNS socket", this.#socket),
                 lifetime: this.#construction,
                 filter: ({ name }) => !!name.match(/_matter(?:[cd]\._udp|\._tcp)\.local$/i),

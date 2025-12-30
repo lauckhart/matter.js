@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DiscoveryData, ScannerSet } from "#common/Scanner.js";
+import { DiscoveryData } from "#common/Scanner.js";
 import {
     anyPromise,
     AsyncObservable,
@@ -13,6 +13,7 @@ import {
     ConnectionlessTransportSet,
     Construction,
     createPromise,
+    DiscoveryNames,
     Duration,
     Environment,
     Environmental,
@@ -33,6 +34,7 @@ import {
     Timer,
 } from "#general";
 import { MdnsClient } from "#mdns/MdnsClient.js";
+import { MdnsService } from "#mdns/MdnsService.js";
 import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
 import { RetransmissionLimitReachedError } from "#protocol/errors.js";
 import { ExchangeManager } from "#protocol/ExchangeManager.js";
@@ -100,7 +102,7 @@ export interface PeerSetContext {
     lifetime: Lifetime.Owner;
     sessions: SessionManager;
     exchanges: ExchangeManager;
-    scanners: ScannerSet;
+    names: DiscoveryNames;
     transports: ConnectionlessTransportSet;
     store: PeerAddressStore;
 }
@@ -112,7 +114,6 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #lifetime: Lifetime;
     readonly #sessions: SessionManager;
     readonly #exchanges: ExchangeManager;
-    readonly #scanners: ScannerSet;
     readonly #transports: ConnectionlessTransportSet;
     readonly #caseClient: CaseClient;
     readonly #peers = new BasicSet<Peer>();
@@ -123,12 +124,11 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #peerContext: Peer.Context;
 
     constructor(context: PeerSetContext) {
-        const { lifetime, sessions, exchanges, scanners, transports: netInterfaces, store } = context;
+        const { lifetime, sessions, exchanges, names, transports: netInterfaces, store } = context;
 
         this.#lifetime = lifetime.join("peers");
         this.#sessions = sessions;
         this.#exchanges = exchanges;
-        this.#scanners = scanners;
         this.#transports = netInterfaces;
         this.#store = store;
         this.#caseClient = new CaseClient(this.#sessions);
@@ -136,6 +136,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         this.#peerContext = {
             lifetime: this.#lifetime,
             sessions,
+            names,
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),
@@ -230,7 +231,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             lifetime: env,
             sessions: env.get(SessionManager),
             exchanges: env.get(ExchangeManager),
-            scanners: env.get(ScannerSet),
+            names: env.get(MdnsService).names,
             transports: env.get(ConnectionlessTransportSet),
             store: env.get(PeerAddressStore),
         });
@@ -465,11 +466,6 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
         if (requestedDiscoveryType === NodeDiscoveryType.RetransmissionDiscovery) {
             throw new ImplementationError("Cannot set retransmission discovery type.");
-        }
-
-        const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsClient | undefined;
-        if (!mdnsScanner) {
-            throw new ImplementationError("Cannot discover device without mDNS scanner.");
         }
 
         const peer = this.for(address);
