@@ -984,6 +984,10 @@ export class ObserverGroup {
         this.#observers.clear();
         this.#boundObservers.clear();
     }
+
+    [Symbol.dispose]() {
+        this.close();
+    }
 }
 
 /**

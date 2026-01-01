@@ -9,6 +9,7 @@ import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
 import { Entropy } from "#util/Entropy.js";
+import { ObserverGroup } from "#util/Observable.js";
 import { DiscoveryName } from "./DiscoveryName.js";
 import type { DiscoveryNames } from "./DiscoveryNames.js";
 import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
@@ -42,17 +43,44 @@ export class DiscoveryResolver implements DiscoverySolicitor {
             return;
         }
 
+        // This controls whether we observe referenced SRV names
         const wantsIp = this.#wantsIp(recordTypes);
 
-        // Wait 20 - 120 ms per RFC 6762
-        const initialDelay = Millis(20 + 100 * (this.#entropy.randomUint32 / Math.pow(2, 32)));
-        await new Abort({ abort, timeout: initialDelay });
-        if (Abort.is(abort)) {
-            return;
-        }
+        // Wait initially 20 - 120 ms per RFC 6762
+        let timeout = Millis(20 + 100 * (this.#entropy.randomUint32 / Math.pow(2, 32)));
 
-        for (const _delay of this.#retries) {
-            // TODO
+        for (const nextTimeout of this.#retries) {
+            using observers = new ObserverGroup();
+
+            timeout = nextTimeout;
+
+            const promise = new Promise<boolean>(resolve => {
+                const resolveIfFound = () => {
+                    if (this.#hasRecordType(name, recordTypes)) {
+                        resolve(true);
+                    }
+                };
+
+                // Monitor name for updated records
+                observers.on(name, resolveIfFound);
+
+                // If looking for IPs, also monitor referenced SRV records
+                if (wantsIp) {
+                    for (const record of name.records) {
+                        if (record.type !== DnsRecordType.SRV) {
+                            continue;
+                        }
+                        observers.on(this.#names.get(record.value.target), resolveIfFound);
+                    }
+                }
+            });
+
+            // Note that we only abort if the input is aborted; if there is a timeout then we will query and iterate
+            // again
+            const value = await new Abort({ abort, timeout }).race(promise);
+            if (value || Abort.is(abort)) {
+                return;
+            }
         }
     }
 
