@@ -165,7 +165,7 @@ export namespace RemoteDescriptor {
         }
 
         if (addresses?.length) {
-            long.addresses = addresses.map(ServerAddress.definitionOf);
+            long.addresses = addresses;
         }
 
         if (deviceIdentifier !== undefined) {

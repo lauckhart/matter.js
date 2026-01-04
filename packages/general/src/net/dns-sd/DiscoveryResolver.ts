@@ -81,6 +81,11 @@ export class DiscoveryResolver implements DiscoverySolicitor {
             if (value || Abort.is(abort)) {
                 return;
             }
+
+            this.solicit({
+                name,
+                recordTypes,
+            });
         }
     }
 

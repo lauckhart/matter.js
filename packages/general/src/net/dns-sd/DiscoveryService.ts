@@ -5,7 +5,7 @@
  */
 
 import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
-import { Lifespan, ServerAddressUdp } from "#net/ServerAddress.js";
+import { AddressLifespan, ServerAddressUdp } from "#net/ServerAddress.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { AsyncObservable, ObserverGroup } from "#util/Observable.js";
@@ -190,7 +190,7 @@ export class DiscoveryService {
     }
 }
 
-interface Service extends Lifespan {
+interface Service extends AddressLifespan {
     name: DiscoveryName;
     priority: number;
     weight: number;

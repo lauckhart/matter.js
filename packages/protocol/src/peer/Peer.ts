@@ -136,7 +136,6 @@ export class Peer {
         }
     }
 
-    // WIP
     async #connect() {
         using connecting = this.#lifetime.join("connecting");
         let attempt = 0;
@@ -144,8 +143,6 @@ export class Peer {
             while (!this.#abort.aborted) {
                 connecting.details.attempt = ++attempt;
             }
-
-            // TODO
         } finally {
             this.#isConnecting = false;
         }
