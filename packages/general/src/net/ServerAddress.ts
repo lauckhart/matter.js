@@ -24,12 +24,12 @@ export interface AddressStatus extends Partial<AddressLifespan> {
     /**
      * Time of last successful access.
      */
-    healthyAt?: boolean;
+    healthyAt?: Timestamp;
 
     /**
      * Time of last unsuccessful access.
      */
-    unhealthyAt?: boolean;
+    unhealthyAt?: Timestamp;
 
     /**
      * DNS priority.
@@ -127,6 +127,26 @@ export namespace ServerAddress {
         }
 
         return false;
+    }
+
+    /**
+     * Compute logical health of an address.
+     *
+     * This returns heathyAt/unhealthyAt values with unhealthyAt set to undefined if the address was more recently
+     * healthy.
+     */
+    export function healthOf(health: AddressStatus): AddressStatus {
+        if (health.unhealthyAt === undefined) {
+            return health;
+        }
+
+        if (health.healthyAt !== undefined && health.healthyAt > health.unhealthyAt) {
+            return {
+                healthyAt: health.healthyAt,
+            };
+        }
+
+        return health;
     }
 
     /**
