@@ -97,6 +97,13 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
     }
 
     /**
+     * Race with throw on abort.
+     */
+    async attempt<T>(...promises: Array<T | PromiseLike<T>>) {
+        return Abort.attempt(this, ...promises);
+    }
+
+    /**
      * Free resources.
      *
      * You must abort or invoke {@link close} when finished if you construct with {@link Abort.Options#abort} or
@@ -266,6 +273,18 @@ export namespace Abort {
         }
 
         return SafePromise.race(promises);
+    }
+
+    /**
+     * Race with throw on abort.
+     */
+    export async function attempt<T>(signal: Signal | undefined, ...promises: Array<T | PromiseLike<T>>) {
+        if (signal && "signal" in signal) {
+            signal = signal.signal;
+        }
+        const result = await race(signal, ...promises);
+        signal?.throwIfAborted();
+        return result as Awaited<T>;
     }
 
     /**

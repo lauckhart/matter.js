@@ -26,6 +26,7 @@ import {
     Minutes,
     NoResponseTimeoutError,
     ObservableSet,
+    RetrySchedule,
     Seconds,
     Semaphore,
     ServerAddress,
@@ -105,6 +106,7 @@ export interface PeerSetContext {
     names: DiscoveryNames;
     transports: ConnectionlessTransportSet;
     store: PeerAddressStore;
+    connectionRetries?: RetrySchedule;
 }
 
 /**
@@ -124,7 +126,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #peerContext: Peer.Context;
 
     constructor(context: PeerSetContext) {
-        const { lifetime, sessions, exchanges, names, transports: netInterfaces, store } = context;
+        const { lifetime, sessions, exchanges, names, transports: netInterfaces, store, connectionRetries } = context;
 
         this.#lifetime = lifetime.join("peers");
         this.#sessions = sessions;
@@ -137,6 +139,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             lifetime: this.#lifetime,
             sessions,
             names,
+            connectionRetries: connectionRetries ?? new RetrySchedule(names.entropy, {}),
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),

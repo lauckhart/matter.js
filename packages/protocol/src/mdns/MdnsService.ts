@@ -8,6 +8,7 @@ import {
     Construction,
     Diagnostic,
     DiscoveryNames,
+    Entropy,
     Environment,
     Environmental,
     Logger,
@@ -23,19 +24,22 @@ import { MdnsClient } from "./MdnsClient.js";
 const logger = Logger.get("MDNS");
 
 export class MdnsService {
+    readonly #entropy: Entropy;
+    readonly #construction: Construction<MdnsService>;
+    readonly #enableIpv4: boolean;
+    readonly limitedToNetInterface?: string;
+
     #socket?: MdnsSocket;
     #server?: MdnsServer;
     #client?: MdnsClient;
     #names?: DiscoveryNames;
-    readonly #construction: Construction<MdnsService>;
-    readonly #enableIpv4: boolean;
-    readonly limitedToNetInterface?: string;
 
     get enableIpv4() {
         return this.#enableIpv4;
     }
 
     constructor(environment: Environment, options?: MdnsService.Options) {
+        this.#entropy = environment.get(Entropy);
         const network = environment.get(Network);
         const rootEnvironment = environment.root;
         rootEnvironment.set(MdnsService, this);
@@ -74,6 +78,7 @@ export class MdnsService {
             this.#names = new DiscoveryNames({
                 socket: this.#construction.assert("MDNS socket", this.#socket),
                 lifetime: this.#construction,
+                entropy: this.#entropy,
                 filter: ({ name }) => !!name.match(/_matter(?:[cd]\._udp|\._tcp)\.local$/i),
             });
         }

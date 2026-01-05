@@ -8,9 +8,8 @@ import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
 import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
-import { Entropy } from "#util/Entropy.js";
 import { ObserverGroup } from "#util/Observable.js";
-import { DiscoveryName } from "./DiscoveryName.js";
+import type { DiscoveryName } from "./DiscoveryName.js";
 import type { DiscoveryNames } from "./DiscoveryNames.js";
 import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
 
@@ -20,13 +19,11 @@ import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
 export class DiscoveryResolver implements DiscoverySolicitor {
     #names: DiscoveryNames;
     #retries: RetrySchedule;
-    #entropy: Entropy;
 
-    constructor(names: DiscoveryNames, entropy: Entropy, retries?: RetrySchedule.Configuration) {
+    constructor(names: DiscoveryNames, retries?: RetrySchedule.Configuration) {
         this.#names = names;
-        this.#entropy = entropy;
         this.#retries = new RetrySchedule(
-            entropy,
+            this.#names.entropy,
             RetrySchedule.Configuration(DiscoveryResolver.DefaultRetries, retries),
         );
     }
@@ -47,7 +44,7 @@ export class DiscoveryResolver implements DiscoverySolicitor {
         const wantsIp = this.#wantsIp(recordTypes);
 
         // Wait initially 20 - 120 ms per RFC 6762
-        let timeout = Millis(20 + 100 * (this.#entropy.randomUint32 / Math.pow(2, 32)));
+        let timeout = Millis(20 + 100 * (this.#names.entropy.randomUint32 / Math.pow(2, 32)));
 
         for (const nextTimeout of this.#retries) {
             using observers = new ObserverGroup();

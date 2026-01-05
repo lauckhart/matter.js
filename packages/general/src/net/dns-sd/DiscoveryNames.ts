@@ -6,6 +6,7 @@
 
 import { DnsRecord } from "#codec/DnsCodec.js";
 import { Logger } from "#log/Logger.js";
+import { Entropy } from "#util/Entropy.js";
 import { Lifetime } from "#util/Lifetime.js";
 import { Observable, ObserverGroup } from "#util/Observable.js";
 import { Scheduler } from "#util/Scheduler.js";
@@ -21,6 +22,7 @@ export const logger = Logger.get("DiscoveryNames");
 export class DiscoveryNames implements DiscoverySolicitor {
     readonly #socket: MdnsSocket;
     readonly #lifetime: Lifetime;
+    readonly #entropy: Entropy;
     readonly #filter?: (record: DnsRecord) => boolean;
     readonly #solicitor: QueryMulticaster;
     readonly #observers = new ObserverGroup();
@@ -28,9 +30,10 @@ export class DiscoveryNames implements DiscoverySolicitor {
     readonly #expiration: Scheduler<DiscoveryName.Record>;
     readonly #discovered = new Observable<[name: DiscoveryName]>();
 
-    constructor({ socket, filter, lifetime = Lifetime.process }: DiscoveryNames.Context) {
+    constructor({ socket, lifetime = Lifetime.process, entropy, filter }: DiscoveryNames.Context) {
         this.#socket = socket;
         this.#lifetime = lifetime.join("mdns client");
+        this.#entropy = entropy;
         this.#filter = filter;
         this.#solicitor = new QueryMulticaster(socket);
         this.#observers.on(this.#socket.receipt, this.#handleMessage.bind(this));
@@ -126,6 +129,10 @@ export class DiscoveryNames implements DiscoverySolicitor {
         this.#solicitor.solicit(solicitation);
     }
 
+    get entropy() {
+        return this.#entropy;
+    }
+
     #nameContext: DiscoveryName.Context = {
         delete: name => {
             const known = this.#names.get(name.qname);
@@ -147,7 +154,8 @@ export class DiscoveryNames implements DiscoverySolicitor {
 export namespace DiscoveryNames {
     export interface Context {
         socket: MdnsSocket;
-        filter?: (record: DnsRecord) => boolean;
         lifetime?: Lifetime.Owner;
+        entropy: Entropy;
+        filter?: (record: DnsRecord) => boolean;
     }
 }

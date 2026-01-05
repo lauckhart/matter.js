@@ -6,11 +6,14 @@
 
 import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
 import { AddressLifespan, ServerAddressUdp } from "#net/ServerAddress.js";
+import { ServerAddressList } from "#net/ServerAddressList.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
+import { Abort } from "#util/Abort.js";
 import { AsyncObservable, ObserverGroup } from "#util/Observable.js";
 import { DiscoveryName } from "./DiscoveryName.js";
 import { DiscoveryNames } from "./DiscoveryNames.js";
+import { DiscoveryResolver } from "./DiscoveryResolver.js";
 
 /**
  * A service that updates as {@link DiscoveryNames} change.
@@ -21,7 +24,8 @@ export class DiscoveryService {
     readonly #observers = new ObserverGroup(this);
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
-    readonly #addresses = new Map<string, ServerAddressUdp>();
+    readonly #addressIndex = new Map<string, ServerAddressUdp>();
+    #addresses?: ServerAddressList<ServerAddressUdp>;
     #notified?: Promise<void>;
 
     constructor(name: string, names: DiscoveryNames) {
@@ -50,8 +54,37 @@ export class DiscoveryService {
     /**
      * Known addresses.
      */
-    get addresses() {
-        return this.#addresses.values();
+    get addresses(): Iterable<ServerAddressUdp> {
+        if (this.#addresses === undefined) {
+            this.#addresses = ServerAddressList(this.#addressIndex.values());
+        }
+        return this.#addresses;
+    }
+
+    /**
+     * Obtain known addresses, discovering as necessary.
+     */
+    async resolve(abort?: AbortSignal, ipv4?: boolean) {
+        const localAbort = new Abort({ abort });
+        using _changed = this.#changed.use(() => {
+            if (this.#addressIndex.size) {
+                localAbort.abort();
+            }
+        });
+
+        const resolver = new DiscoveryResolver(this.#names);
+
+        await localAbort.race(
+            resolver.resolve({
+                qname: this.#name.qname,
+                recordTypes: ipv4 ? [DnsRecordType.AAAA, DnsRecordType.A] : [DnsRecordType.AAAA],
+                abort,
+            }),
+        );
+
+        abort?.throwIfAborted();
+
+        return this.#addresses;
     }
 
     /**
@@ -114,6 +147,10 @@ export class DiscoveryService {
         this.#observers.on(service.name, service.onChange);
 
         this.#services.set(key, service);
+
+        if (this.#addresses) {
+            this.#addresses?.replace(this.#addressIndex.values());
+        }
     }
 
     #deleteService({ target, port }: SrvRecordValue) {
@@ -151,11 +188,11 @@ export class DiscoveryService {
     #updateAddress(service: Service, ip: string) {
         const key = ipKeyOf(ip, service.port);
 
-        if (this.#addresses.has(key)) {
+        if (this.#addressIndex.has(key)) {
             return;
         }
 
-        this.#addresses.set(key, {
+        this.#addressIndex.set(key, {
             type: "udp",
             ip,
             port: service.port,
@@ -167,11 +204,11 @@ export class DiscoveryService {
     #deleteAddress(service: Service, ip: string) {
         const key = ipKeyOf(ip, service.port);
 
-        if (!this.#addresses.has(key)) {
+        if (!this.#addressIndex.has(key)) {
             return;
         }
 
-        this.#addresses.delete(key);
+        this.#addressIndex.delete(key);
 
         this.#notify();
     }

@@ -16,6 +16,8 @@ import {
     Lifetime,
     Logger,
     MaybePromise,
+    RetrySchedule,
+    ServerAddressUdp,
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import { getOperationalDeviceQname } from "#mdns/MdnsConsts.js";
@@ -112,13 +114,16 @@ export class Peer {
         return this.#service;
     }
 
-    // WIP
+    /**
+     * Obtain a session with the peer, establishing anew as necessary.
+     */
     async connect(abort?: AbortSignal) {
         const aborts = new Array<AbortSignal>(this.#abort);
         if (abort) {
             aborts.push(abort);
         }
         const localAbort = new Abort({ abort: aborts });
+
         while (true) {
             const session = this.#sessions.find(session => !session.isClosing && !session.isPeerLost);
             if (session) {
@@ -139,13 +144,31 @@ export class Peer {
     async #connect() {
         using connecting = this.#lifetime.join("connecting");
         let attempt = 0;
+
         try {
-            while (!this.#abort.aborted) {
-                connecting.details.attempt = ++attempt;
+            for (const nextTimeout of this.#context.connectionRetries) {
+                while (!this.#abort.aborted) {
+                    connecting.details.attempt = ++attempt;
+                }
+
+                for (const address of this.#service.addresses) {
+                    if (await this.#connectToAddress(address)) {
+                        return;
+                    }
+                    if (this.#abort.aborted) {
+                        return;
+                    }
+                }
+
+                await this.#abort.race(Abort.sleep(`await retry of ${this.address}`, this.#abort, nextTimeout));
             }
         } finally {
             this.#isConnecting = false;
         }
+    }
+
+    async #connectToAddress(address: ServerAddressUdp): Promise<boolean> {
+        return false;
     }
 
     /**
@@ -207,6 +230,7 @@ export namespace Peer {
         lifetime: Lifetime.Owner;
         sessions: SessionManager;
         names: DiscoveryNames;
+        connectionRetries: RetrySchedule;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;
