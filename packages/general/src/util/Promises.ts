@@ -459,7 +459,7 @@ export namespace SafePromise {
 
                     let observer: AsyncObserver<[Awaited<T>]>;
                     if ("value" in value) {
-                        // For observable value, only resolve if value is true
+                        // For observable value, only resolve if value is truthy
                         observer = value => {
                             if (value) {
                                 resolve(value);
@@ -469,6 +469,7 @@ export namespace SafePromise {
                         // And handle errors
                         disposables.push((value as unknown as AsyncObservableValue).useError(reject));
                     } else {
+                        // Normal observables "resolve" on any emit and do not have an error channel
                         observer = resolve;
                     }
                     disposables.push((value as unknown as AsyncObservable<[Awaited<T>]>).use(observer));

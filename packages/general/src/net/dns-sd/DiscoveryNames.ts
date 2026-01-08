@@ -41,7 +41,9 @@ export class DiscoveryNames implements DiscoverySolicitor {
         this.#expiration = new Scheduler({
             name: "expiration scheduler",
             lifetime: this.#lifetime,
-            timeOf: a => a.expiresAt,
+            timeOf: a => {
+                return a.expiresAt;
+            },
             run: record => {
                 const discoveryName = this.#names.get(record.name);
                 if (discoveryName) {

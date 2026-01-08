@@ -143,6 +143,9 @@ export class Peer {
 
     async #connect() {
         using connecting = this.#lifetime.join("connecting");
+
+        const attempts = new Map<ServerAddressUdp, Promise<void>>();
+
         let attempt = 0;
 
         try {

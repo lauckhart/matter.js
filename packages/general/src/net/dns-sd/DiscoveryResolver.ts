@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
+import { DnsRecordType } from "#codec/DnsCodec.js";
 import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
@@ -29,31 +29,53 @@ export class DiscoveryResolver implements DiscoverySolicitor {
     }
 
     /**
-     * Solicit new records until discovery of one of the requested record types.
-     *
-     * Includes specialized support for locating A and AAAA records via SRV records.
+     * Solicit records for a service until discovery of IP addresses.
      */
-    async resolve({ qname, recordTypes, abort }: DiscoveryResolver.Resolve) {
+    async resolve(name: DiscoveryName, abort?: AbortSignal, ipv4?: boolean) {
+        await this.query({
+            qname: name.qname,
+            queryRecordTypes: [DnsRecordType.SRV],
+            awaitedRecordTypes: ipv4 ? [DnsRecordType.AAAA, DnsRecordType.A] : [DnsRecordType.AAAA],
+            abort,
+        });
+    }
+
+    /**
+     * Solicit new records until discovery of one of the requested record types.
+     */
+    async query({ qname, queryRecordTypes, awaitedRecordTypes, abort }: DiscoveryResolver.Resolve) {
         const name = this.#names.get(qname);
 
-        if (this.#hasRecordType(name, recordTypes)) {
+        if (awaitedRecordTypes === undefined) {
+            awaitedRecordTypes = queryRecordTypes;
+        }
+
+        if (this.#hasRecordType(name, awaitedRecordTypes)) {
             return;
         }
 
         // This controls whether we observe referenced SRV names
-        const wantsIp = this.#wantsIp(recordTypes);
+        const wantsIp = this.#wantsIp(awaitedRecordTypes);
 
         // Wait initially 20 - 120 ms per RFC 6762
         let timeout = Millis(20 + 100 * (this.#names.entropy.randomUint32 / Math.pow(2, 32)));
 
         for (const nextTimeout of this.#retries) {
+            this.solicit(
+                {
+                    name,
+                    recordTypes: queryRecordTypes,
+                },
+                awaitedRecordTypes,
+            );
+
             using observers = new ObserverGroup();
 
             timeout = nextTimeout;
 
             const promise = new Promise<boolean>(resolve => {
                 const resolveIfFound = () => {
-                    if (this.#hasRecordType(name, recordTypes)) {
+                    if (this.#hasRecordType(name, awaitedRecordTypes)) {
                         resolve(true);
                     }
                 };
@@ -61,10 +83,10 @@ export class DiscoveryResolver implements DiscoverySolicitor {
                 // Monitor name for updated records
                 observers.on(name, resolveIfFound);
 
-                // If looking for IPs, also monitor referenced SRV records
+                // If looking for IPs, also monitor names referenced by SRV records
                 if (wantsIp) {
                     for (const record of name.records) {
-                        if (record.type !== DnsRecordType.SRV) {
+                        if (record.recordType !== DnsRecordType.SRV) {
                             continue;
                         }
                         observers.on(this.#names.get(record.value.target), resolveIfFound);
@@ -78,18 +100,13 @@ export class DiscoveryResolver implements DiscoverySolicitor {
             if (value || Abort.is(abort)) {
                 return;
             }
-
-            this.solicit({
-                name,
-                recordTypes,
-            });
         }
     }
 
     /**
-     * Standard solicitation with specialized support for SRV records.
+     * Standard solicitation with specialized support for discovering IPs.
      */
-    solicit(solicitation: DiscoverySolicitor.Solicitation): void {
+    solicit(solicitation: DiscoverySolicitor.Solicitation, awaitedRecordTypes?: DnsRecordType[]): void {
         let extra: undefined | Set<DiscoverySolicitor.Solicitation>;
         let associated: undefined | Set<DiscoveryName>;
 
@@ -98,15 +115,15 @@ export class DiscoveryResolver implements DiscoverySolicitor {
         }
 
         // If the requested record has known SRV records, check whether we know addresses for the name.  If so, we
-        // include them as associated so queries include their answers as known.  If not, also explicitly solicit their
+        // include them as associated so queries include their answers as known.  If not, explicitly solicit their
         // records as well
-        if (this.#wantsIp(solicitation.recordTypes)) {
+        if (awaitedRecordTypes && this.#wantsIp(awaitedRecordTypes)) {
             nextRecord: for (const record of solicitation.name.records) {
                 if (record.recordType !== DnsRecordType.SRV) {
                     continue;
                 }
 
-                const srv = this.#names.get((record.value as SrvRecordValue).target);
+                const srv = this.#names.get(record.value.target);
                 for (const record of srv.records) {
                     if (record.recordType === DnsRecordType.A || record.recordType === DnsRecordType.AAAA) {
                         if (!associated) {
@@ -122,7 +139,7 @@ export class DiscoveryResolver implements DiscoverySolicitor {
                 }
                 extra.add({
                     name: srv,
-                    recordTypes: solicitation.recordTypes.filter(
+                    recordTypes: awaitedRecordTypes.filter(
                         type => type === DnsRecordType.A || type === DnsRecordType.AAAA,
                     ),
                 });
@@ -151,7 +168,7 @@ export class DiscoveryResolver implements DiscoverySolicitor {
             }
 
             if (wantsIp && record.recordType === DnsRecordType.SRV) {
-                const referencedName = this.#names.maybeGet((record.value as SrvRecordValue).target);
+                const referencedName = this.#names.maybeGet(record.value.target);
                 if (referencedName && this.#hasRecordType(referencedName, recordTypes)) {
                     return true;
                 }
@@ -169,9 +186,9 @@ export class DiscoveryResolver implements DiscoverySolicitor {
 export namespace DiscoveryResolver {
     export interface Resolve {
         qname: string;
-        recordTypes: DnsRecordType[];
+        queryRecordTypes: DnsRecordType[];
+        awaitedRecordTypes?: DnsRecordType[];
         abort?: Abort.Signal;
-        retries?: RetrySchedule;
     }
 
     /**

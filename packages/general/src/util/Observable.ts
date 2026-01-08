@@ -366,7 +366,7 @@ export class BasicObservable<T extends any[] = any[], R = void> implements Obser
             };
         }
 
-        // Initially emit using a synchronous loop.  When we hit the first promies we convert to an async function
+        // Initially emit using a synchronous loop.  When we hit the first promise we convert to an async function
         for (; nextObserver < observers.length; nextObserver++) {
             let result: ReturnType<Observer<T, R>>;
 

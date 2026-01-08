@@ -217,8 +217,10 @@ export class Heap<T> {
 
                 const rightChild = this.#rightChildOf(index);
 
-                if (this.#compare(this.#buffer[moveTo ?? index], this.#buffer[rightChild]) > 0) {
-                    moveTo = rightChild;
+                if (rightChild < this.#buffer.length) {
+                    if (this.#compare(this.#buffer[moveTo ?? index], this.#buffer[rightChild]) > 0) {
+                        moveTo = rightChild;
+                    }
                 }
             }
 

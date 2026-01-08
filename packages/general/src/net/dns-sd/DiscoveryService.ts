@@ -5,12 +5,12 @@
  */
 
 import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
-import { AddressLifespan, ServerAddressUdp } from "#net/ServerAddress.js";
+import { AddressLifespan, ServerAddress, ServerAddressUdp } from "#net/ServerAddress.js";
 import { ServerAddressList } from "#net/ServerAddressList.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { Abort } from "#util/Abort.js";
-import { AsyncObservable, ObserverGroup } from "#util/Observable.js";
+import { AsyncObservable, AsyncObservableValue, ObserverGroup } from "#util/Observable.js";
 import { DiscoveryName } from "./DiscoveryName.js";
 import { DiscoveryNames } from "./DiscoveryNames.js";
 import { DiscoveryResolver } from "./DiscoveryResolver.js";
@@ -64,7 +64,7 @@ export class DiscoveryService {
     /**
      * Obtain known addresses, discovering as necessary.
      */
-    async resolve(abort?: AbortSignal, ipv4?: boolean) {
+    async resolve(abort?: AbortSignal, ipv4 = true) {
         const localAbort = new Abort({ abort });
         using _changed = this.#changed.use(() => {
             if (this.#addressIndex.size) {
@@ -74,17 +74,11 @@ export class DiscoveryService {
 
         const resolver = new DiscoveryResolver(this.#names);
 
-        await localAbort.race(
-            resolver.resolve({
-                qname: this.#name.qname,
-                recordTypes: ipv4 ? [DnsRecordType.AAAA, DnsRecordType.A] : [DnsRecordType.AAAA],
-                abort,
-            }),
-        );
+        await resolver.resolve(this.#name, abort, ipv4);
 
         abort?.throwIfAborted();
 
-        return this.#addresses;
+        return this.addresses;
     }
 
     /**
@@ -99,6 +93,85 @@ export class DiscoveryService {
      */
     get changed() {
         return this.#changed;
+    }
+
+    /**
+     * Stream address updates, starting with initial set of addresses.
+     */
+    async *addressChanges({
+        abort,
+        order = ServerAddressList.compareDesirability,
+        ipv4 = true,
+    }: {
+        abort?: AbortSignal;
+        order?: ServerAddressList.Comparator;
+        ipv4?: boolean;
+    }): AsyncGenerator<{ kind: "add" | "delete"; address: ServerAddressUdp }> {
+        let knownAddresses = new Map<string, ServerAddressUdp>();
+
+        // Implement change detection
+        const dirty = new AsyncObservableValue<[isDirty: boolean]>();
+        using _changed = this.changed.use(() => dirty.emit(true));
+
+        loop: while (true) {
+            // Ensure we're resolved
+            {
+                const addresses = await Abort.race(abort, this.resolve(abort, ipv4));
+                if (addresses === undefined) {
+                    // Aborted
+                    return;
+                }
+            }
+
+            // Collect and order addresses; do not use return from resolve() to avoid race condition with dirty
+            // observation
+            dirty.emit(false);
+            const addresses = ServerAddressList(this.addresses, order);
+
+            // Enqueue new addresses
+            let changes = new Array<DiscoveryService.AddressChange>();
+            const oldKnownAddresses = knownAddresses;
+            knownAddresses = new Map();
+            for (const address of addresses) {
+                const key = ServerAddress.urlFor(address);
+                if (oldKnownAddresses.has(key)) {
+                    oldKnownAddresses.delete(key);
+                    continue;
+                }
+
+                changes.push({ kind: "add", address });
+
+                knownAddresses.set(key, address);
+            }
+
+            // Enqueue deleted addresses
+            if (oldKnownAddresses.size) {
+                const deletedAddresses = [...oldKnownAddresses.values()];
+                const deletes = deletedAddresses.map(address => ({ kind: "delete", address }) as const);
+                changes = [...deletes, ...changes];
+            }
+
+            // Report deleted addresses
+            for (const change of changes) {
+                yield change;
+
+                // Abort if aborted
+                if (Abort.is(abort)) {
+                    return;
+                }
+
+                // Restart if changed
+                if (dirty.value) {
+                    continue loop;
+                }
+            }
+
+            // All addresses emitted; wait for change
+            await Abort.race(abort, dirty);
+            if (Abort.is(abort)) {
+                return;
+            }
+        }
     }
 
     #onServiceChanged = async ({ updated, deleted }: DiscoveryName.Changes) => {
@@ -227,6 +300,13 @@ export class DiscoveryService {
     }
 }
 
+export namespace DiscoveryService {
+    export interface AddressChange {
+        kind: "add" | "delete";
+        address: ServerAddressUdp;
+    }
+}
+
 interface Service extends AddressLifespan {
     name: DiscoveryName;
     priority: number;
@@ -236,7 +316,7 @@ interface Service extends AddressLifespan {
 }
 
 function serviceOf(record: DiscoveryName.Record) {
-    if (record.type !== DnsRecordType.SRV) {
+    if (record.recordType !== DnsRecordType.SRV) {
         return;
     }
 
@@ -255,7 +335,7 @@ function ipKeyOf(ip: string, port: number) {
 }
 
 function addressOf(record: DiscoveryName.Record) {
-    if (record.type !== DnsRecordType.A && record.type !== DnsRecordType.AAAA) {
+    if (record.recordType !== DnsRecordType.A && record.recordType !== DnsRecordType.AAAA) {
         return;
     }
     return record.value;

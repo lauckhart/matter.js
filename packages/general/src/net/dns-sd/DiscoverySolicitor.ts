@@ -70,7 +70,7 @@ export class QueryMulticaster implements DiscoverySolicitor {
                 }
             }
         }
-        this.#namesReady.value = true;
+        this.#namesReady.emit(true);
     }
 
     async close() {

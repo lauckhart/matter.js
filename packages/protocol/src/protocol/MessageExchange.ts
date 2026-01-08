@@ -7,6 +7,7 @@
 import { Message, PacketHeader, SessionType } from "#codec/MessageCodec.js";
 import { Mark } from "#common/Mark.js";
 import {
+    Abort,
     AsyncObservableValue,
     Bytes,
     createPromise,
@@ -14,7 +15,9 @@ import {
     DataReadQueue,
     Diagnostic,
     Duration,
+    Forever,
     hex,
+    ImplementationError,
     Instant,
     InternalError,
     Lifetime,
@@ -80,6 +83,15 @@ export type ExchangeSendOptions = {
     //  messages itself
     /** Allows to override the protocol ID of the message, mainly used for standalone acks. */
     protocolId?: number;
+
+    /** Aborts sending; does not throw */
+    abort?: AbortSignal;
+
+    /** Number of MRP retries to attempt (default: MRP.MAX_TRANSMISSIONS) */
+    maxRetransmissions?: number;
+
+    /** Maximum MRP retransmission time (default: unlimited) */
+    maxRetransmissionTime?: Duration;
 };
 
 /**
@@ -102,7 +114,9 @@ export interface MessageExchangeContext {
 /**
  * A Matter "message exchange" is a sequence of messages associated with a single interaction.
  *
- * TODO - rewrite using sleeps and abort controller
+ * TODO - rewrite main send retransmission loop using sleeps instead of timers
+ * TODO - track dangling promises (annotated with TODO)
+ * TODO - replace throws with logging for some errors triggered by peer
  */
 export class MessageExchange {
     static fromInitialMessage(context: MessageExchangeContext, initialMessage: Message) {
@@ -146,11 +160,6 @@ export class MessageExchange {
             );
         }
     });
-    #sentMessageToAck: Message | undefined;
-    #sentMessageAckSuccess: ((message: Message | undefined) => void) | undefined;
-    #sentMessageAckFailure: ((error?: Error) => void) | undefined;
-    #retransmissionTimer: Timer | undefined;
-    #retransmissionCounter = 0;
     #closeTimer: Timer | undefined;
     #isDestroyed = false;
     #timedInteractionTimer: Timer | undefined;
@@ -163,6 +172,16 @@ export class MessageExchange {
     readonly #protocolId: number;
     readonly #closed = AsyncObservableValue();
     readonly #closing = AsyncObservableValue();
+
+    // This following are associated with current active transmission
+    #isTransmitting = false;
+    #sentMessageToAck: Message | undefined;
+    #sentMessageAckSuccess: ((message: Message | undefined) => void) | undefined;
+    #sentMessageAckFailure: ((error?: Error) => void) | undefined;
+    #retransmissionTimer: Timer | undefined;
+    #retransmissionCounter = 0;
+    #maxRetransmissions = MRP.MAX_TRANSMISSIONS;
+    #maxRetransmissionTime = Forever;
 
     constructor(config: MessageExchange.Config) {
         const { context, isInitiator, peerSessionId, nodeId, peerNodeId, exchangeId, protocolId } = config;
@@ -342,6 +361,30 @@ export class MessageExchange {
     }
 
     async send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
+        if (this.#lifetime.isClosing) {
+            throw new ImplementationError("Cannot send because exchange is closed");
+        }
+        if (this.#isTransmitting) {
+            throw new ImplementationError("Cannot send because exchange is busy");
+        }
+
+        this.#isTransmitting = true;
+
+        try {
+            await this.#send(messageType, payload, options);
+        } finally {
+            this.#retransmissionTimer?.stop();
+            this.#retransmissionTimer =
+                this.#sentMessageToAck =
+                this.#sentMessageAckSuccess =
+                this.#sentMessageAckFailure =
+                    undefined;
+            this.#retransmissionCounter = 0;
+            this.#isTransmitting = false;
+        }
+    }
+
+    async #send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         const {
             expectAckOnly = false,
             disableMrpLogic,
@@ -349,7 +392,11 @@ export class MessageExchange {
             includeAcknowledgeMessageId,
             logContext,
             protocolId = this.#protocolId,
+            maxRetransmissions = MRP.MAX_TRANSMISSIONS,
+            maxRetransmissionTime = Forever,
         } = options;
+
+        using abort = new Abort(options);
 
         if (!this.session.usesMrp && includeAcknowledgeMessageId !== undefined) {
             throw new InternalError("Cannot include an acknowledge message ID when MRP is not used");
@@ -366,11 +413,11 @@ export class MessageExchange {
                 return;
             }
             if (requiresAck) {
-                throw new MatterFlowError("A standalone ack may not require acknowledgement.");
+                throw new MatterFlowError("A standalone ack may not require acknowledgement");
             }
         }
         if (this.#sentMessageToAck !== undefined && !isStandaloneAck) {
-            throw new MatterFlowError("The previous message has not been acked yet, cannot send a new message.");
+            throw new MatterFlowError("The previous message has not been acked yet; cannot send a new message");
         }
 
         this.#used = true;
@@ -387,10 +434,14 @@ export class MessageExchange {
 
         let packetHeader: PacketHeader;
         if (this.session.type === SessionType.Unicast) {
+            const messageId = await abort.race(this.session.getIncrementedMessageCounter());
+            if (messageId === undefined) {
+                return;
+            }
             packetHeader = {
                 sessionId: this.#peerSessionId,
                 sessionType: SessionType.Unicast,
-                messageId: await this.session.getIncrementedMessageCounter(),
+                messageId,
                 destNodeId: this.#peerNodeId,
                 sourceNodeId: this.#nodeId,
                 hasPrivacyEnhancements: false,
@@ -406,10 +457,14 @@ export class MessageExchange {
             if (destGroupId === 0) {
                 throw new InternalError(`Invalid GroupId extracted from NodeId ${this.#peerNodeId}`);
             }
+            const messageId = await abort.race(this.session.getIncrementedMessageCounter());
+            if (messageId === undefined) {
+                return;
+            }
             packetHeader = {
                 sessionId: this.#peerSessionId,
                 sessionType: SessionType.Group,
-                messageId: await session.getIncrementedMessageCounter(),
+                messageId,
                 destGroupId,
                 sourceNodeId: this.#nodeId, // We are the source node, so use our NodeId
                 hasPrivacyEnhancements: false,
@@ -439,7 +494,7 @@ export class MessageExchange {
             this.#sentMessageToAck = message;
             this.#retransmissionTimer = Time.getTimer(
                 `retransmitting ${Message.via(this, message)}`,
-                this.channel.getMrpResubmissionBackOffTime(0),
+                Duration.min(this.channel.getMrpResubmissionBackOffTime(0), this.#maxRetransmissionTime),
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
             const { promise, resolver, rejecter } = createPromise<Message | undefined>();
@@ -449,15 +504,23 @@ export class MessageExchange {
         }
 
         using sending = this.join("sending", Diagnostic.strong(Message.via(this, message)));
-        await this.channel.send(message, logContext);
+        await abort.race(this.channel.send(message, logContext));
+        if (abort.aborted) {
+            return;
+        }
 
-        if (ackPromise !== undefined) {
+        if (ackPromise === undefined) {
+            this.#maxRetransmissions = maxRetransmissions;
+            this.#maxRetransmissionTime = maxRetransmissionTime;
             this.#retransmissionCounter = 0;
             this.#retransmissionTimer?.start();
 
             // Await response.  Resolves with message when received, undefined when aborted, and rejects on timeout
             using _waiting = sending.join("waiting for ack");
-            const responseMessage = await ackPromise;
+            const responseMessage = await abort.race(ackPromise);
+            if (abort.aborted) {
+                return;
+            }
 
             this.#sentMessageAckSuccess = undefined;
             this.#sentMessageAckFailure = undefined;
@@ -505,9 +568,9 @@ export class MessageExchange {
 
     #retransmitMessage(message: Message, expectedProcessingTime?: Duration) {
         this.#retransmissionCounter++;
-        if (this.considerClosed || this.#retransmissionCounter >= MRP.MAX_TRANSMISSIONS) {
-            // Ok all 4 resubmissions are done, but we need to wait a bit longer because of processing time and
-            // the resubmissions from the other side
+        if (this.considerClosed || this.#retransmissionCounter >= this.#maxRetransmissions) {
+            // Ok all resubmissions are done, but we need to wait a bit longer because of processing time and the
+            // resubmissions from the other side
             if (expectedProcessingTime && !this.considerClosed) {
                 // We already have waited after the last message was sent, so deduct this time from the final wait time
                 const finalWaitTime = Millis(
@@ -549,7 +612,10 @@ export class MessageExchange {
         this.session.notifyActivity(false);
 
         this.context.retry(this.#retransmissionCounter);
-        const resubmissionBackoffTime = this.channel.getMrpResubmissionBackOffTime(this.#retransmissionCounter);
+        const resubmissionBackoffTime = Duration.min(
+            this.channel.getMrpResubmissionBackOffTime(this.#retransmissionCounter),
+            this.#maxRetransmissionTime,
+        );
         logger.debug(
             `Resubmitting ${Message.via(this, message)} (retransmission attempt ${this.#retransmissionCounter}, backoff time ${Duration.format(resubmissionBackoffTime)}))`,
         );
@@ -689,9 +755,11 @@ export class MessageExchange {
             return this.#close();
         }
 
-        // Wait until all potential outstanding Resubmissions are done, also for Standalone-Acks.
+        // Wait until all potential outstanding Resubmissions are done (up to default of MRP.MAX_TRANSMISSIONS), also
+        // for Standalone-Acks.
+        //
         // We might wait a bit longer than needed, but because this is mainly a failsafe mechanism, it is acceptable.
-        // in normal case this timer is cancelled before it triggers when all retries are done.
+        // Normal this timer is cancelled before it triggers when all retries are done.
         let maxResubmissionTime = Instant;
         for (let i = this.#retransmissionCounter; i <= MRP.MAX_TRANSMISSIONS; i++) {
             maxResubmissionTime = Millis(maxResubmissionTime + this.channel.getMrpResubmissionBackOffTime(i));

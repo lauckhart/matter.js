@@ -7,7 +7,8 @@
 import { DnsRecord, DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
 import { Time } from "#time/Time.js";
 import { Timestamp } from "#time/Timestamp.js";
-import { AsyncObservable, AsyncObserver } from "#util/Observable.js";
+import { AsyncObserver, BasicObservable } from "#util/Observable.js";
+import { MaybePromise } from "#util/Promises.js";
 import { logger } from "./DiscoveryNames.js";
 
 /**
@@ -16,7 +17,7 @@ import { logger } from "./DiscoveryNames.js";
  * An {@link DiscoveryName} is created when a new name is discovered or requested by another component.  The name
  * automatically deletes when there are no longer observers or unexpired records.
  */
-export class DiscoveryName extends AsyncObservable<[changes: DiscoveryName.Changes]> {
+export class DiscoveryName extends BasicObservable<[changes: DiscoveryName.Changes], MaybePromise> {
     #context: DiscoveryName.Context;
     #records = new Map<string, DiscoveryName.Record>();
     #recordCount = 0;
@@ -63,9 +64,9 @@ export class DiscoveryName extends AsyncObservable<[changes: DiscoveryName.Chang
     }
 
     installRecord(record: DnsRecord<any>) {
-        // We don't track TTL on text records; we just store the standard DNS-SD k/v's
+        // For TXT records, extract the standard DNS-SD k/v's
         if (record.recordType === DnsRecordType.TXT) {
-            const entries = record.value as string[];
+            const entries = record.value;
             for (const entry of entries) {
                 const pos = entry.indexOf("=");
                 if (pos === -1) {
@@ -219,15 +220,15 @@ export namespace DiscoveryName {
     }
 
     export interface PointerRecord extends DnsRecord<string>, Expiration {
-        type: DnsRecordType.PTR;
+        recordType: DnsRecordType.PTR;
     }
 
     export interface HostRecord extends DnsRecord<string>, Expiration {
-        type: DnsRecordType.A | DnsRecordType.AAAA;
+        recordType: DnsRecordType.A | DnsRecordType.AAAA;
     }
 
     export interface ServiceRecord extends DnsRecord<SrvRecordValue>, Expiration {
-        type: DnsRecordType.SRV;
+        recordType: DnsRecordType.SRV;
     }
 
     export type Record = PointerRecord | ServiceRecord | HostRecord;

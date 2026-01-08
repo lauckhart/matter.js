@@ -62,6 +62,10 @@ export function ServerAddressList<T extends ServerAddress>(
 }
 
 export namespace ServerAddressList {
+    export interface Comparator<T extends ServerAddress = ServerAddress> {
+        (addr1: T, addr2: T): number;
+    }
+
     /**
      * Update a list of addresses with health information from another list.
      */
