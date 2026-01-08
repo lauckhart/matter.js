@@ -95,7 +95,7 @@ export class Scheduler<T> {
             const now = Time.nowMs;
             let first = this.#queue.first;
             let nextAt = first ? this.#timeOf(first) : undefined;
-            while (nextAt !== undefined && nextAt < now) {
+            while (nextAt !== undefined && nextAt <= now) {
                 if (this.#abort.aborted) {
                     return;
                 }

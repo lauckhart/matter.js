@@ -25,7 +25,6 @@ export class DiscoveryService {
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addressIndex = new Map<string, ServerAddressUdp>();
-    #addresses?: ServerAddressList<ServerAddressUdp>;
     #notified?: Promise<void>;
 
     constructor(name: string, names: DiscoveryNames) {
@@ -55,10 +54,7 @@ export class DiscoveryService {
      * Known addresses.
      */
     get addresses(): Iterable<ServerAddressUdp> {
-        if (this.#addresses === undefined) {
-            this.#addresses = ServerAddressList(this.#addressIndex.values());
-        }
-        return this.#addresses;
+        return this.#addressIndex.values();
     }
 
     /**
@@ -97,6 +93,10 @@ export class DiscoveryService {
 
     /**
      * Stream address updates, starting with initial set of addresses.
+     *
+     * Outputs addresses in priority order so the stream may be used directly for establishing new connections.
+     *
+     * If no addresses are present, triggers discovery using standard MDNS backoff schedule.
      */
     async *addressChanges({
         abort,
@@ -106,7 +106,7 @@ export class DiscoveryService {
         abort?: AbortSignal;
         order?: ServerAddressList.Comparator;
         ipv4?: boolean;
-    }): AsyncGenerator<{ kind: "add" | "delete"; address: ServerAddressUdp }> {
+    } = {}): AsyncGenerator<{ kind: "add" | "delete"; address: ServerAddressUdp }> {
         let knownAddresses = new Map<string, ServerAddressUdp>();
 
         // Implement change detection
@@ -114,15 +114,6 @@ export class DiscoveryService {
         using _changed = this.changed.use(() => dirty.emit(true));
 
         loop: while (true) {
-            // Ensure we're resolved
-            {
-                const addresses = await Abort.race(abort, this.resolve(abort, ipv4));
-                if (addresses === undefined) {
-                    // Aborted
-                    return;
-                }
-            }
-
             // Collect and order addresses; do not use return from resolve() to avoid race condition with dirty
             // observation
             dirty.emit(false);
@@ -134,14 +125,14 @@ export class DiscoveryService {
             knownAddresses = new Map();
             for (const address of addresses) {
                 const key = ServerAddress.urlFor(address);
+                knownAddresses.set(key, address);
+
                 if (oldKnownAddresses.has(key)) {
                     oldKnownAddresses.delete(key);
                     continue;
                 }
 
                 changes.push({ kind: "add", address });
-
-                knownAddresses.set(key, address);
             }
 
             // Enqueue deleted addresses
@@ -151,7 +142,7 @@ export class DiscoveryService {
                 changes = [...deletes, ...changes];
             }
 
-            // Report deleted addresses
+            // Output
             for (const change of changes) {
                 yield change;
 
@@ -163,6 +154,16 @@ export class DiscoveryService {
                 // Restart if changed
                 if (dirty.value) {
                     continue loop;
+                }
+            }
+
+            // If we have no addresses, perform resolution.  Do this after sending updates so that "delete" records emit
+            // first
+            if (!knownAddresses.size && !this.#addressIndex.size) {
+                const addresses = await Abort.race(abort, this.resolve(abort, ipv4));
+                if (addresses === undefined) {
+                    // Aborted
+                    return;
                 }
             }
 
@@ -219,11 +220,9 @@ export class DiscoveryService {
 
         this.#observers.on(service.name, service.onChange);
 
-        this.#services.set(key, service);
+        this.#onAddressChanged(service, { name: service.name, updated: [...service.name.records] });
 
-        if (this.#addresses) {
-            this.#addresses?.replace(this.#addressIndex.values());
-        }
+        this.#services.set(key, service);
     }
 
     #deleteService({ target, port }: SrvRecordValue) {
@@ -234,7 +233,11 @@ export class DiscoveryService {
             return;
         }
 
+        this.#services.delete(key);
+
         this.#observers.off(service.name, service.onChange);
+
+        this.#onAddressChanged(service, { name: service.name, deleted: [...service.name.records] });
 
         return;
     }
@@ -296,6 +299,8 @@ export class DiscoveryService {
     };
 
     async #emitNotification() {
+        await Time.sleep("discovery service coalescence", 0);
+        this.#notified = undefined;
         await this.changed.emit();
     }
 }

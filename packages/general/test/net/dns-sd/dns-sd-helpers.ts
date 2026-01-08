@@ -99,7 +99,7 @@ export class MockHost {
     /**
      * Send MDNS message now.
      */
-    async broadcast(nameOrIndex: number | string = 1, ttl = Hours(1)) {
+    async broadcast(nameOrIndex: number | string = 1, ttl = Hours(1), ips?: string[]) {
         const qname = qnameOf(nameOrIndex);
         const hostname = `${hex.fixed(this.#index, 16)}.local`;
 
@@ -128,7 +128,13 @@ export class MockHost {
 
         const additionalRecords = Array<DnsRecord>();
         for (const intf of this.#network.getNetInterfaces()) {
-            const { ipV4, ipV6 } = this.#network.getIpMac(intf.name);
+            let ipV4: string[], ipV6: string[];
+            if (ips) {
+                ipV4 = [];
+                ipV6 = ips;
+            } else {
+                ({ ipV4, ipV6 } = this.#network.getIpMac(intf.name));
+            }
 
             for (const ips of [ipV4, ipV6]) {
                 const recordType = ips === ipV4 ? DnsRecordType.A : DnsRecordType.AAAA;

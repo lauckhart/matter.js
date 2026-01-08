@@ -183,6 +183,7 @@ export class DiscoveryName extends BasicObservable<[changes: DiscoveryName.Chang
                 this.#changes.clear();
                 await this.emit(changes);
             }
+            this.#notified = undefined;
         };
 
         this.#notified = notify();
