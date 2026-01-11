@@ -6,10 +6,13 @@
 
 import { DnsMessageType, DnsQuery, DnsRecord, DnsRecordClass, DnsRecordType } from "#codec/DnsCodec.js";
 import { Logger } from "#log/Logger.js";
+import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Time } from "#time/Time.js";
+import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
 import { ObservableValue } from "#util/Observable.js";
-import { DiscoveryName } from "./DiscoveryName.js";
+import type { DiscoveryName } from "./DiscoveryName.js";
+import type { DiscoveryNames } from "./DiscoveryNames.js";
 import { MdnsSocket } from "./MdnsSocket.js";
 
 const logger = new Logger("DiscoverySolicitor");
@@ -32,14 +35,88 @@ export namespace DiscoverySolicitor {
      * Configures solicitation of a single name.
      */
     export interface Solicitation {
+        /**
+         * The name to solicit.
+         */
         name: DiscoveryName;
+
+        /**
+         * Record types to request.
+         */
         recordTypes: DnsRecordType[];
+
+        /**
+         * Additional names to include as known answers.
+         */
         associatedNames?: DiscoveryName[];
     }
 
     /**
-     * Solicit repeatedly using standard DNS-SD schedule until aborted.
+     * Configures repeated solicitation.
      */
+    export interface Discovery {
+        /**
+         * Discovery name manager.
+         */
+        names: DiscoveryNames;
+
+        /**
+         * The solicitation to send.
+         *
+         * This value is read repeatedly so may change between solicitations.
+         */
+        solicitation: Solicitation;
+
+        /**
+         * Terminates discovery.
+         */
+        abort: AbortSignal;
+
+        /**
+         * The schedule for sending packets after the DNS-SD delay of 100-120ms.
+         *
+         * Defaults to {@link DefaultRetries}.
+         */
+        schedule?: RetrySchedule;
+    }
+
+    /**
+     * Default retry schedule per RFC 6762 (initial delay of 20-120ms. handled separately).
+     */
+    export const DefaultRetries: RetrySchedule.Configuration = {
+        initialInterval: Seconds(1),
+        jitterFactor: 0.2,
+        backoffFactor: 2,
+        maximumInterval: Hours(1),
+    };
+
+    /**
+     * Perform solicitation until aborted.
+     */
+    export async function discover(discovery: Discovery) {
+        const { names, abort } = discovery;
+
+        let { schedule } = discovery;
+        if (!schedule) {
+            schedule = new RetrySchedule(names.entropy, DefaultRetries);
+        }
+
+        // Wait initially 20 - 120 ms per RFC 6762
+        let timeout = Millis(20 + 100 * (names.entropy.randomUint32 / Math.pow(2, 32)));
+
+        for (const nextTimeout of schedule) {
+            using delay = new Abort({ abort, timeout });
+
+            await delay;
+            if (delay.aborted) {
+                break;
+            }
+
+            timeout = nextTimeout;
+
+            names.solicit(discovery.solicitation);
+        }
+    }
 }
 
 /**

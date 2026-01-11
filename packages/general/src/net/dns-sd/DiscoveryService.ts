@@ -14,6 +14,7 @@ import { AsyncObservable, AsyncObservableValue, ObserverGroup } from "#util/Obse
 import { DiscoveryName } from "./DiscoveryName.js";
 import { DiscoveryNames } from "./DiscoveryNames.js";
 import { DiscoveryResolver } from "./DiscoveryResolver.js";
+import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
 
 /**
  * A service that updates as {@link DiscoveryNames} change.
@@ -25,7 +26,13 @@ export class DiscoveryService {
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addresses = ServerAddressSet<ServerAddressUdp>();
+    #connections?: Set<Disposable>;
+    #isReachable = false;
     #notified?: Promise<void>;
+    #discovery?: {
+        abort: Abort;
+        finished: Promise<void>;
+    };
 
     constructor(name: string, names: DiscoveryNames) {
         this.#name = names.get(name);
@@ -41,10 +48,52 @@ export class DiscoveryService {
     }
 
     /**
+     * Inform the service of a connection attempt until the returned value is disposed.
+     */
+    connecting(): Disposable {
+        if (!this.#connections) {
+            this.#connections = new Set();
+        }
+
+        const disposable: Disposable = {
+            [Symbol.dispose]: () => {
+                this.#connections?.delete(disposable);
+                if (!this.#connections?.size) {
+                    this.#terminateDiscovery();
+                }
+            },
+        };
+
+        this.#connections.add(disposable);
+
+        if (!this.#isReachable) {
+            this.#initiateDiscovery();
+        }
+
+        return disposable;
+    }
+
+    /**
+     * Specify whether known addresses are reachable.
+     *
+     * Set to false initially, then true upon discovery of any new address.
+     *
+     * When false, triggers discovery when connecting.  If true, cancels any active discovery.
+     */
+    get isReachable() {
+        return this.#isReachable;
+    }
+
+    set isReachable(isReachable: boolean) {
+        this.#isReachable = isReachable;
+    }
+
+    /**
      * Release resources.
      */
     async close() {
         this.#observers.close();
+        this.#terminateDiscovery();
         if (this.#notified) {
             await this.#notified;
         }
@@ -292,6 +341,34 @@ export class DiscoveryService {
         // We notify asynchronously so changes coalesce
         this.#notified = this.#emitNotification();
     };
+
+    #initiateDiscovery() {
+        if (this.#discovery) {
+            return;
+        }
+
+        const abort = new Abort();
+
+        const self = this;
+        this.#discovery = {
+            abort,
+            finished: DiscoverySolicitor.discover({
+                abort,
+                names: this.#names,
+                get solicitation() {
+                    return {
+                        name: self.#name,
+                        recordTypes: 
+                    }
+                },
+            }),
+        };
+    }
+
+    #terminateDiscovery() {
+        this.#discovery?.abort();
+        this.#discovery = undefined;
+    }
 
     async #emitNotification() {
         await Time.sleep("discovery service coalescence", 0);

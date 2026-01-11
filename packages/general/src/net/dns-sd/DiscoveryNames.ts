@@ -19,7 +19,7 @@ export const logger = Logger.get("DiscoveryNames");
 /**
  * Names collected via DNS-SD.
  */
-export class DiscoveryNames implements DiscoverySolicitor {
+export class DiscoveryNames {
     readonly #socket: MdnsSocket;
     readonly #lifetime: Lifetime;
     readonly #entropy: Entropy;
