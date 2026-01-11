@@ -206,6 +206,7 @@ export namespace RemoteDescriptor {
         if ("CM" in descriptor) {
             long.commissioningMode = descriptor.CM;
         }
+
         return long;
     }
 }

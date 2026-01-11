@@ -25,13 +25,21 @@ import { Observable } from "./Observable.js";
 export class Heap<T> {
     readonly #buffer = Array<T>();
     readonly #compare: (a: T, b: T) => number;
+    readonly #normalize?: (a: T) => T;
     #firstChanged?: Observable<[T | undefined]>;
     #deleted?: Observable<[T]>;
     #added?: Observable<[T]>;
     #positions?: Map<T, number>;
 
-    constructor(comparator: (a: T, b: T) => number) {
+    /**
+     * Create new heap.
+     *
+     * @param comparator performs ordering of items in the heap
+     * @param normalizer optionally converts items to normal form on insert
+     */
+    constructor(comparator: (a: T, b: T) => number, normalizer?: (entry: T) => T) {
         this.#compare = comparator;
+        this.#normalize = normalizer;
     }
 
     /**
@@ -103,7 +111,11 @@ export class Heap<T> {
      * Add an item.
      */
     add(...items: T[]) {
-        for (const item of items) {
+        for (let item of items) {
+            if (this.#normalize) {
+                item = this.#normalize(item);
+            }
+
             this.#buffer.push(item);
             this.#bubbleUp(this.#buffer.length - 1);
 
@@ -127,6 +139,10 @@ export class Heap<T> {
             for (let i = 0; i < this.#buffer.length; i++) {
                 this.#positions.set(this.#buffer[i], i);
             }
+        }
+
+        if (this.#normalize) {
+            item = this.#normalize(item);
         }
 
         const pos = this.#positions.get(item);

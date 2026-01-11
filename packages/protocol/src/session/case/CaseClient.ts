@@ -8,7 +8,7 @@ import { Icac } from "#certificate/kinds/Icac.js";
 import { Noc } from "#certificate/kinds/Noc.js";
 import { Fabric } from "#fabric/Fabric.js";
 import { Abort, Bytes, Duration, EcdsaSignature, Logger, PublicKey, UnexpectedDataError } from "#general";
-import { MessageExchange } from "#protocol/MessageExchange.js";
+import { ExchangeSendOptions, MessageExchange } from "#protocol/MessageExchange.js";
 import { RetransmissionLimitReachedError } from "#protocol/errors.js";
 import { ChannelStatusResponseError } from "#securechannel/SecureChannelMessenger.js";
 import { NodeSession } from "#session/NodeSession.js";
@@ -50,6 +50,10 @@ export class CaseClient {
                 peerNodeId,
                 new Abort({ abort }),
                 caseAuthenticatedTags,
+                {
+                    maxRetransmissions: options?.maxInitialRetransmissions,
+                    maxRetransmissionTime: options?.maxInitialRetransmissionTime,
+                },
             );
         } catch (error) {
             if (!(error instanceof ChannelStatusResponseError || error instanceof RetransmissionLimitReachedError)) {
@@ -68,6 +72,7 @@ export class CaseClient {
         peerNodeId: NodeId,
         abort: Abort,
         caseAuthenticatedTags?: CaseAuthenticatedTag[],
+        initialSendOptions?: ExchangeSendOptions,
     ) {
         const { crypto } = fabric;
 
@@ -88,25 +93,31 @@ export class CaseClient {
             );
             const initiatorResumeMic = crypto.encrypt(resumeKey, new Uint8Array(0), RESUME1_MIC_NONCE);
             sigma1Bytes = await abort.attempt(
-                messenger.sendSigma1({
-                    initiatorSessionId,
-                    destinationId: await abort.attempt(fabric.currentDestinationIdFor(peerNodeId, initiatorRandom)),
-                    initiatorEcdhPublicKey: localKey.publicBits,
-                    initiatorRandom,
-                    resumptionId,
-                    initiatorResumeMic,
-                    initiatorSessionParams: this.#sessions.sessionParameters,
-                }),
+                messenger.sendSigma1(
+                    {
+                        initiatorSessionId,
+                        destinationId: await abort.attempt(fabric.currentDestinationIdFor(peerNodeId, initiatorRandom)),
+                        initiatorEcdhPublicKey: localKey.publicBits,
+                        initiatorRandom,
+                        resumptionId,
+                        initiatorResumeMic,
+                        initiatorSessionParams: this.#sessions.sessionParameters,
+                    },
+                    initialSendOptions,
+                ),
             );
         } else {
             sigma1Bytes = await abort.attempt(
-                messenger.sendSigma1({
-                    initiatorSessionId,
-                    destinationId: await abort.attempt(fabric.currentDestinationIdFor(peerNodeId, initiatorRandom)),
-                    initiatorEcdhPublicKey: localKey.publicBits,
-                    initiatorRandom,
-                    initiatorSessionParams: this.#sessions.sessionParameters,
-                }),
+                messenger.sendSigma1(
+                    {
+                        initiatorSessionId,
+                        destinationId: await abort.attempt(fabric.currentDestinationIdFor(peerNodeId, initiatorRandom)),
+                        initiatorEcdhPublicKey: localKey.publicBits,
+                        initiatorRandom,
+                        initiatorSessionParams: this.#sessions.sessionParameters,
+                    },
+                    initialSendOptions,
+                ),
             );
         }
 
@@ -300,5 +311,7 @@ export namespace CaseClient {
         expectedProcessingTime?: Duration;
         caseAuthenticatedTags?: CaseAuthenticatedTag[];
         abort?: AbortSignal;
+        maxInitialRetransmissions?: number;
+        maxInitialRetransmissionTime?: Duration;
     }
 }

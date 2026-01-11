@@ -5,8 +5,8 @@
  */
 
 import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
-import { AddressLifespan, ServerAddress, ServerAddressUdp } from "#net/ServerAddress.js";
-import { ServerAddressList } from "#net/ServerAddressList.js";
+import { AddressLifespan, ServerAddressUdp } from "#net/ServerAddress.js";
+import { ServerAddressSet } from "#net/ServerAddressSet.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { Abort } from "#util/Abort.js";
@@ -24,7 +24,7 @@ export class DiscoveryService {
     readonly #observers = new ObserverGroup(this);
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
-    readonly #addressIndex = new Map<string, ServerAddressUdp>();
+    readonly #addresses = ServerAddressSet<ServerAddressUdp>();
     #notified?: Promise<void>;
 
     constructor(name: string, names: DiscoveryNames) {
@@ -53,8 +53,8 @@ export class DiscoveryService {
     /**
      * Known addresses.
      */
-    get addresses(): Iterable<ServerAddressUdp> {
-        return this.#addressIndex.values();
+    get addresses() {
+        return this.#addresses;
     }
 
     /**
@@ -63,7 +63,7 @@ export class DiscoveryService {
     async resolve(abort?: AbortSignal, ipv4 = true) {
         const localAbort = new Abort({ abort });
         using _changed = this.#changed.use(() => {
-            if (this.#addressIndex.size) {
+            if (this.#addresses.size) {
                 localAbort.abort();
             }
         });
@@ -100,14 +100,14 @@ export class DiscoveryService {
      */
     async *addressChanges({
         abort,
-        order = ServerAddressList.compareDesirability,
+        order = ServerAddressSet.compareDesirability,
         ipv4 = true,
     }: {
         abort?: AbortSignal;
-        order?: ServerAddressList.Comparator;
+        order?: ServerAddressSet.Comparator;
         ipv4?: boolean;
     } = {}): AsyncGenerator<{ kind: "add" | "delete"; address: ServerAddressUdp }> {
-        let knownAddresses = new Map<string, ServerAddressUdp>();
+        let knownAddresses = new Set<ServerAddressUdp>();
 
         // Implement change detection
         const dirty = new AsyncObservableValue<[isDirty: boolean]>();
@@ -117,18 +117,17 @@ export class DiscoveryService {
             // Collect and order addresses; do not use return from resolve() to avoid race condition with dirty
             // observation
             dirty.emit(false);
-            const addresses = ServerAddressList(this.addresses, order);
+            const addresses = ServerAddressSet(this.addresses, order);
 
             // Enqueue new addresses
             let changes = new Array<DiscoveryService.AddressChange>();
             const oldKnownAddresses = knownAddresses;
-            knownAddresses = new Map();
+            knownAddresses = new Set();
             for (const address of addresses) {
-                const key = ServerAddress.urlFor(address);
-                knownAddresses.set(key, address);
+                knownAddresses.add(address);
 
-                if (oldKnownAddresses.has(key)) {
-                    oldKnownAddresses.delete(key);
+                if (oldKnownAddresses.has(address)) {
+                    oldKnownAddresses.delete(address);
                     continue;
                 }
 
@@ -159,7 +158,7 @@ export class DiscoveryService {
 
             // If we have no addresses, perform resolution.  Do this after sending updates so that "delete" records emit
             // first
-            if (!knownAddresses.size && !this.#addressIndex.size) {
+            if (!knownAddresses.size && !this.#addresses.size) {
                 const addresses = await Abort.race(abort, this.resolve(abort, ipv4));
                 if (addresses === undefined) {
                     // Aborted
@@ -262,29 +261,25 @@ export class DiscoveryService {
     };
 
     #updateAddress(service: Service, ip: string) {
-        const key = ipKeyOf(ip, service.port);
+        const address: ServerAddressUdp = { type: "udp", ip, port: service.port };
 
-        if (this.#addressIndex.has(key)) {
+        if (this.#addresses.has(address)) {
             return;
         }
 
-        this.#addressIndex.set(key, {
-            type: "udp",
-            ip,
-            port: service.port,
-        });
+        this.#addresses.add(address);
 
         this.#notify();
     }
 
     #deleteAddress(service: Service, ip: string) {
-        const key = ipKeyOf(ip, service.port);
+        const address: ServerAddressUdp = { type: "udp", ip, port: service.port };
 
-        if (!this.#addressIndex.has(key)) {
+        if (!this.#addresses.has(address)) {
             return;
         }
 
-        this.#addressIndex.delete(key);
+        this.#addresses.delete(address);
 
         this.#notify();
     }
@@ -330,13 +325,6 @@ function serviceOf(record: DiscoveryName.Record) {
 
 function hostKeyOf(name: string, port: number) {
     return `${name}:${port}`;
-}
-
-function ipKeyOf(ip: string, port: number) {
-    if (ip.includes(":")) {
-        ip = `[${ip}]`;
-    }
-    return hostKeyOf(ip, port);
 }
 
 function addressOf(record: DiscoveryName.Record) {

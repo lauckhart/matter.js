@@ -36,6 +36,10 @@ export namespace DiscoverySolicitor {
         recordTypes: DnsRecordType[];
         associatedNames?: DiscoveryName[];
     }
+
+    /**
+     * Solicit repeatedly using standard DNS-SD schedule until aborted.
+     */
 }
 
 /**

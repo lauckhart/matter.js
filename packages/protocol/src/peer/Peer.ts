@@ -5,6 +5,7 @@
  */
 
 import { BasicInformation } from "#clusters/basic-information";
+import { DiscoveryData } from "#common/Scanner.js";
 import {
     Abort,
     BasicMultiplex,
@@ -16,14 +17,15 @@ import {
     Lifetime,
     Logger,
     MaybePromise,
-    RetrySchedule,
-    ServerAddressUdp,
+    ObserverGroup,
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import { getOperationalDeviceQname } from "#mdns/MdnsConsts.js";
+import { CaseClient } from "#session/case/CaseClient.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
-import type { SessionManager } from "#session/SessionManager.js";
+import { SessionParameters } from "#session/SessionParameters.js";
+import { PeerConnection } from "./PeerConnection.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
 
@@ -44,8 +46,9 @@ export class Peer {
         subscriptionsPerFabric: 3,
     };
     #abort = new Abort();
-    #isConnecting = false;
+    #connecting?: Promise<NodeSession | undefined>;
     #service: DiscoveryService;
+    #observers = new ObserverGroup();
 
     // TODO - manage these internally and/or factor away
     activeDiscovery?: Peer.ActiveDiscovery;
@@ -70,9 +73,18 @@ export class Peer {
             this.#isSaving = true;
             this.#workers.add(this.#save());
         });
+
         this.#context = context;
 
-        this.#sessions.added.on(session => {
+        this.#observers.on(this.#service.changed, () => {
+            // Update persisted discovery data
+            this.#descriptor.discoveryData = {
+                ...this.#descriptor.discoveryData,
+                ...DiscoveryData(this.#service.kvs),
+            };
+        });
+
+        this.#observers.on(this.#sessions.added, session => {
             // Remove channel when destroyed
             session.closing.on(() => {
                 this.#sessions.delete(session);
@@ -84,6 +96,10 @@ export class Peer {
                 this.#descriptor.operationalAddress = channel.networkAddress;
             }
         });
+    }
+
+    get lifetime() {
+        return this.#lifetime;
     }
 
     get fabric() {
@@ -114,64 +130,50 @@ export class Peer {
         return this.#service;
     }
 
+    get sessionParameters() {
+        const sessionParameters = {} as SessionParameters.Config;
+
+        const { SII, SAI, SAT } = this.descriptor.discoveryData ?? {};
+        if (SII !== undefined) {
+            sessionParameters.idleInterval = SII;
+        }
+        if (SAI !== undefined) {
+            sessionParameters.activeInterval = SAI;
+        }
+        if (SAT !== undefined) {
+            sessionParameters.activeThreshold = SAT;
+        }
+
+        return sessionParameters;
+    }
+
     /**
      * Obtain a session with the peer, establishing anew as necessary.
      */
-    async connect(abort?: AbortSignal) {
-        const aborts = new Array<AbortSignal>(this.#abort);
-        if (abort) {
-            aborts.push(abort);
-        }
-        const localAbort = new Abort({ abort: aborts });
-
+    async connect(options?: CaseClient.PairOptions) {
         while (true) {
             const session = this.#sessions.find(session => !session.isClosing && !session.isPeerLost);
             if (session) {
                 return session;
             }
 
-            if (!this.#isConnecting) {
-                this.#isConnecting = true;
-                this.#workers.add(this.#connect());
+            if (!this.#connecting) {
+                this.#connecting = PeerConnection(this, this.#context, { ...options, abort: this.#abort }).finally(
+                    (this.#connecting = undefined),
+                );
+                this.#workers.add(this.#connecting);
             }
 
-            const added = new Promise(resolve => this.#sessions.added.once(resolve));
-            await localAbort.race(added);
+            const aborts = new Array<AbortSignal>(this.#abort);
+            if (options?.abort) {
+                aborts.push(options?.abort);
+            }
+
+            const localAbort = new Abort({ abort: aborts });
+            await localAbort.race(this.#connecting);
+
             localAbort.throwIfAborted();
         }
-    }
-
-    async #connect() {
-        using connecting = this.#lifetime.join("connecting");
-
-        const attempts = new Map<ServerAddressUdp, Promise<void>>();
-
-        let attempt = 0;
-
-        try {
-            for (const nextTimeout of this.#context.connectionRetries) {
-                while (!this.#abort.aborted) {
-                    connecting.details.attempt = ++attempt;
-                }
-
-                for (const address of this.#service.addresses) {
-                    if (await this.#connectToAddress(address)) {
-                        return;
-                    }
-                    if (this.#abort.aborted) {
-                        return;
-                    }
-                }
-
-                await this.#abort.race(Abort.sleep(`await retry of ${this.address}`, this.#abort, nextTimeout));
-            }
-        } finally {
-            this.#isConnecting = false;
-        }
-    }
-
-    async #connectToAddress(address: ServerAddressUdp): Promise<boolean> {
-        return false;
     }
 
     /**
@@ -189,6 +191,8 @@ export class Peer {
      */
     async close() {
         using _lifetime = this.#lifetime.closing();
+
+        this.#observers.close();
 
         this.#abort();
 
@@ -229,11 +233,9 @@ export class Peer {
 }
 
 export namespace Peer {
-    export interface Context {
+    export interface Context extends PeerConnection.Context {
         lifetime: Lifetime.Owner;
-        sessions: SessionManager;
         names: DiscoveryNames;
-        connectionRetries: RetrySchedule;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;

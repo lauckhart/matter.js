@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DiscoveryData } from "#common/Scanner.js";
+import { DiscoveryData, ScannerSet } from "#common/Scanner.js";
 import {
+    Abort,
+    AddressUnreachableError,
     anyPromise,
     AsyncObservable,
     BasicSet,
@@ -103,6 +105,7 @@ export interface PeerSetContext {
     lifetime: Lifetime.Owner;
     sessions: SessionManager;
     exchanges: ExchangeManager;
+    scanners: ScannerSet;
     names: DiscoveryNames;
     transports: ConnectionlessTransportSet;
     store: PeerAddressStore;
@@ -116,6 +119,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #lifetime: Lifetime;
     readonly #sessions: SessionManager;
     readonly #exchanges: ExchangeManager;
+    readonly #scanners: ScannerSet;
     readonly #transports: ConnectionlessTransportSet;
     readonly #caseClient: CaseClient;
     readonly #peers = new BasicSet<Peer>();
@@ -126,11 +130,12 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #peerContext: Peer.Context;
 
     constructor(context: PeerSetContext) {
-        const { lifetime, sessions, exchanges, names, transports: netInterfaces, store, connectionRetries } = context;
+        const { lifetime, sessions, exchanges, scanners, names, transports: netInterfaces, store } = context;
 
         this.#lifetime = lifetime.join("peers");
         this.#sessions = sessions;
         this.#exchanges = exchanges;
+        this.#scanners = scanners;
         this.#transports = netInterfaces;
         this.#store = store;
         this.#caseClient = new CaseClient(this.#sessions);
@@ -138,8 +143,9 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         this.#peerContext = {
             lifetime: this.#lifetime,
             sessions,
+            exchanges,
             names,
-            connectionRetries: connectionRetries ?? new RetrySchedule(names.entropy, {}),
+            openSocket: (address, abort) => this.#openSocket(address, abort),
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),
@@ -234,6 +240,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             lifetime: env,
             sessions: env.get(SessionManager),
             exchanges: env.get(ExchangeManager),
+            scanners: env.get(ScannerSet),
             names: env.get(MdnsService).names,
             transports: env.get(ConnectionlessTransportSet),
             store: env.get(PeerAddressStore),
@@ -246,12 +253,17 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         return this.#peers;
     }
 
+    /**
+     * @deprecated
+     */
     async connect(address: PeerAddress, options: PeerConnectionOptions & { operationalAddress?: ServerAddressUdp }) {
         await this.#ensureConnection(address, { ...options, allowUnknownPeer: true });
     }
 
     /**
      * Ensure there is a channel to the designated peer.
+     *
+     * @deprecated
      */
     async #ensureConnection(
         address: PeerAddress,
@@ -423,6 +435,8 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
      * method will try to connect to the device using the previously used server address (if set). If that fails, the
      * device is discovered again using its operational instance details.
      * It returns the operational MessageChannel on success.
+     *
+     * @deprecated
      */
     async #resume(address: PeerAddress, options: PeerConnectionOptions, tryOperationalAddress?: ServerAddressUdp) {
         const { discoveryOptions: { discoveryType } = {} } = options;
@@ -449,6 +463,9 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
     }
 
+    /**
+     * @deprecated
+     */
     async #connectOrDiscoverNode(
         address: PeerAddress,
         operationalAddress?: ServerAddressUdp,
@@ -469,6 +486,11 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
         if (requestedDiscoveryType === NodeDiscoveryType.RetransmissionDiscovery) {
             throw new ImplementationError("Cannot set retransmission discovery type.");
+        }
+
+        const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsClient | undefined;
+        if (!mdnsScanner) {
+            throw new ImplementationError("Cannot discover device without mDNS scanner.");
         }
 
         const peer = this.for(address);
@@ -643,6 +665,9 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         });
     }
 
+    /**
+     * @deprecated
+     */
     async #reconnectKnownAddress(
         address: PeerAddress,
         operationalAddress: ServerAddressUdp,
@@ -680,7 +705,22 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
     }
 
-    /** Pair with an operational device (already commissioned) and establish a CASE session. */
+    async #openSocket(address: ServerAddressUdp, abort: AbortSignal) {
+        const isIpv6Address = isIPv6(address.ip);
+        const operationalInterface = this.#transports.interfaceFor(ChannelType.UDP, isIpv6Address ? "::" : "0.0.0.0");
+
+        if (operationalInterface === undefined) {
+            throw new AddressUnreachableError(`No interface available for IP address ${address.ip}`);
+        }
+
+        return await Abort.race(abort, operationalInterface.openChannel(address));
+    }
+
+    /**
+     * Pair with an operational device (already commissioned) and establish a CASE session.
+     *
+     * @deprecated
+     */
     async #pair(
         address: PeerAddress,
         operationalServerAddress: ServerAddressUdp,
@@ -736,6 +776,9 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         }
     }
 
+    /**
+     * @deprecated
+     */
     async #doCasePair(
         paseSession: Session,
         address: PeerAddress,
@@ -853,6 +896,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         if (fabric === undefined || nodeId === undefined) {
             return;
         }
+
         const address = fabric.addressOf(nodeId);
         const peer = this.for(address);
         if (peer.activeDiscovery) {

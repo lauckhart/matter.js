@@ -9,48 +9,114 @@ import { AddressStatus, ServerAddress } from "./ServerAddress.js";
 /**
  * A set of server addresses ordered by a comparator.
  */
-export interface ServerAddressList<T extends ServerAddress> {
+export interface ServerAddressSet<T extends ServerAddress> {
+    /**
+     * Add an address.
+     *
+     * If the address alreay exists, returns the existing address to facilitate comparison by value.  If not, returns
+     * the input address.
+     */
+    add(address: T): T;
+
+    /**
+     * Delete an address.
+     */
+    delete(address: T): boolean;
+
     /**
      * Replace the stored addresses.
+     */
+    replace(newAddresses: Iterable<T>): void;
+
+    /**
+     * Test for existence of address.
+     */
+    has(address: T): boolean;
+
+    /**
+     * The number of addresses.
+     */
+    size: number;
+
+    /**
+     * Iterate.
      *
      * If you replace addresses during iteration only addresses not already produced will be covered by remaining
      * iterations.
      */
-    replace(newAddresses: Iterable<T>): void;
-
     [Symbol.iterator](): Iterator<T>;
 }
 
 /**
- * Create a new {@link ServerAddressList}.
+ * Create a new {@link ServerAddressSet}.
  */
-export function ServerAddressList<T extends ServerAddress>(
-    addresses: Iterable<T>,
-    comparator = ServerAddressList.compareDesirability,
-): ServerAddressList<T> {
-    return {
+export function ServerAddressSet<T extends ServerAddress>(
+    initial?: Iterable<T>,
+    comparator = ServerAddressSet.compareDesirability,
+) {
+    let version = 0;
+    let addresses: undefined | Map<string, T>;
+
+    const set: ServerAddressSet<T> = {
+        add(address: T) {
+            version++;
+            const key = ServerAddress.urlFor(address);
+            const existing = addresses?.get(key);
+            if (existing) {
+                return existing;
+            }
+
+            if (!addresses) {
+                addresses = new Map();
+            }
+
+            addresses.set(key, address);
+            return address;
+        },
+
+        delete(address: T) {
+            version++;
+            return addresses?.delete(ServerAddress.urlFor(address)) ?? false;
+        },
+
+        has(address: T) {
+            return addresses?.has(ServerAddress.urlFor(address)) ?? false;
+        },
+
         replace(newAddresses) {
-            addresses = newAddresses;
+            version++;
+            const oldAddresses = addresses;
+            addresses = new Map();
+            for (const address of newAddresses) {
+                const key = ServerAddress.urlFor(address);
+                addresses.set(key, oldAddresses?.get(key) ?? address);
+            }
+        },
+
+        get size() {
+            return addresses?.size ?? 0;
         },
 
         *[Symbol.iterator]() {
             const tried = new Set<string>();
 
             all: while (true) {
-                const currentAddresses = addresses;
-                const ordered = [...currentAddresses].sort(comparator);
+                const currentVersion = version;
+                const ordered = addresses
+                    ? [...addresses.entries()].map(([, address]) => address).sort(comparator)
+                    : [];
 
                 for (const address of ordered) {
                     // Skip duplicates or addresses we've tried with previous sets
-                    const url = ServerAddress.urlFor(address);
-                    if (tried.has(url)) {
+                    const key = ServerAddress.urlFor(address);
+                    if (tried.has(key)) {
                         continue;
                     }
 
                     yield address;
 
                     // Restart iteration if the underlying address set changed
-                    if (addresses !== currentAddresses) {
+                    if (currentVersion !== version) {
                         continue all;
                     }
                 }
@@ -59,9 +125,15 @@ export function ServerAddressList<T extends ServerAddress>(
             }
         },
     };
+
+    if (initial) {
+        set.replace(initial);
+    }
+
+    return set;
 }
 
-export namespace ServerAddressList {
+export namespace ServerAddressSet {
     export interface Comparator<T extends ServerAddress = ServerAddress> {
         (addr1: T, addr2: T): number;
     }
