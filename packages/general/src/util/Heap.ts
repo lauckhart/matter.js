@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { InternalError } from "#MatterError.js";
 import { Abort } from "./Abort.js";
 import { Observable } from "./Observable.js";
 
@@ -198,8 +199,38 @@ export class Heap<T> {
         }
     }
 
+    /**
+     * Perform internal validation of queue order.
+     */
+    validate() {
+        for (let i = 0; i < this.#buffer.length; i++) {
+            const leftChild = this.#leftChildOf(i);
+            if (leftChild < this.#buffer.length) {
+                if (this.#compare(this.#buffer[i], this.#buffer[leftChild]) > 0) {
+                    throw new InternalError(
+                        `Heap error: buffer #${i} (${this.#buffer[i]}) is greater than left child #${leftChild} (${this.#buffer[leftChild]})`,
+                    );
+                }
+
+                const rightChild = this.#rightChildOf(i);
+                if (rightChild < this.#buffer.length) {
+                    if (this.#compare(this.#buffer[i], this.#buffer[rightChild]) > 0) {
+                        throw new InternalError(
+                            `Heap error: buffer #${i} (${this.#buffer[i]}) is greater than right child #${rightChild} (${this.#buffer[rightChild]})`,
+                        );
+                    }
+
+                    if (this.#compare(this.#buffer[leftChild], this.#buffer[rightChild]) > 0) {
+                        throw new InternalError(
+                            `Heap error: buffer #${leftChild} (${this.#buffer[leftChild]}) is greater than right sibling #${rightChild} (${this.#buffer[rightChild]})`,
+                        );
+                    }
+                }
+            }
+        }
+    }
+
     #deleteAt(index: number) {
-        console.log("DELETING", index, JSON.stringify(this.#buffer));
         if (index >= this.#buffer.length) {
             return;
         }
@@ -212,6 +243,9 @@ export class Heap<T> {
             this.#buffer[index] = this.#buffer[lastIndex];
             this.#positions?.set(this.#buffer[index], index);
             this.#buffer.length = lastIndex;
+            if (index) {
+                this.#bubbleUp(index);
+            }
             this.#sinkDown(index);
         }
 
