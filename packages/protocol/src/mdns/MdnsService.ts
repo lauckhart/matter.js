@@ -7,7 +7,7 @@
 import {
     Construction,
     Diagnostic,
-    DiscoveryNames,
+    DnssdNames,
     Entropy,
     Environment,
     Environmental,
@@ -32,7 +32,7 @@ export class MdnsService {
     #socket?: MdnsSocket;
     #server?: MdnsServer;
     #client?: MdnsClient;
-    #names?: DiscoveryNames;
+    #names?: DnssdNames;
 
     get enableIpv4() {
         return this.#enableIpv4;
@@ -75,7 +75,7 @@ export class MdnsService {
 
     get names() {
         if (this.#names === undefined) {
-            this.#names = new DiscoveryNames({
+            this.#names = new DnssdNames({
                 socket: this.#construction.assert("MDNS socket", this.#socket),
                 lifetime: this.#construction,
                 entropy: this.#entropy,

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./DiscoveryName.js";
-export * from "./DiscoveryNames.js";
-export * from "./DiscoveryService.js";
-export * from "./DiscoverySolicitor.js";
+export * from "./DnssdName.js";
+export * from "./DnssdNames.js";
+export * from "./DnssdSolicitor.js";
+export * from "./IpService.js";
 export * from "./MdnsSocket.js";

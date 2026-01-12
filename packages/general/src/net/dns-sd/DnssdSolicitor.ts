@@ -10,18 +10,35 @@ import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Time } from "#time/Time.js";
 import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
+import { BasicMultiplex } from "#util/Multiplex.js";
 import { ObservableValue } from "#util/Observable.js";
-import type { DiscoveryName } from "./DiscoveryName.js";
-import type { DiscoveryNames } from "./DiscoveryNames.js";
-import { MdnsSocket } from "./MdnsSocket.js";
+import type { DnssdName } from "./DnssdName.js";
+import type { DnssdNames } from "./DnssdNames.js";
 
 const logger = new Logger("DiscoverySolicitor");
 
 /**
  * Solicits DNS-SD records for specific names.
  */
-export interface DiscoverySolicitor {
-    solicit(solicitation: DiscoverySolicitor.Solicitation): void;
+export interface DnssdSolicitor {
+    /**
+     * Send a single MDNS query for a specific DNS-SD name.
+     *
+     * Multiple solicitations for the same name are coalesced into the same query using a macrotask.
+     */
+    solicit(solicitation: DnssdSolicitor.Solicitation): void;
+
+    /**
+     * Send MDNS queries for a specific DNS-SD name using a standard MDNS transmission schedule.
+     *
+     * The solicitor does not have a notion of "discovery complete", so this function does not return until
+     * {@link DnssdSolicitor.Discovery.abort} signals abort (or the solicitor is closed).
+     *
+     * Multiple simultaneous attempts to complete discovery of the same name will not result in redundant solicitations.
+     *
+     * If fields in {@link discovery} change their value is used for the next solicitation.
+     */
+    discover(discovery: DnssdSolicitor.Discovery): Promise<void>;
 }
 
 /**
@@ -30,7 +47,7 @@ export interface DiscoverySolicitor {
  * "Soliciting" consists of broadcasting a query for a DNS-SD name.  Groups multiple solicitations in the same
  * macrotask into a single packet.
  */
-export namespace DiscoverySolicitor {
+export namespace DnssdSolicitor {
     /**
      * Configures solicitation of a single name.
      */
@@ -38,7 +55,7 @@ export namespace DiscoverySolicitor {
         /**
          * The name to solicit.
          */
-        name: DiscoveryName;
+        name: DnssdName;
 
         /**
          * Record types to request.
@@ -48,36 +65,17 @@ export namespace DiscoverySolicitor {
         /**
          * Additional names to include as known answers.
          */
-        associatedNames?: DiscoveryName[];
+        associatedNames?: Iterable<DnssdName>;
     }
 
     /**
      * Configures repeated solicitation.
      */
-    export interface Discovery {
-        /**
-         * Discovery name manager.
-         */
-        names: DiscoveryNames;
-
-        /**
-         * The solicitation to send.
-         *
-         * This value is read repeatedly so may change between solicitations.
-         */
-        solicitation: Solicitation;
-
+    export interface Discovery extends Solicitation {
         /**
          * Terminates discovery.
          */
         abort: AbortSignal;
-
-        /**
-         * The schedule for sending packets after the DNS-SD delay of 100-120ms.
-         *
-         * Defaults to {@link DefaultRetries}.
-         */
-        schedule?: RetrySchedule;
     }
 
     /**
@@ -89,52 +87,30 @@ export namespace DiscoverySolicitor {
         backoffFactor: 2,
         maximumInterval: Hours(1),
     };
-
-    /**
-     * Perform solicitation until aborted.
-     */
-    export async function discover(discovery: Discovery) {
-        const { names, abort } = discovery;
-
-        let { schedule } = discovery;
-        if (!schedule) {
-            schedule = new RetrySchedule(names.entropy, DefaultRetries);
-        }
-
-        // Wait initially 20 - 120 ms per RFC 6762
-        let timeout = Millis(20 + 100 * (names.entropy.randomUint32 / Math.pow(2, 32)));
-
-        for (const nextTimeout of schedule) {
-            using delay = new Abort({ abort, timeout });
-
-            await delay;
-            if (delay.aborted) {
-                break;
-            }
-
-            timeout = nextTimeout;
-
-            names.solicit(discovery.solicitation);
-        }
-    }
 }
 
 /**
- * Concrete implementation of {@link DiscoverySolicitor} that sends DNS-SD queries via multicast.
+ * Concrete implementation of {@link DnssdSolicitor} that sends DNS-SD queries via multicast.
  */
-export class QueryMulticaster implements DiscoverySolicitor {
-    #socket: MdnsSocket;
+export class QueryMulticaster implements DnssdSolicitor {
+    #names: DnssdNames;
+    #schedule: RetrySchedule;
     #abort = new Abort();
-    #toSolicit = new Map<DiscoveryName, DiscoverySolicitor.Solicitation>();
+    #toSolicit = new Map<DnssdName, DnssdSolicitor.Solicitation>();
+    #discovering = new Map<DnssdName, { abort: Abort; finished: Promise<void>; waiting: Set<{}> }>();
     #namesReady = new ObservableValue();
-    #done: Promise<void>;
+    #workers = new BasicMultiplex();
 
-    constructor(socket: MdnsSocket) {
-        this.#socket = socket;
-        this.#done = this.#run();
+    constructor(names: DnssdNames, retries?: RetrySchedule.Configuration) {
+        this.#names = names;
+        this.#schedule = new RetrySchedule(
+            names.entropy,
+            RetrySchedule.Configuration(DnssdSolicitor.DefaultRetries, retries),
+        );
+        this.#workers.add(this.#emitSolicitations());
     }
 
-    solicit(solicitation: DiscoverySolicitor.Solicitation) {
+    solicit(solicitation: DnssdSolicitor.Solicitation) {
         if (this.#abort.aborted) {
             return;
         }
@@ -154,12 +130,56 @@ export class QueryMulticaster implements DiscoverySolicitor {
         this.#namesReady.emit(true);
     }
 
-    async close() {
-        this.#abort();
-        await this.#done;
+    async discover(discovery: DnssdSolicitor.Discovery) {
+        let active = this.#discovering.get(discovery.name);
+        if (active) {
+            active.waiting.add(discovery);
+        } else {
+            // This abort is different from the input abort because we only abort when the input aborts if nobody else
+            // is waiting on discovery of the same name
+            const abort = new Abort({ abort: this.#abort });
+            active = {
+                abort,
+                finished: this.#discover(discovery, abort),
+                waiting: new Set([discovery]),
+            };
+        }
+
+        try {
+            await Abort.race(discovery.abort, active.finished);
+        } finally {
+            active.waiting.delete(discovery);
+            if (active.waiting.size === 0) {
+                active.abort();
+                this.#discovering.delete(discovery.name);
+            }
+        }
     }
 
-    async #run() {
+    async #discover(solicitation: DnssdSolicitor.Solicitation, abort: Abort) {
+        // Wait initially 20 - 120 ms per RFC 6762
+        let timeout = Millis(20 + 100 * (this.#names.entropy.randomUint32 / Math.pow(2, 32)));
+
+        for (const nextTimeout of this.#schedule) {
+            using delay = new Abort({ abort, timeout });
+
+            await delay;
+            if (delay.aborted) {
+                break;
+            }
+
+            timeout = nextTimeout;
+
+            this.solicit(solicitation);
+        }
+    }
+
+    async close() {
+        this.#abort();
+        await this.#workers;
+    }
+
+    async #emitSolicitations() {
         while (true) {
             // Wait for names to solicit
             await this.#abort.race(this.#namesReady);
@@ -196,7 +216,7 @@ export class QueryMulticaster implements DiscoverySolicitor {
             // Send the message
             try {
                 await this.#abort.race(
-                    this.#socket.send({
+                    this.#names.socket.send({
                         messageType: DnsMessageType.Query,
                         queries,
                         answers,

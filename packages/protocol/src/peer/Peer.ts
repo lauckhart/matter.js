@@ -11,8 +11,8 @@ import {
     BasicMultiplex,
     BasicSet,
     Diagnostic,
-    DiscoveryNames,
-    DiscoveryService,
+    DnssdNames,
+    IpService,
     isIpNetworkChannel,
     Lifetime,
     Logger,
@@ -47,7 +47,7 @@ export class Peer {
     };
     #abort = new Abort();
     #connecting?: Promise<NodeSession | undefined>;
-    #service: DiscoveryService;
+    #service: IpService;
     #observers = new ObserverGroup();
 
     // TODO - manage these internally and/or factor away
@@ -57,7 +57,7 @@ export class Peer {
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
         this.#lifetime = context.lifetime.join(descriptor.address.toString());
         this.#workers = new BasicMultiplex();
-        this.#service = new DiscoveryService(
+        this.#service = new IpService(
             getOperationalDeviceQname(
                 context.sessions.fabricFor(descriptor.address).globalId,
                 descriptor.address.nodeId,
@@ -235,7 +235,7 @@ export class Peer {
 export namespace Peer {
     export interface Context extends PeerConnection.Context {
         lifetime: Lifetime.Owner;
-        names: DiscoveryNames;
+        names: DnssdNames;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;

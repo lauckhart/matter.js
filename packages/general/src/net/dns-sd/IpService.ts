@@ -5,38 +5,34 @@
  */
 
 import { DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
+import { Diagnostic } from "#log/Diagnostic.js";
 import { AddressLifespan, ServerAddressUdp } from "#net/ServerAddress.js";
 import { ServerAddressSet } from "#net/ServerAddressSet.js";
 import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { Abort } from "#util/Abort.js";
 import { AsyncObservable, AsyncObservableValue, ObserverGroup } from "#util/Observable.js";
-import { DiscoveryName } from "./DiscoveryName.js";
-import { DiscoveryNames } from "./DiscoveryNames.js";
 import { DiscoveryResolver } from "./DiscoveryResolver.js";
-import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
+import { DnssdName } from "./DnssdName.js";
+import { DnssdNames } from "./DnssdNames.js";
 
 /**
- * A service that updates as {@link DiscoveryNames} change.
+ * A service addressable by IP that updates as {@link DnssdNames} change.
  */
-export class DiscoveryService {
-    readonly #name: DiscoveryName;
-    readonly #names: DiscoveryNames;
+export class IpService {
+    readonly #name: DnssdName;
+    readonly #via: string;
+    readonly #names: DnssdNames;
     readonly #observers = new ObserverGroup(this);
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addresses = ServerAddressSet<ServerAddressUdp>();
-    #connections?: Set<Disposable>;
-    #isReachable = false;
     #notified?: Promise<void>;
-    #discovery?: {
-        abort: Abort;
-        finished: Promise<void>;
-    };
 
-    constructor(name: string, names: DiscoveryNames) {
+    constructor(name: string, via: string, names: DnssdNames) {
         this.#name = names.get(name);
         this.#names = names;
+        this.#via = Diagnostic.via(via);
         this.#observers.on(this.#name, this.#onServiceChanged);
 
         for (const record of this.#name.records) {
@@ -48,44 +44,24 @@ export class DiscoveryService {
     }
 
     /**
-     * Inform the service of a connection attempt until the returned value is disposed.
+     * The DNS-SD name.
      */
-    connecting(): Disposable {
-        if (!this.#connections) {
-            this.#connections = new Set();
-        }
-
-        const disposable: Disposable = {
-            [Symbol.dispose]: () => {
-                this.#connections?.delete(disposable);
-                if (!this.#connections?.size) {
-                    this.#terminateDiscovery();
-                }
-            },
-        };
-
-        this.#connections.add(disposable);
-
-        if (!this.#isReachable) {
-            this.#initiateDiscovery();
-        }
-
-        return disposable;
+    get name() {
+        return this.#name;
     }
 
     /**
-     * Specify whether known addresses are reachable.
-     *
-     * Set to false initially, then true upon discovery of any new address.
-     *
-     * When false, triggers discovery when connecting.  If true, cancels any active discovery.
+     * Other DNS-SD names.
      */
-    get isReachable() {
-        return this.#isReachable;
+    get names() {
+        return this.#names;
     }
 
-    set isReachable(isReachable: boolean) {
-        this.#isReachable = isReachable;
+    /**
+     * Identifier used for logging.
+     */
+    get via() {
+        return this.#via;
     }
 
     /**
@@ -93,7 +69,6 @@ export class DiscoveryService {
      */
     async close() {
         this.#observers.close();
-        this.#terminateDiscovery();
         if (this.#notified) {
             await this.#notified;
         }
@@ -169,7 +144,7 @@ export class DiscoveryService {
             const addresses = ServerAddressSet(this.addresses, order);
 
             // Enqueue new addresses
-            let changes = new Array<DiscoveryService.AddressChange>();
+            let changes = new Array<IpService.AddressChange>();
             const oldKnownAddresses = knownAddresses;
             knownAddresses = new Set();
             for (const address of addresses) {
@@ -223,7 +198,7 @@ export class DiscoveryService {
         }
     }
 
-    #onServiceChanged = async ({ updated, deleted }: DiscoveryName.Changes) => {
+    #onServiceChanged = async ({ updated, deleted }: DnssdName.Changes) => {
         if (updated) {
             for (const record of updated) {
                 const service = serviceOf(record);
@@ -290,7 +265,7 @@ export class DiscoveryService {
         return;
     }
 
-    #onAddressChanged = (service: Service, { updated, deleted }: DiscoveryName.Changes) => {
+    #onAddressChanged = (service: Service, { updated, deleted }: DnssdName.Changes) => {
         if (updated) {
             for (const record of updated) {
                 const addr = addressOf(record);
@@ -342,34 +317,6 @@ export class DiscoveryService {
         this.#notified = this.#emitNotification();
     };
 
-    #initiateDiscovery() {
-        if (this.#discovery) {
-            return;
-        }
-
-        const abort = new Abort();
-
-        const self = this;
-        this.#discovery = {
-            abort,
-            finished: DiscoverySolicitor.discover({
-                abort,
-                names: this.#names,
-                get solicitation() {
-                    return {
-                        name: self.#name,
-                        recordTypes: 
-                    }
-                },
-            }),
-        };
-    }
-
-    #terminateDiscovery() {
-        this.#discovery?.abort();
-        this.#discovery = undefined;
-    }
-
     async #emitNotification() {
         await Time.sleep("discovery service coalescence", 0);
         this.#notified = undefined;
@@ -377,7 +324,7 @@ export class DiscoveryService {
     }
 }
 
-export namespace DiscoveryService {
+export namespace IpService {
     export interface AddressChange {
         kind: "add" | "delete";
         address: ServerAddressUdp;
@@ -385,14 +332,14 @@ export namespace DiscoveryService {
 }
 
 interface Service extends AddressLifespan {
-    name: DiscoveryName;
+    name: DnssdName;
     priority: number;
     weight: number;
     port: number;
-    onChange(changes: DiscoveryName.Changes): void;
+    onChange(changes: DnssdName.Changes): void;
 }
 
-function serviceOf(record: DiscoveryName.Record) {
+function serviceOf(record: DnssdName.Record) {
     if (record.recordType !== DnsRecordType.SRV) {
         return;
     }
@@ -404,7 +351,7 @@ function hostKeyOf(name: string, port: number) {
     return `${name}:${port}`;
 }
 
-function addressOf(record: DiscoveryName.Record) {
+function addressOf(record: DnssdName.Record) {
     if (record.recordType !== DnsRecordType.A && record.recordType !== DnsRecordType.AAAA) {
         return;
     }

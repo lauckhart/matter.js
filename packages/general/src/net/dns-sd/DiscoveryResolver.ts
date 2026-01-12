@@ -9,18 +9,18 @@ import { RetrySchedule } from "#net/RetrySchedule.js";
 import { Hours, Millis, Seconds } from "#time/TimeUnit.js";
 import { Abort } from "#util/Abort.js";
 import { ObserverGroup } from "#util/Observable.js";
-import type { DiscoveryName } from "./DiscoveryName.js";
-import type { DiscoveryNames } from "./DiscoveryNames.js";
-import { DiscoverySolicitor } from "./DiscoverySolicitor.js";
+import type { DnssdName } from "./DnssdName.js";
+import type { DnssdNames } from "./DnssdNames.js";
+import { DnssdSolicitor } from "./DnssdSolicitor.js";
 
 /**
  * Resolves DNS-SD names.
  */
-export class DiscoveryResolver implements DiscoverySolicitor {
-    #names: DiscoveryNames;
+export class DiscoveryResolver implements DnssdSolicitor {
+    #names: DnssdNames;
     #retries: RetrySchedule;
 
-    constructor(names: DiscoveryNames, retries?: RetrySchedule.Configuration) {
+    constructor(names: DnssdNames, retries?: RetrySchedule.Configuration) {
         this.#names = names;
         this.#retries = new RetrySchedule(
             this.#names.entropy,
@@ -31,7 +31,7 @@ export class DiscoveryResolver implements DiscoverySolicitor {
     /**
      * Solicit records for a service until discovery of IP addresses.
      */
-    async resolve(name: DiscoveryName, abort?: AbortSignal, ipv4?: boolean) {
+    async resolve(name: DnssdName, abort?: AbortSignal, ipv4?: boolean) {
         await this.query({
             qname: name.qname,
             queryRecordTypes: [DnsRecordType.SRV],
@@ -106,9 +106,9 @@ export class DiscoveryResolver implements DiscoverySolicitor {
     /**
      * Standard solicitation with specialized support for discovering IPs.
      */
-    solicit(solicitation: DiscoverySolicitor.Solicitation, awaitedRecordTypes?: DnsRecordType[]): void {
-        let extra: undefined | Set<DiscoverySolicitor.Solicitation>;
-        let associated: undefined | Set<DiscoveryName>;
+    solicit(solicitation: DnssdSolicitor.Solicitation, awaitedRecordTypes?: DnsRecordType[]): void {
+        let extra: undefined | Set<DnssdSolicitor.Solicitation>;
+        let associated: undefined | Set<DnssdName>;
 
         if (solicitation.associatedNames) {
             associated = new Set(solicitation.associatedNames);
@@ -159,7 +159,7 @@ export class DiscoveryResolver implements DiscoverySolicitor {
         }
     }
 
-    #hasRecordType(name: DiscoveryName, recordTypes: DnsRecordType[]) {
+    #hasRecordType(name: DnssdName, recordTypes: DnsRecordType[]) {
         const wantsIp = this.#wantsIp(recordTypes);
 
         for (const record of name.records) {

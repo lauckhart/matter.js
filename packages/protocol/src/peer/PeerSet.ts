@@ -15,7 +15,7 @@ import {
     ConnectionlessTransportSet,
     Construction,
     createPromise,
-    DiscoveryNames,
+    DnssdNames,
     Duration,
     Environment,
     Environmental,
@@ -106,7 +106,7 @@ export interface PeerSetContext {
     sessions: SessionManager;
     exchanges: ExchangeManager;
     scanners: ScannerSet;
-    names: DiscoveryNames;
+    names: DnssdNames;
     transports: ConnectionlessTransportSet;
     store: PeerAddressStore;
     connectionRetries?: RetrySchedule;

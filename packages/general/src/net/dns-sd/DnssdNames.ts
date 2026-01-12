@@ -5,37 +5,36 @@
  */
 
 import { DnsRecord } from "#codec/DnsCodec.js";
-import { Logger } from "#log/Logger.js";
 import { Entropy } from "#util/Entropy.js";
 import { Lifetime } from "#util/Lifetime.js";
 import { Observable, ObserverGroup } from "#util/Observable.js";
 import { Scheduler } from "#util/Scheduler.js";
-import { DiscoveryName } from "./DiscoveryName.js";
-import { DiscoverySolicitor, QueryMulticaster } from "./DiscoverySolicitor.js";
+import { DnssdName } from "./DnssdName.js";
+import { QueryMulticaster } from "./DnssdSolicitor.js";
 import { MdnsSocket } from "./MdnsSocket.js";
-
-export const logger = Logger.get("DiscoveryNames");
 
 /**
  * Names collected via DNS-SD.
+ *
+ * TODO - API is designed to support Avahi, Bonjour etc. but current implementation is tied to local MDNS
  */
-export class DiscoveryNames {
+export class DnssdNames {
     readonly #socket: MdnsSocket;
     readonly #lifetime: Lifetime;
     readonly #entropy: Entropy;
     readonly #filter?: (record: DnsRecord) => boolean;
     readonly #solicitor: QueryMulticaster;
     readonly #observers = new ObserverGroup();
-    readonly #names = new Map<string, DiscoveryName>();
-    readonly #expiration: Scheduler<DiscoveryName.Record>;
-    readonly #discovered = new Observable<[name: DiscoveryName]>();
+    readonly #names = new Map<string, DnssdName>();
+    readonly #expiration: Scheduler<DnssdName.Record>;
+    readonly #discovered = new Observable<[name: DnssdName]>();
 
-    constructor({ socket, lifetime = Lifetime.process, entropy, filter }: DiscoveryNames.Context) {
+    constructor({ socket, lifetime = Lifetime.process, entropy, filter }: DnssdNames.Context) {
         this.#socket = socket;
         this.#lifetime = lifetime.join("mdns client");
         this.#entropy = entropy;
         this.#filter = filter;
-        this.#solicitor = new QueryMulticaster(socket);
+        this.#solicitor = new QueryMulticaster(this);
         this.#observers.on(this.#socket.receipt, this.#handleMessage.bind(this));
 
         this.#expiration = new Scheduler({
@@ -81,22 +80,22 @@ export class DiscoveryNames {
     }
 
     /**
-     * Retrieve the {@link DiscoveryName} for {@link name}.
+     * Retrieve the {@link DnssdName} for {@link name}.
      *
      * This will create the name if it does not exist, and if you do not add an observer then it will not automatically
      * delete if there are no records.  So if you may not use the record test for existence with {@link has} first.
      */
-    get(qname: string): DiscoveryName {
+    get(qname: string): DnssdName {
         let name = this.maybeGet(qname);
         if (name === undefined) {
-            name = new DiscoveryName(qname, this.#nameContext);
+            name = new DnssdName(qname, this.#nameContext);
             this.#names.set(qname, name);
         }
         return name;
     }
 
     /**
-     * Retrieve the {@link DiscoveryName} if known.
+     * Retrieve the {@link DnssdName} if known.
      */
     maybeGet(name: string) {
         name = name.toLowerCase();
@@ -117,25 +116,31 @@ export class DiscoveryNames {
         await this.#solicitor.close();
     }
 
+    get socket() {
+        return this.#socket;
+    }
+
     /**
-     * Emits when a {@link DiscoveryName} is first discovered.
+     * Emits when a {@link DnssdName} is first discovered.
      */
     get discovered() {
         return this.#discovered;
     }
 
     /**
-     * Solicit new records for names.
+     * Shared solicitor.
+     *
+     * We offer solicitation in this object so there is not redundant solicitation across interested parties.
      */
-    solicit(solicitation: DiscoverySolicitor.Solicitation) {
-        this.#solicitor.solicit(solicitation);
+    get solicitor() {
+        return this.#solicitor;
     }
 
     get entropy() {
         return this.#entropy;
     }
 
-    #nameContext: DiscoveryName.Context = {
+    #nameContext: DnssdName.Context = {
         delete: name => {
             const known = this.#names.get(name.qname);
             if (known === name) {
@@ -153,7 +158,7 @@ export class DiscoveryNames {
     };
 }
 
-export namespace DiscoveryNames {
+export namespace DnssdNames {
     export interface Context {
         socket: MdnsSocket;
         lifetime?: Lifetime.Owner;
