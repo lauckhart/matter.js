@@ -21,8 +21,8 @@ const logger = Logger.get("IpServiceStatus");
 export class IpServiceStatus {
     #service: IpService;
     #isReachable = true;
-    #connecting = new BasicSet<Promise<boolean>>();
-    #abortDiscovery?: Abort;
+    #connecting = new BasicSet<PromiseLike<boolean>>();
+    #abortResolver?: Abort;
     #resolving?: Promise<void>;
 
     constructor(service: IpService) {
@@ -31,6 +31,8 @@ export class IpServiceStatus {
 
     /**
      * Is the service actively connecting?
+     *
+     * This is true so long as a promise passed to {@link connecting} is unresolved.
      */
     get isConnecting() {
         return this.#connecting.size > 0;
@@ -49,7 +51,7 @@ export class IpServiceStatus {
     /**
      * Are we actively performing MDNS discovery for the service?
      */
-    get isDiscovering() {
+    get isResolving() {
         return this.#resolving !== undefined;
     }
 
@@ -78,7 +80,7 @@ export class IpServiceStatus {
      *
      * {@link isConnecting} will be true until {@link result} resolves.
      */
-    connecting(result: Promise<boolean>) {
+    connecting(result: PromiseLike<boolean>) {
         logger.debug(this.#service.via, "Connecting");
 
         result.then(
@@ -117,7 +119,7 @@ export class IpServiceStatus {
     }
 
     #maybeStartDiscovery() {
-        if (this.#isReachable || !this.isConnecting || this.#abortDiscovery) {
+        if (this.#isReachable || !this.isConnecting || this.#abortResolver) {
             return;
         }
 
@@ -127,33 +129,37 @@ export class IpServiceStatus {
 
         switch (numAddresses) {
             case 0:
-                why = "IP address unknown";
+                why = "need address";
                 break;
 
             case 1:
-                why = "IP address is unreachable";
+                why = "address is unreachable";
                 break;
 
             default:
-                why = `IP addresses are unreachable (${numAddresses} known addresses)`;
+                why = `${numAddresses} known addresses are unreachable`;
         }
 
-        logger.info(this.#service.via, "Starting discovery:", Diagnostic.weak(why));
+        logger.info(this.#service.via, "Resolving", Diagnostic.weak(`(${why})`));
 
-        this.#abortDiscovery = new Abort();
-        this.#resolving = IpServiceResolution(this.#service, this.#abortDiscovery).finally(() => {
-            this.#abortDiscovery = undefined;
+        this.#abortResolver = new Abort();
+        this.#resolving = IpServiceResolution(this.#service, this.#abortResolver).finally(() => {
+            if (this.#abortResolver?.aborted === false) {
+                logger.debug(this.#service.via, `Resolved`);
+                this.#isReachable = true;
+            }
+            this.#abortResolver = undefined;
             this.#resolving = undefined;
         });
     }
 
     #maybeStopDiscovery() {
-        if (!this.#isReachable || this.isConnecting || !this.#abortDiscovery) {
+        if (!this.#isReachable || this.isConnecting || !this.#abortResolver) {
             return;
         }
 
-        logger.debug(this.#service.via, "Stopping discovery");
+        this.#abortResolver();
 
-        this.#abortDiscovery();
+        logger.debug(this.#service.via, "Stopped resolving");
     }
 }

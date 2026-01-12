@@ -1,15 +1,13 @@
 /**
  * @license
- * Copyright 2022-2025 Matter.js Authors
+ * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Abort, Hours, Minutes, ServerAddressUdp } from "#index.js";
-import { DiscoveryService } from "#net/dns-sd/DiscoveryService.js";
-import { ServerAddressSet } from "#net/ServerAddressList.js";
-import { MockSite } from "./dns-sd-helpers.js";
+import { Abort, Hours, Minutes } from "#index.js";
+import { expectAddresses, expectKvs, MockSite } from "./dns-sd-helpers.js";
 
-describe("DiscoveryService", () => {
+describe("IpService", () => {
     before(() => MockTime.enable());
 
     it("notices new addresses", async () => {
@@ -24,20 +22,6 @@ describe("DiscoveryService", () => {
         await MockTime.resolve(discovered);
 
         expectAddresses(service.addresses);
-        expectKvs(service);
-    });
-
-    it("solicits and resolves", async () => {
-        await using site = new MockSite();
-        const { client, server } = await site.addPair();
-
-        const service = client.addService();
-
-        server.publish();
-
-        const addresses = await MockTime.resolve(service.resolve());
-
-        expectAddresses(addresses);
         expectKvs(service);
     });
 
@@ -102,6 +86,11 @@ describe("DiscoveryService", () => {
         await server.broadcast();
 
         const abort = new Abort();
+
+        // Force discovery
+        service.status.isReachable = false;
+        service.status.connecting(abort.then(() => !abort.aborted));
+
         const iter = service.addressChanges({ abort });
 
         // Should generate two preexisting addresses
@@ -145,19 +134,3 @@ describe("DiscoveryService", () => {
         }
     });
 });
-
-function expectAddresses(addresses?: Iterable<ServerAddressUdp>) {
-    expect(addresses).not.undefined;
-    addresses = ServerAddressSet(addresses!);
-    expect([...addresses!]).deep.equals([
-        { type: "udp", ip: "1111:2222:3333:4444:5555:6666:7777:8891", port: 1234 },
-        { type: "udp", ip: "10.10.10.145", port: 1234 },
-    ]);
-}
-
-function expectKvs(service: DiscoveryService) {
-    expect([...service.kvs]).deep.equals([
-        ["foo", "bar"],
-        ["flag", ""],
-    ]);
-}

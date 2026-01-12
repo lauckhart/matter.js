@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2025 Matter.js Authors
+ * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -12,6 +12,8 @@ import { IpService } from "#net/dns-sd/IpService.js";
 import { MdnsSocket } from "#net/dns-sd/MdnsSocket.js";
 import { MockNetwork } from "#net/mock/MockNetwork.js";
 import { NetworkSimulator } from "#net/mock/NetworkSimulator.js";
+import { ServerAddressUdp } from "#net/ServerAddress.js";
+import { ServerAddressSet } from "#net/ServerAddressSet.js";
 import { Hours } from "#time/TimeUnit.js";
 import { hex } from "#util/String.js";
 
@@ -162,6 +164,22 @@ export class MockHost {
         await this.#names?.close();
         await this.#network.close();
     }
+}
+
+export function expectAddresses(addresses?: Iterable<ServerAddressUdp>) {
+    expect(addresses).not.undefined;
+    addresses = ServerAddressSet(addresses);
+    expect([...addresses]).deep.equals([
+        { type: "udp", ip: "1111:2222:3333:4444:5555:6666:7777:8891", port: 1234 },
+        { type: "udp", ip: "10.10.10.145", port: 1234 },
+    ]);
+}
+
+export function expectKvs(service: IpService) {
+    expect([...service.kvs]).deep.equals([
+        ["foo", "bar"],
+        ["flag", ""],
+    ]);
 }
 
 function qnameOf(nameOrIndex: number | string) {

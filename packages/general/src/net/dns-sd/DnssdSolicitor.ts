@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2025 Matter.js Authors
+ * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -116,7 +116,7 @@ export class QueryMulticaster implements DnssdSolicitor {
         }
         const entry = this.#toSolicit.get(solicitation.name);
         if (entry === undefined) {
-            this.#toSolicit.set(solicitation.name, solicitation);
+            this.#toSolicit.set(solicitation.name, { ...solicitation });
         } else {
             entry.recordTypes = [...new Set([...entry.recordTypes, ...solicitation.recordTypes])];
             if (solicitation.associatedNames) {
@@ -158,13 +158,13 @@ export class QueryMulticaster implements DnssdSolicitor {
 
     async #discover(solicitation: DnssdSolicitor.Solicitation, abort: Abort) {
         // Wait initially 20 - 120 ms per RFC 6762
-        let timeout = Millis(20 + 100 * (this.#names.entropy.randomUint32 / Math.pow(2, 32)));
+        let timeout = Millis.floor(Millis(20 + 100 * (this.#names.entropy.randomUint32 / Math.pow(2, 32))));
 
         for (const nextTimeout of this.#schedule) {
             using delay = new Abort({ abort, timeout });
 
             await delay;
-            if (delay.aborted) {
+            if (abort.aborted) {
                 break;
             }
 

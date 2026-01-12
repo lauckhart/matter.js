@@ -62,6 +62,9 @@ export class Peer {
                 context.sessions.fabricFor(descriptor.address).globalId,
                 descriptor.address.nodeId,
             ),
+
+            Diagnostic.via(this.address.toString()),
+
             context.names,
         );
 

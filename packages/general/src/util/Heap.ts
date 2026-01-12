@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2025 Matter.js Authors
+ * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -199,6 +199,7 @@ export class Heap<T> {
     }
 
     #deleteAt(index: number) {
+        console.log("DELETING", index, JSON.stringify(this.#buffer));
         if (index >= this.#buffer.length) {
             return;
         }
