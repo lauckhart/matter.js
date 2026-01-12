@@ -68,6 +68,11 @@ export class Peer {
             context.names,
         );
 
+        // Consider service initially reachable if we have a known operational address
+        if (descriptor.operationalAddress) {
+            this.#service.status.isReachable = true;
+        }
+
         this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
             if (this.#isSaving) {
                 return;

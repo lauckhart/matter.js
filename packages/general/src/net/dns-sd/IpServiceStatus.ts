@@ -20,13 +20,14 @@ const logger = Logger.get("IpServiceStatus");
  */
 export class IpServiceStatus {
     #service: IpService;
-    #isReachable = true;
+    #isReachable: boolean;
     #connecting = new BasicSet<PromiseLike<boolean>>();
     #abortResolver?: Abort;
     #resolving?: Promise<void>;
 
     constructor(service: IpService) {
         this.#service = service;
+        this.#isReachable = !!service.addresses.size;
     }
 
     /**
