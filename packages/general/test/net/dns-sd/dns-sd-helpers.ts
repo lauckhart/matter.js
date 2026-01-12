@@ -6,8 +6,9 @@
 
 import { DnsMessageType, DnsRecord, DnsRecordClass, DnsRecordType, SrvRecordValue } from "#codec/DnsCodec.js";
 import { MockCrypto } from "#crypto/MockCrypto.js";
-import { DiscoveryNames } from "#net/dns-sd/DiscoveryNames.js";
-import { DiscoveryService } from "#net/dns-sd/DiscoveryService.js";
+import { Diagnostic } from "#log/Diagnostic.js";
+import { DnssdNames } from "#net/dns-sd/DnssdNames.js";
+import { IpService } from "#net/dns-sd/IpService.js";
 import { MdnsSocket } from "#net/dns-sd/MdnsSocket.js";
 import { MockNetwork } from "#net/mock/MockNetwork.js";
 import { NetworkSimulator } from "#net/mock/NetworkSimulator.js";
@@ -49,8 +50,8 @@ export class MockHost {
     #network: MockNetwork;
     #mdns: MdnsSocket;
     #index: number;
-    #names?: DiscoveryNames;
-    #services?: Map<string, DiscoveryService>;
+    #names?: DnssdNames;
+    #services?: Map<string, IpService>;
 
     constructor(network: MockNetwork, mdns: MdnsSocket, index: number) {
         this.#network = network;
@@ -64,7 +65,7 @@ export class MockHost {
 
     get names() {
         if (this.#names === undefined) {
-            this.#names = new DiscoveryNames({ socket: this.mdns, entropy: MockCrypto(this.#index) });
+            this.#names = new DnssdNames({ socket: this.mdns, entropy: MockCrypto(this.#index) });
         }
         return this.#names;
     }
@@ -79,7 +80,7 @@ export class MockHost {
         const qname = qnameOf(nameOrIndex);
         let service = this.#services.get(qname);
         if (service === undefined) {
-            this.#services.set(qname, (service = new DiscoveryService(qname, this.names)));
+            this.#services.set(qname, (service = new IpService(qname, Diagnostic.via("test"), this.names)));
         }
         return service;
     }
