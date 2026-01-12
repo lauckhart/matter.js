@@ -16,12 +16,12 @@ import type { DnssdSolicitor } from "./DnssdSolicitor.js";
 import { IpService } from "./IpService.js";
 
 /**
- * Performs discovery for an {@link IpService} until new IP addresses are identified.
+ * Discovers new IP addresses for an {@link IpService}.
  *
  * This primarily involves sending queries for SRV records using {@link DnssdSolicitor#discover}.  We also query for
  * A and AAAA records for any SRV target hostnames for which we do not know IP addresses.
  *
- * Runs until aborted or we discover a new IP address (that is not already known).
+ * Runs until aborted or we discover a new IP address (we ignore existing addresses).
  */
 export async function IpServiceResolution(service: IpService, abort: AbortSignal, ipv4 = true) {
     using localAbort = new Abort({ abort });
@@ -87,6 +87,7 @@ export async function IpServiceResolution(service: IpService, abort: AbortSignal
         // Detect new address which means discovery is complete
         for (const address of service.addresses) {
             if (!ipv4 && isIPv4(address.ip)) {
+                // Ignore ipv4 if ipv4 is unused
                 continue;
             }
 

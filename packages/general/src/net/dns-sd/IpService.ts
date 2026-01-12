@@ -12,9 +12,9 @@ import { Duration } from "#time/Duration.js";
 import { Time } from "#time/Time.js";
 import { Abort } from "#util/Abort.js";
 import { AsyncObservable, AsyncObservableValue, ObserverGroup } from "#util/Observable.js";
-import { DiscoveryResolver } from "./DiscoveryResolver.js";
 import { DnssdName } from "./DnssdName.js";
 import { DnssdNames } from "./DnssdNames.js";
+import { IpServiceStatus } from "./IpServiceStatus.js";
 
 /**
  * A service addressable by IP that updates as {@link DnssdNames} change.
@@ -27,6 +27,7 @@ export class IpService {
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addresses = ServerAddressSet<ServerAddressUdp>();
+    #status?: IpServiceStatus;
     #notified?: Promise<void>;
 
     constructor(name: string, via: string, names: DnssdNames) {
@@ -65,6 +66,17 @@ export class IpService {
     }
 
     /**
+     * Status details of the service.
+     */
+    get status() {
+        if (this.#status === undefined) {
+            this.#status = new IpServiceStatus(this);
+        }
+
+        return this.#status;
+    }
+
+    /**
      * Release resources.
      */
     async close() {
@@ -79,26 +91,6 @@ export class IpService {
      */
     get addresses() {
         return this.#addresses;
-    }
-
-    /**
-     * Obtain known addresses, discovering as necessary.
-     */
-    async resolve(abort?: AbortSignal, ipv4 = true) {
-        const localAbort = new Abort({ abort });
-        using _changed = this.#changed.use(() => {
-            if (this.#addresses.size) {
-                localAbort.abort();
-            }
-        });
-
-        const resolver = new DiscoveryResolver(this.#names);
-
-        await resolver.resolve(this.#name, abort, ipv4);
-
-        abort?.throwIfAborted();
-
-        return this.addresses;
     }
 
     /**
@@ -125,7 +117,6 @@ export class IpService {
     async *addressChanges({
         abort,
         order = ServerAddressSet.compareDesirability,
-        ipv4 = true,
     }: {
         abort?: AbortSignal;
         order?: ServerAddressSet.Comparator;
@@ -177,16 +168,6 @@ export class IpService {
                 // Restart if changed
                 if (dirty.value) {
                     continue loop;
-                }
-            }
-
-            // If we have no addresses, perform resolution.  Do this after sending updates so that "delete" records emit
-            // first
-            if (!knownAddresses.size && !this.#addresses.size) {
-                const addresses = await Abort.race(abort, this.resolve(abort, ipv4));
-                if (addresses === undefined) {
-                    // Aborted
-                    return;
                 }
             }
 
