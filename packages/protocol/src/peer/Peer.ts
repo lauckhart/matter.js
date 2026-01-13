@@ -50,8 +50,10 @@ export class Peer {
     #service: IpService;
     #observers = new ObserverGroup();
 
-    // TODO - manage these internally and/or factor away
+    /** @deprecated */
     activeDiscovery?: Peer.ActiveDiscovery;
+
+    /** @deprecated */
     activeReconnection?: Peer.ActiveReconnection;
 
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {

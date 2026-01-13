@@ -92,6 +92,9 @@ export type ExchangeSendOptions = {
 
     /** Maximum MRP retransmission time (default: unlimited) */
     maxRetransmissionTime?: Duration;
+
+    /** Invoked when a message transmits */
+    onSend?: (message: Message, retransmission: number) => void;
 };
 
 /**
@@ -107,8 +110,10 @@ export const MATTER_MESSAGE_OVERHEAD = 26 + 12 + CRYPTO_AEAD_MIC_LENGTH_BYTES;
  */
 export interface MessageExchangeContext {
     session: Session;
-    retry(number: number): void;
     localSessionParameters: SessionParameters;
+
+    /** @deprecated */
+    retry(number: number): void;
 }
 
 /**
@@ -173,15 +178,14 @@ export class MessageExchange {
     readonly #closed = AsyncObservableValue();
     readonly #closing = AsyncObservableValue();
 
-    // This following are associated with current active transmission
+    // TODO - following are associated with current active transmission and should maybe go in a closure
     #isTransmitting = false;
     #sentMessageToAck: Message | undefined;
     #sentMessageAckSuccess: ((message: Message | undefined) => void) | undefined;
     #sentMessageAckFailure: ((error?: Error) => void) | undefined;
-    #retransmissionTimer: Timer | undefined;
+    #sendOptions: ExchangeSendOptions = {};
     #retransmissionCounter = 0;
-    #maxRetransmissions = MRP.MAX_TRANSMISSIONS;
-    #maxRetransmissionTime = Forever;
+    #retransmissionTimer: Timer | undefined;
 
     constructor(config: MessageExchange.Config) {
         const { context, isInitiator, peerSessionId, nodeId, peerNodeId, exchangeId, protocolId } = config;
@@ -369,9 +373,11 @@ export class MessageExchange {
         }
 
         this.#isTransmitting = true;
+        this.#sendOptions = options;
+        this.#retransmissionCounter = 0;
 
         try {
-            await this.#send(messageType, payload, options);
+            await this.#send(messageType, payload);
         } finally {
             this.#retransmissionTimer?.stop();
             this.#retransmissionTimer =
@@ -384,7 +390,7 @@ export class MessageExchange {
         }
     }
 
-    async #send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
+    async #send(messageType: number, payload: Bytes) {
         const {
             expectAckOnly = false,
             disableMrpLogic,
@@ -392,17 +398,15 @@ export class MessageExchange {
             includeAcknowledgeMessageId,
             logContext,
             protocolId = this.#protocolId,
-            maxRetransmissions = MRP.MAX_TRANSMISSIONS,
-            maxRetransmissionTime = Forever,
-        } = options;
+        } = this.#sendOptions;
 
-        using abort = new Abort(options);
+        using abort = new Abort(this.#sendOptions);
 
         if (!this.session.usesMrp && includeAcknowledgeMessageId !== undefined) {
             throw new InternalError("Cannot include an acknowledge message ID when MRP is not used");
         }
 
-        let { requiresAck } = options;
+        let { requiresAck } = this.#sendOptions;
         if (requiresAck && !(this.session.usesMrp || (this.session as NodeSession).isPeerLost)) {
             requiresAck = false;
         }
@@ -494,7 +498,7 @@ export class MessageExchange {
             this.#sentMessageToAck = message;
             this.#retransmissionTimer = Time.getTimer(
                 `retransmitting ${Message.via(this, message)}`,
-                Duration.min(this.channel.getMrpResubmissionBackOffTime(0), this.#maxRetransmissionTime),
+                this.#mrpResubmissionBackOffTime,
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
             const { promise, resolver, rejecter } = createPromise<Message | undefined>();
@@ -503,6 +507,7 @@ export class MessageExchange {
             this.#sentMessageAckFailure = rejecter;
         }
 
+        this.#sendOptions.onSend?.(message, 0);
         using sending = this.join("sending", Diagnostic.strong(Message.via(this, message)));
         await abort.race(this.channel.send(message, logContext));
         if (abort.aborted) {
@@ -510,8 +515,6 @@ export class MessageExchange {
         }
 
         if (ackPromise === undefined) {
-            this.#maxRetransmissions = maxRetransmissions;
-            this.#maxRetransmissionTime = maxRetransmissionTime;
             this.#retransmissionCounter = 0;
             this.#retransmissionTimer?.start();
 
@@ -568,7 +571,10 @@ export class MessageExchange {
 
     #retransmitMessage(message: Message, expectedProcessingTime?: Duration) {
         this.#retransmissionCounter++;
-        if (this.considerClosed || this.#retransmissionCounter >= this.#maxRetransmissions) {
+        if (
+            this.considerClosed ||
+            this.#retransmissionCounter >= (this.#sendOptions.maxRetransmissions ?? MRP.MAX_TRANSMISSIONS)
+        ) {
             // Ok all resubmissions are done, but we need to wait a bit longer because of processing time and the
             // resubmissions from the other side
             if (expectedProcessingTime && !this.considerClosed) {
@@ -612,15 +618,13 @@ export class MessageExchange {
         this.session.notifyActivity(false);
 
         this.context.retry(this.#retransmissionCounter);
-        const resubmissionBackoffTime = Duration.min(
-            this.channel.getMrpResubmissionBackOffTime(this.#retransmissionCounter),
-            this.#maxRetransmissionTime,
-        );
+        const resubmissionBackoffTime = this.#mrpResubmissionBackOffTime;
         logger.debug(
             `Resubmitting ${Message.via(this, message)} (retransmission attempt ${this.#retransmissionCounter}, backoff time ${Duration.format(resubmissionBackoffTime)}))`,
         );
 
         // TODO await
+        this.#sendOptions.onSend?.(message, this.#retransmissionCounter);
         this.channel
             .send(message)
             .then(() => this.#initializeResubmission(message, resubmissionBackoffTime, expectedProcessingTime))
@@ -790,6 +794,13 @@ export class MessageExchange {
         }
 
         return Diagnostic.via(`${this.session.via}${Mark.EXCHANGE}${this.idStr}`);
+    }
+
+    get #mrpResubmissionBackOffTime() {
+        return Duration.min(
+            this.channel.getMrpResubmissionBackOffTime(this.#retransmissionCounter),
+            this.#sendOptions.maxRetransmissionTime ?? Forever,
+        );
     }
 }
 

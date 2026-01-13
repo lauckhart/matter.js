@@ -34,30 +34,6 @@ import { SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
 import { ServerAddressSet } from "../../../general/src/net/ServerAddressSet.js";
 import type { Peer } from "./Peer.js";
 
-/**
- * Delay following a low-level network error.
- *
- * We use this when we could not contact the peer.
- *
- * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission until
- * response or abort.
- */
-const NETWORK_ERROR_DELAY = Seconds(30);
-
-/**
- * Delay following report of general error from peer.
- *
- * We use this when we have successfully contacted a peer but could not negotiate a new session.
- */
-const PEER_ERROR_DELAY = Seconds(60);
-
-/**
- * Delay for an unhandled exception.
- *
- * Any error that occurs here should be considered internal or should use one of above delays instead.
- */
-const UNHANDLED_ERROR_DELAY = Seconds(120);
-
 const logger = Logger.get("PeerConnection");
 
 /**
@@ -106,8 +82,11 @@ export async function PeerConnection(
     const abort = new Abort(options);
     using lifetime = (peer.lifetime ?? Lifetime.process).join("connecting");
 
+    // Update peer status
+    peer.service.status.connecting(abort.then(() => !!peer.sessions.size));
+
     // Configuration
-    const { maxInitialRetryInterval, nextAddressInterval } = { ...PeerConnection.defaultIntervals, ...options };
+    const intervals = { ...PeerConnection.defaultIntervals, ...options };
 
     // DNS-SD name of peer service
     const service = peer.service;
@@ -155,6 +134,11 @@ export async function PeerConnection(
         }
     }
 
+    // Ensure peer is marked as reachable if we've established a connection
+    if (session) {
+        peer.service.status.isReachable = true;
+    }
+
     abort();
 
     await workers;
@@ -177,7 +161,7 @@ export async function PeerConnection(
             // Delay if within the delay window of last initiation attempt
             if (lastAttemptAt !== undefined) {
                 const timeSinceLastAttempt = Timestamp.delta(lastAttemptAt);
-                const delayInterval = Millis(nextAddressInterval - timeSinceLastAttempt);
+                const delayInterval = Millis(intervals.nextAddressInterval - timeSinceLastAttempt);
                 if (delayInterval > 0) {
                     const changed = await abort.race<ServerAddressUdp | void>(
                         Time.sleep("connection delay", delayInterval),
@@ -323,7 +307,7 @@ export async function PeerConnection(
             ...options,
             abort,
             maxInitialRetransmissions: Infinity,
-            maxInitialRetransmissionTime: maxInitialRetryInterval,
+            maxInitialRetransmissionTime: intervals.maxInitialRetryInterval,
         });
 
         return session;
@@ -337,10 +321,10 @@ export async function PeerConnection(
         if (e instanceof NetworkError || e instanceof RetransmissionLimitReachedError) {
             logger.error(
                 via,
-                `Network error (retry in ${Duration.format(NETWORK_ERROR_DELAY)}):`,
+                `Network error (retry in ${Duration.format(intervals.delayAfterNetworkError)}):`,
                 Diagnostic.errorMessage(e),
             );
-            delay = NETWORK_ERROR_DELAY;
+            delay = intervals.delayAfterNetworkError;
         } else if (e instanceof ChannelStatusResponseError) {
             if (
                 e.protocolStatusCode === SecureChannelStatusCode.NoSharedTrustRoots &&
@@ -353,13 +337,17 @@ export async function PeerConnection(
             } else {
                 logger.error(
                     via,
-                    `Peer error (retry in ${Duration.format(PEER_ERROR_DELAY)}):`,
+                    `Peer error (retry in ${Duration.format(intervals.delayAfterPeerError)}):`,
                     Diagnostic.errorMessage(e),
                 );
-                delay = PEER_ERROR_DELAY;
+                delay = intervals.delayAfterPeerError;
             }
         } else {
-            logger.error(via, `Unhandled connection error (retry in ${Duration.format(UNHANDLED_ERROR_DELAY)}):`, e);
+            logger.error(
+                via,
+                `Unhandled connection error (retry in ${Duration.format(intervals.delayAfterUnhandledError)}):`,
+                e,
+            );
         }
 
         if (abort.aborted) {
@@ -390,20 +378,47 @@ export namespace PeerConnection {
          *
          * This is the longest period between packets between MRP retries when we attempt initial contact.
          */
-        maxInitialRetryInterval?: Duration;
+        maxDelayBetweenRetransmissions?: Duration;
 
         /**
          * Wait time before trying the next address.
          *
          * We run addresses in parallel but delay the time between the initial attempt for each address by this amount.
          */
-        nextAddressInterval?: Duration;
+        delayBeforeNextAddress?: Duration;
+
+        /**
+         * Delay following a low-level network error.
+         *
+         * We use this when we could not contact the peer.
+         *
+         * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission until
+         * response or abort.
+         */
+        delayAfterNetworkError: Duration;
+
+        /**
+         * Delay following report of general error from peer.
+         *
+         * We use this when we have successfully contacted a peer but could not negotiate a new session.
+         */
+        delayAfterPeerError: Duration;
+
+        /**
+         * Delay for an unhandled exception.
+         *
+         * Any error that occurs here should be considered internal or should use one of above delays instead.
+         */
+        delayAfterUnhandledError: Duration;
     }
 
     // TODO - tune these
     export const defaultIntervals = {
         maxInitialRetryInterval: Minutes(2),
         nextAddressInterval: Seconds(5),
+        delayAfterNetworkError: Seconds(30),
+        delayAfterPeerError: Seconds(60),
+        delayAfterUnhandledError: Seconds(120),
     };
 }
 
