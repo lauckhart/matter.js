@@ -395,21 +395,21 @@ export namespace PeerConnection {
          * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission until
          * response or abort.
          */
-        delayAfterNetworkError: Duration;
+        delayAfterNetworkError?: Duration;
 
         /**
          * Delay following report of general error from peer.
          *
          * We use this when we have successfully contacted a peer but could not negotiate a new session.
          */
-        delayAfterPeerError: Duration;
+        delayAfterPeerError?: Duration;
 
         /**
          * Delay for an unhandled exception.
          *
          * Any error that occurs here should be considered internal or should use one of above delays instead.
          */
-        delayAfterUnhandledError: Duration;
+        delayAfterUnhandledError?: Duration;
     }
 
     // TODO - tune these
