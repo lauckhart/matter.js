@@ -20,6 +20,10 @@ describe("IpServiceStatus", () => {
 
         const service = client.addService();
 
+        // Set service to reachable like we would if we have a previously-good address.  This should prevent discovery
+        // until we enable below
+        service.status.isReachable = true;
+
         server.publish();
 
         // Force resolution

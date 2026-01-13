@@ -7,6 +7,7 @@
 import { Diagnostic } from "#log/Diagnostic.js";
 import { Logger } from "#log/Logger.js";
 import { AbortedError } from "#MatterError.js";
+import { ServerAddress } from "#net/ServerAddress.js";
 import { Abort } from "#util/Abort.js";
 import { asError } from "#util/Error.js";
 import { BasicSet } from "#util/Set.js";
@@ -20,14 +21,13 @@ const logger = Logger.get("IpServiceStatus");
  */
 export class IpServiceStatus {
     #service: IpService;
-    #isReachable: boolean;
+    #isReachable = false;
     #connecting = new BasicSet<PromiseLike<boolean>>();
     #abortResolver?: Abort;
     #resolving?: Promise<void>;
 
     constructor(service: IpService) {
         this.#service = service;
-        this.#isReachable = !!service.addresses.size;
     }
 
     /**
@@ -44,6 +44,15 @@ export class IpServiceStatus {
      *
      * This value is writable.  If you set {@link isReachable} to false and {@link isConnecting} is true, the service
      * enters discovery mode and begins active solicitation so long as neither condition changes.
+     *
+     * The service sets {@link isReachable} to true automatically if:
+     *
+     * - It discovers a new (previously unknown) address, or
+     *
+     * - The input promise to {@link connecting} resolves to true
+     *
+     * The service sets {@link isReachable} to false automatically if the input promise to {@link connecting} resolves
+     * to false.
      */
     get isReachable() {
         return this.#isReachable;
@@ -146,8 +155,8 @@ export class IpServiceStatus {
         this.#abortResolver = new Abort();
         this.#resolving = IpServiceResolution(this.#service, this.#abortResolver).finally(() => {
             if (this.#abortResolver?.aborted === false) {
-                logger.debug(this.#service.via, `Resolved`);
-                this.#isReachable = true;
+                const addresses = [...this.#service.addresses].map(ServerAddress.urlFor);
+                logger.debug(this.#service.via, `Resolved as ${addresses.join(", ")}`);
             }
             this.#abortResolver = undefined;
             this.#resolving = undefined;

@@ -342,7 +342,7 @@ export class MessageExchange {
                 this.#sentMessageAckFailure = undefined;
                 this.#sentMessageToAck = undefined;
                 if (isStandaloneAck && this.#closeTimer !== undefined) {
-                    // All resubmissions done and in closing, no need to wait further
+                    // All retransmissions done and in closing, no need to wait further
                     return this.#close();
                 }
             }

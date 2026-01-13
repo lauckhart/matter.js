@@ -27,7 +27,7 @@ export class IpService {
     readonly #services = new Map<string, Service>();
     readonly #changed = new AsyncObservable<[]>();
     readonly #addresses = ServerAddressSet<ServerAddressUdp>();
-    #status?: IpServiceStatus;
+    #status = new IpServiceStatus(this);
     #notified?: Promise<void>;
 
     constructor(name: string, via: string, names: DnssdNames) {
@@ -41,6 +41,8 @@ export class IpService {
             if (!service) {
                 continue;
             }
+
+            this.#updateService(record.ttl, service);
         }
     }
 
@@ -69,10 +71,6 @@ export class IpService {
      * Status details of the service.
      */
     get status() {
-        if (this.#status === undefined) {
-            this.#status = new IpServiceStatus(this);
-        }
-
         return this.#status;
     }
 
@@ -105,6 +103,10 @@ export class IpService {
      */
     get changed() {
         return this.#changed;
+    }
+
+    map<T>(fn: (addr: ServerAddressUdp) => T): T[] {
+        return [...this.addresses].map(fn);
     }
 
     /**
@@ -273,6 +275,9 @@ export class IpService {
         }
 
         this.#addresses.add(address);
+
+        // Set status to reachable any time we add a new address
+        this.#status.isReachable = true;
 
         this.#notify();
     }
