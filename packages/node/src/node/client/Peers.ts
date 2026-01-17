@@ -40,7 +40,6 @@ import {
     FabricManager,
     InteractionQueue,
     PeerAddress,
-    PeerSet,
     SessionManager,
 } from "#protocol";
 import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
@@ -386,22 +385,8 @@ export class Peers extends EndpointContainer<ClientNode> {
             return;
         }
 
-        setPeerLimits();
-
         node.eventsOf(type).leave?.on(({ fabricIndex }) => this.#onLeave(node, fabricIndex));
         node.eventsOf(type).shutDown?.on(() => this.#onShutdown(node));
-        node.eventsOf(type).capabilityMinima$Changed.on(setPeerLimits);
-
-        function setPeerLimits() {
-            if (!node.env.has(PeerSet)) {
-                // Node is not yet online, delay setting limits
-                return;
-            }
-            const peerAddress = node.maybeStateOf(CommissioningClient)?.peerAddress;
-            if (peerAddress) {
-                node.env.get(PeerSet).for(peerAddress).limits = node.stateOf(type).capabilityMinima;
-            }
-        }
     }
 
     #onLeave(node: ClientNode, fabricIndex: FabricIndex) {

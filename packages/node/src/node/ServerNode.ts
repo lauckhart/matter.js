@@ -12,7 +12,7 @@ import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "#behavior/system/network/ServerNetworkRuntime.js";
 import { ProductDescriptionServer } from "#behavior/system/product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "#behavior/system/sessions/SessionsBehavior.js";
-import { SubscriptionsBehavior } from "#behavior/system/subscriptions/SubscriptionsServer.js";
+import { SubscriptionsServer } from "#behavior/system/subscriptions/SubscriptionsServer.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import type { Environment } from "#general";
 import { asyncNew, Construction, DiagnosticSource, errorOf, Identity, MatterError } from "#general";
@@ -216,7 +216,7 @@ export namespace ServerNode {
         CommissioningServer,
         NetworkServer,
         ProductDescriptionServer,
-        SubscriptionsBehavior,
+        SubscriptionsServer,
         SessionsBehavior,
         EventsBehavior,
         ControllerBehavior,

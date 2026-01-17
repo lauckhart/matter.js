@@ -62,20 +62,28 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
             }
         }
 
-        if (timeout) {
-            this.#timeout = Time.getPeriodicTimer("subtask timeout", timeout, () => {
-                if (this.aborted) {
-                    return;
-                }
-
+        if (timeout !== undefined) {
+            if (timeout <= 0) {
                 this.abort(new TimeoutError());
-            });
+            } else {
+                this.#timeout = Time.getPeriodicTimer("subtask timeout", timeout, () => {
+                    if (this.aborted) {
+                        return;
+                    }
 
-            this.#timeout.start();
+                    this.abort(new TimeoutError());
+                });
+
+                this.#timeout.start();
+            }
         }
 
         if (handler) {
-            this.addEventListener("abort", () => handler(this.reason));
+            if (this.aborted) {
+                handler(this.reason);
+            } else {
+                this.addEventListener("abort", () => handler(this.reason));
+            }
         }
     }
 

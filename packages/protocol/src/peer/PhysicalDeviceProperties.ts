@@ -16,14 +16,17 @@ const DEFAULT_SUBSCRIPTION_CEILING_THREAD_SLEEPY = Minutes(3);
 const DEFAULT_SUBSCRIPTION_CEILING_BATTERY_POWERED = Minutes(10);
 
 export interface PhysicalDeviceProperties {
-    threadConnected: boolean;
-    wifiConnected: boolean;
-    ethernetConnected: boolean;
+    supportsThread: boolean;
+    supportsWifi: boolean;
+    supportsEthernet: boolean;
     rootEndpointServerList: number[];
     isMainsPowered: boolean;
     isBatteryPowered: boolean;
     isIntermittentlyConnected: boolean;
     isThreadSleepyEndDevice: boolean;
+    threadActive?: boolean;
+    threadPan?: bigint;
+    threadChannel?: number;
 }
 
 export namespace PhysicalDeviceProperties {
@@ -49,7 +52,7 @@ export namespace PhysicalDeviceProperties {
             isMainsPowered,
             isBatteryPowered,
             isIntermittentlyConnected,
-            threadConnected,
+            supportsThread: threadConnected,
             isThreadSleepyEndDevice,
         } = properties ?? {};
 

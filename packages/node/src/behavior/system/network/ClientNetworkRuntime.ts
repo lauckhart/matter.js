@@ -16,7 +16,6 @@ import {
     SessionManager,
 } from "#protocol";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
-import { RemoteDescriptor } from "../commissioning/RemoteDescriptor.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
 
 export class UncommissionedError extends MatterError {}
@@ -50,7 +49,7 @@ export class ClientNetworkRuntime extends NetworkRuntime {
             throw new UncommissionedError(`Cannot interact with ${this.owner} because it is disabled`);
         }
 
-        const address = this.owner.stateOf(CommissioningClient).peerAddress;
+        const address = PeerAddress(this.owner.stateOf(CommissioningClient).peerAddress);
 
         if (address === undefined) {
             throw new InternalError(`Commissioned node ${this.owner} has no peer address`);
@@ -59,18 +58,12 @@ export class ClientNetworkRuntime extends NetworkRuntime {
         // Install the exchange provider for the node
         const { env, lifecycle } = this.owner;
         const peers = env.get(PeerSet);
-        const commissioningState = this.owner.stateOf(CommissioningClient);
-        const networkState = this.owner.state.network;
-
-        const exchangeProvider = await peers.exchangeProviderFor(address, {
-            discoveryOptions: {
-                discoveryData: RemoteDescriptor.fromLongForm(commissioningState),
-            },
-            caseAuthenticatedTags: networkState.caseAuthenticatedTags
-                ? [...networkState.caseAuthenticatedTags] // needed because the tags are readonly
-                : undefined,
-        });
-        env.set(ExchangeProvider, exchangeProvider);
+        let peer = peers.get(address);
+        if (peer === undefined) {
+            // Should already exist
+            peer = peers.addKnownPeer({ address });
+        }
+        env.set(ExchangeProvider, peer.exchangeProvider);
 
         this.#client = new ClientInteraction({ environment: env, abort: this.abortSignal });
         env.set(ClientInteraction, this.#client);
@@ -90,30 +83,16 @@ export class ClientNetworkRuntime extends NetworkRuntime {
             this.owner.act(({ context }) => lifecycle.online.emit(context));
         }
 
-        this.#observers.on(sessions.added, session => {
+        this.#observers.on(peer.sessions.added, () => {
             if (lifecycle.isOnline) {
-                return;
-            }
-
-            const address = PeerAddress(commissioningState.peerAddress);
-            if (!address || session.peerAddress !== address) {
                 return;
             }
 
             this.owner.act(({ context }) => lifecycle.online.emit(context));
         });
 
-        this.#observers.on(sessions.deleted, session => {
-            if (!lifecycle.isOnline) {
-                return;
-            }
-
-            const address = PeerAddress(commissioningState.peerAddress);
-            if (session.peerAddress !== address) {
-                return;
-            }
-
-            if (address && sessions.find(({ peerAddress }) => peerAddress === address)) {
+        this.#observers.on(peer.sessions.deleted, () => {
+            if (!lifecycle.isOnline || peer.sessions.size) {
                 return;
             }
 

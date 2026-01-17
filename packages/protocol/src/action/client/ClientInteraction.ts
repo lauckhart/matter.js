@@ -38,7 +38,6 @@ import { InteractionClientMessenger, MessageType } from "#interaction/Interactio
 import { Subscription } from "#interaction/Subscription.js";
 import { PeerAddress } from "#peer/PeerAddress.js";
 import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
-import { SecureSession } from "#session/SecureSession.js";
 import { Status, TlvAttributeReport, TlvNoResponse, TlvSubscribeResponse, TypeFromSchema } from "#types";
 import { ClientWrite } from "./ClientWrite.js";
 import { InputChunk } from "./InputChunk.js";
@@ -113,14 +112,6 @@ export class ClientInteraction<
                 enumerable: true,
             },
         });
-    }
-
-    get exchanges() {
-        return this.#exchanges;
-    }
-
-    get session() {
-        return this.#exchanges.session;
     }
 
     async close() {
@@ -370,8 +361,10 @@ export class ClientInteraction<
             logger.debug("Subscribe interactions with more then 3 paths might be not allowed by the device.");
         }
 
-        SecureSession.assert(this.#exchanges.session);
-        const peer = this.#exchanges.session.peerAddress;
+        const peer = this.#exchanges.peerAddress;
+        if (peer === undefined) {
+            throw new ImplementationError("Subscription unavailable because not interacting with a commissioned peer");
+        }
 
         if (!request.keepSubscriptions) {
             for (const subscription of this.subscriptions) {
@@ -435,7 +428,7 @@ export class ClientInteraction<
                 closed: () => this.subscriptions.delete(subscription),
                 response,
                 abort: session?.abort,
-                maxPeerResponseTime: this.#exchanges.maximumPeerResponseTime(),
+                maxPeerResponseTime: this.maximumPeerResponseTime(),
             });
             this.subscriptions.addPeer(subscription);
 
@@ -535,7 +528,7 @@ export class ClientInteraction<
             // either try the last addresses again (if existing), or do a short-timed re-discovery. This would block
             // the execution max 10s. What's missing is that one layer (like Sustained Subscription) would trigger a
             // FullDiscovery instead of just a timed one, but for the tests and currently this should be enough.
-            await this.exchanges.reconnectChannel({ asOf: now, resetInitialState: true });
+            await this.#exchanges.reconnectChannel({ asOf: now, resetInitialState: true });
             messenger = await InteractionClientMessenger.create(this.#exchanges);
         }
 

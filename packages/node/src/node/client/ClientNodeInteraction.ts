@@ -7,7 +7,6 @@
 import type { ActionContext } from "#behavior/context/ActionContext.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import type { ClientNode } from "#node/ClientNode.js";
-import { NodePhysicalProperties } from "#node/NodePhysicalProperties.js";
 import {
     ClientBdxRequest,
     ClientBdxResponse,
@@ -27,36 +26,16 @@ import {
 } from "#protocol";
 import { EndpointNumber } from "#types";
 import { ClientEndpointInitializer } from "./ClientEndpointInitializer.js";
+import { ClientNodePhysicalProperties } from "./ClientNodePhysicalProperties.js";
 
 /**
  * A {@link ClientInteraction} that brings the node online before attempting interaction.
  */
 export class ClientNodeInteraction implements Interactable<ActionContext> {
     #node: ClientNode;
-    #physicalProps?: PhysicalDeviceProperties;
 
     constructor(node: ClientNode) {
         this.#node = node;
-    }
-
-    /**
-     * The current session used for interaction with the node if any session is established, otherwise undefined.
-     */
-    get session() {
-        if (this.#node.env.has(ClientInteraction)) {
-            return this.#node.env.get(ClientInteraction).session;
-        }
-    }
-
-    get physicalProperties() {
-        if (this.#physicalProps === undefined) {
-            this.#physicalProps = NodePhysicalProperties(this.#node);
-            this.structure?.changed.on(() => {
-                // When structure changes, physical properties may change, so clear cached value to recompute on the next access
-                this.#physicalProps = undefined;
-            });
-        }
-        return this.#physicalProps;
     }
 
     /**
@@ -93,7 +72,7 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
             ...this.structure.injectVersionFilters(request),
             ...PhysicalDeviceProperties.subscriptionIntervalBoundsFor({
                 description: this.#node.toString(),
-                properties: this.physicalProperties,
+                properties: ClientNodePhysicalProperties(this.#node),
                 request,
             }),
 
@@ -156,10 +135,12 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
         if (!this.#node.lifecycle.isOnline) {
             await this.#node.start();
         }
-        const props = this.physicalProperties;
+
+        const props = ClientNodePhysicalProperties(this.#node);
+
         // When we have a thread device, then we use the queue, or when we do not know anything
         // (usually before the initial subscription) unless the queue is ignored by the method parameter
-        return respectQueue && (props.threadConnected || !props.rootEndpointServerList.length)
+        return respectQueue && (props.supportsThread || !props.rootEndpointServerList.length)
             ? this.#node.env.get(QueuedClientInteraction)
             : this.#node.env.get(ClientInteraction);
     }

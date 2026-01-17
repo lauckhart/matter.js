@@ -12,5 +12,6 @@ export * from "./InteractionQueue.js";
 export * from "./PeerAddress.js";
 export * from "./PeerAddressStore.js";
 export * from "./PeerDescriptor.js";
+export * from "./PeerExchangeProvider.js";
 export * from "./PeerSet.js";
 export * from "./PhysicalDeviceProperties.js";

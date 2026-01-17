@@ -236,7 +236,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         return this.#interaction;
     }
 
-    override get identity() {
+    get peerAddress() {
         // If commissioned, use the peer address for logging purposes
         let address = this.behaviors.maybeStateOf("commissioning")?.peerAddress as PeerAddress | undefined;
 
@@ -245,9 +245,15 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
             address = this.store.storeForEndpoint(this).peerAddress as PeerAddress | undefined;
         }
 
+        return address;
+    }
+
+    override get identity() {
+        const peerAddress = this.peerAddress;
+
         // Use the peer address as a log identifier if present
-        if (address) {
-            return PeerAddress(address).toString();
+        if (peerAddress) {
+            return PeerAddress(peerAddress).toString();
         }
 
         // Fall back to persistence ID

@@ -55,7 +55,7 @@ interface InternalResumptionRecord {
     fabricIndex: FabricIndex;
     peerNodeId: NodeId;
     sessionParameters: SessionParameters;
-    caseAuthenticatedTags?: CaseAuthenticatedTag[];
+    caseAuthenticatedTags?: readonly CaseAuthenticatedTag[];
 }
 
 /** Resumption record with Fabric reference. */
@@ -81,7 +81,7 @@ type ResumptionStorageRecord = {
         supportedTransports?: number;
         maxTcpMessageSize?: number;
     };
-    caseAuthenticatedTags?: CaseAuthenticatedTag[];
+    caseAuthenticatedTags?: readonly CaseAuthenticatedTag[];
 };
 
 export interface ActiveSessionInformation {
