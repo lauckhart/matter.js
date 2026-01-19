@@ -429,7 +429,7 @@ export namespace PeerConnection {
     }
 
     export interface Options {
-        abort?: Abort;
+        abort?: AbortSignal;
         connectionTimeout?: Duration;
         network?: string;
     }

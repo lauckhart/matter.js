@@ -29,7 +29,7 @@ export type InteractionSession = AccessControl.Session & {
     abort?: AbortSignal;
 
     /**
-     * Timeout on connection time.
+     * Timeout on connection.
      *
      * This limits the amount of time matter.js will wait for a new connection to the underlying node when performing
      * remote interactions.  This timeout is from the time of first connection attempt; if matter.js is already

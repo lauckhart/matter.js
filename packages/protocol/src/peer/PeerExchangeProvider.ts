@@ -37,7 +37,7 @@ export class PeerExchangeProvider extends ExchangeProvider {
         const abort = options?.abort;
 
         // Connections grab their own network slot so connect before obtaining our own
-        const session = await this.#peer.connect();
+        const session = await this.#peer.connect(options);
 
         const network = this.#context.networks.select(this.#peer, options?.network);
         const slot = await network.semaphore.obtainSlot(abort);
