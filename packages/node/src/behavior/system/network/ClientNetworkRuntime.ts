@@ -4,31 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError, Logger, MatterError, ObserverGroup } from "#general";
+import { InternalError, MatterError, ObserverGroup } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
-import {
-    ClientInteraction,
-    ExchangeProvider,
-    InteractionQueue,
-    PeerAddress,
-    PeerSet,
-    QueuedClientInteraction,
-    SessionManager,
-} from "#protocol";
+import { ExchangeProvider, PeerAddress, PeerSet, SessionManager } from "#protocol";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
 
 export class UncommissionedError extends MatterError {}
 export class OfflineError extends MatterError {}
 
-const logger = Logger.get("ClientNetworkRuntime");
-
 /**
  * Handles network functionality for {@link ClientNode}.
  */
 export class ClientNetworkRuntime extends NetworkRuntime {
-    #client?: ClientInteraction;
-    #queuedClient?: QueuedClientInteraction;
     #observers = new ObserverGroup();
 
     constructor(owner: ClientNode) {
@@ -58,21 +46,11 @@ export class ClientNetworkRuntime extends NetworkRuntime {
         // Install the exchange provider for the node
         const { env, lifecycle } = this.owner;
         const peers = env.get(PeerSet);
-        let peer = peers.get(address);
+        const peer = peers.get(address);
         if (peer === undefined) {
-            // Should already exist
-            peer = peers.addKnownPeer({ address });
+            throw new InternalError(`Commissioned node ${this.owner} has no peer installed`);
         }
         env.set(ExchangeProvider, peer.exchangeProvider);
-
-        this.#client = new ClientInteraction({ environment: env, abort: this.abortSignal });
-        env.set(ClientInteraction, this.#client);
-        this.#queuedClient = new QueuedClientInteraction({
-            environment: env,
-            abort: this.abortSignal,
-            queue: env.get(InteractionQueue), // created and owned by Peers
-        });
-        env.set(QueuedClientInteraction, this.#queuedClient);
 
         // Monitor sessions to maintain online state.  We consider the node "online" if there is an active session.  If
         // not, we consider the node offline.  This is the only real way we have of determining whether the node is
@@ -103,15 +81,8 @@ export class ClientNetworkRuntime extends NetworkRuntime {
     protected async stop() {
         await this.construction;
 
-        this.owner.env.delete(ClientInteraction, this.#client);
-        this.owner.env.delete(QueuedClientInteraction, this.#queuedClient);
-
-        try {
-            await this.#client?.close();
-        } catch (e) {
-            logger.error(`Error closing connection to ${this.owner}`, e);
-        }
-
         this.#observers.close();
+
+        this.owner.act(({ context }) => this.owner.lifecycle.offline.emit(context));
     }
 }

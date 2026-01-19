@@ -35,7 +35,7 @@ import type { Session } from "#session/Session.js";
 import type { SessionManager } from "#session/SessionManager.js";
 import { SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
 import type { Peer } from "./Peer.js";
-import type { PeerNetworks } from "./PeerNetworks.js";
+import type { PeerNetworks } from "./PeerNetwork.js";
 
 const logger = Logger.get("PeerConnection");
 

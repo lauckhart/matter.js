@@ -339,7 +339,7 @@ export class CommissioningClient extends Behavior {
 
             const peer = node.env.get(PeerSet).for(addr);
             if (peer) {
-                peer.protocol = undefined;
+                peer.protocol = node.protocol;
             }
 
             node.lifecycle.commissioned.emit(this.context);

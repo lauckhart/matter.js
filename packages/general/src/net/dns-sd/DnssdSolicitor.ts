@@ -143,6 +143,7 @@ export class QueryMulticaster implements DnssdSolicitor {
                 finished: this.#discover(discovery, abort),
                 waiting: new Set([discovery]),
             };
+            this.#discovering.set(discovery.name, active);
         }
 
         try {

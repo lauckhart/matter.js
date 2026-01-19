@@ -79,6 +79,7 @@ export class IpService {
      */
     async close() {
         this.#observers.close();
+        await this.#status.close();
         if (this.#notified) {
             await this.#notified;
         }

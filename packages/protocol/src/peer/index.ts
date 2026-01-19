@@ -8,7 +8,6 @@ export * from "./CommissioningError.js";
 export * from "./ControllerCommissioner.js";
 export * from "./ControllerCommissioningFlow.js";
 export * from "./ControllerDiscovery.js";
-export * from "./InteractionQueue.js";
 export * from "./PeerAddress.js";
 export * from "./PeerAddressStore.js";
 export * from "./PeerDescriptor.js";

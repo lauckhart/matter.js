@@ -25,13 +25,20 @@ export class IpServiceStatus {
     #service: IpService;
     #isReachable = false;
     #connecting = new BasicSet<PromiseLike<boolean>>();
-    #abortResolver?: Abort;
+    #resolveAbort?: Abort;
     #resolving?: Promise<void>;
     #connectionInitiatedAt?: Timestamp;
     #lastReceiptAt?: Timestamp;
 
     constructor(service: IpService) {
         this.#service = service;
+    }
+
+    async close() {
+        this.#maybeStopResolving();
+        if (this.#resolving) {
+            await this.#resolving;
+        }
     }
 
     /**
@@ -77,9 +84,9 @@ export class IpServiceStatus {
         this.#isReachable = isReachable;
 
         if (isReachable) {
-            this.#maybeStopDiscovery();
+            this.#maybeStopResolving();
         } else {
-            this.#maybeStartDiscovery();
+            this.#maybeStartResolving();
         }
     }
 
@@ -125,7 +132,7 @@ export class IpServiceStatus {
                     logger.debug(this.#service.via, "Connect attempt aborted");
                 }
 
-                this.#maybeStopDiscovery();
+                this.#maybeStopResolving();
             },
 
             error => {
@@ -139,7 +146,7 @@ export class IpServiceStatus {
 
                 this.#isReachable = false;
 
-                this.#maybeStartDiscovery();
+                this.#maybeStartResolving();
             },
         );
 
@@ -148,11 +155,11 @@ export class IpServiceStatus {
         }
         this.#connecting.add(result);
 
-        this.#maybeStartDiscovery();
+        this.#maybeStartResolving();
     }
 
-    #maybeStartDiscovery() {
-        if (this.#isReachable || !this.isConnecting || this.#abortResolver) {
+    #maybeStartResolving() {
+        if (this.#isReachable || !this.isConnecting || this.#resolveAbort) {
             return;
         }
 
@@ -175,23 +182,24 @@ export class IpServiceStatus {
 
         logger.info(this.#service.via, "Resolving", Diagnostic.weak(`(${why})`));
 
-        this.#abortResolver = new Abort();
-        this.#resolving = IpServiceResolution(this.#service, this.#abortResolver).finally(() => {
-            if (this.#abortResolver?.aborted === false) {
+        this.#resolveAbort = new Abort();
+        this.#resolving = IpServiceResolution(this.#service, this.#resolveAbort).finally(() => {
+            if (this.#resolveAbort?.aborted === false) {
                 const addresses = [...this.#service.addresses].map(ServerAddress.urlFor);
                 logger.debug(this.#service.via, `Resolved as ${addresses.join(", ")}`);
             }
-            this.#abortResolver = undefined;
+            this.#resolveAbort?.close();
+            this.#resolveAbort = undefined;
             this.#resolving = undefined;
         });
     }
 
-    #maybeStopDiscovery() {
-        if (!this.#isReachable || this.isConnecting || !this.#abortResolver) {
+    #maybeStopResolving() {
+        if (!this.#isReachable || this.isConnecting || !this.#resolveAbort) {
             return;
         }
 
-        this.#abortResolver();
+        this.#resolveAbort();
 
         logger.debug(this.#service.via, "Stopped resolving");
     }

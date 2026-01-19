@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AbortedError } from "#MatterError.js";
+import { AbortedError, ClosedError } from "#MatterError.js";
 import { Abort } from "#util/Abort.js";
 import { Semaphore } from "#util/Semaphore.js";
 
@@ -256,7 +256,7 @@ describe("Semaphore", () => {
         it("throws if abort signal is already aborted", async () => {
             const queue = new Semaphore("test", 1);
             const abortController = new AbortController();
-            abortController.abort(new AbortedError("pre-aborted"));
+            abortController.abort(new ClosedError("pre-aborted"));
 
             let error: Error | undefined;
             try {
@@ -266,6 +266,7 @@ describe("Semaphore", () => {
             }
 
             expect(error).to.be.instanceOf(AbortedError);
+            expect(error?.cause).to.be.instanceOf(ClosedError);
         });
 
         it("rejects queued request when abort signal fires", async () => {
@@ -281,7 +282,7 @@ describe("Semaphore", () => {
             expect(queue.count).equals(1);
 
             // Abort while waiting
-            abortController.abort(new AbortedError("cancelled"));
+            abortController.abort(new ClosedError("cancelled"));
 
             let error: Error | undefined;
             try {
@@ -291,6 +292,7 @@ describe("Semaphore", () => {
             }
 
             expect(error).to.be.instanceOf(AbortedError);
+            expect(error?.cause).to.be.instanceOf(ClosedError);
             expect(queue.count).equals(0); // Should be removed from queue
 
             slot1.close();

@@ -12,6 +12,7 @@ import {
     AbortedError,
     BasicMultiplex,
     BasicSet,
+    ClosedError,
     Diagnostic,
     DnssdNames,
     Identity,
@@ -34,7 +35,7 @@ import { GlobalAttributes, TypeFromSchema } from "#types";
 import { PeerConnection } from "./PeerConnection.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import { PeerExchangeProvider } from "./PeerExchangeProvider.js";
-import { PeerNetworks } from "./PeerNetworks.js";
+import { PeerNetworks } from "./PeerNetwork.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
 import { PhysicalDeviceProperties } from "./PhysicalDeviceProperties.js";
 
@@ -67,6 +68,16 @@ export class Peer {
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
         this.#lifetime = context.lifetime.join(descriptor.address.toString());
         this.#workers = new BasicMultiplex();
+
+        this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
+            if (this.#isSaving) {
+                return;
+            }
+
+            this.#isSaving = true;
+            this.#workers.add(this.#save());
+        });
+
         this.#service = new IpService(
             getOperationalDeviceQname(
                 context.sessions.fabricFor(descriptor.address).globalId,
@@ -82,15 +93,6 @@ export class Peer {
         if (descriptor.operationalAddress) {
             this.#service.status.isReachable = true;
         }
-
-        this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
-            if (this.#isSaving) {
-                return;
-            }
-
-            this.#isSaving = true;
-            this.#workers.add(this.#save());
-        });
 
         this.#context = context;
 
@@ -262,7 +264,7 @@ export class Peer {
     }
 
     /**
-     * Close the peer without removing the persistent state.
+     * Close the peer without removing persistent state.
      */
     async close() {
         using _lifetime = this.#lifetime.closing();
@@ -283,7 +285,7 @@ export class Peer {
         if (this.activeReconnection) {
             const rejecter = this.activeReconnection.rejecter;
             this.activeReconnection = undefined;
-            rejecter(new AbortedError("Peer closed"));
+            rejecter(new ClosedError("Peer closed"));
         }
 
         for (const session of this.#context.sessions.sessionsFor(this.address)) {

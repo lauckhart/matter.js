@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AbortedError } from "#MatterError.js";
+import { AbortedError, ClosedError } from "#MatterError.js";
 import { Duration } from "#time/Duration.js";
 import { Time, Timer } from "#time/Time.js";
 import { Instant } from "#time/TimeUnit.js";
@@ -64,7 +64,7 @@ export class Semaphore {
     async obtainSlot(abort?: Abort.Signal): Promise<WorkSlot> {
         // Check if closed or already aborted before proceeding
         if (this.#closed) {
-            throw new AbortedError("Queue is closed");
+            throw new ClosedError("Queue is closed");
         }
         if (abort) {
             const signal = "signal" in abort ? abort.signal : abort;
@@ -201,7 +201,7 @@ export class Semaphore {
     clear(): void {
         if (this.#queue.length > 0) {
             // Abort current waiters and create fresh abort for future requests
-            this.#abort.abort(new AbortedError("Queue cleared"));
+            this.#abort.abort(new ClosedError("Queue cleared"));
             this.#abort = new Abort();
         }
         this.#queue.length = 0;
@@ -226,7 +226,7 @@ export class Semaphore {
      */
     close(): void {
         this.#closed = true;
-        this.#abort.abort(new AbortedError("Queue is closed"));
+        this.#abort.abort(new ClosedError("Queue is closed"));
         this.clear();
         this.#delayTimer.stop();
     }

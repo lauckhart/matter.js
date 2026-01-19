@@ -54,7 +54,7 @@ import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedErro
 import { Peer } from "./Peer.js";
 import { PeerAddressStore, PeerDataStore } from "./PeerAddressStore.js";
 import { PeerDescriptor } from "./PeerDescriptor.js";
-import { PeerNetworks } from "./PeerNetworks.js";
+import { PeerNetworks } from "./PeerNetwork.js";
 
 const logger = Logger.get("PeerSet");
 

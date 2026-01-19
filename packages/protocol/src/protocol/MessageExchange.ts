@@ -387,6 +387,10 @@ export class MessageExchange {
         if (this.#lifetime.isClosing) {
             throw new ImplementationError("Cannot send because exchange is closed");
         }
+        await this.#sendWithoutCloseGuard(messageType, payload, options);
+    }
+
+    async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         if (this.#isTransmitting) {
             throw new ImplementationError("Cannot send because exchange is busy");
         }
@@ -396,7 +400,7 @@ export class MessageExchange {
         this.#retransmissionCounter = 0;
 
         try {
-            await this.#send(messageType, payload);
+            await this.#sendWithoutTransmitGuard(messageType, payload);
         } finally {
             this.#retransmissionTimer?.stop();
             this.#retransmissionTimer =
@@ -409,7 +413,7 @@ export class MessageExchange {
         }
     }
 
-    async #send(messageType: number, payload: Bytes) {
+    async #sendWithoutTransmitGuard(messageType: number, payload: Bytes) {
         const {
             expectAckOnly = false,
             disableMrpLogic,
@@ -582,7 +586,7 @@ export class MessageExchange {
         } = message;
         if (!requiresAck || !this.session.usesMrp) return;
 
-        await this.send(SecureMessageType.StandaloneAck, new Uint8Array(0), {
+        await this.#sendWithoutCloseGuard(SecureMessageType.StandaloneAck, new Uint8Array(0), {
             includeAcknowledgeMessageId: messageId,
             protocolId: SECURE_CHANNEL_PROTOCOL_ID,
         });

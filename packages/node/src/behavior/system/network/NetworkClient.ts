@@ -39,7 +39,7 @@ export class NetworkClient extends NetworkBehavior {
             if (!peerSet.has(peerAddress)) {
                 const udpAddresses = this.#node.state.commissioning.addresses?.filter(a => a.type === "udp") ?? [];
                 if (udpAddresses.length) {
-                    const operationalAddress = ServerAddress(udpAddresses[udpAddresses.length - 1]) as ServerAddressUdp;
+                    const operationalAddress = ServerAddress(udpAddresses[0]) as ServerAddressUdp;
                     // Make sure the PeerSet knows about this peer now too
                     peerSet.addKnownPeer({
                         address: peerAddress,

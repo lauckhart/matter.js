@@ -28,8 +28,7 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
     #controller: AbortController;
 
     // Optional abort chaining
-    #dependents?: AbortSignal[];
-    #listener?: (reason: any) => void;
+    #unregisterDependencies?: () => void;
 
     // Optional PromiseLike behavior
     #aborted?: Promise<Error>;
@@ -43,6 +42,17 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
 
         this.#controller = new AbortController();
 
+        const throwIfAborted = this.#controller.signal.throwIfAborted.bind(this.#controller.signal);
+        this.#controller.signal.throwIfAborted = () => {
+            try {
+                throwIfAborted();
+            } catch (e) {
+                const error = new AbortedError();
+                error.cause = e;
+                throw error;
+            }
+        };
+
         const self = (reason?: any) => {
             this.abort(reason);
         };
@@ -53,12 +63,16 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
         }
 
         if (abort?.length) {
-            const dependents = abort.map(abort => ("signal" in abort ? abort.signal : abort));
-            this.#dependents = dependents;
+            const dependencies = abort.map(abort => ("signal" in abort ? abort.signal : abort));
 
-            this.#listener = (reason: any) => this.abort(reason);
-            for (const dependent of dependents) {
-                dependent.addEventListener("abort", this.#listener);
+            for (const dependency of dependencies) {
+                const listener = () => this.abort(asError(dependency.reason));
+                dependency.addEventListener("abort", listener);
+                const unregisterPrev = this.#unregisterDependencies;
+                this.#unregisterDependencies = () => {
+                    unregisterPrev?.();
+                    dependency.removeEventListener("abort", listener);
+                };
             }
         }
 
@@ -87,8 +101,8 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
         }
     }
 
-    abort(reason?: any) {
-        this.#controller.abort(reason ?? new AbortedError());
+    abort(reason?: Error) {
+        this.#controller.abort(reason ?? new AbortedError("Operation aborted with no reason given"));
     }
 
     get signal() {
@@ -119,11 +133,7 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
      */
     close() {
         this.#timeout?.stop();
-        if (this.#listener && this.#dependents) {
-            for (const dependent of this.#dependents) {
-                dependent.removeEventListener("abort", this.#listener);
-            }
-        }
+        this.#unregisterDependencies?.();
     }
 
     [Symbol.dispose]() {

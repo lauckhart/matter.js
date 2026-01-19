@@ -59,6 +59,7 @@ export interface ClientInteractionContext {
     sustainRetries?: RetrySchedule.Configuration;
     exchangeProvider?: ExchangeProvider;
     address?: PeerAddress;
+    network?: string;
 }
 
 export const DEFAULT_MIN_INTERVAL_FLOOR = Seconds(1);
@@ -82,7 +83,7 @@ export class ClientInteraction<
 > implements Interactable<SessionT> {
     protected readonly environment: Environment;
     readonly #lifetime: Lifetime;
-    readonly #exchanges: ExchangeProvider;
+    readonly #exchangeProvider: ExchangeProvider;
     readonly #interactions = new BasicSet<Read | Write | Invoke | Subscribe | ClientBdxRequest>();
     #subscriptions?: ClientSubscriptions;
     readonly #abort: Abort;
@@ -91,7 +92,7 @@ export class ClientInteraction<
 
     constructor({ environment, abort, sustainRetries, exchangeProvider, address }: ClientInteractionContext) {
         this.environment = environment;
-        this.#exchanges = exchangeProvider ?? environment.get(ExchangeProvider);
+        this.#exchangeProvider = exchangeProvider ?? environment.get(ExchangeProvider);
         if (environment.has(ClientSubscriptions)) {
             this.#subscriptions = environment.get(ClientSubscriptions);
         }
@@ -361,7 +362,7 @@ export class ClientInteraction<
             logger.debug("Subscribe interactions with more then 3 paths might be not allowed by the device.");
         }
 
-        const peer = this.#exchanges.peerAddress;
+        const peer = this.#exchangeProvider.peerAddress;
         if (peer === undefined) {
             throw new ImplementationError("Subscription unavailable because not interacting with a commissioned peer");
         }
@@ -487,7 +488,7 @@ export class ClientInteraction<
 
         const checkAbort = Abort.checkerFor(session);
 
-        const messenger = await BdxMessenger.create(this.#exchanges, request.messageTimeout);
+        const messenger = await BdxMessenger.create(this.#exchangeProvider, request.messageTimeout);
 
         const context: RequestContext<BdxMessenger> = {
             checkAbort,
@@ -507,11 +508,17 @@ export class ClientInteraction<
         return { context };
     }
 
-    async #begin(what: string, request: Read | Write | Invoke | Subscribe, session: SessionT | undefined) {
+    async #begin(
+        what: string,
+        request: ClientRead | ClientWrite | ClientInvoke | ClientSubscribe,
+        session: SessionT | undefined,
+    ) {
         using lifetime = this.#lifetime.join(what);
 
         if (this.#abort.aborted) {
-            throw new ImplementationError("Client interaction unavailable after close");
+            throw new ImplementationError(
+                `Cannot ${what} ${this.#address ?? "uncommissioned node"} because interactable is closed`,
+            );
         }
 
         const checkAbort = Abort.checkerFor(session);
@@ -519,7 +526,7 @@ export class ClientInteraction<
         const now = Time.nowMs;
         let messenger: InteractionClientMessenger;
         try {
-            messenger = await InteractionClientMessenger.create(this.#exchanges);
+            messenger = await InteractionClientMessenger.create(this.#exchangeProvider, { network: request.network });
         } catch (error) {
             TimeoutError.accept(error);
 
@@ -528,8 +535,8 @@ export class ClientInteraction<
             // either try the last addresses again (if existing), or do a short-timed re-discovery. This would block
             // the execution max 10s. What's missing is that one layer (like Sustained Subscription) would trigger a
             // FullDiscovery instead of just a timed one, but for the tests and currently this should be enough.
-            await this.#exchanges.reconnectChannel({ asOf: now, resetInitialState: true });
-            messenger = await InteractionClientMessenger.create(this.#exchanges);
+            await this.#exchangeProvider.reconnectChannel({ asOf: now, resetInitialState: true });
+            messenger = await InteractionClientMessenger.create(this.#exchangeProvider);
         }
 
         this.#interactions.add(request);
@@ -561,17 +568,17 @@ export class ClientInteraction<
     }
 
     get channelType() {
-        return this.#exchanges.channelType;
+        return this.#exchangeProvider.channelType;
     }
 
     /** Calculates the current maximum response time for a message use in additional logic like timers. */
     maximumPeerResponseTime(expectedProcessingTime?: Duration) {
-        return this.#exchanges.maximumPeerResponseTime(expectedProcessingTime);
+        return this.#exchangeProvider.maximumPeerResponseTime(expectedProcessingTime);
     }
 
     get address() {
         if (this.#address === undefined) {
-            throw new ImplementationError("This InteractionClient is not bound to a specific peer.");
+            throw new ImplementationError("Uncommissioned node has no peer address");
         }
         return this.#address;
     }

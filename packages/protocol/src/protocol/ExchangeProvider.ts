@@ -10,7 +10,7 @@ import { MessageExchange } from "#protocol/MessageExchange.js";
 import { NodeSession } from "#session/NodeSession.js";
 import { SecureSession } from "#session/SecureSession.js";
 import { SessionManager } from "#session/SessionManager.js";
-import { INTERACTION_PROTOCOL_ID, SECURE_CHANNEL_PROTOCOL_ID } from "#types";
+import { INTERACTION_PROTOCOL_ID } from "#types";
 import { SessionClosedError } from "./errors.js";
 import { MRP } from "./MRP.js";
 
@@ -26,7 +26,7 @@ export interface NewExchangeOptions {
     /**
      * The protocol for the message exchange.
      *
-     * Defaults to {@link SECURE_CHANNEL_PROTOCOL_ID}.
+     * Defaults to {@link INTERACTION_PROTOCOL_ID}.
      */
     protocol?: number;
 
@@ -132,7 +132,7 @@ export class ReconnectableExchangeProvider extends ExchangeProvider {
         if (!this.sessions.maybeSessionFor(this.#address)) {
             throw new SessionClosedError("Channel not connected");
         }
-        return this.exchangeManager.initiateExchange(this.#address, options?.protocol ?? SECURE_CHANNEL_PROTOCOL_ID);
+        return this.exchangeManager.initiateExchange(this.#address, options?.protocol ?? INTERACTION_PROTOCOL_ID);
     }
 
     override async reconnectChannel(options: { asOf?: Timestamp; resetInitialState?: boolean } = {}) {

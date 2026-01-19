@@ -291,10 +291,10 @@ export class TimeoutError extends MatterError {
 }
 
 /**
- * Thrown on abort when there is not an underlying error.
+ * Thrown as the primary cause when an {@link AbortController} aborts.
  */
 export class AbortedError extends CanceledError {
-    constructor(message = "This operation was aborted", options?: ErrorOptions) {
+    constructor(message = "Operation aborted", options?: ErrorOptions) {
         super(message, options);
     }
 
@@ -319,6 +319,11 @@ export class AbortedError extends CanceledError {
         return super.accept(cause);
     }
 }
+
+/**
+ * Thrown when an operation can't complete because a resource is closed.
+ */
+export class ClosedError extends CanceledError {}
 
 /**
  * Node.js-style object inspection.

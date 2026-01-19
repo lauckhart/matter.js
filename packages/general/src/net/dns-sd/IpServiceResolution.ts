@@ -53,11 +53,13 @@ export async function IpServiceResolution(service: IpService, abort: AbortSignal
         const hostAbort = new Abort({ abort: localAbort });
         hostResolvers.set(name, hostAbort);
         workers.add(
-            service.names.solicitor.discover({
-                name,
-                recordTypes: ipv4 ? [DnsRecordType.A, DnsRecordType.AAAA] : [DnsRecordType.AAAA],
-                abort: hostAbort,
-            }),
+            service.names.solicitor
+                .discover({
+                    name,
+                    recordTypes: ipv4 ? [DnsRecordType.A, DnsRecordType.AAAA] : [DnsRecordType.AAAA],
+                    abort: hostAbort,
+                })
+                .finally(hostAbort.close.bind(hostAbort)),
         );
     });
 
