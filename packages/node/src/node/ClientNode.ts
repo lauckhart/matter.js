@@ -15,7 +15,7 @@ import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js
 import { EndpointLifecycle } from "#endpoint/properties/EndpointLifecycle.js";
 import { EndpointType } from "#endpoint/type/EndpointType.js";
 import { MutableEndpoint } from "#endpoint/type/MutableEndpoint.js";
-import { Diagnostic, Identity, InternalError, Lifecycle, Logger, MaybePromise } from "#general";
+import { Construction, Diagnostic, Identity, InternalError, Lifecycle, Logger, MaybePromise } from "#general";
 import { Matter, MatterModel } from "#model";
 import { Interactable, OccurrenceManager, PeerAddress } from "#protocol";
 import { ClientNodeStore } from "#storage/client/ClientNodeStore.js";
@@ -264,6 +264,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         // Log client node status updates as info rather than notice and change the log facility to make clear it's a
         // client
         logger.info(Diagnostic.strong(this.toString()), message);
+    }
+
+    override async [Construction.destruct]() {
+        await this.#interaction?.close();
+        await super[Construction.destruct]();
     }
 }
 

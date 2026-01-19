@@ -6,7 +6,7 @@
 
 import type { ActionContext } from "#behavior/context/ActionContext.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { ImplementationError, Logger, MatterAggregateError } from "#general";
+import { ImplementationError, Lifecycle, Logger, MatterAggregateError } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import {
     ClientBdxRequest,
@@ -47,30 +47,13 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
                 return;
             }
 
-            this.#closeInteractable();
+            this.#closeInteraction();
         });
     }
 
     async close() {
-        this.#closeInteractable();
+        this.#closeInteraction();
         await this.#interactableClosed;
-    }
-
-    #closeInteractable() {
-        if (!this.#interactable) {
-            return;
-        }
-
-        const closed = this.#interactable.close().catch(e => {
-            logger.error(`Unhandled error closing client interaction`, e);
-        });
-
-        if (this.#interactableClosed) {
-            // Unlikely to have two active closes but if we do, handle it
-            this.#interactableClosed = MatterAggregateError.allSettled([this.#interactableClosed, closed]);
-        } else {
-            this.#interactableClosed = closed;
-        }
     }
 
     /**
@@ -160,6 +143,12 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
     }
 
     get #interaction() {
+        if (this.#node.construction.status !== Lifecycle.Status.Active) {
+            throw new ImplementationError(
+                `Cannot interact with ${this.#node} because it is ${this.#node.construction.status}`,
+            );
+        }
+
         if (this.#interactable) {
             return this.#interactable;
         }
@@ -176,6 +165,30 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
         });
 
         return this.#interactable;
+    }
+
+    /**
+     * Close currently open interaction.
+     *
+     * We do this when closing and when the peer address changes.
+     */
+    #closeInteraction() {
+        if (!this.#interactable) {
+            return;
+        }
+
+        const closed = this.#interactable.close().catch(e => {
+            logger.error(`Unhandled error closing client interaction`, e);
+        });
+
+        this.#interactable = undefined;
+
+        if (this.#interactableClosed) {
+            // Unlikely to have two active closes but if we do, handle it
+            this.#interactableClosed = MatterAggregateError.allSettled([this.#interactableClosed, closed]);
+        } else {
+            this.#interactableClosed = closed;
+        }
     }
 
     get #structure() {
