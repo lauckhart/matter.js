@@ -118,7 +118,7 @@ export class CaseClient {
             );
         }
 
-        let secureSession;
+        let secureSession: NodeSession;
         const { sigma2Bytes, sigma2, sigma2Resume } = await abort.attempt(messenger.readSigma2());
         if (sigma2Resume !== undefined) {
             // Process sigma2 resume

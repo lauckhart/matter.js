@@ -93,7 +93,7 @@ export class ObservablePeerDescriptor implements PeerDescriptor {
             return;
         }
 
-        this.#operationalAddress = value;
+        this.#operationalAddress = value ? { ...value } : undefined;
         this.#onChange();
     }
 
@@ -119,7 +119,7 @@ export class ObservablePeerDescriptor implements PeerDescriptor {
             return;
         }
 
-        this.#sessionParameters = value;
+        this.#sessionParameters = { ...value };
         this.#onChange();
     }
 
@@ -132,7 +132,7 @@ export class ObservablePeerDescriptor implements PeerDescriptor {
             return;
         }
 
-        this.#caseAuthenticatedTags = cats;
+        this.#caseAuthenticatedTags = cats ? [...cats] : undefined;
         this.#onChange();
     }
 

@@ -106,15 +106,8 @@ export class CommissioningClient extends Behavior {
 
         const node = this.endpoint as ClientNode;
         this.reactTo(node.lifecycle.partsReady, this.#initializeNode);
-        this.reactTo(node.lifecycle.online, this.#nodeOnline);
         this.reactTo(this.events.peerAddress$Changed, this.#peerAddressChanged);
         this.reactTo(this.events.caseAuthenticatedTags$Changed, this.#catsChanged);
-    }
-
-    #nodeOnline() {
-        if (this.state.peerAddress !== undefined) {
-            this.#updateAddresses(this.state.peerAddress);
-        }
     }
 
     #findServerOtaProviderEndpoint() {
@@ -229,12 +222,12 @@ export class CommissioningClient extends Behavior {
             this.state.caseAuthenticatedTags = opts.caseAuthenticatedTags;
         }
 
-        await this.context.transaction.commit();
-
         const network = this.agent.get(NetworkClient);
         network.state.defaultSubscription = opts.defaultSubscription;
         // Nodes we commission are auto-subscribed by default, unless disabled explicitly
         network.state.autoSubscribe = opts.autoSubscribe !== false;
+
+        await this.context.transaction.commit();
 
         logger.notice(
             "Commissioned",
