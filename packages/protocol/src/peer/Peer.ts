@@ -212,7 +212,7 @@ export class Peer {
      */
     async connect(options?: PeerConnection.Options) {
         while (true) {
-            const session = this.#sessions.find(session => !session.isClosing && !session.isPeerLost);
+            const session = this.#newestSession;
             if (session) {
                 return session;
             }
@@ -307,6 +307,23 @@ export class Peer {
         using _lifetime = this.#lifetime.join("saving");
         this.#isSaving = false;
         await this.#context.savePeer(this);
+    }
+
+    get #newestSession() {
+        // Prefer the most recently used session.  Older ones may not work with broken peers (e.g. CHIP test harness)
+        let found: NodeSession | undefined;
+
+        for (const session of this.#sessions) {
+            if (session.isClosing || session.isPeerLost) {
+                continue;
+            }
+
+            if (!found || found.timestamp < session.timestamp) {
+                found = session;
+            }
+        }
+
+        return found;
     }
 }
 

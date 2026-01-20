@@ -28,6 +28,7 @@ import {
     Minutes,
     NoResponseTimeoutError,
     ObservableSet,
+    ObserverGroup,
     RetrySchedule,
     Seconds,
     Semaphore,
@@ -131,6 +132,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #disconnected = AsyncObservable<[peer: Peer]>();
     readonly #peerContext: Peer.Context;
     readonly #networks: PeerNetworks;
+    readonly #observers = new ObserverGroup();
 
     constructor(context: PeerSetContext) {
         const { lifetime, sessions, exchanges, scanners, names, transports: netInterfaces, store, networks } = context;
@@ -176,6 +178,18 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             for (const descriptor of await this.#store.loadPeers()) {
                 this.#peers.add(new Peer(descriptor, this.#peerContext));
             }
+        });
+
+        this.#observers.on(this.#sessions.sessions.added, session => {
+            if (session.fabric === undefined) {
+                return;
+            }
+
+            this.for(session.peerAddress).sessions.add(session);
+        });
+
+        this.#observers.on(this.#sessions.sessions.deleted, session => {
+            this.get(session.peerAddress)?.sessions.delete(session);
         });
     }
 
@@ -442,6 +456,8 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         for (const peer of this.#peers) {
             await peer.close();
         }
+
+        this.#observers.close();
     }
 
     /**

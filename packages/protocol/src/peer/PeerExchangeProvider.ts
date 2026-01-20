@@ -7,8 +7,8 @@
 import { ExchangeProvider, NewExchangeOptions } from "#protocol/ExchangeProvider.js";
 import type { MessageExchange } from "#protocol/MessageExchange.js";
 import { MRP } from "#protocol/MRP.js";
+import { INTERACTION_PROTOCOL_ID } from "#types";
 import { ChannelType, Duration } from "@matter/general";
-import { SECURE_CHANNEL_PROTOCOL_ID } from "@matter/types";
 import { Peer } from "./Peer.js";
 import { PeerConnection } from "./PeerConnection.js";
 
@@ -48,7 +48,7 @@ export class PeerExchangeProvider extends ExchangeProvider {
                 this.#peer,
                 this.#context.exchanges,
                 session,
-                options?.protocol ?? SECURE_CHANNEL_PROTOCOL_ID,
+                options?.protocol ?? INTERACTION_PROTOCOL_ID,
             );
 
             exchange.closed.on(() => {
