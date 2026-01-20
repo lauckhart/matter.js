@@ -101,6 +101,30 @@ export class MatterError extends Error {
     }
 
     /**
+     * Replace the message in an error.
+     *
+     * In addition to setting the message, updates the message in the stack.
+     */
+    static replaceMessage(error: Error, message: string) {
+        const oldMessage = error.message;
+        error.message = message;
+
+        const stack = error.stack?.split("\n");
+        const messagePos = stack?.findIndex(line => {
+            if (line.startsWith("Error: ")) {
+                line = line.slice(7);
+            }
+            if (line === oldMessage) {
+                return true;
+            }
+        });
+        if (messagePos !== undefined && messagePos !== -1) {
+            stack![messagePos] = message;
+            error.stack = stack!.join("\n");
+        }
+    }
+
+    /**
      * The fallback formatter factory.  This produces a limited plaintext formatter.
      */
     static defaultFormatterFactory = () => fallbackFormatter;
@@ -220,6 +244,10 @@ export class MatterAggregateError extends AggregateError {
         }
         return (results as PromiseFulfilledResult<T>[]).map(result => result.value);
     }
+
+    /**
+     * Replace the message in an error.
+     */
 
     format = MatterError.prototype.format;
 }

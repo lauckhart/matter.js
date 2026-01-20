@@ -89,8 +89,9 @@ export class ClientInteraction<
     readonly #abort: Abort;
     readonly #sustainRetries: RetrySchedule;
     readonly #address?: PeerAddress;
+    readonly #network?: string;
 
-    constructor({ environment, abort, sustainRetries, exchangeProvider, address }: ClientInteractionContext) {
+    constructor({ environment, abort, sustainRetries, exchangeProvider, address, network }: ClientInteractionContext) {
         this.environment = environment;
         this.#exchangeProvider = exchangeProvider ?? environment.get(ExchangeProvider);
         if (environment.has(ClientSubscriptions)) {
@@ -102,6 +103,7 @@ export class ClientInteraction<
             RetrySchedule.Configuration(SustainedSubscription.DefaultRetrySchedule, sustainRetries),
         );
         this.#address = address;
+        this.#network = network;
 
         this.#lifetime = environment.join("interactions");
         Object.defineProperties(this.#lifetime.details, {
@@ -526,7 +528,10 @@ export class ClientInteraction<
         const now = Time.nowMs;
         let messenger: InteractionClientMessenger;
         try {
-            messenger = await InteractionClientMessenger.create(this.#exchangeProvider, { network: request.network });
+            messenger = await InteractionClientMessenger.create(this.#exchangeProvider, {
+                network: request.network ?? this.#network,
+                abort: session?.abort,
+            });
         } catch (error) {
             TimeoutError.accept(error);
 

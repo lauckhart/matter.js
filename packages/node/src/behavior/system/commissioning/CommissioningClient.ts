@@ -334,18 +334,23 @@ export class CommissioningClient extends Behavior {
     #peerAddressChanged(addr?: ProtocolPeerAddress, oldAddr?: ProtocolPeerAddress) {
         const node = this.endpoint as ClientNode;
 
+        const peers = node.env.get(PeerSet);
+
         if (addr) {
             this.#updateAddresses(addr);
 
-            const peer = node.env.get(PeerSet).for(addr);
-            if (peer) {
-                peer.protocol = node.protocol;
-            }
+            const peer = peers.addKnownPeer({
+                address: addr,
+                operationalAddress: this.state.addresses?.filter(a => a.type === "udp")?.[0],
+                discoveryData: RemoteDescriptor.fromLongForm(this.state),
+            });
+
+            peer.protocol = node.protocol;
 
             node.lifecycle.commissioned.emit(this.context);
         } else {
-            if (oldAddr) {
-                const peer = node.env.get(PeerSet).for(oldAddr);
+            if (oldAddr && peers.has(oldAddr)) {
+                const peer = peers.for(oldAddr);
                 if (peer?.protocol === node.protocol) {
                     peer.protocol = undefined;
                 }

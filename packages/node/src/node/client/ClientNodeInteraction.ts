@@ -6,7 +6,7 @@
 
 import type { ActionContext } from "#behavior/context/ActionContext.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { ImplementationError, Lifecycle, Logger, MatterAggregateError } from "#general";
+import { ImplementationError, Lifecycle, Logger, MatterAggregateError, ObserverGroup } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 import {
     ClientBdxRequest,
@@ -36,22 +36,20 @@ const logger = Logger.get("ClientNodeInteraction");
  */
 export class ClientNodeInteraction implements Interactable<ActionContext> {
     #node: ClientNode;
+    #observers = new ObserverGroup();
     #interactable?: ClientInteraction;
     #interactableClosed?: Promise<unknown>;
 
     constructor(node: ClientNode) {
         this.#node = node;
 
-        this.#node.events.commissioning.peerAddress$Changed.on(() => {
-            if (!this.#interactable) {
-                return;
-            }
-
-            this.#closeInteraction();
-        });
+        const closeInteraction = this.#closeInteraction.bind(this);
+        this.#observers.on(this.#node.events.commissioning.peerAddress$Changed, closeInteraction);
+        this.#observers.on(this.#node.owner?.lifecycle.goingOffline, closeInteraction);
     }
 
     async close() {
+        this.#observers.close();
         this.#closeInteraction();
         await this.#interactableClosed;
     }
@@ -149,6 +147,10 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
             );
         }
 
+        if (!this.#node.owner?.lifecycle.isOnline) {
+            throw new ImplementationError(`Cannot interact with ${this.#node} because the local node is not online`);
+        }
+
         if (this.#interactable) {
             return this.#interactable;
         }
@@ -169,8 +171,6 @@ export class ClientNodeInteraction implements Interactable<ActionContext> {
 
     /**
      * Close currently open interaction.
-     *
-     * We do this when closing and when the peer address changes.
      */
     #closeInteraction() {
         if (!this.#interactable) {

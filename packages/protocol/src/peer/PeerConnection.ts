@@ -7,6 +7,7 @@
 import type { Message } from "#codec/MessageCodec.js";
 import {
     Abort,
+    AbortedError,
     asError,
     BasicMultiplex,
     Bytes,
@@ -285,7 +286,7 @@ export async function PeerConnection(
             attemptingFallback = undefined;
         }
 
-        while (true) {
+        while (!abort.aborted) {
             try {
                 await attemptOnce(address, abort);
             } catch (e) {
@@ -295,7 +296,7 @@ export async function PeerConnection(
     }
 
     /**
-     * Make a single attempt to connect to a specific address, throwing on error.
+     * Make a single attempt to connect to a specific address.
      */
     async function attemptOnce(address: ServerAddressUdp, abort: Abort) {
         const socket = await context.openSocket(address, abort);
@@ -313,15 +314,23 @@ export async function PeerConnection(
         const caseClient = new CaseClient(context.sessions);
 
         const fabric = context.sessions.fabricFor(peer.address);
-        const { session } = await caseClient.pair(exchange, fabric, peer.address.nodeId, {
-            ...options,
-            abort,
-            caseAuthenticatedTags: peer.descriptor.caseAuthenticatedTags,
-            maxInitialRetransmissions: Infinity,
-            maxInitialRetransmissionTime: timing.maxInitialRetryInterval,
-        });
+        try {
+            const { session } = await caseClient.pair(exchange, fabric, peer.address.nodeId, {
+                ...options,
+                abort,
+                caseAuthenticatedTags: peer.descriptor.caseAuthenticatedTags,
+                maxInitialRetransmissions: Infinity,
+                maxInitialRetransmissionTime: timing.maxInitialRetryInterval,
+            });
 
-        return session;
+            return session;
+        } catch (e) {
+            if (AbortedError.is(e)) {
+                return;
+            }
+
+            throw e;
+        }
     }
 
     /**

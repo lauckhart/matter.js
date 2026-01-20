@@ -271,7 +271,7 @@ export class Peer {
 
         this.#observers.close();
 
-        this.#abort();
+        this.#abort(new ClosedError("Peer closed"));
 
         if (this.activeDiscovery) {
             this.activeDiscovery.stopTimerFunc?.();

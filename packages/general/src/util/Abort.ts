@@ -23,7 +23,10 @@ import { SafePromise } from "./Promises.js";
  * Optionally will register for abort with an outer {@link AbortController} and/or add a timeout.  You must abort or
  * invoke {@link close} if you use either of these options.
  */
-export class Abort extends Callable<[reason?: Error]> implements AbortController, AbortSignal, PromiseLike<Error> {
+export class Abort
+    extends Callable<[reason?: string | Error]>
+    implements AbortController, AbortSignal, PromiseLike<Error>
+{
     // The native controller implementation
     #controller: AbortController;
 
@@ -37,8 +40,15 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
     // Optional timeout
     #timeout?: Timer;
 
-    constructor({ abort, timeout, handler }: Abort.Options = {}) {
-        super(() => this.abort());
+    constructor({ abort: aborts, timeout, handler }: Abort.Options = {}) {
+        const abort = (reason?: Error | string) => {
+            if (typeof reason === "string") {
+                reason = new AbortedError(reason);
+            }
+            this.abort(reason);
+        };
+
+        super(abort);
 
         this.#controller = new AbortController();
 
@@ -48,6 +58,13 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
                 throwIfAborted();
             } catch (e) {
                 const error = new AbortedError();
+
+                // Remove stack lines for this abort logic
+                error.stack = error.stack
+                    ?.split("\n")
+                    .filter(line => !line.match(/\.throwIfAborted/))
+                    .join("\n");
+
                 error.cause = e;
                 throw error;
             }
@@ -58,12 +75,12 @@ export class Abort extends Callable<[reason?: Error]> implements AbortController
         };
         Object.setPrototypeOf(self, Object.getPrototypeOf(this));
 
-        if (abort && !Array.isArray(abort)) {
-            abort = [abort];
+        if (aborts && !Array.isArray(aborts)) {
+            aborts = [aborts];
         }
 
-        if (abort?.length) {
-            const dependencies = abort.map(abort => ("signal" in abort ? abort.signal : abort));
+        if (aborts?.length) {
+            const dependencies = aborts.map(abort => ("signal" in abort ? abort.signal : abort));
 
             for (const dependency of dependencies) {
                 const listener = () => this.abort(asError(dependency.reason));

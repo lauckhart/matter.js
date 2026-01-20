@@ -42,21 +42,18 @@ export class CaseClient {
         const { expectedProcessingTime, caseAuthenticatedTags, abort } = options ?? {};
         const messenger = new CaseClientMessenger(exchange, expectedProcessingTime);
 
+        const localAbort = new Abort({ abort });
+
         try {
-            return await this.#doPair(
-                messenger,
-                exchange,
-                fabric,
-                peerNodeId,
-                new Abort({ abort }),
-                caseAuthenticatedTags,
-                {
-                    maxRetransmissions: options?.maxInitialRetransmissions,
-                    maxRetransmissionTime: options?.maxInitialRetransmissionTime,
-                },
-            );
+            return await this.#doPair(messenger, exchange, fabric, peerNodeId, localAbort, caseAuthenticatedTags, {
+                maxRetransmissions: options?.maxInitialRetransmissions,
+                maxRetransmissionTime: options?.maxInitialRetransmissionTime,
+            });
         } catch (error) {
-            if (!(error instanceof ChannelStatusResponseError || error instanceof RetransmissionLimitReachedError)) {
+            if (
+                !localAbort.aborted &&
+                !(error instanceof ChannelStatusResponseError || error instanceof RetransmissionLimitReachedError)
+            ) {
                 await messenger.sendError(SecureChannelStatusCode.InvalidParam);
             }
             throw error;

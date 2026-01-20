@@ -35,7 +35,7 @@ export class IpServiceStatus {
     }
 
     async close() {
-        this.#maybeStopResolving();
+        this.#stopResolving();
         if (this.#resolving) {
             await this.#resolving;
         }
@@ -196,6 +196,14 @@ export class IpServiceStatus {
 
     #maybeStopResolving() {
         if (!this.#isReachable || this.isConnecting || !this.#resolveAbort) {
+            return;
+        }
+
+        this.#stopResolving();
+    }
+
+    #stopResolving() {
+        if (!this.#resolveAbort) {
             return;
         }
 

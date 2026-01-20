@@ -104,8 +104,12 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         return promise;
     }
 
-    override get owner(): ServerNode | undefined {
-        return super.owner as ServerNode | undefined;
+    override get owner(): ServerNode {
+        const owner = super.owner;
+        if (owner === undefined) {
+            throw new InternalError("Client node is missing owner");
+        }
+        return super.owner as ServerNode;
     }
 
     override set owner(owner: ServerNode) {
