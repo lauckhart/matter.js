@@ -187,10 +187,6 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
             this.for(session.peerAddress).sessions.add(session);
         });
-
-        this.#observers.on(this.#sessions.sessions.deleted, session => {
-            this.get(session.peerAddress)?.sessions.delete(session);
-        });
     }
 
     get added() {

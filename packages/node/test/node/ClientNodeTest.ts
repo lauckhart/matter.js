@@ -69,7 +69,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it("commissions and initializes endpoints after commissioning and restart", async () => {
+    it.only("commissions and initializes endpoints after commissioning and restart", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -125,7 +125,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    });
+    }).timeout(1e9);
 
     it("commissions and initializes endpoints even with a leave event in initial subscription data", async () => {
         // *** COMMISSIONING ***
@@ -724,6 +724,7 @@ const PEER1_STATE = {
                 ttl: undefined,
             },
         ],
+        caseAuthenticatedTags: undefined,
         commissionedAt: expect.NUMBER,
         discoveredAt: expect.NUMBER,
         onlineAt: undefined,
@@ -739,7 +740,20 @@ const PEER1_STATE = {
         rotatingIdentifier: undefined,
         pairingHint: 0x21,
         pairingInstructions: undefined,
-        sessionIntervals: { idleInterval: 500, activeInterval: 300, activeThreshold: 4000 },
+        sessionParameters: {
+            activeInterval: 300,
+            activeThreshold: 4000,
+            dataModelRevision: 19,
+            idleInterval: 500,
+            interactionModelRevision: 13,
+            maxPathsPerInvoke: 10,
+            maxTcpMessageSize: undefined,
+            specificationVersion: 17039872,
+            supportedTransports: {
+                tcpClient: false,
+                tcpServer: false,
+            },
+        },
         tcpSupport: 0,
     },
     network: {

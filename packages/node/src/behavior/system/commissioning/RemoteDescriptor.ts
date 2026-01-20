@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Immutable, Seconds, ServerAddress } from "#general";
+import { Immutable, ServerAddress } from "#general";
 import { CommissionableDevice, OperationalDevice, PeerAddress } from "#protocol";
 import { DeviceTypeId, VendorId } from "#types";
 import type { CommissioningClient } from "./CommissioningClient.js";
@@ -67,7 +67,7 @@ export namespace RemoteDescriptor {
         }
 
         if (ttl !== undefined) {
-            result.ttl = Seconds(ttl);
+            result.ttl = ttl;
         }
 
         if (deviceIdentifier !== undefined) {

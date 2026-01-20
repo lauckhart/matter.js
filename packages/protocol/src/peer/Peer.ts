@@ -105,15 +105,17 @@ export class Peer {
         });
 
         this.#observers.on(this.#sessions.added, session => {
-            // Remove channel when destroyed
+            // Remove session when destroyed
             session.closing.on(() => {
                 this.#sessions.delete(session);
             });
 
             // Ensure operational address is always the most recent IP
-            const { channel } = session.channel;
-            if (isIpNetworkChannel(channel)) {
-                this.#descriptor.operationalAddress = channel.networkAddress;
+            if (!session.isClosed) {
+                const { channel } = session.channel;
+                if (isIpNetworkChannel(channel)) {
+                    this.#descriptor.operationalAddress = channel.networkAddress;
+                }
             }
 
             // Ensure session parameters reflect those most recently reported by peer
