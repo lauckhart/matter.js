@@ -123,7 +123,7 @@ export namespace RemoteDescriptor {
         }
 
         if (longIdleTimeOperatingMode !== undefined) {
-            result.ICD = 1;
+            result.ICD = longIdleTimeOperatingMode ? 1 : 0;
         }
 
         const isOperational = long.peerAddress !== undefined;
