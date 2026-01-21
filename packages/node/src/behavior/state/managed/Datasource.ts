@@ -513,6 +513,7 @@ function createReference(resource: Transaction.Resource, internals: Internals, s
     const transaction = session.transaction;
 
     // Refresh to newest values whenever the transaction commits or rolls back
+    if (transaction === undefined) debugger;
     void transaction.onShared(() => {
         if (values !== internals.values) {
             try {

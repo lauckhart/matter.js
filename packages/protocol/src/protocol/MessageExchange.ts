@@ -563,7 +563,7 @@ export class MessageExchange {
         }
     }
 
-    nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration }) {
+    async nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration; abort?: AbortSignal }) {
         let timeout: Duration;
         if (options?.timeout !== undefined) {
             timeout = options.timeout;
@@ -576,7 +576,7 @@ export class MessageExchange {
                 options?.expectedProcessingTime,
             );
         }
-        return this.#messagesQueue.read(timeout);
+        return await this.#messagesQueue.read({ timeout, abort: options?.abort });
     }
 
     async #sendStandaloneAckForMessage(message: Message) {

@@ -113,16 +113,21 @@ export class CaseClient {
                         initiatorRandom,
                         initiatorSessionParams: this.#sessions.sessionParameters,
                     },
-                    initialSendOptions,
+                    {
+                        abort,
+                        ...initialSendOptions,
+                    },
                 ),
             );
         }
 
         let secureSession: NodeSession;
-        const { sigma2Bytes, sigma2, sigma2Resume } = await abort.attempt(messenger.readSigma2());
+        const { sigma2Bytes, sigma2, sigma2Resume } = await messenger.readSigma2(abort);
         if (sigma2Resume !== undefined) {
             // Process sigma2 resume
-            if (resumptionRecord === undefined) throw new UnexpectedDataError("Received an unexpected sigma2Resume.");
+            if (resumptionRecord === undefined) {
+                throw new UnexpectedDataError("Received an unexpected sigma2Resume.");
+            }
             const {
                 sharedSecret,
                 fabric,
@@ -157,7 +162,7 @@ export class CaseClient {
                     caseAuthenticatedTags,
                 }),
             );
-            await abort.attempt(messenger.sendSuccess());
+            await messenger.sendSuccess(abort);
             NodeSession.logNew(logger, "Resumed", secureSession, messenger, fabric, peerNodeId);
 
             resumptionRecord.resumptionId = resumptionId; /* update resumptionId */
@@ -256,8 +261,8 @@ export class CaseClient {
                 signature: signature.bytes,
             });
             const encrypted = crypto.encrypt(sigma3Key, encryptedData, TBE_DATA3_NONCE);
-            const sigma3Bytes = await abort.attempt(messenger.sendSigma3({ encrypted }));
-            await abort.attempt(messenger.waitForSuccess("Sigma3-Success"));
+            const sigma3Bytes = await messenger.sendSigma3({ encrypted }, { abort });
+            await abort.attempt(messenger.waitForSuccess({ description: "Sigma3-Success" }));
 
             // Create a secure session. Configured CATs take precedence over resumption record ones
             const sessionCaseAuthenticatedTags = caseAuthenticatedTags ?? resumptionRecord?.caseAuthenticatedTags;

@@ -69,7 +69,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it.only("commissions and initializes endpoints after commissioning and restart", async () => {
+    it("commissions and initializes endpoints after commissioning and restart", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -125,7 +125,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    }).timeout(1e9);
+    });
 
     it("commissions and initializes endpoints even with a leave event in initial subscription data", async () => {
         // *** COMMISSIONING ***
@@ -246,7 +246,7 @@ describe("ClientNode", () => {
         expect(ep1Server.state.identify.identifyTime).equals(5);
     });
 
-    it("throws error if node cannot be reached", async () => {
+    it.only("throws error if node cannot be reached", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -258,7 +258,7 @@ describe("ClientNode", () => {
         // *** INVOCATION ***
 
         await expect(MockTime.resolve(ep1.commandsOf(OnOffClient).toggle())).rejectedWith(TimeoutError);
-    });
+    }).timeout(1e9);
 
     it("reconnects and updates connection status", async () => {
         // *** SETUP ***

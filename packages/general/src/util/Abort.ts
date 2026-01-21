@@ -40,7 +40,7 @@ export class Abort
     // Optional timeout
     #timeout?: Timer;
 
-    constructor({ abort: aborts, timeout, handler }: Abort.Options = {}) {
+    constructor({ abort: aborts, timeout, handler, timeoutHandler }: Abort.Options = {}) {
         const abort = (reason?: Error | string) => {
             if (typeof reason === "string") {
                 reason = new AbortedError(reason);
@@ -94,15 +94,19 @@ export class Abort
         }
 
         if (timeout !== undefined) {
+            if (timeoutHandler === undefined) {
+                timeoutHandler = () => this.abort(new TimeoutError());
+            }
+
             if (timeout <= 0) {
-                this.abort(new TimeoutError());
+                timeoutHandler.call(this);
             } else {
                 this.#timeout = Time.getPeriodicTimer("subtask timeout", timeout, () => {
                     if (this.aborted) {
                         return;
                     }
 
-                    this.abort(new TimeoutError());
+                    timeoutHandler!.call(this);
                 });
 
                 this.#timeout.start();
@@ -111,9 +115,9 @@ export class Abort
 
         if (handler) {
             if (this.aborted) {
-                handler(this.reason);
+                handler.call(this, this.reason);
             } else {
-                this.addEventListener("abort", () => handler(this.reason));
+                this.addEventListener("abort", () => handler.call(this, this.reason));
             }
         }
     }
@@ -142,7 +146,7 @@ export class Abort
      * Race with throw on abort.
      */
     async attempt<T>(...promises: Array<T | PromiseLike<T>>) {
-        return Abort.attempt(this, ...promises);
+        return await Abort.attempt(this, ...promises);
     }
 
     /**
@@ -258,7 +262,14 @@ export namespace Abort {
         /**
          * Adds a default abort handler.
          */
-        handler?: (reason?: Error) => void;
+        handler?: (this: Abort, reason?: Error) => void;
+
+        /**
+         * Replaces the default timeout handler.
+         *
+         * The default implementation aborts with {@link TimeoutError}.
+         */
+        timeoutHandler?: (this: Abort) => void;
     }
 
     /**
