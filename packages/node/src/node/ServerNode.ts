@@ -16,7 +16,7 @@ import { SubscriptionsServer } from "#behavior/system/subscriptions/Subscription
 import { Endpoint } from "#endpoint/Endpoint.js";
 import type { Environment } from "#general";
 import { asyncNew, Construction, DiagnosticSource, errorOf, Identity, MatterError } from "#general";
-import { FabricManager, Interactable, OccurrenceManager, ServerInteraction, SessionManager } from "#protocol";
+import { FabricManager, Interactable, OccurrenceManager, PeerSet, ServerInteraction, SessionManager } from "#protocol";
 import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
@@ -114,6 +114,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     }
 
     override async prepareRuntimeShutdown() {
+        await this.env.maybeGet(PeerSet)?.disconnect();
         await this.env.get(SessionManager).closeAllSessions();
     }
 

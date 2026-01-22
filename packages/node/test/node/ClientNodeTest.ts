@@ -16,7 +16,19 @@ import { OnOffLightDevice } from "#devices/on-off-light";
 import { WindowCoveringDevice } from "#devices/window-covering";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { AggregatorEndpoint } from "#endpoints/aggregator";
-import { b$, Bytes, Crypto, deepCopy, Entropy, MockCrypto, Observable, Seconds, Time, TimeoutError } from "#general";
+import {
+    AbortedError,
+    b$,
+    Bytes,
+    Crypto,
+    deepCopy,
+    Entropy,
+    MockCrypto,
+    Observable,
+    Seconds,
+    Time,
+    TimeoutError,
+} from "#general";
 import { Specification } from "#model";
 import { ClientStructureEvents } from "#node/client/ClientStructureEvents.js";
 import { ServerNode } from "#node/ServerNode.js";
@@ -246,7 +258,7 @@ describe("ClientNode", () => {
         expect(ep1Server.state.identify.identifyTime).equals(5);
     });
 
-    it.only("throws error if node cannot be reached", async () => {
+    it("throws error if node cannot be reached", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -257,8 +269,15 @@ describe("ClientNode", () => {
 
         // *** INVOCATION ***
 
-        await expect(MockTime.resolve(ep1.commandsOf(OnOffClient).toggle())).rejectedWith(TimeoutError);
-    }).timeout(1e9);
+        const toggled = ep1.commandsOf(OnOffClient).toggle();
+        await expect(MockTime.resolve(toggled)).rejectedWith(AbortedError);
+        try {
+            await toggled;
+        } catch (e) {
+            expect(e instanceof AbortedError);
+            expect((e as AbortedError).cause instanceof TimeoutError);
+        }
+    });
 
     it("reconnects and updates connection status", async () => {
         // *** SETUP ***

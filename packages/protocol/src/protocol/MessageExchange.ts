@@ -17,11 +17,11 @@ import {
     Duration,
     Forever,
     hex,
-    ImplementationError,
     Instant,
     InternalError,
     Lifetime,
     Logger,
+    MatterError,
     MatterFlowError,
     Millis,
     Time,
@@ -46,6 +46,16 @@ import { MRP } from "./MRP.js";
 const logger = Logger.get("MessageExchange");
 
 export type ExchangeLogContext = Record<string, unknown>;
+
+/**
+ * Thrown when an operation cannot complete because the exchange is closed.
+ */
+export class ExchangeClosedError extends MatterError {}
+
+/**
+ * Thrown when an operation cannot complete because the exchange is already in use.
+ */
+export class ExchangeBusyError extends MatterError {}
 
 export interface ExchangeSendOptions {
     /**
@@ -385,14 +395,15 @@ export class MessageExchange {
 
     async send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         if (this.#lifetime.isClosing) {
-            throw new ImplementationError("Cannot send because exchange is closed");
+            throw new ExchangeClosedError("Cannot send because exchange is closed");
         }
+
         await this.#sendWithoutCloseGuard(messageType, payload, options);
     }
 
     async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         if (this.#isTransmitting) {
-            throw new ImplementationError("Cannot send because exchange is busy");
+            throw new ExchangeBusyError("Cannot send because exchange is busy");
         }
 
         this.#isTransmitting = true;

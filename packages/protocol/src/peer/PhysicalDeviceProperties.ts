@@ -48,13 +48,8 @@ export namespace PhysicalDeviceProperties {
             description = "Node";
         }
 
-        const {
-            isMainsPowered,
-            isBatteryPowered,
-            isIntermittentlyConnected,
-            supportsThread: threadConnected,
-            isThreadSleepyEndDevice,
-        } = properties ?? {};
+        const { isMainsPowered, isBatteryPowered, isIntermittentlyConnected, supportsThread, isThreadSleepyEndDevice } =
+            properties ?? {};
 
         if (isIntermittentlyConnected) {
             if (minIntervalFloor !== undefined && minIntervalFloor !== DEFAULT_SUBSCRIPTION_FLOOR_ICD) {
@@ -73,7 +68,7 @@ export namespace PhysicalDeviceProperties {
                 ? DEFAULT_SUBSCRIPTION_CEILING_BATTERY_POWERED
                 : isThreadSleepyEndDevice
                   ? DEFAULT_SUBSCRIPTION_CEILING_THREAD_SLEEPY
-                  : threadConnected
+                  : supportsThread
                     ? DEFAULT_SUBSCRIPTION_CEILING_THREAD
                     : DEFAULT_SUBSCRIPTION_CEILING_WIFI;
         if (maxIntervalCeiling === undefined) {

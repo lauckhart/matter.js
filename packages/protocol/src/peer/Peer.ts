@@ -15,6 +15,7 @@ import {
     ClosedError,
     Diagnostic,
     DnssdNames,
+    Duration,
     Identity,
     IpService,
     isIpNetworkChannel,
@@ -55,6 +56,7 @@ export class Peer {
     #physicalProperties?: PhysicalDeviceProperties;
     #abort = new Abort();
     #connecting?: Promise<NodeSession | undefined>;
+    #abortConnection?: Abort;
     #service: IpService;
     #observers = new ObserverGroup();
     #exchangeProvider?: ExchangeProvider;
@@ -224,20 +226,22 @@ export class Peer {
                 aborts.push(options?.abort);
             }
 
-            let timeout;
-            if (options?.connectionTimeout) {
-                timeout = options.connectionTimeout;
+            let timeout: Duration | undefined =
+                options?.connectionTimeout ?? this.#context.timing.defaultConnectionTimeout;
+            if (timeout <= 0 || timeout === Infinity) {
+                timeout = undefined;
+            } else {
                 if (this.service.status.connectionInitiatedAt) {
                     timeout = Millis(timeout - (Time.nowMs - this.service.status.connectionInitiatedAt));
                 }
-            } else {
-                timeout = undefined;
             }
 
             if (!this.#connecting) {
-                this.#connecting = PeerConnection(this, this.#context, { ...options, abort: this.#abort }).finally(
-                    (this.#connecting = undefined),
-                );
+                this.#abortConnection = new Abort({ abort: this.#abort });
+                this.#connecting = PeerConnection(this, this.#context, {
+                    ...options,
+                    abort: this.#abortConnection,
+                }).finally(() => (this.#abortConnection = this.#connecting = undefined));
                 this.#workers.add(this.#connecting);
             }
 
@@ -248,6 +252,19 @@ export class Peer {
 
             localAbort.throwIfAborted();
         }
+    }
+
+    /**
+     * Abort any outstanding connection attempts.
+     */
+    async disconnect() {
+        if (this.#connecting) {
+            this.#abortConnection?.();
+            await this.#connecting;
+        }
+
+        // TODO - need to shutdown exchanges and sessions here too so you can cleanly take down a single peer, but
+        // currently that's handled by "managers" for those entities
     }
 
     /**

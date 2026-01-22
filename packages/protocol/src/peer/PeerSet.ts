@@ -24,6 +24,7 @@ import {
     isIPv6,
     Lifetime,
     Logger,
+    MatterAggregateError,
     MatterError,
     Minutes,
     NoResponseTimeoutError,
@@ -56,6 +57,7 @@ import { Peer } from "./Peer.js";
 import { PeerAddressStore, PeerDataStore } from "./PeerAddressStore.js";
 import { PeerDescriptor } from "./PeerDescriptor.js";
 import { PeerNetworks } from "./PeerNetwork.js";
+import { PeerTimingParameters } from "./PeerTimingParameters.js";
 
 const logger = Logger.get("PeerSet");
 
@@ -113,6 +115,7 @@ export interface PeerSetContext {
     store: PeerAddressStore;
     networks: PeerNetworks;
     connectionRetries?: RetrySchedule;
+    timing?: PeerTimingParameters;
 }
 
 /**
@@ -135,13 +138,13 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #observers = new ObserverGroup();
 
     constructor(context: PeerSetContext) {
-        const { lifetime, sessions, exchanges, scanners, names, transports: netInterfaces, store, networks } = context;
+        const { lifetime, sessions, exchanges, scanners, names, transports, store, networks, timing } = context;
 
         this.#lifetime = lifetime.join("peers");
         this.#sessions = sessions;
         this.#exchanges = exchanges;
         this.#scanners = scanners;
-        this.#transports = netInterfaces;
+        this.#transports = transports;
         this.#store = store;
         this.#networks = networks;
         this.#caseClient = new CaseClient(this.#sessions);
@@ -152,6 +155,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             exchanges,
             names,
             networks,
+            timing: PeerTimingParameters(timing),
             openSocket: (address, abort) => this.#openSocket(address, abort),
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
@@ -271,6 +275,14 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
 
     get networks() {
         return this.#networks;
+    }
+
+    get timing() {
+        return this.#peerContext.timing;
+    }
+
+    set timing(timing: Partial<PeerTimingParameters>) {
+        this.#peerContext.timing = PeerTimingParameters(timing);
     }
 
     /**
@@ -444,6 +456,16 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             return this.#peers.get("address", PeerAddress(peer.address));
         }
         return this.#peers.get("address", PeerAddress(peer));
+    }
+
+    /**
+     * Terminate any active peer networking operations.
+     */
+    async disconnect() {
+        await MatterAggregateError.allSettled(
+            this.#peers.map(peer => peer.disconnect()),
+            "Error disconnecting peers",
+        );
     }
 
     async close() {

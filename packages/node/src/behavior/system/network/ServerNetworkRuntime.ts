@@ -349,6 +349,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         }
 
         {
+            using _lifetime = this.construction.join("peers");
+            await env.maybeGet(PeerSet)?.disconnect();
+        }
+
+        {
             using _lifetime = this.construction.join("exchanges");
             await env.close(ExchangeManager);
         }
@@ -366,11 +371,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         {
             using _lifetime = this.construction.join("interactions");
             await env.close(InteractionServer);
-        }
-
-        {
-            using _lifetime = this.construction.join("peers");
-            await env.close(PeerSet);
         }
 
         env.delete(ScannerSet);

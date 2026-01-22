@@ -18,9 +18,8 @@ import {
     Lifetime,
     Logger,
     Millis,
-    Minutes,
     NetworkError,
-    Seconds,
+    NoResponseTimeoutError,
     ServerAddress,
     ServerAddressSet,
     ServerAddressUdp,
@@ -37,6 +36,7 @@ import type { SessionManager } from "#session/SessionManager.js";
 import { SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
 import type { Peer } from "./Peer.js";
 import type { PeerNetworks } from "./PeerNetwork.js";
+import { PeerTimingParameters } from "./PeerTimingParameters.js";
 
 const logger = Logger.get("PeerConnection");
 
@@ -95,9 +95,6 @@ export async function PeerConnection(
 
     // Update peer status
     peer.service.status.connecting(abort.then(() => !!peer.sessions.size));
-
-    // Configuration
-    const timing = { ...PeerConnection.defaultTimingParameters, ...context.timing };
 
     // DNS-SD name of peer service
     const service = peer.service;
@@ -172,7 +169,7 @@ export async function PeerConnection(
             // Delay if within the delay window of last initiation attempt
             if (lastAttemptAt !== undefined) {
                 const timeSinceLastAttempt = Timestamp.delta(lastAttemptAt);
-                const delayInterval = Millis(timing.nextAddressInterval - timeSinceLastAttempt);
+                const delayInterval = Millis(context.timing.delayBeforeNextAddress - timeSinceLastAttempt);
                 if (delayInterval > 0) {
                     const changed = await abort.race<ServerAddressUdp | void>(
                         Time.sleep("connection delay", delayInterval),
@@ -320,7 +317,7 @@ export async function PeerConnection(
                 abort,
                 caseAuthenticatedTags: peer.descriptor.caseAuthenticatedTags,
                 maxInitialRetransmissions: Infinity,
-                maxInitialRetransmissionTime: timing.maxInitialRetryInterval,
+                maxInitialRetransmissionTime: context.timing.maxDelayBetweenInitialContactRetries,
             });
 
             return session;
@@ -338,13 +335,17 @@ export async function PeerConnection(
      */
     async function handleConnectionError(e: Error, abort: Abort) {
         let delay: undefined | Duration;
-        if (e instanceof NetworkError || e instanceof RetransmissionLimitReachedError) {
+        if (
+            e instanceof NetworkError ||
+            e instanceof RetransmissionLimitReachedError ||
+            e instanceof NoResponseTimeoutError
+        ) {
             logger.error(
                 via,
-                `Network error (retry in ${Duration.format(timing.delayAfterNetworkError)}):`,
+                `Network error (retry in ${Duration.format(context.timing.delayAfterNetworkError)}):`,
                 Diagnostic.errorMessage(e),
             );
-            delay = timing.delayAfterNetworkError;
+            delay = context.timing.delayAfterNetworkError;
         } else if (e instanceof ChannelStatusResponseError) {
             if (
                 e.protocolStatusCode === SecureChannelStatusCode.NoSharedTrustRoots &&
@@ -357,17 +358,18 @@ export async function PeerConnection(
             } else {
                 logger.error(
                     via,
-                    `Peer error (retry in ${Duration.format(timing.delayAfterPeerError)}):`,
+                    `Peer error (retry in ${Duration.format(context.timing.delayAfterPeerError)}):`,
                     Diagnostic.errorMessage(e),
                 );
-                delay = timing.delayAfterPeerError;
+                delay = context.timing.delayAfterPeerError;
             }
         } else {
             logger.error(
                 via,
-                `Unhandled connection error (retry in ${Duration.format(timing.delayAfterUnhandledError)}):`,
+                `Unhandled connection error (retry in ${Duration.format(context.timing.delayAfterUnhandledError)}):`,
                 e,
             );
+            delay = context.timing.delayAfterUnhandledError;
         }
 
         if (abort.aborted) {
@@ -384,46 +386,6 @@ export async function PeerConnection(
 }
 
 export namespace PeerConnection {
-    export interface TimingParameters {
-        /**
-         * The longest time between retries.
-         *
-         * This is the longest period between packets between MRP retries when we attempt initial contact.
-         */
-        maxDelayBetweenRetransmissions?: Duration;
-
-        /**
-         * Wait time before trying the next address.
-         *
-         * We run addresses in parallel but delay the time between the initial attempt for each address by this amount.
-         */
-        delayBeforeNextAddress?: Duration;
-
-        /**
-         * Delay following a low-level network error.
-         *
-         * We use this when we could not contact the peer.
-         *
-         * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission until
-         * response or abort.
-         */
-        delayAfterNetworkError?: Duration;
-
-        /**
-         * Delay following report of general error from peer.
-         *
-         * We use this when we have successfully contacted a peer but could not negotiate a new session.
-         */
-        delayAfterPeerError?: Duration;
-
-        /**
-         * Delay for an unhandled exception.
-         *
-         * Any error that occurs here should be considered internal or should use one of above delays instead.
-         */
-        delayAfterUnhandledError?: Duration;
-    }
-
     export interface Context {
         sessions: SessionManager;
         exchanges: ExchangeManager;
@@ -434,7 +396,7 @@ export namespace PeerConnection {
          */
         openSocket(address: ServerAddressUdp, abort: AbortSignal): Promise<Channel<Bytes> | void>;
 
-        timing?: TimingParameters;
+        timing: PeerTimingParameters;
     }
 
     export interface Options {
@@ -442,15 +404,6 @@ export namespace PeerConnection {
         connectionTimeout?: Duration;
         network?: string;
     }
-
-    // TODO - tune these
-    export const defaultTimingParameters = {
-        maxInitialRetryInterval: Minutes(2),
-        nextAddressInterval: Seconds(5),
-        delayAfterNetworkError: Seconds(30),
-        delayAfterPeerError: Minutes(1),
-        delayAfterUnhandledError: Minutes(2),
-    };
 
     export function createExchange(
         peer: Peer,

@@ -74,6 +74,7 @@ export class DataReadQueue<T> {
         this.#clearPendingRead();
         if (pendingRead) {
             pendingRead.resolver(data);
+            return;
         }
         this.#queue.push(data);
     }

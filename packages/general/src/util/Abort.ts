@@ -80,9 +80,13 @@ export class Abort
         }
 
         if (aborts?.length) {
-            const dependencies = aborts.map(abort => ("signal" in abort ? abort.signal : abort));
+            const dependencies = aborts.map(abort => abort && ("signal" in abort ? abort.signal : abort));
 
             for (const dependency of dependencies) {
+                if (dependency === undefined) {
+                    continue;
+                }
+
                 const listener = () => this.abort(asError(dependency.reason));
                 dependency.addEventListener("abort", listener);
                 const unregisterPrev = this.#unregisterDependencies;
@@ -250,7 +254,7 @@ export namespace Abort {
          *
          * This functions similarly to {@link AbortSignal.any} but has additional protection against memory leaks.
          */
-        abort?: Signal | Signal[];
+        abort?: Signal | (Signal | undefined)[];
 
         /**
          * An abort timeout.
