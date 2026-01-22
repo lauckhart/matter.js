@@ -98,7 +98,16 @@ export class Abort
         }
 
         if (timeout !== undefined) {
-            if (timeoutHandler === undefined) {
+            if (timeoutHandler) {
+                const original = timeoutHandler;
+                timeoutHandler = () => {
+                    try {
+                        original.call(this);
+                    } catch (e) {
+                        this.abort(asError(e));
+                    }
+                };
+            } else {
                 timeoutHandler = () => this.abort(new TimeoutError());
             }
 

@@ -25,6 +25,8 @@ import {
     Millis,
     ObserverGroup,
     Time,
+    TimeoutError,
+    Timestamp,
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import { getOperationalDeviceQname } from "#mdns/MdnsConsts.js";
@@ -41,6 +43,11 @@ import type { NodeDiscoveryType } from "./PeerSet.js";
 import { PhysicalDeviceProperties } from "./PhysicalDeviceProperties.js";
 
 const logger = Logger.get("Peer");
+
+/**
+ * Thrown when an operation aborts because the peer is unreachable.
+ */
+export class PeerUnreachableError extends TimeoutError {}
 
 /**
  * A node on a fabric we are a member of.
@@ -212,6 +219,20 @@ export class Peer {
     }
 
     /**
+     * Time that node has been unreachable.
+     *
+     * If we are actively attempting to connect to the peer, this is the time since the connection process started.
+     * Otherwise it is zero.
+     */
+    get timeOffline() {
+        if (this.service.status.connectionInitiatedAt === undefined) {
+            return 0;
+        }
+
+        return Timestamp.delta(this.service.status.connectionInitiatedAt, Time.nowMs);
+    }
+
+    /**
      * Obtain a session with the peer, establishing anew as necessary.
      */
     async connect(options?: PeerConnection.Options) {
@@ -231,9 +252,7 @@ export class Peer {
             if (timeout <= 0 || timeout === Infinity) {
                 timeout = undefined;
             } else {
-                if (this.service.status.connectionInitiatedAt) {
-                    timeout = Millis(timeout - (Time.nowMs - this.service.status.connectionInitiatedAt));
-                }
+                timeout = Millis(timeout - this.timeOffline);
             }
 
             if (!this.#connecting) {
@@ -245,7 +264,16 @@ export class Peer {
                 this.#workers.add(this.#connecting);
             }
 
-            const localAbort = new Abort({ abort: aborts, timeout });
+            const localAbort = new Abort({
+                abort: aborts,
+                timeout,
+
+                timeoutHandler: () => {
+                    throw new PeerUnreachableError(
+                        `Peer has been unreachable for ${Duration.format(this.timeOffline)}`,
+                    );
+                },
+            });
             localAbort.throwIfAborted();
 
             await localAbort.race(this.#connecting);

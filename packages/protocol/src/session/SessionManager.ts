@@ -271,9 +271,11 @@ export class SessionManager {
         const { channel, initiatorNodeId, sessionParameters, isInitiator } = options;
         if (initiatorNodeId !== undefined) {
             if (this.#unsecuredSessions.has(initiatorNodeId)) {
-                throw new MatterFlowError(`UnsecuredSession with NodeId ${initiatorNodeId} already exists.`);
+                throw new MatterFlowError(`UnsecuredSession with NodeId ${initiatorNodeId} already exists`);
             }
         }
+
+        let tries = 0;
         while (true) {
             const session = new UnsecuredSession({
                 crypto: this.#context.fabrics.crypto,
@@ -286,7 +288,13 @@ export class SessionManager {
             });
 
             const ephemeralNodeId = session.nodeId;
-            if (this.#unsecuredSessions.has(ephemeralNodeId)) continue;
+            if (this.#unsecuredSessions.has(ephemeralNodeId)) {
+                if (++tries > 4) {
+                    throw new InternalError("Unable to allocate unique ephemeral node ID; entropy source is broken");
+                }
+
+                continue;
+            }
 
             this.#unsecuredSessions.set(ephemeralNodeId, session);
             session.activate();

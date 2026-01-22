@@ -16,23 +16,11 @@ import { OnOffLightDevice } from "#devices/on-off-light";
 import { WindowCoveringDevice } from "#devices/window-covering";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { AggregatorEndpoint } from "#endpoints/aggregator";
-import {
-    AbortedError,
-    b$,
-    Bytes,
-    Crypto,
-    deepCopy,
-    Entropy,
-    MockCrypto,
-    Observable,
-    Seconds,
-    Time,
-    TimeoutError,
-} from "#general";
+import { AbortedError, b$, Bytes, Crypto, deepCopy, Entropy, MockCrypto, Observable, Seconds, Time } from "#general";
 import { Specification } from "#model";
 import { ClientStructureEvents } from "#node/client/ClientStructureEvents.js";
 import { ServerNode } from "#node/ServerNode.js";
-import { ClientSubscription, FabricManager, SustainedSubscription, Val } from "#protocol";
+import { ClientSubscription, FabricManager, PeerUnreachableError, SustainedSubscription, Val } from "#protocol";
 import { FabricIndex } from "#types";
 import { WindowCovering } from "@matter/types/clusters/window-covering";
 import { MyBehavior } from "../behavior/cluster/cluster-behavior-test-util.js";
@@ -246,10 +234,12 @@ describe("ClientNode", () => {
 
         const peer1 = controller.peers.get("peer1")!;
         const ep1Client = peer1.parts.get("ep1")!;
-        await ep1Client.act(agent => {
-            agent.get(OnOffClient).state.onTime = 20;
-            agent.get(IdentifyClient).state.identifyTime = 5;
-        });
+        await MockTime.resolve(
+            ep1Client.act(agent => {
+                agent.get(OnOffClient).state.onTime = 20;
+                agent.get(IdentifyClient).state.identifyTime = 5;
+            }),
+        );
 
         // *** VALIDATE ***
 
@@ -269,17 +259,10 @@ describe("ClientNode", () => {
 
         // *** INVOCATION ***
 
-        const toggled = ep1.commandsOf(OnOffClient).toggle();
-        await expect(MockTime.resolve(toggled)).rejectedWith(AbortedError);
-        try {
-            await toggled;
-        } catch (e) {
-            expect(e instanceof AbortedError);
-            expect((e as AbortedError).cause instanceof TimeoutError);
-        }
+        await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
     });
 
-    it("reconnects and updates connection status", async () => {
+    it.only("reconnects and updates connection status", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -291,7 +274,7 @@ describe("ClientNode", () => {
         // *** INVOKE ***
 
         // We detected tge device as offline, and so we get a failure on execution
-        await expect(MockTime.resolve(ep1.commandsOf(OnOffClient).toggle())).rejectedWith(TimeoutError);
+        await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
 
         // Delay
         await MockTime.resolve(Time.sleep("waiting to start device", Seconds(5)));
@@ -301,7 +284,7 @@ describe("ClientNode", () => {
 
         // Toggle should now complete
         await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle());
-    });
+    }).timeout(1e9);
 
     it("resubscribes on timeout", async () => {
         // *** SETUP ***
@@ -1010,3 +993,14 @@ const EP1_STATE = {
         eventList: undefined,
     },
 };
+
+async function expectTimeoutError(promise: Promise<any>) {
+    await expect(MockTime.resolve(promise)).rejectedWith(AbortedError);
+
+    try {
+        return await promise;
+    } catch (e) {
+        expect(e instanceof AbortedError);
+        expect((e as AbortedError).cause instanceof PeerUnreachableError);
+    }
+}

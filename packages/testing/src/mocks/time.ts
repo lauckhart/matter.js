@@ -190,10 +190,22 @@ export const MockTime = {
      *
      * Moves time forward until the promise resolves.
      */
-    async resolve<T>(promise: PromiseLike<T>, { stepMs, macrotasks }: { stepMs?: number; macrotasks?: boolean } = {}) {
+    async resolve<T>(
+        promise: PromiseLike<T> | T,
+        { stepMs, macrotasks }: { stepMs?: number; macrotasks?: boolean } = {},
+    ) {
         let resolved = false;
         let result: T | undefined;
         let error: any;
+
+        if (
+            typeof promise !== "object" ||
+            promise === null ||
+            !("then" in promise) ||
+            typeof promise.then !== "function"
+        ) {
+            return promise;
+        }
 
         promise.then(
             r => {
