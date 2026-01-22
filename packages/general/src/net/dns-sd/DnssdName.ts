@@ -18,7 +18,7 @@ const logger = Logger.get("DnssdName");
  * Manages records associated with a single DNS-SD qname.
  *
  * Every DNS-SD qname of interest has a 1:1 relationship with a single instance of this class in the context of a
- * {@link DnssdNames}.  We therefore can use the qname or {@link DnsssdName} interchangeably.
+ * {@link DnssdNames}.  We therefore can use the qname or {@link DnssdName} interchangeably.
  *
  * An {@link DnssdName} is created when a new name is discovered or requested by another component.  The name
  * automatically deletes when there are no longer observers or unexpired records.
