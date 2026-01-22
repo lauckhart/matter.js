@@ -11,7 +11,7 @@ import { NodePeerAddressStore } from "#node/client/NodePeerAddressStore.js";
 import { ChangeNotificationService } from "#node/integration/ChangeNotificationService.js";
 import { ServerEndpointInitializer } from "#node/server/ServerEndpointInitializer.js";
 import type { ServerNode } from "#node/ServerNode.js";
-import { FabricManager, OccurrenceManager, PeerAddressStore, SessionManager } from "#protocol";
+import { FabricManager, OccurrenceManager, PeerAddressStore, PeerSet, SessionManager } from "#protocol";
 import { ServerNodeStore } from "#storage/server/ServerNodeStore.js";
 import { IdentityService } from "./IdentityService.js";
 
@@ -54,6 +54,7 @@ export namespace ServerEnvironment {
         const { env } = node;
 
         env.close(FabricManager);
+        await env.close(PeerSet);
         await env.close(ChangeNotificationService);
         await env.close(SessionManager);
         await env.close(OccurrenceManager);

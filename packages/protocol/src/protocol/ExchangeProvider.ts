@@ -3,45 +3,73 @@
  * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Diagnostic, Duration, Observable, Timestamp } from "#general";
+import { ChannelType, Diagnostic, Duration, Observable, Timestamp } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
 import { ExchangeManager } from "#protocol/ExchangeManager.js";
-import { DEFAULT_EXPECTED_PROCESSING_TIME } from "#protocol/MessageChannel.js";
 import { MessageExchange } from "#protocol/MessageExchange.js";
-import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
+import { NodeSession } from "#session/NodeSession.js";
 import { SecureSession } from "#session/SecureSession.js";
-import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { INTERACTION_PROTOCOL_ID } from "#types";
 import { SessionClosedError } from "./errors.js";
+import { MRP } from "./MRP.js";
 
 /**
- * Interface for obtaining an exchange with a specific peer.
+ * Message exchange configuration options.
+ */
+export interface NewExchangeOptions {
+    /**
+     * Aborts exchange establishment.
+     */
+    abort?: AbortSignal;
+
+    /**
+     * The protocol for the message exchange.
+     *
+     * Defaults to {@link INTERACTION_PROTOCOL_ID}.
+     */
+    protocol?: number;
+
+    /**
+     * The name of the logical {@link PeerNetwork}.
+     *
+     * By default matter.js selects a network based on the node's physical properties.  Use "unlimited" to disable
+     * rate limiting.
+     */
+    network?: string;
+
+    /**
+     * Timeout on connection.
+     *
+     * This limits the amount of time matter.js will wait for a new connection to the underlying node when performing
+     * remote interactions.  This timeout is from the time of first connection attempt; if matter.js is already
+     * attempting to establish a connection this may result in a timeout sooner than the supplied duration.
+     *
+     * The purpose of this timeout is to allow user-facing interactions to fail more quickly when the peer is known to
+     * be unresponsive.
+     *
+     * Use {@link abort} with a timed {@link AbortSignal} to limit total interaction time.
+     */
+    connectionTimeout?: Duration;
+}
+
+/**
+ * Interface for obtaining a message exchange with a specific peer.
  */
 export abstract class ExchangeProvider {
-    abstract readonly supportsReconnect: boolean;
+    /** @deprecated */
+    readonly supportsReconnect: boolean = false;
 
     constructor(protected readonly exchangeManager: ExchangeManager) {}
 
-    hasProtocolHandler(protocolId: number) {
-        return this.exchangeManager.hasProtocolHandler(protocolId);
-    }
-
-    getProtocolHandler(protocolId: number) {
-        return this.exchangeManager.getProtocolHandler(protocolId);
-    }
-
-    addProtocolHandler(handler: ProtocolHandler) {
-        this.exchangeManager.addProtocolHandler(handler);
-    }
-
     abstract maximumPeerResponseTime(expectedProcessingTime?: Duration): Duration;
-    abstract initiateExchange(protocol?: number): Promise<MessageExchange>;
-    abstract reconnectChannel(options: { asOf?: Timestamp; resetInitialState?: boolean }): Promise<boolean>;
-    abstract session: Session;
+    abstract initiateExchange(options?: NewExchangeOptions): Promise<MessageExchange>;
+    abstract readonly channelType: ChannelType;
+    abstract readonly peerAddress?: PeerAddress;
 
-    get channelType() {
-        return this.session.channel.type;
+    /** @deprecated */
+    async reconnectChannel(_options: { asOf?: Timestamp; resetInitialState?: boolean }): Promise<boolean> {
+        return false;
     }
 }
 
@@ -50,7 +78,6 @@ export abstract class ExchangeProvider {
  */
 export class DedicatedChannelExchangeProvider extends ExchangeProvider {
     #session: SecureSession;
-    readonly supportsReconnect = false;
 
     constructor(exchangeManager: ExchangeManager, session: SecureSession) {
         super(exchangeManager);
@@ -61,24 +88,28 @@ export class DedicatedChannelExchangeProvider extends ExchangeProvider {
         return this.exchangeManager.initiateExchangeForSession(this.#session, INTERACTION_PROTOCOL_ID);
     }
 
-    async reconnectChannel() {
-        return false;
+    get channelType() {
+        return this.#session.channel.channel.type;
     }
 
-    get session() {
-        return this.#session;
-    }
-
-    maximumPeerResponseTime(expectedProcessingTime = DEFAULT_EXPECTED_PROCESSING_TIME) {
+    maximumPeerResponseTime(expectedProcessingTime = MRP.DEFAULT_EXPECTED_PROCESSING_TIME) {
         return this.exchangeManager.calculateMaximumPeerResponseTimeMsFor(this.#session, expectedProcessingTime);
+    }
+
+    get peerAddress() {
+        if (NodeSession.is(this.#session)) {
+            return this.#session.peerAddress;
+        }
     }
 }
 
 /**
  * Manages peer exchange that will reestablish automatically in the case of communication failure.
+ *
+ * @deprecated
  */
 export class ReconnectableExchangeProvider extends ExchangeProvider {
-    readonly supportsReconnect = true;
+    override readonly supportsReconnect = true;
     readonly #address: PeerAddress;
     readonly #reconnectChannelFunc: (options?: { asOf?: Timestamp; resetInitialState?: boolean }) => Promise<void>;
     readonly #channelUpdated = Observable<[void]>();
@@ -103,7 +134,7 @@ export class ReconnectableExchangeProvider extends ExchangeProvider {
         return this.#channelUpdated;
     }
 
-    async initiateExchange(protocol = INTERACTION_PROTOCOL_ID): Promise<MessageExchange> {
+    async initiateExchange(options?: NewExchangeOptions): Promise<MessageExchange> {
         if (!this.sessions.maybeSessionFor(this.#address)) {
             using _connecting = this.sessions.construction.join(
                 "connecting to",
@@ -115,10 +146,10 @@ export class ReconnectableExchangeProvider extends ExchangeProvider {
         if (!this.sessions.maybeSessionFor(this.#address)) {
             throw new SessionClosedError("Channel not connected");
         }
-        return this.exchangeManager.initiateExchange(this.#address, protocol);
+        return this.exchangeManager.initiateExchange(this.#address, options?.protocol ?? INTERACTION_PROTOCOL_ID);
     }
 
-    async reconnectChannel(options: { asOf?: Timestamp; resetInitialState?: boolean } = {}) {
+    override async reconnectChannel(options: { asOf?: Timestamp; resetInitialState?: boolean } = {}) {
         if (this.#reconnectChannelFunc === undefined) {
             return false;
         }
@@ -126,11 +157,13 @@ export class ReconnectableExchangeProvider extends ExchangeProvider {
         return true;
     }
 
-    get session() {
-        return this.sessions.sessionFor(this.#address);
+    readonly channelType = ChannelType.UDP;
+
+    get peerAddress() {
+        return this.#address;
     }
 
-    maximumPeerResponseTime(expectedProcessingTimeMs = DEFAULT_EXPECTED_PROCESSING_TIME) {
+    maximumPeerResponseTime(expectedProcessingTimeMs = MRP.DEFAULT_EXPECTED_PROCESSING_TIME) {
         return this.exchangeManager.calculateMaximumPeerResponseTimeMsFor(
             this.sessions.sessionFor(this.#address),
             expectedProcessingTimeMs,

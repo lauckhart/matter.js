@@ -5,14 +5,14 @@
  */
 
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
-import { BasicInformationClient } from "#behaviors/basic-information";
 import { Observable, ServerAddress, ServerAddressUdp } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
 import { ClientNodeInteraction } from "#node/client/ClientNodeInteraction.js";
+import { ClientNodePhysicalProperties } from "#node/client/ClientNodePhysicalProperties.js";
 import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
 import { ClientSubscription, PeerSet, Subscribe, SustainedSubscription } from "#protocol";
-import { CaseAuthenticatedTag, EventNumber } from "#types";
+import { EventNumber } from "#types";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
 
@@ -39,20 +39,20 @@ export class NetworkClient extends NetworkBehavior {
             if (!peerSet.has(peerAddress)) {
                 const udpAddresses = this.#node.state.commissioning.addresses?.filter(a => a.type === "udp") ?? [];
                 if (udpAddresses.length) {
-                    const latestUdpAddress = ServerAddress(udpAddresses[udpAddresses.length - 1]) as ServerAddressUdp;
+                    const operationalAddress = ServerAddress(udpAddresses[0]) as ServerAddressUdp;
                     // Make sure the PeerSet knows about this peer now too
-                    await peerSet.addKnownPeer(
-                        peerAddress,
-                        latestUdpAddress,
-                        RemoteDescriptor.fromLongForm(this.#node.state.commissioning),
-                    );
+                    peerSet.addKnownPeer({
+                        address: peerAddress,
+                        operationalAddress,
+                        discoveryData: RemoteDescriptor.fromLongForm(this.#node.state.commissioning),
+                    });
                 }
             }
-            if (!this.#node.lifecycle.isCommissioned) {
-                const capabilityMinima = this.#node.maybeStateOf(BasicInformationClient)?.capabilityMinima;
-                if (capabilityMinima !== undefined) {
-                    peerSet.for(peerAddress).limits = capabilityMinima;
-                }
+
+            const peer = peerSet.get(peerAddress);
+            if (peer) {
+                peer.protocol = this.#node.protocol;
+                peer.physicalProperties = ClientNodePhysicalProperties(this.#node);
             }
         }
 
@@ -181,19 +181,6 @@ export class NetworkClient extends NetworkBehavior {
                 quality: "N",
                 default: EventNumber(0),
             }),
-
-            FieldElement({
-                name: "caseAuthenticatedTags",
-                type: "list",
-                quality: "N",
-                conformance: "O",
-                children: [
-                    FieldElement({
-                        name: "entry",
-                        type: "uint32",
-                    }),
-                ],
-            }),
         ],
     });
 }
@@ -238,15 +225,6 @@ export namespace NetworkClient {
          * Newly commissioned nodes default to true.
          */
         autoSubscribe = false;
-
-        /**
-         * Case Authenticated Tags (CATs) to use for operational CASE sessions with this node.
-         *
-         * CATs provide additional authentication context for Matter operational sessions. They are only used
-         * for operational CASE connections after commissioning is complete, not during the initial PASE
-         * commissioning process.
-         */
-        caseAuthenticatedTags?: CaseAuthenticatedTag[];
 
         /**
          * The highest event number seen from this node for the default read/subscription.

@@ -18,7 +18,6 @@ export abstract class PeerAddressStore {
     abstract loadPeers(): MaybePromise<Iterable<PeerDescriptor>>;
     abstract updatePeer(peer: PeerDescriptor): MaybePromise<void>;
     abstract deletePeer(address: PeerAddress): MaybePromise<void>;
-    abstract createNodeStore(address: PeerAddress): MaybePromise<PeerDataStore | undefined>;
 }
 
 export abstract class PeerDataStore {
