@@ -20,6 +20,7 @@ import {
     Millis,
     NetworkError,
     NoResponseTimeoutError,
+    Observable,
     ServerAddress,
     ServerAddressSet,
     ServerAddressUdp,
@@ -122,6 +123,9 @@ export async function PeerConnection(
 
     // Time of last attempt initiation, used to delay next initiation
     let lastAttemptAt: undefined | Timestamp;
+
+    // Exchange "kick" driver
+    const kicker = options?.kicker;
 
     // Start the attempt scheduler
     workers.add(scheduleAttempts());
@@ -301,17 +305,23 @@ export async function PeerConnection(
             return;
         }
 
-        const unsecuredSession = context.sessions.createUnsecuredSession({
+        await using unsecuredSession = context.sessions.createUnsecuredSession({
             channel: socket,
             sessionParameters: peer.sessionParameters,
             isInitiator: true,
         });
 
-        const exchange = PeerConnection.createExchange(peer, context.exchanges, unsecuredSession);
+        await using exchange = PeerConnection.createExchange(peer, context.exchanges, unsecuredSession);
+
         const caseClient = new CaseClient(context.sessions);
 
         const fabric = context.sessions.fabricFor(peer.address);
+
+        let kick: Disposable | undefined;
+
         try {
+            kick = kicker?.use(() => exchange.kick());
+
             const { session } = await caseClient.pair(exchange, fabric, peer.address.nodeId, {
                 ...options,
                 abort,
@@ -327,6 +337,8 @@ export async function PeerConnection(
             }
 
             throw e;
+        } finally {
+            kick?.[Symbol.dispose]();
         }
     }
 
@@ -401,8 +413,8 @@ export namespace PeerConnection {
 
     export interface Options {
         abort?: AbortSignal;
-        connectionTimeout?: Duration;
         network?: string;
+        kicker?: Observable<[]>;
     }
 
     export function createExchange(

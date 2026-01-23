@@ -54,6 +54,11 @@ export interface PeerTimingParameters {
      * Any error that occurs here should be considered internal or should use one of above delays instead.
      */
     delayAfterUnhandledError: Duration;
+
+    /**
+     * Minimum delay between MRP loop "kicks".
+     */
+    minimumTimeBetweenMrpKicks: Duration;
 }
 
 const complete = Symbol("complete-timing-parameters");
@@ -83,5 +88,6 @@ export namespace PeerTimingParameters {
         delayAfterNetworkError: Seconds(30),
         delayAfterPeerError: Minutes(1),
         delayAfterUnhandledError: Minutes(2),
+        minimumTimeBetweenMrpKicks: Seconds(3),
     };
 }

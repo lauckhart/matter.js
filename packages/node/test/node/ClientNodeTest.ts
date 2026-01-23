@@ -273,7 +273,7 @@ describe("ClientNode", () => {
 
         // *** INVOKE ***
 
-        // We detected tge device as offline, and so we get a failure on execution
+        // We detected the device as offline, and so we get a failure on execution
         await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
 
         // Delay

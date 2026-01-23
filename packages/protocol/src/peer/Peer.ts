@@ -24,6 +24,7 @@ import {
     MaybePromise,
     Millis,
     ObserverGroup,
+    QuietObservable,
     Time,
     TimeoutError,
     Timestamp,
@@ -62,8 +63,7 @@ export class Peer {
     #protocol?: NodeProtocol;
     #physicalProperties?: PhysicalDeviceProperties;
     #abort = new Abort();
-    #connecting?: Promise<NodeSession | undefined>;
-    #abortConnection?: Abort;
+    #connecting?: ConnectionProcess;
     #service: IpService;
     #observers = new ObserverGroup();
     #exchangeProvider?: ExchangeProvider;
@@ -235,12 +235,14 @@ export class Peer {
     /**
      * Obtain a session with the peer, establishing anew as necessary.
      */
-    async connect(options?: PeerConnection.Options) {
+    async connect(options?: Peer.ConnectOptions) {
         while (true) {
             const session = this.#newestSession;
             if (session) {
                 return session;
             }
+
+            this.#initiateConnection(options);
 
             const aborts = new Array<AbortSignal>(this.#abort);
             if (options?.abort) {
@@ -251,17 +253,8 @@ export class Peer {
                 options?.connectionTimeout ?? this.#context.timing.defaultConnectionTimeout;
             if (timeout <= 0 || timeout === Infinity) {
                 timeout = undefined;
-            } else {
+            } else if (!options?.kick) {
                 timeout = Millis(timeout - this.timeOffline);
-            }
-
-            if (!this.#connecting) {
-                this.#abortConnection = new Abort({ abort: this.#abort });
-                this.#connecting = PeerConnection(this, this.#context, {
-                    ...options,
-                    abort: this.#abortConnection,
-                }).finally(() => (this.#abortConnection = this.#connecting = undefined));
-                this.#workers.add(this.#connecting);
             }
 
             const localAbort = new Abort({
@@ -283,12 +276,21 @@ export class Peer {
     }
 
     /**
+     * Kick the connection process.
+     *
+     * This will temporarily increase MRP responsiveness of any ongoing connection attempt.
+     */
+    kick() {
+        this.#connecting?.kick();
+    }
+
+    /**
      * Abort any outstanding connection attempts.
      */
     async disconnect() {
         if (this.#connecting) {
-            this.#abortConnection?.();
-            await this.#connecting;
+            this.#connecting.abort();
+            await this.#connecting.done;
         }
 
         // TODO - need to shutdown exchanges and sessions here too so you can cleanly take down a single peer, but
@@ -372,6 +374,35 @@ export class Peer {
 
         return found;
     }
+
+    #initiateConnection(options?: Peer.ConnectOptions) {
+        if (this.#connecting) {
+            if (options?.kick) {
+                this.kick();
+            }
+            return;
+        }
+
+        const abort = new Abort({ abort: this.#abort });
+        const kicker = new QuietObservable({
+            minimumEmitInterval: this.#context.timing.minimumTimeBetweenMrpKicks,
+            skipSuppressedEmits: true,
+        });
+        this.#connecting = {
+            abort: new Abort({ abort: this.#abort }),
+
+            done: PeerConnection(this, this.#context, {
+                network: options?.network,
+                abort,
+                kicker,
+            }).finally(() => (this.#connecting = undefined)),
+
+            kick() {
+                kicker.emit();
+            },
+        };
+        this.#workers.add(this.#connecting);
+    }
 }
 
 export namespace Peer {
@@ -391,6 +422,32 @@ export namespace Peer {
         >]?: TypeFromSchema<(typeof BasicInformation.Complete.attributes)[N]["schema"]>;
     }> {}
 
+    export interface ConnectOptions {
+        /**
+         * Aborts the connection attempt (underlying connection however may continue).
+         */
+        abort?: AbortSignal;
+
+        /**
+         * Network identifier used for timing parameters.
+         */
+        network?: string;
+
+        /**
+         * A timeout relative to beginning of connection process.
+         *
+         * If the peer is already connecting, connection time is reduced by this amount.
+         */
+        connectionTimeout?: Duration;
+
+        /**
+         * If a connection is ongoing, kicks the process to increase MRP responsiveness.
+         *
+         * If true, {@link connectionTimeout} is not reduced if already connecting.
+         */
+        kick?: boolean;
+    }
+
     // TODO - factor away
     export interface ActiveDiscovery {
         type: NodeDiscoveryType;
@@ -404,4 +461,10 @@ export namespace Peer {
         promise: Promise<SecureSession>;
         rejecter: (reason?: any) => void;
     }
+}
+
+interface ConnectionProcess {
+    done: Promise<NodeSession | void>;
+    abort: Abort;
+    kick: () => void;
 }

@@ -203,12 +203,13 @@ export class MessageExchange {
 
     // TODO - following are associated with current active transmission and should maybe go in a closure
     #isTransmitting = false;
-    #sentMessageToAck: Message | undefined;
-    #sentMessageAckSuccess: ((message: Message | undefined) => void) | undefined;
-    #sentMessageAckFailure: ((error?: Error) => void) | undefined;
+    #sentMessageToAck?: Message;
+    #sentMessageAckSuccess?: (message: Message | undefined) => void;
+    #sentMessageAckFailure?: (error?: Error) => void;
     #sendOptions: ExchangeSendOptions = {};
     #retransmissionCounter = 0;
-    #retransmissionTimer: Timer | undefined;
+    #retransmissionTimer?: Timer;
+    #kick?: () => void;
 
     constructor(config: MessageExchange.Config) {
         const { context, isInitiator, peerSessionId, nodeId, peerNodeId, exchangeId, protocolId, onSend, onReceive } =
@@ -402,6 +403,13 @@ export class MessageExchange {
         await this.#sendWithoutCloseGuard(messageType, payload, options);
     }
 
+    /**
+     * If a transmission using MRP is active, short-circuits the MRP loop and sends the next packet immediately.
+     */
+    kick() {
+        this.#kick?.();
+    }
+
     async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
         if (this.#isTransmitting) {
             throw new ExchangeBusyError("Cannot send because exchange is busy");
@@ -421,6 +429,7 @@ export class MessageExchange {
                 this.#sentMessageAckFailure =
                     undefined;
             this.#retransmissionCounter = 0;
+            this.#kick = undefined;
             this.#isTransmitting = false;
         }
     }
@@ -538,6 +547,12 @@ export class MessageExchange {
                 this.#mrpResubmissionBackOffTime,
                 () => this.#retransmitMessage(message, expectedProcessingTime),
             );
+            this.#kick = () => {
+                if (this.#retransmissionTimer?.isRunning) {
+                    this.#retransmissionTimer.stop();
+                    this.#retransmitMessage(message, expectedProcessingTime);
+                }
+            };
             const { promise, resolver, rejecter } = createPromise<Message | undefined>();
             ackPromise = promise;
             this.#sentMessageAckSuccess = resolver;
@@ -865,6 +880,13 @@ export namespace MessageExchange {
         protocolId: number;
     }
 
+    /**
+     * Callback invoked by exchange before message transmission.
+     */
     export type SendNotifier = (message: Message, retransmission: number) => void;
+
+    /**
+     * Callback invoked by exchange after message receipt.
+     */
     export type ReceiveNotifier = (message: Message, duplicate: boolean) => void;
 }
