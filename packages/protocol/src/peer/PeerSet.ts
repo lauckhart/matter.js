@@ -53,10 +53,10 @@ import { SessionManager } from "#session/SessionManager.js";
 import { SessionParameters } from "#session/SessionParameters.js";
 import { CaseAuthenticatedTag, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
 import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedError } from "./ControllerDiscovery.js";
+import { NetworkProfiles } from "./NetworkProfile.js";
 import { Peer } from "./Peer.js";
 import { PeerAddressStore, PeerDataStore } from "./PeerAddressStore.js";
 import { PeerDescriptor } from "./PeerDescriptor.js";
-import { PeerNetworks } from "./PeerNetwork.js";
 import { PeerTimingParameters } from "./PeerTimingParameters.js";
 
 const logger = Logger.get("PeerSet");
@@ -113,7 +113,7 @@ export interface PeerSetContext {
     names: DnssdNames;
     transports: ConnectionlessTransportSet;
     store: PeerAddressStore;
-    networks: PeerNetworks;
+    networks: NetworkProfiles;
     connectionRetries?: RetrySchedule;
     timing?: PeerTimingParameters;
 }
@@ -134,7 +134,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
     readonly #nodeCachedData = new PeerAddressMap<PeerDataStore>(); // Temporarily until we store it in new API
     readonly #disconnected = AsyncObservable<[peer: Peer]>();
     readonly #peerContext: Peer.Context;
-    readonly #networks: PeerNetworks;
+    readonly #networks: NetworkProfiles;
     readonly #observers = new ObserverGroup();
 
     constructor(context: PeerSetContext) {
@@ -263,7 +263,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             names: env.get(MdnsService).names,
             transports: env.get(ConnectionlessTransportSet),
             store: env.get(PeerAddressStore),
-            networks: env.get(PeerNetworks),
+            networks: env.get(NetworkProfiles),
         });
         env.set(PeerSet, instance);
         return instance;

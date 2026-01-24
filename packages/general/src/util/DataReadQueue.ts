@@ -20,7 +20,7 @@ export class DataReadQueue<T> {
     #pendingRead?: { resolver: (data: T) => void; rejecter: (reason: any) => void; timeoutTimer?: Timer };
     #closed = false;
 
-    async read({ timeout = Minutes.one, abort }: { timeout?: Duration; abort?: AbortSignal } = {}): Promise<T> {
+    async read({ timeout, abort }: { timeout?: Duration; abort?: AbortSignal } = {}): Promise<T> {
         const { promise, resolver, rejecter } = createPromise<T>();
         if (this.#closed) throw new EndOfStreamError();
         const data = this.#queue.shift();
@@ -28,16 +28,26 @@ export class DataReadQueue<T> {
             return data;
         }
         if (this.#pendingRead !== undefined) throw new MatterFlowError("Only one pending read is supported");
-        this.#pendingRead = {
-            resolver,
-            rejecter,
-            timeoutTimer: Time.getTimer("Queue timeout", timeout, () =>
+
+        if (!abort && !timeout) {
+            timeout = Minutes.one;
+        }
+
+        let timeoutTimer: Timer | undefined;
+        if (timeout !== undefined) {
+            timeoutTimer = Time.getTimer("Queue timeout", timeout, () =>
                 rejecter(
                     new NoResponseTimeoutError(
                         `Expected response data missing within timeout of ${Duration.format(timeout)}`,
                     ),
                 ),
-            ).start(),
+            ).start();
+        }
+
+        this.#pendingRead = {
+            resolver,
+            rejecter,
+            timeoutTimer,
         };
 
         let localAbort: Abort | undefined;

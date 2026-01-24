@@ -3,6 +3,7 @@
  * Copyright 2022-2026 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
+import { InteractionSettings } from "#action/InteractionSettings.js";
 import { ChannelType, Diagnostic, Duration, Observable, Timestamp } from "#general";
 import { PeerAddress } from "#peer/PeerAddress.js";
 import { ExchangeManager } from "#protocol/ExchangeManager.js";
@@ -17,12 +18,7 @@ import { MRP } from "./MRP.js";
 /**
  * Message exchange configuration options.
  */
-export interface NewExchangeOptions {
-    /**
-     * Aborts exchange establishment.
-     */
-    abort?: AbortSignal;
-
+export interface NewExchangeOptions extends Omit<InteractionSettings, "transaction"> {
     /**
      * The protocol for the message exchange.
      *
@@ -37,20 +33,6 @@ export interface NewExchangeOptions {
      * rate limiting.
      */
     network?: string;
-
-    /**
-     * Timeout on connection.
-     *
-     * This limits the amount of time matter.js will wait for a new connection to the underlying node when performing
-     * remote interactions.  This timeout is from the time of first connection attempt; if matter.js is already
-     * attempting to establish a connection this may result in a timeout sooner than the supplied duration.
-     *
-     * The purpose of this timeout is to allow user-facing interactions to fail more quickly when the peer is known to
-     * be unresponsive.
-     *
-     * Use {@link abort} with a timed {@link AbortSignal} to limit total interaction time.
-     */
-    connectionTimeout?: Duration;
 }
 
 /**

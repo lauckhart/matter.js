@@ -35,8 +35,8 @@ import type { NodeSession } from "#session/NodeSession.js";
 import type { Session } from "#session/Session.js";
 import type { SessionManager } from "#session/SessionManager.js";
 import { SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
+import { NetworkProfiles } from "./NetworkProfile.js";
 import type { Peer } from "./Peer.js";
-import type { PeerNetworks } from "./PeerNetwork.js";
 import { PeerTimingParameters } from "./PeerTimingParameters.js";
 
 const logger = Logger.get("PeerConnection");
@@ -401,7 +401,7 @@ export namespace PeerConnection {
     export interface Context {
         sessions: SessionManager;
         exchanges: ExchangeManager;
-        networks: PeerNetworks;
+        networks: NetworkProfiles;
 
         /**
          * Open byte channel to a specific address.

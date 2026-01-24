@@ -593,12 +593,12 @@ export class MessageExchange {
     }
 
     async nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration; abort?: AbortSignal }) {
-        let timeout: Duration;
+        let timeout: Duration | undefined;
         if (options?.timeout !== undefined) {
             timeout = options.timeout;
         } else if (this.#messagesQueue.size > 0) {
             timeout = Instant; // If we have messages in the queue, we can return them immediately
-        } else {
+        } else if (!options?.abort || options?.expectedProcessingTime !== undefined) {
             timeout = this.channel.calculateMaximumPeerResponseTime(
                 this.session.parameters,
                 this.context.localSessionParameters,

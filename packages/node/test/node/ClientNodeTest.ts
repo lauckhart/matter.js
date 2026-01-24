@@ -16,7 +16,19 @@ import { OnOffLightDevice } from "#devices/on-off-light";
 import { WindowCoveringDevice } from "#devices/window-covering";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { AggregatorEndpoint } from "#endpoints/aggregator";
-import { AbortedError, b$, Bytes, Crypto, deepCopy, Entropy, MockCrypto, Observable, Seconds, Time } from "#general";
+import {
+    AbortedError,
+    b$,
+    Bytes,
+    Crypto,
+    deepCopy,
+    Entropy,
+    Minutes,
+    MockCrypto,
+    Observable,
+    Seconds,
+    Time,
+} from "#general";
 import { Specification } from "#model";
 import { ClientStructureEvents } from "#node/client/ClientStructureEvents.js";
 import { ServerNode } from "#node/ServerNode.js";
@@ -283,7 +295,7 @@ describe("ClientNode", () => {
         await MockTime.resolve(device.start());
 
         // Toggle should now complete
-        await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle());
+        await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle(undefined, { connectionTimeout: Minutes(5) }));
     }).timeout(1e9);
 
     it("resubscribes on timeout", async () => {

@@ -36,10 +36,10 @@ import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
 import { SessionParameters } from "#session/SessionParameters.js";
 import { GlobalAttributes, TypeFromSchema } from "#types";
+import { NetworkProfiles } from "./NetworkProfile.js";
 import { PeerConnection } from "./PeerConnection.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import { PeerExchangeProvider } from "./PeerExchangeProvider.js";
-import { PeerNetworks } from "./PeerNetwork.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
 import { PhysicalDeviceProperties } from "./PhysicalDeviceProperties.js";
 
@@ -250,8 +250,9 @@ export class Peer {
             }
 
             let timeout: Duration | undefined =
-                options?.connectionTimeout ?? this.#context.timing.defaultConnectionTimeout;
-            if (timeout <= 0 || timeout === Infinity) {
+                options?.connectionTimeout ??
+                (options?.abort ? undefined : this.#context.timing.defaultConnectionTimeout);
+            if (timeout === undefined || timeout <= 0 || timeout === Infinity) {
                 timeout = undefined;
             } else if (!options?.kick) {
                 timeout = Millis(timeout - this.timeOffline);
@@ -269,7 +270,7 @@ export class Peer {
             });
             localAbort.throwIfAborted();
 
-            await localAbort.race(this.#connecting);
+            await localAbort.race(this.#connecting?.done);
 
             localAbort.throwIfAborted();
         }
@@ -409,7 +410,7 @@ export namespace Peer {
     export interface Context extends PeerConnection.Context {
         lifetime: Lifetime.Owner;
         names: DnssdNames;
-        networks: PeerNetworks;
+        networks: NetworkProfiles;
         savePeer(peer: Peer): MaybePromise<void>;
         deletePeer(peer: Peer): MaybePromise<void>;
         closed(peer: Peer): void;

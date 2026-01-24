@@ -13,7 +13,8 @@ export interface PeerTimingParameters {
     /**
      * Overall timeout for establishing connections.
      *
-     * This timeout applies to the process of establishing a new session with a peer.
+     * This timeout applies to the process of establishing a new session with a peer.  It only applies if you do not
+     * override and do not supply an {@link AbortSignal}.
      */
     defaultConnectionTimeout: Duration;
 
@@ -36,8 +37,8 @@ export interface PeerTimingParameters {
      *
      * We use this when we could not contact the peer.
      *
-     * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission until
-     * response or abort.
+     * Note that this includes MRP timeouts *except* for initial contact; in that case we continue MRP retransmission
+     * until response or abort.
      */
     delayAfterNetworkError: Duration;
 

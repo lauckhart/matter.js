@@ -4,16 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Duration, Environment, Environmental, Millis, Semaphore } from "#general";
+import { Duration, Environment, Environmental, MatterError, Millis, Semaphore } from "#general";
 import { Peer } from "./Peer.js";
+
+/**
+ * Thrown when a named network profile does not exist.
+ */
+export class UnknownNetworkProfileError extends MatterError {}
 
 /**
  * A single logical Matter networking segment.
  *
- * A "peer network" is a logical grouping of nodes that shares rate limits.  By default matter.js selects a network
- * based on medium, falling back to {@link PeerNetworks.conservative} if the medium is unknown.
+ * A "network profile" is a logical grouping of nodes that share rate limits.  By default matter.js selects a network
+ * based on medium, falling back to {@link NetworkProfiles.conservative} if the medium is unknown.
+ *
+ * TODO - record latency and packet loss to support dynamic rate limits
  */
-export interface PeerNetwork {
+export interface NetworkProfile {
     id: string;
     semaphore: Semaphore;
 }
@@ -21,20 +28,20 @@ export interface PeerNetwork {
 /**
  * Controls how we interact with peers based on the network in which the peer resides.
  */
-export class PeerNetworks {
-    #networks = new Map<string, PeerNetwork>();
-    #defaults: PeerNetworks.Profiles;
+export class NetworkProfiles {
+    #networks = new Map<string, NetworkProfile>();
+    #defaults: NetworkProfiles.Templates;
 
-    constructor(options?: PeerNetworks.Options) {
+    constructor(options?: NetworkProfiles.Options) {
         this.#defaults = {
-            ...PeerNetworks.defaults,
+            ...NetworkProfiles.defaults,
             ...options,
         };
     }
 
     static [Environmental.create](env: Environment) {
         const instance = new this();
-        env.set(PeerNetworks, instance);
+        env.set(NetworkProfiles, instance);
         return instance;
     }
 
@@ -46,6 +53,11 @@ export class PeerNetworks {
         return this.forPeer(peer);
     }
 
+    /**
+     * Retrieve the named network profile.
+     *
+     * @param id one of the standard {@link NetworkProfiles.Templates} or any previously configured identifier
+     */
     get(id: string) {
         const network = this.#networks.get(id);
 
@@ -53,15 +65,15 @@ export class PeerNetworks {
             return network;
         }
 
-        if (!(id in PeerNetworks.defaults)) {
-            id = "conservative";
+        if (!(id in NetworkProfiles.defaults)) {
+            throw new UnknownNetworkProfileError(`Network profile ${id} is not configured`);
         }
 
-        return this.configure(id, PeerNetworks.defaults[id as keyof PeerNetworks.Profiles]);
+        return this.configure(id, NetworkProfiles.defaults[id as keyof NetworkProfiles.Templates]);
     }
 
-    configure(id: string, parameters: PeerNetworks.Limits) {
-        const network: PeerNetwork = {
+    configure(id: string, parameters: NetworkProfiles.Limits) {
+        const network: NetworkProfile = {
             id,
             semaphore: new Semaphore(`network semaphore ${id}`, parameters.exchanges, parameters.delay),
         };
@@ -72,7 +84,7 @@ export class PeerNetworks {
     forPeer(peer: Peer) {
         const pp = peer.physicalProperties;
 
-        let id: string, defaults: PeerNetworks.Limits;
+        let id: string, defaults: NetworkProfiles.Limits;
         if (pp === undefined) {
             id = "unknown";
             defaults = this.#defaults.conservative;
@@ -95,8 +107,8 @@ export class PeerNetworks {
     }
 }
 
-export namespace PeerNetworks {
-    export interface Options extends Partial<Profiles> {}
+export namespace NetworkProfiles {
+    export interface Options extends Partial<Templates> {}
 
     /**
      * Parameters that control exchange throttling for a specific medium.
@@ -116,7 +128,7 @@ export namespace PeerNetworks {
     /**
      * Standard profiles, selected automatically based on transfer medium.
      */
-    export interface Profiles {
+    export interface Templates {
         /**
          * Limit for "fast" networks.
          *
@@ -140,7 +152,7 @@ export namespace PeerNetworks {
         /**
          * Limit for "unlimited" networks.
          *
-         * This profile is only selectable manually.
+         * Interactions only use this profile if you specify explicitly.
          */
         unlimited: Limits;
     }
@@ -153,7 +165,7 @@ export namespace PeerNetworks {
         delay: Millis(100),
     };
 
-    export const defaults: Profiles = {
+    export const defaults: Templates = {
         unlimited: { exchanges: Infinity },
         fast: { exchanges: 200 },
         thread: conservative,
