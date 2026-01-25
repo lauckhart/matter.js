@@ -164,6 +164,7 @@ export function extendApi(Mocha: typeof MochaType) {
 function instrumentSuites(mocha: Mocha) {
     for (const suite of mocha.suite.suites) {
         suite.beforeAll(beforeEachFile);
+        suite.beforeEach(beforeEach);
 
         // Move our beforeAll hook so it runs before the suite's beforeAll hooks
         const hooks = (suite as any)._beforeAll as unknown[];
@@ -198,6 +199,11 @@ export async function runMocha(mocha: Mocha) {
 // need a reset the suite needs to handle itself.
 function beforeEachFile() {
     Boot.reboot();
+}
+
+// Reset state before each test.
+function beforeEach() {
+    Boot.reset();
 }
 
 export function adaptReporter(
@@ -248,12 +254,21 @@ export function adaptReporter(
             }
 
             runner.on(RUNNER.EVENT_TEST_FAIL, (test, error) => {
+                let diagnostics: undefined | string;
+                if (typeof error?.message === "string") {
+                    if (
+                        error.message.startsWith("Mock timeout:") ||
+                        error.message.match(/^Timeout of \d+ms exceeded/)
+                    ) {
+                        diagnostics = MatterHooks?.generateDiagnostics?.();
+                    }
+                }
                 if (updateStats && test.descriptor) {
                     test.descriptor.durationMs = test.duration;
                     test.descriptor.passed = false;
                 }
                 const logs = (test as any).logs as string[];
-                reporter.failTest(test.title, FailureDetail(error, undefined, logs));
+                reporter.failTest(test.title, FailureDetail(error, undefined, logs, undefined, diagnostics));
                 wtf.dump();
             });
 

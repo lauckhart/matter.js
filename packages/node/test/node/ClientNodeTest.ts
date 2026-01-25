@@ -296,7 +296,7 @@ describe("ClientNode", () => {
 
         // Toggle should now complete
         await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle(undefined, { connectionTimeout: Minutes(5) }));
-    }).timeout(1e9);
+    });
 
     it("resubscribes on timeout", async () => {
         // *** SETUP ***
