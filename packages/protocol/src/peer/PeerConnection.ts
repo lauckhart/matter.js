@@ -398,7 +398,7 @@ export async function PeerConnection(
 }
 
 export namespace PeerConnection {
-    export interface Context {
+    export interface Context extends Lifetime.Owner {
         sessions: SessionManager;
         exchanges: ExchangeManager;
         networks: NetworkProfiles;

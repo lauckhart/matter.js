@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeProtocol } from "#action/protocols.js";
+import type { ClientInteraction } from "#action/client/ClientInteraction.js";
+import type { NodeProtocol } from "#action/protocols.js";
 import { BasicInformation } from "#clusters/basic-information";
 import { DiscoveryData } from "#common/Scanner.js";
 import {
@@ -31,17 +32,17 @@ import {
 } from "#general";
 import type { MdnsClient } from "#mdns/MdnsClient.js";
 import { getOperationalDeviceQname } from "#mdns/MdnsConsts.js";
-import { ExchangeProvider } from "#protocol/ExchangeProvider.js";
+import type { ExchangeProvider } from "#protocol/ExchangeProvider.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import type { SecureSession } from "#session/SecureSession.js";
 import { SessionParameters } from "#session/SessionParameters.js";
-import { GlobalAttributes, TypeFromSchema } from "#types";
-import { NetworkProfiles } from "./NetworkProfile.js";
+import type { GlobalAttributes, TypeFromSchema } from "#types";
+import type { NetworkProfiles } from "./NetworkProfile.js";
 import { PeerConnection } from "./PeerConnection.js";
 import { ObservablePeerDescriptor, PeerDescriptor } from "./PeerDescriptor.js";
 import { PeerExchangeProvider } from "./PeerExchangeProvider.js";
 import type { NodeDiscoveryType } from "./PeerSet.js";
-import { PhysicalDeviceProperties } from "./PhysicalDeviceProperties.js";
+import type { PhysicalDeviceProperties } from "./PhysicalDeviceProperties.js";
 
 const logger = Logger.get("Peer");
 
@@ -60,6 +61,7 @@ export class Peer {
     #sessions = new BasicSet<NodeSession>();
     #workers: BasicMultiplex;
     #isSaving = false;
+    #interaction?: ClientInteraction;
     #protocol?: NodeProtocol;
     #physicalProperties?: PhysicalDeviceProperties;
     #abort = new Abort();
@@ -75,7 +77,7 @@ export class Peer {
     activeReconnection?: Peer.ActiveReconnection;
 
     constructor(descriptor: PeerDescriptor, context: Peer.Context) {
-        this.#lifetime = context.lifetime.join(descriptor.address.toString());
+        this.#lifetime = context.join(descriptor.address.toString());
         this.#workers = new BasicMultiplex();
 
         this.#descriptor = new ObservablePeerDescriptor(descriptor, () => {
@@ -138,6 +140,14 @@ export class Peer {
 
     get fabric() {
         return this.#context.sessions.fabricFor(this.address);
+    }
+
+    get interaction() {
+        return this.#interaction;
+    }
+
+    set interaction(interaction: ClientInteraction | undefined) {
+        this.#interaction = interaction;
     }
 
     get protocol() {
@@ -408,7 +418,6 @@ export class Peer {
 
 export namespace Peer {
     export interface Context extends PeerConnection.Context {
-        lifetime: Lifetime.Owner;
         names: DnssdNames;
         networks: NetworkProfiles;
         savePeer(peer: Peer): MaybePromise<void>;

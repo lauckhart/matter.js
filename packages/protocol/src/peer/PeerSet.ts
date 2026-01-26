@@ -150,7 +150,6 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
         this.#caseClient = new CaseClient(this.#sessions);
 
         this.#peerContext = {
-            lifetime: this.#lifetime,
             sessions,
             exchanges,
             names,
@@ -160,6 +159,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
             savePeer: peer => this.#store.updatePeer(peer.descriptor),
             deletePeer: peer => this.#store.deletePeer(peer.address),
             closed: peer => this.#peers.delete(peer),
+            join: name => this.#construction.join(name),
         };
 
         this.#peers.added.on(peer => {

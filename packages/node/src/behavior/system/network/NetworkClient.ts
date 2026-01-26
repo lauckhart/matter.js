@@ -69,6 +69,10 @@ export class NetworkClient extends NetworkBehavior {
     }
 
     async #handleAutoSubscribeChanged(desiredState = this.state.autoSubscribe) {
+        if (!this.internal.runtime) {
+            return;
+        }
+
         const { isDisabled } = this.state;
         const subscriptionDesired = desiredState && !isDisabled;
 

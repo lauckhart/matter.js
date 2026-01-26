@@ -44,7 +44,7 @@ import {
 import type { ClientNode } from "#node/ClientNode.js";
 import type { ServerNode } from "#node/ServerNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
-import type { PeerDescriptor, SupportedTransportsBitmap } from "#protocol";
+import type { ClientInteraction, PeerDescriptor, SupportedTransportsBitmap } from "#protocol";
 import {
     CommissioningMode,
     ControllerCommissioner,
@@ -54,6 +54,7 @@ import {
     FabricAuthority,
     FabricManager,
     LocatedNodeCommissioningOptions,
+    Peer,
     PeerAddress,
     PeerSet,
     PeerAddress as ProtocolPeerAddress,
@@ -102,12 +103,21 @@ export class CommissioningClient extends Behavior {
         if (this.state.peerAddress !== undefined) {
             // If restored from the storage, ensure we have the proper logging sugar, else it is "just" an object
             this.state.peerAddress = PeerAddress(this.state.peerAddress);
+
+            // And couple to the Peer instance
+            this.#bindPeer(this.state.peerAddress);
         }
 
         const node = this.endpoint as ClientNode;
         this.reactTo(node.lifecycle.partsReady, this.#initializeNode);
         this.reactTo(this.events.peerAddress$Changed, this.#peerAddressChanged);
         this.reactTo(this.events.caseAuthenticatedTags$Changed, this.#catsChanged);
+    }
+
+    override [Symbol.asyncDispose]() {
+        if (this.endpoint.env.has(PeerSet) && this.state.peerAddress) {
+            this.#unbindPeer(this.state.peerAddress);
+        }
     }
 
     #findServerOtaProviderEndpoint() {
@@ -290,7 +300,7 @@ export class CommissioningClient extends Behavior {
      * Override to implement CASE commissioning yourself.
      *
      * If you override, matter.js commissions to the point where commissioning over PASE is complete.  You must then
-     * complete commissioning yourself by connecting to the device and invokeint the "CommissioningComplete" command.
+     * complete commissioning yourself by connecting to the device and invoking the "CommissioningComplete" command.
      */
     protected async finalizeCommissioning(_address: ProtocolPeerAddress, _discoveryData?: DiscoveryData) {
         throw new NotImplementedError();
@@ -326,29 +336,11 @@ export class CommissioningClient extends Behavior {
 
     #peerAddressChanged(addr?: ProtocolPeerAddress, oldAddr?: ProtocolPeerAddress) {
         const node = this.endpoint as ClientNode;
-
-        const peers = node.env.get(PeerSet);
-
         if (addr) {
-            this.#updateAddresses(addr);
-
-            const peer = peers.addKnownPeer({
-                address: addr,
-                operationalAddress: this.state.addresses?.filter(a => a.type === "udp")?.[0],
-                discoveryData: RemoteDescriptor.fromLongForm(this.state),
-            });
-
-            peer.protocol = node.protocol;
-
+            this.#bindPeer(addr);
             node.lifecycle.commissioned.emit(this.context);
-        } else {
-            if (oldAddr && peers.has(oldAddr)) {
-                const peer = peers.for(oldAddr);
-                if (peer?.protocol === node.protocol) {
-                    peer.protocol = undefined;
-                }
-            }
-
+        } else if (oldAddr) {
+            this.#unbindPeer(oldAddr);
             node.lifecycle.decommissioned.emit(this.context);
         }
     }
@@ -369,6 +361,54 @@ export class CommissioningClient extends Behavior {
         }
 
         peer.descriptor.caseAuthenticatedTags = cats;
+    }
+
+    /**
+     * Couple my {@link ClientNode} with the equivalent {@link Peer}.
+     */
+    #bindPeer(addr: PeerAddress) {
+        const node = this.endpoint as ClientNode;
+        let peer = node.env.maybeGet(Peer);
+        if (peer) {
+            if (peer.address === addr) {
+                // Already bound
+                return;
+            }
+
+            // Peer address changed; this probably shouldn't happen but handle just in case
+            this.#unbindPeer(peer.address);
+        }
+
+        const peers = node.env.get(PeerSet);
+        peer = peers.addKnownPeer({
+            address: addr,
+            operationalAddress: this.state.addresses?.filter(a => a.type === "udp")?.[0],
+            discoveryData: RemoteDescriptor.fromLongForm(this.state),
+        });
+
+        this.#updateAddresses(addr);
+
+        peer.interaction = node.interaction as ClientInteraction;
+        peer.protocol = node.protocol;
+    }
+
+    /**
+     * Uncouple my {@link ClientNode} from a {@link Peer}.
+     */
+    #unbindPeer(addr: PeerAddress) {
+        const node = this.endpoint as ClientNode;
+        const peer = node.env.maybeGet(Peer);
+        if (!peer || peer.address !== addr) {
+            return;
+        }
+        node.env.delete(Peer, peer);
+
+        if (peer.interaction === node.interaction) {
+            peer.interaction = undefined;
+        }
+        if (peer.protocol === node.protocol) {
+            peer.protocol = undefined;
+        }
     }
 }
 

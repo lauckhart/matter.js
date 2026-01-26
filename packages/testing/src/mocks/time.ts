@@ -6,6 +6,18 @@
 
 import { Boot } from "./boot.js";
 
+export class TestTimeoutError extends Error {
+    diagnostics = MatterHooks?.generateDiagnostics?.();
+
+    constructor(message: string) {
+        super(`Test timeout: ${message}`);
+    }
+
+    code?: number | string;
+    timeout?: number;
+    file?: string;
+}
+
 type TimerCallback = () => any;
 
 type MockTimeLike = typeof MockTime;
@@ -236,8 +248,8 @@ export const MockTime = {
 
             // If we've advanced more than one hour, assume we've hung
             if (timeAdvanced > 60 * 60 * 1000) {
-                throw new Error(
-                    "Mock timeout: Promise did not resolve within one (virtual) hour, probably not going to happen",
+                throw new TestTimeoutError(
+                    "Promise did not resolve within one (virtual) hour, probably not going to happen",
                 );
             }
 

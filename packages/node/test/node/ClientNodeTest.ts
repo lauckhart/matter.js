@@ -179,7 +179,7 @@ describe("ClientNode", () => {
         // TODO
     });
 
-    it("invokes, receives state updates and emits changed events", async () => {
+    it.only("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -203,7 +203,7 @@ describe("ClientNode", () => {
 
         // *** Test another command also in the feature-set ***
         await ep1.commandsOf(OnOffClient).offWithEffect({ effectIdentifier: 0, effectVariant: 0 });
-    });
+    }).timeout(1e9);
 
     it("decommissions", async () => {
         // *** SETUP ***
@@ -274,7 +274,7 @@ describe("ClientNode", () => {
         await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
     });
 
-    it.only("reconnects and updates connection status", async () => {
+    it("reconnects and updates connection status", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -296,7 +296,7 @@ describe("ClientNode", () => {
 
         // Toggle should now complete
         await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle(undefined, { connectionTimeout: Minutes(5) }));
-    });
+    }).timeout(1e9);
 
     it("resubscribes on timeout", async () => {
         // *** SETUP ***

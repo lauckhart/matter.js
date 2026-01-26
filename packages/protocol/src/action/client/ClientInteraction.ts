@@ -127,6 +127,10 @@ export class ClientInteraction<
         }
     }
 
+    async [Symbol.asyncDispose]() {
+        await this.close();
+    }
+
     get subscriptions() {
         if (this.#subscriptions === undefined) {
             this.#subscriptions = this.environment.get(ClientSubscriptions);
