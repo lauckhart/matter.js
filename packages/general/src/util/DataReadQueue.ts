@@ -18,7 +18,7 @@ export class DataReadQueue<T> {
     #closed = false;
 
     async read(abort?: AbortSignal): Promise<T> {
-        const { promise, resolver, rejecter } = createPromise<T>();
+        const { promise, resolver } = createPromise<T>();
         if (this.#closed) throw new EndOfStreamError();
         const data = this.#queue.shift();
         if (data !== undefined) {
@@ -27,29 +27,27 @@ export class DataReadQueue<T> {
 
         if (this.#pendingRead !== undefined) throw new InternalError("Only one pending read is supported");
 
-        if (!abort) {
-            abort = new Abort({ timeout: Minutes.one });
-        }
+        using localAbort = new Abort({
+            timeout: abort ? undefined : Minutes.one,
+            abort,
+        });
 
         this.#pendingRead = {
             resolver,
-            rejecter,
+            rejecter(cause) {
+                localAbort.abort(cause);
+            },
         };
 
         try {
-            return await Abort.attempt(abort, promise);
+            return await localAbort.attempt(promise);
         } catch (e) {
             if (e instanceof AbortedError) {
                 // Stack trace is already correct
                 throw e;
             }
 
-            if (e instanceof EndOfStreamError) {
-                // Throw with proper stack trace
-                throw new EndOfStreamError();
-            }
-
-            // Above are the only expected errors
+            // Above is the only expected errors
             throw e;
         } finally {
             this.#pendingRead = undefined;
@@ -57,7 +55,9 @@ export class DataReadQueue<T> {
     }
 
     write(data: T) {
-        if (this.#closed) throw new EndOfStreamError();
+        if (this.#closed) {
+            throw new EndOfStreamError();
+        }
         const pendingRead = this.#pendingRead;
         this.#pendingRead = undefined;
         if (pendingRead) {

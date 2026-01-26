@@ -4,14 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Diagnostic, Duration, MatterError, Seconds, UnexpectedDataError } from "#general";
+import { Diagnostic, Duration, Seconds, UnexpectedDataError } from "#general";
+import { PeerCommunicationError } from "#peer/PeerCommunicationError.js";
 import { GeneralStatusCode, SecureChannelStatusCode, SecureMessageType, TlvSchema } from "#types";
 import { Message } from "../codec/MessageCodec.js";
 import { ExchangeSendOptions, MessageExchange } from "../protocol/MessageExchange.js";
 import { SecureChannelStatusMessage } from "./SecureChannelStatusMessageSchema.js";
 
 /** Error base Class for all errors related to the status response messages. */
-export class ChannelStatusResponseError extends MatterError {
+export class ChannelStatusResponseError extends PeerCommunicationError {
     public constructor(
         message: string,
         public readonly generalStatusCode: GeneralStatusCode,

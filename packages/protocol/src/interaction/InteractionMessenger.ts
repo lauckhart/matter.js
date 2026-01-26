@@ -8,6 +8,7 @@ import { ReadResult } from "#action/response/ReadResult.js";
 import { Mark } from "#common/Mark.js";
 import {
     Bytes,
+    causedBy,
     Diagnostic,
     Duration,
     InternalError,
@@ -19,6 +20,7 @@ import {
     UnexpectedDataError,
 } from "#general";
 import { Specification } from "#model";
+import { PeerCommunicationError } from "#peer/PeerCommunicationError.js";
 import { RetransmissionLimitReachedError, SessionClosedError, UnexpectedMessageError } from "#protocol/errors.js";
 import {
     ReceivedStatusResponseError,
@@ -948,13 +950,13 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
         } catch (error) {
             if (
                 this.#exchangeProvider.supportsReconnect &&
-                (error instanceof RetransmissionLimitReachedError || error instanceof SessionClosedError) &&
+                causedBy(error, PeerCommunicationError, SessionClosedError, RetransmissionLimitReachedError) &&
                 !options?.multipleMessageInteraction
             ) {
-                // When retransmission failed (most likely due to a lost connection or invalid session),
-                // try to reconnect if possible and resend the message one more time
+                // When retransmission failed (most likely due to a lost connection or invalid session), try to
+                // reconnect if possible and resend the message one more time
                 logger.debug(
-                    `${error instanceof RetransmissionLimitReachedError ? "Retransmission limit reached" : "Channel not connected"}, trying to reconnect and resend the message.`,
+                    `${causedBy(error, RetransmissionLimitReachedError) ? "Retransmission limit reached" : "Channel not connected"}, trying to reconnect and resend the message.`,
                 );
                 await this.exchange.close();
                 if (await this.#exchangeProvider.reconnectChannel({ asOf: now })) {

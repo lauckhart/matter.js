@@ -10,6 +10,7 @@ import {
     Abort,
     AsyncObservableValue,
     Bytes,
+    causedBy,
     ClosedError,
     createPromise,
     CRYPTO_AEAD_MIC_LENGTH_BYTES,
@@ -27,8 +28,9 @@ import {
     Millis,
     Time,
     Timer,
+    Timestamp,
 } from "#general";
-import { PeerUnresponsiveError } from "#peer/Peer.js";
+import { PeerUnresponsiveError } from "#peer/PeerCommunicationError.js";
 import { GroupSession } from "#session/GroupSession.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
@@ -41,7 +43,7 @@ import {
     StatusCode,
     StatusResponseError,
 } from "#types";
-import { RetransmissionLimitReachedError, SessionClosedError, UnexpectedMessageError } from "./errors.js";
+import { SessionClosedError, UnexpectedMessageError } from "./errors.js";
 import { MessageChannel } from "./MessageChannel.js";
 import { MRP } from "./MRP.js";
 
@@ -205,11 +207,10 @@ export class MessageExchange {
     #channel?: MessageChannel;
 
     // TODO - following are associated with current active transmission and should maybe go in a closure
-    #isTransmitting = false;
-    #isReceiving = false;
+    #isBusy = false;
     #sentMessageToAck?: Message;
     #sentMessageAckSuccess?: (message: Message | undefined) => void;
-    #sentMessageAckFailure?: (error?: Error) => void;
+    #sentMessageAckFailure?: () => void;
     #sendOptions: ExchangeSendOptions = {};
     #retransmissionCounter = 0;
     #retransmissionTimer?: Timer;
@@ -415,16 +416,22 @@ export class MessageExchange {
     }
 
     async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
-        if (this.#isTransmitting) {
+        if (this.#isBusy) {
             throw new ExchangeBusyError("Cannot send because exchange is busy");
         }
 
-        this.#isTransmitting = true;
+        this.#isBusy = true;
         this.#sendOptions = options;
         this.#retransmissionCounter = 0;
 
         try {
             await this.#sendWithoutTransmitGuard(messageType, payload);
+        } catch (e) {
+            if (causedBy(e, PeerUnresponsiveError)) {
+                await this.#context.peerLost(this);
+            }
+
+            throw e;
         } finally {
             this.#retransmissionTimer?.stop();
             this.#retransmissionTimer =
@@ -434,7 +441,7 @@ export class MessageExchange {
                     undefined;
             this.#retransmissionCounter = 0;
             this.#kick = undefined;
-            this.#isTransmitting = false;
+            this.#isBusy = false;
         }
     }
 
@@ -557,10 +564,13 @@ export class MessageExchange {
                     this.#retransmitMessage(message, expectedProcessingTime);
                 }
             };
-            const { promise, resolver, rejecter } = createPromise<Message | undefined>();
+            const { promise, resolver } = createPromise<Message | undefined>();
             ackPromise = promise;
             this.#sentMessageAckSuccess = resolver;
-            this.#sentMessageAckFailure = rejecter;
+            const startedWaitingAt = Time.nowMs;
+            this.#sentMessageAckFailure = () => {
+                abort.abort(new PeerUnresponsiveError(Timestamp.delta(startedWaitingAt)));
+            };
         }
 
         this.#onSend?.(message, 0);
@@ -597,22 +607,22 @@ export class MessageExchange {
     }
 
     async nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration; abort?: AbortSignal }) {
-        if (this.#isReceiving) {
+        if (this.#isBusy) {
             throw new ExchangeBusyError("Cannot receive because exchange is busy");
         }
 
-        this.#isReceiving = true;
+        this.#isBusy = true;
 
         try {
             return await this.#readWithoutReceiveGuard(options);
         } catch (e) {
-            if (MatterError.causedBy(e, PeerUnresponsiveError)) {
+            if (causedBy(e, PeerUnresponsiveError)) {
                 await this.#context.peerLost(this);
             }
 
             throw e;
         } finally {
-            this.#isReceiving = false;
+            this.#isBusy = false;
         }
     }
 
@@ -640,9 +650,7 @@ export class MessageExchange {
             abort: options?.abort,
 
             timeoutHandler: () => {
-                throw new PeerUnresponsiveError(
-                    `Peer is no longer responding to active session (timed out after ${Duration.format(timeout)})`,
-                );
+                throw new PeerUnresponsiveError(timeout!);
             },
         });
 
@@ -696,7 +704,7 @@ export class MessageExchange {
             // All resubmissions done and no expected processing time, close directly
             if (this.#sentMessageToAck !== undefined && this.#sentMessageAckFailure !== undefined) {
                 this.#receivedMessageToAck = undefined;
-                this.#sentMessageAckFailure(new RetransmissionLimitReachedError());
+                this.#sentMessageAckFailure();
                 this.#sentMessageAckFailure = undefined;
                 this.#sentMessageAckSuccess = undefined;
             }

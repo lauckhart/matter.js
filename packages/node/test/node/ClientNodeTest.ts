@@ -179,7 +179,7 @@ describe("ClientNode", () => {
         // TODO
     });
 
-    it.only("invokes, receives state updates and emits changed events", async () => {
+    it("invokes, receives state updates and emits changed events", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -203,7 +203,7 @@ describe("ClientNode", () => {
 
         // *** Test another command also in the feature-set ***
         await ep1.commandsOf(OnOffClient).offWithEffect({ effectIdentifier: 0, effectVariant: 0 });
-    }).timeout(1e9);
+    });
 
     it("decommissions", async () => {
         // *** SETUP ***

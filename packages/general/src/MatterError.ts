@@ -7,7 +7,7 @@
 import { NodeJsStyleInspectable } from "#log/NodeJsStyleInspectable.js";
 import type { MaybePromise } from "#util/Promises.js";
 import { decamelize } from "#util/identifier-case.js";
-import { asError, errorOf } from "./util/Error.js";
+import { errorOf } from "./util/Error.js";
 
 const codes = new WeakMap<{}, string>();
 
@@ -98,32 +98,6 @@ export class MatterError extends Error {
         if (error instanceof this) {
             throw error;
         }
-    }
-
-    /**
-     * Determine if one or more error classes are present in an error's causal chain.
-     */
-    static causedBy(error: unknown, ...causes: [new (...args: any[]) => Error, ...(new (...args: any[]) => Error)[]]) {
-        const e = asError(error);
-        for (const cause of causes) {
-            if (e instanceof cause) {
-                return true;
-            }
-        }
-
-        if (e.cause && this.causedBy(e.cause, ...causes)) {
-            return true;
-        }
-
-        if (e instanceof AggregateError && e.errors) {
-            for (const e2 of e.errors) {
-                if (this.causedBy(e2, ...causes)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**

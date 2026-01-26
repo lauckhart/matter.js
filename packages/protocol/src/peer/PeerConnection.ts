@@ -11,6 +11,7 @@ import {
     asError,
     BasicMultiplex,
     Bytes,
+    causedBy,
     Channel,
     Diagnostic,
     Duration,
@@ -19,7 +20,6 @@ import {
     Logger,
     Millis,
     NetworkError,
-    NoResponseTimeoutError,
     Observable,
     ServerAddress,
     ServerAddressSet,
@@ -27,7 +27,6 @@ import {
     Time,
     Timestamp,
 } from "#general";
-import { RetransmissionLimitReachedError } from "#protocol/errors.js";
 import type { ExchangeManager } from "#protocol/ExchangeManager.js";
 import { ChannelStatusResponseError } from "#securechannel/SecureChannelMessenger.js";
 import { CaseClient } from "#session/case/CaseClient.js";
@@ -37,6 +36,7 @@ import type { SessionManager } from "#session/SessionManager.js";
 import { SECURE_CHANNEL_PROTOCOL_ID, SecureChannelStatusCode } from "#types";
 import { NetworkProfiles } from "./NetworkProfile.js";
 import type { Peer } from "./Peer.js";
+import { PeerCommunicationError } from "./PeerCommunicationError.js";
 import { PeerTimingParameters } from "./PeerTimingParameters.js";
 
 const logger = Logger.get("PeerConnection");
@@ -347,14 +347,10 @@ export async function PeerConnection(
      */
     async function handleConnectionError(e: Error, abort: Abort) {
         let delay: undefined | Duration;
-        if (
-            e instanceof NetworkError ||
-            e instanceof RetransmissionLimitReachedError ||
-            e instanceof NoResponseTimeoutError
-        ) {
+        if (causedBy(e, NetworkError, PeerCommunicationError)) {
             logger.error(
                 via,
-                `Network error (retry in ${Duration.format(context.timing.delayAfterNetworkError)}):`,
+                `Connection error (retry in ${Duration.format(context.timing.delayAfterNetworkError)}):`,
                 Diagnostic.errorMessage(e),
             );
             delay = context.timing.delayAfterNetworkError;

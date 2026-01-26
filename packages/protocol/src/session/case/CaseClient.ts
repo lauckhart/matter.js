@@ -7,10 +7,10 @@
 import { Icac } from "#certificate/kinds/Icac.js";
 import { Noc } from "#certificate/kinds/Noc.js";
 import { Fabric } from "#fabric/Fabric.js";
-import { Abort, Bytes, Duration, EcdsaSignature, Logger, PublicKey, UnexpectedDataError } from "#general";
+import { Abort, Bytes, causedBy, Duration, EcdsaSignature, Logger, PublicKey, UnexpectedDataError } from "#general";
+import { PeerCommunicationError } from "#peer/PeerCommunicationError.js";
 import { ExchangeSendOptions, MessageExchange } from "#protocol/MessageExchange.js";
 import { RetransmissionLimitReachedError } from "#protocol/errors.js";
-import { ChannelStatusResponseError } from "#securechannel/SecureChannelMessenger.js";
 import { NodeSession } from "#session/NodeSession.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { CaseAuthenticatedTag, NodeId, SecureChannelStatusCode } from "#types";
@@ -50,10 +50,7 @@ export class CaseClient {
                 maxRetransmissionTime: options?.maxInitialRetransmissionTime,
             });
         } catch (error) {
-            if (
-                !localAbort.aborted &&
-                !(error instanceof ChannelStatusResponseError || error instanceof RetransmissionLimitReachedError)
-            ) {
+            if (!localAbort.aborted && !causedBy(error, PeerCommunicationError, RetransmissionLimitReachedError)) {
                 await messenger.sendError(SecureChannelStatusCode.InvalidParam);
             }
             throw error;

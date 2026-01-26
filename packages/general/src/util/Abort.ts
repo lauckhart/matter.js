@@ -194,15 +194,15 @@ export class Abort
         this.signal.throwIfAborted();
     }
 
-    then<TResult1 = void, TResult2 = never>(
+    async then<TResult1 = void, TResult2 = never>(
         onfulfilled?: ((value: Error) => TResult1 | PromiseLike<TResult1>) | null,
         onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null,
-    ): PromiseLike<TResult1 | TResult2> {
+    ): Promise<TResult1 | TResult2> {
         if (!this.#aborted) {
             this.#aborted = new Promise(resolve => (this.#resolve = resolve));
             this.addEventListener("abort", () => this.#resolve!(asError(this.signal.reason)));
         }
-        return this.#aborted.then(onfulfilled, onrejected);
+        return await this.#aborted.then(onfulfilled, onrejected);
     }
 
     addEventListener<K extends keyof AbortSignalEventMap>(
