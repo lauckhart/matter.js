@@ -452,8 +452,8 @@ export class SessionManager {
     /**
      * Removes all Peer sessions and closes subscriptions.
      */
-    handlePeerLoss(address: PeerAddress, asOf?: Timestamp) {
-        return this.#handlePeerLoss({ address, asOf: asOf ?? Time.nowMs });
+    async handlePeerLoss(address: PeerAddress, asOf?: Timestamp) {
+        return await this.#handlePeerLoss({ address, asOf: asOf ?? Time.nowMs });
     }
 
     async #handlePeerLoss(options: { address: PeerAddress; asOf?: Timestamp; keepSubscriptions?: boolean }) {

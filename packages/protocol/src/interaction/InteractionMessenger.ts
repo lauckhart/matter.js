@@ -147,7 +147,7 @@ class InteractionMessenger {
         },
         expectedMessageInfo?: string,
     ) {
-        return this.#nextMessage(expectedMessageType, options, expectedMessageInfo);
+        return await this.#nextMessage(expectedMessageType, options, expectedMessageInfo);
     }
 
     async anyNextMessage(

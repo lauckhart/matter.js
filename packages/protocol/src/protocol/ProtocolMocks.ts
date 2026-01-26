@@ -239,6 +239,7 @@ export namespace ProtocolMocks {
                     localSessionParameters: SessionParameters(
                         context?.localSessionParameters ?? SessionParameters.defaults,
                     ),
+                    async peerLost() {},
                     retry() {},
                 },
             });

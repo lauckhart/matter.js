@@ -28,6 +28,10 @@ export namespace Boot {
                 continue;
             }
 
+            if (kind === "state") {
+                continue;
+            }
+
             initializer.setup();
         }
     }

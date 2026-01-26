@@ -426,7 +426,11 @@ export function timeSetup(Time: {
 
 Object.assign(globalThis, { MockTime });
 
-Boot.init(() => {
+Boot.init(kind => {
+    if (kind === "state") {
+        return;
+    }
+
     MockTime.reset();
     MockTime.disable();
 });

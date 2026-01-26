@@ -56,17 +56,8 @@ export class Abort
         this.#controller.signal.throwIfAborted = () => {
             try {
                 throwIfAborted();
-            } catch (e) {
-                const error = new AbortedError();
-
-                // Remove stack lines for this abort logic
-                error.stack = error.stack
-                    ?.split("\n")
-                    .filter(line => !line.match(/\.throwIfAborted/))
-                    .join("\n");
-
-                error.cause = e;
-                throw error;
+            } catch (reason) {
+                throw createAbortError(reason);
             }
         };
 
@@ -196,7 +187,7 @@ export class Abort
     }
 
     get reason() {
-        return asError(this.signal.reason);
+        return this.signal.reason;
     }
 
     throwIfAborted() {
@@ -209,7 +200,7 @@ export class Abort
     ): PromiseLike<TResult1 | TResult2> {
         if (!this.#aborted) {
             this.#aborted = new Promise(resolve => (this.#resolve = resolve));
-            this.addEventListener("abort", () => this.#resolve!(asError(this.reason)));
+            this.addEventListener("abort", () => this.#resolve!(asError(this.signal.reason)));
         }
         return this.#aborted.then(onfulfilled, onrejected);
     }
@@ -311,7 +302,7 @@ export namespace Abort {
      * If the abort signal is present and signals abort, the race will end and return undefined.  It will not throw the
      * abort reason.
      */
-    export function race<T>(
+    export async function race<T>(
         signal: Signal | undefined,
         ...promises: Array<T | PromiseLike<T>>
     ): Promise<Awaited<T> | void> {
@@ -327,14 +318,18 @@ export namespace Abort {
                 off = () => (signal as AbortSignal).removeEventListener("abort", onabort);
             });
 
-            return SafePromise.race([aborted, ...promises]).finally(off!);
+            try {
+                return await SafePromise.race([aborted, ...promises]);
+            } finally {
+                off!();
+            }
         }
 
         if (promises.length === 1) {
-            return Promise.resolve(promises[0]);
+            return await Promise.resolve(promises[0]);
         }
 
-        return SafePromise.race(promises);
+        return await SafePromise.race(promises);
     }
 
     /**
@@ -403,4 +398,19 @@ export namespace Abort {
 
         return (signal as AbortSignal).throwIfAborted.bind(signal);
     }
+}
+
+function createAbortError(reason: unknown) {
+    const error = new AbortedError();
+
+    // Remove stack lines for this abort logic
+    const stack = error.stack?.split("\n");
+
+    // Leave the message but remove top two frames (this function + caller in Abort)
+    stack?.splice(1, 2);
+
+    error.stack = stack?.join("\n");
+
+    error.cause = asError(reason);
+    return error;
 }

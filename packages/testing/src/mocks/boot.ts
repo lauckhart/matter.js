@@ -15,7 +15,7 @@ const appBooters = {} as Record<string, (kind?: BootKind) => void>;
 
 export interface Boot {
     format: string;
-    init(fn: () => void): void;
+    init(fn: (kind: BootKind) => void): void;
     reboot(): void;
     reset(): void;
 }
@@ -24,7 +24,7 @@ export const Boot: Boot = {
     format: "unknown",
 
     init(fn) {
-        fn();
+        fn("platform");
         initializers.push(fn);
     },
 
@@ -41,7 +41,7 @@ export const Boot: Boot = {
     },
 };
 
-const initializers = [(kind?: BootKind) => appBooters[Boot.format]?.(kind)];
+const initializers = [(kind: BootKind) => appBooters[Boot.format]?.(kind)];
 
 export function bootSetup(AppBoot: { reboot(kind?: BootKind): () => void }) {
     appBooters[Boot.format] = AppBoot.reboot.bind(Boot);

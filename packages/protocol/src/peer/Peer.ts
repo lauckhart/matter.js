@@ -49,7 +49,20 @@ const logger = Logger.get("Peer");
 /**
  * Thrown when an operation aborts because the peer is unreachable.
  */
-export class PeerUnreachableError extends TimeoutError {}
+export class PeerUnreachableError extends TimeoutError {
+    constructor(message = "Peer is not currently reachable") {
+        super(message);
+    }
+}
+
+/**
+ * Thrown when an operation aborts because the peer became unresponsive with an active session.
+ */
+export class PeerUnresponsiveError extends TimeoutError {
+    constructor(message = "Peer is no longer responding to active session") {
+        super(message);
+    }
+}
 
 /**
  * A node on a fabric we are a member of.

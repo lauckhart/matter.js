@@ -23,6 +23,7 @@ import {
     MatterError,
     MatterFlowError,
     ObserverGroup,
+    Time,
     UdpInterface,
     UnexpectedDataError,
 } from "#general";
@@ -32,7 +33,7 @@ import { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { UNICAST_UNSECURE_SESSION_ID } from "#session/UnsecuredSession.js";
-import { NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
+import { FabricIndex, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
 import { MessageExchange, MessageExchangeContext } from "./MessageExchange.js";
 import { DuplicateMessageError } from "./MessageReceptionState.js";
 import { MRP } from "./MRP.js";
@@ -424,6 +425,27 @@ export class ExchangeManager {
         return {
             session,
             localSessionParameters: this.#sessions.sessionParameters,
+
+            peerLost: async (exchange: MessageExchange) => {
+                if (!(session instanceof NodeSession)) {
+                    return;
+                }
+
+                // If not connected to a commissioned peer, report peer loss to the session only
+                if (
+                    session.peerAddress.fabricIndex === FabricIndex.NO_FABRIC ||
+                    session.peerAddress.nodeId === NodeId.UNSPECIFIED_NODE_ID
+                ) {
+                    await session.handlePeerLoss({
+                        currentExchange: exchange,
+                    });
+                    return;
+                }
+
+                // Report peer loss to the session manager; this notify all sessions for the peer
+                await this.#sessions.handlePeerLoss(session.peerAddress, Time.nowMs);
+            },
+
             retry: number => this.#sessions.retry.emit(session, number),
         };
     }

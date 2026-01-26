@@ -28,6 +28,7 @@ import {
     Time,
     Timer,
 } from "#general";
+import { PeerUnresponsiveError } from "#peer/Peer.js";
 import { GroupSession } from "#session/GroupSession.js";
 import type { NodeSession } from "#session/NodeSession.js";
 import { Session } from "#session/Session.js";
@@ -121,6 +122,8 @@ export interface MessageExchangeContext {
     session: Session;
     localSessionParameters: SessionParameters;
 
+    peerLost(exchange: MessageExchange): Promise<void>;
+
     /** @deprecated */
     retry(number: number): void;
 }
@@ -203,6 +206,7 @@ export class MessageExchange {
 
     // TODO - following are associated with current active transmission and should maybe go in a closure
     #isTransmitting = false;
+    #isReceiving = false;
     #sentMessageToAck?: Message;
     #sentMessageAckSuccess?: (message: Message | undefined) => void;
     #sentMessageAckFailure?: (error?: Error) => void;
@@ -593,7 +597,32 @@ export class MessageExchange {
     }
 
     async nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration; abort?: AbortSignal }) {
+        if (this.#isReceiving) {
+            throw new ExchangeBusyError("Cannot receive because exchange is busy");
+        }
+
+        this.#isReceiving = true;
+
+        try {
+            return await this.#readWithoutReceiveGuard(options);
+        } catch (e) {
+            if (MatterError.causedBy(e, PeerUnresponsiveError)) {
+                await this.#context.peerLost(this);
+            }
+
+            throw e;
+        } finally {
+            this.#isReceiving = false;
+        }
+    }
+
+    async #readWithoutReceiveGuard(options?: {
+        expectedProcessingTime?: Duration;
+        timeout?: Duration;
+        abort?: AbortSignal;
+    }) {
         let timeout: Duration | undefined;
+
         if (options?.timeout !== undefined) {
             timeout = options.timeout;
         } else if (this.#messagesQueue.size > 0) {
@@ -605,7 +634,19 @@ export class MessageExchange {
                 options?.expectedProcessingTime,
             );
         }
-        return await this.#messagesQueue.read({ timeout, abort: options?.abort });
+
+        using localAbort = new Abort({
+            timeout,
+            abort: options?.abort,
+
+            timeoutHandler: () => {
+                throw new PeerUnresponsiveError(
+                    `Peer is no longer responding to active session (timed out after ${Duration.format(timeout)})`,
+                );
+            },
+        });
+
+        return await this.#messagesQueue.read(localAbort);
     }
 
     async #sendStandaloneAckForMessage(message: Message) {
