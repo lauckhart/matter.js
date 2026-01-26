@@ -22,6 +22,7 @@ import {
     ImplementationError,
     isIPv6,
     Logger,
+    MaybePromise,
     Millis,
     Minutes,
     NoResponseTimeoutError,
@@ -46,7 +47,7 @@ import { DiscoveryCapabilitiesBitmap, NodeId, SECURE_CHANNEL_PROTOCOL_ID, TypeFr
 import { PeerAddress } from "./PeerAddress.js";
 import { NodeDiscoveryType, PeerSet } from "./PeerSet.js";
 
-const logger = Logger.get("PeerCommissioner");
+const logger = Logger.get("ControllerCommissioner");
 
 /**
  * General commissioning options.
@@ -67,7 +68,7 @@ export interface CommissioningOptions extends Partial<ControllerCommissioningFlo
      * This optional callback allows the caller to complete commissioning once PASE commissioning completes.  If it does
      * not throw, the commissioner considers commissioning complete.
      */
-    finalizeCommissioning?: (peerAddress: PeerAddress, discoveryData?: DiscoveryData) => Promise<void>;
+    finalizeCommissioning?: (peerAddress: PeerAddress, discoveryData?: DiscoveryData) => MaybePromise<void>;
 
     /**
      * Commissioning Flow Implementation as class that extends the official implementation to use for commissioning.
@@ -181,6 +182,7 @@ export class ControllerCommissioner {
         for (const address of addresses) {
             try {
                 session = await this.#initializePaseSecureChannel(address, passcode, discoveryData);
+                break;
             } catch (e) {
                 NoResponseTimeoutError.accept(e);
                 logger.warn(`Could not connect to ${ServerAddress.urlFor(address)}: ${e.message}`);
@@ -470,8 +472,8 @@ export class ControllerCommissioner {
             `Start commissioning of node ${address.nodeId} into fabric ${fabric.fabricId} (index ${address.fabricIndex})`,
         );
         const exchangeProvider = new DedicatedChannelExchangeProvider(this.#context.exchanges, paseSession);
-        const commissioningManager = new commissioningFlowImpl(
-            // Use the created secure session to do the commissioning
+
+        await using commissioningManager = new commissioningFlowImpl(
             new ClientInteraction({
                 environment: this.#context.environment,
                 exchangeProvider,

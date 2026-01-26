@@ -118,10 +118,15 @@ export class ExchangeManager {
         return this.initiateExchangeForSession(this.#sessions.sessionFor(address), protocolId);
     }
 
-    initiateExchangeForSession(session: Session, protocolId: number) {
+    initiateExchangeForSession(session: Session, protocolId: number, options?: MessageExchange.Options) {
         const exchangeId = this.#exchangeCounter.getIncrementedCounter();
         const exchangeIndex = exchangeId | 0x10000; // Ensure initiated and received exchange index are different, since the exchangeID can be the same
-        const exchange = MessageExchange.initiate(this.#messageExchangeContextFor(session), exchangeId, protocolId);
+        const exchange = MessageExchange.initiate(
+            this.#messageExchangeContextFor(session),
+            exchangeId,
+            protocolId,
+            options,
+        );
         this.#addExchange(exchangeIndex, exchange);
         return exchange;
     }

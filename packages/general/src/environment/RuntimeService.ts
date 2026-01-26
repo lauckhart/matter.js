@@ -216,7 +216,7 @@ export class RuntimeService {
     }
 
     get [Diagnostic.value]() {
-        return Diagnostic.node("⚙️", "Workers", {
+        return Diagnostic.node("⚙️", `Workers for ${this.#env.name}`, {
             children: [...this.#workers].map(worker => {
                 let diagnostic: unknown = worker[DiagnosticPresentation.name];
 

@@ -43,7 +43,7 @@ import {
     TypeFromSchema,
 } from "#types";
 import { Message, SessionType } from "../codec/MessageCodec.js";
-import { ExchangeProvider } from "../protocol/ExchangeProvider.js";
+import { ExchangeProvider, NewExchangeOptions } from "../protocol/ExchangeProvider.js";
 import { ExchangeSendOptions, MessageExchange } from "../protocol/MessageExchange.js";
 import {
     AttributeReportPayload,
@@ -926,8 +926,8 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
 export class InteractionClientMessenger extends IncomingInteractionClientMessenger {
     #exchangeProvider: ExchangeProvider;
 
-    static async create(exchangeProvider: ExchangeProvider) {
-        const exchange = await exchangeProvider.initiateExchange();
+    static async create(exchangeProvider: ExchangeProvider, options?: NewExchangeOptions) {
+        const exchange = await exchangeProvider.initiateExchange(options);
         return new this(exchange, exchangeProvider);
     }
 

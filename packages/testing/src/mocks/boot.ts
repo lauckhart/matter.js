@@ -11,12 +11,13 @@
  * The test harness may load multiple test environments (e.g. ESM vs CJS) so we must track the current environment to
  * ensure we boot the correct version of the code.
  */
-const appBooters = {} as Record<string, () => void>;
+const appBooters = {} as Record<string, (kind?: BootKind) => void>;
 
 export interface Boot {
     format: string;
     init(fn: () => void): void;
     reboot(): void;
+    reset(): void;
 }
 
 export const Boot: Boot = {
@@ -29,13 +30,21 @@ export const Boot: Boot = {
 
     reboot() {
         for (const initializer of initializers) {
-            initializer();
+            initializer("platform");
+        }
+    },
+
+    reset() {
+        for (const initializer of initializers) {
+            initializer("state");
         }
     },
 };
 
-const initializers = [() => appBooters[Boot.format]?.()];
+const initializers = [(kind?: BootKind) => appBooters[Boot.format]?.(kind)];
 
-export function bootSetup(AppBoot: { reboot(): () => void }) {
+export function bootSetup(AppBoot: { reboot(kind?: BootKind): () => void }) {
     appBooters[Boot.format] = AppBoot.reboot.bind(Boot);
 }
+
+export type BootKind = "platform" | "state";

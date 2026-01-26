@@ -43,37 +43,21 @@ export class SecureChannelMessenger {
         return this.exchange.channel;
     }
 
-    async nextMessage(
-        expectedMessageType: number,
-        expectedProcessingTimeMs = this.#defaultExpectedProcessingTime,
-        expectedMessageInfo?: string,
-    ) {
-        return this.#nextMessage(expectedMessageType, expectedProcessingTimeMs, expectedMessageInfo);
-    }
-
-    async anyNextMessage(expectedMessageInfo: string, expectedProcessingTime = this.#defaultExpectedProcessingTime) {
-        return this.#nextMessage(undefined, expectedProcessingTime, expectedMessageInfo);
-    }
-
     /**
      * Waits for the next message and returns it.
      *
-     * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
+     * {@link expectedProcessingTime} defaults to {@link EXPECTED_CRYPTO_PROCESSING_TIME}.
      */
-    async #nextMessage(
-        expectedMessageType?: number,
-        expectedProcessingTime = this.#defaultExpectedProcessingTime,
-        expectedMessageInfo?: string,
-    ) {
-        const message = await this.exchange.nextMessage({ expectedProcessingTime });
+    async nextMessage({ type, expectedProcessingTime, description, abort }: SecureChannelMessenger.ReadOptions = {}) {
+        const message = await this.exchange.nextMessage({ expectedProcessingTime, abort });
         const messageType = message.payloadHeader.messageType;
-        if (expectedMessageType !== undefined && expectedMessageInfo === undefined) {
-            expectedMessageInfo = SecureMessageType[expectedMessageType];
+        if (type !== undefined && description === undefined) {
+            description = SecureMessageType[type];
         }
-        this.throwIfErrorStatusReport(message, expectedMessageInfo);
-        if (expectedMessageType !== undefined && messageType !== expectedMessageType)
+        this.throwIfErrorStatusReport(message, description);
+        if (type !== undefined && messageType !== type)
             throw new UnexpectedDataError(
-                `Received unexpected message type: ${messageType}, expected: ${expectedMessageType} (${expectedMessageInfo})`,
+                `Received unexpected message type: ${messageType}, expected: ${type} (${description})`,
             );
         return message;
     }
@@ -83,12 +67,8 @@ export class SecureChannelMessenger {
      *
      * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
      */
-    async nextMessageDecoded<T>(
-        expectedMessageType: number,
-        schema: TlvSchema<T>,
-        expectedProcessingTime = this.#defaultExpectedProcessingTime,
-    ) {
-        return schema.decode((await this.nextMessage(expectedMessageType, expectedProcessingTime)).payload);
+    async nextMessageDecoded<T>(schema: TlvSchema<T>, options?: SecureChannelMessenger.ReadOptions) {
+        return schema.decode((await this.nextMessage(options)).payload);
     }
 
     /**
@@ -96,9 +76,12 @@ export class SecureChannelMessenger {
      *
      * When no expectedProcessingTimeMs is provided, the default value of EXPECTED_CRYPTO_PROCESSING_TIME_MS is used.
      */
-    async waitForSuccess(expectedMessageInfo: string, expectedProcessingTime = this.#defaultExpectedProcessingTime) {
+    async waitForSuccess(options?: Omit<SecureChannelMessenger.ReadOptions, "type">) {
         // If the status is not Success, this would throw an Error.
-        await this.nextMessage(SecureMessageType.StatusReport, expectedProcessingTime, expectedMessageInfo);
+        await this.nextMessage({
+            ...options,
+            type: SecureMessageType.StatusReport,
+        });
     }
 
     /**
@@ -117,16 +100,16 @@ export class SecureChannelMessenger {
         return payload;
     }
 
-    sendError(code: SecureChannelStatusCode) {
-        return this.#sendStatusReport(GeneralStatusCode.Failure, code);
+    sendError(code: SecureChannelStatusCode, abort?: AbortSignal) {
+        return this.#sendStatusReport(GeneralStatusCode.Failure, code, abort);
     }
 
-    sendSuccess() {
-        return this.#sendStatusReport(GeneralStatusCode.Success, SecureChannelStatusCode.Success);
+    sendSuccess(abort?: AbortSignal) {
+        return this.#sendStatusReport(GeneralStatusCode.Success, SecureChannelStatusCode.Success, abort);
     }
 
-    sendCloseSession() {
-        return this.#sendStatusReport(GeneralStatusCode.Success, SecureChannelStatusCode.CloseSession, false);
+    sendCloseSession(abort?: AbortSignal) {
+        return this.#sendStatusReport(GeneralStatusCode.Success, SecureChannelStatusCode.CloseSession, abort);
     }
 
     get channelName() {
@@ -144,7 +127,7 @@ export class SecureChannelMessenger {
     async #sendStatusReport(
         generalStatus: GeneralStatusCode,
         protocolStatus: SecureChannelStatusCode,
-        requiresAck?: boolean,
+        abort?: AbortSignal,
     ) {
         await this.exchange.send(
             SecureMessageType.StatusReport,
@@ -153,11 +136,11 @@ export class SecureChannelMessenger {
                 protocolStatus,
             }),
             {
-                requiresAck,
                 logContext: {
                     generalStatus: GeneralStatusCode[generalStatus] ?? Diagnostic.hex(generalStatus),
                     protocolStatus: SecureChannelStatusCode[protocolStatus] ?? Diagnostic.hex(protocolStatus),
                 },
+                abort,
             },
         );
     }
@@ -184,5 +167,34 @@ export class SecureChannelMessenger {
                 protocolStatus,
             );
         }
+    }
+}
+
+export namespace SecureChannelMessenger {
+    /**
+     * Controls message read.
+     */
+    export interface ReadOptions {
+        /**
+         * The expected type of the message.
+         *
+         * The messenger throws an error if a message arrives that is not of this type.
+         */
+        type?: SecureMessageType;
+
+        /**
+         * Processing time used as input to timeout algorithms.
+         */
+        expectedProcessingTime?: Duration;
+
+        /**
+         * Description of read operation used in diagnostic messages.
+         */
+        description?: string;
+
+        /**
+         * Aborts the read.
+         */
+        abort?: AbortSignal;
     }
 }

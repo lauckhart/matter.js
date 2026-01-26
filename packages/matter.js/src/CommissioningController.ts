@@ -340,9 +340,11 @@ export class CommissioningController {
 
         // Ensure we have the peer added to the node because commissioning runs aside for now
         await controller.node.peers.forAddress(controller.fabric.addressOf(nodeId), {
+            commissioning: {
+                caseAuthenticatedTags: nodeOptions.caseAuthenticatedTags ?? this.#options.caseAuthenticatedTags,
+            },
             network: {
                 autoSubscribe: false,
-                caseAuthenticatedTags: nodeOptions.caseAuthenticatedTags ?? this.#options.caseAuthenticatedTags,
             },
         });
 
@@ -505,10 +507,12 @@ export class CommissioningController {
         if (peerNode === undefined) {
             if (allowUnknownNode) {
                 peerNode = await this.node.peers.forAddress(peerAddress, {
-                    network: {
-                        autoSubscribe: false,
+                    commissioning: {
                         caseAuthenticatedTags:
                             connectOptions?.caseAuthenticatedTags ?? this.#options.caseAuthenticatedTags,
+                    },
+                    network: {
+                        autoSubscribe: false,
                     },
                 });
             } else {

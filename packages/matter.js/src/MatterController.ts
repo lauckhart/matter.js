@@ -34,7 +34,6 @@ import {
     isObject,
     Logger,
     MatterError,
-    MaybePromise,
     Minutes,
     ObserverGroup,
     ServerAddress,
@@ -45,9 +44,9 @@ import {
     SupportedStorageTypes,
     Time,
 } from "#general";
-import type { ClientNodeInteraction } from "#node";
 import {
     ClientNode,
+    ClientNodePhysicalProperties,
     CommissioningClient,
     ControllerBehavior,
     Endpoint,
@@ -72,7 +71,6 @@ import {
     PeerAddress,
     PeerAddressStore,
     PeerConnectionOptions,
-    PeerDataStore,
     PeerDescriptor,
     PeerSet,
     PhysicalDeviceProperties,
@@ -617,9 +615,9 @@ export class MatterController {
         }
         if (
             options.caseAuthenticatedTags !== undefined &&
-            !isDeepEqual(options.caseAuthenticatedTags, node.state.network.caseAuthenticatedTags)
+            !isDeepEqual(options.caseAuthenticatedTags, node.state.commissioning.caseAuthenticatedTags)
         ) {
-            await node.setStateOf(NetworkClient, { caseAuthenticatedTags: options.caseAuthenticatedTags });
+            await node.setStateOf(CommissioningClient, { caseAuthenticatedTags: options.caseAuthenticatedTags });
         }
         await node.enable();
         return this.#clients!.connect(this.fabric.addressOf(peerNodeId), options);
@@ -802,10 +800,6 @@ class CommissionedNodeStore extends PeerAddressStore {
         this.#peers = peers;
     }
 
-    createNodeStore(_address: PeerAddress): MaybePromise<PeerDataStore | undefined> {
-        throw new ImplementationError("Not implemented");
-    }
-
     async loadPeers() {
         if (!(await this.#controllerStore.nodesStorage.has("commissionedNodes"))) {
             return [];
@@ -857,7 +851,7 @@ class CommissionedNodeStore extends PeerAddressStore {
                                 ? RemoteDescriptor.fromLongForm(commissioningState)
                                 : undefined;
                         const deviceData = {
-                            meta: (peer.interaction as ClientNodeInteraction).physicalProperties,
+                            meta: ClientNodePhysicalProperties(peer),
                             basicInformation: peer.maybeStateOf(BasicInformationClient),
                         };
 
