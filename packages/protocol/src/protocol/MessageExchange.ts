@@ -220,7 +220,8 @@ export class MessageExchange {
     #channel?: MessageChannel;
 
     // TODO - following are associated with current active transmission and should maybe go in a closure
-    #isBusy = false;
+    #isReading = false;
+    #isWriting = false;
     #sentMessageToAck?: Message;
     #sentMessageAckSuccess?: (message: Message | undefined) => void;
     #sentMessageAckFailure?: () => void;
@@ -429,11 +430,11 @@ export class MessageExchange {
     }
 
     async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
-        if (this.#isBusy) {
+        if (this.#isWriting) {
             throw new ExchangeBusyError("Cannot send because exchange is busy");
         }
 
-        this.#isBusy = true;
+        this.#isWriting = true;
         this.#sendOptions = options;
         this.#retransmissionCounter = 0;
 
@@ -454,7 +455,7 @@ export class MessageExchange {
                     undefined;
             this.#retransmissionCounter = 0;
             this.#kick = undefined;
-            this.#isBusy = false;
+            this.#isWriting = false;
         }
     }
 
@@ -620,11 +621,11 @@ export class MessageExchange {
     }
 
     async nextMessage(options?: ExchangeReceiveOptions) {
-        if (this.#isBusy) {
+        if (this.#isReading) {
             throw new ExchangeBusyError("Cannot receive because exchange is busy");
         }
 
-        this.#isBusy = true;
+        this.#isReading = true;
 
         try {
             return await this.#readWithoutReceiveGuard(options);
@@ -635,7 +636,7 @@ export class MessageExchange {
 
             throw e;
         } finally {
-            this.#isBusy = false;
+            this.#isReading = false;
         }
     }
 

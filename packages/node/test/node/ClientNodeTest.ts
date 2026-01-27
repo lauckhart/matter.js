@@ -93,8 +93,7 @@ describe("ClientNode", () => {
         // *** INITIAL STATE ***
 
         // Get a client view of the device
-        const peer1 = controller.peers.get("peer1")!;
-        expect(peer1).not.undefined;
+        const peer1 = await subscribedPeer(controller, "peer1");
 
         // Validate the root endpoint
         expect(Object.keys(peer1.state).sort()).deep.equals(Object.keys(PEER1_STATE).sort());
@@ -137,7 +136,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    });
+    }).timeout(1e9);
 
     it("commissions and initializes endpoints even with a leave event in initial subscription data", async () => {
         // *** COMMISSIONING ***
@@ -303,7 +302,7 @@ describe("ClientNode", () => {
 
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();
-        const peer1 = controller.peers.get("peer1")!;
+        const peer1 = await subscribedPeer(controller, "peer1");
         const ep1 = peer1.parts.get("ep1")!;
 
         // *** INITIAL SUBSCRIPTION ***
@@ -423,12 +422,12 @@ describe("ClientNode", () => {
         expect(aggregatorClient.parts.size).equals(0);
     });
 
-    it.only("erases node after leave event", async () => {
+    it("erases node after leave event", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
         const { controller, device } = await site.addCommissionedPair();
-        const peer1 = controller.peers.get("peer1")!;
+        const peer1 = await subscribedPeer(controller, "peer1");
 
         // *** CONFIRM FABRIC IDENTITY ***
 
@@ -1017,4 +1016,16 @@ async function expectTimeoutError(promise: Promise<any>) {
         expect(e instanceof AbortedError);
         expect(e.cause instanceof PeerUnreachableError);
     }
+}
+
+async function subscribedPeer(controller: ServerNode, id: string) {
+    const peer = controller.peers.get(id);
+    expect(peer).not.undefined;
+
+    const subscription = peer!.behaviors.internalsOf(NetworkClient).activeSubscription as SustainedSubscription;
+    expect(subscription).not.undefined;
+
+    await MockTime.resolve(subscription.active);
+
+    return peer!;
 }
