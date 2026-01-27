@@ -249,11 +249,6 @@ export class Peer {
 
             this.#initiateConnection(options);
 
-            const aborts = new Array<AbortSignal>(this.#abort);
-            if (options?.abort) {
-                aborts.push(options?.abort);
-            }
-
             let timeout: Duration | undefined =
                 options?.connectionTimeout ??
                 (options?.abort ? undefined : this.#context.timing.defaultConnectionTimeout);
@@ -264,7 +259,7 @@ export class Peer {
             }
 
             const localAbort = new Abort({
-                abort: aborts,
+                abort: [this.#abort, options?.abort],
                 timeout,
 
                 timeoutHandler: () => {

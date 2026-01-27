@@ -46,7 +46,7 @@ import {
 } from "#types";
 import { Message, SessionType } from "../codec/MessageCodec.js";
 import { ExchangeProvider, NewExchangeOptions } from "../protocol/ExchangeProvider.js";
-import { ExchangeSendOptions, MessageExchange } from "../protocol/MessageExchange.js";
+import { ExchangeReceiveOptions, ExchangeSendOptions, MessageExchange } from "../protocol/MessageExchange.js";
 import {
     AttributeReportPayload,
     BaseDataReport,
@@ -141,37 +141,16 @@ class InteractionMessenger {
         await this.nextMessage(MessageType.StatusResponse, options, `Success-${expectedMessageInfo}`);
     }
 
-    async nextMessage(
-        expectedMessageType: number,
-        options?: {
-            expectedProcessingTime?: Duration;
-            timeout?: Duration;
-        },
-        expectedMessageInfo?: string,
-    ) {
+    async nextMessage(expectedMessageType: number, options?: ExchangeReceiveOptions, expectedMessageInfo?: string) {
         return await this.#nextMessage(expectedMessageType, options, expectedMessageInfo);
     }
 
-    async anyNextMessage(
-        expectedMessageInfo: string,
-        options?: {
-            expectedProcessingTime?: Duration;
-            timeout?: Duration;
-        },
-    ) {
+    async anyNextMessage(expectedMessageInfo: string, options?: ExchangeReceiveOptions) {
         return this.#nextMessage(undefined, options, expectedMessageInfo);
     }
 
-    async #nextMessage(
-        expectedMessageType?: number,
-        options?: {
-            expectedProcessingTime?: Duration;
-            timeout?: Duration;
-        },
-        expectedMessageInfo?: string,
-    ) {
-        const { expectedProcessingTime, timeout } = options ?? {};
-        const message = await this.exchange.nextMessage({ expectedProcessingTime, timeout });
+    async #nextMessage(expectedMessageType?: number, options?: ExchangeReceiveOptions, expectedMessageInfo?: string) {
+        const message = await this.exchange.nextMessage(options);
         const messageType = message.payloadHeader.messageType;
         if (expectedMessageType !== undefined && expectedMessageInfo === undefined) {
             expectedMessageInfo = MessageType[expectedMessageType];

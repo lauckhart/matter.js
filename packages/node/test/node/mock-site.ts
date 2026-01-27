@@ -6,9 +6,7 @@
 
 import { OnOffLightDevice } from "#devices/on-off-light";
 import {
-    asError,
     Crypto,
-    Diagnostic,
     Entropy,
     Environment,
     Logger,
@@ -150,7 +148,7 @@ export class MockSite {
                 { macrotasks: true },
             );
         } catch (e) {
-            logger.error("Error closing mock site:", Diagnostic.errorMessage(asError(e)));
+            logger.error("Error closing mock site:", e);
         }
     }
 

@@ -109,6 +109,19 @@ export interface ExchangeSendOptions {
     maxRetransmissionTime?: Duration;
 }
 
+export interface ExchangeReceiveOptions {
+    /** Aborts sending; does not throw */
+    abort?: AbortSignal;
+
+    timeout?: Duration;
+
+    /**
+     * Defined an expected processing time by the responder for the message. This is used to calculate the final
+     * timeout for responses together with the normal retransmission logic when MRP is used.
+     */
+    expectedProcessingTime?: Duration;
+}
+
 /**
  * Message size overhead of a Matter message:
  * 26 (Matter Message Header) + 12 (Matter Payload Header) taken from https://github.com/project-chip/connectedhomeip/blob/2d97cda23024e72f36216900ca667bf1a0d9499f/src/system/SystemConfig.h#L327
@@ -606,7 +619,7 @@ export class MessageExchange {
         }
     }
 
-    async nextMessage(options?: { expectedProcessingTime?: Duration; timeout?: Duration; abort?: AbortSignal }) {
+    async nextMessage(options?: ExchangeReceiveOptions) {
         if (this.#isBusy) {
             throw new ExchangeBusyError("Cannot receive because exchange is busy");
         }
@@ -626,11 +639,7 @@ export class MessageExchange {
         }
     }
 
-    async #readWithoutReceiveGuard(options?: {
-        expectedProcessingTime?: Duration;
-        timeout?: Duration;
-        abort?: AbortSignal;
-    }) {
+    async #readWithoutReceiveGuard(options?: ExchangeReceiveOptions) {
         let timeout: Duration | undefined;
 
         if (options?.timeout !== undefined) {

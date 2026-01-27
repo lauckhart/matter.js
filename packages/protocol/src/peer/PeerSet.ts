@@ -189,6 +189,7 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
                 return;
             }
 
+            console.log(">>> ADD SESSION <<<");
             this.for(session.peerAddress).sessions.add(session);
         });
     }

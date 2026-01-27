@@ -84,18 +84,18 @@ export async function PeerConnection(
 ): Promise<NodeSession | undefined> {
     const via = Diagnostic.via(peer.address.toString());
 
-    const abort = new Abort(options);
+    const overallAbort = new Abort(options);
     using lifetime = (peer.lifetime ?? Lifetime.process).join("connecting");
 
     // Reserve network communication slot
     const network = context.networks.select(peer, options?.network);
-    using _slot = await network.semaphore.obtainSlot(abort);
-    if (abort.aborted) {
+    using _slot = await network.semaphore.obtainSlot(overallAbort);
+    if (overallAbort.aborted) {
         return;
     }
 
     // Update peer status
-    peer.service.status.connecting(abort.then(() => !!peer.sessions.size));
+    peer.service.status.connecting(overallAbort.then(() => !!peer.sessions.size));
 
     // DNS-SD name of peer service
     const service = peer.service;
@@ -104,7 +104,7 @@ export async function PeerConnection(
     const attempts = new Map<ServerAddressUdp, Attempt>();
 
     // The result
-    let session: NodeSession | undefined;
+    let outputSession: NodeSession | undefined;
 
     // Outstanding promises
     const workers = new BasicMultiplex();
@@ -134,7 +134,7 @@ export async function PeerConnection(
     maybeAttemptFallback();
 
     // Manage connection attempts until connected or aborted
-    for await (const { kind, address } of service.addressChanges({ abort })) {
+    for await (const { kind, address } of service.addressChanges({ abort: overallAbort })) {
         switch (kind) {
             case "add":
                 addAddress(address);
@@ -147,15 +147,15 @@ export async function PeerConnection(
     }
 
     // Ensure peer is marked as reachable if we've established a connection
-    if (session) {
+    if (outputSession) {
         peer.service.status.isReachable = true;
     }
 
-    abort();
+    overallAbort();
 
     await workers;
 
-    return session;
+    return outputSession;
 
     /**
      * Initiate connection attempts as we discover new addresses until aborted.
@@ -164,9 +164,9 @@ export async function PeerConnection(
         while (true) {
             // Wait for an address if none are available
             if (!pendingAddresses.size) {
-                await abort.race(pendingAddresses.added);
+                await overallAbort.race(pendingAddresses.added);
             }
-            if (abort.aborted) {
+            if (overallAbort.aborted) {
                 return;
             }
 
@@ -175,12 +175,12 @@ export async function PeerConnection(
                 const timeSinceLastAttempt = Timestamp.delta(lastAttemptAt);
                 const delayInterval = Millis(context.timing.delayBeforeNextAddress - timeSinceLastAttempt);
                 if (delayInterval > 0) {
-                    const changed = await abort.race<ServerAddressUdp | void>(
+                    const changed = await overallAbort.race<ServerAddressUdp | void>(
                         Time.sleep("connection delay", delayInterval),
                         pendingAddresses.added,
                         pendingAddresses.deleted,
                     );
-                    if (abort.aborted) {
+                    if (overallAbort.aborted) {
                         return;
                     }
 
@@ -237,7 +237,7 @@ export async function PeerConnection(
      */
     function initiateAttempt(address: ServerAddressUdp) {
         address = addresses.add(address);
-        const attemptAbort = new Abort({ abort });
+        const addressAbort = new Abort({ abort: overallAbort });
 
         // Skip if we're already attempting connection to this address
         if (attempts.has(address)) {
@@ -246,14 +246,14 @@ export async function PeerConnection(
 
         lastAttemptAt = Time.nowMs;
 
-        const finished = connect(address, attemptAbort).finally(() => {
+        const finished = connect(address, addressAbort).finally(() => {
             if (attempts.get(address)?.finished === finished) {
                 attempts.delete(address);
                 maybeAttemptFallback();
             }
         });
 
-        attempts.set(address, { abort: attemptAbort, finished });
+        attempts.set(address, { abort: addressAbort, finished });
 
         workers.add(finished);
     }
@@ -276,7 +276,7 @@ export async function PeerConnection(
     /**
      * Perform connection to specific address until successful.
      */
-    async function connect(address: ServerAddressUdp, abort: Abort) {
+    async function connect(address: ServerAddressUdp, addressAbort: Abort) {
         using connecting = lifetime.join("connecting");
         connecting.details.address = ServerAddress.urlFor(address);
 
@@ -287,11 +287,11 @@ export async function PeerConnection(
             attemptingFallback = undefined;
         }
 
-        while (!abort.aborted) {
+        while (!addressAbort.aborted) {
             try {
-                await attemptOnce(address, abort);
+                await attemptOnce(address, addressAbort);
             } catch (e) {
-                await handleConnectionError(asError(e), abort);
+                await handleConnectionError(asError(e), addressAbort);
             }
         }
     }
@@ -299,8 +299,8 @@ export async function PeerConnection(
     /**
      * Make a single attempt to connect to a specific address.
      */
-    async function attemptOnce(address: ServerAddressUdp, abort: Abort) {
-        const socket = await context.openSocket(address, abort);
+    async function attemptOnce(address: ServerAddressUdp, addressAbort: Abort) {
+        const socket = await context.openSocket(address, addressAbort);
         if (socket === undefined) {
             return;
         }
@@ -324,13 +324,15 @@ export async function PeerConnection(
 
             const { session } = await caseClient.pair(exchange, fabric, peer.address.nodeId, {
                 ...options,
-                abort,
+                abort: addressAbort,
                 caseAuthenticatedTags: peer.descriptor.caseAuthenticatedTags,
                 maxInitialRetransmissions: Infinity,
                 maxInitialRetransmissionTime: context.timing.maxDelayBetweenInitialContactRetries,
             });
 
-            return session;
+            // Success
+            outputSession = session;
+            overallAbort();
         } catch (e) {
             if (AbortedError.is(e)) {
                 return;
@@ -345,7 +347,7 @@ export async function PeerConnection(
     /**
      * Log error information and pause before next retry.
      */
-    async function handleConnectionError(e: Error, abort: Abort) {
+    async function handleConnectionError(e: Error, addressAbort: Abort) {
         let delay: undefined | Duration;
         if (causedBy(e, NetworkError, PeerCommunicationError)) {
             logger.error(
@@ -380,13 +382,13 @@ export async function PeerConnection(
             delay = context.timing.delayAfterUnhandledError;
         }
 
-        if (abort.aborted) {
+        if (addressAbort.aborted) {
             return;
         }
 
         if (delay) {
-            await Abort.sleep("peer connection retry", abort, delay);
-            if (abort.aborted) {
+            await Abort.sleep("peer connection retry", addressAbort, delay);
+            if (addressAbort.aborted) {
                 return;
             }
         }

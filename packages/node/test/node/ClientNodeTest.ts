@@ -81,7 +81,7 @@ describe("ClientNode", () => {
         expect(discovered[0].state.commissioning.discriminator === device.state.commissioning.discriminator);
     });
 
-    it("commissions and initializes endpoints after commissioning and restart", async () => {
+    it.only("commissions and initializes endpoints after commissioning and restart", async () => {
         // *** COMMISSIONING ***
 
         await using site = new MockSite();
@@ -274,7 +274,7 @@ describe("ClientNode", () => {
         await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
     });
 
-    it.only("reconnects and updates connection status", async () => {
+    it("reconnects and updates connection status", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -296,7 +296,7 @@ describe("ClientNode", () => {
 
         // Toggle should now complete
         await MockTime.resolve(ep1.commandsOf(OnOffClient).toggle(undefined, { connectionTimeout: Minutes(5) }));
-    }).timeout(1e9);
+    });
 
     it("resubscribes on timeout", async () => {
         // *** SETUP ***
