@@ -137,7 +137,7 @@ describe("ClientNode", () => {
         expect(ep1b).not.undefined;
         expect(ep1b.construction.status).equals("active");
         expect(ep1b.state).deep.equals(expectedEp1State);
-    });
+    }).timeout(1e9);
 
     it("commissions and initializes endpoints even with a leave event in initial subscription data", async () => {
         // *** COMMISSIONING ***

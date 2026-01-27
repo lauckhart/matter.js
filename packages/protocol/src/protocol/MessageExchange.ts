@@ -644,8 +644,6 @@ export class MessageExchange {
 
         if (options?.timeout !== undefined) {
             timeout = options.timeout;
-        } else if (this.#messagesQueue.size > 0) {
-            timeout = Instant; // If we have messages in the queue, we can return them immediately
         } else if (!options?.abort || options?.expectedProcessingTime !== undefined) {
             timeout = this.channel.calculateMaximumPeerResponseTime(
                 this.session.parameters,

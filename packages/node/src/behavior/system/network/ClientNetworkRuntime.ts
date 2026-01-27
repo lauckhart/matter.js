@@ -82,7 +82,5 @@ export class ClientNetworkRuntime extends NetworkRuntime {
         await this.construction;
 
         this.#observers.close();
-
-        this.owner.act(({ context }) => this.owner.lifecycle.offline.emit(context));
     }
 }
