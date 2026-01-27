@@ -34,8 +34,6 @@ export class MockSite {
     #nodes = new Set<ServerNode>();
     #nextNetworkIndex = 1;
     #storage = {} as Record<string, Storage>;
-    #controllerCount = 0;
-    #deviceCount = 0;
 
     addNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
         type?: T,
@@ -56,7 +54,7 @@ export class MockSite {
         );
 
         const index = (config.index ??= this.#nextNetworkIndex++);
-        const id = (config.id ??= `device${++this.#deviceCount}`);
+        const id = (config.id ??= `device${index}`);
         const env = (config.environment ??= new Environment(id));
         if (!env.has(Crypto)) {
             const crypto = MockCrypto(index);
@@ -93,13 +91,18 @@ export class MockSite {
 
     async addController(options?: MockServerNode.Options<ServerNode.RootEndpoint>) {
         options ??= {};
+        const index = (options.index ??= this.#nextNetworkIndex++);
+        const id = (options.id ??= `device${index}`);
+
         if (options.controller?.adminFabricId === undefined) {
             options.controller ??= {};
             options.controller.adminFabricId = FabricId(1);
         }
+
         return await this.addNode(undefined, {
             online: false,
-            id: `controller${++this.#controllerCount}`,
+            id,
+            index,
             ...options,
             commissioning: { enabled: false, ...options.commissioning },
         });

@@ -351,6 +351,10 @@ export class Peer {
         return this.address.toString();
     }
 
+    get hasSession() {
+        return !!this.sessions.find(session => !session.isClosing && !session.isPeerLost);
+    }
+
     async #save() {
         using _lifetime = this.#lifetime.join("saving");
         this.#isSaving = false;

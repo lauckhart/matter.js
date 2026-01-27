@@ -101,9 +101,6 @@ export class CommissioningClient extends Behavior {
         }
 
         if (this.state.peerAddress !== undefined) {
-            // If restored from the storage, ensure we have the proper logging sugar, else it is "just" an object
-            this.state.peerAddress = PeerAddress(this.state.peerAddress);
-
             // And ensure we are coupled to the Peer instance
             this.#bindPeer(this.state.peerAddress);
         }
@@ -319,21 +316,6 @@ export class CommissioningClient extends Behavior {
         endpoint.lifecycle.initialized.emit(this.state.peerAddress !== undefined);
     }
 
-    #updateAddresses(addr: ProtocolPeerAddress) {
-        const node = this.endpoint as ClientNode;
-        if (!node.env.has(PeerSet)) {
-            return;
-        }
-
-        const peer = node.env.get(PeerSet).for(addr);
-        if (peer) {
-            if (peer.descriptor.operationalAddress) {
-                this.state.addresses = [peer.descriptor.operationalAddress];
-            }
-            this.descriptor = peer.descriptor.discoveryData;
-        }
-    }
-
     #peerAddressChanged(addr?: ProtocolPeerAddress, oldAddr?: ProtocolPeerAddress) {
         const node = this.endpoint as ClientNode;
         if (addr) {
@@ -385,8 +367,6 @@ export class CommissioningClient extends Behavior {
             operationalAddress: this.state.addresses?.filter(a => a.type === "udp")?.[0],
             discoveryData: RemoteDescriptor.fromLongForm(this.state),
         });
-
-        this.#updateAddresses(addr);
 
         peer.interaction = node.interaction as ClientInteraction;
         peer.protocol = node.protocol;

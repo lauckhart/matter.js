@@ -6,7 +6,7 @@
 
 import { InternalError, MatterError, ObserverGroup } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
-import { ExchangeProvider, PeerAddress, PeerSet, SessionManager } from "#protocol";
+import { ExchangeProvider, Peer, PeerAddress, PeerSet, SessionManager } from "#protocol";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
 
@@ -18,9 +18,15 @@ export class OfflineError extends MatterError {}
  */
 export class ClientNetworkRuntime extends NetworkRuntime {
     #observers = new ObserverGroup();
+    #isReady = false;
 
     constructor(owner: ClientNode) {
         super(owner);
+    }
+
+    set isReady(isReady: boolean) {
+        this.#isReady = isReady;
+        this.#syncOnlineStatus();
     }
 
     override get owner() {
@@ -61,26 +67,39 @@ export class ClientNetworkRuntime extends NetworkRuntime {
             this.owner.act(({ context }) => lifecycle.online.emit(context));
         }
 
-        this.#observers.on(peer.sessions.added, () => {
-            if (lifecycle.isOnline) {
-                return;
-            }
+        const syncOnlineStatus = this.#syncOnlineStatus.bind(this);
 
-            this.owner.act(({ context }) => lifecycle.online.emit(context));
-        });
-
-        this.#observers.on(peer.sessions.deleted, () => {
-            if (!lifecycle.isOnline || peer.sessions.size) {
-                return;
-            }
-
-            this.owner.act(({ context }) => lifecycle.offline.emit(context));
-        });
+        this.#observers.on(peer.sessions.added, syncOnlineStatus);
+        this.#observers.on(peer.sessions.deleted, syncOnlineStatus);
     }
 
     protected async stop() {
+        this.isReady = false;
+
         await this.construction;
 
         this.#observers.close();
+    }
+
+    #syncOnlineStatus() {
+        let shouldBeOnline: boolean;
+        if (!this.#isReady) {
+            shouldBeOnline = false;
+        } else {
+            const peer = this.owner.env.maybeGet(Peer);
+            if (peer === undefined) {
+                shouldBeOnline = false;
+            } else {
+                shouldBeOnline = peer.hasSession;
+            }
+        }
+
+        if (this.owner.lifecycle.isOnline === shouldBeOnline) {
+            return;
+        }
+
+        this.owner.act(({ context }) => {
+            this.owner.lifecycle[shouldBeOnline ? "online" : "offline"].emit(context);
+        });
     }
 }

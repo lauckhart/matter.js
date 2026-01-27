@@ -27,7 +27,7 @@ export class NetworkClient extends NetworkBehavior {
             this.state.autoSubscribe = false;
             this.state.defaultSubscription = undefined;
         } else {
-            this.reactTo(this.events.autoSubscribe$Changed, this.#handleAutoSubscribeChanged, { offline: true });
+            this.reactTo(this.events.autoSubscribe$Changed, this.#syncAutoSubscribe, { offline: true });
             this.reactTo(this.events.defaultSubscription$Changed, this.#handleDefaultSubscriptionChange);
         }
     }
@@ -56,19 +56,21 @@ export class NetworkClient extends NetworkBehavior {
             }
         }
 
-        await this.#handleAutoSubscribeChanged();
+        await this.#syncAutoSubscribe();
+
+        this.internal.isReady = true;
     }
 
     async #handleDefaultSubscriptionChange() {
         // Terminate any existing subscription
-        await this.#handleAutoSubscribeChanged(false);
+        await this.#syncAutoSubscribe(false);
 
         if (this.state.autoSubscribe && !this.state.isDisabled) {
-            await this.#handleAutoSubscribeChanged(true);
+            await this.#syncAutoSubscribe(true);
         }
     }
 
-    async #handleAutoSubscribeChanged(desiredState = this.state.autoSubscribe) {
+    async #syncAutoSubscribe(desiredState = this.state.autoSubscribe) {
         if (!this.internal.runtime) {
             return;
         }
@@ -90,12 +92,12 @@ export class NetworkClient extends NetworkBehavior {
             });
 
             // First, read.  This allows us to retrieve attributes that do not support subscription and gives us
-            // physical device information required to optimize subscription parameters
-            for await (const _chunk of this.#node.interaction.read({
-                ...subscribe,
-                eventFilters: undefined,
-                eventRequests: undefined,
-            }));
+            // physical device information required to optimize subscription parameters.
+            //
+            // We also load events here so we are fully synced before reporting as online.
+            //
+            // Must read all chunks for the async iterator to complete.
+            for await (const _chunk of this.#node.interaction.read(subscribe));
 
             // Now subscribe for subsequent updates
             this.internal.activeSubscription = await (this.#node.interaction as ClientNodeInteraction).subscribe({
@@ -192,6 +194,7 @@ export class NetworkClient extends NetworkBehavior {
 export namespace NetworkClient {
     export class Internal extends NetworkBehavior.Internal {
         declare runtime?: ClientNetworkRuntime;
+        isReady?: boolean;
 
         /**
          * The active default subscription.

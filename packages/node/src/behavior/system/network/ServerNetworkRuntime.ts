@@ -15,7 +15,6 @@ import {
     NetworkInterfaceDetailed,
     NoAddressAvailableError,
     ObserverGroup,
-    SharedEnvironmentServices,
     UdpInterface,
 } from "#general";
 import type { ServerNode } from "#node/ServerNode.js";
@@ -61,11 +60,9 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     #ipv6UdpInterface?: UdpInterface;
     #observers = new ObserverGroup(this);
     #groupNetworking?: ServerGroupNetworking;
-    #services: SharedEnvironmentServices;
 
     constructor(owner: ServerNode) {
         super(owner);
-        this.#services = owner.env.asDependent();
     }
 
     override get owner() {
@@ -83,7 +80,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
                 ...this.owner.state.commissioning.mdns,
             };
             const crypto = this.owner.env.get(Crypto);
-            const { server } = this.#services.get(MdnsService);
+            const { server } = this.owner.env.get(MdnsService);
             this.#mdnsAdvertiser = new MdnsAdvertiser(crypto, server, { ...options, port });
         }
         return this.#mdnsAdvertiser;
@@ -265,9 +262,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         const interfaces = env.get(ConnectionlessTransportSet);
         await this.addTransports(interfaces);
 
-        // Initialize MDNS
-        const mdns = await this.#services.load(MdnsService);
-
         const advertiser = env.get(DeviceAdvertiser);
 
         await this.addBroadcasters(advertiser);
@@ -300,7 +294,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         }
 
         // Initialize ScannerSet
-        this.owner.env.get(ScannerSet).add(mdns.client);
+        this.owner.env.get(ScannerSet).add(env.get(MdnsService).client);
 
         await env.load(PeerSet);
 
@@ -341,11 +335,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         {
             using _advertiser = this.construction.join("advertisement");
             await advertisementShutdown;
-        }
-
-        {
-            using _lifetime = this.construction.join("services");
-            await this.#services.close();
         }
 
         {
