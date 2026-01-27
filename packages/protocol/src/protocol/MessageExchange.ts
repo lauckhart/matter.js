@@ -219,6 +219,8 @@ export class MessageExchange {
     readonly #closing = AsyncObservableValue();
     #channel?: MessageChannel;
 
+    #timedAck?: Promise<void>;
+
     // TODO - following are associated with current active transmission and should maybe go in a closure
     #isReading = false;
     #isWriting = false;

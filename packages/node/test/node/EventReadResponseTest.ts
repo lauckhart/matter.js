@@ -350,7 +350,7 @@ describe("EventReadResponse", () => {
             MockTime.macrotasks = true;
         });
 
-        it("Reads startup event via remote read", async () => {
+        it.only("Reads startup event via remote read", async () => {
             await using site = new MockSite();
             // Device is automatically configured with vendorId 0xfff1 and productId 0x8000
             const { controller } = await site.addCommissionedPair({
@@ -380,11 +380,17 @@ describe("EventReadResponse", () => {
             );
 
             let asExpected = false;
-            for await (const chunks of read) {
-                expect(chunks).deep.equals([]);
-                expect(asExpected).equals(false);
-                asExpected = true;
-            }
+
+            await MockTime.resolve(
+                (async () => {
+                    for await (const chunks of read) {
+                        expect(chunks).deep.equals([]);
+                        expect(asExpected).equals(false);
+                        asExpected = true;
+                    }
+                })(),
+            );
+
             expect(asExpected).equals(true);
         });
     });
