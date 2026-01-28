@@ -30,7 +30,9 @@ export class DnssdName extends BasicObservable<[changes: DnssdName.Changes], May
     #changes?: Map<string, { kind: "update" | "delete"; record: DnssdName.Record }>;
     #notified?: Promise<void>;
     #maybeDeleting?: Promise<void>;
-    #kvs?: Map<string, string>;
+    #parameters?: Map<string, string>;
+    #dependencies?: Map<string, DnssdName>;
+    #nullObserver?: () => void;
 
     constructor(
         readonly qname: string,
@@ -58,11 +60,11 @@ export class DnssdName extends BasicObservable<[changes: DnssdName.Changes], May
         return this.#records.values();
     }
 
-    get kvs() {
-        if (this.#kvs === undefined) {
-            this.#kvs = new Map();
+    get parameters() {
+        if (this.#parameters === undefined) {
+            this.#parameters = new Map();
         }
-        return this.#kvs;
+        return this.#parameters;
     }
 
     get isDiscovered() {
@@ -76,9 +78,9 @@ export class DnssdName extends BasicObservable<[changes: DnssdName.Changes], May
             for (const entry of entries) {
                 const pos = entry.indexOf("=");
                 if (pos === -1) {
-                    this.kvs.set(entry, "");
+                    this.parameters.set(entry, "");
                 } else {
-                    this.kvs.set(entry.slice(0, pos), entry.slice(pos + 1));
+                    this.parameters.set(entry.slice(0, pos), entry.slice(pos + 1));
                 }
             }
         }
@@ -102,6 +104,17 @@ export class DnssdName extends BasicObservable<[changes: DnssdName.Changes], May
 
         this.#context.registerForExpiration(recordWithExpire);
 
+        // For PTR records, add a dependency
+        if (record.recordType === DnsRecordType.SRV && !this.#dependencies?.has(key)) {
+            const dependency = this.#context.get((record.value as SrvRecordValue).target);
+
+            // We use the "null observer" to mark the name as observed; we don't actually react to changes because we
+            // want to observe so long as its a dependency
+            dependency.on((this.#nullObserver ??= () => undefined));
+
+            (this.#dependencies ??= new Map()).set(key, dependency);
+        }
+
         this.#notify("update", key, recordWithExpire);
     }
 
@@ -124,6 +137,12 @@ export class DnssdName extends BasicObservable<[changes: DnssdName.Changes], May
 
         this.#records.delete(key);
         this.#recordCount--;
+
+        const dependency = this.#dependencies?.get(key);
+        if (dependency) {
+            this.#dependencies!.delete(key);
+            dependency.off(this.#nullObserver!);
+        }
 
         this.#context.unregisterForExpiration(recordWithExpire);
 
@@ -216,6 +235,12 @@ function keyOf(record: DnsRecord): string | undefined {
                 return `${record.recordType} ${srv.target}:${srv.port}`;
             }
             break;
+
+        case DnsRecordType.TXT:
+            if (Array.isArray(record.value)) {
+                return `${record.recordType} ${record.value.sort().join(" ")}`;
+            }
+            break;
     }
 }
 
@@ -224,6 +249,7 @@ export namespace DnssdName {
         delete(name: DnssdName): void;
         registerForExpiration(record: Record): void;
         unregisterForExpiration(record: Record): void;
+        get(qname: string): DnssdName;
     }
 
     export interface Expiration {

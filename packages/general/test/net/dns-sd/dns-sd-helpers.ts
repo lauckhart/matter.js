@@ -61,13 +61,21 @@ export class MockHost {
         this.#index = index;
     }
 
+    get hostname() {
+        return `${hex.fixed(this.#index, 16)}.local`;
+    }
+
     get mdns() {
         return this.#mdns;
     }
 
+    configureNames(config?: Partial<DnssdNames.Context>) {
+        return (this.#names = new DnssdNames({ socket: this.mdns, entropy: MockCrypto(this.#index), ...config }));
+    }
+
     get names() {
         if (this.#names === undefined) {
-            this.#names = new DnssdNames({ socket: this.mdns, entropy: MockCrypto(this.#index) });
+            this.#names = this.configureNames();
         }
         return this.#names;
     }
@@ -104,7 +112,6 @@ export class MockHost {
      */
     async broadcast(nameOrIndex: number | string = 1, ttl = Hours(1), ips?: string[]) {
         const qname = qnameOf(nameOrIndex);
-        const hostname = `${hex.fixed(this.#index, 16)}.local`;
 
         const answers: DnsRecord[] = [
             {
@@ -116,7 +123,7 @@ export class MockHost {
                     port: 1234,
                     priority: 10,
                     weight: 1,
-                    target: hostname,
+                    target: this.hostname,
                 } satisfies SrvRecordValue,
             },
 
@@ -143,7 +150,7 @@ export class MockHost {
                 const recordType = ips === ipV4 ? DnsRecordType.A : DnsRecordType.AAAA;
                 for (const ip of ips) {
                     answers.push({
-                        name: hostname,
+                        name: this.hostname,
                         recordType,
                         ttl,
                         recordClass: DnsRecordClass.IN,
@@ -176,13 +183,13 @@ export function expectAddresses(addresses?: Iterable<ServerAddressUdp>) {
 }
 
 export function expectKvs(service: IpService) {
-    expect([...service.kvs]).deep.equals([
+    expect([...service.parameters]).deep.equals([
         ["foo", "bar"],
         ["flag", ""],
     ]);
 }
 
-function qnameOf(nameOrIndex: number | string) {
+export function qnameOf(nameOrIndex: number | string) {
     if (typeof nameOrIndex === "number") {
         return `service${hex.byte(nameOrIndex + 0x80)}.${MOCK_SERVICE_DOMAIN}`;
     }

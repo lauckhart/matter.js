@@ -92,7 +92,7 @@ export class MockSite {
     async addController(options?: MockServerNode.Options<ServerNode.RootEndpoint>) {
         options ??= {};
         const index = (options.index ??= this.#nextNetworkIndex++);
-        const id = (options.id ??= `device${index}`);
+        const id = (options.id ??= `controller${index}`);
 
         if (options.controller?.adminFabricId === undefined) {
             options.controller ??= {};

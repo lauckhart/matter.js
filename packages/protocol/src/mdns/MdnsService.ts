@@ -79,7 +79,14 @@ export class MdnsService {
                 socket: this.#construction.assert("MDNS socket", this.#socket),
                 lifetime: this.#construction,
                 entropy: this.#entropy,
-                filter: ({ name }) => !!name.match(/_matter(?:[cd]\._udp|\._tcp)\.local$/i),
+                filter: ({ name }) => {
+                    // TODO - only accepting operational records here; add commissionable when we remove MdnsClient
+                    if (name.toLowerCase().match(/_matter(?:[cd]\._udp|\._tcp)\.local$/i)) {
+                        return true;
+                    }
+
+                    return false;
+                },
             });
         }
         return this.#names;

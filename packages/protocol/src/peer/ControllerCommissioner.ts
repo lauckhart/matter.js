@@ -45,7 +45,7 @@ import { PaseClient } from "#session/pase/PaseClient.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { DiscoveryCapabilitiesBitmap, NodeId, SECURE_CHANNEL_PROTOCOL_ID, TypeFromPartialBitSchema } from "#types";
 import { PeerAddress } from "./PeerAddress.js";
-import { NodeDiscoveryType, PeerSet } from "./PeerSet.js";
+import { PeerSet } from "./PeerSet.js";
 
 const logger = Logger.get("ControllerCommissioner");
 
@@ -497,20 +497,13 @@ export class ControllerCommissioner {
                     return;
                 }
 
-                // Look for the device broadcast over MDNS and do CASE pairing
-                await this.#context.peers.connect(address, {
-                    discoveryOptions: {
-                        discoveryType: NodeDiscoveryType.TimedDiscovery,
-                        timeout: Minutes(4),
-                        discoveryData,
-                    },
-                }); // Wait to find the operational device for the commissioning process
+                const peer = this.#context.peers.for(address);
+                peer.descriptor.discoveryData = discoveryData;
+                await peer.connect({ connectionTimeout: Minutes(4) });
 
-                // And we use a ClientInteraction backed Interaction client to finish the commissioning because
-                const exchangeProvider = await this.#context.peers.exchangeProviderFor(address);
                 return new ClientInteraction({
                     environment: this.#context.environment,
-                    exchangeProvider,
+                    exchangeProvider: peer.exchangeProvider,
                     address,
                 });
             },

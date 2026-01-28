@@ -106,7 +106,7 @@ export class Peer {
             // Update persisted discovery data
             this.#descriptor.discoveryData = {
                 ...this.#descriptor.discoveryData,
-                ...DiscoveryData(this.#service.kvs),
+                ...DiscoveryData(this.#service.parameters),
             };
         });
 
