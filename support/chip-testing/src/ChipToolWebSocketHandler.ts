@@ -40,7 +40,11 @@ import {
     MatterModel,
     ValueModel,
 } from "@matter/model";
-import { CommissionableDeviceIdentifiers, PeerCommunicationError, RetransmissionLimitReachedError } from "@matter/protocol";
+import {
+    CommissionableDeviceIdentifiers,
+    PeerCommunicationError,
+    RetransmissionLimitReachedError,
+} from "@matter/protocol";
 import { NodeNotConnectedError } from "@project-chip/matter.js/device";
 import { WebSocketServer } from "ws";
 import { log } from "./GenericTestApp.js";
@@ -1278,7 +1282,7 @@ export class ChipToolWebSocketHandler {
                 ],
             };
         }
-        if (causedBy(error, PeerCommunicationError, NodeNotConnectedError, RetransmissionLimitReachedError) {
+        if (causedBy(error, PeerCommunicationError, NodeNotConnectedError, RetransmissionLimitReachedError)) {
             // Needed because Chip tests expect a failure and not an automatic reconnection
             await (await this.#commandHandlerFor(commissionerName)).disconnectNode(NodeId(parseNumber(destinationId)));
         }

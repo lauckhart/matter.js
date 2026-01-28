@@ -11,7 +11,6 @@ import {
     AsyncObservableValue,
     Bytes,
     causedBy,
-    ClosedError,
     createPromise,
     CRYPTO_AEAD_MIC_LENGTH_BYTES,
     DataReadQueue,
@@ -23,7 +22,6 @@ import {
     InternalError,
     Lifetime,
     Logger,
-    MatterError,
     MatterFlowError,
     Millis,
     Time,
@@ -50,16 +48,6 @@ import { MRP } from "./MRP.js";
 const logger = Logger.get("MessageExchange");
 
 export type ExchangeLogContext = Record<string, unknown>;
-
-/**
- * Thrown when an operation cannot complete because the exchange is closed.
- */
-export class ExchangeClosedError extends ClosedError {}
-
-/**
- * Thrown when an operation cannot complete because the exchange is already in use.
- */
-export class ExchangeBusyError extends MatterError {}
 
 export interface ExchangeSendOptions {
     /**
@@ -219,11 +207,7 @@ export class MessageExchange {
     readonly #closing = AsyncObservableValue();
     #channel?: MessageChannel;
 
-    #timedAck?: Promise<void>;
-
     // TODO - following are associated with current active transmission and should maybe go in a closure
-    #isReading = false;
-    #isWriting = false;
     #sentMessageToAck?: Message;
     #sentMessageAckSuccess?: (message: Message | undefined) => void;
     #sentMessageAckFailure?: () => void;
@@ -417,31 +401,11 @@ export class MessageExchange {
     }
 
     async send(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
-        if (this.#lifetime.isClosing) {
-            throw new ExchangeClosedError("Cannot send because exchange is closed");
-        }
-
-        await this.#sendWithoutCloseGuard(messageType, payload, options);
-    }
-
-    /**
-     * If a transmission using MRP is active, short-circuits the MRP loop and sends the next packet immediately.
-     */
-    kick() {
-        this.#kick?.();
-    }
-
-    async #sendWithoutCloseGuard(messageType: number, payload: Bytes, options: ExchangeSendOptions = {}) {
-        if (this.#isWriting) {
-            throw new ExchangeBusyError("Cannot send because exchange is busy");
-        }
-
-        this.#isWriting = true;
         this.#sendOptions = options;
         this.#retransmissionCounter = 0;
 
         try {
-            await this.#sendWithoutTransmitGuard(messageType, payload);
+            await this.#send(messageType, payload);
         } catch (e) {
             if (causedBy(e, PeerUnresponsiveError)) {
                 await this.#context.peerLost(this);
@@ -457,11 +421,10 @@ export class MessageExchange {
                     undefined;
             this.#retransmissionCounter = 0;
             this.#kick = undefined;
-            this.#isWriting = false;
         }
     }
 
-    async #sendWithoutTransmitGuard(messageType: number, payload: Bytes) {
+    async #send(messageType: number, payload: Bytes) {
         const {
             expectAckOnly = false,
             disableMrpLogic,
@@ -623,26 +586,18 @@ export class MessageExchange {
     }
 
     async nextMessage(options?: ExchangeReceiveOptions) {
-        if (this.#isReading) {
-            throw new ExchangeBusyError("Cannot receive because exchange is busy");
-        }
-
-        this.#isReading = true;
-
         try {
-            return await this.#readWithoutReceiveGuard(options);
+            return await this.#nextMessage(options);
         } catch (e) {
             if (causedBy(e, PeerUnresponsiveError)) {
                 await this.#context.peerLost(this);
             }
 
             throw e;
-        } finally {
-            this.#isReading = false;
         }
     }
 
-    async #readWithoutReceiveGuard(options?: ExchangeReceiveOptions) {
+    async #nextMessage(options?: ExchangeReceiveOptions) {
         let timeout: Duration | undefined;
 
         if (options?.timeout !== undefined) {
@@ -667,6 +622,13 @@ export class MessageExchange {
         return await this.#messagesQueue.read(localAbort);
     }
 
+    /**
+     * If a transmission using MRP is active, short-circuits the MRP loop and sends the next packet immediately.
+     */
+    kick() {
+        this.#kick?.();
+    }
+
     async #sendStandaloneAckForMessage(message: Message) {
         const {
             packetHeader: { messageId },
@@ -674,7 +636,7 @@ export class MessageExchange {
         } = message;
         if (!requiresAck || !this.session.usesMrp) return;
 
-        await this.#sendWithoutCloseGuard(SecureMessageType.StandaloneAck, new Uint8Array(0), {
+        await this.send(SecureMessageType.StandaloneAck, new Uint8Array(0), {
             includeAcknowledgeMessageId: messageId,
             protocolId: SECURE_CHANNEL_PROTOCOL_ID,
         });
