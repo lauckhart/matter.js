@@ -278,7 +278,8 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         // Install our interaction server
         const interactionServer = new InteractionServer(this.owner, env.get(SessionManager));
         env.set(InteractionServer, interactionServer);
-        env.get(ExchangeManager).addProtocolHandler(interactionServer);
+        const exchanges = env.get(ExchangeManager);
+        exchanges.addProtocolHandler(interactionServer);
 
         // Ensure SecureChannelProtocol is installed
         env.get(SecureChannelProtocol);
@@ -296,7 +297,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         // Initialize ScannerSet
         this.owner.env.get(ScannerSet).add(env.get(MdnsService).client);
 
-        await env.load(PeerSet);
+        (await env.load(PeerSet)).exchanges = exchanges;
 
         // Prevent new connections when aborted
         this.abortSignal.addEventListener("abort", () =>
@@ -354,7 +355,9 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
         {
             using _lifetime = this.construction.join("transports");
-            await env.close(ConnectionlessTransportSet);
+
+            // Close transports but leave the set in place as it is shared and will be reused
+            await env.maybeGet(ConnectionlessTransportSet)?.close();
         }
 
         {

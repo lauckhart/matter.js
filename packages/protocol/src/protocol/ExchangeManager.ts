@@ -10,6 +10,7 @@ import {
     BasicMultiplex,
     Bytes,
     Channel,
+    ChannelType,
     ConnectionlessTransport,
     ConnectionlessTransportSet,
     Diagnostic,
@@ -55,11 +56,11 @@ const MAXIMUM_CONCURRENT_OUTGOING_EXCHANGES_PER_SESSION = 30;
 export interface ExchangeManagerContext {
     lifetime: Lifetime.Owner;
     entropy: Entropy;
-    netInterface: ConnectionlessTransportSet;
+    transports: ConnectionlessTransportSet;
     sessions: SessionManager;
 }
 
-export class ExchangeManager {
+export class ExchangeManager implements ConnectionlessTransport.Provider {
     readonly #lifetime: Lifetime;
     readonly #transports: ConnectionlessTransportSet;
     readonly #sessions: SessionManager;
@@ -75,7 +76,7 @@ export class ExchangeManager {
     constructor(context: ExchangeManagerContext) {
         this.#lifetime = context.lifetime.join("exchanges");
         this.#workers = new BasicMultiplex();
-        this.#transports = context.netInterface;
+        this.#transports = context.transports;
         this.#sessions = context.sessions;
         this.#exchangeCounter = new ExchangeCounter(context.entropy);
 
@@ -93,7 +94,7 @@ export class ExchangeManager {
         const instance = new ExchangeManager({
             lifetime: env,
             entropy: env.get(Entropy),
-            netInterface: env.get(ConnectionlessTransportSet),
+            transports: env.get(ConnectionlessTransportSet),
             sessions: env.get(SessionManager),
         });
         env.set(ExchangeManager, instance);
@@ -113,6 +114,14 @@ export class ExchangeManager {
             throw new ImplementationError(`Handler for protocol ${protocol.id} already registered.`);
         }
         this.#protocols.set(protocol.id, protocol);
+    }
+
+    interfaceFor(type: ChannelType, address?: string): ConnectionlessTransport | undefined {
+        return this.#transports.interfaceFor(type, address);
+    }
+
+    hasInterfaceFor(type: ChannelType, address?: string): boolean {
+        return this.#transports.hasInterfaceFor(type, address);
     }
 
     initiateExchange(address: PeerAddress, protocolId: number) {
