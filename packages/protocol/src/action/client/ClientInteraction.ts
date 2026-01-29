@@ -445,7 +445,7 @@ export class ClientInteraction<
             );
         }
 
-        const subscribe = async (request: ClientSubscribe) => {
+        const subscribe = async (request: ClientSubscribe, abort?: AbortSignal) => {
             await using context = await this.#begin("subscribing", request, session);
             const { checkAbort, messenger } = context;
 
@@ -479,7 +479,7 @@ export class ClientInteraction<
                 peer,
                 closed: () => this.subscriptions.delete(subscription),
                 response,
-                abort: session?.abort,
+                abort,
                 maxPeerResponseTime: this.maximumPeerResponseTime(),
             });
             this.subscriptions.addPeer(subscription);
@@ -510,7 +510,7 @@ export class ClientInteraction<
                 retries: this.#sustainRetries,
             });
         } else {
-            subscription = await subscribe(request);
+            subscription = await subscribe(request, session?.abort);
         }
 
         this.subscriptions.addActive(subscription);

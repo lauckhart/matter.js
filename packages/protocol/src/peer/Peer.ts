@@ -258,7 +258,7 @@ export class Peer {
                 timeout = Millis(timeout - this.timeOffline);
             }
 
-            const localAbort = new Abort({
+            using localAbort = new Abort({
                 abort: [this.#abort, options?.abort],
                 timeout,
 
@@ -288,6 +288,7 @@ export class Peer {
      */
     async disconnect() {
         if (this.#connecting) {
+            using _disconnecting = this.#lifetime.join("disconnecting");
             this.#connecting.abort();
             await this.#connecting.done;
         }
@@ -391,14 +392,18 @@ export class Peer {
             minimumEmitInterval: this.#context.timing.minimumTimeBetweenMrpKicks,
             skipSuppressedEmits: true,
         });
+
         this.#connecting = {
-            abort: new Abort({ abort: this.#abort }),
+            abort,
 
             done: PeerConnection(this, this.#context, {
                 network: options?.network,
                 abort,
                 kicker,
-            }).finally(() => (this.#connecting = undefined)),
+            }).finally(() => {
+                this.#connecting = undefined;
+                abort.close();
+            }),
 
             kick() {
                 kicker.emit();

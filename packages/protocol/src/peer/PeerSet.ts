@@ -462,6 +462,8 @@ export class PeerSet implements ImmutableSet<Peer>, ObservableSet<Peer> {
      * Terminate any active peer networking operations.
      */
     async disconnect() {
+        using _disconnecting = this.#lifetime.join("disconnecting");
+
         await MatterAggregateError.allSettled(
             this.#peers.map(peer => peer.disconnect()),
             "Error disconnecting peers",

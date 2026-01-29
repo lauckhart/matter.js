@@ -9,7 +9,6 @@ import {
     Crypto,
     Entropy,
     Environment,
-    Logger,
     MatterAggregateError,
     MockCrypto,
     Network,
@@ -24,7 +23,7 @@ import { ServerNode } from "#node/ServerNode.js";
 import { FabricId } from "#types";
 import type { MockServerNode } from "./mock-server-node.js";
 
-const logger = Logger.get("MockSite");
+//const logger = Logger.get("MockSite");
 
 /**
  * Manages a mock network with nodes on it.
@@ -139,20 +138,16 @@ export class MockSite {
     }
 
     async close() {
-        try {
-            await MockTime.resolve(
-                MatterAggregateError.allSettled(
-                    [...this.#nodes].map(async node => {
-                        await node.close();
-                    }),
-                ),
+        await MockTime.resolve(
+            MatterAggregateError.allSettled(
+                [...this.#nodes].map(async node => {
+                    await node.close();
+                }),
+            ),
 
-                // Not sure why macrotasks are necessary; something hangs with microtasks but haven't tracked down
-                { macrotasks: true },
-            );
-        } catch (e) {
-            logger.error("Error closing mock site:", e);
-        }
+            // Not sure why macrotasks are necessary; something hangs with microtasks but haven't tracked down
+            { macrotasks: true },
+        );
     }
 
     storageFor(id: string | { id: string }) {

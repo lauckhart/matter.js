@@ -259,7 +259,7 @@ describe("ClientNode", () => {
         expect(ep1Server.state.identify.identifyTime).equals(5);
     });
 
-    it.only("throws error if node cannot be reached", async () => {
+    it("throws error if node cannot be reached", async () => {
         // *** SETUP ***
 
         await using site = new MockSite();
@@ -270,8 +270,10 @@ describe("ClientNode", () => {
 
         // *** INVOCATION ***
 
+        (ep1.env.get(Crypto) as MockCrypto).entropic = true;
+
         await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());
-    }).timeout(1e9);
+    });
 
     it("reconnects and updates connection status", async () => {
         // *** SETUP ***
@@ -283,6 +285,8 @@ describe("ClientNode", () => {
         await MockTime.resolve(device.cancel());
 
         // *** INVOKE ***
+
+        (ep1.env.get(Crypto) as MockCrypto).entropic = true;
 
         // We detected the device as offline, and so we get a failure on execution
         await expectTimeoutError(ep1.commandsOf(OnOffClient).toggle());

@@ -84,7 +84,7 @@ export async function PeerConnection(
 ): Promise<NodeSession | undefined> {
     const via = Diagnostic.via(peer.address.toString());
 
-    const overallAbort = new Abort(options);
+    using overallAbort = new Abort(options);
     using lifetime = (peer.lifetime ?? Lifetime.process).join("connecting");
 
     // Reserve network communication slot
@@ -161,9 +161,12 @@ export async function PeerConnection(
      * Initiate connection attempts as we discover new addresses until aborted.
      */
     async function scheduleAttempts() {
+        using scheduling = lifetime.join("scheduling");
+
         while (true) {
             // Wait for an address if none are available
             if (!pendingAddresses.size) {
+                using _waiting = scheduling.join("waiting for address");
                 await overallAbort.race(pendingAddresses.added);
             }
             if (overallAbort.aborted) {
@@ -175,6 +178,8 @@ export async function PeerConnection(
                 const timeSinceLastAttempt = Timestamp.delta(lastAttemptAt);
                 const delayInterval = Millis(context.timing.delayBeforeNextAddress - timeSinceLastAttempt);
                 if (delayInterval > 0) {
+                    using _delaying = scheduling.join("delaying");
+
                     const changed = await overallAbort.race<ServerAddressUdp | void>(
                         Time.sleep("connection delay", delayInterval),
                         pendingAddresses.added,
@@ -237,19 +242,24 @@ export async function PeerConnection(
      */
     function initiateAttempt(address: ServerAddressUdp) {
         address = addresses.add(address);
-        const addressAbort = new Abort({ abort: overallAbort });
 
         // Skip if we're already attempting connection to this address
         if (attempts.has(address)) {
             return;
         }
 
+        const addressAbort = new Abort({ abort: overallAbort });
+
         lastAttemptAt = Time.nowMs;
 
         const finished = connect(address, addressAbort).finally(() => {
-            if (attempts.get(address)?.finished === finished) {
-                attempts.delete(address);
-                maybeAttemptFallback();
+            try {
+                if (attempts.get(address)?.finished === finished) {
+                    attempts.delete(address);
+                    maybeAttemptFallback();
+                }
+            } finally {
+                addressAbort.close();
             }
         });
 
@@ -277,7 +287,7 @@ export async function PeerConnection(
      * Perform connection to specific address until successful.
      */
     async function connect(address: ServerAddressUdp, addressAbort: Abort) {
-        using connecting = lifetime.join("connecting");
+        using connecting = lifetime.join("attempt");
         connecting.details.address = ServerAddress.urlFor(address);
 
         // If this is not the fallback address but we're still attempting to connect to the fallback, it means that
@@ -289,9 +299,9 @@ export async function PeerConnection(
 
         while (!addressAbort.aborted) {
             try {
-                await attemptOnce(address, addressAbort);
+                await attemptOnce(address, addressAbort, connecting);
             } catch (e) {
-                await handleConnectionError(asError(e), addressAbort);
+                await handleConnectionError(asError(e), addressAbort, connecting);
             }
         }
     }
@@ -299,10 +309,15 @@ export async function PeerConnection(
     /**
      * Make a single attempt to connect to a specific address.
      */
-    async function attemptOnce(address: ServerAddressUdp, addressAbort: Abort) {
-        const socket = await context.openSocket(address, addressAbort);
-        if (socket === undefined) {
-            return;
+    async function attemptOnce(address: ServerAddressUdp, addressAbort: Abort, lifetime: Lifetime) {
+        let socket;
+
+        {
+            using _opening = lifetime.join("opening socket");
+            socket = await context.openSocket(address, addressAbort);
+            if (socket === undefined) {
+                return;
+            }
         }
 
         await using unsecuredSession = context.sessions.createUnsecuredSession({
@@ -320,6 +335,8 @@ export async function PeerConnection(
         let kick: Disposable | undefined;
 
         try {
+            using _pairing = lifetime.join("pairing");
+
             kick = kicker?.use(() => exchange.kick());
 
             const { session } = await caseClient.pair(exchange, fabric, peer.address.nodeId, {
@@ -347,7 +364,9 @@ export async function PeerConnection(
     /**
      * Log error information and pause before next retry.
      */
-    async function handleConnectionError(e: Error, addressAbort: Abort) {
+    async function handleConnectionError(e: Error, addressAbort: Abort, lifetime: Lifetime) {
+        using _handling = lifetime.join("handling error");
+
         let delay: undefined | Duration;
         if (causedBy(e, NetworkError, PeerCommunicationError)) {
             logger.error(

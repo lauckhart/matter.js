@@ -392,11 +392,11 @@ export namespace Abort {
         if ("signal" in signal) {
             signal = signal.signal;
         }
-        if (!signal) {
+        if (!signal || !("throwIfAborted" in signal)) {
             return () => {};
         }
 
-        return (signal as AbortSignal).throwIfAborted.bind(signal);
+        return signal.throwIfAborted.bind(signal);
     }
 }
 
