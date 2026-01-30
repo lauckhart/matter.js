@@ -6,6 +6,7 @@
 
 import {
     AddressInUseError,
+    AddressUnreachableError,
     BindError,
     Bytes,
     ChannelType,
@@ -27,7 +28,6 @@ import {
     UdpChannelOptions,
     UdpSocketType,
 } from "#general";
-import { RetransmissionLimitReachedError } from "#protocol";
 import * as dgram from "node:dgram";
 import { NodeJsNetwork } from "./NodeJsNetwork.js";
 
@@ -262,12 +262,7 @@ export class NodeJsUdpChannel implements UdpChannel {
             } else {
                 const netError =
                     "code" in error && error.code === "EHOSTUNREACH"
-                        ? repackErrorAs(
-                              error,
-                              // TODO - this is a routing error; current error indicates timeout and is defined
-                              //        in higher-level module (MessageExchange)
-                              RetransmissionLimitReachedError,
-                          )
+                        ? repackErrorAs(error, AddressUnreachableError)
                         : repackErrorAs(error, NetworkError);
                 rejecter(netError);
             }
