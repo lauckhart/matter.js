@@ -388,6 +388,10 @@ export class Peer {
         }
 
         const abort = new Abort({ abort: this.#abort });
+
+        // Abort connection if a session is established from any source
+        const added = this.#sessions.added.use(() => abort());
+
         const kicker = new QuietObservable({
             minimumEmitInterval: this.#context.timing.minimumTimeBetweenMrpKicks,
             skipSuppressedEmits: true,
@@ -403,6 +407,7 @@ export class Peer {
             }).finally(() => {
                 this.#connecting = undefined;
                 abort.close();
+                added[Symbol.dispose]();
             }),
 
             kick() {
