@@ -356,7 +356,11 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     commandsOf<T extends Behavior.Type>(type: T) {
         if (!this.behaviors.has(type)) {
-            throw new ImplementationError(`Behavior ${type.id} is not supported by this endpoint`);
+            // Attempt dynamic wiring for remote non-cluster behaviors
+            const initializer = this.env.get(EndpointInitializer);
+            if (!initializer.tryWireRemoteBehavior(this, type)) {
+                throw new ImplementationError(`Behavior ${type.id} is not supported by this endpoint`);
+            }
         }
         return this.commands[type.id] as unknown as Commands.OfBehavior<T>;
     }

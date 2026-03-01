@@ -48,4 +48,14 @@ export abstract class EndpointInitializer {
      * Invoked after behaviors are initialized but before the initialization transaction commits.
      */
     behaviorsInitialized(_agent: Agent): MaybePromise {}
+
+    /**
+     * Attempt to dynamically install a behavior for remote access.
+     *
+     * Returns `true` if the behavior was installed successfully.  The default implementation returns `false`.
+     * Overridden by {@link RemoteEndpointInitializer} to support non-cluster behaviors with schema.
+     */
+    tryWireRemoteBehavior(_endpoint: Endpoint, _type: Behavior.Type): boolean {
+        return false;
+    }
 }

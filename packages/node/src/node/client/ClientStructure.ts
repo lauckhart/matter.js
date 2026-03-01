@@ -171,6 +171,14 @@ export class ClientStructure {
     }
 
     /**
+     * Obtain the store for a remote non-cluster behavior identified by name.
+     */
+    storeForRemoteBehavior(endpoint: Endpoint, behaviorId: string) {
+        const endpointStructure = this.#endpointFor(endpoint.number);
+        return this.#clusterForBehavior(endpointStructure, behaviorId).store;
+    }
+
+    /**
      * Inject version filters into a Read or Subscribe request.
      */
     injectVersionFilters<T extends Read>(request: T): T {
@@ -422,6 +430,30 @@ export class ClientStructure {
         } else {
             await this.eventEmitter(occurrence);
         }
+    }
+
+    /**
+     * Check whether a behavior ID was seen from the server for a given endpoint.
+     */
+    hasBehavior(endpoint: EndpointNumber, behaviorId: string): boolean {
+        const structure = this.#endpoints.get(endpoint);
+        if (!structure) {
+            return false;
+        }
+
+        // Check name-keyed entries (non-cluster behaviors delivered via wire changes)
+        if (structure.clusters.has(behaviorId)) {
+            return true;
+        }
+
+        // Check if any cluster's behavior has a matching ID
+        for (const cluster of structure.clusters.values()) {
+            if (cluster.behavior?.id === behaviorId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -11,5 +11,6 @@ export * from "./Node.js";
 export * from "./NodeLifecycle.js";
 export * from "./NodePhysicalProperties.js";
 export * from "./Plugins.js";
+export * from "./remote/index.js";
 export * from "./server/index.js";
 export * from "./ServerNode.js";
