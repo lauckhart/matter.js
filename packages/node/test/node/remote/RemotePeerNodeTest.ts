@@ -23,7 +23,7 @@ function findLight(node: { parts: Iterable<Endpoint> }) {
 describe("RemotePeerNode", () => {
     before(() => {
         MockTime.init();
-        MockTime.macrotasks = true;
+        MockTime.forceMacrotasks = true;
     });
 
     it("discovers peer through subscription", async () => {
@@ -83,7 +83,7 @@ describe("RemotePeerNode", () => {
                     while (true) {
                         const v = await peerLight.act(agent => (agent.get(onOffType).state as any).onOff);
                         if (v === true) return;
-                        await new Promise<void>(resolve => setTimeout(resolve, 0));
+                        await MockTime.macrotask;
                     }
                 })(),
                 { macrotasks: true },
@@ -114,7 +114,7 @@ describe("RemotePeerNode", () => {
             await MockTime.resolve(
                 (async () => {
                     while (remote.peers.size > 0) {
-                        await new Promise<void>(resolve => setTimeout(resolve, 0));
+                        await MockTime.macrotask;
                     }
                 })(),
                 { macrotasks: true },

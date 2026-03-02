@@ -24,7 +24,7 @@ function serverLight(node: { parts: Iterable<Endpoint> }) {
 describe("RemoteNode", () => {
     before(() => {
         MockTime.init();
-        MockTime.macrotasks = true;
+        MockTime.forceMacrotasks = true;
     });
 
     it("invokes a command on a child endpoint", async () => {
@@ -99,7 +99,7 @@ describe("RemoteNode", () => {
                     while (true) {
                         const val = await clientLight.act(agent => (agent.get(onOffType).state as any).onOff);
                         if (val === true) return;
-                        await new Promise<void>(resolve => setTimeout(resolve, 0));
+                        await MockTime.macrotask;
                     }
                 })(),
                 { macrotasks: true },
