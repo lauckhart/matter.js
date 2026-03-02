@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes } from "#general";
+import { Bytes } from "@matter/general";
 import { OtbrClient } from "../../src/otbr/OtbrClient.js";
 import { OtbrActiveDataset, OtbrPendingDataset, OtbrResponseError } from "../../src/otbr/OtbrTypes.js";
 import { MockOtbrServer } from "./MockOtbrServer.js";

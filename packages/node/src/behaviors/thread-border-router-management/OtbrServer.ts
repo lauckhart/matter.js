@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Abort, Bytes, Logger, MaybePromise, Seconds } from "#general";
-import { OtbrClient } from "#protocol";
+import { Abort, Bytes, Logger, MaybePromise, Seconds } from "@matter/general";
+import { OtbrClient } from "@matter/protocol";
 import { ThreadBorderRouterManagementServer } from "./ThreadBorderRouterManagementServer.js";
 
 const logger = Logger.get("OtbrServer");

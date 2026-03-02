@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes, Duration, Logger, Seconds } from "#general";
+import { Bytes, Duration, Logger, Seconds } from "@matter/general";
 import { OtbrActiveDataset, OtbrError, OtbrNodeState, OtbrPendingDataset, OtbrResponseError } from "./OtbrTypes.js";
 
 const logger = Logger.get("OtbrClient");

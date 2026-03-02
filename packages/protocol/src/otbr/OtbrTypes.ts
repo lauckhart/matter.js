@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "#general";
+import { MatterError } from "@matter/general";
 
 /**
  * Base class for all OTBR-related errors.

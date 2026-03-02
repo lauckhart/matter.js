@@ -5,9 +5,9 @@
  */
 
 import { OtbrServer } from "#behaviors/thread-border-router-management";
-import { Bytes } from "#general";
-import { OtbrActiveDataset, OtbrNodeState, OtbrPendingDataset } from "#protocol";
-import { StatusResponseError } from "#types";
+import { Bytes } from "@matter/general";
+import { OtbrActiveDataset, OtbrNodeState, OtbrPendingDataset } from "@matter/protocol";
+import { StatusResponseError } from "@matter/types";
 import { MockEndpoint } from "../../endpoint/mock-endpoint.js";
 
 /**

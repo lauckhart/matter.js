@@ -5,9 +5,9 @@
  */
 
 import { GeneralCommissioningBehavior } from "#behaviors/general-commissioning";
-import { ThreadBorderRouterManagement } from "#clusters/thread-border-router-management";
-import { Bytes, MaybePromise } from "#general";
-import { StatusCode, StatusResponseError } from "#types";
+import { ThreadBorderRouterManagement } from "@matter/types/clusters/thread-border-router-management";
+import { Bytes, MaybePromise } from "@matter/general";
+import { StatusCode, StatusResponseError } from "@matter/types";
 import { ThreadBorderRouterManagementBehavior } from "./ThreadBorderRouterManagementBehavior.js";
 
 const ThreadBorderRouterManagementBase = ThreadBorderRouterManagementBehavior.with("PanChange");
