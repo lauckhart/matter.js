@@ -93,16 +93,13 @@ export function Command<
     }
 
     function help(domain: Domain) {
-        const namedArgDetails = [
-            ...Object.entries(args ?? {}).map(([k, v]) => {
-                let description = v.description;
-                if (v.default !== undefined) {
-                    description = `${description} (default ${v.default})`;
-                }
-                return [k, description];
-            }),
-            ["--help", "Show this help"],
-        ];
+        const namedArgDetails = Object.entries(args ?? {}).map(([k, v]) => {
+            let description = v.description;
+            if (v.default !== undefined) {
+                description = `${description} (default ${v.default})`;
+            }
+            return [k, description];
+        });
 
         const maxArgWidth = Math.max(...namedArgDetails.map(([arg]) => arg.length));
         const argNameWidth = maxArgWidth + 4;
@@ -162,7 +159,7 @@ export function Command<
             const splitAt = arg.indexOf("=");
             let name: string;
             let param: unknown;
-            if (splitAt) {
+            if (splitAt !== -1) {
                 param = arg.slice(splitAt + 1);
                 arg = arg.slice(0, splitAt);
             }
@@ -202,11 +199,15 @@ export function Command<
             }
 
             const definition = args[arg];
-            if (param === undefined && definition.type !== "boolean") {
-                if (i === argv.length - 1) {
-                    domain.err(`Argument "${arg}" requires a parameter`);
+            if (param === undefined) {
+                if (definition.type === "boolean" || definition.type === undefined) {
+                    param = true;
+                } else {
+                    if (i === argv.length - 1) {
+                        domain.err(`Argument "${arg}" requires a parameter`);
+                    }
+                    param = argv[++i];
                 }
-                param = argv[++i];
             }
 
             inputs[name!] = FieldValue.cast((args[arg].type ?? "boolean") as Metatype, param);
