@@ -10,7 +10,12 @@ import { repl } from "#repl.js";
 import { Environment, LogFormat, MatterError } from "@matter/general";
 import "@matter/nodejs";
 import colors from "ansi-colors";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { stdout } from "node:process";
+import { fileURLToPath } from "node:url";
+import "./commands/index.js";
+import "./providers/index.js";
 
 export async function main(argv: string[]) {
     colors.enabled = stdout.isTTY;
@@ -25,11 +30,13 @@ export async function main(argv: string[]) {
         if (arg.startsWith("-")) {
             if (arg === "--help") {
                 args = ["help"];
+            } else if (arg === "--version" || arg === "-v") {
+                stdout.write(`matter.js ${readVersion()}\n`);
+                return;
             } else {
                 throw new MatterError(`Unknown command line argument ${arg}`);
             }
         } else {
-            // Identified command
             break;
         }
     }
@@ -84,5 +91,27 @@ export async function main(argv: string[]) {
     } catch (e) {
         domain.err(LogFormat.formats.ansi(e), "\n");
         process.exitCode = 1;
+    } finally {
+        // Force clean exit — one-shot commands shouldn't leave lingering event loops
+        process.exit(process.exitCode ?? 0);
     }
+}
+
+function readVersion(): string {
+    let path = dirname(fileURLToPath(import.meta.url));
+    while (dirname(path) !== path) {
+        try {
+            const pkg = readFileSync(join(path, "package.json"), "utf-8");
+            const parsed = JSON.parse(pkg);
+            if (typeof parsed.version === "string") {
+                return parsed.version;
+            }
+        } catch (e) {
+            if ((e as NodeJS.ErrnoException).code !== "ENOENT") {
+                throw e;
+            }
+        }
+        path = dirname(path);
+    }
+    return "unknown";
 }

@@ -19,7 +19,6 @@ import {
     Observable,
     SafePromise,
 } from "@matter/general";
-import { ServerNode } from "@matter/node";
 import colors from "ansi-colors";
 import { inspect } from "node:util";
 import { createContext, runInContext, RunningCodeOptions } from "node:vm";
@@ -103,10 +102,6 @@ export async function Domain(context: DomainContext): Promise<Domain> {
     });
 
     globals.global = globals.globalThis = globals;
-
-    const defaultNode = new ServerNode();
-    await defaultNode.construction;
-    globals[defaultNode.id] = defaultNode;
 
     const domain: Domain = {
         isDomain: true,
@@ -259,7 +254,7 @@ export async function Domain(context: DomainContext): Promise<Domain> {
     domain.globalsLoaded = loadGlobals(domain);
 
     if (!domain.env.vars.has("home")) {
-        domain.env.vars.set("home", `/${defaultNode.id}`);
+        domain.env.vars.set("home", "/");
     }
 
     const vmContext = createContext(
@@ -332,7 +327,7 @@ export async function Domain(context: DomainContext): Promise<Domain> {
         ),
     );
 
-    const cwd = domain.env.vars.string("cwd") ?? `/${defaultNode.id}`;
+    const cwd = domain.env.vars.string("cwd") ?? "/";
     try {
         domain.location = await domain.location.at(cwd);
     } catch (e) {
