@@ -34,12 +34,19 @@ Command({
         for (const id of nodeIds) {
             const paddedId = id.padEnd(maxIdLen);
             const url = registry.get(id, "url");
+            const pid = await registry.readPid(id);
             const node = this.globals[id];
 
             let statusStr: string;
             let urlStr: string;
 
-            if (node instanceof LazyNode) {
+            if (pid !== undefined && registry.isAlive(pid)) {
+                statusStr = colors.green(`running (pid ${pid})`);
+            } else if (pid !== undefined) {
+                // Stale PID file — clean it up
+                await registry.removePid(id);
+                statusStr = colors.dim("stopped");
+            } else if (node instanceof LazyNode) {
                 switch (node.status) {
                     case "connected":
                         statusStr = colors.green("connected");
@@ -57,7 +64,7 @@ Command({
             } else if (node !== undefined) {
                 statusStr = colors.green("connected");
             } else {
-                statusStr = colors.dim("unknown");
+                statusStr = colors.dim("idle");
             }
 
             if (url) {

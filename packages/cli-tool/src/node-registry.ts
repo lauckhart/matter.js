@@ -5,8 +5,10 @@
  */
 
 import { StorageService, VariableService } from "@matter/general";
-import { readdir } from "node:fs/promises";
+import { readdir, readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
+
+const PID_FILE = "matter.pid";
 
 /**
  * Manages discovery and registration of Matter nodes under the storage root (typically `~/.matter/`).
@@ -74,9 +76,65 @@ export class NodeRegistry {
     }
 
     /**
+     * Persist a configuration value for a node.
+     */
+    async set(nodeId: string, key: string, value: string) {
+        await this.#vars.persist(`nodes.${nodeId}.${key}`, value);
+    }
+
+    /**
      * Register a remote node by persisting its URL to config.
      */
     async register(nodeId: string, url: string) {
         await this.#vars.persist(`nodes.${nodeId}.url`, url);
     }
+
+    /**
+     * Read the PID of a running node process, if recorded.
+     */
+    async readPid(nodeId: string): Promise<number | undefined> {
+        const pidPath = join(this.#storageRoot, nodeId, PID_FILE);
+        try {
+            const data = await readFile(pidPath, "utf-8");
+            const pid = parseInt(data.trim(), 10);
+            return isNaN(pid) ? undefined : pid;
+        } catch (e) {
+            if ((e as NodeJS.ErrnoException).code === "ENOENT") {
+                return undefined;
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Remove the PID file for a node.
+     */
+    async removePid(nodeId: string) {
+        const pidPath = join(this.#storageRoot, nodeId, PID_FILE);
+        try {
+            await unlink(pidPath);
+        } catch (e) {
+            if ((e as NodeJS.ErrnoException).code === "ENOENT") {
+                return;
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Check whether a process is still alive.
+     */
+    isAlive(pid: number): boolean {
+        try {
+            process.kill(pid, 0);
+            return true;
+        } catch (e) {
+            // EPERM means the process exists but we lack permission to signal it
+            if ((e as NodeJS.ErrnoException).code === "EPERM") {
+                return true;
+            }
+            return false;
+        }
+    }
+
 }
