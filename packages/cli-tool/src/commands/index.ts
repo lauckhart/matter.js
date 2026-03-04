@@ -12,5 +12,7 @@ import "./exit.js";
 import "./help.js";
 import "./ls.js";
 import "./pwd.js";
+import "./register.js";
 import "./rm.js";
 import "./set.js";
+import "./status.js";

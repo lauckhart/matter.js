@@ -9,6 +9,7 @@ import { CommandInput } from "#parser.js";
 import { repl } from "#repl.js";
 import { Environment, LogFormat, MatterError } from "@matter/general";
 import "@matter/nodejs";
+import "@matter/nodejs-ws";
 import colors from "ansi-colors";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";

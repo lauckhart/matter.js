@@ -6,7 +6,9 @@
 
 import { BadCommandError, IncompleteError, NotACommandError, NotADirectoryError, NotFoundError } from "#errors.js";
 import { bin, globals as defaultGlobals } from "#globals.js";
+import { populateNodes } from "#lazy-node.js";
 import { Location, undefinedValue } from "#location.js";
+import { NodeRegistry } from "#node-registry.js";
 import { Input, parseInput } from "#parser.js";
 import { Directory } from "#stat.js";
 import {
@@ -18,6 +20,8 @@ import {
     MaybePromise,
     Observable,
     SafePromise,
+    StorageService,
+    VariableService,
 } from "@matter/general";
 import colors from "ansi-colors";
 import { inspect } from "node:util";
@@ -252,6 +256,17 @@ export async function Domain(context: DomainContext): Promise<Domain> {
     };
 
     domain.globalsLoaded = loadGlobals(domain);
+
+    // Discover and populate nodes from storage root
+    try {
+        const storage = domain.env.get(StorageService);
+        const vars = domain.env.get(VariableService);
+        const registry = new NodeRegistry(storage, vars);
+        domain.env.set(NodeRegistry, registry);
+        await populateNodes(globals, registry, domain.env);
+    } catch {
+        // Storage not configured or discovery failed — continue without nodes
+    }
 
     if (!domain.env.vars.has("home")) {
         domain.env.vars.set("home", "/");
