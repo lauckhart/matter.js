@@ -5,8 +5,9 @@
  */
 
 import { StorageService, VariableService } from "@matter/general";
+import { existsSync, watch } from "node:fs";
 import { readdir, readFile, unlink } from "node:fs/promises";
-import { join } from "node:path";
+import { basename, dirname, join } from "node:path";
 
 const PID_FILE = "matter.pid";
 
@@ -65,7 +66,7 @@ export class NodeRegistry {
             return url;
         }
         const socketPath = join(this.#storageRoot, nodeId, "remote.sock");
-        return `ws+unix://${encodeURIComponent(socketPath)}/`;
+        return `ws+unix://${socketPath}:/`;
     }
 
     /**
@@ -83,10 +84,70 @@ export class NodeRegistry {
     }
 
     /**
-     * Register a remote node by persisting its URL to config.
+     * Register a node by persisting its type and optional config values.
      */
-    async register(nodeId: string, url: string) {
-        await this.#vars.persist(`nodes.${nodeId}.url`, url);
+    async register(nodeId: string, type: string, config?: Record<string, VariableService.Value>) {
+        await this.set(nodeId, "type", type);
+        if (config) {
+            for (const [key, value] of Object.entries(config)) {
+                if (key !== "id") {
+                    await this.#vars.persist(`nodes.${nodeId}.${key}`, value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Build the standard management config for a CLI-managed node.
+     *
+     * Uses canonical schema paths so values flow through {@link EndpointVariableService} automatically.
+     */
+    managementConfig(nodeId: string): Record<string, VariableService.Value> {
+        return {
+            plugins: [
+                "@matter/node/behaviors/system/websocket",
+                "@matter/node/behaviors/system/lifecycle",
+                "@matter/node/behaviors/system/logs",
+            ].join(","),
+            "logs.path": join(this.#storageRoot, nodeId, "matter.log"),
+            "network.port": 0,
+        };
+    }
+
+    /**
+     * Generate a unique node name from a base, checking against all known node IDs.
+     *
+     * If {@link overrideName} is provided, returns it directly.  Otherwise tries the base name, then appends numeric
+     * suffixes ("controller2", "controller3", ...) until a unique name is found.
+     */
+    async autoName(base: string, overrideName?: string): Promise<string> {
+        if (overrideName) {
+            return overrideName;
+        }
+        const existing = new Set(await this.allNodeIds());
+        if (!existing.has(base)) {
+            return base;
+        }
+        for (let i = 2; ; i++) {
+            const candidate = `${base}${i}`;
+            if (!existing.has(candidate)) {
+                return candidate;
+            }
+        }
+    }
+
+    /**
+     * All known node IDs: discovered storage directories plus nodes with config entries.
+     */
+    async allNodeIds(): Promise<string[]> {
+        const ids = new Set(await this.discover());
+        const nodesMap = this.#vars.get<VariableService.Map>("nodes");
+        if (nodesMap && typeof nodesMap === "object" && !Array.isArray(nodesMap)) {
+            for (const key of Object.keys(nodesMap)) {
+                ids.add(key);
+            }
+        }
+        return [...ids];
     }
 
     /**
@@ -122,6 +183,140 @@ export class NodeRegistry {
     }
 
     /**
+     * Build a `MATTER_NODES_<ID>_*` environment variable map from the node's stored config.
+     *
+     * This allows a forked child process to inherit all registered config values via the standard
+     * {@link VariableService} parsing.
+     */
+    envForNode(nodeId: string): Record<string, string> {
+        const nodeConfig = this.#vars.get<VariableService.Map>(`nodes.${nodeId}`);
+        if (!nodeConfig || typeof nodeConfig !== "object" || Array.isArray(nodeConfig)) {
+            return {};
+        }
+
+        const env: Record<string, string> = {};
+        const prefix = `MATTER_NODES_${nodeId.toUpperCase()}`;
+
+        const flatten = (obj: VariableService.Map, keyPrefix: string) => {
+            for (const [key, value] of Object.entries(obj)) {
+                const envKey = `${keyPrefix}_${key.toUpperCase()}`;
+                if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+                    flatten(value as VariableService.Map, envKey);
+                } else if (value !== undefined && value !== null) {
+                    env[envKey] = String(value);
+                }
+            }
+        };
+
+        flatten(nodeConfig, prefix);
+        return env;
+    }
+
+    /**
+     * Watch for the PID file to appear or disappear.
+     *
+     * Uses `fs.watch()` for OS-level filesystem events rather than polling.  Returns true if the condition was met,
+     * false on timeout.
+     *
+     * @param nodeId - The node whose PID file to watch
+     * @param expect - "appear" to wait for the file to be created, "disappear" to wait for the process to exit
+     * @param timeoutMs - Maximum time to wait
+     */
+    watchPidFile(nodeId: string, expect: "appear" | "disappear", timeoutMs: number): Promise<boolean> {
+        const dir = join(this.#storageRoot, nodeId);
+
+        return new Promise<boolean>(resolve => {
+            const watcher = watch(dir, (_, filename) => {
+                if (filename !== PID_FILE) {
+                    return;
+                }
+
+                if (expect === "appear") {
+                    void this.readPid(nodeId).then(pid => {
+                        if (pid !== undefined && this.isAlive(pid)) {
+                            cleanup(true);
+                        }
+                    });
+                } else {
+                    void this.readPid(nodeId).then(pid => {
+                        if (pid === undefined || !this.isAlive(pid)) {
+                            cleanup(true);
+                        }
+                    });
+                }
+            });
+
+            const timer = setTimeout(() => cleanup(false), timeoutMs);
+
+            let settled = false;
+            const cleanup = (result: boolean) => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                clearTimeout(timer);
+                watcher.close();
+                resolve(result);
+            };
+
+            // Check immediately in case the condition is already met
+            void this.readPid(nodeId).then(pid => {
+                if (expect === "appear") {
+                    if (pid !== undefined && this.isAlive(pid)) {
+                        cleanup(true);
+                    }
+                } else {
+                    if (pid === undefined || !this.isAlive(pid)) {
+                        cleanup(true);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Watch for a file to appear or disappear.
+     *
+     * Uses `fs.watch()` for OS-level filesystem events.  Returns true if the condition was met, false on timeout.
+     */
+    watchFile(filePath: string, expect: "appear" | "disappear", timeoutMs: number): Promise<boolean> {
+        const dir = dirname(filePath);
+        const target = basename(filePath);
+
+        return new Promise<boolean>(resolve => {
+            const watcher = watch(dir, (_, filename) => {
+                if (filename !== target) {
+                    return;
+                }
+                check();
+            });
+
+            const timer = setTimeout(() => cleanup(false), timeoutMs);
+
+            let settled = false;
+            const cleanup = (result: boolean) => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                clearTimeout(timer);
+                watcher.close();
+                resolve(result);
+            };
+
+            const check = () => {
+                const exists = existsSync(filePath);
+                if (expect === "appear" ? exists : !exists) {
+                    cleanup(true);
+                }
+            };
+
+            // Check immediately in case the condition is already met
+            check();
+        });
+    }
+
+    /**
      * Check whether a process is still alive.
      */
     isAlive(pid: number): boolean {
@@ -136,5 +331,4 @@ export class NodeRegistry {
             return false;
         }
     }
-
 }

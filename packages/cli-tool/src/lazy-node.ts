@@ -168,7 +168,7 @@ export async function populateNodes(
     registry: NodeRegistry,
     environment: Environment,
 ) {
-    const nodeIds = await registry.discover();
+    const nodeIds = await registry.allNodeIds();
 
     for (const id of nodeIds) {
         if (id in globals) {

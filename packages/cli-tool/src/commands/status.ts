@@ -22,7 +22,7 @@ Command({
             return;
         }
 
-        const nodeIds = await registry.discover();
+        const nodeIds = await registry.allNodeIds();
 
         if (!nodeIds.length) {
             this.out("No nodes found\n");
@@ -67,13 +67,16 @@ Command({
                 statusStr = colors.dim("idle");
             }
 
+            const type = registry.get(id, "type") ?? "local";
+            const typeStr = colors.cyan(`[${type}]`);
+
             if (url) {
                 urlStr = colors.dim(` (${url})`);
             } else {
-                urlStr = colors.dim(" (local)");
+                urlStr = "";
             }
 
-            this.out(`  ${colors.bold(paddedId)}  ${statusStr}${urlStr}\n`);
+            this.out(`  ${colors.bold(paddedId)}  ${statusStr} ${typeStr}${urlStr}\n`);
         }
     },
 });
