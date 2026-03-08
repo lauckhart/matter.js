@@ -6,10 +6,10 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { RootSupervisor } from "#behavior/supervision/RootSupervisor.js";
-import { InternalError } from "@matter/general";
+import { camelize, InternalError } from "@matter/general";
 import { ClusterModel, CommandModel } from "@matter/model";
-import { StatusResponse } from "@matter/types";
 import { ApiResource } from "../ApiResource.js";
+import { Envelope } from "../Envelope.js";
 import { CommandResource } from "./CommandResource.js";
 import { PropertyResource } from "./PropertyResource.js";
 
@@ -37,8 +37,10 @@ export class BehaviorResource extends PropertyResource {
         return this.#behavior.state;
     }
 
-    override write() {
-        throw new StatusResponse.UnsupportedWriteError(`Only patch supported for this path`);
+    override write(request: Envelope.Data) {
+        const requestEnv = new Envelope({ supervisor: this.supervisor, ...request });
+        requestEnv.validate();
+        Object.assign(this.#behavior.state, requestEnv.js as Record<string, unknown>);
     }
 
     override async childFor(id: string) {
@@ -51,6 +53,11 @@ export class BehaviorResource extends PropertyResource {
         // For direct children, commands take precedence should there be a name collision
         if (this.schema instanceof ClusterModel) {
             const command = this.schema.conformant.commands.for(id, CommandModel);
+            if (command) {
+                return new CommandResource(this, this.#behavior, command);
+            }
+        } else {
+            const command = this.schema.get(CommandModel, camelize(id));
             if (command) {
                 return new CommandResource(this, this.#behavior, command);
             }

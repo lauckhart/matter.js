@@ -10,6 +10,7 @@ export * from "./dcl/index.js";
 export * from "./events/index.js";
 export * from "./http/index.js";
 export * from "./index/index.js";
+export * from "./lifecycle/index.js";
 export * from "./mqtt/index.js";
 export * from "./network/index.js";
 export * from "./parts/index.js";
