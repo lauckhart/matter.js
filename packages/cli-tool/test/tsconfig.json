@@ -1,11 +1,17 @@
 {
-    "extends": "../../tools/tsc/tsconfig.lib.json",
+    "extends": "../../tools/tsc/tsconfig.test.json",
     "compilerOptions": {
-        "allowJs": true,
+        "rootDir": "..",
         "types": [
-            "node"
+            "node",
+            "mocha",
+            "@matter/testing"
         ]
     },
+    "include": [
+        "./**/*.ts",
+        "../src/**/*.ts"
+    ],
     "references": [
         {
             "path": "../../general/src"
@@ -33,6 +39,9 @@
         },
         {
             "path": "../../types/src"
+        },
+        {
+            "path": "../src"
         }
     ]
 }

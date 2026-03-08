@@ -25,6 +25,7 @@
         "clean": "matter-build clean",
         "build": "matter-build",
         "build-clean": "matter-build --clean",
+        "test": "matter-test -w",
         "matter": "matter-run bin/matter.js"
     },
     "bin": {
