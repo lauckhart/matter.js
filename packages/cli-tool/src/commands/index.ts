@@ -10,6 +10,7 @@ import "./clear.js";
 import "./diff-spec.js";
 import "./exit.js";
 import "./help.js";
+import "./logs.js";
 import "./ls.js";
 import "./pwd.js";
 import "./register.js";
