@@ -51,7 +51,9 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         void parentEnvironment.root.runtime;
 
         if (config.id === undefined) {
-            config.id = `node${parentEnvironment.vars.increment("node.nextFallbackId")}`;
+            config.id =
+                parentEnvironment.vars.string("node.id") ??
+                `node${parentEnvironment.vars.increment("node.nextFallbackId")}`;
         }
 
         super(config);

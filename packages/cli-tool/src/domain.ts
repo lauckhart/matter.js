@@ -6,11 +6,12 @@
 
 import { BadCommandError, IncompleteError, NotACommandError, NotADirectoryError, NotFoundError } from "#errors.js";
 import { bin, globals as defaultGlobals } from "#globals.js";
-import { populateNodes } from "#lazy-node.js";
+import { LazyNode, populateNodes } from "#lazy-node.js";
 import { Location, undefinedValue } from "#location.js";
 import { NodeRegistry } from "#node-registry.js";
 import { Input, parseInput } from "#parser.js";
 import { Directory } from "#stat.js";
+import { Node, RemoteNode } from "@matter/node";
 import {
     CancelablePromise,
     Diagnostic,
@@ -71,6 +72,13 @@ export interface Domain extends DomainContext {
     interrupted: Observable<[], false | void>;
     globals: Record<string, unknown>;
     globalsLoaded: Promise<void>;
+
+    /**
+     * Obtain a node by ID.
+     *
+     * Handles {@link LazyNode} (triggers connection), {@link RemoteNode}, and local {@link Node} instances.
+     */
+    node(nodeId: string): Promise<Node>;
 }
 
 /**
@@ -253,6 +261,17 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
         globals,
         globalsLoaded: undefined as unknown as Promise<void>,
+
+        async node(nodeId: string) {
+            const entry = globals[nodeId];
+            if (entry instanceof Node) {
+                return entry;
+            }
+            if (entry instanceof LazyNode) {
+                return await entry.connect();
+            }
+            throw new NotFoundError(nodeId);
+        },
     };
 
     domain.globalsLoaded = loadGlobals(domain);
