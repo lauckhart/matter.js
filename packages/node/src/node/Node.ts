@@ -102,8 +102,10 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
 
     /**
      * Bring the node online.
+     *
+     * @param abort - if provided, aborts the startup attempt when the signal fires
      */
-    async start() {
+    async start(abort?: AbortSignal) {
         if (this.lifecycle.isOnline || this.#startInProgress) {
             return;
         }
@@ -112,7 +114,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         try {
             this.lifecycle.targetState = "online";
 
-            await this.lifecycle.mutex.produce(this.startWithMutex.bind(this));
+            await this.lifecycle.mutex.produce(() => this.startWithMutex(abort));
         } catch (error) {
             this.lifecycle.targetState = "offline";
             throw error;
@@ -121,7 +123,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         }
     }
 
-    protected async startWithMutex() {
+    protected async startWithMutex(abort?: AbortSignal) {
         this.env.runtime.add(this);
 
         try {
@@ -133,7 +135,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
 
             this.statusUpdate("going online");
 
-            this.#runtime = this.createRuntime();
+            this.#runtime = this.createRuntime(abort);
             this.#runtime.construction.start();
             this.#environment.set(NetworkRuntime, this.#runtime);
             await this.#runtime.construction.ready;
@@ -248,7 +250,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
     /**
      * Create the network runtime.
      */
-    protected abstract createRuntime(): NetworkRuntime;
+    protected abstract createRuntime(abort?: AbortSignal): NetworkRuntime;
 
     /**
      * An {@link Interactable} that allows for execution of Matter interactions against this node.

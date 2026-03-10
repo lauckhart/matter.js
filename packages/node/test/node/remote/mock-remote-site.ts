@@ -49,7 +49,7 @@ export async function connectRemote(factory: MockHttpEndpointFactory, serverNode
     wsClient.connect = async () => factory.connect();
     Environment.default.set(WebSocketClient, wsClient);
 
-    return await RemoteNode.create({
+    return await RemoteNode.connect({
         id: serverNodeId,
         url: MockHttpEndpointFactory.WS_URL,
     });

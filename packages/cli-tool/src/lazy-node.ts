@@ -65,7 +65,7 @@ export class LazyNode {
     async #doConnect(): Promise<RemoteNode> {
         const url = this.#registry.resolveUrl(this.id);
 
-        return await RemoteNode.create({
+        return await RemoteNode.connect({
             url,
             id: this.id,
             environment: new Environment(this.id, this.#environment),

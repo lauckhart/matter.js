@@ -28,11 +28,13 @@ const logger = Logger.get("RemoteNetworkRuntime");
  */
 export class RemoteNetworkRuntime extends NetworkRuntime {
     #isRemoteNode: boolean;
+    #startupAbort?: AbortSignal;
 
-    constructor(owner: Node) {
+    constructor(owner: Node, startupAbort?: AbortSignal) {
         super(owner);
         // RemoteNode has a connection; RemotePeerNode does not
         this.#isRemoteNode = "connection" in owner;
+        this.#startupAbort = startupAbort;
     }
 
     protected override async start() {
@@ -46,7 +48,7 @@ export class RemoteNetworkRuntime extends NetworkRuntime {
         const connection = serverRemote.connection;
 
         // Open the WebSocket connection
-        await connection.open();
+        await connection.open(this.#startupAbort);
 
         // Subscribe to changes
         const subscriptionId = await this.#subscribe(serverRemote, connection);

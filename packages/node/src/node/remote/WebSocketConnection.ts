@@ -37,9 +37,26 @@ export class WebSocketConnection {
 
     /**
      * Open the WebSocket connection and start the read loop.
+     *
+     * If an abort signal is provided, the connection attempt is cancelled when the signal fires.
      */
-    async open() {
-        this.#ws = await this.#env.get(WebSocketClient).connect(this.#url);
+    async open(abort?: AbortSignal) {
+        if (abort?.aborted) {
+            throw new Error("Connection aborted");
+        }
+
+        const connectPromise = this.#env.get(WebSocketClient).connect(this.#url);
+
+        if (abort) {
+            const abortPromise = new Promise<never>((_, reject) => {
+                abort.addEventListener("abort", () => reject(new Error("Connection aborted")), { once: true });
+            });
+
+            this.#ws = await Promise.race([connectPromise, abortPromise]);
+        } else {
+            this.#ws = await connectPromise;
+        }
+
         this.#readLoop = this.#runReadLoop();
     }
 

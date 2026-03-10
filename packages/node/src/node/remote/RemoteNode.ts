@@ -15,7 +15,7 @@ import { ClientStructureEvents } from "#node/client/ClientStructureEvents.js";
 import { ChangeNotificationService } from "#node/integration/ChangeNotificationService.js";
 import { ProtocolService } from "#node/integration/ProtocolService.js";
 import { IdentityService } from "#node/server/IdentityService.js";
-import { asyncNew, Construction, Identity, Observable } from "@matter/general";
+import { Abort, asyncNew, Construction, Identity, Observable, Seconds } from "@matter/general";
 import { Interactable } from "@matter/protocol";
 import { RemoteEndpointInitializer } from "./RemoteEndpointInitializer.js";
 import { RemoteNetworkRuntime } from "./RemoteNetworkRuntime.js";
@@ -76,11 +76,15 @@ export class RemoteNode extends Node<RemoteNode.RootEndpoint> {
     }
 
     /**
-     * Create and start a RemoteNode.
+     * Connect to a remote ServerNode.
+     *
+     * If no abort signal is provided, a default 10s timeout is used.
      */
-    static async create(options: RemoteNode.Options): Promise<RemoteNode> {
+    static async connect(options: RemoteNode.Options): Promise<RemoteNode> {
+        using abort = Abort.subtask(options.abort, options.abort ? undefined : Seconds(10));
+
         const remote = await asyncNew(RemoteNode, options);
-        await remote.start();
+        await remote.start(abort.signal);
         return remote;
     }
 
@@ -107,8 +111,8 @@ export class RemoteNode extends Node<RemoteNode.RootEndpoint> {
 
     protected override assertConstructable() {}
 
-    protected createRuntime(): NetworkRuntime {
-        return new RemoteNetworkRuntime(this);
+    protected createRuntime(startupAbort?: AbortSignal): NetworkRuntime {
+        return new RemoteNetworkRuntime(this, startupAbort);
     }
 
     get interaction(): Interactable<ActionContext> {
@@ -141,6 +145,11 @@ export namespace RemoteNode {
          * Optional environment.
          */
         environment?: import("@matter/general").Environment;
+
+        /**
+         * Optional abort signal.  If not provided, a default 10s timeout is used.
+         */
+        abort?: AbortSignal;
     }
 
     export const RootEndpoint = MutableEndpoint({
