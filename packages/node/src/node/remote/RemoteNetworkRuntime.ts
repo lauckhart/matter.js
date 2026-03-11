@@ -50,23 +50,31 @@ export class RemoteNetworkRuntime extends NetworkRuntime {
         // Open the WebSocket connection
         await connection.open(this.#startupAbort);
 
-        // Subscribe to changes
-        const subscriptionId = await this.#subscribe(serverRemote, connection);
+        const subscribeOptions = serverRemote.subscribeOptions;
 
-        // Set up abort handler to clean up subscription
-        const signal = this.abortSignal;
-        if (signal) {
-            signal.addEventListener("abort", () => {
-                if (subscriptionId) {
-                    connection.unsubscribe(subscriptionId);
-                }
-            });
+        if (subscribeOptions !== false) {
+            // Subscribe to changes
+            const subscriptionId = await this.#subscribe(serverRemote, connection, subscribeOptions);
+
+            // Set up abort handler to clean up subscription
+            const signal = this.abortSignal;
+            if (signal) {
+                signal.addEventListener("abort", () => {
+                    if (subscriptionId) {
+                        connection.unsubscribe(subscriptionId);
+                    }
+                });
+            }
         }
 
         this.owner.lifecycle.online.emit(await this.owner.act(agent => agent.context));
     }
 
-    async #subscribe(serverRemote: RemoteNode, connection: WebSocketConnection): Promise<string | undefined> {
+    async #subscribe(
+        serverRemote: RemoteNode,
+        connection: WebSocketConnection,
+        subscribeOptions?: RemoteNode.SubscribeOptions,
+    ): Promise<string | undefined> {
         const structure = serverRemote.structure;
         const peers = serverRemote.peers;
 
@@ -76,6 +84,7 @@ export class RemoteNetworkRuntime extends NetworkRuntime {
             {
                 method: "subscribe",
                 target: "changes",
+                ...subscribeOptions,
             },
             (response: RemoteResponse) => {
                 this.#handleChange(response, serverRemote.id, structure, peers);

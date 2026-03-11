@@ -35,6 +35,8 @@ export class RemoteNode extends Node<RemoteNode.RootEndpoint> {
     #peers: RemotePeers;
     #initializer?: RemoteEndpointInitializer;
 
+    #subscribeOptions: false | RemoteNode.SubscribeOptions | undefined;
+
     constructor(options: RemoteNode.Options) {
         const config = {
             id: options.id ?? "remote",
@@ -45,6 +47,7 @@ export class RemoteNode extends Node<RemoteNode.RootEndpoint> {
 
         super(config);
 
+        this.#subscribeOptions = options.subscribe;
         this.#connection = new WebSocketConnection(options.url, this.env);
         this.#storeFactory = RemoteStoreFactory(this.#connection);
         this.#peers = new RemotePeers(this, this.#storeFactory);
@@ -109,6 +112,17 @@ export class RemoteNode extends Node<RemoteNode.RootEndpoint> {
         return this.#initializer!.structure;
     }
 
+    /**
+     * Controls the state subscription.
+     *
+     * - `undefined` (default): Subscribe and sync all state
+     * - `false`: No subscription — connect without syncing state
+     * - Object with filter fields: Subscribe with filters
+     */
+    get subscribeOptions() {
+        return this.#subscribeOptions;
+    }
+
     protected override assertConstructable() {}
 
     protected createRuntime(startupAbort?: AbortSignal): NetworkRuntime {
@@ -150,6 +164,20 @@ export namespace RemoteNode {
          * Optional abort signal.  If not provided, a default 10s timeout is used.
          */
         abort?: AbortSignal;
+
+        /**
+         * Controls the state subscription.
+         *
+         * - `undefined` (default): Subscribe and sync all state
+         * - `false`: No subscription — connect without syncing state
+         * - Object with filter fields: Subscribe with filters
+         */
+        subscribe?: false | SubscribeOptions;
+    }
+
+    export interface SubscribeOptions {
+        nodes?: string[];
+        clusters?: string[];
     }
 
     export const RootEndpoint = MutableEndpoint({
