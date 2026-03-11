@@ -5,7 +5,7 @@
  */
 
 import { NodeRegistry } from "#node-registry.js";
-import { WebSocketClient } from "@matter/general";
+import { LifecycleServer, RemoteNode } from "@matter/node";
 import { Command } from "./command.js";
 
 Command({
@@ -46,16 +46,15 @@ Command({
 
         const timeoutMs = (args.timeout ?? 10) * 1000;
 
-        // Try graceful shutdown via a lightweight WebSocket request, fall back to SIGTERM
+        // Try graceful shutdown via RemoteNode, fall back to SIGTERM
         try {
             const url = registry.resolveUrl(nodeId);
-            const ws = await this.env.get(WebSocketClient).connect(url);
-
-            const writer = ws.writable.getWriter();
-            await writer.write(JSON.stringify({ method: "invoke", target: "0/lifecycle/stop", id: "1" }));
-            writer.releaseLock();
-
-            await ws.writable.close();
+            const remote = await RemoteNode.connect({ url, id: nodeId, subscribe: false });
+            try {
+                await remote.commandsOf(LifecycleServer).stop(undefined);
+            } finally {
+                await remote.close();
+            }
         } catch (e) {
             // Connection or command failed — fall back to SIGTERM
             this.err(`Graceful stop failed: ${e instanceof Error ? e.message : e}\n`);

@@ -100,6 +100,15 @@ export class WebSocketInterface extends RemoteInterface {
 
         // Abort any ongoing subscriptions associated with the connection
         subtask.abort();
+
+        // Close writable after pending sends drain — signals client that server is done
+        await this.#mutex.produce(async () => {
+            try {
+                await ws.writable.close();
+            } catch {
+                // May already be closed
+            }
+        });
     }
 
     async #handleRequest(

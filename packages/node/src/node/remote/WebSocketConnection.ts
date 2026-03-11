@@ -73,6 +73,16 @@ export class WebSocketConnection {
         this.#pending.clear();
         this.#subscriptionListeners.clear();
 
+        // Close writable to signal peer — causes peer to close its writable,
+        // which ends our readable and allows the read loop to exit
+        if (this.#ws) {
+            try {
+                await this.#ws.writable.close();
+            } catch {
+                // May already be closed
+            }
+        }
+
         await this.#readLoop;
         this.#ws = undefined;
     }

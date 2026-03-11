@@ -20,6 +20,7 @@ import {
     LogFormat,
     MaybePromise,
     Observable,
+    RuntimeService,
     SafePromise,
     StorageService,
     VariableService,
@@ -374,6 +375,10 @@ export async function Domain(context: DomainContext): Promise<Domain> {
         domain.interrupt();
         return true;
     };
+
+    // Register the domain as a worker so RuntimeService stays alive for the CLI's lifetime.  Without this, closing
+    // ephemeral RemoteNode connections can trigger RuntimeService.cancel()
+    domain.env.get(RuntimeService).add(domain as RuntimeService.NewWorker);
 
     return domain;
 
