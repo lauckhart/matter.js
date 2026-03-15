@@ -177,9 +177,12 @@ export class ClusterBehavior extends Behavior {
         return this as unknown as ClusterBehavior.Type<typeof ClusterType.Unknown, typeof ClusterBehavior, I>;
     }
 
+    static isType(type: Behavior.Type): type is ClusterBehavior.Type {
+        return typeof (type as ClusterBehavior.Type)?.withFeatures === "function";
+    }
+
     static override supports(other: Behavior.Type) {
-        const otherCluster = (other as { cluster?: ClusterType }).cluster;
-        if (!otherCluster) {
+        if (!ClusterBehavior.isType(other)) {
             return false;
         }
 
@@ -191,7 +194,7 @@ export class ClusterBehavior extends Behavior {
         //
         // Further, we know the "Client" classes can have no extension methods or properties, so we don't need to do an
         // exact class match for type safety
-        if (isClientBehavior(other) && otherCluster.id === this.cluster.id) {
+        if (isClientBehavior(other) && other.schema.id === this.schema.id) {
             return true;
         }
 
@@ -199,10 +202,9 @@ export class ClusterBehavior extends Behavior {
             return false;
         }
 
-        const otherFeatures = otherCluster.supportedFeatures;
-        const myFeatures = this.cluster.supportedFeatures;
-        for (const name in otherFeatures) {
-            if (otherFeatures[name] && !(myFeatures as Record<string, boolean>)[name]) {
+        const otherFeatures = other.schema.supportedFeatures;
+        for (const name of otherFeatures) {
+            if (!this.schema.supportedFeatures.has(name)) {
                 return false;
             }
         }
