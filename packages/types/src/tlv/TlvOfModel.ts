@@ -48,6 +48,7 @@ import {
     systimeMs,
     systimeUs,
     uint16,
+    uint24,
     uint32,
     uint64,
     uint8,
@@ -76,11 +77,12 @@ import {
     TlvSysTimeMS,
     TlvSysTimeUs,
     TlvUInt16,
+    TlvUInt24,
     TlvUInt32,
     TlvUInt64,
     TlvUInt8,
 } from "./TlvNumber.js";
-import { TlvObject } from "./TlvObject.js";
+import { TlvField, TlvObject, TlvOptionalField } from "./TlvObject.js";
 import { TlvSchema } from "./TlvSchema.js";
 import { TlvByteString, TlvString } from "./TlvString.js";
 
@@ -105,6 +107,7 @@ const NumberMapping: Record<string, TlvSchema<unknown>> = {
     // Unsigned int
     [uint8.name]: TlvUInt8,
     [uint16.name]: TlvUInt16,
+    [uint24.name]: TlvUInt24,
     [uint32.name]: TlvUInt32,
     [uint64.name]: TlvUInt64,
 
@@ -138,13 +141,12 @@ const NumberMapping: Record<string, TlvSchema<unknown>> = {
     [systimeUs.name]: TlvSysTimeUs,
     [systimeMs.name]: TlvSysTimeMS,
 
-    // The following are defined in the specification but we don't support them so they're apparently unused
+    // The following are defined in the specification but have no corresponding TlvSchema
     //[int24.name]: TlvInt24,
     //[int40.name]: TlvInt40,
     //[int48.name]: TlvInt48,
-    //[uint24.name]: TlvInt24,
-    //[uint40.name]: TlvInt40,
-    //[uint48.name]: TlvInt48,
+    //[uint40.name]: TlvUInt40,
+    //[uint48.name]: TlvUInt48,
     //[map64.name]: TlvUInt64,
 };
 
@@ -221,8 +223,12 @@ function generateTlv(model: ClusterModel | ValueModel): TlvSchema<unknown> {
 }
 
 function generateStruct(model: ClusterModel | ValueModel) {
-    const entries = model.conformant.properties.map(p => [camelize(p.name), TlvOfModel(model)]);
-    const fields = Object.fromEntries(entries);
+    const fields = {} as Record<string, any>;
+    for (const p of model.conformant.properties) {
+        const schema = TlvOfModel(p);
+        const id = p.id ?? 0;
+        fields[camelize(p.name)] = p.mandatory ? TlvField(id, schema) : TlvOptionalField(id, schema);
+    }
     return TlvObject(fields);
 }
 
@@ -265,7 +271,7 @@ function generateList(model: ValueModel) {
         return TlvArray(TlvAny, bounds);
     }
 
-    return TlvArray(TlvOfModel(model), bounds);
+    return TlvArray(TlvOfModel(entry), bounds);
 }
 
 function generateString(base: typeof TlvByteString | typeof TlvString, model: ValueModel) {

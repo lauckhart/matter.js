@@ -11,4 +11,5 @@ export * from "./Cluster.js";
 export * from "./ClusterHelper.js";
 export * from "./ClusterRegistry.js";
 export * from "./ClusterType.js";
+export * from "./ClusterTypeOfModel.js";
 export * from "./mutation/index.js";
