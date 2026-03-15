@@ -9,6 +9,7 @@ import "../clusters/index.js";
 
 export * from "./Cluster.js";
 export * from "./ClusterHelper.js";
+export * from "./ClusterNamespace.js";
 export * from "./ClusterRegistry.js";
 export * from "./ClusterType.js";
 export * from "./ClusterTypeOfModel.js";
