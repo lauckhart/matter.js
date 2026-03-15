@@ -8,31 +8,17 @@
 
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { FixedAttribute, Command, TlvNoResponse, Attribute, OptionalCommand, Event } from "../cluster/Cluster.js";
-import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvUInt32, TlvBitmap } from "../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
+import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { DishwasherAlarm as DishwasherAlarmModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace DishwasherAlarm {
-    /**
-     * These are optional features supported by DishwasherAlarmCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.15.4
-     */
-    export enum Feature {
-        /**
-         * Reset (RESET)
-         *
-         * This feature indicates that alarms can be reset via the Reset command.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 1.15.4.1
-         */
-        Reset = "Reset"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 8.4.4.1
      */
@@ -68,6 +54,185 @@ export namespace DishwasherAlarm {
         waterLevelError: BitFlag(5)
     };
 
+    export interface Alarm {
+        /**
+         * Water inflow is abnormal
+         */
+        inflowError?: boolean;
+
+        /**
+         * Water draining is abnormal
+         */
+        drainError?: boolean;
+
+        /**
+         * Door or door lock is abnormal
+         */
+        doorError?: boolean;
+
+        /**
+         * Unable to reach normal temperature
+         */
+        tempTooLow?: boolean;
+
+        /**
+         * Temperature is too high
+         */
+        tempTooHigh?: boolean;
+
+        /**
+         * Water level is abnormal
+         */
+        waterLevelError?: boolean;
+    }
+
+    /**
+     * This command resets active and latched alarms (if possible). Any generated Notify event shall contain fields that
+     * represent the state of the server after the command has been processed.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.1
+     */
+    export interface ResetRequest {
+        /**
+         * This field shall indicate a bitmap where each bit set in this field corresponds to an alarm that shall be
+         * reset to inactive in the State attribute unless the alarm definition requires manual intervention. If the
+         * alarms indicated are successfully reset, the response status code shall be SUCCESS, otherwise, the response
+         * status code shall be FAILURE.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.1.1
+         */
+        alarms: Alarm;
+    }
+
+    /**
+     * This command allows a client to request that an alarm be enabled or suppressed at the server.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.2
+     */
+    export interface ModifyEnabledAlarmsRequest {
+        /**
+         * This field shall indicate a bitmap where each bit set in the this field corresponds to an alarm that SHOULD
+         * be enabled or suppressed. A value of 1 shall indicate that the alarm SHOULD be enabled while a value of 0
+         * shall indicate that the alarm SHOULD be suppressed.
+         *
+         * A server that receives this command with a Mask that includes bits that are set for unknown alarms shall
+         * respond with a status code of INVALID_COMMAND.
+         *
+         * A server that receives this command with a Mask that includes bits that are set for alarms which are not
+         * supported, as indicated in the Supported attribute, shall respond with a status code of INVALID_COMMAND.
+         *
+         * A server that is unable to enable a currently suppressed alarm, or is unable to suppress a currently enabled
+         * alarm shall respond with a status code of FAILURE; otherwise the server shall respond with a status code of
+         * SUCCESS.
+         *
+         * On a SUCCESS case, the server shall also change the value of the Mask attribute to the value of the Mask
+         * field from this command. After that the server shall also update the value of its State attribute to reflect
+         * the status of the new alarm set as indicated by the new value of the Mask attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.2.1
+         */
+        mask: Alarm;
+    }
+
+    /**
+     * This event shall be generated when one or more alarms change state.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1
+     */
+    export interface NotifyEvent {
+        /**
+         * This field shall indicate those alarms that have become active.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1.1
+         */
+        active: Alarm;
+
+        /**
+         * This field shall indicate those alarms that have become inactive.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1.2
+         */
+        inactive: Alarm;
+
+        /**
+         * This field shall be a copy of the new State attribute value that resulted in the event being generated. That
+         * is, this field shall have all the bits in Active set and shall NOT have any of the bits in Inactive set.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1.4
+         */
+        state: Alarm;
+
+        /**
+         * This field shall be a copy of the Mask attribute when this event was generated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1.3
+         */
+        mask: Alarm;
+    }
+
+    export interface Attributes {
+        mask: Alarm;
+        state: Alarm;
+        supported: Alarm;
+        latch: Alarm;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "mask" | "state" | "supported" },
+            { flags: { reset: true }, mandatory: "latch" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base, Commands.Reset {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command allows a client to request that an alarm be enabled or suppressed at the server.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.2
+             */
+            modifyEnabledAlarms(request: ModifyEnabledAlarmsRequest): MaybePromise;
+        }
+
+        export interface Reset {
+            /**
+             * This command resets active and latched alarms (if possible). Any generated Notify event shall contain
+             * fields that represent the state of the server after the command has been processed.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.1
+             */
+            reset(request: ResetRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }, { flags: { reset: true }, methods: Reset }];
+    }
+
+    export interface Events {
+        notify: NotifyEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, mandatory: "notify" }];
+    }
+    export type Features = "Reset";
+
+    /**
+     * These are optional features supported by DishwasherAlarmCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.15.4
+     */
+    export enum Feature {
+        /**
+         * Reset (RESET)
+         *
+         * This feature indicates that alarms can be reset via the Reset command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.15.4.1
+         */
+        Reset = "Reset"
+    }
+
     /**
      * Input to the DishwasherAlarm reset command
      *
@@ -84,13 +249,6 @@ export namespace DishwasherAlarm {
          */
         alarms: TlvField(0, TlvBitmap(TlvUInt32, Alarm))
     });
-
-    /**
-     * Input to the DishwasherAlarm reset command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.1
-     */
-    export interface ResetRequest extends TypeFromSchema<typeof TlvResetRequest> {}
 
     /**
      * Input to the DishwasherAlarm modifyEnabledAlarms command
@@ -121,13 +279,6 @@ export namespace DishwasherAlarm {
          */
         mask: TlvField(0, TlvBitmap(TlvUInt32, Alarm))
     });
-
-    /**
-     * Input to the DishwasherAlarm modifyEnabledAlarms command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.15.7.2
-     */
-    export interface ModifyEnabledAlarmsRequest extends TypeFromSchema<typeof TlvModifyEnabledAlarmsRequest> {}
 
     /**
      * Body of the DishwasherAlarm notify event
@@ -164,13 +315,6 @@ export namespace DishwasherAlarm {
          */
         mask: TlvField(3, TlvBitmap(TlvUInt32, Alarm))
     });
-
-    /**
-     * Body of the DishwasherAlarm notify event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.15.8.1
-     */
-    export interface NotifyEvent extends TypeFromSchema<typeof TlvNotifyEvent> {}
 
     /**
      * A DishwasherAlarmCluster supports these elements if it supports feature Reset.
@@ -315,8 +459,15 @@ export namespace DishwasherAlarm {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x5d);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 export const DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 ClusterRegistry.register(DishwasherAlarm.Complete);
+ClusterNamespace.define(DishwasherAlarm, DishwasherAlarmModel);

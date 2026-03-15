@@ -13,8 +13,36 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { PressureMeasurement as PressureMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PressureMeasurement {
+    export interface Attributes {
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        tolerance: number;
+        scaledValue: number | null;
+        minScaledValue: number | null;
+        maxScaledValue: number | null;
+        scale: number;
+        scaledTolerance: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue", optional: "tolerance" },
+            {
+                flags: { extended: true },
+                mandatory: "scaledValue" | "minScaledValue" | "maxScaledValue" | "scale",
+                optional: "scaledTolerance"
+            }
+        ];
+    }
+
+    export type Features = "Extended";
+
     /**
      * These are optional features supported by PressureMeasurementCluster.
      *
@@ -198,8 +226,13 @@ export namespace PressureMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x403);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type PressureMeasurementCluster = PressureMeasurement.Cluster;
 export const PressureMeasurementCluster = PressureMeasurement.Cluster;
 ClusterRegistry.register(PressureMeasurement.Complete);
+ClusterNamespace.define(PressureMeasurement, PressureMeasurementModel);

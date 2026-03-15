@@ -19,14 +19,192 @@ import {
     OptionalEvent
 } from "../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../tlv/TlvNumber.js";
-import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { BitFlag } from "../schema/BitmapSchema.js";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { BooleanStateConfiguration as BooleanStateConfigurationModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace BooleanStateConfiguration {
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.5.1
+     */
+    export const AlarmMode = {
+        /**
+         * Visual alarming
+         */
+        visual: BitFlag(0),
+
+        /**
+         * Audible alarming
+         */
+        audible: BitFlag(1)
+    };
+
+    export interface AlarmMode {
+        /**
+         * Visual alarming
+         */
+        visual?: boolean;
+
+        /**
+         * Audible alarming
+         */
+        audible?: boolean;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.2
+     */
+    export interface EnableDisableAlarmRequest {
+        /**
+         * This field shall indicate the alarm modes to either enable or disable depending on the bit status, as
+         * specified for the AlarmsEnabled attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.2.1
+         */
+        alarmsToEnableDisable: AlarmMode;
+    }
+
+    /**
+     * This event shall be generated after any bits in the AlarmsActive and/or AlarmsSuppressed attributes change. This
+     * may occur in situations such as when internal processing by the server determines that an alarm mode becomes
+     * active or inactive, or when the SuppressAlarm or EnableDisableAlarm commands are processed in a way that some
+     * alarm modes becomes suppressed, active or inactive.
+     *
+     * If several alarm modes change state at the same time, a single event combining multiple changes may be emitted
+     * instead of multiple events each representing a single change.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.1
+     */
+    export interface AlarmsStateChangedEvent {
+        /**
+         * This field shall indicate the state of active alarm modes, as indicated by the AlarmsActive attribute, at the
+         * time the event was generated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.1.1
+         */
+        alarmsActive: AlarmMode;
+
+        /**
+         * This field shall indicate the state of suppressed alarm modes, as indicated by the AlarmsSuppressed
+         * attribute, at the time the event was generated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.1.2
+         */
+        alarmsSuppressed?: AlarmMode;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.1
+     */
+    export interface SuppressAlarmRequest {
+        /**
+         * This field shall indicate the alarm modes to suppress.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.1.1
+         */
+        alarmsToSuppress: AlarmMode;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.5.2
+     */
+    export const SensorFault = {
+        /**
+         * Unspecified fault detected
+         */
+        generalFault: BitFlag(0)
+    };
+
+    export interface SensorFault {
+        /**
+         * Unspecified fault detected
+         */
+        generalFault?: boolean;
+    }
+
+    /**
+     * This event shall be generated when the device registers or clears a fault.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.2
+     */
+    export interface SensorFaultEvent {
+        /**
+         * This field shall indicate the value of the SensorFault attribute, at the time this event is generated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.2.1
+         */
+        sensorFault: SensorFault;
+    }
+
+    export interface Attributes {
+        sensorFault: SensorFault;
+        currentSensitivityLevel: number;
+        supportedSensitivityLevels: number;
+        defaultSensitivityLevel: number;
+        alarmsActive: AlarmMode;
+        alarmsSupported: AlarmMode;
+        alarmsEnabled: AlarmMode;
+        alarmsSuppressed: AlarmMode;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, optional: "sensorFault" },
+            {
+                flags: { sensitivityLevel: true },
+                mandatory: "currentSensitivityLevel" | "supportedSensitivityLevels",
+                optional: "defaultSensitivityLevel"
+            },
+            { flags: { visual: true }, mandatory: "alarmsActive" | "alarmsSupported", optional: "alarmsEnabled" },
+            { flags: { audible: true }, mandatory: "alarmsActive" | "alarmsSupported", optional: "alarmsEnabled" },
+            { flags: { alarmSuppress: true }, mandatory: "alarmsSuppressed" }
+        ];
+    }
+
+    export interface Commands extends Commands.VisualOrAudible, Commands.AlarmSuppress {}
+
+    export namespace Commands {
+        export interface VisualOrAudible {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.2
+             */
+            enableDisableAlarm(request: EnableDisableAlarmRequest): MaybePromise;
+        }
+
+        export interface AlarmSuppress {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.1
+             */
+            suppressAlarm(request: SuppressAlarmRequest): MaybePromise;
+        }
+
+        export type Components = [
+            { flags: { visual: true }, methods: VisualOrAudible },
+            { flags: { audible: true }, methods: VisualOrAudible },
+            { flags: { alarmSuppress: true }, methods: AlarmSuppress }
+        ];
+    }
+
+    export interface Events {
+        sensorFault: SensorFaultEvent;
+        alarmsStateChanged: AlarmsStateChangedEvent;
+    }
+
+    export namespace Events {
+        export type Components = [
+            { flags: {}, optional: "sensorFault" },
+            { flags: { visual: true }, mandatory: "alarmsStateChanged" },
+            { flags: { audible: true }, mandatory: "alarmsStateChanged" }
+        ];
+    }
+
+    export type Features = "Visual" | "Audible" | "AlarmSuppress" | "SensitivityLevel";
+
     /**
      * These are optional features supported by BooleanStateConfigurationCluster.
      *
@@ -80,21 +258,6 @@ export namespace BooleanStateConfiguration {
     }
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.5.1
-     */
-    export const AlarmMode = {
-        /**
-         * Visual alarming
-         */
-        visual: BitFlag(0),
-
-        /**
-         * Audible alarming
-         */
-        audible: BitFlag(1)
-    };
-
-    /**
      * Input to the BooleanStateConfiguration enableDisableAlarm command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.2
@@ -108,13 +271,6 @@ export namespace BooleanStateConfiguration {
          */
         alarmsToEnableDisable: TlvField(0, TlvBitmap(TlvUInt8, AlarmMode))
     });
-
-    /**
-     * Input to the BooleanStateConfiguration enableDisableAlarm command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.2
-     */
-    export interface EnableDisableAlarmRequest extends TypeFromSchema<typeof TlvEnableDisableAlarmRequest> {}
 
     /**
      * Body of the BooleanStateConfiguration alarmsStateChanged event
@@ -140,13 +296,6 @@ export namespace BooleanStateConfiguration {
     });
 
     /**
-     * Body of the BooleanStateConfiguration alarmsStateChanged event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.1
-     */
-    export interface AlarmsStateChangedEvent extends TypeFromSchema<typeof TlvAlarmsStateChangedEvent> {}
-
-    /**
      * Input to the BooleanStateConfiguration suppressAlarm command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.1
@@ -161,23 +310,6 @@ export namespace BooleanStateConfiguration {
     });
 
     /**
-     * Input to the BooleanStateConfiguration suppressAlarm command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.7.1
-     */
-    export interface SuppressAlarmRequest extends TypeFromSchema<typeof TlvSuppressAlarmRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.5.2
-     */
-    export const SensorFault = {
-        /**
-         * Unspecified fault detected
-         */
-        generalFault: BitFlag(0)
-    };
-
-    /**
      * Body of the BooleanStateConfiguration sensorFault event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.2
@@ -190,13 +322,6 @@ export namespace BooleanStateConfiguration {
          */
         sensorFault: TlvField(0, TlvBitmap(TlvUInt16, SensorFault))
     });
-
-    /**
-     * Body of the BooleanStateConfiguration sensorFault event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.8.8.2
-     */
-    export interface SensorFaultEvent extends TypeFromSchema<typeof TlvSensorFaultEvent> {}
 
     /**
      * A BooleanStateConfigurationCluster supports these elements if it supports feature SensitivityLevel.
@@ -510,8 +635,15 @@ export namespace BooleanStateConfiguration {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x80);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type BooleanStateConfigurationCluster = BooleanStateConfiguration.Cluster;
 export const BooleanStateConfigurationCluster = BooleanStateConfiguration.Cluster;
 ClusterRegistry.register(BooleanStateConfiguration.Complete);
+ClusterNamespace.define(BooleanStateConfiguration, BooleanStateConfigurationModel);

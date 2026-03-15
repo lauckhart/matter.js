@@ -12,43 +12,11 @@ import { Attribute } from "../cluster/Cluster.js";
 import { TlvEnum } from "../tlv/TlvNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { AirQuality as AirQualityModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace AirQuality {
-    /**
-     * These are optional features supported by AirQualityCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.9.4
-     */
-    export enum Feature {
-        /**
-         * Fair (FAIR)
-         *
-         * Cluster supports the Fair air quality level
-         */
-        Fair = "Fair",
-
-        /**
-         * Moderate (MOD)
-         *
-         * Cluster supports the Moderate air quality level
-         */
-        Moderate = "Moderate",
-
-        /**
-         * VeryPoor (VPOOR)
-         *
-         * Cluster supports the Very poor air quality level
-         */
-        VeryPoor = "VeryPoor",
-
-        /**
-         * ExtremelyPoor (XPOOR)
-         *
-         * Cluster supports the Extremely poor air quality level
-         */
-        ExtremelyPoor = "ExtremelyPoor"
-    }
-
     /**
      * The AirQualityEnum provides a representation of the quality of the analyzed air. It is up to the device
      * manufacturer to determine the mapping between the measured values and their corresponding enumeration values.
@@ -90,6 +58,49 @@ export namespace AirQuality {
          * The air quality is extremely poor.
          */
         ExtremelyPoor = 6
+    }
+
+    export interface Attributes {
+        airQuality: AirQualityEnum;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "airQuality" }];
+    }
+    export type Features = "Fair" | "Moderate" | "VeryPoor" | "ExtremelyPoor";
+
+    /**
+     * These are optional features supported by AirQualityCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.9.4
+     */
+    export enum Feature {
+        /**
+         * Fair (FAIR)
+         *
+         * Cluster supports the Fair air quality level
+         */
+        Fair = "Fair",
+
+        /**
+         * Moderate (MOD)
+         *
+         * Cluster supports the Moderate air quality level
+         */
+        Moderate = "Moderate",
+
+        /**
+         * VeryPoor (VPOOR)
+         *
+         * Cluster supports the Very poor air quality level
+         */
+        VeryPoor = "VeryPoor",
+
+        /**
+         * ExtremelyPoor (XPOOR)
+         *
+         * Cluster supports the Extremely poor air quality level
+         */
+        ExtremelyPoor = "ExtremelyPoor"
     }
 
     /**
@@ -156,8 +167,13 @@ export namespace AirQuality {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x5b);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type AirQualityCluster = AirQuality.Cluster;
 export const AirQualityCluster = AirQuality.Cluster;
 ClusterRegistry.register(AirQuality.Complete);
+ClusterNamespace.define(AirQuality, AirQualityModel);

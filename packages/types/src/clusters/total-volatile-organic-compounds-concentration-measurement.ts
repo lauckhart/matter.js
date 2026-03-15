@@ -10,8 +10,43 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import {
+    TotalVolatileOrganicCompoundsConcentrationMeasurement as TotalVolatileOrganicCompoundsConcentrationMeasurementModel
+} from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
+    export interface Attributes {
+        measurementMedium: ConcentrationMeasurement.MeasurementMedium;
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        measurementUnit: ConcentrationMeasurement.MeasurementUnit;
+        uncertainty: number;
+        peakMeasuredValue: number | null;
+        peakMeasuredValueWindow: number;
+        averageMeasuredValue: number | null;
+        averageMeasuredValueWindow: number;
+        levelValue: ConcentrationMeasurement.LevelValue;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measurementMedium" },
+            {
+                flags: { numericMeasurement: true },
+                mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue" | "measurementUnit",
+                optional: "uncertainty"
+            },
+            { flags: { peakMeasurement: true }, mandatory: "peakMeasuredValue" | "peakMeasuredValueWindow" },
+            { flags: { averageMeasurement: true }, mandatory: "averageMeasuredValue" | "averageMeasuredValueWindow" },
+            { flags: { levelIndication: true }, mandatory: "levelValue" }
+        ];
+    }
+
+    export type Features = "NumericMeasurement" | "LevelIndication" | "MediumLevel" | "CriticalLevel" | "PeakMeasurement" | "AverageMeasurement";
+
     export const Base = {
         ...ConcentrationMeasurement.Base,
         id: 0x42e,
@@ -49,8 +84,13 @@ export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
 
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x42e);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type TotalVolatileOrganicCompoundsConcentrationMeasurementCluster = TotalVolatileOrganicCompoundsConcentrationMeasurement.Cluster;
 export const TotalVolatileOrganicCompoundsConcentrationMeasurementCluster = TotalVolatileOrganicCompoundsConcentrationMeasurement.Cluster;
 ClusterRegistry.register(TotalVolatileOrganicCompoundsConcentrationMeasurement.Complete);
+ClusterNamespace.define(TotalVolatileOrganicCompoundsConcentrationMeasurement, TotalVolatileOrganicCompoundsConcentrationMeasurementModel);

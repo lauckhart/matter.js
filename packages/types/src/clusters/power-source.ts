@@ -20,49 +20,16 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { TlvEndpointNumber } from "../datatype/EndpointNumber.js";
+import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { PowerSource as PowerSourceModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PowerSource {
-    /**
-     * These are optional features supported by PowerSourceCluster.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.7.4
-     */
-    export enum Feature {
-        /**
-         * Wired (WIRED)
-         *
-         * A wired power source
-         */
-        Wired = "Wired",
-
-        /**
-         * Battery (BAT)
-         *
-         * A battery power source
-         */
-        Battery = "Battery",
-
-        /**
-         * Rechargeable (RECHG)
-         *
-         * A rechargeable battery power source
-         */
-        Rechargeable = "Rechargeable",
-
-        /**
-         * Replaceable (REPLC)
-         *
-         * A replaceable battery power source
-         */
-        Replaceable = "Replaceable"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.7.6.5
      */
@@ -99,32 +66,26 @@ export namespace PowerSource {
     }
 
     /**
-     * Body of the PowerSource wiredFaultChange event
+     * The WiredFaultChange Event shall be generated when the set of wired faults currently detected by the Node on this
+     * wired power source changes. This event shall correspond to a change in value of ActiveWiredFaults.
      *
      * @see {@link MatterSpecification.v142.Core} § 11.7.8.1
      */
-    export const TlvWiredFaultChangeEvent = TlvObject({
+    export interface WiredFaultChangeEvent {
         /**
          * This field shall represent the set of faults currently detected, as per ActiveWiredFaults.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.1.1
          */
-        current: TlvField(0, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 })),
+        current: WiredFault[];
 
         /**
          * This field shall represent the set of faults detected prior to this change event, as per ActiveWiredFaults.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.1.2
          */
-        previous: TlvField(1, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 }))
-    });
-
-    /**
-     * Body of the PowerSource wiredFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.7.8.1
-     */
-    export interface WiredFaultChangeEvent extends TypeFromSchema<typeof TlvWiredFaultChangeEvent> {}
+        previous: WiredFault[];
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.7.6.6
@@ -192,32 +153,26 @@ export namespace PowerSource {
     }
 
     /**
-     * Body of the PowerSource batFaultChange event
+     * The BatFaultChange Event shall be generated when the set of battery faults currently detected by the Node on this
+     * battery power source changes. This event shall correspond to a change in value of ActiveBatFaults.
      *
      * @see {@link MatterSpecification.v142.Core} § 11.7.8.2
      */
-    export const TlvBatFaultChangeEvent = TlvObject({
+    export interface BatFaultChangeEvent {
         /**
          * This field shall represent the set of faults currently detected, as per ActiveBatFaults.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.2.1
          */
-        current: TlvField(0, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 })),
+        current: BatFault[];
 
         /**
          * This field shall represent the set of faults detected prior to this change event, as per ActiveBatFaults.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.2.2
          */
-        previous: TlvField(1, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 }))
-    });
-
-    /**
-     * Body of the PowerSource batFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.7.8.2
-     */
-    export interface BatFaultChangeEvent extends TypeFromSchema<typeof TlvBatFaultChangeEvent> {}
+        previous: BatFault[];
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.7.6.8
@@ -860,17 +815,18 @@ export namespace PowerSource {
     }
 
     /**
-     * Body of the PowerSource batChargeFaultChange event
+     * The BatChargeFaultChange Event shall be generated when the set of charge faults currently detected by the Node on
+     * this battery power source changes. This event shall correspond to a change in value of ActiveBatChargeFaults.
      *
      * @see {@link MatterSpecification.v142.Core} § 11.7.8.3
      */
-    export const TlvBatChargeFaultChangeEvent = TlvObject({
+    export interface BatChargeFaultChangeEvent {
         /**
          * This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.3.1
          */
-        current: TlvField(0, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 })),
+        current: BatChargeFault[];
 
         /**
          * This field shall represent the set of faults detected prior to this change event, as per
@@ -878,15 +834,8 @@ export namespace PowerSource {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.7.8.3.2
          */
-        previous: TlvField(1, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 }))
-    });
-
-    /**
-     * Body of the PowerSource batChargeFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.7.8.3
-     */
-    export interface BatChargeFaultChangeEvent extends TypeFromSchema<typeof TlvBatChargeFaultChangeEvent> {}
+        previous: BatChargeFault[];
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.7.6.4
@@ -912,6 +861,184 @@ export namespace PowerSource {
          */
         Unavailable = 3
     }
+
+    export interface Attributes {
+        status: PowerSourceStatus;
+        order: number;
+        description: string;
+        endpointList: EndpointNumber[];
+        wiredCurrentType: WiredCurrentType;
+        wiredAssessedInputVoltage: number | null;
+        wiredAssessedInputFrequency: number | null;
+        wiredAssessedCurrent: number | null;
+        wiredNominalVoltage: number;
+        wiredMaximumCurrent: number;
+        wiredPresent: boolean;
+        activeWiredFaults: WiredFault[];
+        batChargeLevel: BatChargeLevel;
+        batReplacementNeeded: boolean;
+        batReplaceability: BatReplaceability;
+        batVoltage: number | null;
+        batPercentRemaining: number | null;
+        batTimeRemaining: number | null;
+        batPresent: boolean;
+        activeBatFaults: BatFault[];
+        batReplacementDescription: string;
+        batQuantity: number;
+        batCommonDesignation: BatCommonDesignation;
+        batAnsiDesignation: string;
+        batIecDesignation: string;
+        batApprovedChemistry: BatApprovedChemistry;
+        batCapacity: number;
+        batChargeState: BatChargeState;
+        batFunctionalWhileCharging: boolean;
+        batTimeToFullCharge: number | null;
+        batChargingCurrent: number | null;
+        activeBatChargeFaults: BatChargeFault[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "status" | "order" | "description" | "endpointList" },
+            {
+                flags: { wired: true },
+                mandatory: "wiredCurrentType",
+                optional: "wiredAssessedInputVoltage" | "wiredAssessedInputFrequency" | "wiredAssessedCurrent" | "wiredNominalVoltage" | "wiredMaximumCurrent" | "wiredPresent" | "activeWiredFaults"
+            },
+            {
+                flags: { battery: true },
+                mandatory: "batChargeLevel" | "batReplacementNeeded" | "batReplaceability",
+                optional: "batVoltage" | "batPercentRemaining" | "batTimeRemaining" | "batPresent" | "activeBatFaults"
+            },
+            {
+                flags: { replaceable: true },
+                mandatory: "batReplacementDescription" | "batQuantity",
+                optional: "batCommonDesignation" | "batAnsiDesignation" | "batIecDesignation" | "batApprovedChemistry"
+            },
+            { flags: { replaceable: true }, optional: "batCapacity" },
+            { flags: { rechargeable: true }, optional: "batCapacity" },
+            {
+                flags: { rechargeable: true },
+                mandatory: "batChargeState" | "batFunctionalWhileCharging",
+                optional: "batTimeToFullCharge" | "batChargingCurrent" | "activeBatChargeFaults"
+            }
+        ];
+    }
+
+    export interface Events {
+        wiredFaultChange: WiredFaultChangeEvent;
+        batFaultChange: BatFaultChangeEvent;
+        batChargeFaultChange: BatChargeFaultChangeEvent;
+    }
+
+    export namespace Events {
+        export type Components = [
+            { flags: { wired: true }, optional: "wiredFaultChange" },
+            { flags: { battery: true }, optional: "batFaultChange" },
+            { flags: { rechargeable: true }, optional: "batChargeFaultChange" }
+        ];
+    }
+
+    export type Features = "Wired" | "Battery" | "Rechargeable" | "Replaceable";
+
+    /**
+     * These are optional features supported by PowerSourceCluster.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.7.4
+     */
+    export enum Feature {
+        /**
+         * Wired (WIRED)
+         *
+         * A wired power source
+         */
+        Wired = "Wired",
+
+        /**
+         * Battery (BAT)
+         *
+         * A battery power source
+         */
+        Battery = "Battery",
+
+        /**
+         * Rechargeable (RECHG)
+         *
+         * A rechargeable battery power source
+         */
+        Rechargeable = "Rechargeable",
+
+        /**
+         * Replaceable (REPLC)
+         *
+         * A replaceable battery power source
+         */
+        Replaceable = "Replaceable"
+    }
+
+    /**
+     * Body of the PowerSource wiredFaultChange event
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.7.8.1
+     */
+    export const TlvWiredFaultChangeEvent = TlvObject({
+        /**
+         * This field shall represent the set of faults currently detected, as per ActiveWiredFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.1.1
+         */
+        current: TlvField(0, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 })),
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per ActiveWiredFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.1.2
+         */
+        previous: TlvField(1, TlvArray(TlvEnum<WiredFault>(), { maxLength: 8 }))
+    });
+
+    /**
+     * Body of the PowerSource batFaultChange event
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.7.8.2
+     */
+    export const TlvBatFaultChangeEvent = TlvObject({
+        /**
+         * This field shall represent the set of faults currently detected, as per ActiveBatFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.2.1
+         */
+        current: TlvField(0, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 })),
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per ActiveBatFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.2.2
+         */
+        previous: TlvField(1, TlvArray(TlvEnum<BatFault>(), { maxLength: 8 }))
+    });
+
+    /**
+     * Body of the PowerSource batChargeFaultChange event
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.7.8.3
+     */
+    export const TlvBatChargeFaultChangeEvent = TlvObject({
+        /**
+         * This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.3.1
+         */
+        current: TlvField(0, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 })),
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per
+         * ActiveBatChargeFaults.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.7.8.3.2
+         */
+        previous: TlvField(1, TlvArray(TlvEnum<BatChargeFault>(), { maxLength: 16 }))
+    });
 
     /**
      * A PowerSourceCluster supports these elements if it supports feature Wired.
@@ -1542,8 +1669,14 @@ export namespace PowerSource {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x2f);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const events: ClusterNamespace.Events<Events>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type PowerSourceCluster = PowerSource.Cluster;
 export const PowerSourceCluster = PowerSource.Cluster;
 ClusterRegistry.register(PowerSource.Complete);
+ClusterNamespace.define(PowerSource, PowerSourceModel);

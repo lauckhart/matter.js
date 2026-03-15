@@ -10,36 +10,16 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Attribute, Command, TlvNoResponse, OptionalAttribute } from "../cluster/Cluster.js";
 import { TlvUInt64, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, EthernetNetworkDiagnostics as EthernetNetworkDiagnosticsModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EthernetNetworkDiagnostics {
-    /**
-     * These are optional features supported by EthernetNetworkDiagnosticsCluster.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.16.4
-     */
-    export enum Feature {
-        /**
-         * PacketCounts (PKTCNT)
-         *
-         * Node makes available the counts for the number of received and transmitted packets on the ethernet interface.
-         */
-        PacketCounts = "PacketCounts",
-
-        /**
-         * ErrorCounts (ERRCNT)
-         *
-         * Node makes available the counts for the number of errors that have occurred during the reception and
-         * transmission of packets on the ethernet interface.
-         */
-        ErrorCounts = "ErrorCounts"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.16.5.1
      */
@@ -93,6 +73,80 @@ export namespace EthernetNetworkDiagnostics {
          * PHY rate is 400Gbps
          */
         Rate400G = 9
+    }
+
+    export interface Attributes {
+        phyRate: PhyRate | null;
+        fullDuplex: boolean | null;
+        carrierDetect: boolean | null;
+        timeSinceReset: number | bigint;
+        packetRxCount: number | bigint;
+        packetTxCount: number | bigint;
+        txErrCount: number | bigint;
+        collisionCount: number | bigint;
+        overrunCount: number | bigint;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, optional: "phyRate" | "fullDuplex" | "carrierDetect" | "timeSinceReset" },
+            { flags: { packetCounts: true }, mandatory: "packetRxCount" | "packetTxCount" },
+            { flags: { errorCounts: true }, mandatory: "txErrCount" | "collisionCount" | "overrunCount" }
+        ];
+    }
+
+    export interface Commands extends Commands.PacketCountsOrErrorCounts {}
+
+    export namespace Commands {
+        export interface PacketCountsOrErrorCounts {
+            /**
+             * This command is used to reset the count attributes.
+             *
+             * Reception of this command shall reset the following attributes to 0:
+             *
+             *   - PacketRxCount
+             *
+             *   - PacketTxCount
+             *
+             *   - TxErrCount
+             *
+             *   - CollisionCount
+             *
+             *   - OverrunCount
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.16.7.1
+             */
+            resetCounts(): MaybePromise;
+        }
+
+        export type Components = [
+            { flags: { packetCounts: true }, methods: PacketCountsOrErrorCounts },
+            { flags: { errorCounts: true }, methods: PacketCountsOrErrorCounts }
+        ];
+    }
+
+    export type Features = "PacketCounts" | "ErrorCounts";
+
+    /**
+     * These are optional features supported by EthernetNetworkDiagnosticsCluster.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.16.4
+     */
+    export enum Feature {
+        /**
+         * PacketCounts (PKTCNT)
+         *
+         * Node makes available the counts for the number of received and transmitted packets on the ethernet interface.
+         */
+        PacketCounts = "PacketCounts",
+
+        /**
+         * ErrorCounts (ERRCNT)
+         *
+         * Node makes available the counts for the number of errors that have occurred during the reception and
+         * transmission of packets on the ethernet interface.
+         */
+        ErrorCounts = "ErrorCounts"
     }
 
     /**
@@ -316,8 +370,14 @@ export namespace EthernetNetworkDiagnostics {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x37);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 export const EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 ClusterRegistry.register(EthernetNetworkDiagnostics.Complete);
+ClusterNamespace.define(EthernetNetworkDiagnostics, EthernetNetworkDiagnosticsModel);

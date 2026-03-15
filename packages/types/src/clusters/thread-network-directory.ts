@@ -10,15 +10,141 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, Attribute, FixedAttribute, Command, TlvNoResponse } from "../cluster/Cluster.js";
 import { TlvByteString, TlvString } from "../tlv/TlvString.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, ThreadNetworkDirectory as ThreadNetworkDirectoryModel } from "@matter/model";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvUInt16, TlvUInt64, TlvUInt8 } from "../tlv/TlvNumber.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThreadNetworkDirectory {
+    /**
+     * Represents the data associated with a Thread Network.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1
+     */
+    export interface ThreadNetwork {
+        /**
+         * This field shall indicate the Extended PAN ID from the OperationalDataset for the given Thread network.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1.1
+         */
+        extendedPanId: Bytes;
+
+        /**
+         * This field shall indicate the Network Name from the OperationalDataset for the given Thread network.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1.2
+         */
+        networkName: string;
+
+        /**
+         * This field shall indicate the Channel from the OperationalDataset for the given Thread network.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1.3
+         */
+        channel: number;
+
+        /**
+         * This field shall indicate the Active Timestamp from the OperationalDataset for the given Thread network.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1.4
+         */
+        activeTimestamp: number | bigint;
+    }
+
+    /**
+     * Adds an entry to the ThreadNetworks attribute with the specified Thread Operational Dataset.
+     *
+     * If there is an existing entry with the Extended PAN ID then the Thread Operational Dataset for that entry is
+     * replaced. As a result, changes to the network parameters (e.g. Channel, Network Name, PSKc, …) of an existing
+     * entry with a given Extended PAN ID can be made using this command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.1
+     */
+    export interface AddNetworkRequest {
+        /**
+         * This field shall represent the Operational Dataset for the network, using the encoding defined in the Thread
+         * specification. It shall contain at least the following sub-TLVs: Active Timestamp, Channel, Channel Mask,
+         * Extended PAN ID, Network Key, Network Mesh-Local Prefix, Network Name, PAN ID, PSKc, and Security Policy.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.1.1
+         */
+        operationalDataset: Bytes;
+    }
+
+    /**
+     * Removes the network with the given Extended PAN ID from the ThreadNetworks attribute.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.2
+     */
+    export interface RemoveNetworkRequest {
+        extendedPanId: Bytes;
+    }
+
+    /**
+     * Retrieves the Thread Operational Dataset with the given Extended PAN ID.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.3
+     */
+    export interface GetOperationalDatasetRequest {
+        extendedPanId: Bytes;
+    }
+
+    /**
+     * Contains the Thread Operational Dataset for the Extended PAN specified in GetOperationalDataset.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.4
+     */
+    export interface OperationalDatasetResponse {
+        operationalDataset: Bytes;
+    }
+
+    export interface Attributes {
+        preferredExtendedPanId: Bytes | null;
+        threadNetworks: ThreadNetwork[];
+        threadNetworkTableSize: number;
+    }
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "preferredExtendedPanId" | "threadNetworks" | "threadNetworkTableSize" }
+        ];
+    }
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * Adds an entry to the ThreadNetworks attribute with the specified Thread Operational Dataset.
+             *
+             * If there is an existing entry with the Extended PAN ID then the Thread Operational Dataset for that entry
+             * is replaced. As a result, changes to the network parameters (e.g. Channel, Network Name, PSKc, …) of an
+             * existing entry with a given Extended PAN ID can be made using this command.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.1
+             */
+            addNetwork(request: AddNetworkRequest): MaybePromise;
+
+            /**
+             * Removes the network with the given Extended PAN ID from the ThreadNetworks attribute.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.2
+             */
+            removeNetwork(request: RemoveNetworkRequest): MaybePromise;
+
+            /**
+             * Retrieves the Thread Operational Dataset with the given Extended PAN ID.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.3
+             */
+            getOperationalDataset(request: GetOperationalDatasetRequest): MaybePromise<OperationalDatasetResponse>;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
     /**
      * Represents the data associated with a Thread Network.
      *
@@ -55,13 +181,6 @@ export namespace ThreadNetworkDirectory {
     });
 
     /**
-     * Represents the data associated with a Thread Network.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.4.4.1
-     */
-    export interface ThreadNetwork extends TypeFromSchema<typeof TlvThreadNetwork> {}
-
-    /**
      * Input to the ThreadNetworkDirectory addNetwork command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.1
@@ -78,25 +197,11 @@ export namespace ThreadNetworkDirectory {
     });
 
     /**
-     * Input to the ThreadNetworkDirectory addNetwork command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.1
-     */
-    export interface AddNetworkRequest extends TypeFromSchema<typeof TlvAddNetworkRequest> {}
-
-    /**
      * Input to the ThreadNetworkDirectory removeNetwork command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.2
      */
     export const TlvRemoveNetworkRequest = TlvObject({ extendedPanId: TlvField(0, TlvByteString.bound({ length: 8 })) });
-
-    /**
-     * Input to the ThreadNetworkDirectory removeNetwork command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.2
-     */
-    export interface RemoveNetworkRequest extends TypeFromSchema<typeof TlvRemoveNetworkRequest> {}
 
     /**
      * Input to the ThreadNetworkDirectory getOperationalDataset command
@@ -108,13 +213,6 @@ export namespace ThreadNetworkDirectory {
     });
 
     /**
-     * Input to the ThreadNetworkDirectory getOperationalDataset command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.3
-     */
-    export interface GetOperationalDatasetRequest extends TypeFromSchema<typeof TlvGetOperationalDatasetRequest> {}
-
-    /**
      * Contains the Thread Operational Dataset for the Extended PAN specified in GetOperationalDataset.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.4
@@ -122,13 +220,6 @@ export namespace ThreadNetworkDirectory {
     export const TlvOperationalDatasetResponse = TlvObject({
         operationalDataset: TlvField(0, TlvByteString.bound({ maxLength: 254 }))
     });
-
-    /**
-     * Contains the Thread Operational Dataset for the Extended PAN specified in GetOperationalDataset.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.4.6.4
-     */
-    export interface OperationalDatasetResponse extends TypeFromSchema<typeof TlvOperationalDatasetResponse> {}
 
     /**
      * @see {@link Cluster}
@@ -249,8 +340,13 @@ export namespace ThreadNetworkDirectory {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x453);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
 }
 
 export type ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 export const ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 ClusterRegistry.register(ThreadNetworkDirectory.Complete);
+ClusterNamespace.define(ThreadNetworkDirectory, ThreadNetworkDirectoryModel);

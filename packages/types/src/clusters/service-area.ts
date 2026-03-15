@@ -12,14 +12,451 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
 import { TlvUInt32, TlvEnum, TlvUInt8, TlvEpochS } from "../tlv/TlvNumber.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { TlvLocationdesc } from "../globals/Locationdesc.js";
-import { Identity } from "@matter/general";
+import { TlvLocationdesc, Locationdesc } from "../globals/Locationdesc.js";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ServiceArea as ServiceAreaModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ServiceArea {
+    /**
+     * This is a struct representing a map.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.3
+     */
+    export interface Map {
+        /**
+         * This field shall represent the map’s identifier.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.3.1
+         */
+        mapId: number;
+
+        /**
+         * This field shall represent a human understandable map description.
+         *
+         * For example: "Main Floor", or "Second Level".
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.3.2
+         */
+        name: string;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6
+     */
+    export enum OperationalStatus {
+        /**
+         * The device has not yet started operating at the given area, or has not finished operating at that area but it
+         * is not currently operating at the area
+         */
+        Pending = 0,
+
+        /**
+         * The device is currently operating at the given area
+         */
+        Operating = 1,
+
+        /**
+         * The device has skipped the given area, before or during operating at it, due to a SkipArea command, due an
+         * out of band command (e.g. from the vendor’s application), due to a vendor specific reason, such as a time
+         * limit used by the device, or due the device ending operating unsuccessfully
+         */
+        Skipped = 2,
+
+        /**
+         * The device has completed operating at the given area
+         */
+        Completed = 3
+    }
+
+    /**
+     * This is a struct indicating the progress.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5
+     */
+    export interface Progress {
+        /**
+         * This field shall indicate the identifier of the area, and the identifier shall be an entry in the
+         * SupportedAreas attribute’s list.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5.1
+         */
+        areaId: number;
+
+        /**
+         * This field shall indicate the operational status of the device regarding the area indicated by the AreaID
+         * field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5.2
+         */
+        status: OperationalStatus;
+
+        /**
+         * This field shall indicate the total operational time, in seconds, from when the device started to operate at
+         * the area indicated by the AreaID field, until the operation finished, due to completion or due to skipping,
+         * including any time spent while paused.
+         *
+         * A value of null indicates that the total operational time is unknown.
+         *
+         * There may be cases where the total operational time exceeds the maximum value that can be conveyed by this
+         * attribute, and in such instances this attribute shall be populated with null.
+         *
+         * Null if the Status field is not set to Completed or Skipped.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5.3
+         */
+        totalOperationalTime?: number | null;
+
+        /**
+         * This field shall indicate the estimated time for the operation, in seconds, from when the device will start
+         * operating at the area indicated by the AreaID field, until the operation completes, excluding any time spent
+         * while not operating in the area.
+         *
+         * A value of null indicates that the estimated time is unknown. If the estimated time is unknown, or if it
+         * exceeds the maximum value that can be conveyed by this attribute, this attribute shall be null.
+         *
+         * After initializing the ProgressStruct instance, the server SHOULD NOT change the value of this field, except
+         * when repopulating the entire instance, to avoid excessive reporting of the Progress attribute changes.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5.4
+         */
+        estimatedTime?: number | null;
+    }
+
+    /**
+     * The data from this structure indicates a landmark and position relative to the landmark.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.1
+     */
+    export interface LandmarkInfo {
+        /**
+         * This field shall indicate that the area is associated with a landmark.
+         *
+         * This field shall be the ID of a landmark semantic tag, located within the Common Landmark Namespace. For
+         * example, this tag may indicate that the area refers to an area next to a table.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.1.1
+         */
+        landmarkTag: number;
+
+        /**
+         * This field shall identify the position of the area relative to a landmark. This is a static description of a
+         * zone known to the server, and this field never reflects the device’s own proximity or position relative to
+         * the landmark, but that of the zone.
+         *
+         * This field shall be the ID of a relative position semantic tag, located within the Common Relative Position
+         * Namespace.
+         *
+         * If the RelativePositionTag field is null, this field indicates proximity to the landmark. Otherwise, the
+         * RelativePositionTag field indicates the position of the area relative to the landmark indicated by the
+         * LandmarkTag field. For example, this tag, in conjunction with the LandmarkTag field, may indicate that the
+         * area refers to a zone under a table.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.1.2
+         */
+        relativePositionTag: number | null;
+    }
+
+    /**
+     * The data from this structure indicates the name and/or semantic data describing an area, as detailed below.
+     *
+     * This data type includes the LocationInfo field, with the following fields: LocationName, FloorNumber, AreaType.
+     * Additional semantic data may be available in the LandmarkInfo field.
+     *
+     * For an area description to be meaningful, it shall have at least one of the following:
+     *
+     *   - a non-empty name (LocationInfo’s LocationName field)
+     *
+     * OR
+     *
+     *   - some semantic data (one or more of these: FloorNumber, AreaType or LandmarkTag) The normative text from the
+     *     remainder of this section describes these constraints.
+     *
+     * If the LocationInfo field is null, the LandmarkInfo field shall NOT be null.
+     *
+     * If the LandmarkInfo field is null, the LocationInfo field shall NOT be null.
+     *
+     * If LocationInfo is not null, and its LocationName field is an empty string, at least one of the following shall
+     * NOT be null:
+     *
+     *   - LocationInfo’s FloorNumber field
+     *
+     *   - LocationInfo’s AreaType field
+     *
+     *   - LandmarkInfo field
+     *
+     * If all three of the following are null, LocationInfo’s LocationName field shall NOT be an empty string:
+     *
+     *   - LocationInfo’s FloorNumber field
+     *
+     *   - LocationInfo’s AreaType field
+     *
+     *   - LandmarkInfo field
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.2
+     */
+    export interface AreaInfo {
+        /**
+         * This field shall indicate the name of the area, floor number and/or area type.
+         *
+         * A few examples are provided below.
+         *
+         *   - An area can have LocationInfo’s LocationName field set to "blue room", and the AreaType field set to the
+         *     ID of a "Living Room" semantic tag. Clients wishing to direct the device to operate in (or service) the
+         *     living room can use this area.
+         *
+         *   - An area can have LocationInfo set to null, the LandmarkInfo’s LandmarkTag field set to the ID of the
+         *     "Table" landmark semantic tag, and the RelativePositionTag field set to the ID of the "Under" position
+         *     semantic tag. With such an area indication, the client can request the device to operate in (or service)
+         *     the area located under the table.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.2.1
+         */
+        locationInfo: Locationdesc | null;
+
+        /**
+         * This field shall indicate an association with a landmark. A value of null indicates that the information is
+         * not available or known. For example, this may indicate that the area refers to a zone next to a table.
+         *
+         * If this field is not null, that indicates that the area is restricted to the zone where the landmark is
+         * located, as indicated by the LandmarkTag and, if not null, by the RelativePositionTag fields, rather than to
+         * the entire room or floor where the landmark is located, if those are indicated by the LocationInfo field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.2.2
+         */
+        landmarkInfo: LandmarkInfo | null;
+    }
+
+    /**
+     * This is a struct representing an area known to the server.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4
+     */
+    export interface Area {
+        /**
+         * This field shall represent the identifier of the area.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4.1
+         */
+        areaId: number;
+
+        /**
+         * This field shall indicate the map identifier which the area is associated with. A value of null indicates
+         * that the area is not associated with a map.
+         *
+         * If the SupportedMaps attribute is not empty, this field shall match the MapID field of an entry from the
+         * SupportedMaps attribute’s list. If the SupportedMaps attribute is empty, this field shall be null.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4.2
+         */
+        mapId: number | null;
+
+        /**
+         * This field shall contain data describing the area.
+         *
+         * This SHOULD be used by clients to determine the name and/or the full, or the partial, semantics of a certain
+         * area.
+         *
+         * > [!NOTE]
+         *
+         * > If any entries on the SupportedAreas attribute’s list have the AreaInfo field missing the semantic data,
+         *   the client may remind the user to assign the respective data.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4.3
+         */
+        areaInfo: AreaInfo;
+    }
+
+    /**
+     * This command is used to select a set of device areas, where the device is to operate.
+     *
+     * On receipt of this command the device shall respond with a SelectAreasResponse command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.1
+     */
+    export interface SelectAreasRequest {
+        /**
+         * This field indicates which areas the device is to operate at.
+         *
+         * If this field is empty, that indicates that the device is to operate without being constrained to any
+         * specific areas, and the operation will not allow skipping using the SkipArea Command, otherwise the field
+         * shall be a list of unique values that match the AreaID field of entries on the SupportedAreas list.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.1.1
+         */
+        newAreas: number[];
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6.1
+     */
+    export enum SelectAreasStatus {
+        /**
+         * Attempting to operate in the areas identified by the entries of the NewAreas field is allowed and possible.
+         * The SelectedAreas attribute is set to the value of the NewAreas field.
+         */
+        Success = 0,
+
+        /**
+         * The value of at least one of the entries of the NewAreas field doesn’t match any entries in the
+         * SupportedAreas attribute.
+         */
+        UnsupportedArea = 1,
+
+        /**
+         * The received request cannot be handled due to the current mode of the device.
+         */
+        InvalidInMode = 2,
+
+        /**
+         * The set of values is invalid. For example, areas on different floors, that a robot knows it can’t reach on
+         * its own.
+         */
+        InvalidSet = 3
+    }
+
+    /**
+     * This command is sent by the device on receipt of the SelectAreas command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.2
+     */
+    export interface SelectAreasResponse {
+        /**
+         * If the Status field is set to Success or UnsupportedArea, the server may use a non-empty string for the
+         * StatusText field to provide additional information. For example, if Status is set to UnsupportedArea, the
+         * server may use StatusText to indicate which areas are unsupported.
+         *
+         * If the Status field is not set to Success, or UnsupportedArea, the StatusText field shall include a
+         * vendor-defined error description which can be used to explain the error to the user. For example, if the
+         * Status field is set to InvalidInMode, the StatusText field SHOULD indicate why the request is not allowed,
+         * given the current mode of the device, which may involve other clusters.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.2.1
+         */
+        status: SelectAreasStatus;
+
+        statusText: string;
+    }
+
+    /**
+     * This command is used to skip the given area, and to attempt operating at other areas on the SupportedAreas
+     * attribute list.
+     *
+     * On receipt of this command the device shall respond with a SkipAreaResponse command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.3
+     */
+    export interface SkipAreaRequest {
+        /**
+         * The SkippedArea field indicates the area to be skipped.
+         *
+         * The SkippedArea field shall match an entry in the SupportedAreas list.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.3.1
+         */
+        skippedArea: number;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6.2
+     */
+    export enum SkipAreaStatus {
+        /**
+         * Skipping the area is allowed and possible, or the device was operating at the last available area and has
+         * stopped.
+         */
+        Success = 0,
+
+        /**
+         * The SelectedAreas attribute is empty.
+         */
+        InvalidAreaList = 1,
+
+        /**
+         * The received request cannot be handled due to the current mode of the device. For example, the CurrentArea
+         * attribute is null or the device is not operating.
+         */
+        InvalidInMode = 2,
+
+        /**
+         * The SkippedArea field doesn’t match an entry in the SupportedAreas list.
+         */
+        InvalidSkippedArea = 3
+    }
+
+    /**
+     * This command is sent by the device on receipt of the SkipArea command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.4
+     */
+    export interface SkipAreaResponse {
+        /**
+         * If the Status field is set to Success or InvalidAreaList, the server may use a non-empty string for the
+         * StatusText field to provide additional information. For example, if Status is set to InvalidAreaList, the
+         * server may use StatusText to indicate why this list is invalid.
+         *
+         * If the Status field is not set to Success or InvalidAreaList, the StatusText field shall include a vendor
+         * defined error description which can be used to explain the error to the user. For example, if the Status
+         * field is set to InvalidInMode, the StatusText field SHOULD indicate why the request is not allowed, given the
+         * current mode of the device, which may involve other clusters.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.4.1
+         */
+        status: SkipAreaStatus;
+
+        statusText: string;
+    }
+
+    export interface Attributes {
+        supportedAreas: Area[];
+        selectedAreas: number[];
+        currentArea: number | null;
+        estimatedEndTime: number | null;
+        supportedMaps: Map[];
+        progress: Progress[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "supportedAreas" | "selectedAreas", optional: "currentArea" | "estimatedEndTime" },
+            { flags: { maps: true }, mandatory: "supportedMaps" },
+            { flags: { progressReporting: true }, mandatory: "progress" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is used to select a set of device areas, where the device is to operate.
+             *
+             * On receipt of this command the device shall respond with a SelectAreasResponse command.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.1
+             */
+            selectAreas(request: SelectAreasRequest): MaybePromise<SelectAreasResponse>;
+
+            /**
+             * This command is used to skip the given area, and to attempt operating at other areas on the
+             * SupportedAreas attribute list.
+             *
+             * On receipt of this command the device shall respond with a SkipAreaResponse command.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.3
+             */
+            skipArea(request: SkipAreaRequest): MaybePromise<SkipAreaResponse>;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "SelectWhileRunning" | "ProgressReporting" | "Maps";
+
     /**
      * These are optional features supported by ServiceAreaCluster.
      *
@@ -73,41 +510,6 @@ export namespace ServiceArea {
          */
         name: TlvField(1, TlvString.bound({ maxLength: 64 }))
     });
-
-    /**
-     * This is a struct representing a map.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.3
-     */
-    export interface Map extends TypeFromSchema<typeof TlvMap> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6
-     */
-    export enum OperationalStatus {
-        /**
-         * The device has not yet started operating at the given area, or has not finished operating at that area but it
-         * is not currently operating at the area
-         */
-        Pending = 0,
-
-        /**
-         * The device is currently operating at the given area
-         */
-        Operating = 1,
-
-        /**
-         * The device has skipped the given area, before or during operating at it, due to a SkipArea command, due an
-         * out of band command (e.g. from the vendor’s application), due to a vendor specific reason, such as a time
-         * limit used by the device, or due the device ending operating unsuccessfully
-         */
-        Skipped = 2,
-
-        /**
-         * The device has completed operating at the given area
-         */
-        Completed = 3
-    }
 
     /**
      * This is a struct indicating the progress.
@@ -164,13 +566,6 @@ export namespace ServiceArea {
     });
 
     /**
-     * This is a struct indicating the progress.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.5
-     */
-    export interface Progress extends TypeFromSchema<typeof TlvProgress> {}
-
-    /**
      * The data from this structure indicates a landmark and position relative to the landmark.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.1
@@ -203,13 +598,6 @@ export namespace ServiceArea {
          */
         relativePositionTag: TlvField(1, TlvNullable(TlvUInt8))
     });
-
-    /**
-     * The data from this structure indicates a landmark and position relative to the landmark.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.1
-     */
-    export interface LandmarkInfo extends TypeFromSchema<typeof TlvLandmarkInfo> {}
 
     /**
      * The data from this structure indicates the name and/or semantic data describing an area, as detailed below.
@@ -282,46 +670,6 @@ export namespace ServiceArea {
     });
 
     /**
-     * The data from this structure indicates the name and/or semantic data describing an area, as detailed below.
-     *
-     * This data type includes the LocationInfo field, with the following fields: LocationName, FloorNumber, AreaType.
-     * Additional semantic data may be available in the LandmarkInfo field.
-     *
-     * For an area description to be meaningful, it shall have at least one of the following:
-     *
-     *   - a non-empty name (LocationInfo’s LocationName field)
-     *
-     * OR
-     *
-     *   - some semantic data (one or more of these: FloorNumber, AreaType or LandmarkTag) The normative text from the
-     *     remainder of this section describes these constraints.
-     *
-     * If the LocationInfo field is null, the LandmarkInfo field shall NOT be null.
-     *
-     * If the LandmarkInfo field is null, the LocationInfo field shall NOT be null.
-     *
-     * If LocationInfo is not null, and its LocationName field is an empty string, at least one of the following shall
-     * NOT be null:
-     *
-     *   - LocationInfo’s FloorNumber field
-     *
-     *   - LocationInfo’s AreaType field
-     *
-     *   - LandmarkInfo field
-     *
-     * If all three of the following are null, LocationInfo’s LocationName field shall NOT be an empty string:
-     *
-     *   - LocationInfo’s FloorNumber field
-     *
-     *   - LocationInfo’s AreaType field
-     *
-     *   - LandmarkInfo field
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.2
-     */
-    export interface AreaInfo extends TypeFromSchema<typeof TlvAreaInfo> {}
-
-    /**
      * This is a struct representing an area known to the server.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4
@@ -362,13 +710,6 @@ export namespace ServiceArea {
     });
 
     /**
-     * This is a struct representing an area known to the server.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.4
-     */
-    export interface Area extends TypeFromSchema<typeof TlvArea> {}
-
-    /**
      * Input to the ServiceArea selectAreas command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.1
@@ -385,41 +726,6 @@ export namespace ServiceArea {
          */
         newAreas: TlvField(0, TlvArray(TlvUInt32))
     });
-
-    /**
-     * Input to the ServiceArea selectAreas command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.1
-     */
-    export interface SelectAreasRequest extends TypeFromSchema<typeof TlvSelectAreasRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6.1
-     */
-    export enum SelectAreasStatus {
-        /**
-         * Attempting to operate in the areas identified by the entries of the NewAreas field is allowed and possible.
-         * The SelectedAreas attribute is set to the value of the NewAreas field.
-         */
-        Success = 0,
-
-        /**
-         * The value of at least one of the entries of the NewAreas field doesn’t match any entries in the
-         * SupportedAreas attribute.
-         */
-        UnsupportedArea = 1,
-
-        /**
-         * The received request cannot be handled due to the current mode of the device.
-         */
-        InvalidInMode = 2,
-
-        /**
-         * The set of values is invalid. For example, areas on different floors, that a robot knows it can’t reach on
-         * its own.
-         */
-        InvalidSet = 3
-    }
 
     /**
      * This command is sent by the device on receipt of the SelectAreas command.
@@ -445,13 +751,6 @@ export namespace ServiceArea {
     });
 
     /**
-     * This command is sent by the device on receipt of the SelectAreas command.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.2
-     */
-    export interface SelectAreasResponse extends TypeFromSchema<typeof TlvSelectAreasResponse> {}
-
-    /**
      * Input to the ServiceArea skipArea command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.3
@@ -466,40 +765,6 @@ export namespace ServiceArea {
          */
         skippedArea: TlvField(0, TlvUInt32)
     });
-
-    /**
-     * Input to the ServiceArea skipArea command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.3
-     */
-    export interface SkipAreaRequest extends TypeFromSchema<typeof TlvSkipAreaRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.5.6.2
-     */
-    export enum SkipAreaStatus {
-        /**
-         * Skipping the area is allowed and possible, or the device was operating at the last available area and has
-         * stopped.
-         */
-        Success = 0,
-
-        /**
-         * The SelectedAreas attribute is empty.
-         */
-        InvalidAreaList = 1,
-
-        /**
-         * The received request cannot be handled due to the current mode of the device. For example, the CurrentArea
-         * attribute is null or the device is not operating.
-         */
-        InvalidInMode = 2,
-
-        /**
-         * The SkippedArea field doesn’t match an entry in the SupportedAreas list.
-         */
-        InvalidSkippedArea = 3
-    }
 
     /**
      * This command is sent by the device on receipt of the SkipArea command.
@@ -523,13 +788,6 @@ export namespace ServiceArea {
 
         statusText: TlvField(1, TlvString.bound({ maxLength: 256 }))
     });
-
-    /**
-     * This command is sent by the device on receipt of the SkipArea command.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.17.7.4
-     */
-    export interface SkipAreaResponse extends TypeFromSchema<typeof TlvSkipAreaResponse> {}
 
     /**
      * A ServiceAreaCluster supports these elements if it supports feature Maps.
@@ -899,8 +1157,14 @@ export namespace ServiceArea {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x150);
+    export const revision = 2;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type ServiceAreaCluster = ServiceArea.Cluster;
 export const ServiceAreaCluster = ServiceArea.Cluster;
 ClusterRegistry.register(ServiceArea.Complete);
+ClusterNamespace.define(ServiceArea, ServiceAreaModel);

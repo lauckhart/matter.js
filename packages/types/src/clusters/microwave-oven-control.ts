@@ -20,11 +20,138 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvOptionalField, TlvObject, TlvField } from "../tlv/TlvObject.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { MicrowaveOvenControl as MicrowaveOvenControlModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace MicrowaveOvenControl {
+    /**
+     * This command is used to set the cooking parameters associated with the operation of the device. This command
+     * supports the following fields:
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2
+     */
+    export interface SetCookingParametersRequest {
+        /**
+         * This field shall indicate the value to which the CurrentMode attribute of the Microwave Oven Mode cluster
+         * should be set. The value of this field shall be one from the list of SupportedModes from the Microwave Oven
+         * Mode cluster.
+         *
+         * If this field is missing, the CurrentMode attribute shall be set to a mode having the Normal mode tag.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2.1
+         */
+        cookMode?: number;
+
+        /**
+         * This field shall indicate the CookTime associated with the operation of the device. The value of this field
+         * shall be subject to the constraints of the CookTime attribute of this cluster.
+         *
+         * If this field is missing, the CookTime attribute shall be set to 30 seconds by the server.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2.2
+         */
+        cookTime?: number;
+
+        /**
+         * This field shall indicate the PowerSetting associated with the operation of the device. The value of this
+         * field shall be subject to the constraints of the PowerSetting attribute of this cluster. If the PowerSetting
+         * field does not conform to the constraints of the PowerSetting attribute, the server shall return a
+         * CONSTRAINT_ERROR status.
+         *
+         * If this field is missing, the PowerSetting attribute shall be set to 100 if MaxPower is not supported by the
+         * server, otherwise it shall be set to MaxPower if the MaxPower attribute is supported by the server.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2.3
+         */
+        powerSetting?: number;
+
+        /**
+         * This field shall indicate the value to which the SelectedWattIndex attribute is set. If the value of this
+         * field is greater than or equal to the length of the SupportedWatts attribute list, the server shall return a
+         * CONSTRAINT_ERROR status and the value of the SelectedWattIndex attribute shall be unchanged.
+         *
+         * If this field is missing, the SelectedWattIndex attribute shall be set by the server to the index associated
+         * with the highest Watt setting for the selected CookMode.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2.4
+         */
+        wattSettingIndex?: number;
+
+        /**
+         * This field shall indicate whether or not oven operation shall be started when the command is received.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2.5
+         */
+        startAfterSetting?: boolean;
+    }
+
+    /**
+     * This command is used to add more time to the CookTime attribute of the server.
+     *
+     * This command supports these fields:
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.3
+     */
+    export interface AddMoreTimeRequest {
+        /**
+         * This field shall indicate the number of seconds to be added to the CookTime attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.3.1
+         */
+        timeToAdd: number;
+    }
+
+    export interface Attributes {
+        cookTime: number;
+        maxCookTime: number;
+        wattRating: number;
+        powerSetting: number;
+        minPower: number;
+        maxPower: number;
+        powerStep: number;
+        supportedWatts: number[];
+        selectedWattIndex: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "cookTime" | "maxCookTime", optional: "wattRating" },
+            { flags: { powerAsNumber: true }, mandatory: "powerSetting" },
+            { flags: { powerNumberLimits: true }, mandatory: "minPower" | "maxPower" | "powerStep" },
+            { flags: { powerInWatts: true }, mandatory: "supportedWatts" | "selectedWattIndex" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is used to set the cooking parameters associated with the operation of the device. This
+             * command supports the following fields:
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2
+             */
+            setCookingParameters(request: SetCookingParametersRequest): MaybePromise;
+
+            /**
+             * This command is used to add more time to the CookTime attribute of the server.
+             *
+             * This command supports these fields:
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.3
+             */
+            addMoreTime(request: AddMoreTimeRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "PowerAsNumber" | "PowerInWatts" | "PowerNumberLimits";
+
     /**
      * These are optional features supported by MicrowaveOvenControlCluster.
      *
@@ -114,13 +241,6 @@ export namespace MicrowaveOvenControl {
     });
 
     /**
-     * Input to the MicrowaveOvenControl setCookingParameters command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.2
-     */
-    export interface SetCookingParametersRequest extends TypeFromSchema<typeof TlvSetCookingParametersRequest> {}
-
-    /**
      * Input to the MicrowaveOvenControl addMoreTime command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.3
@@ -133,13 +253,6 @@ export namespace MicrowaveOvenControl {
          */
         timeToAdd: TlvField(0, TlvUInt32.bound({ min: 1 }))
     });
-
-    /**
-     * Input to the MicrowaveOvenControl addMoreTime command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 8.13.6.3
-     */
-    export interface AddMoreTimeRequest extends TypeFromSchema<typeof TlvAddMoreTimeRequest> {}
 
     /**
      * A MicrowaveOvenControlCluster supports these elements if it supports feature PowerAsNumber.
@@ -389,8 +502,14 @@ export namespace MicrowaveOvenControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x5f);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 export const MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 ClusterRegistry.register(MicrowaveOvenControl.Complete);
+ClusterNamespace.define(MicrowaveOvenControl, MicrowaveOvenControlModel);

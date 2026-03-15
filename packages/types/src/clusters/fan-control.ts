@@ -10,72 +10,16 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { FixedAttribute, WritableAttribute, Attribute, Command, TlvNoResponse } from "../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvEnum, TlvPercent } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
-import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { Identity } from "@matter/general";
+import { BitFlag } from "../schema/BitmapSchema.js";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { FanControl as FanControlModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace FanControl {
-    /**
-     * These are optional features supported by FanControlCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.4.4
-     */
-    export enum Feature {
-        /**
-         * MultiSpeed (SPD)
-         *
-         * Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed control
-         * but left it up to the implementer to decide what was supported. Therefore, it is assumed that legacy client
-         * implementations are capable of determining, from the server, the number of speeds supported between 1, 2, or
-         * 3, and whether automatic speed control is supported.
-         *
-         * The MultiSpeed feature includes attributes that support a running fan speed value from 0 to SpeedMax.
-         *
-         * See Section 4.4.6.6.1, “Speed Rules” for more details.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 4.4.4.1
-         */
-        MultiSpeed = "MultiSpeed",
-
-        /**
-         * Auto (AUT)
-         *
-         * Automatic mode supported for fan speed
-         */
-        Auto = "Auto",
-
-        /**
-         * Rocking (RCK)
-         *
-         * Rocking movement supported
-         */
-        Rocking = "Rocking",
-
-        /**
-         * Wind (WND)
-         *
-         * Wind emulation supported
-         */
-        Wind = "Wind",
-
-        /**
-         * Step (STEP)
-         *
-         * Step command supported
-         */
-        Step = "Step",
-
-        /**
-         * AirflowDirection (DIR)
-         *
-         * Airflow Direction attribute is supported
-         */
-        AirflowDirection = "AirflowDirection"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.1
      */
@@ -95,6 +39,23 @@ export namespace FanControl {
          */
         rockRound: BitFlag(2)
     };
+
+    export interface Rock {
+        /**
+         * Indicate rock left to right
+         */
+        rockLeftRight?: boolean;
+
+        /**
+         * Indicate rock up and down
+         */
+        rockUpDown?: boolean;
+
+        /**
+         * Indicate rock around
+         */
+        rockRound?: boolean;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.2
@@ -119,6 +80,27 @@ export namespace FanControl {
          */
         naturalWind: BitFlag(1)
     };
+
+    export interface Wind {
+        /**
+         * Indicate sleep wind
+         *
+         * The fan speed, based on current settings, shall gradually slow down to a final minimum speed. For this
+         * process, the sequence, speeds and duration are MS.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.2.1
+         */
+        sleepWind?: boolean;
+
+        /**
+         * Indicate natural wind
+         *
+         * The fan speed shall vary to emulate natural wind. For this setting, the sequence, speeds and duration are MS.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.2.2
+         */
+        naturalWind?: boolean;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.4
@@ -151,24 +133,37 @@ export namespace FanControl {
     }
 
     /**
-     * Input to the FanControl step command
+     * This command indirectly changes the speed-oriented attributes of the fan in steps rather than using the
+     * speed-oriented attributes, FanMode, PercentSetting, or SpeedSetting, directly. This command supports, for
+     * example, a user-operated and wall-mounted toggle switch that can be used to increase or decrease the speed of the
+     * fan by pressing the toggle switch up or down until the desired fan speed is reached. How this command is
+     * interpreted by the server and how it affects the values of the speed-oriented attributes is implementation
+     * specific.
+     *
+     * For example, a fan supports this command, and the value of the FanModeSequence attribute is 0. The current value
+     * of the FanMode attribute is 2, or Medium. This command is received with the Direction field set to Increase. As
+     * per it’s specific implementation, the server reacts to the command by setting the value of the FanMode attribute
+     * to 3, or High, which in turn sets the PercentSetting and SpeedSetting (if present) attributes to appropriate
+     * values, as defined by Section 4.4.6.3.1, “Percent Rules” and Section 4.4.6.6.1, “Speed Rules” respectively.
+     *
+     * This command supports these fields:
      *
      * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1
      */
-    export const TlvStepRequest = TlvObject({
+    export interface StepRequest {
         /**
          * This field shall indicate whether the speed-oriented attributes increase or decrease to the next step value.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.1
          */
-        direction: TlvField(0, TlvEnum<StepDirection>()),
+        direction: StepDirection;
 
         /**
          * This field shall indicate if the speed-oriented attributes wrap between highest and lowest step value.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.2
          */
-        wrap: TlvOptionalField(1, TlvBoolean),
+        wrap?: boolean;
 
         /**
          * This field shall indicate that the fan being off (FanMode = Off, PercentSetting = 0, or SpeedSetting = 0) is
@@ -176,15 +171,8 @@ export namespace FanControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.3
          */
-        lowestOff: TlvOptionalField(2, TlvBoolean)
-    });
-
-    /**
-     * Input to the FanControl step command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1
-     */
-    export interface StepRequest extends TypeFromSchema<typeof TlvStepRequest> {}
+        lowestOff?: boolean;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.4.5.5
@@ -262,6 +250,149 @@ export namespace FanControl {
          */
         OffHigh = 5
     }
+
+    export interface Attributes {
+        fanMode: FanMode;
+        fanModeSequence: FanModeSequence;
+        percentSetting: number | null;
+        percentCurrent: number;
+        speedMax: number;
+        speedSetting: number | null;
+        speedCurrent: number;
+        rockSupport: Rock;
+        rockSetting: Rock;
+        windSupport: Wind;
+        windSetting: Wind;
+        airflowDirection: AirflowDirection;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "fanMode" | "fanModeSequence" | "percentSetting" | "percentCurrent" },
+            { flags: { multiSpeed: true }, mandatory: "speedMax" | "speedSetting" | "speedCurrent" },
+            { flags: { rocking: true }, mandatory: "rockSupport" | "rockSetting" },
+            { flags: { wind: true }, mandatory: "windSupport" | "windSetting" },
+            { flags: { airflowDirection: true }, mandatory: "airflowDirection" }
+        ];
+    }
+
+    export interface Commands extends Commands.Step {}
+
+    export namespace Commands {
+        export interface Step {
+            /**
+             * This command indirectly changes the speed-oriented attributes of the fan in steps rather than using the
+             * speed-oriented attributes, FanMode, PercentSetting, or SpeedSetting, directly. This command supports, for
+             * example, a user-operated and wall-mounted toggle switch that can be used to increase or decrease the
+             * speed of the fan by pressing the toggle switch up or down until the desired fan speed is reached. How
+             * this command is interpreted by the server and how it affects the values of the speed-oriented attributes
+             * is implementation specific.
+             *
+             * For example, a fan supports this command, and the value of the FanModeSequence attribute is 0. The
+             * current value of the FanMode attribute is 2, or Medium. This command is received with the Direction field
+             * set to Increase. As per it’s specific implementation, the server reacts to the command by setting the
+             * value of the FanMode attribute to 3, or High, which in turn sets the PercentSetting and SpeedSetting (if
+             * present) attributes to appropriate values, as defined by Section 4.4.6.3.1, “Percent Rules” and Section
+             * 4.4.6.6.1, “Speed Rules” respectively.
+             *
+             * This command supports these fields:
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1
+             */
+            step(request: StepRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: { step: true }, methods: Step }];
+    }
+
+    export type Features = "MultiSpeed" | "Auto" | "Rocking" | "Wind" | "Step" | "AirflowDirection";
+
+    /**
+     * These are optional features supported by FanControlCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.4.4
+     */
+    export enum Feature {
+        /**
+         * MultiSpeed (SPD)
+         *
+         * Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed control
+         * but left it up to the implementer to decide what was supported. Therefore, it is assumed that legacy client
+         * implementations are capable of determining, from the server, the number of speeds supported between 1, 2, or
+         * 3, and whether automatic speed control is supported.
+         *
+         * The MultiSpeed feature includes attributes that support a running fan speed value from 0 to SpeedMax.
+         *
+         * See Section 4.4.6.6.1, “Speed Rules” for more details.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.4.1
+         */
+        MultiSpeed = "MultiSpeed",
+
+        /**
+         * Auto (AUT)
+         *
+         * Automatic mode supported for fan speed
+         */
+        Auto = "Auto",
+
+        /**
+         * Rocking (RCK)
+         *
+         * Rocking movement supported
+         */
+        Rocking = "Rocking",
+
+        /**
+         * Wind (WND)
+         *
+         * Wind emulation supported
+         */
+        Wind = "Wind",
+
+        /**
+         * Step (STEP)
+         *
+         * Step command supported
+         */
+        Step = "Step",
+
+        /**
+         * AirflowDirection (DIR)
+         *
+         * Airflow Direction attribute is supported
+         */
+        AirflowDirection = "AirflowDirection"
+    }
+
+    /**
+     * Input to the FanControl step command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1
+     */
+    export const TlvStepRequest = TlvObject({
+        /**
+         * This field shall indicate whether the speed-oriented attributes increase or decrease to the next step value.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.1
+         */
+        direction: TlvField(0, TlvEnum<StepDirection>()),
+
+        /**
+         * This field shall indicate if the speed-oriented attributes wrap between highest and lowest step value.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.2
+         */
+        wrap: TlvOptionalField(1, TlvBoolean),
+
+        /**
+         * This field shall indicate that the fan being off (FanMode = Off, PercentSetting = 0, or SpeedSetting = 0) is
+         * included as a step value.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.4.7.1.3
+         */
+        lowestOff: TlvOptionalField(2, TlvBoolean)
+    });
 
     /**
      * A FanControlCluster supports these elements if it supports feature MultiSpeed.
@@ -621,8 +752,14 @@ export namespace FanControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x202);
+    export const revision = 5;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type FanControlCluster = FanControl.Cluster;
 export const FanControlCluster = FanControl.Cluster;
 ClusterRegistry.register(FanControl.Complete);
+ClusterNamespace.define(FanControl, FanControlModel);

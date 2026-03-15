@@ -21,44 +21,17 @@ import { TlvEpochUs, TlvPercent, TlvUInt8, TlvUInt32, TlvEnum, TlvUInt16, TlvBit
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvOptionalField, TlvObject, TlvField } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ValveConfigurationAndControl as ValveConfigurationAndControlModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ValveConfigurationAndControl {
-    /**
-     * These are optional features supported by ValveConfigurationAndControlCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.6.4
-     */
-    export enum Feature {
-        /**
-         * TimeSync (TS)
-         *
-         * This feature shall indicate that the valve uses Time Synchronization and UTC time to indicate duration and
-         * auto close time.
-         *
-         * This feature shall NOT be supported unless the device supports the Time Synchronization cluster.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 4.6.4.1
-         */
-        TimeSync = "TimeSync",
-
-        /**
-         * Level (LVL)
-         *
-         * This feature shall indicate that the valve is capable of being adjusted to a specific position, as a
-         * percentage, of its full range of motion.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 4.6.4.2
-         */
-        Level = "Level"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.6.5.2
      */
@@ -114,6 +87,199 @@ export namespace ValveConfigurationAndControl {
         currentExceeded: BitFlag(5)
     };
 
+    export interface ValveFault {
+        /**
+         * Unspecified fault detected
+         */
+        generalFault?: boolean;
+
+        /**
+         * Valve is blocked
+         */
+        blocked?: boolean;
+
+        /**
+         * Valve has detected a leak
+         */
+        leaking?: boolean;
+
+        /**
+         * No valve is connected to controller
+         */
+        notConnected?: boolean;
+
+        /**
+         * Short circuit is detected
+         */
+        shortCircuit?: boolean;
+
+        /**
+         * The available current has been exceeded
+         */
+        currentExceeded?: boolean;
+    }
+
+    /**
+     * This command is used to set the valve to its open position.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.1
+     */
+    export interface OpenRequest {
+        /**
+         * This field shall indicate the duration that the valve will remain open for this specific Open command.
+         *
+         * A value of null shall indicate the duration is not set, meaning that the valve will remain open until closed
+         * by the user or some other automation.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.1.1
+         */
+        openDuration?: number | null;
+
+        /**
+         * This field shall indicate the target level used for this specific Open command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.1.2
+         */
+        targetLevel?: number;
+    }
+
+    /**
+     * This event shall be generated when the valve state changed. For level changes, after the end of movement, for
+     * state changes when the new state has been reached.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.1
+     */
+    export interface ValveStateChangedEvent {
+        /**
+         * This field shall indicate the new state of the valve.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.1.1
+         */
+        valveState: ValveState;
+
+        /**
+         * This field shall indicate the new level of the valve.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.1.2
+         */
+        valveLevel?: number;
+    }
+
+    /**
+     * This event shall be generated when the valve registers or clears a fault, e.g. not being able to transition to
+     * the requested target level or state.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.2
+     */
+    export interface ValveFaultEvent {
+        /**
+         * This field shall indicate the value of the ValveFault attribute, at the time this event is generated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.2.1
+         */
+        valveFault: ValveFault;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 4.6.6.1
+     */
+    export enum StatusCode {
+        /**
+         * The requested action could not be performed due to a fault on the valve.
+         */
+        FailureDueToFault = 2
+    }
+
+    export interface Attributes {
+        openDuration: number | null;
+        defaultOpenDuration: number | null;
+        remainingDuration: number | null;
+        currentState: ValveState | null;
+        targetState: ValveState | null;
+        valveFault: ValveFault;
+        autoCloseTime: number | bigint | null;
+        currentLevel: number | null;
+        targetLevel: number | null;
+        defaultOpenLevel: number;
+        levelStep: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "openDuration" | "defaultOpenDuration" | "remainingDuration" | "currentState" | "targetState",
+                optional: "valveFault"
+            },
+            { flags: { timeSync: true }, mandatory: "autoCloseTime" },
+            {
+                flags: { level: true },
+                mandatory: "currentLevel" | "targetLevel",
+                optional: "defaultOpenLevel" | "levelStep"
+            }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is used to set the valve to its open position.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.1
+             */
+            open(request: OpenRequest): MaybePromise;
+
+            /**
+             * This command is used to set the valve to its closed position.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.2
+             */
+            close(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        valveStateChanged: ValveStateChangedEvent;
+        valveFault: ValveFaultEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "valveStateChanged" | "valveFault" }];
+    }
+    export type Features = "TimeSync" | "Level";
+
+    /**
+     * These are optional features supported by ValveConfigurationAndControlCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.6.4
+     */
+    export enum Feature {
+        /**
+         * TimeSync (TS)
+         *
+         * This feature shall indicate that the valve uses Time Synchronization and UTC time to indicate duration and
+         * auto close time.
+         *
+         * This feature shall NOT be supported unless the device supports the Time Synchronization cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.4.1
+         */
+        TimeSync = "TimeSync",
+
+        /**
+         * Level (LVL)
+         *
+         * This feature shall indicate that the valve is capable of being adjusted to a specific position, as a
+         * percentage, of its full range of motion.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.6.4.2
+         */
+        Level = "Level"
+    }
+
     /**
      * Input to the ValveConfigurationAndControl open command
      *
@@ -139,13 +305,6 @@ export namespace ValveConfigurationAndControl {
     });
 
     /**
-     * Input to the ValveConfigurationAndControl open command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.6.8.1
-     */
-    export interface OpenRequest extends TypeFromSchema<typeof TlvOpenRequest> {}
-
-    /**
      * Body of the ValveConfigurationAndControl valveStateChanged event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.1
@@ -167,13 +326,6 @@ export namespace ValveConfigurationAndControl {
     });
 
     /**
-     * Body of the ValveConfigurationAndControl valveStateChanged event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.1
-     */
-    export interface ValveStateChangedEvent extends TypeFromSchema<typeof TlvValveStateChangedEvent> {}
-
-    /**
      * Body of the ValveConfigurationAndControl valveFault event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.2
@@ -186,23 +338,6 @@ export namespace ValveConfigurationAndControl {
          */
         valveFault: TlvField(0, TlvBitmap(TlvUInt16, ValveFault))
     });
-
-    /**
-     * Body of the ValveConfigurationAndControl valveFault event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.6.9.2
-     */
-    export interface ValveFaultEvent extends TypeFromSchema<typeof TlvValveFaultEvent> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 4.6.6.1
-     */
-    export enum StatusCode {
-        /**
-         * The requested action could not be performed due to a fault on the valve.
-         */
-        FailureDueToFault = 2
-    }
 
     /**
      * Thrown for cluster status code {@link StatusCode.FailureDueToFault}.
@@ -523,8 +658,15 @@ export namespace ValveConfigurationAndControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x81);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type ValveConfigurationAndControlCluster = ValveConfigurationAndControl.Cluster;
 export const ValveConfigurationAndControlCluster = ValveConfigurationAndControl.Cluster;
 ClusterRegistry.register(ValveConfigurationAndControl.Complete);
+ClusterNamespace.define(ValveConfigurationAndControl, ValveConfigurationAndControlModel);

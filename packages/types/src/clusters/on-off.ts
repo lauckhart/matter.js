@@ -11,16 +11,228 @@ import { Attribute, WritableAttribute, Command, TlvNoResponse } from "../cluster
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvUInt16, TlvEnum, TlvUInt8, TlvBitmap } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, OnOff as OnOffModel } from "@matter/model";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { ClusterType } from "../cluster/ClusterType.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OnOff {
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.2
+     */
+    export enum StartUpOnOff {
+        /**
+         * Set the OnOff attribute to FALSE
+         */
+        Off = 0,
+
+        /**
+         * Set the OnOff attribute to TRUE
+         */
+        On = 1,
+
+        /**
+         * If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the
+         * previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).
+         */
+        Toggle = 2
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.3
+     */
+    export enum EffectIdentifier {
+        /**
+         * Delayed All Off
+         */
+        DelayedAllOff = 0,
+
+        /**
+         * Dying Light
+         */
+        DyingLight = 1
+    }
+
+    /**
+     * The OffWithEffect command allows devices to be turned off using enhanced ways of fading.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4
+     */
+    export interface OffWithEffectRequest {
+        /**
+         * This field specifies the fading effect to use when turning the device off. This field shall contain one of
+         * the non-reserved values listed in EffectIdentifierEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4.1
+         */
+        effectIdentifier: EffectIdentifier;
+
+        /**
+         * This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD
+         * be triggered. If the server does not support the given variant, it shall use the default variant. This field
+         * is dependent on the value of the EffectIdentifier field and shall contain one of the non-reserved values
+         * listed in either DelayedAllOffEffectVariantEnum or DyingLightEffectVariantEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4.2
+         */
+        effectVariant: number;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.1
+     */
+    export const OnOffControl = {
+        /**
+         * Indicates a command is only accepted when in On state.
+         */
+        acceptOnlyWhenOn: BitFlag(0)
+    };
+
+    export interface OnOffControl {
+        /**
+         * Indicates a command is only accepted when in On state.
+         */
+        acceptOnlyWhenOn?: boolean;
+    }
+
+    /**
+     * This command allows devices to be turned on for a specific duration with a guarded off duration so that SHOULD
+     * the device be subsequently turned off, further OnWithTimedOff commands, received during this time, are prevented
+     * from turning the devices back on. Further OnWithTimedOff commands received while the server is turned on, will
+     * update the period that the device is turned on.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6
+     */
+    export interface OnWithTimedOffRequest {
+        /**
+         * This field contains information on how the server is to be operated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6.1
+         */
+        onOffControl: OnOffControl;
+
+        /**
+         * This field is used to adjust the value of the OnTime attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6.2
+         */
+        onTime: number;
+
+        /**
+         * This field is used to adjust the value of the OffWaitTime attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6.3
+         */
+        offWaitTime: number;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.4
+     */
+    export enum DelayedAllOffEffectVariant {
+        /**
+         * Fade to off in 0.8 seconds
+         */
+        DelayedOffFastFade = 0,
+
+        /**
+         * No fade
+         */
+        NoFade = 1,
+
+        /**
+         * 50% dim down in 0.8 seconds then fade to off in 12 seconds
+         */
+        DelayedOffSlowFade = 2
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.5
+     */
+    export enum DyingLightEffectVariant {
+        /**
+         * 20% dim up in 0.5s then fade to off in 1 second
+         */
+        DyingLightFadeOff = 0
+    }
+
+    export interface Attributes {
+        onOff: boolean;
+        globalSceneControl: boolean;
+        onTime: number;
+        offWaitTime: number;
+        startUpOnOff: StartUpOnOff | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "onOff" },
+            { flags: { lighting: true }, mandatory: "globalSceneControl" | "onTime" | "offWaitTime" | "startUpOnOff" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base, Commands.Lighting, Commands.NotOffOnly {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.1
+             */
+            off(): MaybePromise;
+        }
+
+        export interface Lighting {
+            /**
+             * The OffWithEffect command allows devices to be turned off using enhanced ways of fading.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4
+             */
+            offWithEffect(request: OffWithEffectRequest): MaybePromise;
+
+            /**
+             * This command allows the recall of the settings when the device was turned off.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.5
+             */
+            onWithRecallGlobalScene(): MaybePromise;
+
+            /**
+             * This command allows devices to be turned on for a specific duration with a guarded off duration so that
+             * SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during this time,
+             * are prevented from turning the devices back on. Further OnWithTimedOff commands received while the server
+             * is turned on, will update the period that the device is turned on.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6
+             */
+            onWithTimedOff(request: OnWithTimedOffRequest): MaybePromise;
+        }
+
+        export interface NotOffOnly {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.2
+             */
+            on(): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.3
+             */
+            toggle(): MaybePromise;
+        }
+
+        export type Components = [
+            { flags: {}, methods: Base },
+            { flags: { lighting: true }, methods: Lighting },
+            { flags: { offOnly: false }, methods: NotOffOnly }
+        ];
+    }
+
+    export type Features = "Lighting" | "DeadFrontBehavior" | "OffOnly";
+
     /**
      * These are optional features supported by OnOffCluster.
      *
@@ -94,42 +306,6 @@ export namespace OnOff {
     }
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.2
-     */
-    export enum StartUpOnOff {
-        /**
-         * Set the OnOff attribute to FALSE
-         */
-        Off = 0,
-
-        /**
-         * Set the OnOff attribute to TRUE
-         */
-        On = 1,
-
-        /**
-         * If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the
-         * previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).
-         */
-        Toggle = 2
-    }
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.3
-     */
-    export enum EffectIdentifier {
-        /**
-         * Delayed All Off
-         */
-        DelayedAllOff = 0,
-
-        /**
-         * Dying Light
-         */
-        DyingLight = 1
-    }
-
-    /**
      * Input to the OnOff offWithEffect command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4
@@ -153,23 +329,6 @@ export namespace OnOff {
          */
         effectVariant: TlvField(1, TlvUInt8)
     });
-
-    /**
-     * Input to the OnOff offWithEffect command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.4
-     */
-    export interface OffWithEffectRequest extends TypeFromSchema<typeof TlvOffWithEffectRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.1
-     */
-    export const OnOffControl = {
-        /**
-         * Indicates a command is only accepted when in On state.
-         */
-        acceptOnlyWhenOn: BitFlag(0)
-    };
 
     /**
      * Input to the OnOff onWithTimedOff command
@@ -198,43 +357,6 @@ export namespace OnOff {
          */
         offWaitTime: TlvField(2, TlvUInt16.bound({ max: 65534 }))
     });
-
-    /**
-     * Input to the OnOff onWithTimedOff command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.7.6
-     */
-    export interface OnWithTimedOffRequest extends TypeFromSchema<typeof TlvOnWithTimedOffRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.4
-     */
-    export enum DelayedAllOffEffectVariant {
-        /**
-         * Fade to off in 0.8 seconds
-         */
-        DelayedOffFastFade = 0,
-
-        /**
-         * No fade
-         */
-        NoFade = 1,
-
-        /**
-         * 50% dim down in 0.8 seconds then fade to off in 12 seconds
-         */
-        DelayedOffSlowFade = 2
-    }
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.5.5.5
-     */
-    export enum DyingLightEffectVariant {
-        /**
-         * 20% dim up in 0.5s then fade to off in 1 second
-         */
-        DyingLightFadeOff = 0
-    }
 
     /**
      * A OnOffCluster supports these elements if it supports feature Lighting.
@@ -512,8 +634,14 @@ export namespace OnOff {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x6);
+    export const revision = 6;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type OnOffCluster = OnOff.Cluster;
 export const OnOffCluster = OnOff.Cluster;
 ClusterRegistry.register(OnOff.Complete);
+ClusterNamespace.define(OnOff, OnOffModel);

@@ -9,27 +9,15 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, FixedAttribute } from "../cluster/Cluster.js";
 import { TlvEnum } from "../tlv/TlvNumber.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, UnitLocalization as UnitLocalizationModel } from "@matter/model";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace UnitLocalization {
-    /**
-     * These are optional features supported by UnitLocalizationCluster.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.5.4
-     */
-    export enum Feature {
-        /**
-         * TemperatureUnit (TEMP)
-         *
-         * The Node can be configured to use different units of temperature when conveying values to a user.
-         */
-        TemperatureUnit = "TemperatureUnit"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.5.5.1
      */
@@ -48,6 +36,31 @@ export namespace UnitLocalization {
          * Temperature conveyed in Kelvin
          */
         Kelvin = 2
+    }
+
+    export interface Attributes {
+        temperatureUnit: TempUnit;
+        supportedTemperatureUnits: TempUnit[];
+    }
+    export namespace Attributes {
+        export type Components = [
+            { flags: { temperatureUnit: true }, mandatory: "temperatureUnit" | "supportedTemperatureUnits" }
+        ];
+    }
+    export type Features = "TemperatureUnit";
+
+    /**
+     * These are optional features supported by UnitLocalizationCluster.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.5.4
+     */
+    export enum Feature {
+        /**
+         * TemperatureUnit (TEMP)
+         *
+         * The Node can be configured to use different units of temperature when conveying values to a user.
+         */
+        TemperatureUnit = "TemperatureUnit"
     }
 
     /**
@@ -160,8 +173,13 @@ export namespace UnitLocalization {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x2d);
+    export const revision = 2;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type UnitLocalizationCluster = UnitLocalization.Cluster;
 export const UnitLocalizationCluster = UnitLocalization.Cluster;
 ClusterRegistry.register(UnitLocalization.Complete);
+ClusterNamespace.define(UnitLocalization, UnitLocalizationModel);

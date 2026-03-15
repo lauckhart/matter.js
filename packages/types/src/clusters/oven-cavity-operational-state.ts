@@ -15,12 +15,71 @@ import { TlvUInt8, TlvUInt32, TlvEnum } from "../tlv/TlvNumber.js";
 import { OperationalState } from "./operational-state.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { OvenCavityOperationalState as OvenCavityOperationalStateModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OvenCavityOperationalState {
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 8.10.5
+     */
+    export interface OperationalCommandResponse {
+        /**
+         * This shall indicate the success or otherwise of the attempted command invocation. On a successful invocation
+         * of the attempted command, the ErrorStateID shall be populated with NoError. See the individual command
+         * sections for additional specific requirements on population.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.6.5.1
+         */
+        commandResponseState: OperationalState.ErrorStateStruct;
+    }
+
+    export interface Attributes {
+        phaseList: string[] | null;
+        currentPhase: number | null;
+        operationalStateList: OperationalState.OperationalStateStruct[];
+        operationalState: OperationalState.OperationalStateEnum;
+        operationalError: OperationalState.ErrorStateStruct;
+        countdownTime: number | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "phaseList" | "currentPhase" | "operationalStateList" | "operationalState" | "operationalError",
+            optional: "countdownTime"
+        }];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 8.10.5
+             */
+            stop(): MaybePromise<OperationalCommandResponse>;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 8.10.5
+             */
+            start(): MaybePromise<OperationalCommandResponse>;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        operationalError: OperationalState.OperationalErrorEvent;
+        operationCompletion: OperationalState.OperationCompletionEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, mandatory: "operationalError", optional: "operationCompletion" }];
+    }
+
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 8.10.5
      */
@@ -34,11 +93,6 @@ export namespace OvenCavityOperationalState {
          */
         commandResponseState: TlvField(0, OperationalState.TlvErrorStateStruct)
     });
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 8.10.5
-     */
-    export interface OperationalCommandResponse extends TypeFromSchema<typeof TlvOperationalCommandResponse> {}
 
     /**
      * @see {@link Cluster}
@@ -191,8 +245,14 @@ export namespace OvenCavityOperationalState {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x48);
+    export const revision = 2;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
 }
 
 export type OvenCavityOperationalStateCluster = OvenCavityOperationalState.Cluster;
 export const OvenCavityOperationalStateCluster = OvenCavityOperationalState.Cluster;
 ClusterRegistry.register(OvenCavityOperationalState.Complete);
+ClusterNamespace.define(OvenCavityOperationalState, OvenCavityOperationalStateModel);

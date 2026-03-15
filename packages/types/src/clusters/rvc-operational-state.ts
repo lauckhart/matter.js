@@ -14,11 +14,13 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvUInt8, TlvUInt32, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { OperationalState as OperationalStateNamespace } from "./operational-state.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { RvcOperationalState as RvcOperationalStateModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace RvcOperationalState {
     /**
@@ -99,13 +101,13 @@ export namespace RvcOperationalState {
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2
      */
-    export const TlvOperationalStateStruct = TlvObject({
+    export interface OperationalStateStruct {
         /**
          * This shall be populated with a value from the OperationalStateEnum.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2.1
          */
-        operationalStateId: TlvField(0, TlvEnum<OperationalState | OperationalStateNamespace.OperationalStateEnum>()),
+        operationalStateId: OperationalState | OperationalStateNamespace.OperationalStateEnum;
 
         /**
          * This field is present when the OperationalStateID is from the set reserved for Manufacturer Specific States.
@@ -113,15 +115,8 @@ export namespace RvcOperationalState {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2.2
          */
-        operationalStateLabel: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
-    });
-
-    /**
-     * The OperationalStateStruct is used to indicate a possible state of the device.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2
-     */
-    export interface OperationalStateStruct extends TypeFromSchema<typeof TlvOperationalStateStruct> {}
+        operationalStateLabel?: string;
+    }
 
     /**
      * The values defined herein are applicable to this derived cluster of Operational State only and are additional to
@@ -232,6 +227,148 @@ export namespace RvcOperationalState {
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4
      */
+    export interface ErrorStateStruct {
+        /**
+         * This shall be populated with a value from the ErrorStateEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4.1
+         */
+        errorStateId: ErrorState | OperationalStateNamespace.ErrorState;
+
+        /**
+         * This field is present when the ErrorStateID is from the set reserved for Manufacturer Specific errors. If
+         * present, this shall contain a human-readable description of the error state.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4.2
+         */
+        errorStateLabel?: string;
+
+        /**
+         * This shall be a human-readable string that provides details about the error condition. As an example, if the
+         * ErrorStateID indicates that the device is a Robotic Vacuum that is stuck, the ErrorStateDetails contains
+         * "left wheel blocked".
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4.3
+         */
+        errorStateDetails?: string;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 7.4.5
+     */
+    export interface OperationalCommandResponse {
+        /**
+         * This shall indicate the success or otherwise of the attempted command invocation. On a successful invocation
+         * of the attempted command, the ErrorStateID shall be populated with NoError. See the individual command
+         * sections for additional specific requirements on population.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.6.5.1
+         */
+        commandResponseState: ErrorStateStruct;
+    }
+
+    /**
+     * This event is generated when a reportable error condition is detected. A device that generates this event shall
+     * also set the OperationalState attribute to Error, indicating an error condition.
+     *
+     * This event shall contain the following fields:
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.14.7.1
+     */
+    export interface OperationalErrorEvent {
+        errorState: ErrorStateStruct;
+    }
+
+    export interface Attributes {
+        phaseList: string[] | null;
+        currentPhase: number | null;
+        operationalStateList: OperationalStateStruct[];
+        operationalState: OperationalState | OperationalStateNamespace.OperationalStateEnum;
+        operationalError: ErrorStateStruct;
+        countdownTime: number | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "phaseList" | "currentPhase" | "operationalStateList" | "operationalState" | "operationalError",
+            optional: "countdownTime"
+        }];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 7.4.5
+             */
+            pause(): MaybePromise<OperationalCommandResponse>;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 7.4.5
+             */
+            resume(): MaybePromise<OperationalCommandResponse>;
+
+            /**
+             * On receipt of this command, the device shall start seeking the charging dock, if possible in the current
+             * state of the device.
+             *
+             * If this command is received when already in the SeekingCharger state the device shall respond with an
+             * OperationalCommandResponse command with an ErrorStateID of NoError but the command shall have no other
+             * effect.
+             *
+             * A device that receives this command in any state which does not allow seeking the charger, such as
+             * Charging or Docked, shall respond with an OperationalCommandResponse command with an ErrorStateID of
+             * CommandInvalidInState and shall have no other effect.
+             *
+             * Otherwise, on success:
+             *
+             *   - The OperationalState attribute shall be set to SeekingCharger.
+             *
+             *   - The device shall respond with an OperationalCommandResponse command with an ErrorStateID of NoError.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 7.4.5.1
+             */
+            goHome(): MaybePromise<OperationalCommandResponse>;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        operationalError: OperationalErrorEvent;
+        operationCompletion: OperationalStateNamespace.OperationCompletionEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, mandatory: "operationalError", optional: "operationCompletion" }];
+    }
+
+    /**
+     * The OperationalStateStruct is used to indicate a possible state of the device.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2
+     */
+    export const TlvOperationalStateStruct = TlvObject({
+        /**
+         * This shall be populated with a value from the OperationalStateEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2.1
+         */
+        operationalStateId: TlvField(0, TlvEnum<OperationalState | OperationalStateNamespace.OperationalStateEnum>()),
+
+        /**
+         * This field is present when the OperationalStateID is from the set reserved for Manufacturer Specific States.
+         * If present, this shall contain a human-readable description of the operational state.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.2.2
+         */
+        operationalStateLabel: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
+    });
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4
+     */
     export const TlvErrorStateStruct = TlvObject({
         /**
          * This shall be populated with a value from the ErrorStateEnum.
@@ -259,11 +396,6 @@ export namespace RvcOperationalState {
     });
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.14.4.4
-     */
-    export interface ErrorStateStruct extends TypeFromSchema<typeof TlvErrorStateStruct> {}
-
-    /**
      * @see {@link MatterSpecification.v142.Cluster} § 7.4.5
      */
     export const TlvOperationalCommandResponse = TlvObject({
@@ -278,23 +410,11 @@ export namespace RvcOperationalState {
     });
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 7.4.5
-     */
-    export interface OperationalCommandResponse extends TypeFromSchema<typeof TlvOperationalCommandResponse> {}
-
-    /**
      * Body of the RvcOperationalState operationalError event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.14.7.1
      */
     export const TlvOperationalErrorEvent = TlvObject({ errorState: TlvField(0, TlvErrorStateStruct) });
-
-    /**
-     * Body of the RvcOperationalState operationalError event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.14.7.1
-     */
-    export interface OperationalErrorEvent extends TypeFromSchema<typeof TlvOperationalErrorEvent> {}
 
     /**
      * @see {@link Cluster}
@@ -476,8 +596,14 @@ export namespace RvcOperationalState {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x61);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
 }
 
 export type RvcOperationalStateCluster = RvcOperationalState.Cluster;
 export const RvcOperationalStateCluster = RvcOperationalState.Cluster;
 ClusterRegistry.register(RvcOperationalState.Complete);
+ClusterNamespace.define(RvcOperationalState, RvcOperationalStateModel);

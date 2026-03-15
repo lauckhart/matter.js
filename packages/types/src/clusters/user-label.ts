@@ -10,11 +10,20 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { Label } from "./label.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, UserLabel as UserLabelModel } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace UserLabel {
+    export interface Attributes {
+        labelList: Label.LabelStruct[];
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "labelList" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -48,8 +57,12 @@ export namespace UserLabel {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x41);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type UserLabelCluster = UserLabel.Cluster;
 export const UserLabelCluster = UserLabel.Cluster;
 ClusterRegistry.register(UserLabel.Complete);
+ClusterNamespace.define(UserLabel, UserLabelModel);

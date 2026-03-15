@@ -18,18 +18,669 @@ import {
 } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
-import { TlvNodeId } from "../datatype/NodeId.js";
-import { TlvSubjectId } from "../datatype/SubjectId.js";
+import { TlvNodeId, NodeId } from "../datatype/NodeId.js";
+import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { TlvEnum, TlvUInt32, TlvUInt16, TlvBitmap } from "../tlv/TlvNumber.js";
-import { TlvFabricIndex } from "../datatype/FabricIndex.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
+import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
+import { AccessLevel, IcdManagement as IcdManagementModel } from "@matter/model";
 import { TlvByteString, TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace IcdManagement {
+    /**
+     * @see {@link MatterSpecification.v142.Core} § 9.16.5.1.1
+     */
+    export enum ClientType {
+        /**
+         * The client is typically resident, always-on, fixed infrastructure in the home.
+         */
+        Permanent = 0,
+
+        /**
+         * The client is mobile or non-resident or not always-on and may not always be available in the home.
+         */
+        Ephemeral = 1
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Core} § 9.16.5.3
+     */
+    export interface MonitoringRegistration {
+        /**
+         * This field shall indicate the NodeID of the Node to which Check-In messages will be sent when the
+         * MonitoredSubject is not subscribed.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.5.3.1
+         */
+        checkInNodeId: NodeId;
+
+        /**
+         * This field shall indicate the monitored Subject ID. This field shall be used to determine if a particular
+         * client has an active subscription for the given entry. The MonitoredSubject, when it is a NodeID, may be the
+         * same as the CheckInNodeID. The MonitoredSubject gives the registering client the flexibility of having a
+         * different CheckInNodeID from the MonitoredSubject. A subscription shall count as an active subscription for
+         * this entry if:
+         *
+         *   - It is on the associated fabric of this entry, and
+         *
+         *   - The subject of this entry matches the ISD of the SubscriptionRequest message that created the
+         *     subscription. Matching shall be determined using the subject_matches function defined in the Access
+         *     Control Privilege Granting Algorithm.
+         *
+         * For example, if the MonitoredSubject is Node ID 0x1111_2222_3333_AAAA, and one of the subscribers to the
+         * server on the entry’s associated fabric bears that Node ID, then the entry matches.
+         *
+         * Another example is if the MonitoredSubject has the value 0xFFFF_FFFD_AA12_0002, and one of the subscribers to
+         * the server on the entry’s associated fabric bears the CASE Authenticated TAG value 0xAA12 and the version
+         * 0x0002 or higher within its NOC, then the entry matches.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.5.3.2
+         */
+        monitoredSubject: SubjectId;
+
+        /**
+         * This field shall indicate the client’s type to inform the ICD of the availability for communication of the
+         * client.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.5.3.4
+         */
+        clientType: ClientType;
+
+        fabricIndex: FabricIndex;
+    }
+
+    /**
+     * This command allows a client to register itself with the ICD to be notified when the device is available for
+     * communication.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.7.1
+     */
+    export interface RegisterClientRequest {
+        /**
+         * This field shall provide the node ID to which a Check-In message will be sent if there are no active
+         * subscriptions matching MonitoredSubject.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.1.1
+         */
+        checkInNodeId: NodeId;
+
+        /**
+         * This field shall provide the monitored subject ID.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.1.2
+         */
+        monitoredSubject: SubjectId;
+
+        /**
+         * This field shall contain the ICDToken, a 128-bit symmetric key shared by the ICD and the ICD Client, used to
+         * encrypt Check-In messages from this ICD to the MonitoredSubject.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.1.3
+         */
+        key: Bytes;
+
+        /**
+         * This field shall provide the verification key. The verification key represents the key already stored on the
+         * server. The verification key provided in this field shall be used by the server to guarantee that a client
+         * with manage permissions can only modify entries that contain a Key equal to the verification key. The
+         * verification key shall be provided for clients with manage permissions. The verification key SHOULD NOT be
+         * provided by clients with administrator permissions for the server cluster. The verification key shall be
+         * ignored by the server if it is provided by a client with administrator permissions for the server cluster.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.1.4
+         */
+        verificationKey?: Bytes;
+
+        /**
+         * This field shall provide the client type of the client registering.
+         *
+         * ### Effect on Receipt
+         *
+         * On receipt of the RegisterClient command, the server shall perform the following procedure:
+         *
+         *   1. The server verifies that an entry for the fabric is available in the server’s list of registered
+         *      clients.
+         *
+         *     a. If one of the entries in storage for the fabric has the same CheckInNodeID as the received
+         *        CheckInNodeID, the server shall continue from step 2.
+         *
+         *     b. If there is an available entry for the fabric, an entry is created for the fabric and the received
+         *        CheckInNodeID, MonitoredSubject, Key and ClientType are stored. The server shall continue from step 5.
+         *
+         *     c. If there are no available entries for the fabric, the status shall be RESOURCE_EXHAUSTED and the
+         *        server shall continue from step 6.
+         *
+         *   2. The server shall verify the privileges of the command’s ISD.
+         *
+         *     a. If the ISD of the command has administrator privileges for the server cluster, the server shall
+         *        continue from step 4.
+         *
+         *     b. If the ISD of the command does not have administrator privileges for the server cluster, the server
+         *        shall continue from step 3.
+         *
+         *   3. The server shall verify that the received verification key is equal to the key previously stored in the
+         *      list of registered clients with the matching CheckInNodeID.
+         *
+         *     a. If the verification key does not have a valid value, the status shall be FAILURE. the server shall
+         *        continue from step 6.
+         *
+         *     b. If the verification key is not equal to the Key value stored in the entry, the status shall be
+         *        FAILURE. The server shall continue from step 6.
+         *
+         *     c. If the verification key is equal to the Key value stored in the entry, the server shall continue from
+         *        step 4.
+         *
+         *   4. The entry shall be updated with the received CheckInNodeID, MonitoredSubject, Key and ClientType.
+         *
+         *     a. If the update fails, the status shall be FAILURE. The server shall continue from step 6.
+         *
+         *     b. If the update succeeds, the server shall continue from step 5.
+         *
+         *   5. The server shall persist the client information.
+         *
+         *     a. If the persistence fails, the status shall be FAILURE and the server shall continue from step 6.
+         *
+         *     b. If the persistence succeeds, the status shall be SUCCESS and the server shall continue from step 6.
+         *
+         *   6. The server shall generate a response.
+         *
+         *     a. If the status is SUCCESS, the server shall generate a RegisterClientResponse command.
+         *
+         *     b. If the status is not SUCCESS, the server shall generate a default response with the Status field set
+         *        to the evaluated error status.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.1.5
+         */
+        clientType: ClientType;
+    }
+
+    /**
+     * This command shall be sent by the ICD Management Cluster server in response to a successful RegisterClient
+     * command.
+     *
+     * ### When Generated
+     *
+     * This command shall be generated in response to a successful RegisterClient command. The ICDCounter field shall be
+     * set to the ICDCounter attribute of the server.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.7.2
+     */
+    export interface RegisterClientResponse {
+        icdCounter: number;
+    }
+
+    /**
+     * This command allows a client to unregister itself with the ICD. Example: a client that is leaving the network
+     * (e.g. running on a phone which is leaving the home) can (and should) remove its subscriptions and send this
+     * UnregisterClient command before leaving to prevent the burden on the ICD of an absent client.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.7.3
+     */
+    export interface UnregisterClientRequest {
+        /**
+         * This field shall provide the registered client node ID to remove from storage.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.3.1
+         */
+        checkInNodeId: NodeId;
+
+        /**
+         * This field shall provide the verification key associated with the CheckInNodeID to remove from storage. The
+         * verification key represents the key already stored on the server. The verification key provided in this field
+         * shall be used by the server to guarantee that a client with manage permissions can only remove entries that
+         * contain a Key equal to the stored key. The verification key shall be provided for clients with manage
+         * permissions. The verification key SHOULD NOT be provided by clients with administrator permissions for the
+         * server cluster. The verification key shall be ignored by the server if it is provided by a client with
+         * administrator permissions for the server cluster.
+         *
+         * ### Effect on Receipt
+         *
+         * On receipt of the UnregisterClient command, the server shall perform the following procedure:
+         *
+         *   1. The server shall check whether there is a entry stored on the device for the fabric with the same
+         *      CheckInNodeID.
+         *
+         *     a. If there are no entries stored for the fabric, the status shall be NOT_FOUND. The server shall
+         *        continue from step 6.
+         *
+         *     b. If there is an error when reading from storage, the status shall be FAILURE. The server shall continue
+         *        from step 6.
+         *
+         *     c. If there is at least one entry stored on the server for the fabric, the server shall continue from
+         *        step 2.
+         *
+         *   2. The server shall verify if one of the entries for the fabric has the corresponding CheckInNodeID
+         *      received in the command.
+         *
+         *     a. If no entries have the corresponding CheckInNodeID, the status shall be NOT_FOUND. The server shall
+         *        continue from step 6.
+         *
+         *     b. If an entry has the corresponding CheckInNodeID, the server shall continue to step 3.
+         *
+         *   3. The server shall check whether the ISD of the command has administrator permissions for the server
+         *      cluster.
+         *
+         *     a. If the ISD of the command has administrator privileges for the server cluster, the server shall
+         *        continue from step 5.
+         *
+         *     b. If the ISD of the command does not have administrator privileges for the server cluster, the server
+         *        shall continue from step 4.
+         *
+         *   4. The server shall verify that the received verification key is equal to the key previously stored in the
+         *      list of registered clients with the matching CheckInNodeID.
+         *
+         *     a. If the verification key does not have a valid value, the status shall be FAILURE. the server shall
+         *        continue from step 6.
+         *
+         *     b. If the verification key is not equal to the Key value stored in the entry, the status shall be
+         *        FAILURE. The server shall continue from step 6.
+         *
+         *     c. If the verification key is equal to the Key value stored in the entry, the server shall continue from
+         *        step 5.
+         *
+         *   5. The server shall delete the entry with the matching CheckInNodeID from storage and will persist the
+         *      change.
+         *
+         *     a. If the removal of the entry fails, the status shall be FAILURE. The server shall continue from step 6.
+         *
+         *     b. If the removal succeeds, the status shall be SUCCESS and the server shall continue to step 6.
+         *
+         *   6. The server shall generate a response with the Status field set to the evaluated status.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.3.2
+         */
+        verificationKey?: Bytes;
+    }
+
+    /**
+     * See the UserActiveModeTriggerHint table for requirements associated to each bit.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.5.1
+     */
+    export const UserActiveModeTrigger = {
+        /**
+         * Power Cycle to transition the device to ActiveMode
+         */
+        powerCycle: BitFlag(0),
+
+        /**
+         * Settings menu on the device informs how to transition the device to ActiveMode
+         */
+        settingsMenu: BitFlag(1),
+
+        /**
+         * Custom Instruction on how to transition the device to ActiveMode
+         */
+        customInstruction: BitFlag(2),
+
+        /**
+         * Device Manual informs how to transition the device to ActiveMode
+         */
+        deviceManual: BitFlag(3),
+
+        /**
+         * Actuate Sensor to transition the device to ActiveMode
+         */
+        actuateSensor: BitFlag(4),
+
+        /**
+         * Actuate Sensor for N seconds to transition the device to ActiveMode
+         */
+        actuateSensorSeconds: BitFlag(5),
+
+        /**
+         * Actuate Sensor N times to transition the device to ActiveMode
+         */
+        actuateSensorTimes: BitFlag(6),
+
+        /**
+         * Actuate Sensor until light blinks to transition the device to ActiveMode
+         */
+        actuateSensorLightsBlink: BitFlag(7),
+
+        /**
+         * Press Reset Button to transition the device to ActiveMode
+         */
+        resetButton: BitFlag(8),
+
+        /**
+         * Press Reset Button until light blinks to transition the device to ActiveMode
+         */
+        resetButtonLightsBlink: BitFlag(9),
+
+        /**
+         * Press Reset Button for N seconds to transition the device to ActiveMode
+         */
+        resetButtonSeconds: BitFlag(10),
+
+        /**
+         * Press Reset Button N times to transition the device to ActiveMode
+         */
+        resetButtonTimes: BitFlag(11),
+
+        /**
+         * Press Setup Button to transition the device to ActiveMode
+         */
+        setupButton: BitFlag(12),
+
+        /**
+         * Press Setup Button for N seconds to transition the device to ActiveMode
+         */
+        setupButtonSeconds: BitFlag(13),
+
+        /**
+         * Press Setup Button until light blinks to transition the device to ActiveMode
+         */
+        setupButtonLightsBlink: BitFlag(14),
+
+        /**
+         * Press Setup Button N times to transition the device to ActiveMode
+         */
+        setupButtonTimes: BitFlag(15),
+
+        /**
+         * Press the N Button to transition the device to ActiveMode
+         */
+        appDefinedButton: BitFlag(16)
+    };
+
+    export interface UserActiveModeTrigger {
+        /**
+         * Power Cycle to transition the device to ActiveMode
+         */
+        powerCycle?: boolean;
+
+        /**
+         * Settings menu on the device informs how to transition the device to ActiveMode
+         */
+        settingsMenu?: boolean;
+
+        /**
+         * Custom Instruction on how to transition the device to ActiveMode
+         */
+        customInstruction?: boolean;
+
+        /**
+         * Device Manual informs how to transition the device to ActiveMode
+         */
+        deviceManual?: boolean;
+
+        /**
+         * Actuate Sensor to transition the device to ActiveMode
+         */
+        actuateSensor?: boolean;
+
+        /**
+         * Actuate Sensor for N seconds to transition the device to ActiveMode
+         */
+        actuateSensorSeconds?: boolean;
+
+        /**
+         * Actuate Sensor N times to transition the device to ActiveMode
+         */
+        actuateSensorTimes?: boolean;
+
+        /**
+         * Actuate Sensor until light blinks to transition the device to ActiveMode
+         */
+        actuateSensorLightsBlink?: boolean;
+
+        /**
+         * Press Reset Button to transition the device to ActiveMode
+         */
+        resetButton?: boolean;
+
+        /**
+         * Press Reset Button until light blinks to transition the device to ActiveMode
+         */
+        resetButtonLightsBlink?: boolean;
+
+        /**
+         * Press Reset Button for N seconds to transition the device to ActiveMode
+         */
+        resetButtonSeconds?: boolean;
+
+        /**
+         * Press Reset Button N times to transition the device to ActiveMode
+         */
+        resetButtonTimes?: boolean;
+
+        /**
+         * Press Setup Button to transition the device to ActiveMode
+         */
+        setupButton?: boolean;
+
+        /**
+         * Press Setup Button for N seconds to transition the device to ActiveMode
+         */
+        setupButtonSeconds?: boolean;
+
+        /**
+         * Press Setup Button until light blinks to transition the device to ActiveMode
+         */
+        setupButtonLightsBlink?: boolean;
+
+        /**
+         * Press Setup Button N times to transition the device to ActiveMode
+         */
+        setupButtonTimes?: boolean;
+
+        /**
+         * Press the N Button to transition the device to ActiveMode
+         */
+        appDefinedButton?: boolean;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Core} § 9.16.5.2
+     */
+    export enum OperatingMode {
+        /**
+         * ICD is operating as a Short Idle Time ICD.
+         */
+        Sit = 0,
+
+        /**
+         * ICD is operating as a Long Idle Time ICD.
+         */
+        Lit = 1
+    }
+
+    /**
+     * This command allows a client to request that the server stays in active mode for at least a given time duration
+     * (in milliseconds) from when this command is received.
+     *
+     * This StayActiveDuration may be longer than the ActiveModeThreshold value and would, typically, be used by the
+     * client to request the server to stay active and responsive for this period to allow a sequence of message
+     * exchanges during that period. The client may slightly overestimate the duration it wants the ICD to be active
+     * for, in order to account for network delays.
+     *
+     * ### Effect on Receipt
+     *
+     * When receiving a StayActiveRequest command, the server shall calculate the maximum PromisedActiveDuration it can
+     * remain active as the greater of the following two values:
+     *
+     *   - StayActiveDuration: Specified in the received command by the client.
+     *
+     *   - Remaining Active Time: The server’s planned remaining active time based on the ActiveModeThreshold and its
+     *     internal resources and power budget.
+     *
+     * A server may replace StayActiveDuration with Minimum Active Duration in the above calculation.
+     *
+     * PromisedActiveDuration represents the guaranteed minimum time the server will remain active, taking into account
+     * both the requested duration and the server’s capabilities.
+     *
+     * The ICD shall report the calculated PromisedActiveDuration in a StayActiveResponse message back to the client.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.7.4
+     */
+    export interface StayActiveRequest {
+        stayActiveDuration: number;
+    }
+
+    /**
+     * This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain the computed
+     * duration (in milliseconds) that the ICD intends to stay active for.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.16.7.5
+     */
+    export interface StayActiveResponse {
+        /**
+         * This field shall provide the actual duration that the ICD server can stay active from the time it receives
+         * the StayActiveRequest command.
+         *
+         * ### Minimum Value for PromisedActiveDuration
+         *
+         * The minimum value of the PromisedActiveDuration field shall be equal to either 30000 milliseconds or
+         * StayActiveDuration (from the received StayActiveRequest command), whichever is smaller.
+         *
+         * Example scenarios:
+         *
+         *   - A Client requests an ICD to stay awake for 20000 milliseconds in its StayActiveDuration field. The ICD
+         *     responds with 20000 in its PromisedActiveDuration if it can stay active for that duration.
+         *
+         *   - A Client requests an ICD to stay awake for 35000 milliseconds in its StayActiveDuration field. The ICD
+         *     responds with 30000 in its PromisedActiveDuration since it can only stay active for that minimal amount.
+         *
+         *   - A Client requests an ICD to stay awake for 10000 milliseconds in its StayActiveDuration field, but the
+         *     ICD’s remaining active time is 20000 milliseconds. The ICD responds with 20000 milliseconds in its
+         *     PromisedActiveDuration field since it intends to stay active that long.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.16.7.5.1
+         */
+        promisedActiveDuration: number;
+    }
+
+    export interface Attributes {
+        idleModeDuration: number;
+        activeModeDuration: number;
+        activeModeThreshold: number;
+        userActiveModeTriggerInstruction: string;
+        registeredClients: MonitoringRegistration[];
+        icdCounter: number;
+        clientsSupportedPerFabric: number;
+        maximumCheckInBackoff: number;
+        userActiveModeTriggerHint: UserActiveModeTrigger;
+        operatingMode: OperatingMode;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "idleModeDuration" | "activeModeDuration" | "activeModeThreshold",
+                optional: "userActiveModeTriggerInstruction"
+            },
+            {
+                flags: { checkInProtocolSupport: true },
+                mandatory: "registeredClients" | "icdCounter" | "clientsSupportedPerFabric" | "maximumCheckInBackoff"
+            },
+            { flags: { userActiveModeTrigger: true }, mandatory: "userActiveModeTriggerHint" },
+            { flags: { longIdleTimeSupport: true }, mandatory: "operatingMode" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base, Commands.CheckInProtocolSupport, Commands.LongIdleTimeSupport {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command allows a client to request that the server stays in active mode for at least a given time
+             * duration (in milliseconds) from when this command is received.
+             *
+             * This StayActiveDuration may be longer than the ActiveModeThreshold value and would, typically, be used by
+             * the client to request the server to stay active and responsive for this period to allow a sequence of
+             * message exchanges during that period. The client may slightly overestimate the duration it wants the ICD
+             * to be active for, in order to account for network delays.
+             *
+             * ### Effect on Receipt
+             *
+             * When receiving a StayActiveRequest command, the server shall calculate the maximum PromisedActiveDuration
+             * it can remain active as the greater of the following two values:
+             *
+             *   - StayActiveDuration: Specified in the received command by the client.
+             *
+             *   - Remaining Active Time: The server’s planned remaining active time based on the ActiveModeThreshold
+             *     and its internal resources and power budget.
+             *
+             * A server may replace StayActiveDuration with Minimum Active Duration in the above calculation.
+             *
+             * PromisedActiveDuration represents the guaranteed minimum time the server will remain active, taking into
+             * account both the requested duration and the server’s capabilities.
+             *
+             * The ICD shall report the calculated PromisedActiveDuration in a StayActiveResponse message back to the
+             * client.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 9.16.7.4
+             */
+            stayActiveRequest(request: StayActiveRequest): MaybePromise<StayActiveResponse>;
+        }
+
+        export interface CheckInProtocolSupport {
+            /**
+             * This command allows a client to register itself with the ICD to be notified when the device is available
+             * for communication.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 9.16.7.1
+             */
+            registerClient(request: RegisterClientRequest): MaybePromise<RegisterClientResponse>;
+
+            /**
+             * This command allows a client to unregister itself with the ICD. Example: a client that is leaving the
+             * network (e.g. running on a phone which is leaving the home) can (and should) remove its subscriptions and
+             * send this UnregisterClient command before leaving to prevent the burden on the ICD of an absent client.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 9.16.7.3
+             */
+            unregisterClient(request: UnregisterClientRequest): MaybePromise;
+        }
+
+        export interface LongIdleTimeSupport {
+            /**
+             * This command allows a client to request that the server stays in active mode for at least a given time
+             * duration (in milliseconds) from when this command is received.
+             *
+             * This StayActiveDuration may be longer than the ActiveModeThreshold value and would, typically, be used by
+             * the client to request the server to stay active and responsive for this period to allow a sequence of
+             * message exchanges during that period. The client may slightly overestimate the duration it wants the ICD
+             * to be active for, in order to account for network delays.
+             *
+             * ### Effect on Receipt
+             *
+             * When receiving a StayActiveRequest command, the server shall calculate the maximum PromisedActiveDuration
+             * it can remain active as the greater of the following two values:
+             *
+             *   - StayActiveDuration: Specified in the received command by the client.
+             *
+             *   - Remaining Active Time: The server’s planned remaining active time based on the ActiveModeThreshold
+             *     and its internal resources and power budget.
+             *
+             * A server may replace StayActiveDuration with Minimum Active Duration in the above calculation.
+             *
+             * PromisedActiveDuration represents the guaranteed minimum time the server will remain active, taking into
+             * account both the requested duration and the server’s capabilities.
+             *
+             * The ICD shall report the calculated PromisedActiveDuration in a StayActiveResponse message back to the
+             * client.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 9.16.7.4
+             */
+            stayActiveRequest(request: StayActiveRequest): MaybePromise<StayActiveResponse>;
+        }
+
+        export type Components = [
+            { flags: {}, methods: Base },
+            { flags: { checkInProtocolSupport: true }, methods: CheckInProtocolSupport },
+            { flags: { longIdleTimeSupport: true }, methods: LongIdleTimeSupport }
+        ];
+    }
+
+    export type Features = "CheckInProtocolSupport" | "UserActiveModeTrigger" | "LongIdleTimeSupport" | "DynamicSitLitSupport";
+
     /**
      * These are optional features supported by IcdManagementCluster.
      *
@@ -73,21 +724,6 @@ export namespace IcdManagement {
          * @see {@link MatterSpecification.v142.Core} § 9.16.4.4
          */
         DynamicSitLitSupport = "DynamicSitLitSupport"
-    }
-
-    /**
-     * @see {@link MatterSpecification.v142.Core} § 9.16.5.1.1
-     */
-    export enum ClientType {
-        /**
-         * The client is typically resident, always-on, fixed infrastructure in the home.
-         */
-        Permanent = 0,
-
-        /**
-         * The client is mobile or non-resident or not always-on and may not always be available in the home.
-         */
-        Ephemeral = 1
     }
 
     /**
@@ -136,11 +772,6 @@ export namespace IcdManagement {
 
         fabricIndex: TlvField(254, TlvFabricIndex)
     });
-
-    /**
-     * @see {@link MatterSpecification.v142.Core} § 9.16.5.3
-     */
-    export interface MonitoringRegistration extends TypeFromSchema<typeof TlvMonitoringRegistration> {}
 
     /**
      * Input to the IcdManagement registerClient command
@@ -247,13 +878,6 @@ export namespace IcdManagement {
     });
 
     /**
-     * Input to the IcdManagement registerClient command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.7.1
-     */
-    export interface RegisterClientRequest extends TypeFromSchema<typeof TlvRegisterClientRequest> {}
-
-    /**
      * This command shall be sent by the ICD Management Cluster server in response to a successful RegisterClient
      * command.
      *
@@ -265,19 +889,6 @@ export namespace IcdManagement {
      * @see {@link MatterSpecification.v142.Core} § 9.16.7.2
      */
     export const TlvRegisterClientResponse = TlvObject({ icdCounter: TlvField(0, TlvUInt32) });
-
-    /**
-     * This command shall be sent by the ICD Management Cluster server in response to a successful RegisterClient
-     * command.
-     *
-     * ### When Generated
-     *
-     * This command shall be generated in response to a successful RegisterClient command. The ICDCounter field shall be
-     * set to the ICDCounter attribute of the server.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.7.2
-     */
-    export interface RegisterClientResponse extends TypeFromSchema<typeof TlvRegisterClientResponse> {}
 
     /**
      * Input to the IcdManagement unregisterClient command
@@ -361,132 +972,11 @@ export namespace IcdManagement {
     });
 
     /**
-     * Input to the IcdManagement unregisterClient command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.7.3
-     */
-    export interface UnregisterClientRequest extends TypeFromSchema<typeof TlvUnregisterClientRequest> {}
-
-    /**
-     * See the UserActiveModeTriggerHint table for requirements associated to each bit.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.5.1
-     */
-    export const UserActiveModeTrigger = {
-        /**
-         * Power Cycle to transition the device to ActiveMode
-         */
-        powerCycle: BitFlag(0),
-
-        /**
-         * Settings menu on the device informs how to transition the device to ActiveMode
-         */
-        settingsMenu: BitFlag(1),
-
-        /**
-         * Custom Instruction on how to transition the device to ActiveMode
-         */
-        customInstruction: BitFlag(2),
-
-        /**
-         * Device Manual informs how to transition the device to ActiveMode
-         */
-        deviceManual: BitFlag(3),
-
-        /**
-         * Actuate Sensor to transition the device to ActiveMode
-         */
-        actuateSensor: BitFlag(4),
-
-        /**
-         * Actuate Sensor for N seconds to transition the device to ActiveMode
-         */
-        actuateSensorSeconds: BitFlag(5),
-
-        /**
-         * Actuate Sensor N times to transition the device to ActiveMode
-         */
-        actuateSensorTimes: BitFlag(6),
-
-        /**
-         * Actuate Sensor until light blinks to transition the device to ActiveMode
-         */
-        actuateSensorLightsBlink: BitFlag(7),
-
-        /**
-         * Press Reset Button to transition the device to ActiveMode
-         */
-        resetButton: BitFlag(8),
-
-        /**
-         * Press Reset Button until light blinks to transition the device to ActiveMode
-         */
-        resetButtonLightsBlink: BitFlag(9),
-
-        /**
-         * Press Reset Button for N seconds to transition the device to ActiveMode
-         */
-        resetButtonSeconds: BitFlag(10),
-
-        /**
-         * Press Reset Button N times to transition the device to ActiveMode
-         */
-        resetButtonTimes: BitFlag(11),
-
-        /**
-         * Press Setup Button to transition the device to ActiveMode
-         */
-        setupButton: BitFlag(12),
-
-        /**
-         * Press Setup Button for N seconds to transition the device to ActiveMode
-         */
-        setupButtonSeconds: BitFlag(13),
-
-        /**
-         * Press Setup Button until light blinks to transition the device to ActiveMode
-         */
-        setupButtonLightsBlink: BitFlag(14),
-
-        /**
-         * Press Setup Button N times to transition the device to ActiveMode
-         */
-        setupButtonTimes: BitFlag(15),
-
-        /**
-         * Press the N Button to transition the device to ActiveMode
-         */
-        appDefinedButton: BitFlag(16)
-    };
-
-    /**
-     * @see {@link MatterSpecification.v142.Core} § 9.16.5.2
-     */
-    export enum OperatingMode {
-        /**
-         * ICD is operating as a Short Idle Time ICD.
-         */
-        Sit = 0,
-
-        /**
-         * ICD is operating as a Long Idle Time ICD.
-         */
-        Lit = 1
-    }
-
-    /**
      * Input to the IcdManagement stayActiveRequest command
      *
      * @see {@link MatterSpecification.v142.Core} § 9.16.7.4
      */
     export const TlvStayActiveRequest = TlvObject({ stayActiveDuration: TlvField(0, TlvUInt32) });
-
-    /**
-     * Input to the IcdManagement stayActiveRequest command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.7.4
-     */
-    export interface StayActiveRequest extends TypeFromSchema<typeof TlvStayActiveRequest> {}
 
     /**
      * This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain the computed
@@ -520,14 +1010,6 @@ export namespace IcdManagement {
          */
         promisedActiveDuration: TlvField(0, TlvUInt32)
     });
-
-    /**
-     * This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain the computed
-     * duration (in milliseconds) that the ICD intends to stay active for.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.16.7.5
-     */
-    export interface StayActiveResponse extends TypeFromSchema<typeof TlvStayActiveResponse> {}
 
     /**
      * A IcdManagementCluster supports these elements if it supports feature CheckInProtocolSupport.
@@ -922,8 +1404,14 @@ export namespace IcdManagement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x46);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type IcdManagementCluster = IcdManagement.Cluster;
 export const IcdManagementCluster = IcdManagement.Cluster;
 ClusterRegistry.register(IcdManagement.Complete);
+ClusterNamespace.define(IcdManagement, IcdManagementModel);

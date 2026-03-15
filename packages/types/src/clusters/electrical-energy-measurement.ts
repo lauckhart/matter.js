@@ -10,15 +10,356 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Attribute, OptionalAttribute, Event, FixedAttribute } from "../cluster/Cluster.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvInt64, TlvEpochS, TlvSysTimeMS } from "../tlv/TlvNumber.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Priority } from "../globals/Priority.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { TlvMeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
+import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ElectricalEnergyMeasurement as ElectricalEnergyMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ElectricalEnergyMeasurement {
+    /**
+     * This struct shall indicate the amount of energy measured during a given measurement period.
+     *
+     * A server which does not have the ability to determine the time in UTC, or has not yet done so, shall use the
+     * system time fields to specify the measurement period and observation times.
+     *
+     * A server which has determined the time in UTC shall use the timestamp fields to specify the measurement period.
+     * Such a server may also include the systime fields to indicate how many seconds had passed since boot for a given
+     * timestamp; this allows for client-side resolution of UTC time for previous reports that only included systime.
+     *
+     * Elements using this data type shall indicate whether it represents cumulative or periodic energy, e.g. in the
+     * name or in the element description.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2
+     */
+    export interface EnergyMeasurement {
+        /**
+         * This field shall be the reported energy.
+         *
+         * If the EnergyMeasurementStruct represents cumulative energy, then this shall represent the cumulative energy
+         * recorded at either the value of the EndTimestamp field or the value of the EndSystime field, or both.
+         *
+         * If the EnergyMeasurementStruct represents periodic energy, then this shall represent the energy recorded
+         * during the period specified by either the StartTimestamp and EndTimestamp fields, the period specified by the
+         * StartSystime and EndSystime fields, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2.1
+         */
+        energy: number | bigint;
+
+        /**
+         * This field shall indicate the timestamp in UTC of the beginning of the period during which the value of the
+         * Energy field was measured.
+         *
+         * If this EnergyMeasurementStruct represents cumulative energy, this field shall be omitted.
+         *
+         * Otherwise, if the server had determined the time in UTC at or before the beginning of the measurement period,
+         * this field shall be indicated.
+         *
+         * Otherwise, if the server had not yet determined the time in UTC at or before the beginning of the measurement
+         * period, or does not have the capability of determining the time in UTC, this field shall be omitted.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2.2
+         */
+        startTimestamp?: number;
+
+        /**
+         * This field shall indicate the timestamp in UTC of the end of the period during which the value of the Energy
+         * field was measured.
+         *
+         * If the server had determined the time in UTC by the end of the measurement period, this field shall be
+         * indicated.
+         *
+         * Otherwise, if the server had not yet determined the time in UTC by the end of the measurement period, or does
+         * not have the capability of determining the time in UTC, this field shall be omitted.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2.3
+         */
+        endTimestamp?: number;
+
+        /**
+         * This field shall indicate the time elapsed since boot at the beginning of the period during which the value
+         * of the Energy field was measured.
+         *
+         * If this EnergyMeasurementStruct represents cumulative energy, this field shall be omitted.
+         *
+         * Otherwise, if the server had not yet determined the time in UTC at the start of the measurement period, or
+         * does not have the capability of determining the time in UTC, this field shall be indicated.
+         *
+         * Otherwise, if the server had determined the time in UTC at or before the beginning of the measurement period,
+         * this field may be omitted; if it is indicated, its value shall be the time elapsed since boot at the UTC time
+         * indicated in StartTimestamp.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2.4
+         */
+        startSystime?: number | bigint;
+
+        /**
+         * This field shall indicate the time elapsed since boot at the end of the period during which the value of the
+         * Energy field was measured.
+         *
+         * If the server had not yet determined the time in UTC by the end of the measurement period, or does not have
+         * the capability of determining the time in UTC, this field shall be indicated.
+         *
+         * Otherwise, if the server had determined the time in UTC by the end of the measurement period, this field may
+         * be omitted; if it is indicated, its value shall be the time elapsed since boot at the UTC time indicated in
+         * EndTimestamp.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2.5
+         */
+        endSystime?: number | bigint;
+    }
+
+    /**
+     * This struct shall represent the times at which cumulative measurements were last zero, either due to
+     * initialization of the device, or an internal reset of the cumulative value.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3
+     */
+    export interface CumulativeEnergyReset {
+        /**
+         * This field shall indicate the timestamp in UTC when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero.
+         *
+         * If the server had determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero, this field shall be indicated.
+         *
+         * Otherwise, if the server had not yet determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero, or does not have the capability of determining the
+         * time in UTC, this field shall be omitted.
+         *
+         * If the timestamp in UTC when the value of the Energy field on the CumulativeEnergyImported attribute was most
+         * recently zero cannot currently be determined, a value of null shall be returned.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3.1
+         */
+        importedResetTimestamp?: number | null;
+
+        /**
+         * This field shall indicate the timestamp in UTC when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero.
+         *
+         * If the server had determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero, this field shall be indicated.
+         *
+         * Otherwise, if the server had not yet determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero, or does not have the capability of determining the
+         * time in UTC, this field shall be omitted.
+         *
+         * If the timestamp in UTC when the value of the Energy field on the CumulativeEnergyExported attribute was most
+         * recently zero cannot currently be determined, a value of null shall be returned.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3.2
+         */
+        exportedResetTimestamp?: number | null;
+
+        /**
+         * This field shall indicate the time elapsed since boot when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero.
+         *
+         * If the server had not yet determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero, or does not have the capability of determining the
+         * time in UTC, this field shall be indicated.
+         *
+         * Otherwise, if the server had determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyImported attribute was most recently zero, this field may be omitted; if it is indicated, its
+         * value shall be the time elapsed since boot at the UTC time indicated in ImportedResetTimestamp.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3.3
+         */
+        importedResetSystime?: number | bigint | null;
+
+        /**
+         * This field shall indicate the time elapsed since boot when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero.
+         *
+         * If the server had not yet determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero, or does not have the capability of determining the
+         * time in UTC, this field shall be indicated.
+         *
+         * Otherwise, if the server had determined the time in UTC when the value of the Energy field on the
+         * CumulativeEnergyExported attribute was most recently zero, this field may be omitted; if it is indicated, its
+         * value shall be the time elapsed since boot at the UTC time indicated in ImportedResetTimestamp.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3.4
+         */
+        exportedResetSystime?: number | bigint | null;
+    }
+
+    /**
+     * This event shall be generated when the server takes a snapshot of the cumulative energy imported by the server,
+     * exported from the server, or both, but not more frequently than the rate mentioned in the description above of
+     * the related attribute.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.1
+     */
+    export interface CumulativeEnergyMeasuredEvent {
+        /**
+         * This field shall be the value of CumulativeEnergyImported attribute at the timestamp indicated in its
+         * EndTimestamp field, EndSystime field, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.1.1
+         */
+        energyImported?: EnergyMeasurement;
+
+        /**
+         * This field shall be the value of CumulativeEnergyExported attribute at the timestamp indicated in its
+         * EndTimestamp field, EndSystime field, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.1.2
+         */
+        energyExported?: EnergyMeasurement;
+    }
+
+    /**
+     * This event shall be generated when the server reaches the end of a reporting period for imported energy, exported
+     * energy, or both.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.2
+     */
+    export interface PeriodicEnergyMeasuredEvent {
+        /**
+         * This field shall be the value of PeriodicEnergyImported attribute at the timestamp indicated in its
+         * EndTimestamp field, EndSystime field, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.2.1
+         */
+        energyImported?: EnergyMeasurement;
+
+        /**
+         * This field shall be the value of PeriodicEnergyExported attribute at the timestamp indicated in its
+         * EndTimestamp field, EndSystime field, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.2.2
+         */
+        energyExported?: EnergyMeasurement;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.1
+     */
+    export enum MeasurementType {
+        Unspecified = 0,
+
+        /**
+         * Voltage in millivolts (mV)
+         */
+        Voltage = 1,
+
+        /**
+         * Active current in milliamps (mA)
+         */
+        ActiveCurrent = 2,
+
+        /**
+         * Reactive current in milliamps (mA)
+         */
+        ReactiveCurrent = 3,
+
+        /**
+         * Apparent current in milliamps (mA)
+         */
+        ApparentCurrent = 4,
+
+        /**
+         * Active power in milliwatts (mW)
+         */
+        ActivePower = 5,
+
+        /**
+         * Reactive power in millivolt-amps reactive (mVAR)
+         */
+        ReactivePower = 6,
+
+        /**
+         * Apparent power in millivolt-amps (mVA)
+         */
+        ApparentPower = 7,
+
+        /**
+         * Root mean squared voltage in millivolts (mV)
+         */
+        RmsVoltage = 8,
+
+        /**
+         * Root mean squared current in milliamps (mA)
+         */
+        RmsCurrent = 9,
+
+        /**
+         * Root mean squared power in milliwatts (mW)
+         */
+        RmsPower = 10,
+
+        /**
+         * AC frequency in millihertz (mHz)
+         */
+        Frequency = 11,
+
+        /**
+         * Power Factor ratio in +/- 1/100ths of a percent.
+         */
+        PowerFactor = 12,
+
+        /**
+         * AC neutral current in milliamps (mA)
+         */
+        NeutralCurrent = 13,
+
+        /**
+         * Electrical energy in milliwatt-hours (mWh)
+         */
+        ElectricalEnergy = 14,
+
+        /**
+         * Reactive power in millivolt-amp-hours reactive (mVARh)
+         */
+        ReactiveEnergy = 15,
+
+        /**
+         * Apparent power in millivolt-amp-hours (mVAh)
+         */
+        ApparentEnergy = 16
+    }
+
+    export interface Attributes {
+        accuracy: MeasurementAccuracy;
+        cumulativeEnergyImported: EnergyMeasurement | null;
+        cumulativeEnergyExported: EnergyMeasurement | null;
+        periodicEnergyImported: EnergyMeasurement | null;
+        periodicEnergyExported: EnergyMeasurement | null;
+        cumulativeEnergyReset: CumulativeEnergyReset | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "accuracy" },
+            { flags: { importedEnergy: true, cumulativeEnergy: true }, mandatory: "cumulativeEnergyImported" },
+            { flags: { exportedEnergy: true, cumulativeEnergy: true }, mandatory: "cumulativeEnergyExported" },
+            { flags: { importedEnergy: true, periodicEnergy: true }, mandatory: "periodicEnergyImported" },
+            { flags: { exportedEnergy: true, periodicEnergy: true }, mandatory: "periodicEnergyExported" },
+            { flags: { cumulativeEnergy: true }, optional: "cumulativeEnergyReset" }
+        ];
+    }
+
+    export interface Events {
+        cumulativeEnergyMeasured: CumulativeEnergyMeasuredEvent;
+        periodicEnergyMeasured: PeriodicEnergyMeasuredEvent;
+    }
+
+    export namespace Events {
+        export type Components = [
+            { flags: { cumulativeEnergy: true }, mandatory: "cumulativeEnergyMeasured" },
+            { flags: { periodicEnergy: true }, mandatory: "periodicEnergyMeasured" }
+        ];
+    }
+
+    export type Features = "ImportedEnergy" | "ExportedEnergy" | "CumulativeEnergy" | "PeriodicEnergy";
+
     /**
      * These are optional features supported by ElectricalEnergyMeasurementCluster.
      *
@@ -161,23 +502,6 @@ export namespace ElectricalEnergyMeasurement {
     });
 
     /**
-     * This struct shall indicate the amount of energy measured during a given measurement period.
-     *
-     * A server which does not have the ability to determine the time in UTC, or has not yet done so, shall use the
-     * system time fields to specify the measurement period and observation times.
-     *
-     * A server which has determined the time in UTC shall use the timestamp fields to specify the measurement period.
-     * Such a server may also include the systime fields to indicate how many seconds had passed since boot for a given
-     * timestamp; this allows for client-side resolution of UTC time for previous reports that only included systime.
-     *
-     * Elements using this data type shall indicate whether it represents cumulative or periodic energy, e.g. in the
-     * name or in the element description.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.2
-     */
-    export interface EnergyMeasurement extends TypeFromSchema<typeof TlvEnergyMeasurement> {}
-
-    /**
      * This struct shall represent the times at which cumulative measurements were last zero, either due to
      * initialization of the device, or an internal reset of the cumulative value.
      *
@@ -254,14 +578,6 @@ export namespace ElectricalEnergyMeasurement {
     });
 
     /**
-     * This struct shall represent the times at which cumulative measurements were last zero, either due to
-     * initialization of the device, or an internal reset of the cumulative value.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.3
-     */
-    export interface CumulativeEnergyReset extends TypeFromSchema<typeof TlvCumulativeEnergyReset> {}
-
-    /**
      * Body of the ElectricalEnergyMeasurement cumulativeEnergyMeasured event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.1
@@ -285,13 +601,6 @@ export namespace ElectricalEnergyMeasurement {
     });
 
     /**
-     * Body of the ElectricalEnergyMeasurement cumulativeEnergyMeasured event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.1
-     */
-    export interface CumulativeEnergyMeasuredEvent extends TypeFromSchema<typeof TlvCumulativeEnergyMeasuredEvent> {}
-
-    /**
      * Body of the ElectricalEnergyMeasurement periodicEnergyMeasured event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.2
@@ -313,100 +622,6 @@ export namespace ElectricalEnergyMeasurement {
          */
         energyExported: TlvOptionalField(1, TlvEnergyMeasurement)
     });
-
-    /**
-     * Body of the ElectricalEnergyMeasurement periodicEnergyMeasured event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.12.7.2
-     */
-    export interface PeriodicEnergyMeasuredEvent extends TypeFromSchema<typeof TlvPeriodicEnergyMeasuredEvent> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 2.12.5.1
-     */
-    export enum MeasurementType {
-        Unspecified = 0,
-
-        /**
-         * Voltage in millivolts (mV)
-         */
-        Voltage = 1,
-
-        /**
-         * Active current in milliamps (mA)
-         */
-        ActiveCurrent = 2,
-
-        /**
-         * Reactive current in milliamps (mA)
-         */
-        ReactiveCurrent = 3,
-
-        /**
-         * Apparent current in milliamps (mA)
-         */
-        ApparentCurrent = 4,
-
-        /**
-         * Active power in milliwatts (mW)
-         */
-        ActivePower = 5,
-
-        /**
-         * Reactive power in millivolt-amps reactive (mVAR)
-         */
-        ReactivePower = 6,
-
-        /**
-         * Apparent power in millivolt-amps (mVA)
-         */
-        ApparentPower = 7,
-
-        /**
-         * Root mean squared voltage in millivolts (mV)
-         */
-        RmsVoltage = 8,
-
-        /**
-         * Root mean squared current in milliamps (mA)
-         */
-        RmsCurrent = 9,
-
-        /**
-         * Root mean squared power in milliwatts (mW)
-         */
-        RmsPower = 10,
-
-        /**
-         * AC frequency in millihertz (mHz)
-         */
-        Frequency = 11,
-
-        /**
-         * Power Factor ratio in +/- 1/100ths of a percent.
-         */
-        PowerFactor = 12,
-
-        /**
-         * AC neutral current in milliamps (mA)
-         */
-        NeutralCurrent = 13,
-
-        /**
-         * Electrical energy in milliwatt-hours (mWh)
-         */
-        ElectricalEnergy = 14,
-
-        /**
-         * Reactive power in millivolt-amp-hours reactive (mVARh)
-         */
-        ReactiveEnergy = 15,
-
-        /**
-         * Apparent power in millivolt-amp-hours (mVAh)
-         */
-        ApparentEnergy = 16
-    }
 
     /**
      * A ElectricalEnergyMeasurementCluster supports these elements if it supports features ImportedEnergy and
@@ -715,8 +930,14 @@ export namespace ElectricalEnergyMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x91);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const events: ClusterNamespace.Events<Events>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 export const ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 ClusterRegistry.register(ElectricalEnergyMeasurement.Complete);
+ClusterNamespace.define(ElectricalEnergyMeasurement, ElectricalEnergyMeasurementModel);

@@ -12,8 +12,24 @@ import { TlvInt16, TlvUInt16 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { TemperatureMeasurement as TemperatureMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace TemperatureMeasurement {
+    export interface Attributes {
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        tolerance: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue", optional: "tolerance" }
+        ];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -71,8 +87,12 @@ export namespace TemperatureMeasurement {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x402);
+    export const revision = 4;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 export const TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 ClusterRegistry.register(TemperatureMeasurement.Complete);
+ClusterNamespace.define(TemperatureMeasurement, TemperatureMeasurementModel);

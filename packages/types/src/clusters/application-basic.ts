@@ -9,16 +9,90 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { OptionalFixedAttribute, FixedAttribute, Attribute } from "../cluster/Cluster.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { TlvVendorId } from "../datatype/VendorId.js";
+import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { TlvUInt16, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, ApplicationBasic as ApplicationBasicModel } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ApplicationBasic {
+    /**
+     * This indicates a global identifier for an Application given a catalog.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.2
+     */
+    export interface Application {
+        /**
+         * This field shall indicate the Connectivity Standards Alliance issued vendor ID for the catalog. The DIAL
+         * registry shall use value 0x0000.
+         *
+         * It is assumed that Content App Platform providers (see Video Player Architecture section in [MatterDevLib])
+         * will have their own catalog vendor ID (set to their own Vendor ID) and will assign an ApplicationID to each
+         * Content App.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.2.1
+         */
+        catalogVendorId: number;
+
+        /**
+         * This field shall indicate the application identifier, expressed as a string, such as "123456-5433",
+         * "PruneVideo" or "Company X". This field shall be unique within a catalog.
+         *
+         * For the DIAL registry catalog, this value shall be the DIAL prefix.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.2.2
+         */
+        applicationId: string;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.1
+     */
+    export enum ApplicationStatus {
+        /**
+         * Application is not running.
+         */
+        Stopped = 0,
+
+        /**
+         * Application is running, is visible to the user, and is the active target for input.
+         */
+        ActiveVisibleFocus = 1,
+
+        /**
+         * Application is running but not visible to the user.
+         */
+        ActiveHidden = 2,
+
+        /**
+         * Application is running and visible, but is not the active target for input.
+         */
+        ActiveVisibleNotFocus = 3
+    }
+
+    export interface Attributes {
+        applicationName: string;
+        application: Application;
+        status: ApplicationStatus;
+        applicationVersion: string;
+        allowedVendorList: VendorId[];
+        vendorName: string;
+        vendorId: VendorId;
+        productId: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "applicationName" | "application" | "status" | "applicationVersion" | "allowedVendorList",
+            optional: "vendorName" | "vendorId" | "productId"
+        }];
+    }
+
     /**
      * This indicates a global identifier for an Application given a catalog.
      *
@@ -47,38 +121,6 @@ export namespace ApplicationBasic {
          */
         applicationId: TlvField(1, TlvString)
     });
-
-    /**
-     * This indicates a global identifier for an Application given a catalog.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.2
-     */
-    export interface Application extends TypeFromSchema<typeof TlvApplication> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 6.3.4.1
-     */
-    export enum ApplicationStatus {
-        /**
-         * Application is not running.
-         */
-        Stopped = 0,
-
-        /**
-         * Application is running, is visible to the user, and is the active target for input.
-         */
-        ActiveVisibleFocus = 1,
-
-        /**
-         * Application is running but not visible to the user.
-         */
-        ActiveHidden = 2,
-
-        /**
-         * Application is running and visible, but is not the active target for input.
-         */
-        ActiveVisibleNotFocus = 3
-    }
 
     /**
      * @see {@link Cluster}
@@ -170,8 +212,12 @@ export namespace ApplicationBasic {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x50d);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type ApplicationBasicCluster = ApplicationBasic.Cluster;
 export const ApplicationBasicCluster = ApplicationBasic.Cluster;
 ClusterRegistry.register(ApplicationBasic.Complete);
+ClusterNamespace.define(ApplicationBasic, ApplicationBasicModel);

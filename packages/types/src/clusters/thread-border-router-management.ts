@@ -10,17 +10,173 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Command, TlvNoResponse, Attribute, FixedAttribute } from "../cluster/Cluster.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, ThreadBorderRouterManagement as ThreadBorderRouterManagementModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvUInt16, TlvUInt64 } from "../tlv/TlvNumber.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThreadBorderRouterManagement {
+    /**
+     * This command shall be used to set or update the pending Dataset of the Thread network to which the Border Router
+     * is connected, if the Border Router supports PAN Change.
+     *
+     * If the command is not executed via a CASE session, the command shall fail with a status code of
+     * UNSUPPORTED_ACCESS.
+     *
+     * This PendingDataset field shall contain the pending dataset to which the Thread network should be updated. The
+     * format of the data shall be an octet string containing the raw Thread TLV value of the pending dataset, as
+     * defined in the Thread specification.
+     *
+     * If any of the parameters in the PendingDataset is invalid, the command shall fail with a status of
+     * INVALID_COMMAND.
+     *
+     * Otherwise, this command shall configure the pending dataset of the Thread network to which the Border Router is
+     * connected, with the value given in the PendingDataset parameter. The Border Router will manage activation of the
+     * pending dataset as defined in the Thread specification.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.5
+     */
+    export interface SetPendingDatasetRequest {
+        pendingDataset: Bytes;
+    }
+
+    /**
+     * This command is sent in response to GetActiveDatasetRequest or GetPendingDatasetRequest command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.3
+     */
+    export interface DatasetResponse {
+        /**
+         * If no dataset (active or pending as requested) is configured, this field shall be set to empty.
+         *
+         * Otherwise, this field shall contain the active or pending dataset of the Thread network to which the Border
+         * Router is connected as an octet string containing the raw Thread TLV value of the dataset, as defined in the
+         * Thread specification.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.3.1
+         */
+        dataset: Bytes;
+    }
+
+    /**
+     * This command shall be used to set the active Dataset of the Thread network to which the Border Router is
+     * connected, when there is no active dataset already.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.4
+     */
+    export interface SetActiveDatasetRequest {
+        /**
+         * This field shall contain the active dataset to set of the Thread network to configure in the Border Router as
+         * an octet string containing the raw Thread TLV value of the dataset, as defined in the Thread specification.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.4.1
+         */
+        activeDataset: Bytes;
+
+        /**
+         * See Breadcrumb Attribute section of General Commissioning Cluster in [MatterCore] for usage.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.4.2
+         */
+        breadcrumb?: number | bigint;
+    }
+
+    export interface Attributes {
+        borderRouterName: string;
+        borderAgentId: Bytes;
+        threadVersion: number;
+        interfaceEnabled: boolean;
+        activeDatasetTimestamp: number | bigint | null;
+        pendingDatasetTimestamp: number | bigint | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "borderRouterName" | "borderAgentId" | "threadVersion" | "interfaceEnabled" | "activeDatasetTimestamp" | "pendingDatasetTimestamp"
+        }];
+    }
+
+    export interface Commands extends Commands.Base, Commands.PanChange {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command shall be used to request the active operational dataset of the Thread network to which the
+             * border router is connected.
+             *
+             * If the command is not executed via a CASE session, the command shall fail with a status code of
+             * UNSUPPORTED_ACCESS.
+             *
+             * If an internal error occurs, then this command shall fail with a FAILURE status code sent back to the
+             * initiator.
+             *
+             * Otherwise, this shall generate a DatasetResponse command.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.1
+             */
+            getActiveDatasetRequest(): MaybePromise<DatasetResponse>;
+
+            /**
+             * This command shall be used to request the pending dataset of the Thread network to which the border
+             * router is connected.
+             *
+             * If the command is not executed via a CASE session, the command shall fail with a status code of
+             * UNSUPPORTED_ACCESS.
+             *
+             * If an internal error occurs, then this command shall fail with a FAILURE status code sent back to the
+             * initiator.
+             *
+             * Otherwise, this shall generate a DatasetResponse command.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.2
+             */
+            getPendingDatasetRequest(): MaybePromise<DatasetResponse>;
+
+            /**
+             * This command shall be used to set the active Dataset of the Thread network to which the Border Router is
+             * connected, when there is no active dataset already.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.4
+             */
+            setActiveDatasetRequest(request: SetActiveDatasetRequest): MaybePromise;
+        }
+
+        export interface PanChange {
+            /**
+             * This command shall be used to set or update the pending Dataset of the Thread network to which the Border
+             * Router is connected, if the Border Router supports PAN Change.
+             *
+             * If the command is not executed via a CASE session, the command shall fail with a status code of
+             * UNSUPPORTED_ACCESS.
+             *
+             * This PendingDataset field shall contain the pending dataset to which the Thread network should be
+             * updated. The format of the data shall be an octet string containing the raw Thread TLV value of the
+             * pending dataset, as defined in the Thread specification.
+             *
+             * If any of the parameters in the PendingDataset is invalid, the command shall fail with a status of
+             * INVALID_COMMAND.
+             *
+             * Otherwise, this command shall configure the pending dataset of the Thread network to which the Border
+             * Router is connected, with the value given in the PendingDataset parameter. The Border Router will manage
+             * activation of the pending dataset as defined in the Thread specification.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.5
+             */
+            setPendingDatasetRequest(request: SetPendingDatasetRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }, { flags: { panChange: true }, methods: PanChange }];
+    }
+
+    export type Features = "PanChange";
+
     /**
      * These are optional features supported by ThreadBorderRouterManagementCluster.
      *
@@ -54,13 +210,6 @@ export namespace ThreadBorderRouterManagement {
     });
 
     /**
-     * Input to the ThreadBorderRouterManagement setPendingDatasetRequest command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.5
-     */
-    export interface SetPendingDatasetRequest extends TypeFromSchema<typeof TlvSetPendingDatasetRequest> {}
-
-    /**
      * This command is sent in response to GetActiveDatasetRequest or GetPendingDatasetRequest command.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.3
@@ -77,13 +226,6 @@ export namespace ThreadBorderRouterManagement {
          */
         dataset: TlvField(0, TlvByteString.bound({ maxLength: 254 }))
     });
-
-    /**
-     * This command is sent in response to GetActiveDatasetRequest or GetPendingDatasetRequest command.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.3
-     */
-    export interface DatasetResponse extends TypeFromSchema<typeof TlvDatasetResponse> {}
 
     /**
      * Input to the ThreadBorderRouterManagement setActiveDatasetRequest command
@@ -106,13 +248,6 @@ export namespace ThreadBorderRouterManagement {
          */
         breadcrumb: TlvOptionalField(1, TlvUInt64)
     });
-
-    /**
-     * Input to the ThreadBorderRouterManagement setActiveDatasetRequest command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 10.3.6.4
-     */
-    export interface SetActiveDatasetRequest extends TypeFromSchema<typeof TlvSetActiveDatasetRequest> {}
 
     /**
      * A ThreadBorderRouterManagementCluster supports these elements if it supports feature PanChange.
@@ -345,8 +480,14 @@ export namespace ThreadBorderRouterManagement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x452);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.Cluster;
 export const ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.Cluster;
 ClusterRegistry.register(ThreadBorderRouterManagement.Complete);
+ClusterNamespace.define(ThreadBorderRouterManagement, ThreadBorderRouterManagementModel);

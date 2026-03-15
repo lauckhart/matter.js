@@ -19,42 +19,15 @@ import { TlvPercent, TlvEnum, TlvEpochS } from "../tlv/TlvNumber.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ResourceMonitoring as ResourceMonitoringModel } from "@matter/model";
 
 export namespace ResourceMonitoring {
-    /**
-     * These are optional features supported by ResourceMonitoringCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.8.4
-     */
-    export enum Feature {
-        /**
-         * Condition (CON)
-         *
-         * Supports monitoring the condition of the resource in percentage
-         */
-        Condition = "Condition",
-
-        /**
-         * Warning (WRN)
-         *
-         * Supports warning indication
-         */
-        Warning = "Warning",
-
-        /**
-         * ReplacementProductList (REP)
-         *
-         * Supports specifying the list of replacement products
-         */
-        ReplacementProductList = "ReplacementProductList"
-    }
-
     /**
      * Indicates the direction in which the condition of the resource changes over time.
      *
@@ -110,17 +83,10 @@ export namespace ResourceMonitoring {
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.8.5.4
      */
-    export const TlvReplacementProduct = TlvObject({
-        productIdentifierType: TlvField(0, TlvEnum<ProductIdentifierType>()),
-        productIdentifierValue: TlvField(1, TlvString.bound({ maxLength: 20 }))
-    });
-
-    /**
-     * Indicates the product identifier that can be used as a replacement for the resource.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.8.5.4
-     */
-    export interface ReplacementProduct extends TypeFromSchema<typeof TlvReplacementProduct> {}
+    export interface ReplacementProduct {
+        productIdentifierType: ProductIdentifierType;
+        productIdentifierValue: string;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 2.8.5.2
@@ -141,6 +107,81 @@ export namespace ResourceMonitoring {
          */
         Critical = 2
     }
+
+    export interface Attributes {
+        changeIndication: ChangeIndication;
+        inPlaceIndicator: boolean;
+        lastChangedTime: number | null;
+        condition: number;
+        degradationDirection: DegradationDirection;
+        replacementProductList: ReplacementProduct[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "changeIndication", optional: "inPlaceIndicator" | "lastChangedTime" },
+            { flags: { condition: true }, mandatory: "condition" | "degradationDirection" },
+            { flags: { replacementProductList: true }, mandatory: "replacementProductList" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * Upon receipt, the device shall reset the Condition and ChangeIndicator attributes, indicating full
+             * resource availability and readiness for use, as initially configured. Invocation of this command may
+             * cause the LastChangedTime to be updated automatically based on the clock of the server, if the server
+             * supports setting the attribute.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 2.8.7.1
+             */
+            resetCondition(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "Condition" | "Warning" | "ReplacementProductList";
+
+    /**
+     * These are optional features supported by ResourceMonitoringCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.8.4
+     */
+    export enum Feature {
+        /**
+         * Condition (CON)
+         *
+         * Supports monitoring the condition of the resource in percentage
+         */
+        Condition = "Condition",
+
+        /**
+         * Warning (WRN)
+         *
+         * Supports warning indication
+         */
+        Warning = "Warning",
+
+        /**
+         * ReplacementProductList (REP)
+         *
+         * Supports specifying the list of replacement products
+         */
+        ReplacementProductList = "ReplacementProductList"
+    }
+
+    /**
+     * Indicates the product identifier that can be used as a replacement for the resource.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.8.5.4
+     */
+    export const TlvReplacementProduct = TlvObject({
+        productIdentifierType: TlvField(0, TlvEnum<ProductIdentifierType>()),
+        productIdentifierValue: TlvField(1, TlvString.bound({ maxLength: 20 }))
+    });
 
     /**
      * A ResourceMonitoringCluster supports these elements if it supports feature Condition.
@@ -296,4 +337,10 @@ export namespace ResourceMonitoring {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
+
+ClusterNamespace.define(ResourceMonitoring, ResourceMonitoringModel);

@@ -9,19 +9,66 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { FixedAttribute, Attribute, OptionalFixedAttribute } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
-import { TlvSemtag } from "../globals/Semtag.js";
+import { TlvSemtag, Semtag } from "../globals/Semtag.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TlvDeviceTypeId } from "../datatype/DeviceTypeId.js";
+import { TlvDeviceTypeId, DeviceTypeId } from "../datatype/DeviceTypeId.js";
 import { TlvUInt16 } from "../tlv/TlvNumber.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { TlvClusterId } from "../datatype/ClusterId.js";
-import { TlvEndpointNumber } from "../datatype/EndpointNumber.js";
+import { TlvClusterId, ClusterId } from "../datatype/ClusterId.js";
+import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { Descriptor as DescriptorModel } from "@matter/model";
 
 export namespace Descriptor {
+    /**
+     * The device type and revision define endpoint conformance to a release of a device type definition. See the Data
+     * Model specification for more information.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 9.5.5.1
+     */
+    export interface DeviceType {
+        /**
+         * This shall indicate the device type definition. The endpoint shall conform to the device type definition and
+         * cluster specifications required by the device type.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.5.5.1.1
+         */
+        deviceType: DeviceTypeId;
+
+        /**
+         * This is the implemented revision of the device type definition. The endpoint shall conform to this revision
+         * of the device type.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 9.5.5.1.2
+         */
+        revision: number;
+    }
+
+    export interface Attributes {
+        deviceTypeList: DeviceType[];
+        serverList: ClusterId[];
+        clientList: ClusterId[];
+        partsList: EndpointNumber[];
+        endpointUniqueId: string;
+        tagList: Semtag[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "deviceTypeList" | "serverList" | "clientList" | "partsList",
+                optional: "endpointUniqueId"
+            },
+            { flags: { tagList: true }, mandatory: "tagList" }
+        ];
+    }
+
+    export type Features = "TagList";
+
     /**
      * These are optional features supported by DescriptorCluster.
      *
@@ -62,14 +109,6 @@ export namespace Descriptor {
          */
         revision: TlvField(1, TlvUInt16.bound({ min: 1 }))
     });
-
-    /**
-     * The device type and revision define endpoint conformance to a release of a device type definition. See the Data
-     * Model specification for more information.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 9.5.5.1
-     */
-    export interface DeviceType extends TypeFromSchema<typeof TlvDeviceType> {}
 
     /**
      * A DescriptorCluster supports these elements if it supports feature TagList.
@@ -240,8 +279,13 @@ export namespace Descriptor {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x1d);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type DescriptorCluster = Descriptor.Cluster;
 export const DescriptorCluster = Descriptor.Cluster;
 ClusterRegistry.register(Descriptor.Complete);
+ClusterNamespace.define(Descriptor, DescriptorModel);

@@ -12,8 +12,24 @@ import { TlvUInt16 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { RelativeHumidityMeasurement as RelativeHumidityMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace RelativeHumidityMeasurement {
+    export interface Attributes {
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        tolerance: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue", optional: "tolerance" }
+        ];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -79,8 +95,12 @@ export namespace RelativeHumidityMeasurement {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x405);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;
 export const RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;
 ClusterRegistry.register(RelativeHumidityMeasurement.Complete);
+ClusterNamespace.define(RelativeHumidityMeasurement, RelativeHumidityMeasurementModel);

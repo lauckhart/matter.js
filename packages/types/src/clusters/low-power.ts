@@ -9,10 +9,28 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Command, TlvNoResponse } from "../cluster/Cluster.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { LowPower as LowPowerModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LowPower {
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command shall put the device into low power mode.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.11.4.1
+             */
+            sleep(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -53,8 +71,12 @@ export namespace LowPower {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x508);
+    export const revision = 1;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
 }
 
 export type LowPowerCluster = LowPower.Cluster;
 export const LowPowerCluster = LowPower.Cluster;
 ClusterRegistry.register(LowPower.Complete);
+ClusterNamespace.define(LowPower, LowPowerModel);

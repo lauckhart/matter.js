@@ -8,19 +8,20 @@
 
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Attribute, Command, TlvNoResponse, Event } from "../cluster/Cluster.js";
-import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvUInt32, TlvBitmap, TlvUInt64, TlvUInt16, TlvEnum } from "../tlv/TlvNumber.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, CommissionerControl as CommissionerControlModel } from "@matter/model";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
-import { TlvVendorId } from "../datatype/VendorId.js";
+import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { TlvString, TlvByteString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { TlvNodeId } from "../datatype/NodeId.js";
+import { TlvNodeId, NodeId } from "../datatype/NodeId.js";
 import { Status } from "../globals/Status.js";
-import { TlvFabricIndex } from "../datatype/FabricIndex.js";
-import { Identity } from "@matter/general";
+import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { BitFlag } from "../schema/BitmapSchema.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace CommissionerControl {
     /**
@@ -38,6 +39,191 @@ export namespace CommissionerControl {
         fabricSynchronization: BitFlag(0)
     };
 
+    export interface SupportedDeviceCategory {
+        /**
+         * Aggregators which support Fabric Synchronization may be commissioned.
+         *
+         * The FabricSynchronization bit shall be set to 1 if and only if the server supports commissioning nodes that
+         * support Fabric Synchronization.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.26.4.1.1
+         */
+        fabricSynchronization?: boolean;
+    }
+
+    /**
+     * This command is sent by a client to request approval for a future CommissionNode call. This is required to be a
+     * separate step in order to provide the server time for interacting with a user before informing the client that
+     * the CommissionNode operation may be successful.
+     *
+     * If the command is not executed via a CASE session, the command shall fail with a status code of
+     * UNSUPPORTED_ACCESS.
+     *
+     * The server may request approval from the user, but it is not required.
+     *
+     * The server shall always return SUCCESS to a correctly formatted RequestCommissioningApproval command, and then
+     * generate a CommissioningRequestResult event associated with the command’s accessing fabric once the result is
+     * ready.
+     *
+     * Clients SHOULD avoid using the same RequestID. If the RequestID and client NodeID of a
+     * RequestCommissioningApproval match a previously received RequestCommissioningApproval and the server has not
+     * returned an error or completed commissioning of a device for the prior request, then the server SHOULD return
+     * FAILURE.
+     *
+     * The parameters for RequestCommissioningApproval command are as follows:
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.26.6.1
+     */
+    export interface RequestCommissioningApprovalRequest {
+        requestId: number | bigint;
+        vendorId: VendorId;
+        productId: number;
+        label?: string;
+    }
+
+    /**
+     * This command is sent by a client to request that the server begins commissioning a previously approved request.
+     *
+     * The server shall return FAILURE if the CommissionNode command is not sent from the same NodeID and on the same
+     * fabric as the RequestCommissioningApproval or if the provided RequestID to CommissionNode does not match the
+     * value provided to RequestCommissioningApproval.
+     *
+     * If the command is not executed via a CASE session, the command shall fail with a status code of
+     * UNSUPPORTED_ACCESS.
+     *
+     * Upon receipt, the server shall respond with ReverseOpenCommissioningWindow if CommissioningRequestResult was
+     * generated with StatusCode of SUCCESS for the matching RequestID field and NodeID of the client.
+     *
+     * The server shall return FAILURE if the CommissionNode command is received after the server has already responded
+     * to a client with ReverseOpenCommissioningWindow for a matching RequestID field and NodeID of the client unless
+     * the client has sent another RequestCommissioningApproval and received an additional CommissioningRequestResult.
+     *
+     * The parameters for CommissionNode command are as follows:
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.26.6.5
+     */
+    export interface CommissionNodeRequest {
+        requestId: number | bigint;
+        responseTimeoutSeconds: number;
+    }
+
+    /**
+     * When received within the timeout specified by ResponseTimeoutSeconds in the CommissionNode command, the client
+     * shall open a commissioning window on a node which matches the VendorID and ProductID provided in the associated
+     * RequestCommissioningApproval command.
+     *
+     * When commissioning this node, the server shall check that the VendorID and ProductID fields provided in the
+     * RequestCommissioningApproval command match the VendorID and ProductID attributes of the Basic Information Cluster
+     * which have already been verified during the Device Attestation Procedure. If they do not match, the server shall
+     * NOT complete commissioning and SHOULD indicate an error to the user.
+     *
+     * > [!NOTE]
+     *
+     * > This is an alias onto the OpenCommissioningWindow command within the Administrator Commissioning Cluster. Refer
+     *   to the OpenCommissioningWindow command for a description of the command behavior and parameters.
+     *
+     * The parameters for ReverseOpenCommissioningWindow command are as follows:
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.26.6.8
+     */
+    export interface ReverseOpenCommissioningWindowResponse {
+        commissioningTimeout: number;
+        pakePasscodeVerifier: Bytes;
+        discriminator: number;
+        iterations: number;
+        salt: Bytes;
+    }
+
+    /**
+     * This event shall be generated by the server following a RequestCommissioningApproval command which the server
+     * responded to with SUCCESS.
+     *
+     * > [!NOTE]
+     *
+     * > The approval is valid for a period determined by the manufacturer and characteristics of the node presenting
+     *   the Commissioner Control Cluster. Clients SHOULD send the CommissionNode command immediately upon receiving a
+     *   CommissioningRequestResult event.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.26.7.1
+     */
+    export interface CommissioningRequestResultEvent {
+        requestId: number | bigint;
+        clientNodeId: NodeId;
+        statusCode: Status;
+        fabricIndex: FabricIndex;
+    }
+
+    export interface Attributes {
+        supportedDeviceCategories: SupportedDeviceCategory;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "supportedDeviceCategories" }];
+    }
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is sent by a client to request approval for a future CommissionNode call. This is required
+             * to be a separate step in order to provide the server time for interacting with a user before informing
+             * the client that the CommissionNode operation may be successful.
+             *
+             * If the command is not executed via a CASE session, the command shall fail with a status code of
+             * UNSUPPORTED_ACCESS.
+             *
+             * The server may request approval from the user, but it is not required.
+             *
+             * The server shall always return SUCCESS to a correctly formatted RequestCommissioningApproval command, and
+             * then generate a CommissioningRequestResult event associated with the command’s accessing fabric once the
+             * result is ready.
+             *
+             * Clients SHOULD avoid using the same RequestID. If the RequestID and client NodeID of a
+             * RequestCommissioningApproval match a previously received RequestCommissioningApproval and the server has
+             * not returned an error or completed commissioning of a device for the prior request, then the server
+             * SHOULD return FAILURE.
+             *
+             * The parameters for RequestCommissioningApproval command are as follows:
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.26.6.1
+             */
+            requestCommissioningApproval(request: RequestCommissioningApprovalRequest): MaybePromise;
+
+            /**
+             * This command is sent by a client to request that the server begins commissioning a previously approved
+             * request.
+             *
+             * The server shall return FAILURE if the CommissionNode command is not sent from the same NodeID and on the
+             * same fabric as the RequestCommissioningApproval or if the provided RequestID to CommissionNode does not
+             * match the value provided to RequestCommissioningApproval.
+             *
+             * If the command is not executed via a CASE session, the command shall fail with a status code of
+             * UNSUPPORTED_ACCESS.
+             *
+             * Upon receipt, the server shall respond with ReverseOpenCommissioningWindow if CommissioningRequestResult
+             * was generated with StatusCode of SUCCESS for the matching RequestID field and NodeID of the client.
+             *
+             * The server shall return FAILURE if the CommissionNode command is received after the server has already
+             * responded to a client with ReverseOpenCommissioningWindow for a matching RequestID field and NodeID of
+             * the client unless the client has sent another RequestCommissioningApproval and received an additional
+             * CommissioningRequestResult.
+             *
+             * The parameters for CommissionNode command are as follows:
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.26.6.5
+             */
+            commissionNode(request: CommissionNodeRequest): MaybePromise<ReverseOpenCommissioningWindowResponse>;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        commissioningRequestResult: CommissioningRequestResultEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, mandatory: "commissioningRequestResult" }];
+    }
+
     /**
      * Input to the CommissionerControl requestCommissioningApproval command
      *
@@ -51,13 +237,6 @@ export namespace CommissionerControl {
     });
 
     /**
-     * Input to the CommissionerControl requestCommissioningApproval command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.26.6.1
-     */
-    export interface RequestCommissioningApprovalRequest extends TypeFromSchema<typeof TlvRequestCommissioningApprovalRequest> {}
-
-    /**
      * Input to the CommissionerControl commissionNode command
      *
      * @see {@link MatterSpecification.v142.Core} § 11.26.6.5
@@ -66,13 +245,6 @@ export namespace CommissionerControl {
         requestId: TlvField(0, TlvUInt64),
         responseTimeoutSeconds: TlvField(1, TlvUInt16.bound({ min: 30, max: 120 }))
     });
-
-    /**
-     * Input to the CommissionerControl commissionNode command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.26.6.5
-     */
-    export interface CommissionNodeRequest extends TypeFromSchema<typeof TlvCommissionNodeRequest> {}
 
     /**
      * When received within the timeout specified by ResponseTimeoutSeconds in the CommissionNode command, the client
@@ -102,27 +274,6 @@ export namespace CommissionerControl {
     });
 
     /**
-     * When received within the timeout specified by ResponseTimeoutSeconds in the CommissionNode command, the client
-     * shall open a commissioning window on a node which matches the VendorID and ProductID provided in the associated
-     * RequestCommissioningApproval command.
-     *
-     * When commissioning this node, the server shall check that the VendorID and ProductID fields provided in the
-     * RequestCommissioningApproval command match the VendorID and ProductID attributes of the Basic Information Cluster
-     * which have already been verified during the Device Attestation Procedure. If they do not match, the server shall
-     * NOT complete commissioning and SHOULD indicate an error to the user.
-     *
-     * > [!NOTE]
-     *
-     * > This is an alias onto the OpenCommissioningWindow command within the Administrator Commissioning Cluster. Refer
-     *   to the OpenCommissioningWindow command for a description of the command behavior and parameters.
-     *
-     * The parameters for ReverseOpenCommissioningWindow command are as follows:
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.26.6.8
-     */
-    export interface ReverseOpenCommissioningWindowResponse extends TypeFromSchema<typeof TlvReverseOpenCommissioningWindowResponse> {}
-
-    /**
      * Body of the CommissionerControl commissioningRequestResult event
      *
      * @see {@link MatterSpecification.v142.Core} § 11.26.7.1
@@ -133,13 +284,6 @@ export namespace CommissionerControl {
         statusCode: TlvField(2, TlvEnum<Status>()),
         fabricIndex: TlvField(254, TlvFabricIndex)
     });
-
-    /**
-     * Body of the CommissionerControl commissioningRequestResult event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.26.7.1
-     */
-    export interface CommissioningRequestResultEvent extends TypeFromSchema<typeof TlvCommissioningRequestResultEvent> {}
 
     /**
      * @see {@link Cluster}
@@ -265,8 +409,14 @@ export namespace CommissionerControl {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x751);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const events: ClusterNamespace.Events<Events>;
 }
 
 export type CommissionerControlCluster = CommissionerControl.Cluster;
 export const CommissionerControlCluster = CommissionerControl.Cluster;
 ClusterRegistry.register(CommissionerControl.Complete);
+ClusterNamespace.define(CommissionerControl, CommissionerControlModel);

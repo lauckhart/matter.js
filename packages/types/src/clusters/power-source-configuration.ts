@@ -9,11 +9,21 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Attribute } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
-import { TlvEndpointNumber } from "../datatype/EndpointNumber.js";
+import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { PowerSourceConfiguration as PowerSourceConfigurationModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PowerSourceConfiguration {
+    export interface Attributes {
+        sources: EndpointNumber[];
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "sources" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -49,8 +59,12 @@ export namespace PowerSourceConfiguration {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x2e);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type PowerSourceConfigurationCluster = PowerSourceConfiguration.Cluster;
 export const PowerSourceConfigurationCluster = PowerSourceConfiguration.Cluster;
 ClusterRegistry.register(PowerSourceConfiguration.Complete);
+ClusterNamespace.define(PowerSourceConfiguration, PowerSourceConfigurationModel);

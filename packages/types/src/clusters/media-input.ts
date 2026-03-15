@@ -11,42 +11,27 @@ import { Command, TlvNoResponse, Attribute } from "../cluster/Cluster.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, MediaInput as MediaInputModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace MediaInput {
     /**
-     * These are optional features supported by MediaInputCluster.
+     * Upon receipt, this command shall rename the input at a specific index in the Input List.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.9.4
+     * Updates to the input name shall appear in the device’s settings menus.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.4
      */
-    export enum Feature {
-        /**
-         * NameUpdates (NU)
-         *
-         * Supports updates to the input names
-         */
-        NameUpdates = "NameUpdates"
+    export interface RenameInputRequest {
+        index: number;
+        name: string;
     }
-
-    /**
-     * Input to the MediaInput renameInput command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.4
-     */
-    export const TlvRenameInputRequest = TlvObject({ index: TlvField(0, TlvUInt8), name: TlvField(1, TlvString) });
-
-    /**
-     * Input to the MediaInput renameInput command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.4
-     */
-    export interface RenameInputRequest extends TypeFromSchema<typeof TlvRenameInputRequest> {}
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.1
@@ -69,6 +54,133 @@ export namespace MediaInput {
         Usb = 10,
         Other = 11
     }
+
+    /**
+     * This contains information about an input.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2
+     */
+    export interface InputInfo {
+        /**
+         * This field shall indicate the unique index into the list of Inputs.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2.1
+         */
+        index: number;
+
+        /**
+         * This field shall indicate the type of input
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2.2
+         */
+        inputType: InputType;
+
+        /**
+         * This field shall indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be provided
+         * when known.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2.3
+         */
+        name: string;
+
+        /**
+         * This field shall indicate the user editable input description, such as “Living room Playstation”. This field
+         * may be blank, but SHOULD be provided when known.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2.4
+         */
+        description: string;
+    }
+
+    /**
+     * Upon receipt, this command shall change the media input on the device to the input at a specific index in the
+     * Input List.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.1
+     */
+    export interface SelectInputRequest {
+        /**
+         * This field shall indicate the index field of the InputInfoStruct from the InputList attribute in which to
+         * change to.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.1.1
+         */
+        index: number;
+    }
+
+    export interface Attributes {
+        inputList: InputInfo[];
+        currentInput: number;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "inputList" | "currentInput" }];
+    }
+    export interface Commands extends Commands.Base, Commands.NameUpdates {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * Upon receipt, this command shall change the media input on the device to the input at a specific index in
+             * the Input List.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.1
+             */
+            selectInput(request: SelectInputRequest): MaybePromise;
+
+            /**
+             * Upon receipt, this command shall display the active status of the input list on screen.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.2
+             */
+            showInputStatus(): MaybePromise;
+
+            /**
+             * Upon receipt, this command shall hide the input list from the screen.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.3
+             */
+            hideInputStatus(): MaybePromise;
+        }
+
+        export interface NameUpdates {
+            /**
+             * Upon receipt, this command shall rename the input at a specific index in the Input List.
+             *
+             * Updates to the input name shall appear in the device’s settings menus.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.4
+             */
+            renameInput(request: RenameInputRequest): MaybePromise;
+        }
+
+        export type Components = [
+            { flags: {}, methods: Base },
+            { flags: { nameUpdates: true }, methods: NameUpdates }
+        ];
+    }
+
+    export type Features = "NameUpdates";
+
+    /**
+     * These are optional features supported by MediaInputCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.9.4
+     */
+    export enum Feature {
+        /**
+         * NameUpdates (NU)
+         *
+         * Supports updates to the input names
+         */
+        NameUpdates = "NameUpdates"
+    }
+
+    /**
+     * Input to the MediaInput renameInput command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.4
+     */
+    export const TlvRenameInputRequest = TlvObject({ index: TlvField(0, TlvUInt8), name: TlvField(1, TlvString) });
 
     /**
      * This contains information about an input.
@@ -108,13 +220,6 @@ export namespace MediaInput {
     });
 
     /**
-     * This contains information about an input.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.9.5.2
-     */
-    export interface InputInfo extends TypeFromSchema<typeof TlvInputInfo> {}
-
-    /**
      * Input to the MediaInput selectInput command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.1
@@ -128,13 +233,6 @@ export namespace MediaInput {
          */
         index: TlvField(0, TlvUInt8)
     });
-
-    /**
-     * Input to the MediaInput selectInput command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.9.7.1
-     */
-    export interface SelectInputRequest extends TypeFromSchema<typeof TlvSelectInputRequest> {}
 
     /**
      * A MediaInputCluster supports these elements if it supports feature NameUpdates.
@@ -264,8 +362,14 @@ export namespace MediaInput {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x507);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type MediaInputCluster = MediaInput.Cluster;
 export const MediaInputCluster = MediaInput.Cluster;
 ClusterRegistry.register(MediaInput.Complete);
+ClusterNamespace.define(MediaInput, MediaInputModel);

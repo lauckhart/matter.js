@@ -12,12 +12,97 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvPercent, TlvUInt8, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { EnergyPreference as EnergyPreferenceModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EnergyPreference {
+    /**
+     * This represents a step along a scale of preferences.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.2
+     */
+    export interface Balance {
+        /**
+         * This field shall indicate the relative value of this step.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.2.1
+         */
+        step: number;
+
+        /**
+         * This field shall indicate an optional string explaining which actions a device might take at the given step
+         * value.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.2.2
+         */
+        label?: string;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1
+     */
+    export enum EnergyPriority {
+        /**
+         * User comfort
+         *
+         * This value shall emphasize user comfort; e.g. local temperature for a thermostat.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.1
+         */
+        Comfort = 0,
+
+        /**
+         * Speed of operation
+         *
+         * This value shall emphasize how quickly a device accomplishes its targeted use; e.g. how quickly a robot
+         * vacuum completes a cleaning cycle.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.2
+         */
+        Speed = 1,
+
+        /**
+         * Amount of Energy consumed by the device
+         *
+         * This value shall emphasize how much energy a device uses; e.g. electricity usage for a Pump.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.3
+         */
+        Efficiency = 2,
+
+        /**
+         * Amount of water consumed by the device
+         */
+        WaterConsumption = 3
+    }
+
+    export interface Attributes {
+        energyBalances: Balance[];
+        currentEnergyBalance: number;
+        energyPriorities: EnergyPriority[];
+        lowPowerModeSensitivities: Balance[];
+        currentLowPowerModeSensitivity: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: { energyBalance: true },
+                mandatory: "energyBalances" | "currentEnergyBalance" | "energyPriorities"
+            },
+            {
+                flags: { lowPowerModeSensitivity: true },
+                mandatory: "lowPowerModeSensitivities" | "currentLowPowerModeSensitivity"
+            }
+        ];
+    }
+
+    export type Features = "EnergyBalance" | "LowPowerModeSensitivity";
+
     /**
      * These are optional features supported by EnergyPreferenceCluster.
      *
@@ -67,51 +152,6 @@ export namespace EnergyPreference {
          */
         label: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
     });
-
-    /**
-     * This represents a step along a scale of preferences.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.2
-     */
-    export interface Balance extends TypeFromSchema<typeof TlvBalance> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1
-     */
-    export enum EnergyPriority {
-        /**
-         * User comfort
-         *
-         * This value shall emphasize user comfort; e.g. local temperature for a thermostat.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.1
-         */
-        Comfort = 0,
-
-        /**
-         * Speed of operation
-         *
-         * This value shall emphasize how quickly a device accomplishes its targeted use; e.g. how quickly a robot
-         * vacuum completes a cleaning cycle.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.2
-         */
-        Speed = 1,
-
-        /**
-         * Amount of Energy consumed by the device
-         *
-         * This value shall emphasize how much energy a device uses; e.g. electricity usage for a Pump.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 9.7.5.1.3
-         */
-        Efficiency = 2,
-
-        /**
-         * Amount of water consumed by the device
-         */
-        WaterConsumption = 3
-    }
 
     /**
      * A EnergyPreferenceCluster supports these elements if it supports feature EnergyBalance.
@@ -314,8 +354,13 @@ export namespace EnergyPreference {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x9b);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type EnergyPreferenceCluster = EnergyPreference.Cluster;
 export const EnergyPreferenceCluster = EnergyPreference.Cluster;
 ClusterRegistry.register(EnergyPreference.Complete);
+ClusterNamespace.define(EnergyPreference, EnergyPreferenceModel);

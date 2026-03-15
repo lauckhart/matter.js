@@ -9,9 +9,14 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, OptionalWritableAttribute } from "../cluster/Cluster.js";
 import { TlvEnum } from "../tlv/TlvNumber.js";
-import { AccessLevel } from "@matter/model";
+import {
+    AccessLevel,
+    ThermostatUserInterfaceConfiguration as ThermostatUserInterfaceConfigurationModel
+} from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThermostatUserInterfaceConfiguration {
     /**
@@ -81,6 +86,15 @@ export namespace ThermostatUserInterfaceConfiguration {
         ScheduleProgrammingDenied = 1
     }
 
+    export interface Attributes {
+        temperatureDisplayMode: TemperatureDisplayMode;
+        keypadLockout: KeypadLockout;
+        scheduleProgrammingVisibility: ScheduleProgrammingVisibility;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "temperatureDisplayMode" | "keypadLockout", optional: "scheduleProgrammingVisibility" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -133,8 +147,12 @@ export namespace ThermostatUserInterfaceConfiguration {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x204);
+    export const revision = 2;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfaceConfiguration.Cluster;
 export const ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfaceConfiguration.Cluster;
 ClusterRegistry.register(ThermostatUserInterfaceConfiguration.Complete);
+ClusterNamespace.define(ThermostatUserInterfaceConfiguration, ThermostatUserInterfaceConfigurationModel);

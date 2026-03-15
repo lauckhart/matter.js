@@ -10,10 +10,11 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, Attribute, Command, TlvNoResponse, OptionalCommand } from "../cluster/Cluster.js";
 import { TlvUInt16, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
-import { Identity } from "@matter/general";
+import { AccessLevel, Identify as IdentifyModel } from "@matter/model";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Identify {
     /**
@@ -50,18 +51,13 @@ export namespace Identify {
     }
 
     /**
-     * Input to the Identify identify command
+     * This command starts or stops the receiving device identifying itself.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.1
      */
-    export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
-
-    /**
-     * Input to the Identify identify command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.1
-     */
-    export interface IdentifyRequest extends TypeFromSchema<typeof TlvIdentifyRequest> {}
+    export interface IdentifyRequest {
+        identifyTime: number;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 1.2.4.2
@@ -111,6 +107,77 @@ export namespace Identify {
     }
 
     /**
+     * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
+     * implementation to provide visual feedback to the user under certain circumstances such as a color light turning
+     * green when it has successfully connected to a network. The use of this command and the effects themselves are
+     * entirely up to the implementer to use whenever a visual feedback is useful but it is not the same as and does not
+     * replace the identify mechanism used during commissioning.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2
+     */
+    export interface TriggerEffectRequest {
+        /**
+         * This field shall indicate the identify effect to use and shall contain one of the non-reserved values in
+         * EffectIdentifierEnum.
+         *
+         * All values of the EffectIdentifierEnum shall be supported. Implementors may deviate from the example light
+         * effects in EffectIdentifierEnum, but they SHOULD indicate during testing how they handle each effect.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2.1
+         */
+        effectIdentifier: EffectIdentifier;
+
+        /**
+         * This field shall indicate which variant of the effect, indicated in the EffectIdentifier field, SHOULD be
+         * triggered. If a device does not support the given variant, it shall use the default variant. This field shall
+         * contain one of the values in EffectVariantEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2.2
+         */
+        effectVariant: EffectVariant;
+    }
+
+    export interface Attributes {
+        identifyTime: number;
+        identifyType: IdentifyType;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "identifyTime" | "identifyType" }];
+    }
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command starts or stops the receiving device identifying itself.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.1
+             */
+            identify(request: IdentifyRequest): MaybePromise;
+
+            /**
+             * This command allows the support of feedback to the user, such as a certain light effect. It is used to
+             * allow an implementation to provide visual feedback to the user under certain circumstances such as a
+             * color light turning green when it has successfully connected to a network. The use of this command and
+             * the effects themselves are entirely up to the implementer to use whenever a visual feedback is useful but
+             * it is not the same as and does not replace the identify mechanism used during commissioning.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2
+             */
+            triggerEffect(request: TriggerEffectRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    /**
+     * Input to the Identify identify command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.1
+     */
+    export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
+
+    /**
      * Input to the Identify triggerEffect command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2
@@ -136,13 +203,6 @@ export namespace Identify {
          */
         effectVariant: TlvField(1, TlvEnum<EffectVariant>())
     });
-
-    /**
-     * Input to the Identify triggerEffect command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.2.6.2
-     */
-    export interface TriggerEffectRequest extends TypeFromSchema<typeof TlvTriggerEffectRequest> {}
 
     /**
      * @see {@link Cluster}
@@ -234,8 +294,13 @@ export namespace Identify {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x3);
+    export const revision = 6;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
 }
 
 export type IdentifyCluster = Identify.Cluster;
 export const IdentifyCluster = Identify.Cluster;
 ClusterRegistry.register(Identify.Complete);
+ClusterNamespace.define(Identify, IdentifyModel);

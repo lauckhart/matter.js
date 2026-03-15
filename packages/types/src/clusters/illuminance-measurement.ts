@@ -12,6 +12,9 @@ import { TlvUInt16, TlvUInt8 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { IlluminanceMeasurement as IlluminanceMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace IlluminanceMeasurement {
     /**
@@ -27,6 +30,22 @@ export namespace IlluminanceMeasurement {
          * Indicates CMOS sensor type
          */
         Cmos = 1
+    }
+
+    export interface Attributes {
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        tolerance: number;
+        lightSensorType: number | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue",
+            optional: "tolerance" | "lightSensorType"
+        }];
     }
 
     /**
@@ -102,8 +121,12 @@ export namespace IlluminanceMeasurement {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x400);
+    export const revision = 3;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
 }
 
 export type IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 export const IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 ClusterRegistry.register(IlluminanceMeasurement.Complete);
+ClusterNamespace.define(IlluminanceMeasurement, IlluminanceMeasurementModel);

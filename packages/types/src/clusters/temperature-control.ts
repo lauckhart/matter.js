@@ -13,11 +13,76 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { TemperatureControl as TemperatureControlModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace TemperatureControl {
+    /**
+     * This command is used to set the temperature setpoint.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 8.2.6.1
+     */
+    export interface SetTemperatureRequest {
+        /**
+         * This field shall specify the desired temperature setpoint that the server is to be set to.
+         *
+         * The TargetTemperature shall be from MinTemperature to MaxTemperature inclusive. If the Step attribute is
+         * supported, TargetTemperature shall be such that (TargetTemperature - MinTemperature) % Step == 0.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.2.6.1.1
+         */
+        targetTemperature?: number;
+
+        /**
+         * This field shall specify the index of the list item in the SupportedTemperatureLevels list that represents
+         * the desired temperature level setting of the server. The value of this field shall be between 0 and the
+         * length of the SupportedTemperatureLevels list -1.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.2.6.1.2
+         */
+        targetTemperatureLevel?: number;
+    }
+
+    export interface Attributes {
+        temperatureSetpoint: number;
+        minTemperature: number;
+        maxTemperature: number;
+        step: number;
+        selectedTemperatureLevel: number;
+        supportedTemperatureLevels: string[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: { temperatureNumber: true },
+                mandatory: "temperatureSetpoint" | "minTemperature" | "maxTemperature"
+            },
+            { flags: { temperatureStep: true }, mandatory: "step" },
+            { flags: { temperatureLevel: true }, mandatory: "selectedTemperatureLevel" | "supportedTemperatureLevels" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is used to set the temperature setpoint.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 8.2.6.1
+             */
+            setTemperature(request: SetTemperatureRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "TemperatureNumber" | "TemperatureLevel" | "TemperatureStep";
+
     /**
      * These are optional features supported by TemperatureControlCluster.
      *
@@ -81,13 +146,6 @@ export namespace TemperatureControl {
          */
         targetTemperatureLevel: TlvOptionalField(1, TlvUInt8)
     });
-
-    /**
-     * Input to the TemperatureControl setTemperature command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 8.2.6.1
-     */
-    export interface SetTemperatureRequest extends TypeFromSchema<typeof TlvSetTemperatureRequest> {}
 
     /**
      * A TemperatureControlCluster supports these elements if it supports feature TemperatureNumber.
@@ -302,8 +360,14 @@ export namespace TemperatureControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x56);
+    export const revision = 1;
+    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const features: ClusterNamespace.Features<Features>;
 }
 
 export type TemperatureControlCluster = TemperatureControl.Cluster;
 export const TemperatureControlCluster = TemperatureControl.Cluster;
 ClusterRegistry.register(TemperatureControl.Complete);
+ClusterNamespace.define(TemperatureControl, TemperatureControlModel);
