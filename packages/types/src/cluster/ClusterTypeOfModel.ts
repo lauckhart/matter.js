@@ -11,6 +11,7 @@ import { AttributeId } from "../datatype/AttributeId.js";
 import { CommandId } from "../datatype/CommandId.js";
 import { EventId } from "../datatype/EventId.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
+import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { TlvOfModel } from "../tlv/TlvOfModel.js";
 import { TlvVoid } from "../tlv/TlvVoid.js";
 import { ClusterType } from "./ClusterType.js";
@@ -122,7 +123,7 @@ export function ClusterTypeOfModel(model: ClusterModel): ClusterType {
 
         events[key] = {
             id: EventId(evt.id),
-            schema: TlvOfModel(evt),
+            schema: evt.members.length ? TlvOfModel(evt) : TlvNoArguments,
             priority: PRIORITY_MAP[evt.priority ?? EventElement.Priority.Debug] ?? Priority.Debug,
             optional: !evt.mandatory,
             readAcl: mapPrivilege(access.readPriv, AccessLevel.View),

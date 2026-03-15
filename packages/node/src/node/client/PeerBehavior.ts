@@ -113,7 +113,7 @@ function instrumentDiscoveredShape(shape: PeerBehavior.DiscoveredClusterShape) {
 
     let baseType: Behavior.Type | undefined;
     const standardCluster = ClusterRegistry.get(shape.id);
-    if (standardCluster && !standardCluster.name.startsWith("Unknown cluster 0x")) {
+    if (standardCluster && !standardCluster.unknown) {
         baseType = ClusterBehavior.for(standardCluster);
     }
 
