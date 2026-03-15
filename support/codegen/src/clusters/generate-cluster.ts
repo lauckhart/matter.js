@@ -14,10 +14,12 @@ import {
     Conformance,
     DatatypeModel,
     DefaultValue,
+    EventModel,
     FeatureBitmap,
     translateBitmap,
     ValueModel,
 } from "#model";
+import { ComponentGenerator } from "../endpoints/ComponentGenerator.js";
 import { Block, Entry } from "../util/TsFile.js";
 import { camelize, serialize } from "../util/string.js";
 import { ClusterComponentGenerator } from "./ClusterComponentGenerator.js";
@@ -32,14 +34,20 @@ export function generateCluster(file: ClusterFile) {
 
     file.addImport("!types/cluster/mutation/MutableCluster.js", "MutableCluster");
 
-    if (cluster.type === undefined || cluster.children.length) {
-        generateDefinition(file);
+    const isAlias = cluster.type !== undefined && !cluster.children.length;
+
+    let tlvSkippedTypes: Map<string, ValueModel> | undefined;
+    if (!isAlias) {
+        tlvSkippedTypes = generateDefinition(file);
     } else {
         generateAlias(file);
     }
+
+    // Generate component interfaces and ClusterNamespace consts
+    generateComponents(file, isAlias ? undefined : tlvSkippedTypes);
 }
 
-function generateDefinition(file: ClusterFile) {
+function generateDefinition(file: ClusterFile): Map<string, ValueModel> | undefined {
     const cluster = file.cluster;
 
     // Analyze variance
@@ -48,8 +56,9 @@ function generateDefinition(file: ClusterFile) {
     // Load features
     const features = cluster.features;
 
-    // Generate components
+    // Generate components — type definitions (enums, struct interfaces) are handled by ComponentGenerator
     const gen = new ClusterComponentGenerator(file.ns);
+    gen.tlv.skipTypeDefinitions = true;
     for (const component of variance.components) {
         gen.defineComponent(component);
     }
@@ -89,17 +98,19 @@ function generateDefinition(file: ClusterFile) {
         generateExtensions(file, variance, base);
     }
 
+    const skippedTypes = gen.tlv.skippedTypes;
+
     // The rest of this code only applies to non-base componentized clusters
     if (cluster.id === undefined) {
         generateComplete(file, variance);
-        return;
+        return skippedTypes;
     }
 
     if (!features.length) {
         generateClusterInterface(file);
         generateComplete(file, variance);
         generateClusterExport(file);
-        return;
+        return skippedTypes;
     }
 
     // Create the default cluster instance
@@ -107,6 +118,8 @@ function generateDefinition(file: ClusterFile) {
 
     // Generate the complete cluster
     generateComplete(file, variance);
+
+    return skippedTypes;
 }
 
 /**
@@ -509,4 +522,69 @@ export function generateExportableTypeAndObject(target: Block, name: string): En
     target.undefine(name);
     target.atom(`export const ${name}: ${name} = ${name}Instance`);
     return definition;
+}
+
+/**
+ * Generate unified component interfaces (Attributes, Commands, Events, Features) and ClusterNamespace consts.
+ */
+function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, ValueModel>) {
+    const cluster = file.cluster;
+
+    const gen = new ComponentGenerator(file);
+
+    // Only generate components for clusters that have non-global attributes, commands, or events
+    const hasContent = cluster.allAces.some(
+        el =>
+            !AttributeModel.isGlobal(el) &&
+            (el instanceof AttributeModel || (el instanceof CommandModel && el.isRequest) || el instanceof EventModel),
+    );
+
+    let hasAttrs = false;
+    let hasCommands = false;
+    let hasEvents = false;
+
+    if (hasContent) {
+        const variance = ClusterVariance(cluster);
+
+        gen.generateComponent("Base", variance.base);
+        for (const component of variance.components) {
+            gen.generateComponent(component.name, component);
+        }
+
+        gen.generateTypes(tlvSkippedTypes);
+        hasAttrs = gen.generateAttributes();
+        hasCommands = gen.generateCommands();
+        hasEvents = gen.generateEvents();
+    }
+
+    gen.generateFeatures();
+    const hasFeatures = cluster.features.length > 0;
+
+    // Generate declare consts inside the namespace (type-only, no runtime code)
+    const name = cluster.name;
+    file.addImport("!types/cluster/ClusterNamespace.js", "ClusterNamespace");
+    file.addImport("@matter/model", `${name} as ${name}Model`);
+
+    // Real constants for id and revision
+    if (cluster.id !== undefined) {
+        file.addImport("!types/datatype/ClusterId.js", "ClusterId");
+        file.ns.atom(`export const id = ClusterId(0x${cluster.id.toString(16)})`);
+    }
+    file.ns.atom(`export const revision = ${cluster.revision}`);
+
+    if (hasAttrs) {
+        file.ns.atom(`export declare const attributes: ClusterNamespace.Attributes<Attributes>`);
+    }
+    if (hasCommands) {
+        file.ns.atom(`export declare const commands: ClusterNamespace.Commands<Commands>`);
+    }
+    if (hasEvents) {
+        file.ns.atom(`export declare const events: ClusterNamespace.Events<Events>`);
+    }
+    if (hasFeatures) {
+        file.ns.atom(`export declare const features: ClusterNamespace.Features<Features>`);
+    }
+
+    // Install lazy getters after the namespace (computed on first access)
+    file.atom(`ClusterNamespace.define(${name}, ${name}Model)`);
 }
