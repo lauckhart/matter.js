@@ -7,31 +7,29 @@
 import type { OfflineEvent, OnlineEvent } from "#behavior/Events.js";
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { AttributeModel, EventModel } from "@matter/model";
-import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
 import type { ActionContext } from "../context/ActionContext.js";
-import type { ClusterOf } from "./cluster-behavior-utils.js";
+import type { ClusterInterface } from "./ClusterInterface.js";
 
 /**
  * Event instance type for ClusterBehaviors.
  */
 export type ClusterEvents<
-    ClusterT extends ClusterType,
     BaseT extends Behavior.Type,
     N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
 > =
     // Keep observables *not* supplied by the old cluster
-    Omit<InstanceType<BaseT["Events"]>, keyof ClusterEvents.Properties<ClusterOf<BaseT>>> &
+    Omit<InstanceType<BaseT["Events"]>, ClusterEvents.EventPropertyKeysOf<ClusterInterface.InterfaceOf<BaseT>>> &
         // Add observables supplied by the new cluster
-        ClusterEvents.Properties<ClusterT, N>;
+        ClusterEvents.Properties<N>;
 
 export namespace ClusterEvents {
     export interface Type<
-        C extends ClusterType,
         B extends Behavior.Type,
         N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
     > {
-        new (endpoint?: Endpoint, behavior?: Behavior.Type): ClusterEvents<C, B, N>;
+        new (endpoint?: Endpoint, behavior?: Behavior.Type): ClusterEvents<B, N>;
     }
 
     export interface PromiseHandler {
@@ -39,90 +37,21 @@ export namespace ClusterEvents {
     }
 
     /**
+     * All event-related property keys contributed by a namespace (for Omit patterns).
+     */
+    export type EventPropertyKeysOf<N extends ClusterNamespaceTyping> =
+        | (N extends { Attributes: infer A }
+              ?
+                    | `${Exclude<keyof A & string, "Components" | "Enabled">}$Changing`
+                    | `${Exclude<keyof A & string, "Components" | "Enabled">}$Changed`
+              : never)
+        | (N extends { Events: infer E } ? Exclude<keyof E & string, "Components" | "Enabled"> : never);
+
+    /**
      * Properties the cluster contributes to Events.
      */
-    export type Properties<C, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> = (AttributesComponentsOf<N> extends []
-        ? ChangingObservables<ClusterType.AttributesOf<C>> & ChangedObservables<ClusterType.AttributesOf<C>>
-        : NsChangingObservables<N> & NsChangedObservables<N>) &
-        (EventsComponentsOf<N> extends [] ? EventObservables<ClusterType.EventsOf<C>> : NsEventObservables<N>);
-
-    export type ChangingObservables<A extends Record<string, ClusterType.Attribute>> = {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? never
-                  : `${K}$Changing`
-              : never]: ChangingObservable<A[K]>;
-    } & {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? `${K}$Changing`
-                  : never
-              : never]?: ChangingObservable<A[K]>;
-    };
-
-    export type ChangedObservables<A extends Record<string, ClusterType.Attribute>> = {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? never
-                  : `${K}$Changed`
-              : never]: ChangedObservable<A[K]>;
-    } & {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? `${K}$Changed`
-                  : never
-              : never]?: ChangedObservable<A[K]>;
-    };
-
-    export type EventObservables<E extends Record<string, ClusterType.Event>> = {
-        [K in keyof E as string extends K
-            ? never
-            : K extends string
-              ? E[K] extends { optional: true }
-                  ? never
-                  : K
-              : never]: EventObservable<E[K]>;
-    } & {
-        [K in keyof E as string extends K
-            ? never
-            : K extends string
-              ? E[K] extends { optional: true }
-                  ? K
-                  : never
-              : never]?: EventObservable<E[K]>;
-    };
-
-    /**
-     * API for events triggered prior to attribute change.
-     */
-    export interface ChangingObservable<A extends ClusterType.Attribute = ClusterType.Attribute> extends OfflineEvent<
-        [value: TypeFromSchema<A["schema"]>, oldValue: TypeFromSchema<A["schema"]>, context: ActionContext],
-        AttributeModel
-    > {}
-
-    /**
-     * API for events triggered after attribute change.
-     */
-    export interface ChangedObservable<A extends ClusterType.Attribute = ClusterType.Attribute> extends OnlineEvent<
-        [value: TypeFromSchema<A["schema"]>, oldValue: TypeFromSchema<A["schema"]>, context: ActionContext | undefined],
-        AttributeModel
-    > {}
-
-    /**
-     * API for events triggered for Matter events.
-     */
-    export interface EventObservable<E extends ClusterType.Event = ClusterType.Event> extends OnlineEvent<
-        [payload: TypeFromSchema<E["schema"]>, context: ActionContext],
-        EventModel
-    > {}
+    export type Properties<N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
+        ChangingObservables<N> & ChangedObservables<N> & NsEventObservables<N>;
 
     // --- Namespace-based attribute change observable types ---
 
@@ -136,17 +65,17 @@ export namespace ClusterEvents {
         : [];
 
     /**
-     * Wrap value type as changing observable.
+     * API for events triggered prior to attribute change.
      */
-    interface NsChangingObservable<T> extends OfflineEvent<
+    export interface ChangingObservable<T = unknown> extends OfflineEvent<
         [value: T, oldValue: T, context: ActionContext],
         AttributeModel
     > {}
 
     /**
-     * Wrap value type as changed observable.
+     * API for events triggered after attribute change.
      */
-    interface NsChangedObservable<T> extends OnlineEvent<
+    export interface ChangedObservable<T = unknown> extends OnlineEvent<
         [value: T, oldValue: T, context: ActionContext | undefined],
         AttributeModel
     > {}
@@ -192,38 +121,38 @@ export namespace ClusterEvents {
     /**
      * Produce changing observables from namespace.
      */
-    type NsChangingObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
+    type ChangingObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
                   | EnabledAttrKeys<N>
               ) &
-                  keyof A as `${K & string}$Changing`]: NsChangingObservable<A[K]>;
+                  keyof A as `${K & string}$Changing`]: ChangingObservable<A[K]>;
           } & {
               [K in Exclude<
                   OptionalAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
                   EnabledAttrKeys<N>
               > &
-                  keyof A as `${K & string}$Changing`]?: NsChangingObservable<A[K]>;
+                  keyof A as `${K & string}$Changing`]?: ChangingObservable<A[K]>;
           }
         : {};
 
     /**
      * Produce changed observables from namespace.
      */
-    type NsChangedObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
+    type ChangedObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
                   | EnabledAttrKeys<N>
               ) &
-                  keyof A as `${K & string}$Changed`]: NsChangedObservable<A[K]>;
+                  keyof A as `${K & string}$Changed`]: ChangedObservable<A[K]>;
           } & {
               [K in Exclude<
                   OptionalAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
                   EnabledAttrKeys<N>
               > &
-                  keyof A as `${K & string}$Changed`]?: NsChangedObservable<A[K]>;
+                  keyof A as `${K & string}$Changed`]?: ChangedObservable<A[K]>;
           }
         : {};
 

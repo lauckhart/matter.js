@@ -8,12 +8,12 @@ import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
 import { ClusterModifier, type Schema } from "@matter/model";
-import { ClusterComposer, ClusterType, ClusterTypeModifier, type ClusterNamespace, type ClusterNamespaceTyping } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
 import { NetworkBehavior } from "../system/network/NetworkBehavior.js";
-import { ExtensionInterfaceOf, isClientBehavior, type ClusterOf } from "./cluster-behavior-utils.js";
+import { ExtensionInterfaceOf, isClientBehavior } from "./cluster-behavior-utils.js";
 import { ClusterBehaviorType } from "./ClusterBehaviorType.js";
 import type { ClusterEvents } from "./ClusterEvents.js";
 import { ClusterInterface } from "./ClusterInterface.js";
@@ -23,7 +23,7 @@ import type { ClusterState } from "./ClusterState.js";
  * A {@link Behavior} with specialization for a specific cluster.
  *
  * To implement cluster functionality you should use a subclass provided by {@link ClusterBehavior.for} with the
- * {@link ClusterType} you are implementing.  Most commonly you would use one of the predefined implementations
+ * cluster namespace you are implementing.  Most commonly you would use one of the predefined implementations
  * matter.js includes.
  *
  * Subclasses can be modified using the static builder methods or extended like a normal class.
@@ -43,7 +43,7 @@ export class ClusterBehavior extends Behavior {
     static override id: Uncapitalize<string>;
 
     /**
-     * The cluster implemented by this behavior.
+     * The cluster namespace associated with this behavior.
      */
     get cluster() {
         return (this.constructor as typeof ClusterBehavior).cluster;
@@ -53,7 +53,7 @@ export class ClusterBehavior extends Behavior {
      * Supported features as a flag object.
      */
     get features() {
-        return this.cluster.supportedFeatures;
+        return (this.constructor as any).supportedFeatures ?? {};
     }
 
     override get type() {
@@ -61,9 +61,9 @@ export class ClusterBehavior extends Behavior {
     }
 
     /**
-     * Every cluster behavior has an associated ClusterType defined statically.
+     * Every cluster behavior has an associated cluster namespace defined statically.
      */
-    static readonly cluster = ClusterType.Unknown;
+    static readonly cluster: ClusterNamespace = {};
 
     /**
      * Method definitions.
@@ -95,26 +95,28 @@ export class ClusterBehavior extends Behavior {
     }
 
     /**
-     * Create a new behavior for a specific {@link ClusterType}.
+     * Create a new behavior for a specific cluster namespace.
      *
      * If you invoke directly on {@link ClusterBehavior} you will receive a new implementation that reports all commands
      * as unimplemented.
      *
      * If you invoke on an existing subclass, you will receive a new implementation with the cluster in the subclass
-     * replaced.  You should generally only do this with a {@link ClusterType} with the same ID.
+     * replaced.  You should generally only do this with a namespace with the same cluster ID.
      */
-    static for<This extends ClusterBehavior.Type, const ClusterT extends ClusterType>(
+    static for<This extends ClusterBehavior.Type, const NS extends ClusterNamespace>(
         this: This,
-        cluster: ClusterT,
+        ns: NS,
+        features?: readonly string[] | true,
         schema?: Schema.Cluster,
         name?: string,
     ) {
         return ClusterBehaviorType({
-            cluster,
+            namespace: ns,
             base: this,
+            features,
             schema,
             name,
-        }) as ClusterBehavior.Type<ClusterT, This>;
+        }) as ClusterBehavior.Type<This, NonNullable<NS["Typing"]>>;
     }
 
     /**
@@ -122,18 +124,13 @@ export class ClusterBehavior extends Behavior {
      */
     static withFeatures<
         This extends ClusterBehavior.Type,
-        const FeaturesT extends ClusterComposer.FeatureSelection<This["cluster"]>,
+        const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
     >(this: This, ...features: FeaturesT) {
-        const newCluster = new ClusterComposer(this.cluster).compose(features) as ClusterComposer.WithFeatures<
-            This["cluster"],
-            FeaturesT
-        >;
-        return this.for(newCluster) as unknown as ClusterBehavior.Type<
-            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
+        return this.for(this.cluster as ClusterInterface.InterfaceOf<This>, features) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithSupportedFeatures<
                 ClusterInterface.InterfaceOf<This>,
-                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+                ClusterNamespace.FeaturesAsFlags<FeaturesT>
             >
         >;
     }
@@ -143,7 +140,7 @@ export class ClusterBehavior extends Behavior {
      */
     static with<
         This extends ClusterBehavior.Type,
-        const FeaturesT extends ClusterComposer.FeatureSelection<This["cluster"]>,
+        const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
     >(this: This, ...features: FeaturesT) {
         return this.withFeatures<This, FeaturesT>(...features);
     }
@@ -153,12 +150,10 @@ export class ClusterBehavior extends Behavior {
      */
     static alter<
         This extends ClusterBehavior.Type,
-        const AlterationsT extends ClusterTypeModifier.Alterations<This["cluster"]>,
+        const AlterationsT extends ClusterNamespace.Alterations<ClusterInterface.InterfaceOf<This>>,
     >(this: This, alterations: AlterationsT) {
-        const cluster = new ClusterTypeModifier(this.cluster).alter(alterations);
         const schema = ClusterModifier.applyRequirements(this.schema, alterations);
-        return this.for(cluster, schema) as ClusterBehavior.Type<
-            ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
+        return this.for(this.cluster as ClusterInterface.InterfaceOf<This>, undefined, schema) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
@@ -177,12 +172,10 @@ export class ClusterBehavior extends Behavior {
      */
     static enable<
         This extends ClusterBehavior.Type,
-        const FlagsT extends ClusterTypeModifier.ElementFlags<This["cluster"]>,
+        const FlagsT extends ClusterNamespace.ElementFlags<ClusterInterface.InterfaceOf<This>>,
     >(this: This, flags: FlagsT) {
-        const cluster = new ClusterTypeModifier(this.cluster).enable(flags);
         const schema = ClusterModifier.applyPresence(this.schema, flags);
-        return this.for(cluster, schema) as ClusterBehavior.Type<
-            ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
+        return this.for(this.cluster as ClusterInterface.InterfaceOf<This>, undefined, schema) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
@@ -192,16 +185,6 @@ export class ClusterBehavior extends Behavior {
                 ClusterNamespace.EnabledAttributeKeysOf<FlagsT>
             >
         >;
-    }
-
-    /**
-     * Create a ClusterBehavior like this one with different interface methods.
-     *
-     * The Interface "property" is type-only.  We define a method however to keep the API consistent.  At runtime the
-     * method is a no-op.
-     */
-    static withInterface<const N extends ClusterNamespaceTyping>() {
-        return this as unknown as ClusterBehavior.Type<typeof ClusterType.Unknown, typeof ClusterBehavior, N>;
     }
 
     static isType(type: Behavior.Type): type is ClusterBehavior.Type {
@@ -264,84 +247,65 @@ export class ClusterBehavior extends Behavior {
 
 export namespace ClusterBehavior {
     /**
-     * A ClusterBehavior specialized for a specific Cluster.
+     * A ClusterBehavior specialized for a specific cluster namespace.
      */
     export interface Type<
-        C extends ClusterType = ClusterType,
         B extends Behavior.Type = Behavior.Type,
         N extends ClusterNamespaceTyping = ClusterInterface.InterfaceOf<B>,
     > {
-        new (agent: Agent, backing: BehaviorBacking): Instance<C, B, N>;
+        new (agent: Agent, backing: BehaviorBacking): Instance<B, N>;
 
         readonly name: string;
 
         /**
          * The behavior ID for ClusterBehaviors is the name of the cluster.
          */
-        readonly id: Uncapitalize<C["name"]>;
+        readonly id: Uncapitalize<string>;
 
         /**
-         * Base cluster state include all attribute values but may be extended by subclasses.
+         * The cluster namespace for this behavior.
          */
-        readonly cluster: C;
+        readonly cluster: ClusterNamespace;
 
-        readonly Events: ClusterEvents.Type<C, B, N>;
-        readonly State: new () => ClusterState.Type<C, B, N>;
+        readonly Events: ClusterEvents.Type<B, N>;
+        readonly State: new () => ClusterState.Type<B, N>;
         readonly Internal: B["Internal"];
         readonly Interface: N;
 
         readonly schema: Schema.Cluster;
         readonly early: boolean;
-        readonly defaults: ClusterState.Type<C, B, N>;
+        readonly defaults: ClusterState.Type<B, N>;
         readonly supervisor: RootSupervisor;
         readonly dependencies?: Iterable<Behavior.Type>;
         supports: typeof ClusterBehavior.supports;
         readonly ExtensionInterface: ExtensionInterfaceOf<B>;
         readonly lockOnInvoke: boolean;
 
-        // Prior to TS 5.4 could do this.  Sadly typing no longer carries through on these...  This["cluster"] reverts
-        // to ClusterType).  So we have to define the long way.
-        //
-        // - for: typeof ClusterBehavior.for;
-        // - with: typeof ClusterBehavior.with;
-        // - alter: typeof ClusterBehavior.alter;
-        // - set: typeof ClusterBehavior.set;
-        // - enable: typeof ClusterBehavior.enable;
-        //
-        // This also means intellisense doesn't work unless we copy comments here (or move here and cast ClusterBehavior
-        // to ClusterBehavior.Type).  Currently we do the former.
-
         /**
-         * Create a new behavior for a specific {@link ClusterType}.
-         *
-         * If you invoke directly on {@link ClusterBehavior} you will receive a new implementation that reports all commands
-         * as unimplemented.
-         *
-         * If you invoke on an existing subclass, you will receive a new implementation with the cluster in the subclass
-         * replaced.  You should generally only do this with a {@link ClusterType} with the same ID.
+         * Create a new behavior for a specific cluster namespace.
          */
-        for<This extends ClusterBehavior.Type, const ClusterT extends ClusterType>(
+        for<This extends ClusterBehavior.Type, const NS extends ClusterNamespace>(
             this: This,
-            cluster: ClusterT,
+            ns: NS,
+            features?: readonly string[] | true,
             schema?: Schema,
             name?: string,
-        ): ClusterBehavior.Type<ClusterT, This>;
+        ): ClusterBehavior.Type<This, NonNullable<NS["Typing"]>>;
 
         /**
          * Create a new behavior with different cluster features.
          */
         withFeatures<
             This extends ClusterBehavior.Type,
-            const FeaturesT extends ClusterComposer.FeatureSelection<This["cluster"]>,
+            const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             ...features: FeaturesT
         ): ClusterBehavior.Type<
-            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
             This,
             ClusterNamespace.WithSupportedFeatures<
                 ClusterInterface.InterfaceOf<This>,
-                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+                ClusterNamespace.FeaturesAsFlags<FeaturesT>
             >
         >;
 
@@ -350,16 +314,15 @@ export namespace ClusterBehavior {
          */
         with<
             This extends ClusterBehavior.Type,
-            const FeaturesT extends ClusterComposer.FeatureSelection<This["cluster"]>,
+            const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             ...features: FeaturesT
         ): ClusterBehavior.Type<
-            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
             This,
             ClusterNamespace.WithSupportedFeatures<
                 ClusterInterface.InterfaceOf<This>,
-                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+                ClusterNamespace.FeaturesAsFlags<FeaturesT>
             >
         >;
 
@@ -368,12 +331,11 @@ export namespace ClusterBehavior {
          */
         alter<
             This extends ClusterBehavior.Type,
-            const AlterationsT extends ClusterTypeModifier.Alterations<This["cluster"]>,
+            const AlterationsT extends ClusterNamespace.Alterations<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             alterations: AlterationsT,
         ): ClusterBehavior.Type<
-            ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
@@ -388,12 +350,11 @@ export namespace ClusterBehavior {
 
         enable<
             This extends ClusterBehavior.Type,
-            const FlagsT extends ClusterTypeModifier.ElementFlags<This["cluster"]>,
+            const FlagsT extends ClusterNamespace.ElementFlags<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             flags: FlagsT,
         ): ClusterBehavior.Type<
-            ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
@@ -409,7 +370,7 @@ export namespace ClusterBehavior {
      * A fully-typed ClusterBehavior.  This type is derived by combining properties of the base type with properties
      * contributed by the cluster.
      */
-    export type Instance<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespaceTyping> =
+    export type Instance<B extends Behavior.Type, N extends ClusterNamespaceTyping> =
         // Base class
         ClusterBehavior &
             // Bring extensions of old class forward
@@ -425,30 +386,30 @@ export namespace ClusterBehavior {
                 | typeof Symbol.asyncDispose
 
                 // Omit command methods of old cluster
-                | keyof ClusterInterface.MethodsOf<ClusterInterface.InterfaceOf<B>, ClusterOf<B>>
+                | keyof ClusterInterface.MethodsOf<ClusterInterface.InterfaceOf<B>>
 
                 // Omit methods defined in ExtensionInterface
                 | keyof ExtensionInterfaceOf<B>
             > &
             // Add command methods
-            ClusterInterface.MethodsOf<N, C> &
+            ClusterInterface.MethodsOf<N> &
             // Add methods defined manually in ExtensionInterface
             ExtensionInterfaceOf<B> & {
                 // Cluster-specific members
                 /**
-                 * The implemented cluster.
+                 * The cluster namespace.
                  */
-                cluster: C;
+                cluster: ClusterNamespace;
 
                 /**
                  * State values for the behavior.
                  */
-                state: ClusterState<C, B, N>;
+                state: ClusterState<B, N>;
 
                 /**
                  * Observables for cluster events and attribute changes.
                  */
-                events: ClusterEvents<C, B, N>;
+                events: ClusterEvents<B, N>;
 
                 /**
                  * Supported features as a flag object.

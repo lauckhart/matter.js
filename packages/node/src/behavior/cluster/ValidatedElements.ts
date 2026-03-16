@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Diagnostic, ImplementationError, Logger, MatterAggregateError, Observable } from "@matter/general";
-import { ClusterType } from "@matter/types";
+import { Diagnostic, ImplementationError, Logger, MatterAggregateError, Observable, camelize } from "@matter/general";
+import { ClusterModel, Conformance, ElementTag, Schema, Scope, ValueModel } from "@matter/model";
+import type { ClusterNamespace } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import { ClusterBehavior } from "./ClusterBehavior.js";
 import { introspectionInstanceOf } from "./cluster-behavior-utils.js";
@@ -73,7 +74,8 @@ export class ValidatedElements {
     #name: string;
     #type: Behavior.Type;
     #instance?: Behavior;
-    #cluster: ClusterType;
+    #cluster: ClusterNamespace;
+    #scope: Scope;
 
     /**
      * Obtain validation information.
@@ -89,6 +91,9 @@ export class ValidatedElements {
         this.#instance = instance;
         this.#name = type.name;
         this.#cluster = type.cluster;
+
+        const schema = Schema(type) as ClusterModel;
+        this.#scope = Scope(schema);
 
         if (typeof type !== "function") {
             this.error(undefined, "Is not a class", true);
@@ -139,9 +144,11 @@ export class ValidatedElements {
     }
 
     #validateAttributes() {
-        const attributes = this.#cluster.attributes;
-        if (!attributes) {
-            this.error("cluster.attributes", "Property missing", true);
+        const nsAttributes = this.#cluster.attributes as
+            | Record<string, ClusterNamespace.Attribute>
+            | undefined;
+        if (!nsAttributes) {
+            // No attributes in namespace — nothing to validate
             return;
         }
 
@@ -164,32 +171,26 @@ export class ValidatedElements {
             }
         }
 
-        for (const name in attributes) {
-            const attr = attributes[name];
-            if (!attr) {
-                this.error(`cluster.attributes.${name}`, "Undefined element in cluster definition", true);
-                continue;
-            }
-
+        // Use the namespace attribute map for enumeration
+        for (const name in nsAttributes) {
             if ((state as Record<string, unknown>)[name] === undefined) {
-                if (!attr.optional) {
+                // Check if the attribute is optional via schema conformance
+                if (!this.#isOptionalElement(name, ElementTag.Attribute)) {
                     this.error(`State.${name}`, "Mandatory element unsupported", false);
                 }
                 continue;
             }
 
             this.attributes.add(name);
-
-            // TODO - should we enforce presence of events.<attr>$Changed?
-
-            // TODO - validate "optional but not nullable" if attributes get proper metadata (or go to model for this)
         }
     }
 
     #validateCommands() {
-        const commands = this.#cluster.commands;
-        if (!commands) {
-            this.error("cluster.commands", "Property missing", true);
+        const nsCommands = this.#cluster.commands as
+            | Record<string, ClusterNamespace.Command>
+            | undefined;
+        if (!nsCommands) {
+            // No commands in namespace — nothing to validate
             return;
         }
 
@@ -206,17 +207,12 @@ export class ValidatedElements {
             }
         }
 
-        for (const name in commands) {
-            const command = commands[name];
-            if (!command) {
-                this.error(`cluster.commands.${name}`, "Undefined element in cluster definition", true);
-                continue;
-            }
-
+        for (const name in nsCommands) {
             const implementation = (implementations as Record<string, unknown>)[name];
+            const isOptional = this.#isOptionalElement(name, ElementTag.Command);
 
             if (!(name in implementations) || implementation === undefined) {
-                if (!command.optional) {
+                if (!isOptional) {
                     this.error(name, `Implementation missing`, true);
                 }
                 continue;
@@ -228,7 +224,7 @@ export class ValidatedElements {
             }
 
             if (implementation === Behavior.unimplemented) {
-                if (!command.optional) {
+                if (!isOptional) {
                     // TODO - do not pollute the logs with these as Matter spec is in flux (should this include groups
                     //  or just scenes?)
                     if (this.#name.match(/^(?:Groups|Scenes|GroupKeyManagement)(?:Server|Behavior)/)) {
@@ -246,9 +242,10 @@ export class ValidatedElements {
     }
 
     #validateEvents() {
-        const expected = this.#cluster.events;
-        if (typeof expected !== "object" || expected === null) {
-            this.error("cluster.events", "Invalid definition", true);
+        const nsEvents = this.#cluster.events as
+            | Record<string, ClusterNamespace.Event>
+            | undefined;
+        if (!nsEvents || Object.keys(nsEvents).length === 0) {
             return;
         }
 
@@ -271,15 +268,9 @@ export class ValidatedElements {
             }
         }
 
-        for (const name in expected) {
-            const event = expected[name];
-            if (!event) {
-                this.error(`cluster.events.${name}`, "Undefined element in cluster definition", true);
-                continue;
-            }
-
+        for (const name in nsEvents) {
             if (!(name in emitters)) {
-                if (!event.optional) {
+                if (!this.#isOptionalElement(name, ElementTag.Event)) {
                     this.error(`cluster.events.${name}`, "Implementation missing", true);
                 }
                 continue;
@@ -287,6 +278,20 @@ export class ValidatedElements {
 
             this.events.add(name);
         }
+    }
+
+    /**
+     * Check if an element is optional by consulting the schema conformance.
+     */
+    #isOptionalElement(name: string, tag: ElementTag): boolean {
+        for (const member of this.#scope.membersOf(this.#scope.owner, { tags: [tag] })) {
+            if (camelize(member.name) === name) {
+                const applicability = (member as ValueModel).effectiveConformance.applicabilityFor(this.#scope);
+                return applicability !== Conformance.Applicability.Mandatory;
+            }
+        }
+        // Element not found in schema — treat as optional
+        return true;
     }
 
     private error(element: string | undefined, message: string, fatal: boolean) {

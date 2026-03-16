@@ -4,19 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import { AttributeId, BitSchema, CommandId, TypeFromPartialBitSchema } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
-import type { ClusterOf } from "./cluster-behavior-utils.js";
+import type { ClusterInterface } from "./ClusterInterface.js";
 
 /**
  * Instance type for complete (endpoint + fabric) state.
  */
 export type ClusterState<
-    C extends ClusterType,
     B extends Behavior.Type,
     N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
-> = ClusterState.Type<C, B, N>;
+> = ClusterState.Type<B, N>;
 
 /**
  * State values for global attributes.
@@ -37,17 +36,11 @@ export namespace ClusterState {
     /**
      * Instance type for ClusterBehavior state.
      */
-    export type Type<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
+    export type Type<B extends Behavior.Type, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
         // Keep properties *not* from attributes of the old cluster
-        Omit<InstanceType<B["State"]>, keyof PropertiesOf<ClusterOf<B>>> &
+        Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<ClusterInterface.InterfaceOf<B>>> &
             // Add properties from attributes of the new cluster
-            NsPropertiesOf<N, C>;
-
-    /**
-     * Use N-driven properties when Attributes.Components exists, else fall back to C.
-     */
-    export type NsPropertiesOf<N extends ClusterNamespaceTyping, C> =
-        AttributesComponentsOf<N> extends [] ? PropertiesOf<C> : NsAttributeProperties<N>;
+            NsAttributeProperties<N>;
 
     /**
      * Extract Attributes.Components tuple from namespace.
@@ -114,35 +107,4 @@ export namespace ClusterState {
      * Extract keys marked as enabled on the namespace (e.g. via `enable()` or `alter()`).
      */
     type EnabledAttrKeys<N> = N extends { Attributes: { Enabled: infer K extends string } } ? K : never;
-
-    /**
-     * Properties a cluster contributes state.
-     */
-    export type PropertiesOf<C> = PropertiesOfAttributes<ClusterType.AttributesOf<C>>;
-
-    export type PropertiesOfAttributes<A extends Record<string, ClusterType.Attribute>> = {
-        -readonly [N in keyof A as A[N] extends { fixed: true }
-            ? never
-            : A[N] extends { optional: true }
-              ? never
-              : N]: TypeFromSchema<A[N]["schema"]>;
-    } & {
-        -readonly [N in keyof A as A[N] extends { fixed: true }
-            ? never
-            : A[N] extends { optional: true }
-              ? N
-              : never]?: TypeFromSchema<A[N]["schema"]>;
-    } & {
-        -readonly [N in keyof A as A[N] extends { fixed: true }
-            ? A[N] extends { optional: true }
-                ? never
-                : N
-            : never]: TypeFromSchema<A[N]["schema"]>;
-    } & {
-        -readonly [N in keyof A as A[N] extends { fixed: true }
-            ? A[N] extends { optional: true }
-                ? N
-                : never
-            : never]?: TypeFromSchema<A[N]["schema"]>;
-    };
 }

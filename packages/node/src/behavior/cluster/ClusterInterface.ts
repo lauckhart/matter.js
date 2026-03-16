@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { MaybePromise } from "@matter/general";
-import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 
 /**
  * @see {@link ClusterNamespaceTyping}
@@ -20,11 +19,8 @@ export namespace ClusterInterface {
 
     export type InterfaceOf<B> = B extends { Interface: infer I extends ClusterInterface } ? I : ClusterInterface;
 
-    export type MethodsOf<I extends ClusterInterface, C extends ClusterType> =
-        // This is the workaround for TS issue #27965
-        InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>> &
-            // Fall back to mapping for methods not defined in an interface
-            Omit<MappedMethodsOf<C["commands"]>, keyof InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>>>;
+    export type MethodsOf<I extends ClusterInterface> =
+        InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>>;
 
     export type ComponentsOf<I extends ClusterInterface> = I extends {
         Commands: { Components: infer C extends Component[] };
@@ -51,14 +47,4 @@ export namespace ClusterInterface {
             ? [C, ...ApplicableComponents<R, S>]
             : ApplicableComponents<R, S>
         : [];
-
-    export type MethodForCommand<C extends ClusterType.Command> = (
-        request: TypeFromSchema<C["requestSchema"]>,
-    ) => MaybePromise<TypeFromSchema<C["responseSchema"]>>;
-
-    export type MappedMethodsOf<C extends Record<string, ClusterType.Command>> = string extends keyof C
-        ? {}
-        : {
-              readonly [K in keyof C]: MethodForCommand<C[K]>;
-          };
 }

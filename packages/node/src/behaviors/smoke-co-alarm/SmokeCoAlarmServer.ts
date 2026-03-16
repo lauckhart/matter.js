@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterType } from "@matter/types";
+
 import { SmokeCoAlarm } from "@matter/types/clusters/smoke-co-alarm";
 import { SmokeCoAlarmBehavior } from "./SmokeCoAlarmBehavior.js";
 
@@ -42,4 +42,4 @@ export class SmokeCoAlarmBaseServer extends SmokeCoAlarmBase {
     }
 }
 
-export class SmokeCoAlarmServer extends SmokeCoAlarmBaseServer.for(ClusterType(SmokeCoAlarm.Base)) {}
+export class SmokeCoAlarmServer extends SmokeCoAlarmBaseServer.for(SmokeCoAlarm) {}

@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterType } from "@matter/types";
 import { ElectricalEnergyMeasurement } from "@matter/types/clusters/electrical-energy-measurement";
 import { ElectricalEnergyMeasurementBehavior } from "./ElectricalEnergyMeasurementBehavior.js";
 
 const ElectricalEnergyMeasurementBase = ElectricalEnergyMeasurementBehavior.for(
-    ElectricalEnergyMeasurement.Complete,
+    ElectricalEnergyMeasurement, true,
 ).with(
     ElectricalEnergyMeasurement.Feature.CumulativeEnergy,
     ElectricalEnergyMeasurement.Feature.PeriodicEnergy,
@@ -94,5 +93,5 @@ export namespace ElectricalEnergyMeasurementBaseServer {
 
 // Reset all Features
 export class ElectricalEnergyMeasurementServer extends ElectricalEnergyMeasurementBaseServer.for(
-    ClusterType(ElectricalEnergyMeasurement.Base),
+    ElectricalEnergyMeasurement,
 ) {}
