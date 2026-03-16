@@ -92,7 +92,7 @@ export class AtomicWriteHandler {
         const attributes = new Map<AttributeId, string>();
         for (const attr of attributeRequests) {
             const [attributeName, _] =
-                Object.entries((cluster as ClusterBehavior.Type).cluster.attributes).find(
+                Object.entries(cluster.cluster.attributes ?? {}).find(
                     ([_, { id }]) => id === attr,
                 ) ?? [];
             if (attributeName === undefined || endpoint.stateOf(cluster.id)[attr] === undefined) {
@@ -108,7 +108,7 @@ export class AtomicWriteHandler {
             s =>
                 PeerAddress.is(s.peerAddress, peerAddress) &&
                 s.endpoint.number == endpoint.number &&
-                s.clusterId === (cluster as ClusterBehavior.Type).cluster.id,
+                s.clusterId === cluster.cluster.id,
         );
 
         if (requestType === Thermostat.RequestType.BeginWrite) {
@@ -247,7 +247,7 @@ export class AtomicWriteHandler {
         context: ActionContext,
         endpoint: Endpoint,
         cluster: B,
-        clusterState: ClusterState.Type<any, B>,
+        clusterState: ClusterState.Type<B>,
     ): Promise<Thermostat.AtomicResponse> {
         const state = this.#initializeState(request, context, endpoint, cluster);
 
@@ -327,9 +327,9 @@ export class AtomicWriteHandler {
     /**
      * Returns the pending write state for the given attribute, if any.
      */
-    #pendingWriteStateForAttribute(endpoint: Endpoint, cluster: Behavior.Type, attribute: AttributeId) {
+    #pendingWriteStateForAttribute(endpoint: Endpoint, cluster: ClusterBehavior.Type, attribute: AttributeId) {
         const writeStates = this.#pendingWrites.filter(
-            s => s.endpoint.number === endpoint.number && s.clusterId === (cluster as ClusterBehavior.Type).cluster.id,
+            s => s.endpoint.number === endpoint.number && s.clusterId === cluster.cluster.id,
         );
         if (writeStates.length === 0) {
             return undefined;
