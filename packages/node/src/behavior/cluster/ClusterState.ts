@@ -54,14 +54,19 @@ export namespace ClusterState {
     /**
      * N-driven attribute properties: mandatory vs optional from Components + value types from Attributes.
      */
+    type MandatoryKeys<N extends ClusterNamespaceTyping> =
+        | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
+        | EnabledAttrKeys<N>;
+
     type NsAttributeProperties<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
-              [K in (
-                  | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
-                  | EnabledAttrKeys<N>
-              ) &
-                  keyof A]: A[K];
+              // Mandatory non-nullable: required
+              [K in MandatoryKeys<N> & keyof A as null extends A[K] ? never : K]: A[K];
           } & {
+              // Mandatory nullable: optional property
+              [K in MandatoryKeys<N> & keyof A as null extends A[K] ? K : never]?: A[K];
+          } & {
+              // Optional by conformance
               [K in Exclude<
                   OptionalAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
                   EnabledAttrKeys<N>
