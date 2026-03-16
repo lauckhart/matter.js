@@ -393,15 +393,17 @@ describe("ClusterBehavior", () => {
             });
 
             interface TestInterface {
-                components: [
-                    {
-                        flags: {};
-                        methods: {
-                            realCommand(request: number): MaybePromise<number>;
-                            nonMatterMethod(request: number): MaybePromise;
-                        };
-                    },
-                ];
+                Commands: {
+                    Components: [
+                        {
+                            flags: {};
+                            methods: {
+                                realCommand(request: number): MaybePromise<number>;
+                                nonMatterMethod(request: number): MaybePromise;
+                            };
+                        },
+                    ];
+                };
             }
 
             const TestSchema = new ClusterModel({

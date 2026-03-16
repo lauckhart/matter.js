@@ -41,17 +41,14 @@ export class BehaviorFile extends TsFile {
         // Install the interface if there are commands
         const definingCluster = this.#variance.cluster;
         if (definingCluster.commands.length) {
-            const interfaceName = `${definingCluster.name}Interface`;
+            const nsName = definingCluster.name;
 
-            if (definingCluster === this.cluster) {
-                // The cluster defines its own interface
-                this.addImport(`./${interfaceName}.js`, interfaceName);
-            } else {
-                // This is an alias so just import the interface of the base cluster
-                this.addImport(`../${decamelize(definingCluster.name)}/${interfaceName}.js`, interfaceName);
+            if (definingCluster !== this.cluster) {
+                // This is an alias so import the defining cluster namespace
+                this.addImport(`@matter/types/clusters/${decamelize(nsName)}`, nsName);
             }
 
-            builder.atom(`withInterface<${interfaceName}>()`);
+            builder.atom(`withInterface<${nsName}>()`);
         }
 
         // Inject the cluster and appropriate documentation
