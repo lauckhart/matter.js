@@ -30,7 +30,7 @@ import {
 } from "@matter/general";
 import { FeatureSet } from "@matter/model";
 import { ClusterTypeProtocol, Val } from "@matter/protocol";
-import { ClusterType, VoidSchema } from "@matter/types";
+import { type ClusterNamespace, VoidSchema } from "@matter/types";
 import type { Agent } from "../Agent.js";
 import type { Endpoint } from "../Endpoint.js";
 import { BehaviorInitializationError, EndpointBehaviorsError } from "../errors.js";
@@ -841,7 +841,7 @@ export class Behaviors {
     }
 }
 
-function clusterOf(behavior?: Behavior.Type): ClusterType | undefined {
+function clusterOf(behavior?: Behavior.Type): ClusterNamespace | undefined {
     return (behavior as ClusterBehavior.Type)?.cluster;
 }
 
