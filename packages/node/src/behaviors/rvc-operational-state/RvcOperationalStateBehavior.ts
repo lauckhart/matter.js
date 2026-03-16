@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * RvcOperationalStateBehavior is the base class for objects that support interaction with
  * {@link RvcOperationalState.Cluster}.
  */
-export const RvcOperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<RvcOperationalState>()
-    .for(RvcOperationalState.Cluster);
+export const RvcOperationalStateBehaviorConstructor = ClusterBehavior.for(RvcOperationalState);
 
 export interface RvcOperationalStateBehaviorConstructor extends Identity<typeof RvcOperationalStateBehaviorConstructor> {}
 export const RvcOperationalStateBehavior: RvcOperationalStateBehaviorConstructor = RvcOperationalStateBehaviorConstructor;

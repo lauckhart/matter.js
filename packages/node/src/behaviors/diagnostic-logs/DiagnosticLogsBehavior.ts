@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * DiagnosticLogsBehavior is the base class for objects that support interaction with {@link DiagnosticLogs.Cluster}.
  */
-export const DiagnosticLogsBehaviorConstructor = ClusterBehavior
-    .withInterface<DiagnosticLogs>()
-    .for(DiagnosticLogs.Cluster);
+export const DiagnosticLogsBehaviorConstructor = ClusterBehavior.for(DiagnosticLogs);
 
 export interface DiagnosticLogsBehaviorConstructor extends Identity<typeof DiagnosticLogsBehaviorConstructor> {}
 export const DiagnosticLogsBehavior: DiagnosticLogsBehaviorConstructor = DiagnosticLogsBehaviorConstructor;

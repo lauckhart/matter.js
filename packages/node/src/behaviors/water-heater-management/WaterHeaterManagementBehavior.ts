@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of WaterHeaterManagement.Cluster enabled. You can enable additional
  * features using WaterHeaterManagementBehavior.with.
  */
-export const WaterHeaterManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<WaterHeaterManagement>()
-    .for(WaterHeaterManagement.Cluster);
+export const WaterHeaterManagementBehaviorConstructor = ClusterBehavior.for(WaterHeaterManagement);
 
 export interface WaterHeaterManagementBehaviorConstructor extends Identity<typeof WaterHeaterManagementBehaviorConstructor> {}
 export const WaterHeaterManagementBehavior: WaterHeaterManagementBehaviorConstructor = WaterHeaterManagementBehaviorConstructor;

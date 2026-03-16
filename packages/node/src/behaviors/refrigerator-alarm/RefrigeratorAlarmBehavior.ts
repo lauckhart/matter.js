@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of RefrigeratorAlarm.Cluster enabled. You can enable additional features
  * using RefrigeratorAlarmBehavior.with.
  */
-export const RefrigeratorAlarmBehaviorConstructor = ClusterBehavior
-    .withInterface<RefrigeratorAlarm>()
-    .for(RefrigeratorAlarm.Cluster);
+export const RefrigeratorAlarmBehaviorConstructor = ClusterBehavior.for(RefrigeratorAlarm);
 
 export interface RefrigeratorAlarmBehaviorConstructor extends Identity<typeof RefrigeratorAlarmBehaviorConstructor> {}
 export const RefrigeratorAlarmBehavior: RefrigeratorAlarmBehaviorConstructor = RefrigeratorAlarmBehaviorConstructor;

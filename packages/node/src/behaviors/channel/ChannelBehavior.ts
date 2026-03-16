@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of Channel.Cluster enabled. You can enable additional features using
  * ChannelBehavior.with.
  */
-export const ChannelBehaviorConstructor = ClusterBehavior
-    .withInterface<Channel>()
-    .for(Channel.Cluster);
+export const ChannelBehaviorConstructor = ClusterBehavior.for(Channel);
 
 export interface ChannelBehaviorConstructor extends Identity<typeof ChannelBehaviorConstructor> {}
 export const ChannelBehavior: ChannelBehaviorConstructor = ChannelBehaviorConstructor;

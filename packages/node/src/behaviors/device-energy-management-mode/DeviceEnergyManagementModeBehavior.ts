@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * DeviceEnergyManagementModeBehavior is the base class for objects that support interaction with
  * {@link DeviceEnergyManagementMode.Cluster}.
  */
-export const DeviceEnergyManagementModeBehaviorConstructor = ClusterBehavior
-    .withInterface<DeviceEnergyManagementMode>()
-    .for(DeviceEnergyManagementMode.Cluster);
+export const DeviceEnergyManagementModeBehaviorConstructor = ClusterBehavior.for(DeviceEnergyManagementMode);
 
 export interface DeviceEnergyManagementModeBehaviorConstructor extends Identity<typeof DeviceEnergyManagementModeBehaviorConstructor> {}
 export const DeviceEnergyManagementModeBehavior: DeviceEnergyManagementModeBehaviorConstructor = DeviceEnergyManagementModeBehaviorConstructor;

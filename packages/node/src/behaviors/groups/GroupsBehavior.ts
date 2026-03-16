@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * GroupsBehavior is the base class for objects that support interaction with {@link Groups.Cluster}.
  */
-export const GroupsBehaviorConstructor = ClusterBehavior
-    .withInterface<Groups>()
-    .for(Groups.Cluster);
+export const GroupsBehaviorConstructor = ClusterBehavior.for(Groups);
 
 export interface GroupsBehaviorConstructor extends Identity<typeof GroupsBehaviorConstructor> {}
 export const GroupsBehavior: GroupsBehaviorConstructor = GroupsBehaviorConstructor;

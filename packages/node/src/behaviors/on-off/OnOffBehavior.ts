@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of OnOff.Cluster enabled. You can enable additional features using
  * OnOffBehavior.with.
  */
-export const OnOffBehaviorConstructor = ClusterBehavior
-    .withInterface<OnOff>()
-    .for(OnOff.Cluster);
+export const OnOffBehaviorConstructor = ClusterBehavior.for(OnOff);
 
 export interface OnOffBehaviorConstructor extends Identity<typeof OnOffBehaviorConstructor> {}
 export const OnOffBehavior: OnOffBehaviorConstructor = OnOffBehaviorConstructor;

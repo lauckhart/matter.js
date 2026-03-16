@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * OperationalCredentialsBehavior is the base class for objects that support interaction with
  * {@link OperationalCredentials.Cluster}.
  */
-export const OperationalCredentialsBehaviorConstructor = ClusterBehavior
-    .withInterface<OperationalCredentials>()
-    .for(OperationalCredentials.Cluster);
+export const OperationalCredentialsBehaviorConstructor = ClusterBehavior.for(OperationalCredentials);
 
 export interface OperationalCredentialsBehaviorConstructor extends Identity<typeof OperationalCredentialsBehaviorConstructor> {}
 export const OperationalCredentialsBehavior: OperationalCredentialsBehaviorConstructor = OperationalCredentialsBehaviorConstructor;

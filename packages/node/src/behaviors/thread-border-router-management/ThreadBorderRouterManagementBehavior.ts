@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ThreadBorderRouterManagement.Cluster enabled. You can enable additional
  * features using ThreadBorderRouterManagementBehavior.with.
  */
-export const ThreadBorderRouterManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<ThreadBorderRouterManagement>()
-    .for(ThreadBorderRouterManagement.Cluster);
+export const ThreadBorderRouterManagementBehaviorConstructor = ClusterBehavior.for(ThreadBorderRouterManagement);
 
 export interface ThreadBorderRouterManagementBehaviorConstructor extends Identity<typeof ThreadBorderRouterManagementBehaviorConstructor> {}
 export const ThreadBorderRouterManagementBehavior: ThreadBorderRouterManagementBehaviorConstructor = ThreadBorderRouterManagementBehaviorConstructor;

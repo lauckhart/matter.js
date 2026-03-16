@@ -18,9 +18,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of HepaFilterMonitoring.Cluster enabled. You can enable additional
  * features using HepaFilterMonitoringBehavior.with.
  */
-export const HepaFilterMonitoringBehaviorConstructor = ClusterBehavior
-    .withInterface<ResourceMonitoring>()
-    .for(HepaFilterMonitoring.Cluster);
+export const HepaFilterMonitoringBehaviorConstructor = ClusterBehavior.for(ResourceMonitoring);
 
 export interface HepaFilterMonitoringBehaviorConstructor extends Identity<typeof HepaFilterMonitoringBehaviorConstructor> {}
 export const HepaFilterMonitoringBehavior: HepaFilterMonitoringBehaviorConstructor = HepaFilterMonitoringBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * OtaSoftwareUpdateRequestorBehavior is the base class for objects that support interaction with
  * {@link OtaSoftwareUpdateRequestor.Cluster}.
  */
-export const OtaSoftwareUpdateRequestorBehaviorConstructor = ClusterBehavior
-    .withInterface<OtaSoftwareUpdateRequestor>()
-    .for(OtaSoftwareUpdateRequestor.Cluster);
+export const OtaSoftwareUpdateRequestorBehaviorConstructor = ClusterBehavior.for(OtaSoftwareUpdateRequestor);
 
 export interface OtaSoftwareUpdateRequestorBehaviorConstructor extends Identity<typeof OtaSoftwareUpdateRequestorBehaviorConstructor> {}
 export const OtaSoftwareUpdateRequestorBehavior: OtaSoftwareUpdateRequestorBehaviorConstructor = OtaSoftwareUpdateRequestorBehaviorConstructor;

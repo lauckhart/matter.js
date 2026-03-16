@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * EnergyEvseModeBehavior is the base class for objects that support interaction with {@link EnergyEvseMode.Cluster}.
  */
-export const EnergyEvseModeBehaviorConstructor = ClusterBehavior
-    .withInterface<EnergyEvseMode>()
-    .for(EnergyEvseMode.Cluster);
+export const EnergyEvseModeBehaviorConstructor = ClusterBehavior.for(EnergyEvseMode);
 
 export interface EnergyEvseModeBehaviorConstructor extends Identity<typeof EnergyEvseModeBehaviorConstructor> {}
 export const EnergyEvseModeBehavior: EnergyEvseModeBehaviorConstructor = EnergyEvseModeBehaviorConstructor;

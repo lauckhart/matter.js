@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * OvenCavityOperationalStateBehavior is the base class for objects that support interaction with
  * {@link OvenCavityOperationalState.Cluster}.
  */
-export const OvenCavityOperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<OvenCavityOperationalState>()
-    .for(OvenCavityOperationalState.Cluster);
+export const OvenCavityOperationalStateBehaviorConstructor = ClusterBehavior.for(OvenCavityOperationalState);
 
 export interface OvenCavityOperationalStateBehaviorConstructor extends Identity<typeof OvenCavityOperationalStateBehaviorConstructor> {}
 export const OvenCavityOperationalStateBehavior: OvenCavityOperationalStateBehaviorConstructor = OvenCavityOperationalStateBehaviorConstructor;

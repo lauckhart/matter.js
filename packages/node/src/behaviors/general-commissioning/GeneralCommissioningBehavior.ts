@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of GeneralCommissioning.Cluster enabled. You can enable additional
  * features using GeneralCommissioningBehavior.with.
  */
-export const GeneralCommissioningBehaviorConstructor = ClusterBehavior
-    .withInterface<GeneralCommissioning>()
-    .for(GeneralCommissioning.Cluster);
+export const GeneralCommissioningBehaviorConstructor = ClusterBehavior.for(GeneralCommissioning);
 
 export interface GeneralCommissioningBehaviorConstructor extends Identity<typeof GeneralCommissioningBehaviorConstructor> {}
 export const GeneralCommissioningBehavior: GeneralCommissioningBehaviorConstructor = GeneralCommissioningBehaviorConstructor;

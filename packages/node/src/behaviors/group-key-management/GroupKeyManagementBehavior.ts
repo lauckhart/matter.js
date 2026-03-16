@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * GroupKeyManagementBehavior is the base class for objects that support interaction with
  * {@link GroupKeyManagement.Cluster}.
  */
-export const GroupKeyManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<GroupKeyManagement>()
-    .for(GroupKeyManagement.Cluster);
+export const GroupKeyManagementBehaviorConstructor = ClusterBehavior.for(GroupKeyManagement);
 
 export interface GroupKeyManagementBehaviorConstructor extends Identity<typeof GroupKeyManagementBehaviorConstructor> {}
 export const GroupKeyManagementBehavior: GroupKeyManagementBehaviorConstructor = GroupKeyManagementBehaviorConstructor;

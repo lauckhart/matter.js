@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of SoftwareDiagnostics.Cluster enabled. You can enable additional features
  * using SoftwareDiagnosticsBehavior.with.
  */
-export const SoftwareDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<SoftwareDiagnostics>()
-    .for(SoftwareDiagnostics.Cluster);
+export const SoftwareDiagnosticsBehaviorConstructor = ClusterBehavior.for(SoftwareDiagnostics);
 
 export interface SoftwareDiagnosticsBehaviorConstructor extends Identity<typeof SoftwareDiagnosticsBehaviorConstructor> {}
 export const SoftwareDiagnosticsBehavior: SoftwareDiagnosticsBehaviorConstructor = SoftwareDiagnosticsBehaviorConstructor;

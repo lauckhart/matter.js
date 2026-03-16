@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ContentControl.Cluster enabled. You can enable additional features
  * using ContentControlBehavior.with.
  */
-export const ContentControlBehaviorConstructor = ClusterBehavior
-    .withInterface<ContentControl>()
-    .for(ContentControl.Cluster);
+export const ContentControlBehaviorConstructor = ClusterBehavior.for(ContentControl);
 
 export interface ContentControlBehaviorConstructor extends Identity<typeof ContentControlBehaviorConstructor> {}
 export const ContentControlBehavior: ContentControlBehaviorConstructor = ContentControlBehaviorConstructor;

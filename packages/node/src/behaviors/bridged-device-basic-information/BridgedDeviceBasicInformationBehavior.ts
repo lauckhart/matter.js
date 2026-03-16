@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of BridgedDeviceBasicInformation.Cluster enabled. You can enable
  * additional features using BridgedDeviceBasicInformationBehavior.with.
  */
-export const BridgedDeviceBasicInformationBehaviorConstructor = ClusterBehavior
-    .withInterface<BridgedDeviceBasicInformation>()
-    .for(BridgedDeviceBasicInformation.Cluster);
+export const BridgedDeviceBasicInformationBehaviorConstructor = ClusterBehavior.for(BridgedDeviceBasicInformation);
 
 export interface BridgedDeviceBasicInformationBehaviorConstructor extends Identity<typeof BridgedDeviceBasicInformationBehaviorConstructor> {}
 export const BridgedDeviceBasicInformationBehavior: BridgedDeviceBasicInformationBehaviorConstructor = BridgedDeviceBasicInformationBehaviorConstructor;

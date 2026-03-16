@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of IcdManagement.Cluster enabled. You can enable additional features using
  * IcdManagementBehavior.with.
  */
-export const IcdManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<IcdManagement>()
-    .for(IcdManagement.Cluster);
+export const IcdManagementBehaviorConstructor = ClusterBehavior.for(IcdManagement);
 
 export interface IcdManagementBehaviorConstructor extends Identity<typeof IcdManagementBehaviorConstructor> {}
 export const IcdManagementBehavior: IcdManagementBehaviorConstructor = IcdManagementBehaviorConstructor;

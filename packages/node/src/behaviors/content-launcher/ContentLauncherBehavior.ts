@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ContentLauncher.Cluster enabled. You can enable additional features
  * using ContentLauncherBehavior.with.
  */
-export const ContentLauncherBehaviorConstructor = ClusterBehavior
-    .withInterface<ContentLauncher>()
-    .for(ContentLauncher.Cluster);
+export const ContentLauncherBehaviorConstructor = ClusterBehavior.for(ContentLauncher);
 
 export interface ContentLauncherBehaviorConstructor extends Identity<typeof ContentLauncherBehaviorConstructor> {}
 export const ContentLauncherBehavior: ContentLauncherBehaviorConstructor = ContentLauncherBehaviorConstructor;

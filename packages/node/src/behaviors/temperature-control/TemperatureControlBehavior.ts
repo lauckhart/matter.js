@@ -8,7 +8,6 @@
 
 import { TemperatureControl } from "@matter/types/clusters/temperature-control";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,9 +17,7 @@ import { Identity } from "@matter/general";
  * TemperatureControl.Cluster requires you to enable one or more optional features. You can do so using
  * {@link TemperatureControlBehavior.with}.
  */
-export const TemperatureControlBehaviorConstructor = ClusterBehavior
-    .withInterface<TemperatureControl>()
-    .for(ClusterType(TemperatureControl.Base));
+export const TemperatureControlBehaviorConstructor = ClusterBehavior.for(TemperatureControl);
 
 export interface TemperatureControlBehaviorConstructor extends Identity<typeof TemperatureControlBehaviorConstructor> {}
 export const TemperatureControlBehavior: TemperatureControlBehaviorConstructor = TemperatureControlBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * LaundryWasherModeBehavior is the base class for objects that support interaction with
  * {@link LaundryWasherMode.Cluster}.
  */
-export const LaundryWasherModeBehaviorConstructor = ClusterBehavior
-    .withInterface<LaundryWasherMode>()
-    .for(LaundryWasherMode.Cluster);
+export const LaundryWasherModeBehaviorConstructor = ClusterBehavior.for(LaundryWasherMode);
 
 export interface LaundryWasherModeBehaviorConstructor extends Identity<typeof LaundryWasherModeBehaviorConstructor> {}
 export const LaundryWasherModeBehavior: LaundryWasherModeBehaviorConstructor = LaundryWasherModeBehaviorConstructor;

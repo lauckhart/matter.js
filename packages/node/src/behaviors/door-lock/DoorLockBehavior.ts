@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of DoorLock.Cluster enabled. You can enable additional features using
  * DoorLockBehavior.with.
  */
-export const DoorLockBehaviorConstructor = ClusterBehavior
-    .withInterface<DoorLock>()
-    .for(DoorLock.Cluster);
+export const DoorLockBehaviorConstructor = ClusterBehavior.for(DoorLock);
 
 export interface DoorLockBehaviorConstructor extends Identity<typeof DoorLockBehaviorConstructor> {}
 export const DoorLockBehavior: DoorLockBehaviorConstructor = DoorLockBehaviorConstructor;

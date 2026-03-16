@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * KeypadInputBehavior is the base class for objects that support interaction with {@link KeypadInput.Cluster}.
  */
-export const KeypadInputBehaviorConstructor = ClusterBehavior
-    .withInterface<KeypadInput>()
-    .for(KeypadInput.Cluster);
+export const KeypadInputBehaviorConstructor = ClusterBehavior.for(KeypadInput);
 
 export interface KeypadInputBehaviorConstructor extends Identity<typeof KeypadInputBehaviorConstructor> {}
 export const KeypadInputBehavior: KeypadInputBehaviorConstructor = KeypadInputBehaviorConstructor;

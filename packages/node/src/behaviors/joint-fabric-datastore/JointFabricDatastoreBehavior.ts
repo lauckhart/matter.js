@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * JointFabricDatastoreBehavior is the base class for objects that support interaction with
  * {@link JointFabricDatastore.Cluster}.
  */
-export const JointFabricDatastoreBehaviorConstructor = ClusterBehavior
-    .withInterface<JointFabricDatastore>()
-    .for(JointFabricDatastore.Cluster);
+export const JointFabricDatastoreBehaviorConstructor = ClusterBehavior.for(JointFabricDatastore);
 
 export interface JointFabricDatastoreBehaviorConstructor extends Identity<typeof JointFabricDatastoreBehaviorConstructor> {}
 export const JointFabricDatastoreBehavior: JointFabricDatastoreBehaviorConstructor = JointFabricDatastoreBehaviorConstructor;

@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of EnergyEvse.Cluster enabled. You can enable additional features using
  * EnergyEvseBehavior.with.
  */
-export const EnergyEvseBehaviorConstructor = ClusterBehavior
-    .withInterface<EnergyEvse>()
-    .for(EnergyEvse.Cluster);
+export const EnergyEvseBehaviorConstructor = ClusterBehavior.for(EnergyEvse);
 
 export interface EnergyEvseBehaviorConstructor extends Identity<typeof EnergyEvseBehaviorConstructor> {}
 export const EnergyEvseBehavior: EnergyEvseBehaviorConstructor = EnergyEvseBehaviorConstructor;

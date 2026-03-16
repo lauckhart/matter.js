@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * RvcRunModeBehavior is the base class for objects that support interaction with {@link RvcRunMode.Cluster}.
  */
-export const RvcRunModeBehaviorConstructor = ClusterBehavior
-    .withInterface<RvcRunMode>()
-    .for(RvcRunMode.Cluster);
+export const RvcRunModeBehaviorConstructor = ClusterBehavior.for(RvcRunMode);
 
 export interface RvcRunModeBehaviorConstructor extends Identity<typeof RvcRunModeBehaviorConstructor> {}
 export const RvcRunModeBehavior: RvcRunModeBehaviorConstructor = RvcRunModeBehaviorConstructor;

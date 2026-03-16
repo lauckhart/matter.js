@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * OtaSoftwareUpdateProviderBehavior is the base class for objects that support interaction with
  * {@link OtaSoftwareUpdateProvider.Cluster}.
  */
-export const OtaSoftwareUpdateProviderBehaviorConstructor = ClusterBehavior
-    .withInterface<OtaSoftwareUpdateProvider>()
-    .for(OtaSoftwareUpdateProvider.Cluster);
+export const OtaSoftwareUpdateProviderBehaviorConstructor = ClusterBehavior.for(OtaSoftwareUpdateProvider);
 
 export interface OtaSoftwareUpdateProviderBehaviorConstructor extends Identity<typeof OtaSoftwareUpdateProviderBehaviorConstructor> {}
 export const OtaSoftwareUpdateProviderBehavior: OtaSoftwareUpdateProviderBehaviorConstructor = OtaSoftwareUpdateProviderBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * MicrowaveOvenModeBehavior is the base class for objects that support interaction with
  * {@link MicrowaveOvenMode.Cluster}.
  */
-export const MicrowaveOvenModeBehaviorConstructor = ClusterBehavior
-    .withInterface<MicrowaveOvenMode>()
-    .for(MicrowaveOvenMode.Cluster);
+export const MicrowaveOvenModeBehaviorConstructor = ClusterBehavior.for(MicrowaveOvenMode);
 
 export interface MicrowaveOvenModeBehaviorConstructor extends Identity<typeof MicrowaveOvenModeBehaviorConstructor> {}
 export const MicrowaveOvenModeBehavior: MicrowaveOvenModeBehaviorConstructor = MicrowaveOvenModeBehaviorConstructor;

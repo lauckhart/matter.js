@@ -17,8 +17,7 @@ import { Identity } from "@matter/general";
  * {@link RefrigeratorAndTemperatureControlledCabinetMode.Cluster}.
  */
 export const RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor = ClusterBehavior
-    .withInterface<RefrigeratorAndTemperatureControlledCabinetMode>()
-    .for(RefrigeratorAndTemperatureControlledCabinetMode.Cluster);
+    .for(RefrigeratorAndTemperatureControlledCabinetMode);
 
 export interface RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor extends Identity<typeof RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor> {}
 export const RefrigeratorAndTemperatureControlledCabinetModeBehavior: RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor = RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor;

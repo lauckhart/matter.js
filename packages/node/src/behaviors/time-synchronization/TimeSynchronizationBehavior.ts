@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of TimeSynchronization.Cluster enabled. You can enable additional features
  * using TimeSynchronizationBehavior.with.
  */
-export const TimeSynchronizationBehaviorConstructor = ClusterBehavior
-    .withInterface<TimeSynchronization>()
-    .for(TimeSynchronization.Cluster);
+export const TimeSynchronizationBehaviorConstructor = ClusterBehavior.for(TimeSynchronization);
 
 export interface TimeSynchronizationBehaviorConstructor extends Identity<typeof TimeSynchronizationBehaviorConstructor> {}
 export const TimeSynchronizationBehavior: TimeSynchronizationBehaviorConstructor = TimeSynchronizationBehaviorConstructor;

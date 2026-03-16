@@ -18,9 +18,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ActivatedCarbonFilterMonitoring.Cluster enabled. You can enable
  * additional features using ActivatedCarbonFilterMonitoringBehavior.with.
  */
-export const ActivatedCarbonFilterMonitoringBehaviorConstructor = ClusterBehavior
-    .withInterface<ResourceMonitoring>()
-    .for(ActivatedCarbonFilterMonitoring.Cluster);
+export const ActivatedCarbonFilterMonitoringBehaviorConstructor = ClusterBehavior.for(ResourceMonitoring);
 
 export interface ActivatedCarbonFilterMonitoringBehaviorConstructor extends Identity<typeof ActivatedCarbonFilterMonitoringBehaviorConstructor> {}
 export const ActivatedCarbonFilterMonitoringBehavior: ActivatedCarbonFilterMonitoringBehaviorConstructor = ActivatedCarbonFilterMonitoringBehaviorConstructor;

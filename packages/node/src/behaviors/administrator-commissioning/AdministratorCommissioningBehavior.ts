@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of AdministratorCommissioning.Cluster enabled. You can enable additional
  * features using AdministratorCommissioningBehavior.with.
  */
-export const AdministratorCommissioningBehaviorConstructor = ClusterBehavior
-    .withInterface<AdministratorCommissioning>()
-    .for(AdministratorCommissioning.Cluster);
+export const AdministratorCommissioningBehaviorConstructor = ClusterBehavior.for(AdministratorCommissioning);
 
 export interface AdministratorCommissioningBehaviorConstructor extends Identity<typeof AdministratorCommissioningBehaviorConstructor> {}
 export const AdministratorCommissioningBehavior: AdministratorCommissioningBehaviorConstructor = AdministratorCommissioningBehaviorConstructor;

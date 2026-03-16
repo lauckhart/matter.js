@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of EthernetNetworkDiagnostics.Cluster enabled. You can enable additional
  * features using EthernetNetworkDiagnosticsBehavior.with.
  */
-export const EthernetNetworkDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<EthernetNetworkDiagnostics>()
-    .for(EthernetNetworkDiagnostics.Cluster);
+export const EthernetNetworkDiagnosticsBehaviorConstructor = ClusterBehavior.for(EthernetNetworkDiagnostics);
 
 export interface EthernetNetworkDiagnosticsBehaviorConstructor extends Identity<typeof EthernetNetworkDiagnosticsBehaviorConstructor> {}
 export const EthernetNetworkDiagnosticsBehavior: EthernetNetworkDiagnosticsBehaviorConstructor = EthernetNetworkDiagnosticsBehaviorConstructor;

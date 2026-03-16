@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ColorControl.Cluster enabled. You can enable additional features using
  * ColorControlBehavior.with.
  */
-export const ColorControlBehaviorConstructor = ClusterBehavior
-    .withInterface<ColorControl>()
-    .for(ColorControl.Cluster);
+export const ColorControlBehaviorConstructor = ClusterBehavior.for(ColorControl);
 
 export interface ColorControlBehaviorConstructor extends Identity<typeof ColorControlBehaviorConstructor> {}
 export const ColorControlBehavior: ColorControlBehaviorConstructor = ColorControlBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * OperationalStateBehavior is the base class for objects that support interaction with
  * {@link OperationalState.Cluster}.
  */
-export const OperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<OperationalState>()
-    .for(OperationalState.Cluster);
+export const OperationalStateBehaviorConstructor = ClusterBehavior.for(OperationalState);
 
 export interface OperationalStateBehaviorConstructor extends Identity<typeof OperationalStateBehaviorConstructor> {}
 export const OperationalStateBehavior: OperationalStateBehaviorConstructor = OperationalStateBehaviorConstructor;

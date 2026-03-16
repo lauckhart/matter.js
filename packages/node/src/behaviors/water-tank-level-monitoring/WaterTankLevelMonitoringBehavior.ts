@@ -18,9 +18,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of WaterTankLevelMonitoring.Cluster enabled. You can enable additional
  * features using WaterTankLevelMonitoringBehavior.with.
  */
-export const WaterTankLevelMonitoringBehaviorConstructor = ClusterBehavior
-    .withInterface<ResourceMonitoring>()
-    .for(WaterTankLevelMonitoring.Cluster);
+export const WaterTankLevelMonitoringBehaviorConstructor = ClusterBehavior.for(ResourceMonitoring);
 
 export interface WaterTankLevelMonitoringBehaviorConstructor extends Identity<typeof WaterTankLevelMonitoringBehaviorConstructor> {}
 export const WaterTankLevelMonitoringBehavior: WaterTankLevelMonitoringBehaviorConstructor = WaterTankLevelMonitoringBehaviorConstructor;

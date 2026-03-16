@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * ContentAppObserverBehavior is the base class for objects that support interaction with
  * {@link ContentAppObserver.Cluster}.
  */
-export const ContentAppObserverBehaviorConstructor = ClusterBehavior
-    .withInterface<ContentAppObserver>()
-    .for(ContentAppObserver.Cluster);
+export const ContentAppObserverBehaviorConstructor = ClusterBehavior.for(ContentAppObserver);
 
 export interface ContentAppObserverBehaviorConstructor extends Identity<typeof ContentAppObserverBehaviorConstructor> {}
 export const ContentAppObserverBehavior: ContentAppObserverBehaviorConstructor = ContentAppObserverBehaviorConstructor;

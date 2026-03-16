@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ThreadNetworkDiagnostics.Cluster enabled. You can enable additional
  * features using ThreadNetworkDiagnosticsBehavior.with.
  */
-export const ThreadNetworkDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<ThreadNetworkDiagnostics>()
-    .for(ThreadNetworkDiagnostics.Cluster);
+export const ThreadNetworkDiagnosticsBehaviorConstructor = ClusterBehavior.for(ThreadNetworkDiagnostics);
 
 export interface ThreadNetworkDiagnosticsBehaviorConstructor extends Identity<typeof ThreadNetworkDiagnosticsBehaviorConstructor> {}
 export const ThreadNetworkDiagnosticsBehavior: ThreadNetworkDiagnosticsBehaviorConstructor = ThreadNetworkDiagnosticsBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * ThreadNetworkDirectoryBehavior is the base class for objects that support interaction with
  * {@link ThreadNetworkDirectory.Cluster}.
  */
-export const ThreadNetworkDirectoryBehaviorConstructor = ClusterBehavior
-    .withInterface<ThreadNetworkDirectory>()
-    .for(ThreadNetworkDirectory.Cluster);
+export const ThreadNetworkDirectoryBehaviorConstructor = ClusterBehavior.for(ThreadNetworkDirectory);
 
 export interface ThreadNetworkDirectoryBehaviorConstructor extends Identity<typeof ThreadNetworkDirectoryBehaviorConstructor> {}
 export const ThreadNetworkDirectoryBehavior: ThreadNetworkDirectoryBehaviorConstructor = ThreadNetworkDirectoryBehaviorConstructor;

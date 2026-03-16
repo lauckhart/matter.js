@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of AccessControl.Cluster enabled. You can enable additional features using
  * AccessControlBehavior.with.
  */
-export const AccessControlBehaviorConstructor = ClusterBehavior
-    .withInterface<AccessControl>()
-    .for(AccessControl.Cluster);
+export const AccessControlBehaviorConstructor = ClusterBehavior.for(AccessControl);
 
 export interface AccessControlBehaviorConstructor extends Identity<typeof AccessControlBehaviorConstructor> {}
 export const AccessControlBehavior: AccessControlBehaviorConstructor = AccessControlBehaviorConstructor;

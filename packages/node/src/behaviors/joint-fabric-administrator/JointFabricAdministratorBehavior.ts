@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * JointFabricAdministratorBehavior is the base class for objects that support interaction with
  * {@link JointFabricAdministrator.Cluster}.
  */
-export const JointFabricAdministratorBehaviorConstructor = ClusterBehavior
-    .withInterface<JointFabricAdministrator>()
-    .for(JointFabricAdministrator.Cluster);
+export const JointFabricAdministratorBehaviorConstructor = ClusterBehavior.for(JointFabricAdministrator);
 
 export interface JointFabricAdministratorBehaviorConstructor extends Identity<typeof JointFabricAdministratorBehaviorConstructor> {}
 export const JointFabricAdministratorBehavior: JointFabricAdministratorBehaviorConstructor = JointFabricAdministratorBehaviorConstructor;

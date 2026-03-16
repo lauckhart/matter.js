@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * ScenesManagementBehavior is the base class for objects that support interaction with
  * {@link ScenesManagement.Cluster}.
  */
-export const ScenesManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<ScenesManagement>()
-    .for(ScenesManagement.Cluster);
+export const ScenesManagementBehaviorConstructor = ClusterBehavior.for(ScenesManagement);
 
 export interface ScenesManagementBehaviorConstructor extends Identity<typeof ScenesManagementBehaviorConstructor> {}
 export const ScenesManagementBehavior: ScenesManagementBehaviorConstructor = ScenesManagementBehaviorConstructor;

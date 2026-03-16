@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of AudioOutput.Cluster enabled. You can enable additional features using
  * AudioOutputBehavior.with.
  */
-export const AudioOutputBehaviorConstructor = ClusterBehavior
-    .withInterface<AudioOutput>()
-    .for(AudioOutput.Cluster);
+export const AudioOutputBehaviorConstructor = ClusterBehavior.for(AudioOutput);
 
 export interface AudioOutputBehaviorConstructor extends Identity<typeof AudioOutputBehaviorConstructor> {}
 export const AudioOutputBehavior: AudioOutputBehaviorConstructor = AudioOutputBehaviorConstructor;

@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of MediaPlayback.Cluster enabled. You can enable additional features using
  * MediaPlaybackBehavior.with.
  */
-export const MediaPlaybackBehaviorConstructor = ClusterBehavior
-    .withInterface<MediaPlayback>()
-    .for(MediaPlayback.Cluster);
+export const MediaPlaybackBehaviorConstructor = ClusterBehavior.for(MediaPlayback);
 
 export interface MediaPlaybackBehaviorConstructor extends Identity<typeof MediaPlaybackBehaviorConstructor> {}
 export const MediaPlaybackBehavior: MediaPlaybackBehaviorConstructor = MediaPlaybackBehaviorConstructor;

@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * WaterHeaterModeBehavior is the base class for objects that support interaction with {@link WaterHeaterMode.Cluster}.
  */
-export const WaterHeaterModeBehaviorConstructor = ClusterBehavior
-    .withInterface<WaterHeaterMode>()
-    .for(WaterHeaterMode.Cluster);
+export const WaterHeaterModeBehaviorConstructor = ClusterBehavior.for(WaterHeaterMode);
 
 export interface WaterHeaterModeBehaviorConstructor extends Identity<typeof WaterHeaterModeBehaviorConstructor> {}
 export const WaterHeaterModeBehavior: WaterHeaterModeBehaviorConstructor = WaterHeaterModeBehaviorConstructor;

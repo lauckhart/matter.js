@@ -17,9 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of ValveConfigurationAndControl.Cluster enabled. You can enable additional
  * features using ValveConfigurationAndControlBehavior.with.
  */
-export const ValveConfigurationAndControlBehaviorConstructor = ClusterBehavior
-    .withInterface<ValveConfigurationAndControl>()
-    .for(ValveConfigurationAndControl.Cluster);
+export const ValveConfigurationAndControlBehaviorConstructor = ClusterBehavior.for(ValveConfigurationAndControl);
 
 export interface ValveConfigurationAndControlBehaviorConstructor extends Identity<typeof ValveConfigurationAndControlBehaviorConstructor> {}
 export const ValveConfigurationAndControlBehavior: ValveConfigurationAndControlBehaviorConstructor = ValveConfigurationAndControlBehaviorConstructor;

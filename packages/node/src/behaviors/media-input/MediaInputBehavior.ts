@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of MediaInput.Cluster enabled. You can enable additional features using
  * MediaInputBehavior.with.
  */
-export const MediaInputBehaviorConstructor = ClusterBehavior
-    .withInterface<MediaInput>()
-    .for(MediaInput.Cluster);
+export const MediaInputBehaviorConstructor = ClusterBehavior.for(MediaInput);
 
 export interface MediaInputBehaviorConstructor extends Identity<typeof MediaInputBehaviorConstructor> {}
 export const MediaInputBehavior: MediaInputBehaviorConstructor = MediaInputBehaviorConstructor;

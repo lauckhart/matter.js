@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * OvenModeBehavior is the base class for objects that support interaction with {@link OvenMode.Cluster}.
  */
-export const OvenModeBehaviorConstructor = ClusterBehavior
-    .withInterface<OvenMode>()
-    .for(OvenMode.Cluster);
+export const OvenModeBehaviorConstructor = ClusterBehavior.for(OvenMode);
 
 export interface OvenModeBehaviorConstructor extends Identity<typeof OvenModeBehaviorConstructor> {}
 export const OvenModeBehavior: OvenModeBehaviorConstructor = OvenModeBehaviorConstructor;

@@ -14,9 +14,7 @@ import { Identity } from "@matter/general";
  * CommissionerControlBehavior is the base class for objects that support interaction with
  * {@link CommissionerControl.Cluster}.
  */
-export const CommissionerControlBehaviorConstructor = ClusterBehavior
-    .withInterface<CommissionerControl>()
-    .for(CommissionerControl.Cluster);
+export const CommissionerControlBehaviorConstructor = ClusterBehavior.for(CommissionerControl);
 
 export interface CommissionerControlBehaviorConstructor extends Identity<typeof CommissionerControlBehaviorConstructor> {}
 export const CommissionerControlBehavior: CommissionerControlBehaviorConstructor = CommissionerControlBehaviorConstructor;

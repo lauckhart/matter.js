@@ -16,9 +16,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of FanControl.Cluster enabled. You can enable additional features using
  * FanControlBehavior.with.
  */
-export const FanControlBehaviorConstructor = ClusterBehavior
-    .withInterface<FanControl>()
-    .for(FanControl.Cluster);
+export const FanControlBehaviorConstructor = ClusterBehavior.for(FanControl);
 
 export interface FanControlBehaviorConstructor extends Identity<typeof FanControlBehaviorConstructor> {}
 export const FanControlBehavior: FanControlBehaviorConstructor = FanControlBehaviorConstructor;

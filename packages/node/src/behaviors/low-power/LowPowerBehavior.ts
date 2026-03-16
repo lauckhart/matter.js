@@ -13,9 +13,7 @@ import { Identity } from "@matter/general";
 /**
  * LowPowerBehavior is the base class for objects that support interaction with {@link LowPower.Cluster}.
  */
-export const LowPowerBehaviorConstructor = ClusterBehavior
-    .withInterface<LowPower>()
-    .for(LowPower.Cluster);
+export const LowPowerBehaviorConstructor = ClusterBehavior.for(LowPower);
 
 export interface LowPowerBehaviorConstructor extends Identity<typeof LowPowerBehaviorConstructor> {}
 export const LowPowerBehavior: LowPowerBehaviorConstructor = LowPowerBehaviorConstructor;
