@@ -48,10 +48,10 @@ export class ElectricalEnergyMeasurementBaseServer extends ElectricalEnergyMeasu
             const useImported = measurement.cumulativeEnergy?.imported !== undefined && this.features.importedEnergy;
             const useExported = measurement.cumulativeEnergy?.exported !== undefined && this.features.exportedEnergy;
             if (useImported) {
-                this.state.cumulativeEnergyImported = measurement.cumulativeEnergy!.imported;
+                this.state.cumulativeEnergyImported = measurement.cumulativeEnergy!.imported ?? null;
             }
             if (useExported) {
-                this.state.cumulativeEnergyExported = measurement.cumulativeEnergy!.exported;
+                this.state.cumulativeEnergyExported = measurement.cumulativeEnergy!.exported ?? null;
             }
             if (useImported || useExported) {
                 this.events.cumulativeEnergyMeasured?.emit(
@@ -67,10 +67,10 @@ export class ElectricalEnergyMeasurementBaseServer extends ElectricalEnergyMeasu
             const useImported = measurement.periodicEnergy?.imported !== undefined && this.features.importedEnergy;
             const useExported = measurement.periodicEnergy?.exported !== undefined && this.features.exportedEnergy;
             if (useImported) {
-                this.state.periodicEnergyImported = measurement.periodicEnergy!.imported;
+                this.state.periodicEnergyImported = measurement.periodicEnergy!.imported ?? null;
             }
             if (useExported) {
-                this.state.periodicEnergyExported = measurement.periodicEnergy!.exported;
+                this.state.periodicEnergyExported = measurement.periodicEnergy!.exported ?? null;
             }
             if (useImported || useExported) {
                 this.events.periodicEnergyMeasured?.emit(

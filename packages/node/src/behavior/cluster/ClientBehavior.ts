@@ -17,7 +17,7 @@ import { markClientBehavior } from "./cluster-behavior-utils.js";
  * For appropriate type safety {@link cluster} must specify all cluster elements, and those that are not mandatory
  * without features must be marked as optional.
  */
-export function ClientBehavior<const NS extends ClusterNamespace>(ns: NS): ClusterBehavior.Type<typeof ClusterBehavior, NonNullable<NS["Typing"]>> {
+export function ClientBehavior<const NS extends ClusterNamespace>(ns: NS): ClusterBehavior.Type<typeof ClusterBehavior, NonNullable<NS["Typing"]>, NS> {
     const schema = (ns as { schema?: { name?: string } }).schema;
     const behavior = ClusterBehavior.for(ns, true, undefined, `${schema?.name ?? "Unknown"}Client`);
 
