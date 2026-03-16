@@ -160,9 +160,12 @@ export class ClusterBehavior extends Behavior {
         return this.for(cluster, schema) as ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
             This,
-            ClusterNamespace.WithEnabledEvents<
-                ClusterInterface.InterfaceOf<This>,
-                ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+            ClusterNamespace.WithEnabledAttributes<
+                ClusterNamespace.WithEnabledEvents<
+                    ClusterInterface.InterfaceOf<This>,
+                    ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+                >,
+                ClusterNamespace.AlteredMandatoryAttributeKeysOf<AlterationsT>
             >
         >;
     }
@@ -181,9 +184,12 @@ export class ClusterBehavior extends Behavior {
         return this.for(cluster, schema) as ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
             This,
-            ClusterNamespace.WithEnabledEvents<
-                ClusterInterface.InterfaceOf<This>,
-                ClusterNamespace.EnabledEventKeysOf<FlagsT>
+            ClusterNamespace.WithEnabledAttributes<
+                ClusterNamespace.WithEnabledEvents<
+                    ClusterInterface.InterfaceOf<This>,
+                    ClusterNamespace.EnabledEventKeysOf<FlagsT>
+                >,
+                ClusterNamespace.EnabledAttributeKeysOf<FlagsT>
             >
         >;
     }
@@ -280,13 +286,13 @@ export namespace ClusterBehavior {
         readonly cluster: C;
 
         readonly Events: ClusterEvents.Type<C, B, N>;
-        readonly State: new () => ClusterState.Type<C, B>;
+        readonly State: new () => ClusterState.Type<C, B, N>;
         readonly Internal: B["Internal"];
         readonly Interface: N;
 
         readonly schema: Schema.Cluster;
         readonly early: boolean;
-        readonly defaults: ClusterState.Type<C, B>;
+        readonly defaults: ClusterState.Type<C, B, N>;
         readonly supervisor: RootSupervisor;
         readonly dependencies?: Iterable<Behavior.Type>;
         supports: typeof ClusterBehavior.supports;
@@ -369,9 +375,12 @@ export namespace ClusterBehavior {
         ): ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
             This,
-            ClusterNamespace.WithEnabledEvents<
-                ClusterInterface.InterfaceOf<This>,
-                ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+            ClusterNamespace.WithEnabledAttributes<
+                ClusterNamespace.WithEnabledEvents<
+                    ClusterInterface.InterfaceOf<This>,
+                    ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+                >,
+                ClusterNamespace.AlteredMandatoryAttributeKeysOf<AlterationsT>
             >
         >;
 
@@ -386,9 +395,12 @@ export namespace ClusterBehavior {
         ): ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
             This,
-            ClusterNamespace.WithEnabledEvents<
-                ClusterInterface.InterfaceOf<This>,
-                ClusterNamespace.EnabledEventKeysOf<FlagsT>
+            ClusterNamespace.WithEnabledAttributes<
+                ClusterNamespace.WithEnabledEvents<
+                    ClusterInterface.InterfaceOf<This>,
+                    ClusterNamespace.EnabledEventKeysOf<FlagsT>
+                >,
+                ClusterNamespace.EnabledAttributeKeysOf<FlagsT>
             >
         >;
     }
@@ -431,7 +443,7 @@ export namespace ClusterBehavior {
                 /**
                  * State values for the behavior.
                  */
-                state: ClusterState<C, B>;
+                state: ClusterState<C, B, N>;
 
                 /**
                  * Observables for cluster events and attribute changes.

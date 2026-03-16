@@ -41,10 +41,9 @@ export namespace ClusterEvents {
     /**
      * Properties the cluster contributes to Events.
      */
-    export type Properties<C, N extends ClusterNamespace = ClusterNamespace> = ChangingObservables<
-        ClusterType.AttributesOf<C>
-    > &
-        ChangedObservables<ClusterType.AttributesOf<C>> &
+    export type Properties<C, N extends ClusterNamespace = ClusterNamespace> = (AttributesComponentsOf<N> extends []
+        ? ChangingObservables<ClusterType.AttributesOf<C>> & ChangedObservables<ClusterType.AttributesOf<C>>
+        : NsChangingObservables<N> & NsChangedObservables<N>) &
         (EventsComponentsOf<N> extends [] ? EventObservables<ClusterType.EventsOf<C>> : NsEventObservables<N>);
 
     export type ChangingObservables<A extends Record<string, ClusterType.Attribute>> = {
@@ -124,6 +123,109 @@ export namespace ClusterEvents {
         [payload: TypeFromSchema<E["schema"]>, context: ActionContext],
         EventModel
     > {}
+
+    // --- Namespace-based attribute change observable types ---
+
+    /**
+     * Extract Attributes.Components tuple from namespace.
+     */
+    export type AttributesComponentsOf<N extends ClusterNamespace> = N extends {
+        Attributes: { Components: infer C extends ClusterNamespace.ElementComponent[] };
+    }
+        ? C
+        : [];
+
+    /**
+     * Wrap value type as changing observable.
+     */
+    interface NsChangingObservable<T> extends OfflineEvent<
+        [value: T, oldValue: T, context: ActionContext],
+        AttributeModel
+    > {}
+
+    /**
+     * Wrap value type as changed observable.
+     */
+    interface NsChangedObservable<T> extends OnlineEvent<
+        [value: T, oldValue: T, context: ActionContext | undefined],
+        AttributeModel
+    > {}
+
+    /**
+     * Collect mandatory attribute keys from applicable components.
+     */
+    type MandatoryAttrKeys<CA extends ClusterNamespace.ElementComponent[], S> = CA extends [
+        infer C extends ClusterNamespace.ElementComponent,
+        ...infer R extends ClusterNamespace.ElementComponent[],
+    ]
+        ?
+              | (S extends C["flags"] ? (C extends { mandatory: infer M extends string } ? M : never) : never)
+              | MandatoryAttrKeys<R, S>
+        : never;
+
+    /**
+     * All attribute keys across all components.
+     */
+    type AllAttrKeys<CA extends ClusterNamespace.ElementComponent[]> = CA extends [
+        infer C extends ClusterNamespace.ElementComponent,
+        ...infer R extends ClusterNamespace.ElementComponent[],
+    ]
+        ?
+              | (C extends { mandatory: infer M extends string } ? M : never)
+              | (C extends { optional: infer O extends string } ? O : never)
+              | AllAttrKeys<R>
+        : never;
+
+    /**
+     * Optional = all keys minus mandatory.
+     */
+    type OptionalAttrKeys<CA extends ClusterNamespace.ElementComponent[], S> = Exclude<
+        AllAttrKeys<CA>,
+        MandatoryAttrKeys<CA, S>
+    >;
+
+    /**
+     * Extract keys marked as enabled on the namespace (e.g. via `enable()` or `alter()`).
+     */
+    type EnabledAttrKeys<N> = N extends { Attributes: { Enabled: infer K extends string } } ? K : never;
+
+    /**
+     * Produce changing observables from namespace.
+     */
+    type NsChangingObservables<N extends ClusterNamespace> = N extends { Attributes: infer A }
+        ? {
+              [K in (
+                  | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
+                  | EnabledAttrKeys<N>
+              ) &
+                  keyof A as `${K & string}$Changing`]: NsChangingObservable<A[K]>;
+          } & {
+              [K in Exclude<
+                  OptionalAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
+                  EnabledAttrKeys<N>
+              > &
+                  keyof A as `${K & string}$Changing`]?: NsChangingObservable<A[K]>;
+          }
+        : {};
+
+    /**
+     * Produce changed observables from namespace.
+     */
+    type NsChangedObservables<N extends ClusterNamespace> = N extends { Attributes: infer A }
+        ? {
+              [K in (
+                  | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
+                  | EnabledAttrKeys<N>
+              ) &
+                  keyof A as `${K & string}$Changed`]: NsChangedObservable<A[K]>;
+          } & {
+              [K in Exclude<
+                  OptionalAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
+                  EnabledAttrKeys<N>
+              > &
+                  keyof A as `${K & string}$Changed`]?: NsChangedObservable<A[K]>;
+          }
+        : {};
 
     // --- Namespace-based event observable types ---
 
