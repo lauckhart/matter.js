@@ -5,7 +5,7 @@
  */
 
 import type { MaybePromise } from "@matter/general";
-import type { ClusterComposer, ClusterNamespace, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterType, TypeFromSchema } from "@matter/types";
 
 /**
  * @see {@link ClusterNamespace}
@@ -22,9 +22,9 @@ export namespace ClusterInterface {
 
     export type MethodsOf<I extends ClusterInterface, C extends ClusterType> =
         // This is the workaround for TS issue #27965
-        InterfaceMethodsOf<I, C["supportedFeatures"]> &
+        InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>> &
             // Fall back to mapping for methods not defined in an interface
-            Omit<MappedMethodsOf<C["commands"]>, keyof InterfaceMethodsOf<I, C["supportedFeatures"]>>;
+            Omit<MappedMethodsOf<C["commands"]>, keyof InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>>>;
 
     export type ComponentsOf<I extends ClusterInterface> = I extends {
         Commands: { Components: infer C extends Component[] };
@@ -32,10 +32,9 @@ export namespace ClusterInterface {
         ? C
         : [];
 
-    export type InterfaceMethodsOf<
-        I extends ClusterInterface,
-        S extends ClusterComposer.FeatureFlags,
-    > = ClusterInterface extends I ? {} : AppliedMethodsOf<ApplicableComponents<ComponentsOf<I>, S>>;
+    export type InterfaceMethodsOf<I extends ClusterInterface, S> = ClusterInterface extends I
+        ? {}
+        : AppliedMethodsOf<ApplicableComponents<ComponentsOf<I>, S>>;
 
     export type AppliedMethodsOf<CA extends Component[]> = CA extends [
         infer C extends Component,
@@ -44,7 +43,7 @@ export namespace ClusterInterface {
         ? C["methods"] & AppliedMethodsOf<R>
         : {};
 
-    export type ApplicableComponents<CA extends Component[], S extends ClusterComposer.FeatureFlags> = CA extends [
+    export type ApplicableComponents<CA extends Component[], S> = CA extends [
         infer C extends Component,
         ...infer R extends Component[],
     ]

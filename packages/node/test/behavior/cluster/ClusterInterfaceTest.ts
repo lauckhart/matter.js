@@ -26,6 +26,7 @@ const FeaturedCluster = ClusterType({
 });
 
 type FeaturesInterface = {
+    SupportedFeatures: { foo: true };
     Commands: {
         Components: [
             {

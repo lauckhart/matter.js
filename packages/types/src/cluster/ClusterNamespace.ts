@@ -68,6 +68,28 @@ export namespace ClusterNamespace {
     export type Features<F extends string> = { [K in F]: Feature };
 
     /**
+     * Set supported feature flags on a namespace, replacing any previous selection.
+     *
+     * Uses Omit+& (not bare &) so that chained `.with()` calls replace rather than intersect, matching the
+     * runtime behavior of {@link ClusterComposer.WithFeatures}.
+     */
+    export type WithSupportedFeatures<N extends ClusterNamespace, S> = Omit<N, "SupportedFeatures"> & {
+        SupportedFeatures: S;
+    };
+
+    /**
+     * Extract supported feature flags from a namespace, defaulting to {}.
+     */
+    export type SupportedFeaturesOf<N> = N extends { SupportedFeatures: infer S } ? S : {};
+
+    /**
+     * Derive the feature flags object type from a namespace's Features string union.
+     */
+    export type FeaturesOf<N> = N extends { Features: infer F extends string }
+        ? { [K in Uncapitalize<F>]: boolean }
+        : Record<string, boolean>;
+
+    /**
      * Augment a namespace with attribute keys forced mandatory (e.g. via `enable()` or `alter()`).
      */
     export type WithEnabledAttributes<N extends ClusterNamespace, K extends string> = N & {
@@ -89,24 +111,21 @@ export namespace ClusterNamespace {
     /**
      * Augment a namespace with event keys forced mandatory (e.g. via `enable()`).
      */
-    export type WithEnabledEvents<N extends ClusterNamespace, K extends string> =
-        N & { Events: { Enabled: K } };
+    export type WithEnabledEvents<N extends ClusterNamespace, K extends string> = N & { Events: { Enabled: K } };
 
     /**
      * Extract event key names from ElementFlags (used by `enable()`).
      * Input shape: `{ events?: { eventName: true } }`
      */
-    export type EnabledEventKeysOf<F> =
-        F extends { events: infer E } ? keyof E & string : never;
+    export type EnabledEventKeysOf<F> = F extends { events: infer E } ? keyof E & string : never;
 
     /**
      * Extract event key names made mandatory by Alterations (used by `alter()`).
      * Input shape: `{ events?: { eventName: { optional: false } } }`
      */
-    export type AlteredMandatoryEventKeysOf<A> =
-        A extends { events: infer E }
-            ? { [K in keyof E & string]: E[K] extends { optional: false } ? K : never }[keyof E & string]
-            : never;
+    export type AlteredMandatoryEventKeysOf<A> = A extends { events: infer E }
+        ? { [K in keyof E & string]: E[K] extends { optional: false } ? K : never }[keyof E & string]
+        : never;
 
     /**
      * Install lazy getters on a cluster namespace object.  Each property is computed on first access via

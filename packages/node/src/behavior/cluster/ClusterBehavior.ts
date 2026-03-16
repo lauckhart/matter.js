@@ -8,7 +8,7 @@ import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
 import { ClusterModifier, type Schema } from "@matter/model";
-import { ClusterComposer, ClusterType, ClusterTypeModifier, TypeFromBitSchema, type ClusterNamespace } from "@matter/types";
+import { ClusterComposer, ClusterType, ClusterTypeModifier, type ClusterNamespace } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
@@ -128,7 +128,14 @@ export class ClusterBehavior extends Behavior {
             This["cluster"],
             FeaturesT
         >;
-        return this.for(newCluster);
+        return this.for(newCluster) as unknown as ClusterBehavior.Type<
+            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
+            This,
+            ClusterNamespace.WithSupportedFeatures<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+            >
+        >;
     }
 
     /**
@@ -153,7 +160,10 @@ export class ClusterBehavior extends Behavior {
         return this.for(cluster, schema) as ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
             This,
-            ClusterNamespace.WithEnabledEvents<ClusterInterface.InterfaceOf<This>, ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>>
+            ClusterNamespace.WithEnabledEvents<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+            >
         >;
     }
 
@@ -171,7 +181,10 @@ export class ClusterBehavior extends Behavior {
         return this.for(cluster, schema) as ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
             This,
-            ClusterNamespace.WithEnabledEvents<ClusterInterface.InterfaceOf<This>, ClusterNamespace.EnabledEventKeysOf<FlagsT>>
+            ClusterNamespace.WithEnabledEvents<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.EnabledEventKeysOf<FlagsT>
+            >
         >;
     }
 
@@ -317,7 +330,14 @@ export namespace ClusterBehavior {
         >(
             this: This,
             ...features: FeaturesT
-        ): ClusterBehavior.Type<ClusterComposer.WithFeatures<This["cluster"], FeaturesT>, This>;
+        ): ClusterBehavior.Type<
+            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
+            This,
+            ClusterNamespace.WithSupportedFeatures<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+            >
+        >;
 
         /**
          * Alias for {@link withFeatures}.
@@ -328,7 +348,14 @@ export namespace ClusterBehavior {
         >(
             this: This,
             ...features: FeaturesT
-        ): ClusterBehavior.Type<ClusterComposer.WithFeatures<This["cluster"], FeaturesT>, This>;
+        ): ClusterBehavior.Type<
+            ClusterComposer.WithFeatures<This["cluster"], FeaturesT>,
+            This,
+            ClusterNamespace.WithSupportedFeatures<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterComposer.FeaturesAsFlags<This["cluster"], FeaturesT>
+            >
+        >;
 
         /**
          * Create a new behavior with modified cluster elements.
@@ -342,7 +369,10 @@ export namespace ClusterBehavior {
         ): ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], AlterationsT>,
             This,
-            ClusterNamespace.WithEnabledEvents<ClusterInterface.InterfaceOf<This>, ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>>
+            ClusterNamespace.WithEnabledEvents<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
+            >
         >;
 
         set<This extends Behavior.Type>(this: This, defaults: Behavior.InputStateOf<This>): This;
@@ -356,7 +386,10 @@ export namespace ClusterBehavior {
         ): ClusterBehavior.Type<
             ClusterTypeModifier.WithAlterations<This["cluster"], ClusterTypeModifier.ElementFlagAlterations<FlagsT>>,
             This,
-            ClusterNamespace.WithEnabledEvents<ClusterInterface.InterfaceOf<This>, ClusterNamespace.EnabledEventKeysOf<FlagsT>>
+            ClusterNamespace.WithEnabledEvents<
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.EnabledEventKeysOf<FlagsT>
+            >
         >;
     }
 
@@ -408,7 +441,7 @@ export namespace ClusterBehavior {
                 /**
                  * Supported features as a flag object.
                  */
-                features: TypeFromBitSchema<C["features"]>;
+                features: ClusterNamespace.FeaturesOf<N>;
 
                 [Symbol.asyncDispose](): MaybePromise<void>;
             };
