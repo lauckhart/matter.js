@@ -398,6 +398,7 @@ export namespace SoftwareDiagnostics {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x34);
+    export const name = "SoftwareDiagnostics" as const;
     export const revision = 1;
     export const schema = SoftwareDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

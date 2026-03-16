@@ -2722,6 +2722,7 @@ export namespace ColorControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x300);
+    export const name = "ColorControl" as const;
     export const revision = 7;
     export const schema = ColorControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

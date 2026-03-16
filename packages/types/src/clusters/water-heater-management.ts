@@ -590,6 +590,7 @@ export namespace WaterHeaterManagement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x94);
+    export const name = "WaterHeaterManagement" as const;
     export const revision = 2;
     export const schema = WaterHeaterManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

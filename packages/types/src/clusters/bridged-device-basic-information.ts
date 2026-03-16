@@ -652,6 +652,7 @@ export namespace BridgedDeviceBasicInformation {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x39);
+    export const name = "BridgedDeviceBasicInformation" as const;
     export const revision = 5;
     export const schema = BridgedDeviceBasicInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

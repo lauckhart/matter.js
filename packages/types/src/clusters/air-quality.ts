@@ -168,6 +168,7 @@ export namespace AirQuality {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x5b);
+    export const name = "AirQuality" as const;
     export const revision = 1;
     export const schema = AirQualityModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

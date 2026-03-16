@@ -89,6 +89,7 @@ export namespace FlowMeasurement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x404);
+    export const name = "FlowMeasurement" as const;
     export const revision = 3;
     export const schema = FlowMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

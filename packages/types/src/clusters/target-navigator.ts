@@ -321,6 +321,7 @@ export namespace TargetNavigator {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x505);
+    export const name = "TargetNavigator" as const;
     export const revision = 2;
     export const schema = TargetNavigatorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

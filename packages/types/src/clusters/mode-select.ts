@@ -413,6 +413,7 @@ export namespace ModeSelect {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50);
+    export const name = "ModeSelect" as const;
     export const revision = 2;
     export const schema = ModeSelectModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

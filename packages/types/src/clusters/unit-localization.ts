@@ -174,6 +174,7 @@ export namespace UnitLocalization {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2d);
+    export const name = "UnitLocalization" as const;
     export const revision = 2;
     export const schema = UnitLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

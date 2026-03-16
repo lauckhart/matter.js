@@ -482,6 +482,7 @@ export namespace RvcRunMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x54);
+    export const name = "RvcRunMode" as const;
     export const revision = 3;
     export const schema = RvcRunModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

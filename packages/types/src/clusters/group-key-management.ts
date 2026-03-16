@@ -949,6 +949,7 @@ export namespace GroupKeyManagement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x3f);
+    export const name = "GroupKeyManagement" as const;
     export const revision = 2;
     export const schema = GroupKeyManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -401,6 +401,7 @@ export namespace LaundryWasherMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x51);
+    export const name = "LaundryWasherMode" as const;
     export const revision = 3;
     export const schema = LaundryWasherModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

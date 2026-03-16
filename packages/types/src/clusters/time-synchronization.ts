@@ -1487,6 +1487,7 @@ export namespace TimeSynchronization {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x38);
+    export const name = "TimeSynchronization" as const;
     export const revision = 2;
     export const schema = TimeSynchronizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

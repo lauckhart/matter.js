@@ -2323,6 +2323,7 @@ export namespace NetworkCommissioning {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x31);
+    export const name = "NetworkCommissioning" as const;
     export const revision = 2;
     export const schema = NetworkCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

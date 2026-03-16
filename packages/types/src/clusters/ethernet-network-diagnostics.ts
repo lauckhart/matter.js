@@ -371,6 +371,7 @@ export namespace EthernetNetworkDiagnostics {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x37);
+    export const name = "EthernetNetworkDiagnostics" as const;
     export const revision = 1;
     export const schema = EthernetNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

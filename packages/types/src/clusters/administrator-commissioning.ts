@@ -695,6 +695,7 @@ export namespace AdministratorCommissioning {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x3c);
+    export const name = "AdministratorCommissioning" as const;
     export const revision = 1;
     export const schema = AdministratorCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

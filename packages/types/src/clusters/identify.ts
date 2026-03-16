@@ -295,6 +295,7 @@ export namespace Identify {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x3);
+    export const name = "Identify" as const;
     export const revision = 6;
     export const schema = IdentifyModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

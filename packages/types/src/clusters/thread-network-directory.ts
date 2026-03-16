@@ -341,6 +341,7 @@ export namespace ThreadNetworkDirectory {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x453);
+    export const name = "ThreadNetworkDirectory" as const;
     export const revision = 1;
     export const schema = ThreadNetworkDirectoryModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

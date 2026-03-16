@@ -263,6 +263,7 @@ export namespace TimeFormatLocalization {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2c);
+    export const name = "TimeFormatLocalization" as const;
     export const revision = 1;
     export const schema = TimeFormatLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

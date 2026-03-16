@@ -437,6 +437,7 @@ export namespace OvenMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x49);
+    export const name = "OvenMode" as const;
     export const revision = 2;
     export const schema = OvenModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

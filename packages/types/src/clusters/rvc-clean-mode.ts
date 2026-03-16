@@ -432,6 +432,7 @@ export namespace RvcCleanMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x55);
+    export const name = "RvcCleanMode" as const;
     export const revision = 4;
     export const schema = RvcCleanModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -84,6 +84,7 @@ export namespace WaterTankLevelMonitoring {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x79);
+    export const name = "WaterTankLevelMonitoring" as const;
     export const revision = 1;
     export const schema = WaterTankLevelMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

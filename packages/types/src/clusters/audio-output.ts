@@ -328,6 +328,7 @@ export namespace AudioOutput {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50b);
+    export const name = "AudioOutput" as const;
     export const revision = 1;
     export const schema = AudioOutputModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

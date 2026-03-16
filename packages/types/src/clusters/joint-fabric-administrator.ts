@@ -640,6 +640,7 @@ export namespace JointFabricAdministrator {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x753);
+    export const name = "JointFabricAdministrator" as const;
     export const revision = 1;
     export const schema = JointFabricAdministratorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

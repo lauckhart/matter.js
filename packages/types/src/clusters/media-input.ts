@@ -363,6 +363,7 @@ export namespace MediaInput {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x507);
+    export const name = "MediaInput" as const;
     export const revision = 1;
     export const schema = MediaInputModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

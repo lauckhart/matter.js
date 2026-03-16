@@ -77,6 +77,7 @@ export namespace RadonConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42f);
+    export const name = "RadonConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = RadonConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

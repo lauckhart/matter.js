@@ -460,6 +460,7 @@ export namespace DishwasherAlarm {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x5d);
+    export const name = "DishwasherAlarm" as const;
     export const revision = 1;
     export const schema = DishwasherAlarmModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -787,6 +787,7 @@ export namespace OperationalState {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x60);
+    export const name = "OperationalState" as const;
     export const revision = 3;
     export const schema = OperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

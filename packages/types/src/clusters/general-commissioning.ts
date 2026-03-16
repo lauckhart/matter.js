@@ -1404,6 +1404,7 @@ export namespace GeneralCommissioning {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x30);
+    export const name = "GeneralCommissioning" as const;
     export const revision = 2;
     export const schema = GeneralCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

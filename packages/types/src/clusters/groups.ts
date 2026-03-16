@@ -647,6 +647,7 @@ export namespace Groups {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x4);
+    export const name = "Groups" as const;
     export const revision = 4;
     export const schema = GroupsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

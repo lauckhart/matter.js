@@ -1129,6 +1129,7 @@ export namespace PumpConfigurationAndControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x200);
+    export const name = "PumpConfigurationAndControl" as const;
     export const revision = 4;
     export const schema = PumpConfigurationAndControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -84,6 +84,7 @@ export namespace HepaFilterMonitoring {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x71);
+    export const name = "HepaFilterMonitoring" as const;
     export const revision = 1;
     export const schema = HepaFilterMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

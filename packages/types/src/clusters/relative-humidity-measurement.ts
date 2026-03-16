@@ -96,6 +96,7 @@ export namespace RelativeHumidityMeasurement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x405);
+    export const name = "RelativeHumidityMeasurement" as const;
     export const revision = 3;
     export const schema = RelativeHumidityMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

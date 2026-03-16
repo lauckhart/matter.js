@@ -677,6 +677,7 @@ export namespace OccupancySensing {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x406);
+    export const name = "OccupancySensing" as const;
     export const revision = 5;
     export const schema = OccupancySensingModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

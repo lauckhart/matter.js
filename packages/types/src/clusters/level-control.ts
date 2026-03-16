@@ -788,6 +788,7 @@ export namespace LevelControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x8);
+    export const name = "LevelControl" as const;
     export const revision = 6;
     export const schema = LevelControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

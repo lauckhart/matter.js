@@ -93,6 +93,7 @@ export namespace Label {
     });
 
     export const Complete = Base;
+    export const name = "Label" as const;
     export const revision = 1;
     export const schema = LabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -196,6 +196,7 @@ export namespace PowerTopology {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x9c);
+    export const name = "PowerTopology" as const;
     export const revision = 1;
     export const schema = PowerTopologyModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

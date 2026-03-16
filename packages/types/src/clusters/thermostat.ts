@@ -3719,6 +3719,7 @@ export namespace Thermostat {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x201);
+    export const name = "Thermostat" as const;
     export const revision = 9;
     export const schema = ThermostatModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -394,6 +394,7 @@ export namespace DishwasherMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x59);
+    export const name = "DishwasherMode" as const;
     export const revision = 3;
     export const schema = DishwasherModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

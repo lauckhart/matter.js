@@ -99,6 +99,7 @@ export namespace BooleanState {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x45);
+    export const name = "BooleanState" as const;
     export const revision = 1;
     export const schema = BooleanStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -360,6 +360,7 @@ export namespace MicrowaveOvenMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x5e);
+    export const name = "MicrowaveOvenMode" as const;
     export const revision = 2;
     export const schema = MicrowaveOvenModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

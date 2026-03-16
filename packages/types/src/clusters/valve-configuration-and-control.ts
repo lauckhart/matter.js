@@ -659,6 +659,7 @@ export namespace ValveConfigurationAndControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x81);
+    export const name = "ValveConfigurationAndControl" as const;
     export const revision = 1;
     export const schema = ValveConfigurationAndControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

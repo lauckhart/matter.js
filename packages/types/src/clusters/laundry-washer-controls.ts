@@ -241,6 +241,7 @@ export namespace LaundryWasherControls {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x53);
+    export const name = "LaundryWasherControls" as const;
     export const revision = 2;
     export const schema = LaundryWasherControlsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

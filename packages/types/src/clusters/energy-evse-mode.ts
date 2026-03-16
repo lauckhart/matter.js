@@ -421,6 +421,7 @@ export namespace EnergyEvseMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x9d);
+    export const name = "EnergyEvseMode" as const;
     export const revision = 2;
     export const schema = EnergyEvseModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

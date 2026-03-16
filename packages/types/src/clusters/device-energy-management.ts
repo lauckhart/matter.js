@@ -2786,6 +2786,7 @@ export namespace DeviceEnergyManagement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x98);
+    export const name = "DeviceEnergyManagement" as const;
     export const revision = 4;
     export const schema = DeviceEnergyManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

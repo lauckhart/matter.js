@@ -576,6 +576,7 @@ export namespace AccountLogin {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x50e);
+    export const name = "AccountLogin" as const;
     export const revision = 2;
     export const schema = AccountLoginModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;

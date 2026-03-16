@@ -571,6 +571,7 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
         file.addImport("!types/datatype/ClusterId.js", "ClusterId");
         file.ns.atom(`export const id = ClusterId(0x${cluster.id.toString(16)})`);
     }
+    file.ns.atom(`export const name = ${serialize(name)} as const`);
     file.ns.atom(`export const revision = ${cluster.revision}`);
     file.ns.atom(`export const schema = ${name}Model`);
 

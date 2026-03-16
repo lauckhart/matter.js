@@ -1100,6 +1100,7 @@ export namespace ElectricalPowerMeasurement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x90);
+    export const name = "ElectricalPowerMeasurement" as const;
     export const revision = 3;
     export const schema = ElectricalPowerMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

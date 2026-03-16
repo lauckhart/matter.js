@@ -85,6 +85,7 @@ export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42e);
+    export const name = "TotalVolatileOrganicCompoundsConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = TotalVolatileOrganicCompoundsConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

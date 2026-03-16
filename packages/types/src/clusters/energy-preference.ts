@@ -355,6 +355,7 @@ export namespace EnergyPreference {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x9b);
+    export const name = "EnergyPreference" as const;
     export const revision = 1;
     export const schema = EnergyPreferenceModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

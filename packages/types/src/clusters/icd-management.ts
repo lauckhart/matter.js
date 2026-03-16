@@ -1405,6 +1405,7 @@ export namespace IcdManagement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x46);
+    export const name = "IcdManagement" as const;
     export const revision = 3;
     export const schema = IcdManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

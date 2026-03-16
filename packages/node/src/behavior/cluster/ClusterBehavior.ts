@@ -116,7 +116,7 @@ export class ClusterBehavior extends Behavior {
             features,
             schema,
             name,
-        }) as ClusterBehavior.Type<This, NonNullable<NS["Typing"]>>;
+        }) as ClusterBehavior.Type<This, NonNullable<NS["Typing"]>> & { readonly id: Uncapitalize<NS["name"] & string> };
     }
 
     /**
@@ -260,7 +260,7 @@ export namespace ClusterBehavior {
         /**
          * The behavior ID for ClusterBehaviors is the name of the cluster.
          */
-        readonly id: Uncapitalize<string>;
+        readonly id: B extends { readonly id: infer S extends Uncapitalize<string> } ? S : Uncapitalize<string>;
 
         /**
          * The cluster namespace for this behavior.
@@ -290,7 +290,7 @@ export namespace ClusterBehavior {
             features?: readonly string[] | true,
             schema?: Schema,
             name?: string,
-        ): ClusterBehavior.Type<This, NonNullable<NS["Typing"]>>;
+        ): ClusterBehavior.Type<This, NonNullable<NS["Typing"]>> & { readonly id: Uncapitalize<NS["name"] & string> };
 
         /**
          * Create a new behavior with different cluster features.

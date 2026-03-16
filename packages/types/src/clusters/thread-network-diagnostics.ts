@@ -1827,6 +1827,7 @@ export namespace ThreadNetworkDiagnostics {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x35);
+    export const name = "ThreadNetworkDiagnostics" as const;
     export const revision = 3;
     export const schema = ThreadNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -201,6 +201,7 @@ export namespace WiFiNetworkManagement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x451);
+    export const name = "WiFiNetworkManagement" as const;
     export const revision = 1;
     export const schema = WiFiNetworkManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

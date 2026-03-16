@@ -165,6 +165,7 @@ export namespace Binding {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x1e);
+    export const name = "Binding" as const;
     export const revision = 1;
     export const schema = BindingModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

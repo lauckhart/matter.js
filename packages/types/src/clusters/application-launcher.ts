@@ -664,6 +664,7 @@ export namespace ApplicationLauncher {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50c);
+    export const name = "ApplicationLauncher" as const;
     export const revision = 2;
     export const schema = ApplicationLauncherModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

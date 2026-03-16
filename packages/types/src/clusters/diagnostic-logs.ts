@@ -448,6 +448,7 @@ export namespace DiagnosticLogs {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x32);
+    export const name = "DiagnosticLogs" as const;
     export const revision = 1;
     export const schema = DiagnosticLogsModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;

@@ -82,6 +82,7 @@ export namespace CarbonMonoxideConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x40c);
+    export const name = "CarbonMonoxideConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = CarbonMonoxideConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

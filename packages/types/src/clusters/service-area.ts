@@ -1158,6 +1158,7 @@ export namespace ServiceArea {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x150);
+    export const name = "ServiceArea" as const;
     export const revision = 2;
     export const schema = ServiceAreaModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

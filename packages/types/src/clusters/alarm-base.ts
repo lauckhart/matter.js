@@ -371,6 +371,7 @@ export namespace AlarmBase {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const name = "AlarmBase" as const;
     export const revision = 2;
     export const schema = AlarmBaseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

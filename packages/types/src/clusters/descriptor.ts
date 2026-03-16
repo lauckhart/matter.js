@@ -280,6 +280,7 @@ export namespace Descriptor {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x1d);
+    export const name = "Descriptor" as const;
     export const revision = 3;
     export const schema = DescriptorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

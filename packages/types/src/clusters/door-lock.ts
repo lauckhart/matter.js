@@ -7359,6 +7359,7 @@ export namespace DoorLock {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x101);
+    export const name = "DoorLock" as const;
     export const revision = 9;
     export const schema = DoorLockModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -402,6 +402,7 @@ export namespace WaterHeaterMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x9e);
+    export const name = "WaterHeaterMode" as const;
     export const revision = 1;
     export const schema = WaterHeaterModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

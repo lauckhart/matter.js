@@ -77,6 +77,7 @@ export namespace Pm25ConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42a);
+    export const name = "Pm25ConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = Pm25ConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

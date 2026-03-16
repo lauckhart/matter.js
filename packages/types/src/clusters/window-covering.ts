@@ -1887,6 +1887,7 @@ export namespace WindowCovering {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x102);
+    export const name = "WindowCovering" as const;
     export const revision = 6;
     export const schema = WindowCoveringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

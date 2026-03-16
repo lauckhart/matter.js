@@ -1747,6 +1747,7 @@ export namespace MediaPlayback {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x506);
+    export const name = "MediaPlayback" as const;
     export const revision = 2;
     export const schema = MediaPlaybackModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -246,6 +246,7 @@ export namespace OvenCavityOperationalState {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x48);
+    export const name = "OvenCavityOperationalState" as const;
     export const revision = 2;
     export const schema = OvenCavityOperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

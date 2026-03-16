@@ -402,6 +402,7 @@ export namespace EcosystemInformation {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x750);
+    export const name = "EcosystemInformation" as const;
     export const revision = 1;
     export const schema = EcosystemInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

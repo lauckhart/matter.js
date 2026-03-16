@@ -810,6 +810,7 @@ export namespace Switch {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x3b);
+    export const name = "Switch" as const;
     export const revision = 2;
     export const schema = SwitchModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

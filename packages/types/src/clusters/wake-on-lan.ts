@@ -92,6 +92,7 @@ export namespace WakeOnLan {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x503);
+    export const name = "WakeOnLan" as const;
     export const revision = 1;
     export const schema = WakeOnLanModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

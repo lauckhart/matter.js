@@ -2076,6 +2076,7 @@ export namespace EnergyEvse {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x99);
+    export const name = "EnergyEvse" as const;
     export const revision = 3;
     export const schema = EnergyEvseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

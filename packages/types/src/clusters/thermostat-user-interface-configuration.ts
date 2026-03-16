@@ -148,6 +148,7 @@ export namespace ThermostatUserInterfaceConfiguration {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x204);
+    export const name = "ThermostatUserInterfaceConfiguration" as const;
     export const revision = 2;
     export const schema = ThermostatUserInterfaceConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

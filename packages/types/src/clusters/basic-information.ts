@@ -791,6 +791,7 @@ export namespace BasicInformation {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x28);
+    export const name = "BasicInformation" as const;
     export const revision = 5;
     export const schema = BasicInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

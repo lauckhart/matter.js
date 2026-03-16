@@ -579,6 +579,7 @@ export namespace ModeBase {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const name = "ModeBase" as const;
     export const revision = 2;
     export const schema = ModeBaseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

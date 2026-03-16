@@ -1469,6 +1469,7 @@ export namespace ScenesManagement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x62);
+    export const name = "ScenesManagement" as const;
     export const revision = 1;
     export const schema = ScenesManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

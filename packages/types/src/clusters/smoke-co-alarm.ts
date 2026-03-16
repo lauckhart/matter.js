@@ -866,6 +866,7 @@ export namespace SmokeCoAlarm {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x5c);
+    export const name = "SmokeCoAlarm" as const;
     export const revision = 1;
     export const schema = SmokeCoAlarmModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

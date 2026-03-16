@@ -1573,6 +1573,7 @@ export namespace Actions {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x25);
+    export const name = "Actions" as const;
     export const revision = 1;
     export const schema = ActionsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -213,6 +213,7 @@ export namespace ApplicationBasic {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x50d);
+    export const name = "ApplicationBasic" as const;
     export const revision = 1;
     export const schema = ApplicationBasicModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

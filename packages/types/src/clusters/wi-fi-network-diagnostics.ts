@@ -608,6 +608,7 @@ export namespace WiFiNetworkDiagnostics {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x36);
+    export const name = "WiFiNetworkDiagnostics" as const;
     export const revision = 1;
     export const schema = WiFiNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

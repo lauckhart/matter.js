@@ -361,6 +361,7 @@ export namespace TemperatureControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x56);
+    export const name = "TemperatureControl" as const;
     export const revision = 1;
     export const schema = TemperatureControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

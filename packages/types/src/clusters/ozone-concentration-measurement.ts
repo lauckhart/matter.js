@@ -77,6 +77,7 @@ export namespace OzoneConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x415);
+    export const name = "OzoneConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = OzoneConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

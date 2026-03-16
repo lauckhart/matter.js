@@ -1228,6 +1228,7 @@ export namespace GeneralDiagnostics {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x33);
+    export const name = "GeneralDiagnostics" as const;
     export const revision = 2;
     export const schema = GeneralDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

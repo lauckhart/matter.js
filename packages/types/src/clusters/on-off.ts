@@ -635,6 +635,7 @@ export namespace OnOff {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x6);
+    export const name = "OnOff" as const;
     export const revision = 6;
     export const schema = OnOffModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

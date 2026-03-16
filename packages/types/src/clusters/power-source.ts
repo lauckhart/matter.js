@@ -1670,6 +1670,7 @@ export namespace PowerSource {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2f);
+    export const name = "PowerSource" as const;
     export const revision = 3;
     export const schema = PowerSourceModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

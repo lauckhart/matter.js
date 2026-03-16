@@ -337,6 +337,7 @@ export namespace ResourceMonitoring {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const name = "ResourceMonitoring" as const;
     export const revision = 1;
     export const schema = ResourceMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

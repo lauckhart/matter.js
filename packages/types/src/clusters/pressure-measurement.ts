@@ -227,6 +227,7 @@ export namespace PressureMeasurement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x403);
+    export const name = "PressureMeasurement" as const;
     export const revision = 3;
     export const schema = PressureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -2186,6 +2186,7 @@ export namespace ContentControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50f);
+    export const name = "ContentControl" as const;
     export const revision = 1;
     export const schema = ContentControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -753,6 +753,7 @@ export namespace FanControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x202);
+    export const name = "FanControl" as const;
     export const revision = 5;
     export const schema = FanControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

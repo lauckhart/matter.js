@@ -3392,6 +3392,7 @@ export namespace JointFabricDatastore {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x752);
+    export const name = "JointFabricDatastore" as const;
     export const revision = 1;
     export const schema = JointFabricDatastoreModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

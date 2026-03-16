@@ -2211,6 +2211,7 @@ export namespace OperationalCredentials {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x3e);
+    export const name = "OperationalCredentials" as const;
     export const revision = 2;
     export const schema = OperationalCredentialsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

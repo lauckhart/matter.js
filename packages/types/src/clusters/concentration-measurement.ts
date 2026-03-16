@@ -434,6 +434,7 @@ export namespace ConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const name = "ConcentrationMeasurement" as const;
     export const revision = 3;
     export const schema = ConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

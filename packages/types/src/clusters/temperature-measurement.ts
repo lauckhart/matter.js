@@ -88,6 +88,7 @@ export namespace TemperatureMeasurement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x402);
+    export const name = "TemperatureMeasurement" as const;
     export const revision = 4;
     export const schema = TemperatureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

@@ -1329,6 +1329,7 @@ export namespace ContentLauncher {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50a);
+    export const name = "ContentLauncher" as const;
     export const revision = 2;
     export const schema = ContentLauncherModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

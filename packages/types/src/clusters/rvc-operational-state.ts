@@ -597,6 +597,7 @@ export namespace RvcOperationalState {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x61);
+    export const name = "RvcOperationalState" as const;
     export const revision = 3;
     export const schema = RvcOperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

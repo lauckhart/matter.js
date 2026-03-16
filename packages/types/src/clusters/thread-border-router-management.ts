@@ -481,6 +481,7 @@ export namespace ThreadBorderRouterManagement {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x452);
+    export const name = "ThreadBorderRouterManagement" as const;
     export const revision = 1;
     export const schema = ThreadBorderRouterManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

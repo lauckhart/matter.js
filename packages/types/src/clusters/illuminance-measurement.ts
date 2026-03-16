@@ -122,6 +122,7 @@ export namespace IlluminanceMeasurement {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x400);
+    export const name = "IlluminanceMeasurement" as const;
     export const revision = 3;
     export const schema = IlluminanceMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

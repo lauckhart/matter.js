@@ -389,6 +389,7 @@ export namespace RefrigeratorAndTemperatureControlledCabinetMode {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x52);
+    export const name = "RefrigeratorAndTemperatureControlledCabinetMode" as const;
     export const revision = 3;
     export const schema = RefrigeratorAndTemperatureControlledCabinetModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

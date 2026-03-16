@@ -1787,6 +1787,7 @@ export namespace Channel {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x504);
+    export const name = "Channel" as const;
     export const revision = 2;
     export const schema = ChannelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

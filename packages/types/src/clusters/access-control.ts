@@ -1928,6 +1928,7 @@ export namespace AccessControl {
 
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x1f);
+    export const name = "AccessControl" as const;
     export const revision = 2;
     export const schema = AccessControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

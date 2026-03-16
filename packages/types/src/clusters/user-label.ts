@@ -58,6 +58,7 @@ export namespace UserLabel {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x41);
+    export const name = "UserLabel" as const;
     export const revision = 1;
     export const schema = UserLabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;

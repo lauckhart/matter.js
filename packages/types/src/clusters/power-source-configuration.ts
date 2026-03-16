@@ -60,6 +60,7 @@ export namespace PowerSourceConfiguration {
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
     export const id = ClusterId(0x2e);
+    export const name = "PowerSourceConfiguration" as const;
     export const revision = 1;
     export const schema = PowerSourceConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
