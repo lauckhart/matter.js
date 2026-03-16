@@ -7,6 +7,7 @@
 import { camelize } from "@matter/general";
 import { ClusterModel, ClusterModifier, GLOBAL_IDS } from "@matter/model";
 import type { AttributeId } from "../datatype/AttributeId.js";
+import type { ClusterId } from "../datatype/ClusterId.js";
 import type { CommandId } from "../datatype/CommandId.js";
 import type { EventId } from "../datatype/EventId.js";
 import type { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
@@ -35,9 +36,9 @@ export interface ClusterNamespaceTyping {
  */
 export interface ClusterNamespace {
     readonly Typing?: ClusterNamespaceTyping;
-    readonly schema?: ClusterModel;
-    readonly id?: number;
-    readonly name?: string;
+    readonly schema: ClusterModel;
+    readonly id?: ClusterId;
+    readonly name: string;
     readonly revision?: number;
     readonly attributes?: Record<string, ClusterNamespace.Attribute>;
     readonly commands?: Record<string, ClusterNamespace.Command>;
@@ -78,6 +79,14 @@ export namespace ClusterNamespace {
     export interface Feature {
         id: number;
         name: string;
+    }
+
+    /**
+     * A {@link ClusterNamespace} with a concrete cluster ID.  Used for behavior types that are known to be associated
+     * with a non-abstract cluster.
+     */
+    export interface Concrete extends ClusterNamespace {
+        readonly id: ClusterId;
     }
 
     export type Attributes<A> = { [K in keyof A]: Attribute<A[K]> };

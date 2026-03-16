@@ -7,7 +7,7 @@
 import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
-import { ClusterModifier, type Schema } from "@matter/model";
+import { ClusterModel, ClusterModifier, type Schema } from "@matter/model";
 import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
@@ -63,7 +63,7 @@ export class ClusterBehavior extends Behavior {
     /**
      * Every cluster behavior has an associated cluster namespace defined statically.
      */
-    static readonly cluster: ClusterNamespace = {};
+    static readonly cluster: ClusterNamespace = { name: "Unknown", schema: new ClusterModel({ name: "Unknown" }) };
 
     /**
      * Method definitions.
@@ -265,7 +265,7 @@ export namespace ClusterBehavior {
         /**
          * The cluster namespace for this behavior.
          */
-        readonly cluster: ClusterNamespace;
+        readonly cluster: ClusterNamespace.Concrete;
 
         readonly Events: ClusterEvents.Type<B, N>;
         readonly State: new () => ClusterState.Type<B, N>;
@@ -399,7 +399,7 @@ export namespace ClusterBehavior {
                 /**
                  * The cluster namespace.
                  */
-                cluster: ClusterNamespace;
+                cluster: ClusterNamespace.Concrete;
 
                 /**
                  * State values for the behavior.
