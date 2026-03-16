@@ -265,7 +265,7 @@ export namespace ClusterBehavior {
         /**
          * The cluster namespace for this behavior.
          */
-        readonly cluster: ClusterNamespace.Concrete;
+        readonly cluster: ClusterNamespace;
 
         readonly Events: ClusterEvents.Type<B, N>;
         readonly State: new () => ClusterState.Type<B, N>;

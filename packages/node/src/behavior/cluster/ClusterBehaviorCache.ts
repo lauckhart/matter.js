@@ -10,12 +10,12 @@ import type { ClusterBehavior } from "./ClusterBehavior.js";
 
 const behaviorCache = new WeakMap<
     Behavior.Type,
-    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type<any>>>>
+    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>
 >();
 
 const clientCache = new WeakMap<
     Behavior.Type,
-    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type<any>>>>
+    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>
 >();
 
 /**
