@@ -39,7 +39,6 @@ import {
     Status,
     StatusResponseError,
     TypeFromPartialBitSchema,
-    TypeFromSchema,
     VendorId,
 } from "@matter/types";
 import { BasicInformation } from "@matter/types/clusters/basic-information";
@@ -148,7 +147,7 @@ type CommissioningStep = {
 
 /** Data that are collected initially or through the commissioning process and can be used also by other steps. */
 type CollectedCommissioningData = {
-    basicCommissioningInfo?: TypeFromSchema<typeof GeneralCommissioning.TlvBasicCommissioningInfo>;
+    basicCommissioningInfo?: GeneralCommissioning.BasicCommissioningInfo;
     productName?: string;
     networkFeatures?: {
         endpointId: EndpointNumber;
@@ -156,7 +155,7 @@ type CollectedCommissioningData = {
     }[];
     networkStatus?: {
         endpointId: EndpointNumber;
-        value: TypeFromSchema<typeof NetworkCommissioning.TlvNetworkInfo>[];
+        value: NetworkCommissioning.NetworkInfo[];
     }[];
     otaRequestorList?: EndpointNumber[];
     rootPartsList?: EndpointNumber[];
@@ -565,7 +564,7 @@ export class ControllerCommissioningFlow {
     /** Helper method to check for errorCode/debugTest responses and throw error on failure */
     #ensureOperationalCredentialsSuccess(
         context: string,
-        { statusCode, debugText, fabricIndex }: TypeFromSchema<typeof OperationalCredentials.TlvNocResponse>,
+        { statusCode, debugText, fabricIndex }: OperationalCredentials.NocResponse,
     ) {
         logger.debug(
             `Commissioning step ${context} returned ${OperationalCredentials.NodeOperationalCertStatus[statusCode]} (${statusCode}), ${debugText}${
@@ -678,7 +677,7 @@ export class ControllerCommissioningFlow {
         }>();
         const networkStatus = new Array<{
             endpointId: EndpointNumber;
-            value: TypeFromSchema<typeof NetworkCommissioning.TlvNetworkInfo>[];
+            value: NetworkCommissioning.NetworkInfo[];
         }>();
         const otaRequestors = new Array<EndpointNumber>();
 
@@ -698,13 +697,13 @@ export class ControllerCommissioningFlow {
                             value: value as TypeFromPartialBitSchema<typeof NetworkCommissioning.Complete.features>,
                         });
                         break;
-                    case NetworkCommissioning.Complete.attributes.networks.id:
+                    case NetworkCommissioning.attributes.networks.id:
                         networkStatus.push({
                             endpointId,
-                            value: value as TypeFromSchema<typeof NetworkCommissioning.TlvNetworkInfo>[],
+                            value: value as NetworkCommissioning.NetworkInfo[],
                         });
                         break;
-                    case OtaSoftwareUpdateRequestor.Complete.attributes.defaultOtaProviders.id:
+                    case OtaSoftwareUpdateRequestor.attributes.defaultOtaProviders.id:
                         otaRequestors.push(endpointId);
                         break;
                 }

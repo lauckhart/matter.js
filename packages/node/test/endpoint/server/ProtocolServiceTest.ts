@@ -34,26 +34,26 @@ import { interaction } from "../../node/node-helpers.js";
 
 const FABRICS_PATH = {
     endpointId: EndpointNumber(0),
-    clusterId: OperationalCredentials.Cluster.id,
-    attributeId: OperationalCredentials.Cluster.attributes.fabrics.id,
+    clusterId: OperationalCredentials.id,
+    attributeId: OperationalCredentials.attributes.fabrics.id,
 };
 
 const NOCS_PATH = {
     endpointId: EndpointNumber(0),
-    clusterId: OperationalCredentials.Cluster.id,
-    attributeId: OperationalCredentials.Cluster.attributes.nocs.id,
+    clusterId: OperationalCredentials.id,
+    attributeId: OperationalCredentials.attributes.nocs.id,
 };
 
 const COMMISSIONED_FABRICS_PATH = {
     endpointId: EndpointNumber(0),
-    clusterId: OperationalCredentials.Cluster.id,
-    attributeId: OperationalCredentials.Cluster.attributes.commissionedFabrics.id,
+    clusterId: OperationalCredentials.id,
+    attributeId: OperationalCredentials.attributes.commissionedFabrics.id,
 };
 
 const LEAVE_PATH = {
     endpointId: EndpointNumber(0),
-    clusterId: BasicInformation.Cluster.id,
-    eventId: BasicInformation.Cluster.events.leave.id,
+    clusterId: BasicInformation.id,
+    eventId: BasicInformation.events.leave.id,
 };
 
 class WifiCommissioningServer extends NetworkCommissioningServer.with("WiFiNetworkInterface") {
@@ -78,8 +78,8 @@ async function writeAcl(node: MockServerNode, fabric: Fabric, acl: TypeFromSchem
     await interaction.write(node, fabric, {
         path: {
             endpointId: EndpointNumber(0),
-            clusterId: ClusterId(AccessControl.Cluster.id),
-            attributeId: AttributeId(AccessControl.Cluster.attributes.acl.id),
+            clusterId: ClusterId(AccessControl.id),
+            attributeId: AttributeId(AccessControl.attributes.acl.id),
         },
         data: TlvArray(AcesWithoutFabric).encodeTlv([acl]),
     });
@@ -88,8 +88,8 @@ async function writeAcl(node: MockServerNode, fabric: Fabric, acl: TypeFromSchem
 async function readAcls(node: MockServerNode, fabric: Fabric, isFabricFiltered: boolean) {
     return await interaction.read(node, fabric, isFabricFiltered, {
         endpointId: EndpointNumber(0),
-        clusterId: AccessControl.Cluster.id,
-        attributeId: AttributeId(AccessControl.Cluster.attributes.acl.id),
+        clusterId: AccessControl.id,
+        attributeId: AttributeId(AccessControl.attributes.acl.id),
     });
 }
 
@@ -180,7 +180,7 @@ describe("ProtocolServiceTest", () => {
         expect(fabricsReport?.path).deep.equals(FABRICS_PATH);
         const decodedFabrics =
             fabricsReport?.data &&
-            OperationalCredentials.Cluster.attributes.fabrics.schema.decodeTlv(fabricsReport?.data);
+            OperationalCredentials.attributes.fabrics.tlv.decodeTlv(fabricsReport?.data);
         expect(decodedFabrics?.map(({ fabricIndex }) => fabricIndex)).deep.equals([1, 2]);
 
         const nocsReport = report.attributes[1]?.attributeData;
@@ -191,7 +191,7 @@ describe("ProtocolServiceTest", () => {
 
         const commissionedFabricCount =
             commissionedFabricsReport?.data &&
-            OperationalCredentials.Cluster.attributes.commissionedFabrics.schema.decodeTlv(
+            OperationalCredentials.attributes.commissionedFabrics.tlv.decodeTlv(
                 commissionedFabricsReport.data,
             );
         expect(commissionedFabricCount).deep.equals(2);
@@ -207,7 +207,7 @@ describe("ProtocolServiceTest", () => {
         const leaveReport = report.events[0]?.eventData;
         expect(leaveReport?.path).deep.equals(LEAVE_PATH);
         expect(
-            leaveReport?.data && BasicInformation.Cluster.events.leave.schema.decodeTlv(leaveReport?.data),
+            leaveReport?.data && BasicInformation.events.leave.tlv.decodeTlv(leaveReport?.data),
         ).deep.equals({
             fabricIndex: 2,
         });
@@ -232,7 +232,7 @@ describe("ProtocolServiceTest", () => {
 
         const commands = await interaction.read(node, fabric, false, {
             endpointId: EndpointNumber(1),
-            clusterId: ClusterId(NetworkCommissioning.Cluster.id),
+            clusterId: ClusterId(NetworkCommissioning.id),
             attributeId: AttributeId(AcceptedCommandList.id),
         });
 
@@ -242,7 +242,7 @@ describe("ProtocolServiceTest", () => {
 
         const commandResponds = await interaction.read(node, fabric, false, {
             endpointId: EndpointNumber(1),
-            clusterId: ClusterId(NetworkCommissioning.Cluster.id),
+            clusterId: ClusterId(NetworkCommissioning.id),
             attributeId: AttributeId(GeneratedCommandList.id),
         });
 
@@ -260,7 +260,7 @@ describe("ProtocolServiceTest", () => {
 
         const featureMap = await interaction.read(node, await node.addFabric(), false, {
             endpointId: EndpointNumber(1),
-            clusterId: ClusterId(OnOff.Cluster.id),
+            clusterId: ClusterId(OnOff.id),
             attributeId: AttributeId(FeatureMap.id),
         });
 
@@ -295,7 +295,7 @@ describe("ProtocolServiceTest", () => {
             {
                 commandPath: {
                     endpointId: EndpointNumber(1),
-                    clusterId: OnOff.Cluster.id,
+                    clusterId: OnOff.id,
                     commandId: CommandId(OnOff.LightingComponent.commands.offWithEffect.requestId),
                 },
 

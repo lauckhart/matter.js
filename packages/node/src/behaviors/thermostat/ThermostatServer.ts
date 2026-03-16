@@ -1453,7 +1453,7 @@ export namespace ThermostatBaseServer {
                                 session,
                                 endpoint,
                                 ThermostatBaseServer,
-                                Thermostat.Complete.attributes.presets.id,
+                                Thermostat.attributes.presets.id,
                             );
                         if (pendingValue !== undefined) {
                             return pendingValue as Thermostat.Preset[];
@@ -1483,7 +1483,7 @@ export namespace ThermostatBaseServer {
                                     session,
                                     endpoint,
                                     ThermostatBaseServer,
-                                    Thermostat.Complete.attributes.presets.id,
+                                    Thermostat.attributes.presets.id,
                                     value,
                                 );
                         }

@@ -11,9 +11,9 @@ import { AccessControl } from "@matter/types/clusters/access-control";
 import { MalformedRequestError } from "./MalformedRequestError.js";
 import { resolvePathForSpecifier, Specifier } from "./Specifier.js";
 
-const AclClusterId = AccessControl.Complete.id;
-const AclAttributeId = AccessControl.Complete.attributes.acl.id;
-const AclExtensionAttributeId = AccessControl.Complete.attributes.extension.id;
+const AclClusterId = AccessControl.id;
+const AclAttributeId = AccessControl.attributes.acl.id;
+const AclExtensionAttributeId = AccessControl.attributes.extension.id;
 
 function isAclOrExtensionPath(path: { clusterId: ClusterId; attributeId: AttributeId }) {
     const { clusterId, attributeId } = path;
