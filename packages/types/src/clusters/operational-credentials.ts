@@ -22,7 +22,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OperationalCredentials {
@@ -2212,12 +2212,14 @@ export namespace OperationalCredentials {
     export const Complete = Cluster;
     export const id = ClusterId(0x3e);
     export const revision = 2;
+    export const schema = OperationalCredentialsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: OperationalCredentials | undefined;
 }
 
 export type OperationalCredentialsCluster = OperationalCredentials.Cluster;
 export const OperationalCredentialsCluster = OperationalCredentials.Cluster;
 ClusterRegistry.register(OperationalCredentials.Complete);
-ClusterNamespace.define(OperationalCredentials, OperationalCredentialsModel);
-export interface OperationalCredentials extends ClusterNamespace { Attributes: OperationalCredentials.Attributes & { Components: OperationalCredentials.Attributes.Components }; Commands: OperationalCredentials.Commands & { Components: OperationalCredentials.Commands.Components } }
+ClusterNamespace.define(OperationalCredentials);
+export interface OperationalCredentials extends ClusterNamespaceTyping { Attributes: OperationalCredentials.Attributes & { Components: OperationalCredentials.Attributes.Components }; Commands: OperationalCredentials.Commands & { Components: OperationalCredentials.Commands.Components } }

@@ -24,7 +24,7 @@ import { Priority } from "../globals/Priority.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { BooleanStateConfiguration as BooleanStateConfigurationModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -637,14 +637,16 @@ export namespace BooleanStateConfiguration {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x80);
     export const revision = 1;
+    export const schema = BooleanStateConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: BooleanStateConfiguration | undefined;
 }
 
 export type BooleanStateConfigurationCluster = BooleanStateConfiguration.Cluster;
 export const BooleanStateConfigurationCluster = BooleanStateConfiguration.Cluster;
 ClusterRegistry.register(BooleanStateConfiguration.Complete);
-ClusterNamespace.define(BooleanStateConfiguration, BooleanStateConfigurationModel);
-export interface BooleanStateConfiguration extends ClusterNamespace { Attributes: BooleanStateConfiguration.Attributes & { Components: BooleanStateConfiguration.Attributes.Components }; Commands: BooleanStateConfiguration.Commands & { Components: BooleanStateConfiguration.Commands.Components }; Events: BooleanStateConfiguration.Events & { Components: BooleanStateConfiguration.Events.Components }; Features: BooleanStateConfiguration.Features }
+ClusterNamespace.define(BooleanStateConfiguration);
+export interface BooleanStateConfiguration extends ClusterNamespaceTyping { Attributes: BooleanStateConfiguration.Attributes & { Components: BooleanStateConfiguration.Attributes.Components }; Commands: BooleanStateConfiguration.Commands & { Components: BooleanStateConfiguration.Commands.Components }; Events: BooleanStateConfiguration.Events & { Components: BooleanStateConfiguration.Events.Components }; Features: BooleanStateConfiguration.Features }

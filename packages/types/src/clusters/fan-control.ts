@@ -15,7 +15,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { FanControl as FanControlModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -754,13 +754,15 @@ export namespace FanControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x202);
     export const revision = 5;
+    export const schema = FanControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: FanControl | undefined;
 }
 
 export type FanControlCluster = FanControl.Cluster;
 export const FanControlCluster = FanControl.Cluster;
 ClusterRegistry.register(FanControl.Complete);
-ClusterNamespace.define(FanControl, FanControlModel);
-export interface FanControl extends ClusterNamespace { Attributes: FanControl.Attributes & { Components: FanControl.Attributes.Components }; Commands: FanControl.Commands & { Components: FanControl.Commands.Components }; Features: FanControl.Features }
+ClusterNamespace.define(FanControl);
+export interface FanControl extends ClusterNamespaceTyping { Attributes: FanControl.Attributes & { Components: FanControl.Attributes.Components }; Commands: FanControl.Commands & { Components: FanControl.Commands.Components }; Features: FanControl.Features }

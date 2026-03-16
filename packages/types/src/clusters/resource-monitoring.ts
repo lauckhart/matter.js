@@ -24,7 +24,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ResourceMonitoring as ResourceMonitoringModel } from "@matter/model";
 
 export namespace ResourceMonitoring {
@@ -338,10 +338,12 @@ export namespace ResourceMonitoring {
 
     export const Complete: Complete = CompleteInstance;
     export const revision = 1;
+    export const schema = ResourceMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ResourceMonitoring | undefined;
 }
 
-ClusterNamespace.define(ResourceMonitoring, ResourceMonitoringModel);
-export interface ResourceMonitoring extends ClusterNamespace { Attributes: ResourceMonitoring.Attributes & { Components: ResourceMonitoring.Attributes.Components }; Commands: ResourceMonitoring.Commands & { Components: ResourceMonitoring.Commands.Components }; Features: ResourceMonitoring.Features }
+ClusterNamespace.define(ResourceMonitoring);
+export interface ResourceMonitoring extends ClusterNamespaceTyping { Attributes: ResourceMonitoring.Attributes & { Components: ResourceMonitoring.Attributes.Components }; Commands: ResourceMonitoring.Commands & { Components: ResourceMonitoring.Commands.Components }; Features: ResourceMonitoring.Features }

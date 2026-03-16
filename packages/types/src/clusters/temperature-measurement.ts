@@ -12,7 +12,7 @@ import { TlvInt16, TlvUInt16 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { TemperatureMeasurement as TemperatureMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -89,11 +89,13 @@ export namespace TemperatureMeasurement {
     export const Complete = Cluster;
     export const id = ClusterId(0x402);
     export const revision = 4;
+    export const schema = TemperatureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: TemperatureMeasurement | undefined;
 }
 
 export type TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 export const TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 ClusterRegistry.register(TemperatureMeasurement.Complete);
-ClusterNamespace.define(TemperatureMeasurement, TemperatureMeasurementModel);
-export interface TemperatureMeasurement extends ClusterNamespace { Attributes: TemperatureMeasurement.Attributes & { Components: TemperatureMeasurement.Attributes.Components } }
+ClusterNamespace.define(TemperatureMeasurement);
+export interface TemperatureMeasurement extends ClusterNamespaceTyping { Attributes: TemperatureMeasurement.Attributes & { Components: TemperatureMeasurement.Attributes.Components } }

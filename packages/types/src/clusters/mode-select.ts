@@ -25,7 +25,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ModeSelect as ModeSelectModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -414,13 +414,15 @@ export namespace ModeSelect {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50);
     export const revision = 2;
+    export const schema = ModeSelectModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ModeSelect | undefined;
 }
 
 export type ModeSelectCluster = ModeSelect.Cluster;
 export const ModeSelectCluster = ModeSelect.Cluster;
 ClusterRegistry.register(ModeSelect.Complete);
-ClusterNamespace.define(ModeSelect, ModeSelectModel);
-export interface ModeSelect extends ClusterNamespace { Attributes: ModeSelect.Attributes & { Components: ModeSelect.Attributes.Components }; Commands: ModeSelect.Commands & { Components: ModeSelect.Commands.Components }; Features: ModeSelect.Features }
+ClusterNamespace.define(ModeSelect);
+export interface ModeSelect extends ClusterNamespaceTyping { Attributes: ModeSelect.Attributes & { Components: ModeSelect.Attributes.Components }; Commands: ModeSelect.Commands & { Components: ModeSelect.Commands.Components }; Features: ModeSelect.Features }

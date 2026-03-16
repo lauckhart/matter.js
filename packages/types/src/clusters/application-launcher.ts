@@ -19,7 +19,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status as GlobalStatus } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ApplicationLauncher as ApplicationLauncherModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -665,13 +665,15 @@ export namespace ApplicationLauncher {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50c);
     export const revision = 2;
+    export const schema = ApplicationLauncherModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ApplicationLauncher | undefined;
 }
 
 export type ApplicationLauncherCluster = ApplicationLauncher.Cluster;
 export const ApplicationLauncherCluster = ApplicationLauncher.Cluster;
 ClusterRegistry.register(ApplicationLauncher.Complete);
-ClusterNamespace.define(ApplicationLauncher, ApplicationLauncherModel);
-export interface ApplicationLauncher extends ClusterNamespace { Attributes: ApplicationLauncher.Attributes & { Components: ApplicationLauncher.Attributes.Components }; Commands: ApplicationLauncher.Commands & { Components: ApplicationLauncher.Commands.Components }; Features: ApplicationLauncher.Features }
+ClusterNamespace.define(ApplicationLauncher);
+export interface ApplicationLauncher extends ClusterNamespaceTyping { Attributes: ApplicationLauncher.Attributes & { Components: ApplicationLauncher.Attributes.Components }; Commands: ApplicationLauncher.Commands & { Components: ApplicationLauncher.Commands.Components }; Features: ApplicationLauncher.Features }

@@ -24,7 +24,7 @@ import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { TlvDeviceTypeId, DeviceTypeId } from "../datatype/DeviceTypeId.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace JointFabricDatastore {
     /**
@@ -3393,12 +3393,14 @@ export namespace JointFabricDatastore {
     export const Complete = Cluster;
     export const id = ClusterId(0x752);
     export const revision = 1;
+    export const schema = JointFabricDatastoreModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: JointFabricDatastore | undefined;
 }
 
 export type JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 export const JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 ClusterRegistry.register(JointFabricDatastore.Complete);
-ClusterNamespace.define(JointFabricDatastore, JointFabricDatastoreModel);
-export interface JointFabricDatastore extends ClusterNamespace { Attributes: JointFabricDatastore.Attributes & { Components: JointFabricDatastore.Attributes.Components }; Commands: JointFabricDatastore.Commands & { Components: JointFabricDatastore.Commands.Components } }
+ClusterNamespace.define(JointFabricDatastore);
+export interface JointFabricDatastore extends ClusterNamespaceTyping { Attributes: JointFabricDatastore.Attributes & { Components: JointFabricDatastore.Attributes.Components }; Commands: JointFabricDatastore.Commands & { Components: JointFabricDatastore.Commands.Components } }

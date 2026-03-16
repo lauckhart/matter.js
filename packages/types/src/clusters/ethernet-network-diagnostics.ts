@@ -16,7 +16,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EthernetNetworkDiagnostics {
@@ -372,13 +372,15 @@ export namespace EthernetNetworkDiagnostics {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x37);
     export const revision = 1;
+    export const schema = EthernetNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: EthernetNetworkDiagnostics | undefined;
 }
 
 export type EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 export const EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 ClusterRegistry.register(EthernetNetworkDiagnostics.Complete);
-ClusterNamespace.define(EthernetNetworkDiagnostics, EthernetNetworkDiagnosticsModel);
-export interface EthernetNetworkDiagnostics extends ClusterNamespace { Attributes: EthernetNetworkDiagnostics.Attributes & { Components: EthernetNetworkDiagnostics.Attributes.Components }; Commands: EthernetNetworkDiagnostics.Commands & { Components: EthernetNetworkDiagnostics.Commands.Components }; Features: EthernetNetworkDiagnostics.Features }
+ClusterNamespace.define(EthernetNetworkDiagnostics);
+export interface EthernetNetworkDiagnostics extends ClusterNamespaceTyping { Attributes: EthernetNetworkDiagnostics.Attributes & { Components: EthernetNetworkDiagnostics.Attributes.Components }; Commands: EthernetNetworkDiagnostics.Commands & { Components: EthernetNetworkDiagnostics.Commands.Components }; Features: EthernetNetworkDiagnostics.Features }

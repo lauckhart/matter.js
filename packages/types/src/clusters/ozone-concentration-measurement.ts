@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { OzoneConcentrationMeasurement as OzoneConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -78,12 +78,14 @@ export namespace OzoneConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x415);
     export const revision = 1;
+    export const schema = OzoneConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: OzoneConcentrationMeasurement | undefined;
 }
 
 export type OzoneConcentrationMeasurementCluster = OzoneConcentrationMeasurement.Cluster;
 export const OzoneConcentrationMeasurementCluster = OzoneConcentrationMeasurement.Cluster;
 ClusterRegistry.register(OzoneConcentrationMeasurement.Complete);
-ClusterNamespace.define(OzoneConcentrationMeasurement, OzoneConcentrationMeasurementModel);
-export interface OzoneConcentrationMeasurement extends ClusterNamespace { Attributes: OzoneConcentrationMeasurement.Attributes & { Components: OzoneConcentrationMeasurement.Attributes.Components }; Features: OzoneConcentrationMeasurement.Features }
+ClusterNamespace.define(OzoneConcentrationMeasurement);
+export interface OzoneConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: OzoneConcentrationMeasurement.Attributes & { Components: OzoneConcentrationMeasurement.Attributes.Components }; Features: OzoneConcentrationMeasurement.Features }

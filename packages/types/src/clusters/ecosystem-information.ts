@@ -19,7 +19,7 @@ import { AccessLevel, EcosystemInformation as EcosystemInformationModel } from "
 import { TlvLocationdesc, Locationdesc } from "../globals/Locationdesc.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EcosystemInformation {
@@ -403,11 +403,13 @@ export namespace EcosystemInformation {
     export const Complete = Cluster;
     export const id = ClusterId(0x750);
     export const revision = 1;
+    export const schema = EcosystemInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: EcosystemInformation | undefined;
 }
 
 export type EcosystemInformationCluster = EcosystemInformation.Cluster;
 export const EcosystemInformationCluster = EcosystemInformation.Cluster;
 ClusterRegistry.register(EcosystemInformation.Complete);
-ClusterNamespace.define(EcosystemInformation, EcosystemInformationModel);
-export interface EcosystemInformation extends ClusterNamespace { Attributes: EcosystemInformation.Attributes & { Components: EcosystemInformation.Attributes.Components } }
+ClusterNamespace.define(EcosystemInformation);
+export interface EcosystemInformation extends ClusterNamespaceTyping { Attributes: EcosystemInformation.Attributes & { Components: EcosystemInformation.Attributes.Components } }

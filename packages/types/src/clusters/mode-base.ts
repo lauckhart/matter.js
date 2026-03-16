@@ -22,7 +22,7 @@ import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { Identity, MaybePromise } from "@matter/general";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ModeBase as ModeBaseModel } from "@matter/model";
 
 export namespace ModeBase {
@@ -580,10 +580,12 @@ export namespace ModeBase {
 
     export const Complete: Complete = CompleteInstance;
     export const revision = 2;
+    export const schema = ModeBaseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ModeBase | undefined;
 }
 
-ClusterNamespace.define(ModeBase, ModeBaseModel);
-export interface ModeBase extends ClusterNamespace { Attributes: ModeBase.Attributes & { Components: ModeBase.Attributes.Components }; Commands: ModeBase.Commands & { Components: ModeBase.Commands.Components }; Features: ModeBase.Features }
+ClusterNamespace.define(ModeBase);
+export interface ModeBase extends ClusterNamespaceTyping { Attributes: ModeBase.Attributes & { Components: ModeBase.Attributes.Components }; Commands: ModeBase.Commands & { Components: ModeBase.Commands.Components }; Features: ModeBase.Features }

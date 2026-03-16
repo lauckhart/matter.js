@@ -14,7 +14,7 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace TimeFormatLocalization {
@@ -264,12 +264,14 @@ export namespace TimeFormatLocalization {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2c);
     export const revision = 1;
+    export const schema = TimeFormatLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: TimeFormatLocalization | undefined;
 }
 
 export type TimeFormatLocalizationCluster = TimeFormatLocalization.Cluster;
 export const TimeFormatLocalizationCluster = TimeFormatLocalization.Cluster;
 ClusterRegistry.register(TimeFormatLocalization.Complete);
-ClusterNamespace.define(TimeFormatLocalization, TimeFormatLocalizationModel);
-export interface TimeFormatLocalization extends ClusterNamespace { Attributes: TimeFormatLocalization.Attributes & { Components: TimeFormatLocalization.Attributes.Components }; Features: TimeFormatLocalization.Features }
+ClusterNamespace.define(TimeFormatLocalization);
+export interface TimeFormatLocalization extends ClusterNamespaceTyping { Attributes: TimeFormatLocalization.Attributes & { Components: TimeFormatLocalization.Attributes.Components }; Features: TimeFormatLocalization.Features }

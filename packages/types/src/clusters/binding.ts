@@ -18,7 +18,7 @@ import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
 import { AccessLevel, Binding as BindingModel } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace Binding {
     /**
@@ -166,11 +166,13 @@ export namespace Binding {
     export const Complete = Cluster;
     export const id = ClusterId(0x1e);
     export const revision = 1;
+    export const schema = BindingModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: Binding | undefined;
 }
 
 export type BindingCluster = Binding.Cluster;
 export const BindingCluster = Binding.Cluster;
 ClusterRegistry.register(Binding.Complete);
-ClusterNamespace.define(Binding, BindingModel);
-export interface Binding extends ClusterNamespace { Attributes: Binding.Attributes & { Components: Binding.Attributes.Components } }
+ClusterNamespace.define(Binding);
+export interface Binding extends ClusterNamespaceTyping { Attributes: Binding.Attributes & { Components: Binding.Attributes.Components } }

@@ -17,7 +17,7 @@ import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/Measurem
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ElectricalPowerMeasurement as ElectricalPowerMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1101,13 +1101,15 @@ export namespace ElectricalPowerMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x90);
     export const revision = 3;
+    export const schema = ElectricalPowerMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ElectricalPowerMeasurement | undefined;
 }
 
 export type ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;
 export const ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;
 ClusterRegistry.register(ElectricalPowerMeasurement.Complete);
-ClusterNamespace.define(ElectricalPowerMeasurement, ElectricalPowerMeasurementModel);
-export interface ElectricalPowerMeasurement extends ClusterNamespace { Attributes: ElectricalPowerMeasurement.Attributes & { Components: ElectricalPowerMeasurement.Attributes.Components }; Events: ElectricalPowerMeasurement.Events & { Components: ElectricalPowerMeasurement.Events.Components }; Features: ElectricalPowerMeasurement.Features }
+ClusterNamespace.define(ElectricalPowerMeasurement);
+export interface ElectricalPowerMeasurement extends ClusterNamespaceTyping { Attributes: ElectricalPowerMeasurement.Attributes & { Components: ElectricalPowerMeasurement.Attributes.Components }; Events: ElectricalPowerMeasurement.Events & { Components: ElectricalPowerMeasurement.Events.Components }; Features: ElectricalPowerMeasurement.Features }

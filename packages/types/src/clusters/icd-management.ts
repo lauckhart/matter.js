@@ -27,7 +27,7 @@ import { TlvByteString, TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace IcdManagement {
@@ -1406,13 +1406,15 @@ export namespace IcdManagement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x46);
     export const revision = 3;
+    export const schema = IcdManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: IcdManagement | undefined;
 }
 
 export type IcdManagementCluster = IcdManagement.Cluster;
 export const IcdManagementCluster = IcdManagement.Cluster;
 ClusterRegistry.register(IcdManagement.Complete);
-ClusterNamespace.define(IcdManagement, IcdManagementModel);
-export interface IcdManagement extends ClusterNamespace { Attributes: IcdManagement.Attributes & { Components: IcdManagement.Attributes.Components }; Commands: IcdManagement.Commands & { Components: IcdManagement.Commands.Components }; Features: IcdManagement.Features }
+ClusterNamespace.define(IcdManagement);
+export interface IcdManagement extends ClusterNamespaceTyping { Attributes: IcdManagement.Attributes & { Components: IcdManagement.Attributes.Components }; Commands: IcdManagement.Commands & { Components: IcdManagement.Commands.Components }; Features: IcdManagement.Features }

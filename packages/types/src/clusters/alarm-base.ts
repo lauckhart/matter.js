@@ -13,7 +13,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { AlarmBase as AlarmBaseModel } from "@matter/model";
 
 export namespace AlarmBase {
@@ -372,11 +372,13 @@ export namespace AlarmBase {
 
     export const Complete: Complete = CompleteInstance;
     export const revision = 2;
+    export const schema = AlarmBaseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: AlarmBase | undefined;
 }
 
-ClusterNamespace.define(AlarmBase, AlarmBaseModel);
-export interface AlarmBase extends ClusterNamespace { Attributes: AlarmBase.Attributes & { Components: AlarmBase.Attributes.Components }; Commands: AlarmBase.Commands & { Components: AlarmBase.Commands.Components }; Events: AlarmBase.Events & { Components: AlarmBase.Events.Components }; Features: AlarmBase.Features }
+ClusterNamespace.define(AlarmBase);
+export interface AlarmBase extends ClusterNamespaceTyping { Attributes: AlarmBase.Attributes & { Components: AlarmBase.Attributes.Components }; Commands: AlarmBase.Commands & { Components: AlarmBase.Commands.Components }; Events: AlarmBase.Events & { Components: AlarmBase.Events.Components }; Features: AlarmBase.Features }

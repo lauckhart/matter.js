@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { WaterHeaterMode as WaterHeaterModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -403,13 +403,15 @@ export namespace WaterHeaterMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x9e);
     export const revision = 1;
+    export const schema = WaterHeaterModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WaterHeaterMode | undefined;
 }
 
 export type WaterHeaterModeCluster = WaterHeaterMode.Cluster;
 export const WaterHeaterModeCluster = WaterHeaterMode.Cluster;
 ClusterRegistry.register(WaterHeaterMode.Complete);
-ClusterNamespace.define(WaterHeaterMode, WaterHeaterModeModel);
-export interface WaterHeaterMode extends ClusterNamespace { Attributes: WaterHeaterMode.Attributes & { Components: WaterHeaterMode.Attributes.Components }; Commands: WaterHeaterMode.Commands & { Components: WaterHeaterMode.Commands.Components }; Features: WaterHeaterMode.Features }
+ClusterNamespace.define(WaterHeaterMode);
+export interface WaterHeaterMode extends ClusterNamespaceTyping { Attributes: WaterHeaterMode.Attributes & { Components: WaterHeaterMode.Attributes.Components }; Commands: WaterHeaterMode.Commands & { Components: WaterHeaterMode.Commands.Components }; Features: WaterHeaterMode.Features }

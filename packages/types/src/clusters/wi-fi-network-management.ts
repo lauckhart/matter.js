@@ -16,7 +16,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WiFiNetworkManagement {
@@ -202,12 +202,14 @@ export namespace WiFiNetworkManagement {
     export const Complete = Cluster;
     export const id = ClusterId(0x451);
     export const revision = 1;
+    export const schema = WiFiNetworkManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: WiFiNetworkManagement | undefined;
 }
 
 export type WiFiNetworkManagementCluster = WiFiNetworkManagement.Cluster;
 export const WiFiNetworkManagementCluster = WiFiNetworkManagement.Cluster;
 ClusterRegistry.register(WiFiNetworkManagement.Complete);
-ClusterNamespace.define(WiFiNetworkManagement, WiFiNetworkManagementModel);
-export interface WiFiNetworkManagement extends ClusterNamespace { Attributes: WiFiNetworkManagement.Attributes & { Components: WiFiNetworkManagement.Attributes.Components }; Commands: WiFiNetworkManagement.Commands & { Components: WiFiNetworkManagement.Commands.Components } }
+ClusterNamespace.define(WiFiNetworkManagement);
+export interface WiFiNetworkManagement extends ClusterNamespaceTyping { Attributes: WiFiNetworkManagement.Attributes & { Components: WiFiNetworkManagement.Attributes.Components }; Commands: WiFiNetworkManagement.Commands & { Components: WiFiNetworkManagement.Commands.Components } }

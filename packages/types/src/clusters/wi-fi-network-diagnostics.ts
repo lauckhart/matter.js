@@ -17,7 +17,7 @@ import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { WiFiNetworkDiagnostics as WiFiNetworkDiagnosticsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -609,14 +609,16 @@ export namespace WiFiNetworkDiagnostics {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x36);
     export const revision = 1;
+    export const schema = WiFiNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WiFiNetworkDiagnostics | undefined;
 }
 
 export type WiFiNetworkDiagnosticsCluster = WiFiNetworkDiagnostics.Cluster;
 export const WiFiNetworkDiagnosticsCluster = WiFiNetworkDiagnostics.Cluster;
 ClusterRegistry.register(WiFiNetworkDiagnostics.Complete);
-ClusterNamespace.define(WiFiNetworkDiagnostics, WiFiNetworkDiagnosticsModel);
-export interface WiFiNetworkDiagnostics extends ClusterNamespace { Attributes: WiFiNetworkDiagnostics.Attributes & { Components: WiFiNetworkDiagnostics.Attributes.Components }; Commands: WiFiNetworkDiagnostics.Commands & { Components: WiFiNetworkDiagnostics.Commands.Components }; Events: WiFiNetworkDiagnostics.Events & { Components: WiFiNetworkDiagnostics.Events.Components }; Features: WiFiNetworkDiagnostics.Features }
+ClusterNamespace.define(WiFiNetworkDiagnostics);
+export interface WiFiNetworkDiagnostics extends ClusterNamespaceTyping { Attributes: WiFiNetworkDiagnostics.Attributes & { Components: WiFiNetworkDiagnostics.Attributes.Components }; Commands: WiFiNetworkDiagnostics.Commands & { Components: WiFiNetworkDiagnostics.Commands.Components }; Events: WiFiNetworkDiagnostics.Events & { Components: WiFiNetworkDiagnostics.Events.Components }; Features: WiFiNetworkDiagnostics.Features }

@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { CarbonMonoxideConcentrationMeasurement as CarbonMonoxideConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -83,12 +83,14 @@ export namespace CarbonMonoxideConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x40c);
     export const revision = 1;
+    export const schema = CarbonMonoxideConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: CarbonMonoxideConcentrationMeasurement | undefined;
 }
 
 export type CarbonMonoxideConcentrationMeasurementCluster = CarbonMonoxideConcentrationMeasurement.Cluster;
 export const CarbonMonoxideConcentrationMeasurementCluster = CarbonMonoxideConcentrationMeasurement.Cluster;
 ClusterRegistry.register(CarbonMonoxideConcentrationMeasurement.Complete);
-ClusterNamespace.define(CarbonMonoxideConcentrationMeasurement, CarbonMonoxideConcentrationMeasurementModel);
-export interface CarbonMonoxideConcentrationMeasurement extends ClusterNamespace { Attributes: CarbonMonoxideConcentrationMeasurement.Attributes & { Components: CarbonMonoxideConcentrationMeasurement.Attributes.Components }; Features: CarbonMonoxideConcentrationMeasurement.Features }
+ClusterNamespace.define(CarbonMonoxideConcentrationMeasurement);
+export interface CarbonMonoxideConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: CarbonMonoxideConcentrationMeasurement.Attributes & { Components: CarbonMonoxideConcentrationMeasurement.Attributes.Components }; Features: CarbonMonoxideConcentrationMeasurement.Features }

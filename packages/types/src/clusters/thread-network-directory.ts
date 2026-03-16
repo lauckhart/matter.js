@@ -16,7 +16,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvUInt16, TlvUInt64, TlvUInt8 } from "../tlv/TlvNumber.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThreadNetworkDirectory {
@@ -342,12 +342,14 @@ export namespace ThreadNetworkDirectory {
     export const Complete = Cluster;
     export const id = ClusterId(0x453);
     export const revision = 1;
+    export const schema = ThreadNetworkDirectoryModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: ThreadNetworkDirectory | undefined;
 }
 
 export type ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 export const ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 ClusterRegistry.register(ThreadNetworkDirectory.Complete);
-ClusterNamespace.define(ThreadNetworkDirectory, ThreadNetworkDirectoryModel);
-export interface ThreadNetworkDirectory extends ClusterNamespace { Attributes: ThreadNetworkDirectory.Attributes & { Components: ThreadNetworkDirectory.Attributes.Components }; Commands: ThreadNetworkDirectory.Commands & { Components: ThreadNetworkDirectory.Commands.Components } }
+ClusterNamespace.define(ThreadNetworkDirectory);
+export interface ThreadNetworkDirectory extends ClusterNamespaceTyping { Attributes: ThreadNetworkDirectory.Attributes & { Components: ThreadNetworkDirectory.Attributes.Components }; Commands: ThreadNetworkDirectory.Commands & { Components: ThreadNetworkDirectory.Commands.Components } }

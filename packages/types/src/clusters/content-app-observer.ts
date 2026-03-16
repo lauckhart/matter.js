@@ -15,7 +15,7 @@ import { Status as GlobalStatus } from "../globals/Status.js";
 import { TlvEnum } from "../tlv/TlvNumber.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ContentAppObserver as ContentAppObserverModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -240,11 +240,13 @@ export namespace ContentAppObserver {
     export const Complete = Cluster;
     export const id = ClusterId(0x510);
     export const revision = 1;
+    export const schema = ContentAppObserverModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: ContentAppObserver | undefined;
 }
 
 export type ContentAppObserverCluster = ContentAppObserver.Cluster;
 export const ContentAppObserverCluster = ContentAppObserver.Cluster;
 ClusterRegistry.register(ContentAppObserver.Complete);
-ClusterNamespace.define(ContentAppObserver, ContentAppObserverModel);
-export interface ContentAppObserver extends ClusterNamespace { Commands: ContentAppObserver.Commands & { Components: ContentAppObserver.Commands.Components } }
+ClusterNamespace.define(ContentAppObserver);
+export interface ContentAppObserver extends ClusterNamespaceTyping { Commands: ContentAppObserver.Commands & { Components: ContentAppObserver.Commands.Components } }

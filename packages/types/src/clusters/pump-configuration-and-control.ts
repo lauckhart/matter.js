@@ -24,7 +24,7 @@ import { Priority } from "../globals/Priority.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PumpConfigurationAndControl {
@@ -1130,13 +1130,15 @@ export namespace PumpConfigurationAndControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x200);
     export const revision = 4;
+    export const schema = PumpConfigurationAndControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: PumpConfigurationAndControl | undefined;
 }
 
 export type PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 export const PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 ClusterRegistry.register(PumpConfigurationAndControl.Complete);
-ClusterNamespace.define(PumpConfigurationAndControl, PumpConfigurationAndControlModel);
-export interface PumpConfigurationAndControl extends ClusterNamespace { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }
+ClusterNamespace.define(PumpConfigurationAndControl);
+export interface PumpConfigurationAndControl extends ClusterNamespaceTyping { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }

@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { DishwasherMode as DishwasherModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -395,13 +395,15 @@ export namespace DishwasherMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x59);
     export const revision = 3;
+    export const schema = DishwasherModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: DishwasherMode | undefined;
 }
 
 export type DishwasherModeCluster = DishwasherMode.Cluster;
 export const DishwasherModeCluster = DishwasherMode.Cluster;
 ClusterRegistry.register(DishwasherMode.Complete);
-ClusterNamespace.define(DishwasherMode, DishwasherModeModel);
-export interface DishwasherMode extends ClusterNamespace { Attributes: DishwasherMode.Attributes & { Components: DishwasherMode.Attributes.Components }; Commands: DishwasherMode.Commands & { Components: DishwasherMode.Commands.Components }; Features: DishwasherMode.Features }
+ClusterNamespace.define(DishwasherMode);
+export interface DishwasherMode extends ClusterNamespaceTyping { Attributes: DishwasherMode.Attributes & { Components: DishwasherMode.Attributes.Components }; Commands: DishwasherMode.Commands & { Components: DishwasherMode.Commands.Components }; Features: DishwasherMode.Features }

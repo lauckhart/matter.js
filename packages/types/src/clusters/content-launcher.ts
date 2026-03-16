@@ -20,7 +20,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ContentLauncher as ContentLauncherModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1330,13 +1330,15 @@ export namespace ContentLauncher {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50a);
     export const revision = 2;
+    export const schema = ContentLauncherModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ContentLauncher | undefined;
 }
 
 export type ContentLauncherCluster = ContentLauncher.Cluster;
 export const ContentLauncherCluster = ContentLauncher.Cluster;
 ClusterRegistry.register(ContentLauncher.Complete);
-ClusterNamespace.define(ContentLauncher, ContentLauncherModel);
-export interface ContentLauncher extends ClusterNamespace { Attributes: ContentLauncher.Attributes & { Components: ContentLauncher.Attributes.Components }; Commands: ContentLauncher.Commands & { Components: ContentLauncher.Commands.Components }; Features: ContentLauncher.Features }
+ClusterNamespace.define(ContentLauncher);
+export interface ContentLauncher extends ClusterNamespaceTyping { Attributes: ContentLauncher.Attributes & { Components: ContentLauncher.Attributes.Components }; Commands: ContentLauncher.Commands & { Components: ContentLauncher.Commands.Components }; Features: ContentLauncher.Features }

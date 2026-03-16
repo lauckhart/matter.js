@@ -18,7 +18,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { DeviceEnergyManagement as DeviceEnergyManagementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -2787,14 +2787,16 @@ export namespace DeviceEnergyManagement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x98);
     export const revision = 4;
+    export const schema = DeviceEnergyManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: DeviceEnergyManagement | undefined;
 }
 
 export type DeviceEnergyManagementCluster = DeviceEnergyManagement.Cluster;
 export const DeviceEnergyManagementCluster = DeviceEnergyManagement.Cluster;
 ClusterRegistry.register(DeviceEnergyManagement.Complete);
-ClusterNamespace.define(DeviceEnergyManagement, DeviceEnergyManagementModel);
-export interface DeviceEnergyManagement extends ClusterNamespace { Attributes: DeviceEnergyManagement.Attributes & { Components: DeviceEnergyManagement.Attributes.Components }; Commands: DeviceEnergyManagement.Commands & { Components: DeviceEnergyManagement.Commands.Components }; Events: DeviceEnergyManagement.Events & { Components: DeviceEnergyManagement.Events.Components }; Features: DeviceEnergyManagement.Features }
+ClusterNamespace.define(DeviceEnergyManagement);
+export interface DeviceEnergyManagement extends ClusterNamespaceTyping { Attributes: DeviceEnergyManagement.Attributes & { Components: DeviceEnergyManagement.Attributes.Components }; Commands: DeviceEnergyManagement.Commands & { Components: DeviceEnergyManagement.Commands.Components }; Events: DeviceEnergyManagement.Events & { Components: DeviceEnergyManagement.Events.Components }; Features: DeviceEnergyManagement.Features }

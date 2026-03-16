@@ -18,7 +18,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { RvcOperationalState as RvcOperationalStateModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -598,13 +598,15 @@ export namespace RvcOperationalState {
     export const Complete = Cluster;
     export const id = ClusterId(0x61);
     export const revision = 3;
+    export const schema = RvcOperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: RvcOperationalState | undefined;
 }
 
 export type RvcOperationalStateCluster = RvcOperationalState.Cluster;
 export const RvcOperationalStateCluster = RvcOperationalState.Cluster;
 ClusterRegistry.register(RvcOperationalState.Complete);
-ClusterNamespace.define(RvcOperationalState, RvcOperationalStateModel);
-export interface RvcOperationalState extends ClusterNamespace { Attributes: RvcOperationalState.Attributes & { Components: RvcOperationalState.Attributes.Components }; Commands: RvcOperationalState.Commands & { Components: RvcOperationalState.Commands.Components }; Events: RvcOperationalState.Events & { Components: RvcOperationalState.Events.Components } }
+ClusterNamespace.define(RvcOperationalState);
+export interface RvcOperationalState extends ClusterNamespaceTyping { Attributes: RvcOperationalState.Attributes & { Components: RvcOperationalState.Attributes.Components }; Commands: RvcOperationalState.Commands & { Components: RvcOperationalState.Commands.Components }; Events: RvcOperationalState.Events & { Components: RvcOperationalState.Events.Components } }

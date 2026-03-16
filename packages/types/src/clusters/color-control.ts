@@ -25,7 +25,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ColorControl {
@@ -2723,13 +2723,15 @@ export namespace ColorControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x300);
     export const revision = 7;
+    export const schema = ColorControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ColorControl | undefined;
 }
 
 export type ColorControlCluster = ColorControl.Cluster;
 export const ColorControlCluster = ColorControl.Cluster;
 ClusterRegistry.register(ColorControl.Complete);
-ClusterNamespace.define(ColorControl, ColorControlModel);
-export interface ColorControl extends ClusterNamespace { Attributes: ColorControl.Attributes & { Components: ColorControl.Attributes.Components }; Commands: ColorControl.Commands & { Components: ColorControl.Commands.Components }; Features: ColorControl.Features }
+ClusterNamespace.define(ColorControl);
+export interface ColorControl extends ClusterNamespaceTyping { Attributes: ColorControl.Attributes & { Components: ColorControl.Attributes.Components }; Commands: ColorControl.Commands & { Components: ColorControl.Commands.Components }; Features: ColorControl.Features }

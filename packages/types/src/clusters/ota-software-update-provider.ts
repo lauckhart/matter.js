@@ -18,7 +18,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status as GlobalStatus } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { OtaSoftwareUpdateProvider as OtaSoftwareUpdateProviderModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1080,11 +1080,13 @@ export namespace OtaSoftwareUpdateProvider {
     export const Complete = Cluster;
     export const id = ClusterId(0x29);
     export const revision = 1;
+    export const schema = OtaSoftwareUpdateProviderModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: OtaSoftwareUpdateProvider | undefined;
 }
 
 export type OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;
 export const OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;
 ClusterRegistry.register(OtaSoftwareUpdateProvider.Complete);
-ClusterNamespace.define(OtaSoftwareUpdateProvider, OtaSoftwareUpdateProviderModel);
-export interface OtaSoftwareUpdateProvider extends ClusterNamespace { Commands: OtaSoftwareUpdateProvider.Commands & { Components: OtaSoftwareUpdateProvider.Commands.Components } }
+ClusterNamespace.define(OtaSoftwareUpdateProvider);
+export interface OtaSoftwareUpdateProvider extends ClusterNamespaceTyping { Commands: OtaSoftwareUpdateProvider.Commands & { Components: OtaSoftwareUpdateProvider.Commands.Components } }

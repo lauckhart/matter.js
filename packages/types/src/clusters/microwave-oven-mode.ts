@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { MicrowaveOvenMode as MicrowaveOvenModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -361,12 +361,14 @@ export namespace MicrowaveOvenMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x5e);
     export const revision = 2;
+    export const schema = MicrowaveOvenModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: MicrowaveOvenMode | undefined;
 }
 
 export type MicrowaveOvenModeCluster = MicrowaveOvenMode.Cluster;
 export const MicrowaveOvenModeCluster = MicrowaveOvenMode.Cluster;
 ClusterRegistry.register(MicrowaveOvenMode.Complete);
-ClusterNamespace.define(MicrowaveOvenMode, MicrowaveOvenModeModel);
-export interface MicrowaveOvenMode extends ClusterNamespace { Attributes: MicrowaveOvenMode.Attributes & { Components: MicrowaveOvenMode.Attributes.Components }; Features: MicrowaveOvenMode.Features }
+ClusterNamespace.define(MicrowaveOvenMode);
+export interface MicrowaveOvenMode extends ClusterNamespaceTyping { Attributes: MicrowaveOvenMode.Attributes & { Components: MicrowaveOvenMode.Attributes.Components }; Features: MicrowaveOvenMode.Features }

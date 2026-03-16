@@ -13,7 +13,7 @@ import { Label } from "./label.js";
 import { AccessLevel, UserLabel as UserLabelModel } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace UserLabel {
@@ -59,11 +59,13 @@ export namespace UserLabel {
     export const Complete = Cluster;
     export const id = ClusterId(0x41);
     export const revision = 1;
+    export const schema = UserLabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: UserLabel | undefined;
 }
 
 export type UserLabelCluster = UserLabel.Cluster;
 export const UserLabelCluster = UserLabel.Cluster;
 ClusterRegistry.register(UserLabel.Complete);
-ClusterNamespace.define(UserLabel, UserLabelModel);
-export interface UserLabel extends ClusterNamespace { Attributes: UserLabel.Attributes & { Components: UserLabel.Attributes.Components } }
+ClusterNamespace.define(UserLabel);
+export interface UserLabel extends ClusterNamespaceTyping { Attributes: UserLabel.Attributes & { Components: UserLabel.Attributes.Components } }

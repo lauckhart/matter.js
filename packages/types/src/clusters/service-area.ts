@@ -17,7 +17,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvLocationdesc, Locationdesc } from "../globals/Locationdesc.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ServiceArea as ServiceAreaModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1159,13 +1159,15 @@ export namespace ServiceArea {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x150);
     export const revision = 2;
+    export const schema = ServiceAreaModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ServiceArea | undefined;
 }
 
 export type ServiceAreaCluster = ServiceArea.Cluster;
 export const ServiceAreaCluster = ServiceArea.Cluster;
 ClusterRegistry.register(ServiceArea.Complete);
-ClusterNamespace.define(ServiceArea, ServiceAreaModel);
-export interface ServiceArea extends ClusterNamespace { Attributes: ServiceArea.Attributes & { Components: ServiceArea.Attributes.Components }; Commands: ServiceArea.Commands & { Components: ServiceArea.Commands.Components }; Features: ServiceArea.Features }
+ClusterNamespace.define(ServiceArea);
+export interface ServiceArea extends ClusterNamespaceTyping { Attributes: ServiceArea.Attributes & { Components: ServiceArea.Attributes.Components }; Commands: ServiceArea.Commands & { Components: ServiceArea.Commands.Components }; Features: ServiceArea.Features }

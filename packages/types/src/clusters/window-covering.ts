@@ -25,7 +25,7 @@ import { AccessLevel, WindowCovering as WindowCoveringModel } from "@matter/mode
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WindowCovering {
@@ -1888,13 +1888,15 @@ export namespace WindowCovering {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x102);
     export const revision = 6;
+    export const schema = WindowCoveringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WindowCovering | undefined;
 }
 
 export type WindowCoveringCluster = WindowCovering.Cluster;
 export const WindowCoveringCluster = WindowCovering.Cluster;
 ClusterRegistry.register(WindowCovering.Complete);
-ClusterNamespace.define(WindowCovering, WindowCoveringModel);
-export interface WindowCovering extends ClusterNamespace { Attributes: WindowCovering.Attributes & { Components: WindowCovering.Attributes.Components }; Commands: WindowCovering.Commands & { Components: WindowCovering.Commands.Components }; Features: WindowCovering.Features }
+ClusterNamespace.define(WindowCovering);
+export interface WindowCovering extends ClusterNamespaceTyping { Attributes: WindowCovering.Attributes & { Components: WindowCovering.Attributes.Components }; Commands: WindowCovering.Commands & { Components: WindowCovering.Commands.Components }; Features: WindowCovering.Features }

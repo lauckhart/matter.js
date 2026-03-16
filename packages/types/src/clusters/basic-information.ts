@@ -29,7 +29,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace BasicInformation {
@@ -792,12 +792,14 @@ export namespace BasicInformation {
     export const Complete = Cluster;
     export const id = ClusterId(0x28);
     export const revision = 5;
+    export const schema = BasicInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: BasicInformation | undefined;
 }
 
 export type BasicInformationCluster = BasicInformation.Cluster;
 export const BasicInformationCluster = BasicInformation.Cluster;
 ClusterRegistry.register(BasicInformation.Complete);
-ClusterNamespace.define(BasicInformation, BasicInformationModel);
-export interface BasicInformation extends ClusterNamespace { Attributes: BasicInformation.Attributes & { Components: BasicInformation.Attributes.Components }; Events: BasicInformation.Events & { Components: BasicInformation.Events.Components } }
+ClusterNamespace.define(BasicInformation);
+export interface BasicInformation extends ClusterNamespaceTyping { Attributes: BasicInformation.Attributes & { Components: BasicInformation.Attributes.Components }; Events: BasicInformation.Events & { Components: BasicInformation.Events.Components } }

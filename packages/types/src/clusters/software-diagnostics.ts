@@ -18,7 +18,7 @@ import { TlvString, TlvByteString } from "../tlv/TlvString.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace SoftwareDiagnostics {
@@ -399,14 +399,16 @@ export namespace SoftwareDiagnostics {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x34);
     export const revision = 1;
+    export const schema = SoftwareDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: SoftwareDiagnostics | undefined;
 }
 
 export type SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 export const SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 ClusterRegistry.register(SoftwareDiagnostics.Complete);
-ClusterNamespace.define(SoftwareDiagnostics, SoftwareDiagnosticsModel);
-export interface SoftwareDiagnostics extends ClusterNamespace { Attributes: SoftwareDiagnostics.Attributes & { Components: SoftwareDiagnostics.Attributes.Components }; Commands: SoftwareDiagnostics.Commands & { Components: SoftwareDiagnostics.Commands.Components }; Events: SoftwareDiagnostics.Events & { Components: SoftwareDiagnostics.Events.Components }; Features: SoftwareDiagnostics.Features }
+ClusterNamespace.define(SoftwareDiagnostics);
+export interface SoftwareDiagnostics extends ClusterNamespaceTyping { Attributes: SoftwareDiagnostics.Attributes & { Components: SoftwareDiagnostics.Attributes.Components }; Commands: SoftwareDiagnostics.Commands & { Components: SoftwareDiagnostics.Commands.Components }; Events: SoftwareDiagnostics.Events & { Components: SoftwareDiagnostics.Events.Components }; Features: SoftwareDiagnostics.Features }

@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { EnergyEvseMode as EnergyEvseModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -422,13 +422,15 @@ export namespace EnergyEvseMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x9d);
     export const revision = 2;
+    export const schema = EnergyEvseModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: EnergyEvseMode | undefined;
 }
 
 export type EnergyEvseModeCluster = EnergyEvseMode.Cluster;
 export const EnergyEvseModeCluster = EnergyEvseMode.Cluster;
 ClusterRegistry.register(EnergyEvseMode.Complete);
-ClusterNamespace.define(EnergyEvseMode, EnergyEvseModeModel);
-export interface EnergyEvseMode extends ClusterNamespace { Attributes: EnergyEvseMode.Attributes & { Components: EnergyEvseMode.Attributes.Components }; Commands: EnergyEvseMode.Commands & { Components: EnergyEvseMode.Commands.Components }; Features: EnergyEvseMode.Features }
+ClusterNamespace.define(EnergyEvseMode);
+export interface EnergyEvseMode extends ClusterNamespaceTyping { Attributes: EnergyEvseMode.Attributes & { Components: EnergyEvseMode.Attributes.Components }; Commands: EnergyEvseMode.Commands & { Components: EnergyEvseMode.Commands.Components }; Features: EnergyEvseMode.Features }

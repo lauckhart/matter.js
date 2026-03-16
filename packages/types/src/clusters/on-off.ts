@@ -18,7 +18,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { ClusterType } from "../cluster/ClusterType.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OnOff {
@@ -636,13 +636,15 @@ export namespace OnOff {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x6);
     export const revision = 6;
+    export const schema = OnOffModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: OnOff | undefined;
 }
 
 export type OnOffCluster = OnOff.Cluster;
 export const OnOffCluster = OnOff.Cluster;
 ClusterRegistry.register(OnOff.Complete);
-ClusterNamespace.define(OnOff, OnOffModel);
-export interface OnOff extends ClusterNamespace { Attributes: OnOff.Attributes & { Components: OnOff.Attributes.Components }; Commands: OnOff.Commands & { Components: OnOff.Commands.Components }; Features: OnOff.Features }
+ClusterNamespace.define(OnOff);
+export interface OnOff extends ClusterNamespaceTyping { Attributes: OnOff.Attributes & { Components: OnOff.Attributes.Components }; Commands: OnOff.Commands & { Components: OnOff.Commands.Components }; Features: OnOff.Features }

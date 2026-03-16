@@ -12,7 +12,7 @@ import { Attribute } from "../cluster/Cluster.js";
 import { TlvEnum } from "../tlv/TlvNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { AirQuality as AirQualityModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -169,12 +169,14 @@ export namespace AirQuality {
     export const Complete = Cluster;
     export const id = ClusterId(0x5b);
     export const revision = 1;
+    export const schema = AirQualityModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: AirQuality | undefined;
 }
 
 export type AirQualityCluster = AirQuality.Cluster;
 export const AirQualityCluster = AirQuality.Cluster;
 ClusterRegistry.register(AirQuality.Complete);
-ClusterNamespace.define(AirQuality, AirQualityModel);
-export interface AirQuality extends ClusterNamespace { Attributes: AirQuality.Attributes & { Components: AirQuality.Attributes.Components }; Features: AirQuality.Features }
+ClusterNamespace.define(AirQuality);
+export interface AirQuality extends ClusterNamespaceTyping { Attributes: AirQuality.Attributes & { Components: AirQuality.Attributes.Components }; Features: AirQuality.Features }

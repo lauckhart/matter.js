@@ -20,7 +20,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Groups {
@@ -648,13 +648,15 @@ export namespace Groups {
     export const Complete = Cluster;
     export const id = ClusterId(0x4);
     export const revision = 4;
+    export const schema = GroupsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Groups | undefined;
 }
 
 export type GroupsCluster = Groups.Cluster;
 export const GroupsCluster = Groups.Cluster;
 ClusterRegistry.register(Groups.Complete);
-ClusterNamespace.define(Groups, GroupsModel);
-export interface Groups extends ClusterNamespace { Attributes: Groups.Attributes & { Components: Groups.Attributes.Components }; Commands: Groups.Commands & { Components: Groups.Commands.Components }; Features: Groups.Features }
+ClusterNamespace.define(Groups);
+export interface Groups extends ClusterNamespaceTyping { Attributes: Groups.Attributes & { Components: Groups.Attributes.Components }; Commands: Groups.Commands & { Components: Groups.Commands.Components }; Features: Groups.Features }

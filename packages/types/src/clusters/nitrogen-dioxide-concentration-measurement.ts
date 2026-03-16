@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { NitrogenDioxideConcentrationMeasurement as NitrogenDioxideConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -83,12 +83,14 @@ export namespace NitrogenDioxideConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x413);
     export const revision = 1;
+    export const schema = NitrogenDioxideConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: NitrogenDioxideConcentrationMeasurement | undefined;
 }
 
 export type NitrogenDioxideConcentrationMeasurementCluster = NitrogenDioxideConcentrationMeasurement.Cluster;
 export const NitrogenDioxideConcentrationMeasurementCluster = NitrogenDioxideConcentrationMeasurement.Cluster;
 ClusterRegistry.register(NitrogenDioxideConcentrationMeasurement.Complete);
-ClusterNamespace.define(NitrogenDioxideConcentrationMeasurement, NitrogenDioxideConcentrationMeasurementModel);
-export interface NitrogenDioxideConcentrationMeasurement extends ClusterNamespace { Attributes: NitrogenDioxideConcentrationMeasurement.Attributes & { Components: NitrogenDioxideConcentrationMeasurement.Attributes.Components }; Features: NitrogenDioxideConcentrationMeasurement.Features }
+ClusterNamespace.define(NitrogenDioxideConcentrationMeasurement);
+export interface NitrogenDioxideConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: NitrogenDioxideConcentrationMeasurement.Attributes & { Components: NitrogenDioxideConcentrationMeasurement.Attributes.Components }; Features: NitrogenDioxideConcentrationMeasurement.Features }

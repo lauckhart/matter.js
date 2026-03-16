@@ -20,7 +20,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { Channel as ChannelModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1788,13 +1788,15 @@ export namespace Channel {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x504);
     export const revision = 2;
+    export const schema = ChannelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Channel | undefined;
 }
 
 export type ChannelCluster = Channel.Cluster;
 export const ChannelCluster = Channel.Cluster;
 ClusterRegistry.register(Channel.Complete);
-ClusterNamespace.define(Channel, ChannelModel);
-export interface Channel extends ClusterNamespace { Attributes: Channel.Attributes & { Components: Channel.Attributes.Components }; Commands: Channel.Commands & { Components: Channel.Commands.Components }; Features: Channel.Features }
+ClusterNamespace.define(Channel);
+export interface Channel extends ClusterNamespaceTyping { Attributes: Channel.Attributes & { Components: Channel.Attributes.Components }; Commands: Channel.Commands & { Components: Channel.Commands.Components }; Features: Channel.Features }

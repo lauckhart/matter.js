@@ -17,7 +17,7 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace MediaInput {
@@ -364,13 +364,15 @@ export namespace MediaInput {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x507);
     export const revision = 1;
+    export const schema = MediaInputModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: MediaInput | undefined;
 }
 
 export type MediaInputCluster = MediaInput.Cluster;
 export const MediaInputCluster = MediaInput.Cluster;
 ClusterRegistry.register(MediaInput.Complete);
-ClusterNamespace.define(MediaInput, MediaInputModel);
-export interface MediaInput extends ClusterNamespace { Attributes: MediaInput.Attributes & { Components: MediaInput.Attributes.Components }; Commands: MediaInput.Commands & { Components: MediaInput.Commands.Components }; Features: MediaInput.Features }
+ClusterNamespace.define(MediaInput);
+export interface MediaInput extends ClusterNamespaceTyping { Attributes: MediaInput.Attributes & { Components: MediaInput.Attributes.Components }; Commands: MediaInput.Commands & { Components: MediaInput.Commands.Components }; Features: MediaInput.Features }

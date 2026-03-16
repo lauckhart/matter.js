@@ -18,7 +18,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace NetworkCommissioning {
@@ -2324,13 +2324,15 @@ export namespace NetworkCommissioning {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x31);
     export const revision = 2;
+    export const schema = NetworkCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: NetworkCommissioning | undefined;
 }
 
 export type NetworkCommissioningCluster = NetworkCommissioning.Cluster;
 export const NetworkCommissioningCluster = NetworkCommissioning.Cluster;
 ClusterRegistry.register(NetworkCommissioning.Complete);
-ClusterNamespace.define(NetworkCommissioning, NetworkCommissioningModel);
-export interface NetworkCommissioning extends ClusterNamespace { Attributes: NetworkCommissioning.Attributes & { Components: NetworkCommissioning.Attributes.Components }; Commands: NetworkCommissioning.Commands & { Components: NetworkCommissioning.Commands.Components }; Features: NetworkCommissioning.Features }
+ClusterNamespace.define(NetworkCommissioning);
+export interface NetworkCommissioning extends ClusterNamespaceTyping { Attributes: NetworkCommissioning.Attributes & { Components: NetworkCommissioning.Attributes.Components }; Commands: NetworkCommissioning.Commands & { Components: NetworkCommissioning.Commands.Components }; Features: NetworkCommissioning.Features }

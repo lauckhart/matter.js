@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import {
     TotalVolatileOrganicCompoundsConcentrationMeasurement as TotalVolatileOrganicCompoundsConcentrationMeasurementModel
 } from "@matter/model";
@@ -86,12 +86,14 @@ export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42e);
     export const revision = 1;
+    export const schema = TotalVolatileOrganicCompoundsConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: TotalVolatileOrganicCompoundsConcentrationMeasurement | undefined;
 }
 
 export type TotalVolatileOrganicCompoundsConcentrationMeasurementCluster = TotalVolatileOrganicCompoundsConcentrationMeasurement.Cluster;
 export const TotalVolatileOrganicCompoundsConcentrationMeasurementCluster = TotalVolatileOrganicCompoundsConcentrationMeasurement.Cluster;
 ClusterRegistry.register(TotalVolatileOrganicCompoundsConcentrationMeasurement.Complete);
-ClusterNamespace.define(TotalVolatileOrganicCompoundsConcentrationMeasurement, TotalVolatileOrganicCompoundsConcentrationMeasurementModel);
-export interface TotalVolatileOrganicCompoundsConcentrationMeasurement extends ClusterNamespace { Attributes: TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes & { Components: TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes.Components }; Features: TotalVolatileOrganicCompoundsConcentrationMeasurement.Features }
+ClusterNamespace.define(TotalVolatileOrganicCompoundsConcentrationMeasurement);
+export interface TotalVolatileOrganicCompoundsConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes & { Components: TotalVolatileOrganicCompoundsConcentrationMeasurement.Attributes.Components }; Features: TotalVolatileOrganicCompoundsConcentrationMeasurement.Features }

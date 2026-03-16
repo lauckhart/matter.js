@@ -13,7 +13,7 @@ import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { BooleanState as BooleanStateModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -100,12 +100,14 @@ export namespace BooleanState {
     export const Complete = Cluster;
     export const id = ClusterId(0x45);
     export const revision = 1;
+    export const schema = BooleanStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: BooleanState | undefined;
 }
 
 export type BooleanStateCluster = BooleanState.Cluster;
 export const BooleanStateCluster = BooleanState.Cluster;
 ClusterRegistry.register(BooleanState.Complete);
-ClusterNamespace.define(BooleanState, BooleanStateModel);
-export interface BooleanState extends ClusterNamespace { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }
+ClusterNamespace.define(BooleanState);
+export interface BooleanState extends ClusterNamespaceTyping { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }

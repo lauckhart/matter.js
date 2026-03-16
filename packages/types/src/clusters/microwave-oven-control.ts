@@ -22,7 +22,7 @@ import { TlvOptionalField, TlvObject, TlvField } from "../tlv/TlvObject.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { MicrowaveOvenControl as MicrowaveOvenControlModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -504,13 +504,15 @@ export namespace MicrowaveOvenControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x5f);
     export const revision = 1;
+    export const schema = MicrowaveOvenControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: MicrowaveOvenControl | undefined;
 }
 
 export type MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 export const MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 ClusterRegistry.register(MicrowaveOvenControl.Complete);
-ClusterNamespace.define(MicrowaveOvenControl, MicrowaveOvenControlModel);
-export interface MicrowaveOvenControl extends ClusterNamespace { Attributes: MicrowaveOvenControl.Attributes & { Components: MicrowaveOvenControl.Attributes.Components }; Commands: MicrowaveOvenControl.Commands & { Components: MicrowaveOvenControl.Commands.Components }; Features: MicrowaveOvenControl.Features }
+ClusterNamespace.define(MicrowaveOvenControl);
+export interface MicrowaveOvenControl extends ClusterNamespaceTyping { Attributes: MicrowaveOvenControl.Attributes & { Components: MicrowaveOvenControl.Attributes.Components }; Commands: MicrowaveOvenControl.Commands & { Components: MicrowaveOvenControl.Commands.Components }; Features: MicrowaveOvenControl.Features }

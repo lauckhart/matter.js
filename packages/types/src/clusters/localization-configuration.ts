@@ -13,7 +13,7 @@ import { AccessLevel, LocalizationConfiguration as LocalizationConfigurationMode
 import { TlvArray } from "../tlv/TlvArray.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LocalizationConfiguration {
@@ -79,11 +79,13 @@ export namespace LocalizationConfiguration {
     export const Complete = Cluster;
     export const id = ClusterId(0x2b);
     export const revision = 1;
+    export const schema = LocalizationConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: LocalizationConfiguration | undefined;
 }
 
 export type LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;
 export const LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;
 ClusterRegistry.register(LocalizationConfiguration.Complete);
-ClusterNamespace.define(LocalizationConfiguration, LocalizationConfigurationModel);
-export interface LocalizationConfiguration extends ClusterNamespace { Attributes: LocalizationConfiguration.Attributes & { Components: LocalizationConfiguration.Attributes.Components } }
+ClusterNamespace.define(LocalizationConfiguration);
+export interface LocalizationConfiguration extends ClusterNamespaceTyping { Attributes: LocalizationConfiguration.Attributes & { Components: LocalizationConfiguration.Attributes.Components } }

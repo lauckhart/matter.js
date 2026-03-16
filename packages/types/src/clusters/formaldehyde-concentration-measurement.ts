@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { FormaldehydeConcentrationMeasurement as FormaldehydeConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -83,12 +83,14 @@ export namespace FormaldehydeConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42b);
     export const revision = 1;
+    export const schema = FormaldehydeConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: FormaldehydeConcentrationMeasurement | undefined;
 }
 
 export type FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrationMeasurement.Cluster;
 export const FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrationMeasurement.Cluster;
 ClusterRegistry.register(FormaldehydeConcentrationMeasurement.Complete);
-ClusterNamespace.define(FormaldehydeConcentrationMeasurement, FormaldehydeConcentrationMeasurementModel);
-export interface FormaldehydeConcentrationMeasurement extends ClusterNamespace { Attributes: FormaldehydeConcentrationMeasurement.Attributes & { Components: FormaldehydeConcentrationMeasurement.Attributes.Components }; Features: FormaldehydeConcentrationMeasurement.Features }
+ClusterNamespace.define(FormaldehydeConcentrationMeasurement);
+export interface FormaldehydeConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: FormaldehydeConcentrationMeasurement.Attributes & { Components: FormaldehydeConcentrationMeasurement.Attributes.Components }; Features: FormaldehydeConcentrationMeasurement.Features }

@@ -18,7 +18,7 @@ import { TlvString } from "../tlv/TlvString.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace GeneralCommissioning {
@@ -1405,13 +1405,15 @@ export namespace GeneralCommissioning {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x30);
     export const revision = 2;
+    export const schema = GeneralCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: GeneralCommissioning | undefined;
 }
 
 export type GeneralCommissioningCluster = GeneralCommissioning.Cluster;
 export const GeneralCommissioningCluster = GeneralCommissioning.Cluster;
 ClusterRegistry.register(GeneralCommissioning.Complete);
-ClusterNamespace.define(GeneralCommissioning, GeneralCommissioningModel);
-export interface GeneralCommissioning extends ClusterNamespace { Attributes: GeneralCommissioning.Attributes & { Components: GeneralCommissioning.Attributes.Components }; Commands: GeneralCommissioning.Commands & { Components: GeneralCommissioning.Commands.Components }; Features: GeneralCommissioning.Features }
+ClusterNamespace.define(GeneralCommissioning);
+export interface GeneralCommissioning extends ClusterNamespaceTyping { Attributes: GeneralCommissioning.Attributes & { Components: GeneralCommissioning.Attributes.Components }; Commands: GeneralCommissioning.Commands & { Components: GeneralCommissioning.Commands.Components }; Features: GeneralCommissioning.Features }

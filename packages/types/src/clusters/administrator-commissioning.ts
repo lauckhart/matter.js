@@ -21,7 +21,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace AdministratorCommissioning {
@@ -696,13 +696,15 @@ export namespace AdministratorCommissioning {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x3c);
     export const revision = 1;
+    export const schema = AdministratorCommissioningModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: AdministratorCommissioning | undefined;
 }
 
 export type AdministratorCommissioningCluster = AdministratorCommissioning.Cluster;
 export const AdministratorCommissioningCluster = AdministratorCommissioning.Cluster;
 ClusterRegistry.register(AdministratorCommissioning.Complete);
-ClusterNamespace.define(AdministratorCommissioning, AdministratorCommissioningModel);
-export interface AdministratorCommissioning extends ClusterNamespace { Attributes: AdministratorCommissioning.Attributes & { Components: AdministratorCommissioning.Attributes.Components }; Commands: AdministratorCommissioning.Commands & { Components: AdministratorCommissioning.Commands.Components }; Features: AdministratorCommissioning.Features }
+ClusterNamespace.define(AdministratorCommissioning);
+export interface AdministratorCommissioning extends ClusterNamespaceTyping { Attributes: AdministratorCommissioning.Attributes & { Components: AdministratorCommissioning.Attributes.Components }; Commands: AdministratorCommissioning.Commands & { Components: AdministratorCommissioning.Commands.Components }; Features: AdministratorCommissioning.Features }

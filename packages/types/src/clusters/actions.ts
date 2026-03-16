@@ -17,7 +17,7 @@ import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { Actions as ActionsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1574,13 +1574,15 @@ export namespace Actions {
     export const Complete = Cluster;
     export const id = ClusterId(0x25);
     export const revision = 1;
+    export const schema = ActionsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: Actions | undefined;
 }
 
 export type ActionsCluster = Actions.Cluster;
 export const ActionsCluster = Actions.Cluster;
 ClusterRegistry.register(Actions.Complete);
-ClusterNamespace.define(Actions, ActionsModel);
-export interface Actions extends ClusterNamespace { Attributes: Actions.Attributes & { Components: Actions.Attributes.Components }; Commands: Actions.Commands & { Components: Actions.Commands.Components }; Events: Actions.Events & { Components: Actions.Events.Components } }
+ClusterNamespace.define(Actions);
+export interface Actions extends ClusterNamespaceTyping { Attributes: Actions.Attributes & { Components: Actions.Attributes.Components }; Commands: Actions.Commands & { Components: Actions.Commands.Components }; Events: Actions.Events & { Components: Actions.Events.Components } }

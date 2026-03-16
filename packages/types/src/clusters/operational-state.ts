@@ -17,7 +17,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { OperationalState as OperationalStateModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -788,13 +788,15 @@ export namespace OperationalState {
     export const Complete = Cluster;
     export const id = ClusterId(0x60);
     export const revision = 3;
+    export const schema = OperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: OperationalState | undefined;
 }
 
 export type OperationalStateCluster = OperationalState.Cluster;
 export const OperationalStateCluster = OperationalState.Cluster;
 ClusterRegistry.register(OperationalState.Complete);
-ClusterNamespace.define(OperationalState, OperationalStateModel);
-export interface OperationalState extends ClusterNamespace { Attributes: OperationalState.Attributes & { Components: OperationalState.Attributes.Components }; Commands: OperationalState.Commands & { Components: OperationalState.Commands.Components }; Events: OperationalState.Events & { Components: OperationalState.Events.Components } }
+ClusterNamespace.define(OperationalState);
+export interface OperationalState extends ClusterNamespaceTyping { Attributes: OperationalState.Attributes & { Components: OperationalState.Attributes.Components }; Commands: OperationalState.Commands & { Components: OperationalState.Commands.Components }; Events: OperationalState.Events & { Components: OperationalState.Events.Components } }

@@ -13,7 +13,7 @@ import { TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { LaundryDryerControls as LaundryDryerControlsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -102,11 +102,13 @@ export namespace LaundryDryerControls {
     export const Complete = Cluster;
     export const id = ClusterId(0x4a);
     export const revision = 1;
+    export const schema = LaundryDryerControlsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: LaundryDryerControls | undefined;
 }
 
 export type LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 export const LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 ClusterRegistry.register(LaundryDryerControls.Complete);
-ClusterNamespace.define(LaundryDryerControls, LaundryDryerControlsModel);
-export interface LaundryDryerControls extends ClusterNamespace { Attributes: LaundryDryerControls.Attributes & { Components: LaundryDryerControls.Attributes.Components } }
+ClusterNamespace.define(LaundryDryerControls);
+export interface LaundryDryerControls extends ClusterNamespaceTyping { Attributes: LaundryDryerControls.Attributes & { Components: LaundryDryerControls.Attributes.Components } }

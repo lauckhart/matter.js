@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { Pm1ConcentrationMeasurement as Pm1ConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -78,12 +78,14 @@ export namespace Pm1ConcentrationMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x42c);
     export const revision = 1;
+    export const schema = Pm1ConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Pm1ConcentrationMeasurement | undefined;
 }
 
 export type Pm1ConcentrationMeasurementCluster = Pm1ConcentrationMeasurement.Cluster;
 export const Pm1ConcentrationMeasurementCluster = Pm1ConcentrationMeasurement.Cluster;
 ClusterRegistry.register(Pm1ConcentrationMeasurement.Complete);
-ClusterNamespace.define(Pm1ConcentrationMeasurement, Pm1ConcentrationMeasurementModel);
-export interface Pm1ConcentrationMeasurement extends ClusterNamespace { Attributes: Pm1ConcentrationMeasurement.Attributes & { Components: Pm1ConcentrationMeasurement.Attributes.Components }; Features: Pm1ConcentrationMeasurement.Features }
+ClusterNamespace.define(Pm1ConcentrationMeasurement);
+export interface Pm1ConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: Pm1ConcentrationMeasurement.Attributes & { Components: Pm1ConcentrationMeasurement.Attributes.Components }; Features: Pm1ConcentrationMeasurement.Features }

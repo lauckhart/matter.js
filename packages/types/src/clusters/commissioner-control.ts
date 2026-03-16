@@ -20,7 +20,7 @@ import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace CommissionerControl {
@@ -411,13 +411,15 @@ export namespace CommissionerControl {
     export const Complete = Cluster;
     export const id = ClusterId(0x751);
     export const revision = 1;
+    export const schema = CommissionerControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: CommissionerControl | undefined;
 }
 
 export type CommissionerControlCluster = CommissionerControl.Cluster;
 export const CommissionerControlCluster = CommissionerControl.Cluster;
 ClusterRegistry.register(CommissionerControl.Complete);
-ClusterNamespace.define(CommissionerControl, CommissionerControlModel);
-export interface CommissionerControl extends ClusterNamespace { Attributes: CommissionerControl.Attributes & { Components: CommissionerControl.Attributes.Components }; Commands: CommissionerControl.Commands & { Components: CommissionerControl.Commands.Components }; Events: CommissionerControl.Events & { Components: CommissionerControl.Events.Components } }
+ClusterNamespace.define(CommissionerControl);
+export interface CommissionerControl extends ClusterNamespaceTyping { Attributes: CommissionerControl.Attributes & { Components: CommissionerControl.Attributes.Components }; Commands: CommissionerControl.Commands & { Components: CommissionerControl.Commands.Components }; Events: CommissionerControl.Events & { Components: CommissionerControl.Events.Components } }

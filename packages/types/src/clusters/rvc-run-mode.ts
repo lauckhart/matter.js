@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { RvcRunMode as RvcRunModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -483,13 +483,15 @@ export namespace RvcRunMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x54);
     export const revision = 3;
+    export const schema = RvcRunModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: RvcRunMode | undefined;
 }
 
 export type RvcRunModeCluster = RvcRunMode.Cluster;
 export const RvcRunModeCluster = RvcRunMode.Cluster;
 ClusterRegistry.register(RvcRunMode.Complete);
-ClusterNamespace.define(RvcRunMode, RvcRunModeModel);
-export interface RvcRunMode extends ClusterNamespace { Attributes: RvcRunMode.Attributes & { Components: RvcRunMode.Attributes.Components }; Commands: RvcRunMode.Commands & { Components: RvcRunMode.Commands.Components }; Features: RvcRunMode.Features }
+ClusterNamespace.define(RvcRunMode);
+export interface RvcRunMode extends ClusterNamespaceTyping { Attributes: RvcRunMode.Attributes & { Components: RvcRunMode.Attributes.Components }; Commands: RvcRunMode.Commands & { Components: RvcRunMode.Commands.Components }; Features: RvcRunMode.Features }

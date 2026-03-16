@@ -18,7 +18,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThreadBorderRouterManagement {
@@ -482,13 +482,15 @@ export namespace ThreadBorderRouterManagement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x452);
     export const revision = 1;
+    export const schema = ThreadBorderRouterManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ThreadBorderRouterManagement | undefined;
 }
 
 export type ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.Cluster;
 export const ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.Cluster;
 ClusterRegistry.register(ThreadBorderRouterManagement.Complete);
-ClusterNamespace.define(ThreadBorderRouterManagement, ThreadBorderRouterManagementModel);
-export interface ThreadBorderRouterManagement extends ClusterNamespace { Attributes: ThreadBorderRouterManagement.Attributes & { Components: ThreadBorderRouterManagement.Attributes.Components }; Commands: ThreadBorderRouterManagement.Commands & { Components: ThreadBorderRouterManagement.Commands.Components }; Features: ThreadBorderRouterManagement.Features }
+ClusterNamespace.define(ThreadBorderRouterManagement);
+export interface ThreadBorderRouterManagement extends ClusterNamespaceTyping { Attributes: ThreadBorderRouterManagement.Attributes & { Components: ThreadBorderRouterManagement.Attributes.Components }; Commands: ThreadBorderRouterManagement.Commands & { Components: ThreadBorderRouterManagement.Commands.Components }; Features: ThreadBorderRouterManagement.Features }

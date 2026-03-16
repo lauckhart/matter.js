@@ -22,7 +22,7 @@ import { TlvByteString } from "../tlv/TlvString.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OtaSoftwareUpdateRequestor {
@@ -810,13 +810,15 @@ export namespace OtaSoftwareUpdateRequestor {
     export const Complete = Cluster;
     export const id = ClusterId(0x2a);
     export const revision = 1;
+    export const schema = OtaSoftwareUpdateRequestorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: OtaSoftwareUpdateRequestor | undefined;
 }
 
 export type OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
 export const OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
 ClusterRegistry.register(OtaSoftwareUpdateRequestor.Complete);
-ClusterNamespace.define(OtaSoftwareUpdateRequestor, OtaSoftwareUpdateRequestorModel);
-export interface OtaSoftwareUpdateRequestor extends ClusterNamespace { Attributes: OtaSoftwareUpdateRequestor.Attributes & { Components: OtaSoftwareUpdateRequestor.Attributes.Components }; Commands: OtaSoftwareUpdateRequestor.Commands & { Components: OtaSoftwareUpdateRequestor.Commands.Components }; Events: OtaSoftwareUpdateRequestor.Events & { Components: OtaSoftwareUpdateRequestor.Events.Components } }
+ClusterNamespace.define(OtaSoftwareUpdateRequestor);
+export interface OtaSoftwareUpdateRequestor extends ClusterNamespaceTyping { Attributes: OtaSoftwareUpdateRequestor.Attributes & { Components: OtaSoftwareUpdateRequestor.Attributes.Components }; Commands: OtaSoftwareUpdateRequestor.Commands & { Components: OtaSoftwareUpdateRequestor.Commands.Components }; Events: OtaSoftwareUpdateRequestor.Events & { Components: OtaSoftwareUpdateRequestor.Events.Components } }

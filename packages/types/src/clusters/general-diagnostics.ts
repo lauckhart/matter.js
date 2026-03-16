@@ -20,7 +20,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace GeneralDiagnostics {
@@ -1229,14 +1229,16 @@ export namespace GeneralDiagnostics {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x33);
     export const revision = 2;
+    export const schema = GeneralDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: GeneralDiagnostics | undefined;
 }
 
 export type GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
 export const GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
 ClusterRegistry.register(GeneralDiagnostics.Complete);
-ClusterNamespace.define(GeneralDiagnostics, GeneralDiagnosticsModel);
-export interface GeneralDiagnostics extends ClusterNamespace { Attributes: GeneralDiagnostics.Attributes & { Components: GeneralDiagnostics.Attributes.Components }; Commands: GeneralDiagnostics.Commands & { Components: GeneralDiagnostics.Commands.Components }; Events: GeneralDiagnostics.Events & { Components: GeneralDiagnostics.Events.Components }; Features: GeneralDiagnostics.Features }
+ClusterNamespace.define(GeneralDiagnostics);
+export interface GeneralDiagnostics extends ClusterNamespaceTyping { Attributes: GeneralDiagnostics.Attributes & { Components: GeneralDiagnostics.Attributes.Components }; Commands: GeneralDiagnostics.Commands & { Components: GeneralDiagnostics.Commands.Components }; Events: GeneralDiagnostics.Events & { Components: GeneralDiagnostics.Events.Components }; Features: GeneralDiagnostics.Features }

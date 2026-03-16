@@ -15,7 +15,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status as GlobalStatus } from "../globals/Status.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { KeypadInput as KeypadInputModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -362,12 +362,14 @@ export namespace KeypadInput {
     export const Complete = Cluster;
     export const id = ClusterId(0x509);
     export const revision = 1;
+    export const schema = KeypadInputModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: KeypadInput | undefined;
 }
 
 export type KeypadInputCluster = KeypadInput.Cluster;
 export const KeypadInputCluster = KeypadInput.Cluster;
 ClusterRegistry.register(KeypadInput.Complete);
-ClusterNamespace.define(KeypadInput, KeypadInputModel);
-export interface KeypadInput extends ClusterNamespace { Commands: KeypadInput.Commands & { Components: KeypadInput.Commands.Components }; Features: KeypadInput.Features }
+ClusterNamespace.define(KeypadInput);
+export interface KeypadInput extends ClusterNamespaceTyping { Commands: KeypadInput.Commands & { Components: KeypadInput.Commands.Components }; Features: KeypadInput.Features }

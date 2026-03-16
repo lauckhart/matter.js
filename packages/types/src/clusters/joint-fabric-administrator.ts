@@ -20,7 +20,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace JointFabricAdministrator {
@@ -641,12 +641,14 @@ export namespace JointFabricAdministrator {
     export const Complete = Cluster;
     export const id = ClusterId(0x753);
     export const revision = 1;
+    export const schema = JointFabricAdministratorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: JointFabricAdministrator | undefined;
 }
 
 export type JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 export const JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 ClusterRegistry.register(JointFabricAdministrator.Complete);
-ClusterNamespace.define(JointFabricAdministrator, JointFabricAdministratorModel);
-export interface JointFabricAdministrator extends ClusterNamespace { Attributes: JointFabricAdministrator.Attributes & { Components: JointFabricAdministrator.Attributes.Components }; Commands: JointFabricAdministrator.Commands & { Components: JointFabricAdministrator.Commands.Components } }
+ClusterNamespace.define(JointFabricAdministrator);
+export interface JointFabricAdministrator extends ClusterNamespaceTyping { Attributes: JointFabricAdministrator.Attributes & { Components: JointFabricAdministrator.Attributes.Components }; Commands: JointFabricAdministrator.Commands & { Components: JointFabricAdministrator.Commands.Components } }

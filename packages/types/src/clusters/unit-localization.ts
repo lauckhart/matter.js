@@ -14,7 +14,7 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace UnitLocalization {
@@ -175,12 +175,14 @@ export namespace UnitLocalization {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2d);
     export const revision = 2;
+    export const schema = UnitLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: UnitLocalization | undefined;
 }
 
 export type UnitLocalizationCluster = UnitLocalization.Cluster;
 export const UnitLocalizationCluster = UnitLocalization.Cluster;
 ClusterRegistry.register(UnitLocalization.Complete);
-ClusterNamespace.define(UnitLocalization, UnitLocalizationModel);
-export interface UnitLocalization extends ClusterNamespace { Attributes: UnitLocalization.Attributes & { Components: UnitLocalization.Attributes.Components }; Features: UnitLocalization.Features }
+ClusterNamespace.define(UnitLocalization);
+export interface UnitLocalization extends ClusterNamespaceTyping { Attributes: UnitLocalization.Attributes & { Components: UnitLocalization.Attributes.Components }; Features: UnitLocalization.Features }

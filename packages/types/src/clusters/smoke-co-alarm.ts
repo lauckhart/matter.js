@@ -26,7 +26,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace SmokeCoAlarm {
@@ -867,14 +867,16 @@ export namespace SmokeCoAlarm {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x5c);
     export const revision = 1;
+    export const schema = SmokeCoAlarmModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: SmokeCoAlarm | undefined;
 }
 
 export type SmokeCoAlarmCluster = SmokeCoAlarm.Cluster;
 export const SmokeCoAlarmCluster = SmokeCoAlarm.Cluster;
 ClusterRegistry.register(SmokeCoAlarm.Complete);
-ClusterNamespace.define(SmokeCoAlarm, SmokeCoAlarmModel);
-export interface SmokeCoAlarm extends ClusterNamespace { Attributes: SmokeCoAlarm.Attributes & { Components: SmokeCoAlarm.Attributes.Components }; Commands: SmokeCoAlarm.Commands & { Components: SmokeCoAlarm.Commands.Components }; Events: SmokeCoAlarm.Events & { Components: SmokeCoAlarm.Events.Components }; Features: SmokeCoAlarm.Features }
+ClusterNamespace.define(SmokeCoAlarm);
+export interface SmokeCoAlarm extends ClusterNamespaceTyping { Attributes: SmokeCoAlarm.Attributes & { Components: SmokeCoAlarm.Attributes.Components }; Commands: SmokeCoAlarm.Commands & { Components: SmokeCoAlarm.Commands.Components }; Events: SmokeCoAlarm.Events & { Components: SmokeCoAlarm.Events.Components }; Features: SmokeCoAlarm.Features }

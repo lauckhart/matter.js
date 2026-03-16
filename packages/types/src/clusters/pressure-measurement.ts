@@ -13,7 +13,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { PressureMeasurement as PressureMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -228,12 +228,14 @@ export namespace PressureMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x403);
     export const revision = 3;
+    export const schema = PressureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: PressureMeasurement | undefined;
 }
 
 export type PressureMeasurementCluster = PressureMeasurement.Cluster;
 export const PressureMeasurementCluster = PressureMeasurement.Cluster;
 ClusterRegistry.register(PressureMeasurement.Complete);
-ClusterNamespace.define(PressureMeasurement, PressureMeasurementModel);
-export interface PressureMeasurement extends ClusterNamespace { Attributes: PressureMeasurement.Attributes & { Components: PressureMeasurement.Attributes.Components }; Features: PressureMeasurement.Features }
+ClusterNamespace.define(PressureMeasurement);
+export interface PressureMeasurement extends ClusterNamespaceTyping { Attributes: PressureMeasurement.Attributes & { Components: PressureMeasurement.Attributes.Components }; Features: PressureMeasurement.Features }

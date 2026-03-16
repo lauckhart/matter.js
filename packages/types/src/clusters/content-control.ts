@@ -22,7 +22,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ContentControl {
@@ -2187,14 +2187,16 @@ export namespace ContentControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50f);
     export const revision = 1;
+    export const schema = ContentControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ContentControl | undefined;
 }
 
 export type ContentControlCluster = ContentControl.Cluster;
 export const ContentControlCluster = ContentControl.Cluster;
 ClusterRegistry.register(ContentControl.Complete);
-ClusterNamespace.define(ContentControl, ContentControlModel);
-export interface ContentControl extends ClusterNamespace { Attributes: ContentControl.Attributes & { Components: ContentControl.Attributes.Components }; Commands: ContentControl.Commands & { Components: ContentControl.Commands.Components }; Events: ContentControl.Events & { Components: ContentControl.Events.Components }; Features: ContentControl.Features }
+ClusterNamespace.define(ContentControl);
+export interface ContentControl extends ClusterNamespaceTyping { Attributes: ContentControl.Attributes & { Components: ContentControl.Attributes.Components }; Commands: ContentControl.Commands & { Components: ContentControl.Commands.Components }; Events: ContentControl.Events & { Components: ContentControl.Events.Components }; Features: ContentControl.Features }

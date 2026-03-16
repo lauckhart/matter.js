@@ -30,7 +30,7 @@ import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { TlvDeviceTypeId, DeviceTypeId } from "../datatype/DeviceTypeId.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace AccessControl {
     /**
@@ -1929,14 +1929,16 @@ export namespace AccessControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x1f);
     export const revision = 2;
+    export const schema = AccessControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: AccessControl | undefined;
 }
 
 export type AccessControlCluster = AccessControl.Cluster;
 export const AccessControlCluster = AccessControl.Cluster;
 ClusterRegistry.register(AccessControl.Complete);
-ClusterNamespace.define(AccessControl, AccessControlModel);
-export interface AccessControl extends ClusterNamespace { Attributes: AccessControl.Attributes & { Components: AccessControl.Attributes.Components }; Commands: AccessControl.Commands & { Components: AccessControl.Commands.Components }; Events: AccessControl.Events & { Components: AccessControl.Events.Components }; Features: AccessControl.Features }
+ClusterNamespace.define(AccessControl);
+export interface AccessControl extends ClusterNamespaceTyping { Attributes: AccessControl.Attributes & { Components: AccessControl.Attributes.Components }; Commands: AccessControl.Commands & { Components: AccessControl.Commands.Components }; Events: AccessControl.Events & { Components: AccessControl.Events.Components }; Features: AccessControl.Features }

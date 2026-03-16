@@ -30,7 +30,7 @@ import { BasicInformation } from "./basic-information.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace BridgedDeviceBasicInformation {
@@ -653,14 +653,16 @@ export namespace BridgedDeviceBasicInformation {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x39);
     export const revision = 5;
+    export const schema = BridgedDeviceBasicInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: BridgedDeviceBasicInformation | undefined;
 }
 
 export type BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation.Cluster;
 export const BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation.Cluster;
 ClusterRegistry.register(BridgedDeviceBasicInformation.Complete);
-ClusterNamespace.define(BridgedDeviceBasicInformation, BridgedDeviceBasicInformationModel);
-export interface BridgedDeviceBasicInformation extends ClusterNamespace { Attributes: BridgedDeviceBasicInformation.Attributes & { Components: BridgedDeviceBasicInformation.Attributes.Components }; Commands: BridgedDeviceBasicInformation.Commands & { Components: BridgedDeviceBasicInformation.Commands.Components }; Events: BridgedDeviceBasicInformation.Events & { Components: BridgedDeviceBasicInformation.Events.Components }; Features: BridgedDeviceBasicInformation.Features }
+ClusterNamespace.define(BridgedDeviceBasicInformation);
+export interface BridgedDeviceBasicInformation extends ClusterNamespaceTyping { Attributes: BridgedDeviceBasicInformation.Attributes & { Components: BridgedDeviceBasicInformation.Attributes.Components }; Commands: BridgedDeviceBasicInformation.Commands & { Components: BridgedDeviceBasicInformation.Commands.Components }; Events: BridgedDeviceBasicInformation.Events & { Components: BridgedDeviceBasicInformation.Events.Components }; Features: BridgedDeviceBasicInformation.Features }

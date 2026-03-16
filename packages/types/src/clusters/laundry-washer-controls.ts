@@ -15,7 +15,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { LaundryWasherControls as LaundryWasherControlsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -242,12 +242,14 @@ export namespace LaundryWasherControls {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x53);
     export const revision = 2;
+    export const schema = LaundryWasherControlsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: LaundryWasherControls | undefined;
 }
 
 export type LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 export const LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 ClusterRegistry.register(LaundryWasherControls.Complete);
-ClusterNamespace.define(LaundryWasherControls, LaundryWasherControlsModel);
-export interface LaundryWasherControls extends ClusterNamespace { Attributes: LaundryWasherControls.Attributes & { Components: LaundryWasherControls.Attributes.Components }; Features: LaundryWasherControls.Features }
+ClusterNamespace.define(LaundryWasherControls);
+export interface LaundryWasherControls extends ClusterNamespaceTyping { Attributes: LaundryWasherControls.Attributes & { Components: LaundryWasherControls.Attributes.Components }; Features: LaundryWasherControls.Features }

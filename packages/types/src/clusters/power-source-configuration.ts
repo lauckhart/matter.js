@@ -12,7 +12,7 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { PowerSourceConfiguration as PowerSourceConfigurationModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -61,11 +61,13 @@ export namespace PowerSourceConfiguration {
     export const Complete = Cluster;
     export const id = ClusterId(0x2e);
     export const revision = 1;
+    export const schema = PowerSourceConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: PowerSourceConfiguration | undefined;
 }
 
 export type PowerSourceConfigurationCluster = PowerSourceConfiguration.Cluster;
 export const PowerSourceConfigurationCluster = PowerSourceConfiguration.Cluster;
 ClusterRegistry.register(PowerSourceConfiguration.Complete);
-ClusterNamespace.define(PowerSourceConfiguration, PowerSourceConfigurationModel);
-export interface PowerSourceConfiguration extends ClusterNamespace { Attributes: PowerSourceConfiguration.Attributes & { Components: PowerSourceConfiguration.Attributes.Components } }
+ClusterNamespace.define(PowerSourceConfiguration);
+export interface PowerSourceConfiguration extends ClusterNamespaceTyping { Attributes: PowerSourceConfiguration.Attributes & { Components: PowerSourceConfiguration.Attributes.Components } }

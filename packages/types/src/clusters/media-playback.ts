@@ -21,7 +21,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { MediaPlayback as MediaPlaybackModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1748,14 +1748,16 @@ export namespace MediaPlayback {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x506);
     export const revision = 2;
+    export const schema = MediaPlaybackModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: MediaPlayback | undefined;
 }
 
 export type MediaPlaybackCluster = MediaPlayback.Cluster;
 export const MediaPlaybackCluster = MediaPlayback.Cluster;
 ClusterRegistry.register(MediaPlayback.Complete);
-ClusterNamespace.define(MediaPlayback, MediaPlaybackModel);
-export interface MediaPlayback extends ClusterNamespace { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }
+ClusterNamespace.define(MediaPlayback);
+export interface MediaPlayback extends ClusterNamespaceTyping { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }

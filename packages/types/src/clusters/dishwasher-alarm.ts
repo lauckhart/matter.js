@@ -14,7 +14,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { DishwasherAlarm as DishwasherAlarmModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -461,14 +461,16 @@ export namespace DishwasherAlarm {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x5d);
     export const revision = 1;
+    export const schema = DishwasherAlarmModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: DishwasherAlarm | undefined;
 }
 
 export type DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 export const DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 ClusterRegistry.register(DishwasherAlarm.Complete);
-ClusterNamespace.define(DishwasherAlarm, DishwasherAlarmModel);
-export interface DishwasherAlarm extends ClusterNamespace { Attributes: DishwasherAlarm.Attributes & { Components: DishwasherAlarm.Attributes.Components }; Commands: DishwasherAlarm.Commands & { Components: DishwasherAlarm.Commands.Components }; Events: DishwasherAlarm.Events & { Components: DishwasherAlarm.Events.Components }; Features: DishwasherAlarm.Features }
+ClusterNamespace.define(DishwasherAlarm);
+export interface DishwasherAlarm extends ClusterNamespaceTyping { Attributes: DishwasherAlarm.Attributes & { Components: DishwasherAlarm.Attributes.Components }; Commands: DishwasherAlarm.Commands & { Components: DishwasherAlarm.Commands.Components }; Events: DishwasherAlarm.Events & { Components: DishwasherAlarm.Events.Components }; Features: DishwasherAlarm.Features }

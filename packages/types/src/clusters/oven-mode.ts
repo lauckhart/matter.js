@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { OvenMode as OvenModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -438,13 +438,15 @@ export namespace OvenMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x49);
     export const revision = 2;
+    export const schema = OvenModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: OvenMode | undefined;
 }
 
 export type OvenModeCluster = OvenMode.Cluster;
 export const OvenModeCluster = OvenMode.Cluster;
 ClusterRegistry.register(OvenMode.Complete);
-ClusterNamespace.define(OvenMode, OvenModeModel);
-export interface OvenMode extends ClusterNamespace { Attributes: OvenMode.Attributes & { Components: OvenMode.Attributes.Components }; Commands: OvenMode.Commands & { Components: OvenMode.Commands.Components }; Features: OvenMode.Features }
+ClusterNamespace.define(OvenMode);
+export interface OvenMode extends ClusterNamespaceTyping { Attributes: OvenMode.Attributes & { Components: OvenMode.Attributes.Components }; Commands: OvenMode.Commands & { Components: OvenMode.Commands.Components }; Features: OvenMode.Features }

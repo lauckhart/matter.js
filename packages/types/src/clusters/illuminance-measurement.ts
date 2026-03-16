@@ -12,7 +12,7 @@ import { TlvUInt16, TlvUInt8 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { IlluminanceMeasurement as IlluminanceMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -123,11 +123,13 @@ export namespace IlluminanceMeasurement {
     export const Complete = Cluster;
     export const id = ClusterId(0x400);
     export const revision = 3;
+    export const schema = IlluminanceMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: IlluminanceMeasurement | undefined;
 }
 
 export type IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 export const IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 ClusterRegistry.register(IlluminanceMeasurement.Complete);
-ClusterNamespace.define(IlluminanceMeasurement, IlluminanceMeasurementModel);
-export interface IlluminanceMeasurement extends ClusterNamespace { Attributes: IlluminanceMeasurement.Attributes & { Components: IlluminanceMeasurement.Attributes.Components } }
+ClusterNamespace.define(IlluminanceMeasurement);
+export interface IlluminanceMeasurement extends ClusterNamespaceTyping { Attributes: IlluminanceMeasurement.Attributes & { Components: IlluminanceMeasurement.Attributes.Components } }

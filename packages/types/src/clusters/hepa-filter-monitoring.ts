@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ResourceMonitoring } from "./resource-monitoring.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { HepaFilterMonitoring as HepaFilterMonitoringModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -85,13 +85,15 @@ export namespace HepaFilterMonitoring {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x71);
     export const revision = 1;
+    export const schema = HepaFilterMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: HepaFilterMonitoring | undefined;
 }
 
 export type HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 export const HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 ClusterRegistry.register(HepaFilterMonitoring.Complete);
-ClusterNamespace.define(HepaFilterMonitoring, HepaFilterMonitoringModel);
-export interface HepaFilterMonitoring extends ClusterNamespace { Attributes: HepaFilterMonitoring.Attributes & { Components: HepaFilterMonitoring.Attributes.Components }; Commands: HepaFilterMonitoring.Commands & { Components: HepaFilterMonitoring.Commands.Components }; Features: HepaFilterMonitoring.Features }
+ClusterNamespace.define(HepaFilterMonitoring);
+export interface HepaFilterMonitoring extends ClusterNamespaceTyping { Attributes: HepaFilterMonitoring.Attributes & { Components: HepaFilterMonitoring.Attributes.Components }; Commands: HepaFilterMonitoring.Commands & { Components: HepaFilterMonitoring.Commands.Components }; Features: HepaFilterMonitoring.Features }

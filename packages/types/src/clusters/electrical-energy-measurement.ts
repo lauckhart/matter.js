@@ -16,7 +16,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ElectricalEnergyMeasurement as ElectricalEnergyMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -932,13 +932,15 @@ export namespace ElectricalEnergyMeasurement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x91);
     export const revision = 1;
+    export const schema = ElectricalEnergyMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ElectricalEnergyMeasurement | undefined;
 }
 
 export type ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 export const ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 ClusterRegistry.register(ElectricalEnergyMeasurement.Complete);
-ClusterNamespace.define(ElectricalEnergyMeasurement, ElectricalEnergyMeasurementModel);
-export interface ElectricalEnergyMeasurement extends ClusterNamespace { Attributes: ElectricalEnergyMeasurement.Attributes & { Components: ElectricalEnergyMeasurement.Attributes.Components }; Events: ElectricalEnergyMeasurement.Events & { Components: ElectricalEnergyMeasurement.Events.Components }; Features: ElectricalEnergyMeasurement.Features }
+ClusterNamespace.define(ElectricalEnergyMeasurement);
+export interface ElectricalEnergyMeasurement extends ClusterNamespaceTyping { Attributes: ElectricalEnergyMeasurement.Attributes & { Components: ElectricalEnergyMeasurement.Attributes.Components }; Events: ElectricalEnergyMeasurement.Events & { Components: ElectricalEnergyMeasurement.Events.Components }; Features: ElectricalEnergyMeasurement.Features }

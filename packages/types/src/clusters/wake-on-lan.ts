@@ -11,7 +11,7 @@ import { OptionalFixedAttribute } from "../cluster/Cluster.js";
 import { TlvString, TlvByteString } from "../tlv/TlvString.js";
 import { Identity, Bytes } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { WakeOnLan as WakeOnLanModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -93,11 +93,13 @@ export namespace WakeOnLan {
     export const Complete = Cluster;
     export const id = ClusterId(0x503);
     export const revision = 1;
+    export const schema = WakeOnLanModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: WakeOnLan | undefined;
 }
 
 export type WakeOnLanCluster = WakeOnLan.Cluster;
 export const WakeOnLanCluster = WakeOnLan.Cluster;
 ClusterRegistry.register(WakeOnLan.Complete);
-ClusterNamespace.define(WakeOnLan, WakeOnLanModel);
-export interface WakeOnLan extends ClusterNamespace { Attributes: WakeOnLan.Attributes & { Components: WakeOnLan.Attributes.Components } }
+ClusterNamespace.define(WakeOnLan);
+export interface WakeOnLan extends ClusterNamespaceTyping { Attributes: WakeOnLan.Attributes & { Components: WakeOnLan.Attributes.Components } }

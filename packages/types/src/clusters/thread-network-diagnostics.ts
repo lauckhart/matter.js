@@ -20,7 +20,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThreadNetworkDiagnostics {
@@ -1828,14 +1828,16 @@ export namespace ThreadNetworkDiagnostics {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x35);
     export const revision = 3;
+    export const schema = ThreadNetworkDiagnosticsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ThreadNetworkDiagnostics | undefined;
 }
 
 export type ThreadNetworkDiagnosticsCluster = ThreadNetworkDiagnostics.Cluster;
 export const ThreadNetworkDiagnosticsCluster = ThreadNetworkDiagnostics.Cluster;
 ClusterRegistry.register(ThreadNetworkDiagnostics.Complete);
-ClusterNamespace.define(ThreadNetworkDiagnostics, ThreadNetworkDiagnosticsModel);
-export interface ThreadNetworkDiagnostics extends ClusterNamespace { Attributes: ThreadNetworkDiagnostics.Attributes & { Components: ThreadNetworkDiagnostics.Attributes.Components }; Commands: ThreadNetworkDiagnostics.Commands & { Components: ThreadNetworkDiagnostics.Commands.Components }; Events: ThreadNetworkDiagnostics.Events & { Components: ThreadNetworkDiagnostics.Events.Components }; Features: ThreadNetworkDiagnostics.Features }
+ClusterNamespace.define(ThreadNetworkDiagnostics);
+export interface ThreadNetworkDiagnostics extends ClusterNamespaceTyping { Attributes: ThreadNetworkDiagnostics.Attributes & { Components: ThreadNetworkDiagnostics.Attributes.Components }; Commands: ThreadNetworkDiagnostics.Commands & { Components: ThreadNetworkDiagnostics.Commands.Components }; Events: ThreadNetworkDiagnostics.Events & { Components: ThreadNetworkDiagnostics.Events.Components }; Features: ThreadNetworkDiagnostics.Features }

@@ -35,7 +35,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { ClusterType } from "../cluster/ClusterType.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace DoorLock {
@@ -7360,14 +7360,16 @@ export namespace DoorLock {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x101);
     export const revision = 9;
+    export const schema = DoorLockModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: DoorLock | undefined;
 }
 
 export type DoorLockCluster = DoorLock.Cluster;
 export const DoorLockCluster = DoorLock.Cluster;
 ClusterRegistry.register(DoorLock.Complete);
-ClusterNamespace.define(DoorLock, DoorLockModel);
-export interface DoorLock extends ClusterNamespace { Attributes: DoorLock.Attributes & { Components: DoorLock.Attributes.Components }; Commands: DoorLock.Commands & { Components: DoorLock.Commands.Components }; Events: DoorLock.Events & { Components: DoorLock.Events.Components }; Features: DoorLock.Features }
+ClusterNamespace.define(DoorLock);
+export interface DoorLock extends ClusterNamespaceTyping { Attributes: DoorLock.Attributes & { Components: DoorLock.Attributes.Components }; Commands: DoorLock.Commands & { Components: DoorLock.Commands.Components }; Events: DoorLock.Events & { Components: DoorLock.Events.Components }; Features: DoorLock.Features }

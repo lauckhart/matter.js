@@ -19,7 +19,7 @@ import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js
 import { TlvString } from "../tlv/TlvString.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { Descriptor as DescriptorModel } from "@matter/model";
 
 export namespace Descriptor {
@@ -281,12 +281,14 @@ export namespace Descriptor {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x1d);
     export const revision = 3;
+    export const schema = DescriptorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Descriptor | undefined;
 }
 
 export type DescriptorCluster = Descriptor.Cluster;
 export const DescriptorCluster = Descriptor.Cluster;
 ClusterRegistry.register(Descriptor.Complete);
-ClusterNamespace.define(Descriptor, DescriptorModel);
-export interface Descriptor extends ClusterNamespace { Attributes: Descriptor.Attributes & { Components: Descriptor.Attributes.Components }; Features: Descriptor.Features }
+ClusterNamespace.define(Descriptor);
+export interface Descriptor extends ClusterNamespaceTyping { Attributes: Descriptor.Attributes & { Components: Descriptor.Attributes.Components }; Features: Descriptor.Features }

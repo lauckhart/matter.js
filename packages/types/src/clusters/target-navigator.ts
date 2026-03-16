@@ -17,7 +17,7 @@ import { Status as GlobalStatus } from "../globals/Status.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { TargetNavigator as TargetNavigatorModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -322,13 +322,15 @@ export namespace TargetNavigator {
     export const Complete = Cluster;
     export const id = ClusterId(0x505);
     export const revision = 2;
+    export const schema = TargetNavigatorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: TargetNavigator | undefined;
 }
 
 export type TargetNavigatorCluster = TargetNavigator.Cluster;
 export const TargetNavigatorCluster = TargetNavigator.Cluster;
 ClusterRegistry.register(TargetNavigator.Complete);
-ClusterNamespace.define(TargetNavigator, TargetNavigatorModel);
-export interface TargetNavigator extends ClusterNamespace { Attributes: TargetNavigator.Attributes & { Components: TargetNavigator.Attributes.Components }; Commands: TargetNavigator.Commands & { Components: TargetNavigator.Commands.Components }; Events: TargetNavigator.Events & { Components: TargetNavigator.Events.Components } }
+ClusterNamespace.define(TargetNavigator);
+export interface TargetNavigator extends ClusterNamespaceTyping { Attributes: TargetNavigator.Attributes & { Components: TargetNavigator.Attributes.Components }; Commands: TargetNavigator.Commands & { Components: TargetNavigator.Commands.Components }; Events: TargetNavigator.Events & { Components: TargetNavigator.Events.Components } }

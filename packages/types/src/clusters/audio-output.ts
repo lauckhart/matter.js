@@ -16,7 +16,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace AudioOutput {
@@ -329,13 +329,15 @@ export namespace AudioOutput {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x50b);
     export const revision = 1;
+    export const schema = AudioOutputModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: AudioOutput | undefined;
 }
 
 export type AudioOutputCluster = AudioOutput.Cluster;
 export const AudioOutputCluster = AudioOutput.Cluster;
 ClusterRegistry.register(AudioOutput.Complete);
-ClusterNamespace.define(AudioOutput, AudioOutputModel);
-export interface AudioOutput extends ClusterNamespace { Attributes: AudioOutput.Attributes & { Components: AudioOutput.Attributes.Components }; Commands: AudioOutput.Commands & { Components: AudioOutput.Commands.Components }; Features: AudioOutput.Features }
+ClusterNamespace.define(AudioOutput);
+export interface AudioOutput extends ClusterNamespaceTyping { Attributes: AudioOutput.Attributes & { Components: AudioOutput.Attributes.Components }; Commands: AudioOutput.Commands & { Components: AudioOutput.Commands.Components }; Features: AudioOutput.Features }

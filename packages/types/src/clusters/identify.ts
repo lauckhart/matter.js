@@ -13,7 +13,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { AccessLevel, Identify as IdentifyModel } from "@matter/model";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Identify {
@@ -296,12 +296,14 @@ export namespace Identify {
     export const Complete = Cluster;
     export const id = ClusterId(0x3);
     export const revision = 6;
+    export const schema = IdentifyModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: Identify | undefined;
 }
 
 export type IdentifyCluster = Identify.Cluster;
 export const IdentifyCluster = Identify.Cluster;
 ClusterRegistry.register(Identify.Complete);
-ClusterNamespace.define(Identify, IdentifyModel);
-export interface Identify extends ClusterNamespace { Attributes: Identify.Attributes & { Components: Identify.Attributes.Components }; Commands: Identify.Commands & { Components: Identify.Commands.Components } }
+ClusterNamespace.define(Identify);
+export interface Identify extends ClusterNamespaceTyping { Attributes: Identify.Attributes & { Components: Identify.Attributes.Components }; Commands: Identify.Commands & { Components: Identify.Commands.Components } }

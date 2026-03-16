@@ -15,7 +15,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { TemperatureControl as TemperatureControlModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -362,13 +362,15 @@ export namespace TemperatureControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x56);
     export const revision = 1;
+    export const schema = TemperatureControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: TemperatureControl | undefined;
 }
 
 export type TemperatureControlCluster = TemperatureControl.Cluster;
 export const TemperatureControlCluster = TemperatureControl.Cluster;
 ClusterRegistry.register(TemperatureControl.Complete);
-ClusterNamespace.define(TemperatureControl, TemperatureControlModel);
-export interface TemperatureControl extends ClusterNamespace { Attributes: TemperatureControl.Attributes & { Components: TemperatureControl.Attributes.Components }; Commands: TemperatureControl.Commands & { Components: TemperatureControl.Commands.Components }; Features: TemperatureControl.Features }
+ClusterNamespace.define(TemperatureControl);
+export interface TemperatureControl extends ClusterNamespaceTyping { Attributes: TemperatureControl.Attributes & { Components: TemperatureControl.Attributes.Components }; Commands: TemperatureControl.Commands & { Components: TemperatureControl.Commands.Components }; Features: TemperatureControl.Features }

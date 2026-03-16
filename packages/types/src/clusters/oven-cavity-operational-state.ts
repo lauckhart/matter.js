@@ -18,7 +18,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { OvenCavityOperationalState as OvenCavityOperationalStateModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -247,13 +247,15 @@ export namespace OvenCavityOperationalState {
     export const Complete = Cluster;
     export const id = ClusterId(0x48);
     export const revision = 2;
+    export const schema = OvenCavityOperationalStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: OvenCavityOperationalState | undefined;
 }
 
 export type OvenCavityOperationalStateCluster = OvenCavityOperationalState.Cluster;
 export const OvenCavityOperationalStateCluster = OvenCavityOperationalState.Cluster;
 ClusterRegistry.register(OvenCavityOperationalState.Complete);
-ClusterNamespace.define(OvenCavityOperationalState, OvenCavityOperationalStateModel);
-export interface OvenCavityOperationalState extends ClusterNamespace { Attributes: OvenCavityOperationalState.Attributes & { Components: OvenCavityOperationalState.Attributes.Components }; Commands: OvenCavityOperationalState.Commands & { Components: OvenCavityOperationalState.Commands.Components }; Events: OvenCavityOperationalState.Events & { Components: OvenCavityOperationalState.Events.Components } }
+ClusterNamespace.define(OvenCavityOperationalState);
+export interface OvenCavityOperationalState extends ClusterNamespaceTyping { Attributes: OvenCavityOperationalState.Attributes & { Components: OvenCavityOperationalState.Attributes.Components }; Commands: OvenCavityOperationalState.Commands & { Components: OvenCavityOperationalState.Commands.Components }; Events: OvenCavityOperationalState.Events & { Components: OvenCavityOperationalState.Events.Components } }

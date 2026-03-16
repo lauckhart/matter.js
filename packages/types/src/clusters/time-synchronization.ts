@@ -25,7 +25,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace TimeSynchronization {
@@ -1488,14 +1488,16 @@ export namespace TimeSynchronization {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x38);
     export const revision = 2;
+    export const schema = TimeSynchronizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: TimeSynchronization | undefined;
 }
 
 export type TimeSynchronizationCluster = TimeSynchronization.Cluster;
 export const TimeSynchronizationCluster = TimeSynchronization.Cluster;
 ClusterRegistry.register(TimeSynchronization.Complete);
-ClusterNamespace.define(TimeSynchronization, TimeSynchronizationModel);
-export interface TimeSynchronization extends ClusterNamespace { Attributes: TimeSynchronization.Attributes & { Components: TimeSynchronization.Attributes.Components }; Commands: TimeSynchronization.Commands & { Components: TimeSynchronization.Commands.Components }; Events: TimeSynchronization.Events & { Components: TimeSynchronization.Events.Components }; Features: TimeSynchronization.Features }
+ClusterNamespace.define(TimeSynchronization);
+export interface TimeSynchronization extends ClusterNamespaceTyping { Attributes: TimeSynchronization.Attributes & { Components: TimeSynchronization.Attributes.Components }; Commands: TimeSynchronization.Commands & { Components: TimeSynchronization.Commands.Components }; Events: TimeSynchronization.Events & { Components: TimeSynchronization.Events.Components }; Features: TimeSynchronization.Features }

@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { LaundryWasherMode as LaundryWasherModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -402,13 +402,15 @@ export namespace LaundryWasherMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x51);
     export const revision = 3;
+    export const schema = LaundryWasherModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: LaundryWasherMode | undefined;
 }
 
 export type LaundryWasherModeCluster = LaundryWasherMode.Cluster;
 export const LaundryWasherModeCluster = LaundryWasherMode.Cluster;
 ClusterRegistry.register(LaundryWasherMode.Complete);
-ClusterNamespace.define(LaundryWasherMode, LaundryWasherModeModel);
-export interface LaundryWasherMode extends ClusterNamespace { Attributes: LaundryWasherMode.Attributes & { Components: LaundryWasherMode.Attributes.Components }; Commands: LaundryWasherMode.Commands & { Components: LaundryWasherMode.Commands.Components }; Features: LaundryWasherMode.Features }
+ClusterNamespace.define(LaundryWasherMode);
+export interface LaundryWasherMode extends ClusterNamespaceTyping { Attributes: LaundryWasherMode.Attributes & { Components: LaundryWasherMode.Attributes.Components }; Commands: LaundryWasherMode.Commands & { Components: LaundryWasherMode.Commands.Components }; Features: LaundryWasherMode.Features }

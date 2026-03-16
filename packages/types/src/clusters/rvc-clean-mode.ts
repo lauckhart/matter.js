@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { RvcCleanMode as RvcCleanModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -433,13 +433,15 @@ export namespace RvcCleanMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x55);
     export const revision = 4;
+    export const schema = RvcCleanModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: RvcCleanMode | undefined;
 }
 
 export type RvcCleanModeCluster = RvcCleanMode.Cluster;
 export const RvcCleanModeCluster = RvcCleanMode.Cluster;
 ClusterRegistry.register(RvcCleanMode.Complete);
-ClusterNamespace.define(RvcCleanMode, RvcCleanModeModel);
-export interface RvcCleanMode extends ClusterNamespace { Attributes: RvcCleanMode.Attributes & { Components: RvcCleanMode.Attributes.Components }; Commands: RvcCleanMode.Commands & { Components: RvcCleanMode.Commands.Components }; Features: RvcCleanMode.Features }
+ClusterNamespace.define(RvcCleanMode);
+export interface RvcCleanMode extends ClusterNamespaceTyping { Attributes: RvcCleanMode.Attributes & { Components: RvcCleanMode.Attributes.Components }; Commands: RvcCleanMode.Commands & { Components: RvcCleanMode.Commands.Components }; Features: RvcCleanMode.Features }

@@ -15,7 +15,7 @@ import { TlvNodeId, NodeId } from "../datatype/NodeId.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace AccountLogin {
@@ -577,12 +577,14 @@ export namespace AccountLogin {
     export const Complete = Cluster;
     export const id = ClusterId(0x50e);
     export const revision = 2;
+    export const schema = AccountLoginModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
+    export declare const Typing: AccountLogin | undefined;
 }
 
 export type AccountLoginCluster = AccountLogin.Cluster;
 export const AccountLoginCluster = AccountLogin.Cluster;
 ClusterRegistry.register(AccountLogin.Complete);
-ClusterNamespace.define(AccountLogin, AccountLoginModel);
-export interface AccountLogin extends ClusterNamespace { Commands: AccountLogin.Commands & { Components: AccountLogin.Commands.Components }; Events: AccountLogin.Events & { Components: AccountLogin.Events.Components } }
+ClusterNamespace.define(AccountLogin);
+export interface AccountLogin extends ClusterNamespaceTyping { Commands: AccountLogin.Commands & { Components: AccountLogin.Commands.Components }; Events: AccountLogin.Events & { Components: AccountLogin.Events.Components } }

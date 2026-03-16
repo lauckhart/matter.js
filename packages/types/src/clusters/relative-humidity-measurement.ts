@@ -12,7 +12,7 @@ import { TlvUInt16 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { RelativeHumidityMeasurement as RelativeHumidityMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -97,11 +97,13 @@ export namespace RelativeHumidityMeasurement {
     export const Complete = Cluster;
     export const id = ClusterId(0x405);
     export const revision = 3;
+    export const schema = RelativeHumidityMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: RelativeHumidityMeasurement | undefined;
 }
 
 export type RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;
 export const RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;
 ClusterRegistry.register(RelativeHumidityMeasurement.Complete);
-ClusterNamespace.define(RelativeHumidityMeasurement, RelativeHumidityMeasurementModel);
-export interface RelativeHumidityMeasurement extends ClusterNamespace { Attributes: RelativeHumidityMeasurement.Attributes & { Components: RelativeHumidityMeasurement.Attributes.Components } }
+ClusterNamespace.define(RelativeHumidityMeasurement);
+export interface RelativeHumidityMeasurement extends ClusterNamespaceTyping { Attributes: RelativeHumidityMeasurement.Attributes & { Components: RelativeHumidityMeasurement.Attributes.Components } }

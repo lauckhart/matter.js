@@ -21,7 +21,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OccupancySensing {
@@ -678,13 +678,15 @@ export namespace OccupancySensing {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x406);
     export const revision = 5;
+    export const schema = OccupancySensingModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: OccupancySensing | undefined;
 }
 
 export type OccupancySensingCluster = OccupancySensing.Cluster;
 export const OccupancySensingCluster = OccupancySensing.Cluster;
 ClusterRegistry.register(OccupancySensing.Complete);
-ClusterNamespace.define(OccupancySensing, OccupancySensingModel);
-export interface OccupancySensing extends ClusterNamespace { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }
+ClusterNamespace.define(OccupancySensing);
+export interface OccupancySensing extends ClusterNamespaceTyping { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }

@@ -14,7 +14,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { RefrigeratorAlarm as RefrigeratorAlarmModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -329,14 +329,16 @@ export namespace RefrigeratorAlarm {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x57);
     export const revision = 1;
+    export const schema = RefrigeratorAlarmModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: RefrigeratorAlarm | undefined;
 }
 
 export type RefrigeratorAlarmCluster = RefrigeratorAlarm.Cluster;
 export const RefrigeratorAlarmCluster = RefrigeratorAlarm.Cluster;
 ClusterRegistry.register(RefrigeratorAlarm.Complete);
-ClusterNamespace.define(RefrigeratorAlarm, RefrigeratorAlarmModel);
-export interface RefrigeratorAlarm extends ClusterNamespace { Attributes: RefrigeratorAlarm.Attributes & { Components: RefrigeratorAlarm.Attributes.Components }; Commands: RefrigeratorAlarm.Commands & { Components: RefrigeratorAlarm.Commands.Components }; Events: RefrigeratorAlarm.Events & { Components: RefrigeratorAlarm.Events.Components }; Features: RefrigeratorAlarm.Features }
+ClusterNamespace.define(RefrigeratorAlarm);
+export interface RefrigeratorAlarm extends ClusterNamespaceTyping { Attributes: RefrigeratorAlarm.Attributes & { Components: RefrigeratorAlarm.Attributes.Components }; Commands: RefrigeratorAlarm.Commands & { Components: RefrigeratorAlarm.Commands.Components }; Events: RefrigeratorAlarm.Events & { Components: RefrigeratorAlarm.Events.Components }; Features: RefrigeratorAlarm.Features }

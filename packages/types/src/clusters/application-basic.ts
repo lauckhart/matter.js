@@ -16,7 +16,7 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { AccessLevel, ApplicationBasic as ApplicationBasicModel } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ApplicationBasic {
@@ -214,11 +214,13 @@ export namespace ApplicationBasic {
     export const Complete = Cluster;
     export const id = ClusterId(0x50d);
     export const revision = 1;
+    export const schema = ApplicationBasicModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export declare const Typing: ApplicationBasic | undefined;
 }
 
 export type ApplicationBasicCluster = ApplicationBasic.Cluster;
 export const ApplicationBasicCluster = ApplicationBasic.Cluster;
 ClusterRegistry.register(ApplicationBasic.Complete);
-ClusterNamespace.define(ApplicationBasic, ApplicationBasicModel);
-export interface ApplicationBasic extends ClusterNamespace { Attributes: ApplicationBasic.Attributes & { Components: ApplicationBasic.Attributes.Components } }
+ClusterNamespace.define(ApplicationBasic);
+export interface ApplicationBasic extends ClusterNamespaceTyping { Attributes: ApplicationBasic.Attributes & { Components: ApplicationBasic.Attributes.Components } }

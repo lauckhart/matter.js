@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { DeviceEnergyManagementMode as DeviceEnergyManagementModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -412,13 +412,15 @@ export namespace DeviceEnergyManagementMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x9f);
     export const revision = 2;
+    export const schema = DeviceEnergyManagementModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: DeviceEnergyManagementMode | undefined;
 }
 
 export type DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Cluster;
 export const DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Cluster;
 ClusterRegistry.register(DeviceEnergyManagementMode.Complete);
-ClusterNamespace.define(DeviceEnergyManagementMode, DeviceEnergyManagementModeModel);
-export interface DeviceEnergyManagementMode extends ClusterNamespace { Attributes: DeviceEnergyManagementMode.Attributes & { Components: DeviceEnergyManagementMode.Attributes.Components }; Commands: DeviceEnergyManagementMode.Commands & { Components: DeviceEnergyManagementMode.Commands.Components }; Features: DeviceEnergyManagementMode.Features }
+ClusterNamespace.define(DeviceEnergyManagementMode);
+export interface DeviceEnergyManagementMode extends ClusterNamespaceTyping { Attributes: DeviceEnergyManagementMode.Attributes & { Components: DeviceEnergyManagementMode.Attributes.Components }; Commands: DeviceEnergyManagementMode.Commands & { Components: DeviceEnergyManagementMode.Commands.Components }; Features: DeviceEnergyManagementMode.Features }

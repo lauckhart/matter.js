@@ -26,7 +26,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WaterHeaterManagement {
@@ -591,14 +591,16 @@ export namespace WaterHeaterManagement {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x94);
     export const revision = 2;
+    export const schema = WaterHeaterManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WaterHeaterManagement | undefined;
 }
 
 export type WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 export const WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 ClusterRegistry.register(WaterHeaterManagement.Complete);
-ClusterNamespace.define(WaterHeaterManagement, WaterHeaterManagementModel);
-export interface WaterHeaterManagement extends ClusterNamespace { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }
+ClusterNamespace.define(WaterHeaterManagement);
+export interface WaterHeaterManagement extends ClusterNamespaceTyping { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }

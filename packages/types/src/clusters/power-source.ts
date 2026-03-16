@@ -25,7 +25,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { PowerSource as PowerSourceModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1671,13 +1671,15 @@ export namespace PowerSource {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x2f);
     export const revision = 3;
+    export const schema = PowerSourceModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: PowerSource | undefined;
 }
 
 export type PowerSourceCluster = PowerSource.Cluster;
 export const PowerSourceCluster = PowerSource.Cluster;
 ClusterRegistry.register(PowerSource.Complete);
-ClusterNamespace.define(PowerSource, PowerSourceModel);
-export interface PowerSource extends ClusterNamespace { Attributes: PowerSource.Attributes & { Components: PowerSource.Attributes.Components }; Events: PowerSource.Events & { Components: PowerSource.Events.Components }; Features: PowerSource.Features }
+ClusterNamespace.define(PowerSource);
+export interface PowerSource extends ClusterNamespaceTyping { Attributes: PowerSource.Attributes & { Components: PowerSource.Attributes.Components }; Events: PowerSource.Events & { Components: PowerSource.Events.Components }; Features: PowerSource.Features }

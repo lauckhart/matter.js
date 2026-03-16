@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import {
     RefrigeratorAndTemperatureControlledCabinetMode as RefrigeratorAndTemperatureControlledCabinetModeModel
 } from "@matter/model";
@@ -390,13 +390,15 @@ export namespace RefrigeratorAndTemperatureControlledCabinetMode {
     export const Complete = Cluster;
     export const id = ClusterId(0x52);
     export const revision = 3;
+    export const schema = RefrigeratorAndTemperatureControlledCabinetModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: RefrigeratorAndTemperatureControlledCabinetMode | undefined;
 }
 
 export type RefrigeratorAndTemperatureControlledCabinetModeCluster = RefrigeratorAndTemperatureControlledCabinetMode.Cluster;
 export const RefrigeratorAndTemperatureControlledCabinetModeCluster = RefrigeratorAndTemperatureControlledCabinetMode.Cluster;
 ClusterRegistry.register(RefrigeratorAndTemperatureControlledCabinetMode.Complete);
-ClusterNamespace.define(RefrigeratorAndTemperatureControlledCabinetMode, RefrigeratorAndTemperatureControlledCabinetModeModel);
-export interface RefrigeratorAndTemperatureControlledCabinetMode extends ClusterNamespace { Attributes: RefrigeratorAndTemperatureControlledCabinetMode.Attributes & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Attributes.Components }; Commands: RefrigeratorAndTemperatureControlledCabinetMode.Commands & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Commands.Components }; Features: RefrigeratorAndTemperatureControlledCabinetMode.Features }
+ClusterNamespace.define(RefrigeratorAndTemperatureControlledCabinetMode);
+export interface RefrigeratorAndTemperatureControlledCabinetMode extends ClusterNamespaceTyping { Attributes: RefrigeratorAndTemperatureControlledCabinetMode.Attributes & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Attributes.Components }; Commands: RefrigeratorAndTemperatureControlledCabinetMode.Commands & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Commands.Components }; Features: RefrigeratorAndTemperatureControlledCabinetMode.Features }

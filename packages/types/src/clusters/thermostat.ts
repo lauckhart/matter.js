@@ -30,7 +30,7 @@ import { TlvAttributeId, AttributeId } from "../datatype/AttributeId.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Thermostat {
@@ -3720,13 +3720,15 @@ export namespace Thermostat {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x201);
     export const revision = 9;
+    export const schema = ThermostatModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Thermostat | undefined;
 }
 
 export type ThermostatCluster = Thermostat.Cluster;
 export const ThermostatCluster = Thermostat.Cluster;
 ClusterRegistry.register(Thermostat.Complete);
-ClusterNamespace.define(Thermostat, ThermostatModel);
-export interface Thermostat extends ClusterNamespace { Attributes: Thermostat.Attributes & { Components: Thermostat.Attributes.Components }; Commands: Thermostat.Commands & { Components: Thermostat.Commands.Components }; Features: Thermostat.Features }
+ClusterNamespace.define(Thermostat);
+export interface Thermostat extends ClusterNamespaceTyping { Attributes: Thermostat.Attributes & { Components: Thermostat.Attributes.Components }; Commands: Thermostat.Commands & { Components: Thermostat.Commands.Components }; Features: Thermostat.Features }

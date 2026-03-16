@@ -23,7 +23,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { ClusterType } from "../cluster/ClusterType.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LevelControl {
@@ -789,13 +789,15 @@ export namespace LevelControl {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x8);
     export const revision = 6;
+    export const schema = LevelControlModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: LevelControl | undefined;
 }
 
 export type LevelControlCluster = LevelControl.Cluster;
 export const LevelControlCluster = LevelControl.Cluster;
 ClusterRegistry.register(LevelControl.Complete);
-ClusterNamespace.define(LevelControl, LevelControlModel);
-export interface LevelControl extends ClusterNamespace { Attributes: LevelControl.Attributes & { Components: LevelControl.Attributes.Components }; Commands: LevelControl.Commands & { Components: LevelControl.Commands.Components }; Features: LevelControl.Features }
+ClusterNamespace.define(LevelControl);
+export interface LevelControl extends ClusterNamespaceTyping { Attributes: LevelControl.Attributes & { Components: LevelControl.Attributes.Components }; Commands: LevelControl.Commands & { Components: LevelControl.Commands.Components }; Features: LevelControl.Features }

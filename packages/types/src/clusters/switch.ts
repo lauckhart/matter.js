@@ -14,7 +14,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { Switch as SwitchModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -811,13 +811,15 @@ export namespace Switch {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x3b);
     export const revision = 2;
+    export const schema = SwitchModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Switch | undefined;
 }
 
 export type SwitchCluster = Switch.Cluster;
 export const SwitchCluster = Switch.Cluster;
 ClusterRegistry.register(Switch.Complete);
-ClusterNamespace.define(Switch, SwitchModel);
-export interface Switch extends ClusterNamespace { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }
+ClusterNamespace.define(Switch);
+export interface Switch extends ClusterNamespaceTyping { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }

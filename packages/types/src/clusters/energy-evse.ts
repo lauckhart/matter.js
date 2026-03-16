@@ -36,7 +36,7 @@ import { Priority } from "../globals/Priority.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EnergyEvse {
@@ -2077,14 +2077,16 @@ export namespace EnergyEvse {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x99);
     export const revision = 3;
+    export const schema = EnergyEvseModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: EnergyEvse | undefined;
 }
 
 export type EnergyEvseCluster = EnergyEvse.Cluster;
 export const EnergyEvseCluster = EnergyEvse.Cluster;
 ClusterRegistry.register(EnergyEvse.Complete);
-ClusterNamespace.define(EnergyEvse, EnergyEvseModel);
-export interface EnergyEvse extends ClusterNamespace { Attributes: EnergyEvse.Attributes & { Components: EnergyEvse.Attributes.Components }; Commands: EnergyEvse.Commands & { Components: EnergyEvse.Commands.Components }; Events: EnergyEvse.Events & { Components: EnergyEvse.Events.Components }; Features: EnergyEvse.Features }
+ClusterNamespace.define(EnergyEvse);
+export interface EnergyEvse extends ClusterNamespaceTyping { Attributes: EnergyEvse.Attributes & { Components: EnergyEvse.Attributes.Components }; Commands: EnergyEvse.Commands & { Components: EnergyEvse.Commands.Components }; Events: EnergyEvse.Events & { Components: EnergyEvse.Events.Components }; Features: EnergyEvse.Features }

@@ -11,7 +11,7 @@ import { Command, TlvNoResponse } from "../cluster/Cluster.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { LowPower as LowPowerModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -73,11 +73,13 @@ export namespace LowPower {
     export const Complete = Cluster;
     export const id = ClusterId(0x508);
     export const revision = 1;
+    export const schema = LowPowerModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
+    export declare const Typing: LowPower | undefined;
 }
 
 export type LowPowerCluster = LowPower.Cluster;
 export const LowPowerCluster = LowPower.Cluster;
 ClusterRegistry.register(LowPower.Complete);
-ClusterNamespace.define(LowPower, LowPowerModel);
-export interface LowPower extends ClusterNamespace { Commands: LowPower.Commands & { Components: LowPower.Commands.Components } }
+ClusterNamespace.define(LowPower);
+export interface LowPower extends ClusterNamespaceTyping { Commands: LowPower.Commands & { Components: LowPower.Commands.Components } }

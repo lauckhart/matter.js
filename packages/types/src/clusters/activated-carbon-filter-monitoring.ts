@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ResourceMonitoring } from "./resource-monitoring.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 import { ActivatedCarbonFilterMonitoring as ActivatedCarbonFilterMonitoringModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -85,13 +85,15 @@ export namespace ActivatedCarbonFilterMonitoring {
     export const Complete: Complete = CompleteInstance;
     export const id = ClusterId(0x72);
     export const revision = 1;
+    export const schema = ActivatedCarbonFilterMonitoringModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ActivatedCarbonFilterMonitoring | undefined;
 }
 
 export type ActivatedCarbonFilterMonitoringCluster = ActivatedCarbonFilterMonitoring.Cluster;
 export const ActivatedCarbonFilterMonitoringCluster = ActivatedCarbonFilterMonitoring.Cluster;
 ClusterRegistry.register(ActivatedCarbonFilterMonitoring.Complete);
-ClusterNamespace.define(ActivatedCarbonFilterMonitoring, ActivatedCarbonFilterMonitoringModel);
-export interface ActivatedCarbonFilterMonitoring extends ClusterNamespace { Attributes: ActivatedCarbonFilterMonitoring.Attributes & { Components: ActivatedCarbonFilterMonitoring.Attributes.Components }; Commands: ActivatedCarbonFilterMonitoring.Commands & { Components: ActivatedCarbonFilterMonitoring.Commands.Components }; Features: ActivatedCarbonFilterMonitoring.Features }
+ClusterNamespace.define(ActivatedCarbonFilterMonitoring);
+export interface ActivatedCarbonFilterMonitoring extends ClusterNamespaceTyping { Attributes: ActivatedCarbonFilterMonitoring.Attributes & { Components: ActivatedCarbonFilterMonitoring.Attributes.Components }; Commands: ActivatedCarbonFilterMonitoring.Commands & { Components: ActivatedCarbonFilterMonitoring.Commands.Components }; Features: ActivatedCarbonFilterMonitoring.Features }

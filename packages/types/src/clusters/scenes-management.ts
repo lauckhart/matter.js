@@ -34,7 +34,7 @@ import { AccessLevel, ScenesManagement as ScenesManagementModel } from "@matter/
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace ScenesManagement {
     /**
@@ -1470,13 +1470,15 @@ export namespace ScenesManagement {
     export const Complete = Cluster;
     export const id = ClusterId(0x62);
     export const revision = 1;
+    export const schema = ScenesManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ScenesManagement | undefined;
 }
 
 export type ScenesManagementCluster = ScenesManagement.Cluster;
 export const ScenesManagementCluster = ScenesManagement.Cluster;
 ClusterRegistry.register(ScenesManagement.Complete);
-ClusterNamespace.define(ScenesManagement, ScenesManagementModel);
-export interface ScenesManagement extends ClusterNamespace { Attributes: ScenesManagement.Attributes & { Components: ScenesManagement.Attributes.Components }; Commands: ScenesManagement.Commands & { Components: ScenesManagement.Commands.Components }; Features: ScenesManagement.Features }
+ClusterNamespace.define(ScenesManagement);
+export interface ScenesManagement extends ClusterNamespaceTyping { Attributes: ScenesManagement.Attributes & { Components: ScenesManagement.Attributes.Components }; Commands: ScenesManagement.Commands & { Components: ScenesManagement.Commands.Components }; Features: ScenesManagement.Features }
