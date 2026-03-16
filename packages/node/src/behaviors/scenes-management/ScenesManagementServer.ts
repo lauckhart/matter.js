@@ -909,10 +909,15 @@ export class ScenesManagementServer extends ScenesManagementBase {
                 continue;
             }
 
+            const tlv = type.cluster.attributes?.[attributeName]?.tlv;
+            if (!tlv) {
+                continue;
+            }
+
             sceneClusterDetails.attributes.add({
                 id: attributeId,
                 name: attributeName,
-                schema: type.cluster.attributes[attributeName].schema,
+                schema: tlv,
                 type: attrType,
                 mappedType: DataTypeToSceneAttributeDataMap[attrType],
                 nullable: !!attribute.effectiveQuality.nullable,
