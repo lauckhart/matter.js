@@ -8,7 +8,7 @@ import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
 import { ClusterModifier, type Schema } from "@matter/model";
-import { ClusterComposer, ClusterType, ClusterTypeModifier, type ClusterNamespace } from "@matter/types";
+import { ClusterComposer, ClusterType, ClusterTypeModifier, type ClusterNamespace, type ClusterNamespaceTyping } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
@@ -200,7 +200,7 @@ export class ClusterBehavior extends Behavior {
      * The Interface "property" is type-only.  We define a method however to keep the API consistent.  At runtime the
      * method is a no-op.
      */
-    static withInterface<const N extends ClusterNamespace>() {
+    static withInterface<const N extends ClusterNamespaceTyping>() {
         return this as unknown as ClusterBehavior.Type<typeof ClusterType.Unknown, typeof ClusterBehavior, N>;
     }
 
@@ -269,7 +269,7 @@ export namespace ClusterBehavior {
     export interface Type<
         C extends ClusterType = ClusterType,
         B extends Behavior.Type = Behavior.Type,
-        N extends ClusterNamespace = ClusterInterface.InterfaceOf<B>,
+        N extends ClusterNamespaceTyping = ClusterInterface.InterfaceOf<B>,
     > {
         new (agent: Agent, backing: BehaviorBacking): Instance<C, B, N>;
 
@@ -409,7 +409,7 @@ export namespace ClusterBehavior {
      * A fully-typed ClusterBehavior.  This type is derived by combining properties of the base type with properties
      * contributed by the cluster.
      */
-    export type Instance<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespace> =
+    export type Instance<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespaceTyping> =
         // Base class
         ClusterBehavior &
             // Bring extensions of old class forward

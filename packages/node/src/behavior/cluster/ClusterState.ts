@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClusterNamespace, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
 import { AttributeId, BitSchema, CommandId, TypeFromPartialBitSchema } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
 import type { ClusterOf } from "./cluster-behavior-utils.js";
@@ -15,7 +15,7 @@ import type { ClusterOf } from "./cluster-behavior-utils.js";
 export type ClusterState<
     C extends ClusterType,
     B extends Behavior.Type,
-    N extends ClusterNamespace = ClusterNamespace,
+    N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
 > = ClusterState.Type<C, B, N>;
 
 /**
@@ -37,7 +37,7 @@ export namespace ClusterState {
     /**
      * Instance type for ClusterBehavior state.
      */
-    export type Type<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespace = ClusterNamespace> =
+    export type Type<C extends ClusterType, B extends Behavior.Type, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
         // Keep properties *not* from attributes of the old cluster
         Omit<InstanceType<B["State"]>, keyof PropertiesOf<ClusterOf<B>>> &
             // Add properties from attributes of the new cluster
@@ -46,13 +46,13 @@ export namespace ClusterState {
     /**
      * Use N-driven properties when Attributes.Components exists, else fall back to C.
      */
-    export type NsPropertiesOf<N extends ClusterNamespace, C> =
+    export type NsPropertiesOf<N extends ClusterNamespaceTyping, C> =
         AttributesComponentsOf<N> extends [] ? PropertiesOf<C> : NsAttributeProperties<N>;
 
     /**
      * Extract Attributes.Components tuple from namespace.
      */
-    export type AttributesComponentsOf<N extends ClusterNamespace> = N extends {
+    export type AttributesComponentsOf<N extends ClusterNamespaceTyping> = N extends {
         Attributes: { Components: infer C extends ClusterNamespace.ElementComponent[] };
     }
         ? C
@@ -61,7 +61,7 @@ export namespace ClusterState {
     /**
      * N-driven attribute properties: mandatory vs optional from Components + value types from Attributes.
      */
-    type NsAttributeProperties<N extends ClusterNamespace> = N extends { Attributes: infer A }
+    type NsAttributeProperties<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>

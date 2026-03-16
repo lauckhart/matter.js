@@ -5,7 +5,7 @@
  */
 
 import { camelize } from "@matter/general";
-import { ClusterModel, GLOBAL_IDS } from "@matter/model";
+import { ClusterModel, ClusterModifier, GLOBAL_IDS } from "@matter/model";
 import type { AttributeId } from "../datatype/AttributeId.js";
 import type { CommandId } from "../datatype/CommandId.js";
 import type { EventId } from "../datatype/EventId.js";
@@ -14,17 +14,35 @@ import { TlvOfModel } from "../tlv/TlvOfModel.js";
 import { TlvSchema } from "../tlv/TlvSchema.js";
 
 /**
- * Describes the shape of a generated cluster namespace for use as a type constraint.
+ * Describes the type-level shape of a generated cluster namespace interface.
  *
- * Generated cluster namespaces in `@matter/types` export a `Commands` sub-namespace with a `Components` tuple that
- * maps feature flags to method interfaces.  This interface describes that shape so behavior infrastructure can extract
- * the correct command methods for a given feature selection.
+ * Each generated cluster has an `interface OnOff extends ClusterNamespaceTyping` that carries type-level information
+ * (attribute types, command types, etc.) used by behavior infrastructure.
  */
-export interface ClusterNamespace {
+export interface ClusterNamespaceTyping {
     Attributes?: {};
     Commands?: {};
     Events?: {};
     Features?: {};
+    readonly schema?: ClusterModel;
+}
+
+/**
+ * Describes the shape of a generated cluster namespace object (`typeof OnOff`).
+ *
+ * The `Typing` property bridges the namespace value to its companion interface, allowing `for()` to extract the
+ * interface type via `NS["Typing"]`.
+ */
+export interface ClusterNamespace {
+    readonly Typing?: ClusterNamespaceTyping;
+    readonly schema?: ClusterModel;
+    readonly id?: number;
+    readonly name?: string;
+    readonly revision?: number;
+    readonly attributes?: Record<string, ClusterNamespace.Attribute>;
+    readonly commands?: Record<string, ClusterNamespace.Command>;
+    readonly events?: Record<string, ClusterNamespace.Event>;
+    readonly features?: Record<string, ClusterNamespace.Feature>;
 }
 
 export namespace ClusterNamespace {
@@ -73,7 +91,7 @@ export namespace ClusterNamespace {
      * Uses Omit+& (not bare &) so that chained `.with()` calls replace rather than intersect, matching the
      * runtime behavior of {@link ClusterComposer.WithFeatures}.
      */
-    export type WithSupportedFeatures<N extends ClusterNamespace, S> = Omit<N, "SupportedFeatures"> & {
+    export type WithSupportedFeatures<N extends ClusterNamespaceTyping, S> = Omit<N, "SupportedFeatures"> & {
         SupportedFeatures: S;
     };
 
@@ -92,7 +110,7 @@ export namespace ClusterNamespace {
     /**
      * Augment a namespace with attribute keys forced mandatory (e.g. via `enable()` or `alter()`).
      */
-    export type WithEnabledAttributes<N extends ClusterNamespace, K extends string> = N & {
+    export type WithEnabledAttributes<N extends ClusterNamespaceTyping, K extends string> = N & {
         Attributes: { Enabled: K };
     };
 
@@ -111,7 +129,7 @@ export namespace ClusterNamespace {
     /**
      * Augment a namespace with event keys forced mandatory (e.g. via `enable()`).
      */
-    export type WithEnabledEvents<N extends ClusterNamespace, K extends string> = N & { Events: { Enabled: K } };
+    export type WithEnabledEvents<N extends ClusterNamespaceTyping, K extends string> = N & { Events: { Enabled: K } };
 
     /**
      * Extract event key names from ElementFlags (used by `enable()`).
@@ -128,10 +146,70 @@ export namespace ClusterNamespace {
         : never;
 
     /**
+     * Extract attribute key names from a namespace, excluding synthetic keys.
+     */
+    export type AttrKeysOf<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
+        ? Exclude<keyof A & string, "Components" | "Enabled">
+        : never;
+
+    /**
+     * Extract command key names from a namespace, excluding synthetic keys.
+     */
+    export type CommandKeysOf<N extends ClusterNamespaceTyping> = N extends { Commands: infer C }
+        ? Exclude<keyof C & string, "Components">
+        : never;
+
+    /**
+     * Extract event key names from a namespace, excluding synthetic keys.
+     */
+    export type EventKeysOf<N extends ClusterNamespaceTyping> = N extends { Events: infer E }
+        ? Exclude<keyof E & string, "Components" | "Enabled">
+        : never;
+
+    /**
+     * Valid feature names for a namespace's feature selection.
+     */
+    export type FeatureSelection<N extends ClusterNamespaceTyping> = N extends { Features: infer F extends string }
+        ? readonly F[]
+        : readonly string[];
+
+    /**
+     * Convert a feature name tuple to a feature flags object type.
+     */
+    export type FeaturesAsFlags<F extends readonly string[]> = { [K in F[number] as Uncapitalize<K>]: true };
+
+    /**
+     * Constraint for `alter()` input based on namespace element keys.
+     */
+    export type Alterations<N extends ClusterNamespaceTyping> = {
+        attributes?: { [K in AttrKeysOf<N>]?: ClusterModifier.RequirementModification };
+        commands?: { [K in CommandKeysOf<N>]?: ClusterModifier.RequirementModification };
+        events?: { [K in EventKeysOf<N>]?: ClusterModifier.RequirementModification };
+    };
+
+    /**
+     * Constraint for `enable()` input based on namespace element keys.
+     */
+    export type ElementFlags<N extends ClusterNamespaceTyping> = {
+        attributes?: { [K in AttrKeysOf<N>]?: true };
+        commands?: { [K in CommandKeysOf<N>]?: true };
+        events?: { [K in EventKeysOf<N>]?: true };
+    };
+
+    /**
      * Install lazy getters on a cluster namespace object.  Each property is computed on first access via
      * {@link Object.defineProperty}, then replaced with the computed value.
      */
-    export function define(ns: object, model: ClusterModel): void {
+    export function define(ns: object, inputModel?: ClusterModel): void {
+        const model = inputModel ?? (ns as { schema?: ClusterModel }).schema;
+        if (!model) {
+            return;
+        }
+
+        if (!Object.hasOwn(ns, "schema")) {
+            Object.defineProperty(ns, "schema", { value: model, enumerable: true, configurable: true });
+        }
+
         const lazy = (name: string, factory: () => unknown) => {
             Object.defineProperty(ns, name, {
                 get() {

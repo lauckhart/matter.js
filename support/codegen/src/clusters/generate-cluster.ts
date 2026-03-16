@@ -563,6 +563,7 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
     // Generate declare consts inside the namespace (type-only, no runtime code)
     const name = cluster.name;
     file.addImport("!types/cluster/ClusterNamespace.js", "ClusterNamespace");
+    file.addImport("!types/cluster/ClusterNamespace.js", "ClusterNamespaceTyping");
     file.addImport("@matter/model", `${name} as ${name}Model`);
 
     // Real constants for id and revision
@@ -571,6 +572,7 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
         file.ns.atom(`export const id = ClusterId(0x${cluster.id.toString(16)})`);
     }
     file.ns.atom(`export const revision = ${cluster.revision}`);
+    file.ns.atom(`export const schema = ${name}Model`);
 
     if (hasAttrs) {
         file.ns.atom(`export declare const attributes: ClusterNamespace.Attributes<Attributes>`);
@@ -585,10 +587,13 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
         file.ns.atom(`export declare const features: ClusterNamespace.Features<Features>`);
     }
 
-    // Install lazy getters after the namespace (computed on first access)
-    file.atom(`ClusterNamespace.define(${name}, ${name}Model)`);
+    // Bridge the interface type onto the namespace value so typeof OnOff carries Typing
+    file.ns.atom(`export declare const Typing: ${name} | undefined`);
 
-    // Merge an interface with the namespace so it can be used as a type (e.g. in withInterface<OnOff>())
+    // Install lazy getters after the namespace (computed on first access)
+    file.atom(`ClusterNamespace.define(${name})`);
+
+    // Merge an interface with the namespace so it can be used as a type (e.g. in for(OnOff))
     const members = [] as string[];
     if (hasAttrs) {
         members.push(`Attributes: ${name}.Attributes & { Components: ${name}.Attributes.Components }`);
@@ -603,5 +608,5 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
         members.push(`Features: ${name}.Features`);
     }
     const body = members.length ? ` ${members.join("; ")} ` : "";
-    file.atom(`export interface ${name} extends ClusterNamespace {${body}}`);
+    file.atom(`export interface ${name} extends ClusterNamespaceTyping {${body}}`);
 }

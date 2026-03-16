@@ -5,12 +5,12 @@
  */
 
 import type { MaybePromise } from "@matter/general";
-import type { ClusterNamespace, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
 
 /**
- * @see {@link ClusterNamespace}
+ * @see {@link ClusterNamespaceTyping}
  */
-export type ClusterInterface = ClusterNamespace;
+export type ClusterInterface = ClusterNamespaceTyping;
 
 export namespace ClusterInterface {
     export const Empty: ClusterInterface = {};

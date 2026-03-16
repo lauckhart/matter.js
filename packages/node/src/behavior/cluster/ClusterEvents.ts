@@ -7,7 +7,7 @@
 import type { OfflineEvent, OnlineEvent } from "#behavior/Events.js";
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { AttributeModel, EventModel } from "@matter/model";
-import type { ClusterNamespace, ClusterType, TypeFromSchema } from "@matter/types";
+import type { ClusterNamespace, ClusterNamespaceTyping, ClusterType, TypeFromSchema } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
 import type { ActionContext } from "../context/ActionContext.js";
 import type { ClusterOf } from "./cluster-behavior-utils.js";
@@ -18,7 +18,7 @@ import type { ClusterOf } from "./cluster-behavior-utils.js";
 export type ClusterEvents<
     ClusterT extends ClusterType,
     BaseT extends Behavior.Type,
-    N extends ClusterNamespace = ClusterNamespace,
+    N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
 > =
     // Keep observables *not* supplied by the old cluster
     Omit<InstanceType<BaseT["Events"]>, keyof ClusterEvents.Properties<ClusterOf<BaseT>>> &
@@ -29,7 +29,7 @@ export namespace ClusterEvents {
     export interface Type<
         C extends ClusterType,
         B extends Behavior.Type,
-        N extends ClusterNamespace = ClusterNamespace,
+        N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
     > {
         new (endpoint?: Endpoint, behavior?: Behavior.Type): ClusterEvents<C, B, N>;
     }
@@ -41,7 +41,7 @@ export namespace ClusterEvents {
     /**
      * Properties the cluster contributes to Events.
      */
-    export type Properties<C, N extends ClusterNamespace = ClusterNamespace> = (AttributesComponentsOf<N> extends []
+    export type Properties<C, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> = (AttributesComponentsOf<N> extends []
         ? ChangingObservables<ClusterType.AttributesOf<C>> & ChangedObservables<ClusterType.AttributesOf<C>>
         : NsChangingObservables<N> & NsChangedObservables<N>) &
         (EventsComponentsOf<N> extends [] ? EventObservables<ClusterType.EventsOf<C>> : NsEventObservables<N>);
@@ -129,7 +129,7 @@ export namespace ClusterEvents {
     /**
      * Extract Attributes.Components tuple from namespace.
      */
-    export type AttributesComponentsOf<N extends ClusterNamespace> = N extends {
+    export type AttributesComponentsOf<N extends ClusterNamespaceTyping> = N extends {
         Attributes: { Components: infer C extends ClusterNamespace.ElementComponent[] };
     }
         ? C
@@ -192,7 +192,7 @@ export namespace ClusterEvents {
     /**
      * Produce changing observables from namespace.
      */
-    type NsChangingObservables<N extends ClusterNamespace> = N extends { Attributes: infer A }
+    type NsChangingObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
@@ -211,7 +211,7 @@ export namespace ClusterEvents {
     /**
      * Produce changed observables from namespace.
      */
-    type NsChangedObservables<N extends ClusterNamespace> = N extends { Attributes: infer A }
+    type NsChangedObservables<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
@@ -232,7 +232,7 @@ export namespace ClusterEvents {
     /**
      * Extract Events.Components tuple from namespace.
      */
-    export type EventsComponentsOf<N extends ClusterNamespace> = N extends {
+    export type EventsComponentsOf<N extends ClusterNamespaceTyping> = N extends {
         Events: { Components: infer C extends ClusterNamespace.ElementComponent[] };
     }
         ? C
@@ -285,7 +285,7 @@ export namespace ClusterEvents {
      * Produce event observables from namespace.  Events are mandatory if they match active feature flags in
      * Components OR if they were marked enabled on the namespace (e.g. via `enable()` or `alter()`).
      */
-    type NsEventObservables<N extends ClusterNamespace> = N extends { Events: infer E }
+    type NsEventObservables<N extends ClusterNamespaceTyping> = N extends { Events: infer E }
         ? {
               [K in (
                   | MandatoryEventKeys<EventsComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
