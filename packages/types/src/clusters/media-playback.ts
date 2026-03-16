@@ -1758,3 +1758,4 @@ export type MediaPlaybackCluster = MediaPlayback.Cluster;
 export const MediaPlaybackCluster = MediaPlayback.Cluster;
 ClusterRegistry.register(MediaPlayback.Complete);
 ClusterNamespace.define(MediaPlayback, MediaPlaybackModel);
+export interface MediaPlayback extends ClusterNamespace { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }

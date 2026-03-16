@@ -247,3 +247,4 @@ export type ContentAppObserverCluster = ContentAppObserver.Cluster;
 export const ContentAppObserverCluster = ContentAppObserver.Cluster;
 ClusterRegistry.register(ContentAppObserver.Complete);
 ClusterNamespace.define(ContentAppObserver, ContentAppObserverModel);
+export interface ContentAppObserver extends ClusterNamespace { Commands: ContentAppObserver.Commands & { Components: ContentAppObserver.Commands.Components } }

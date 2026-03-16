@@ -94,3 +94,4 @@ export type ActivatedCarbonFilterMonitoringCluster = ActivatedCarbonFilterMonito
 export const ActivatedCarbonFilterMonitoringCluster = ActivatedCarbonFilterMonitoring.Cluster;
 ClusterRegistry.register(ActivatedCarbonFilterMonitoring.Complete);
 ClusterNamespace.define(ActivatedCarbonFilterMonitoring, ActivatedCarbonFilterMonitoringModel);
+export interface ActivatedCarbonFilterMonitoring extends ClusterNamespace { Attributes: ActivatedCarbonFilterMonitoring.Attributes & { Components: ActivatedCarbonFilterMonitoring.Attributes.Components }; Commands: ActivatedCarbonFilterMonitoring.Commands & { Components: ActivatedCarbonFilterMonitoring.Commands.Components }; Features: ActivatedCarbonFilterMonitoring.Features }

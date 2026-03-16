@@ -1498,3 +1498,4 @@ export type TimeSynchronizationCluster = TimeSynchronization.Cluster;
 export const TimeSynchronizationCluster = TimeSynchronization.Cluster;
 ClusterRegistry.register(TimeSynchronization.Complete);
 ClusterNamespace.define(TimeSynchronization, TimeSynchronizationModel);
+export interface TimeSynchronization extends ClusterNamespace { Attributes: TimeSynchronization.Attributes & { Components: TimeSynchronization.Attributes.Components }; Commands: TimeSynchronization.Commands & { Components: TimeSynchronization.Commands.Components }; Events: TimeSynchronization.Events & { Components: TimeSynchronization.Events.Components }; Features: TimeSynchronization.Features }

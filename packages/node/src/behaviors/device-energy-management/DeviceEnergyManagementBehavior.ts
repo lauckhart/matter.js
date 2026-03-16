@@ -8,7 +8,6 @@
 
 import { DeviceEnergyManagement } from "@matter/types/clusters/device-energy-management";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { DeviceEnergyManagementInterface } from "./DeviceEnergyManagementInterface.js";
 import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
@@ -20,7 +19,7 @@ import { Identity } from "@matter/general";
  * {@link DeviceEnergyManagementBehavior.with}.
  */
 export const DeviceEnergyManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<DeviceEnergyManagementInterface>()
+    .withInterface<DeviceEnergyManagement>()
     .for(ClusterType(DeviceEnergyManagement.Base));
 
 export interface DeviceEnergyManagementBehaviorConstructor extends Identity<typeof DeviceEnergyManagementBehaviorConstructor> {}

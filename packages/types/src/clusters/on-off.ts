@@ -645,3 +645,4 @@ export type OnOffCluster = OnOff.Cluster;
 export const OnOffCluster = OnOff.Cluster;
 ClusterRegistry.register(OnOff.Complete);
 ClusterNamespace.define(OnOff, OnOffModel);
+export interface OnOff extends ClusterNamespace { Attributes: OnOff.Attributes & { Components: OnOff.Attributes.Components }; Commands: OnOff.Commands & { Components: OnOff.Commands.Components }; Features: OnOff.Features }

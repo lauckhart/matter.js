@@ -8,7 +8,6 @@
 
 import { ValveConfigurationAndControl } from "@matter/types/clusters/valve-configuration-and-control";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ValveConfigurationAndControlInterface } from "./ValveConfigurationAndControlInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * features using ValveConfigurationAndControlBehavior.with.
  */
 export const ValveConfigurationAndControlBehaviorConstructor = ClusterBehavior
-    .withInterface<ValveConfigurationAndControlInterface>()
+    .withInterface<ValveConfigurationAndControl>()
     .for(ValveConfigurationAndControl.Cluster);
 
 export interface ValveConfigurationAndControlBehaviorConstructor extends Identity<typeof ValveConfigurationAndControlBehaviorConstructor> {}

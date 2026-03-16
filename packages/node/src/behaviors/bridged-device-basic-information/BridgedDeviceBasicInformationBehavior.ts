@@ -8,7 +8,6 @@
 
 import { BridgedDeviceBasicInformation } from "@matter/types/clusters/bridged-device-basic-information";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { BridgedDeviceBasicInformationInterface } from "./BridgedDeviceBasicInformationInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * additional features using BridgedDeviceBasicInformationBehavior.with.
  */
 export const BridgedDeviceBasicInformationBehaviorConstructor = ClusterBehavior
-    .withInterface<BridgedDeviceBasicInformationInterface>()
+    .withInterface<BridgedDeviceBasicInformation>()
     .for(BridgedDeviceBasicInformation.Cluster);
 
 export interface BridgedDeviceBasicInformationBehaviorConstructor extends Identity<typeof BridgedDeviceBasicInformationBehaviorConstructor> {}

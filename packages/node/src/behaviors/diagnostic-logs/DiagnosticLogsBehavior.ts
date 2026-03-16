@@ -8,14 +8,13 @@
 
 import { DiagnosticLogs } from "@matter/types/clusters/diagnostic-logs";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { DiagnosticLogsInterface } from "./DiagnosticLogsInterface.js";
 import { Identity } from "@matter/general";
 
 /**
  * DiagnosticLogsBehavior is the base class for objects that support interaction with {@link DiagnosticLogs.Cluster}.
  */
 export const DiagnosticLogsBehaviorConstructor = ClusterBehavior
-    .withInterface<DiagnosticLogsInterface>()
+    .withInterface<DiagnosticLogs>()
     .for(DiagnosticLogs.Cluster);
 
 export interface DiagnosticLogsBehaviorConstructor extends Identity<typeof DiagnosticLogsBehaviorConstructor> {}

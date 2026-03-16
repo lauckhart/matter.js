@@ -250,3 +250,4 @@ export type LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 export const LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 ClusterRegistry.register(LaundryWasherControls.Complete);
 ClusterNamespace.define(LaundryWasherControls, LaundryWasherControlsModel);
+export interface LaundryWasherControls extends ClusterNamespace { Attributes: LaundryWasherControls.Attributes & { Components: LaundryWasherControls.Attributes.Components }; Features: LaundryWasherControls.Features }

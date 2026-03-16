@@ -456,3 +456,4 @@ export type DiagnosticLogsCluster = DiagnosticLogs.Cluster;
 export const DiagnosticLogsCluster = DiagnosticLogs.Cluster;
 ClusterRegistry.register(DiagnosticLogs.Complete);
 ClusterNamespace.define(DiagnosticLogs, DiagnosticLogsModel);
+export interface DiagnosticLogs extends ClusterNamespace { Commands: DiagnosticLogs.Commands & { Components: DiagnosticLogs.Commands.Components } }

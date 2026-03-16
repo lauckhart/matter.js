@@ -649,3 +649,4 @@ export type JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 export const JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 ClusterRegistry.register(JointFabricAdministrator.Complete);
 ClusterNamespace.define(JointFabricAdministrator, JointFabricAdministratorModel);
+export interface JointFabricAdministrator extends ClusterNamespace { Attributes: JointFabricAdministrator.Attributes & { Components: JointFabricAdministrator.Attributes.Components }; Commands: JointFabricAdministrator.Commands & { Components: JointFabricAdministrator.Commands.Components } }

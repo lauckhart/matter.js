@@ -339,3 +339,4 @@ export type RefrigeratorAlarmCluster = RefrigeratorAlarm.Cluster;
 export const RefrigeratorAlarmCluster = RefrigeratorAlarm.Cluster;
 ClusterRegistry.register(RefrigeratorAlarm.Complete);
 ClusterNamespace.define(RefrigeratorAlarm, RefrigeratorAlarmModel);
+export interface RefrigeratorAlarm extends ClusterNamespace { Attributes: RefrigeratorAlarm.Attributes & { Components: RefrigeratorAlarm.Attributes.Components }; Commands: RefrigeratorAlarm.Commands & { Components: RefrigeratorAlarm.Commands.Components }; Events: RefrigeratorAlarm.Events & { Components: RefrigeratorAlarm.Events.Components }; Features: RefrigeratorAlarm.Features }

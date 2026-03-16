@@ -586,3 +586,4 @@ export namespace ModeBase {
 }
 
 ClusterNamespace.define(ModeBase, ModeBaseModel);
+export interface ModeBase extends ClusterNamespace { Attributes: ModeBase.Attributes & { Components: ModeBase.Attributes.Components }; Commands: ModeBase.Commands & { Components: ModeBase.Commands.Components }; Features: ModeBase.Features }

@@ -447,3 +447,4 @@ export type OvenModeCluster = OvenMode.Cluster;
 export const OvenModeCluster = OvenMode.Cluster;
 ClusterRegistry.register(OvenMode.Complete);
 ClusterNamespace.define(OvenMode, OvenModeModel);
+export interface OvenMode extends ClusterNamespace { Attributes: OvenMode.Attributes & { Components: OvenMode.Attributes.Components }; Commands: OvenMode.Commands & { Components: OvenMode.Commands.Components }; Features: OvenMode.Features }

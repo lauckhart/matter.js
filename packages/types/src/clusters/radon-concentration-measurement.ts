@@ -86,3 +86,4 @@ export type RadonConcentrationMeasurementCluster = RadonConcentrationMeasurement
 export const RadonConcentrationMeasurementCluster = RadonConcentrationMeasurement.Cluster;
 ClusterRegistry.register(RadonConcentrationMeasurement.Complete);
 ClusterNamespace.define(RadonConcentrationMeasurement, RadonConcentrationMeasurementModel);
+export interface RadonConcentrationMeasurement extends ClusterNamespace { Attributes: RadonConcentrationMeasurement.Attributes & { Components: RadonConcentrationMeasurement.Attributes.Components }; Features: RadonConcentrationMeasurement.Features }

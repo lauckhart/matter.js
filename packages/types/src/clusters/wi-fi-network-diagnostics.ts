@@ -619,3 +619,4 @@ export type WiFiNetworkDiagnosticsCluster = WiFiNetworkDiagnostics.Cluster;
 export const WiFiNetworkDiagnosticsCluster = WiFiNetworkDiagnostics.Cluster;
 ClusterRegistry.register(WiFiNetworkDiagnostics.Complete);
 ClusterNamespace.define(WiFiNetworkDiagnostics, WiFiNetworkDiagnosticsModel);
+export interface WiFiNetworkDiagnostics extends ClusterNamespace { Attributes: WiFiNetworkDiagnostics.Attributes & { Components: WiFiNetworkDiagnostics.Attributes.Components }; Commands: WiFiNetworkDiagnostics.Commands & { Components: WiFiNetworkDiagnostics.Commands.Components }; Events: WiFiNetworkDiagnostics.Events & { Components: WiFiNetworkDiagnostics.Events.Components }; Features: WiFiNetworkDiagnostics.Features }

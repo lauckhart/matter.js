@@ -2220,3 +2220,4 @@ export type OperationalCredentialsCluster = OperationalCredentials.Cluster;
 export const OperationalCredentialsCluster = OperationalCredentials.Cluster;
 ClusterRegistry.register(OperationalCredentials.Complete);
 ClusterNamespace.define(OperationalCredentials, OperationalCredentialsModel);
+export interface OperationalCredentials extends ClusterNamespace { Attributes: OperationalCredentials.Attributes & { Components: OperationalCredentials.Attributes.Components }; Commands: OperationalCredentials.Commands & { Components: OperationalCredentials.Commands.Components } }

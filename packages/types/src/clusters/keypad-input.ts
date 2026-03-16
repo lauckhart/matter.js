@@ -370,3 +370,4 @@ export type KeypadInputCluster = KeypadInput.Cluster;
 export const KeypadInputCluster = KeypadInput.Cluster;
 ClusterRegistry.register(KeypadInput.Complete);
 ClusterNamespace.define(KeypadInput, KeypadInputModel);
+export interface KeypadInput extends ClusterNamespace { Commands: KeypadInput.Commands & { Components: KeypadInput.Commands.Components }; Features: KeypadInput.Features }

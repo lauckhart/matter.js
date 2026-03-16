@@ -2732,3 +2732,4 @@ export type ColorControlCluster = ColorControl.Cluster;
 export const ColorControlCluster = ColorControl.Cluster;
 ClusterRegistry.register(ColorControl.Complete);
 ClusterNamespace.define(ColorControl, ColorControlModel);
+export interface ColorControl extends ClusterNamespace { Attributes: ColorControl.Attributes & { Components: ColorControl.Attributes.Components }; Commands: ColorControl.Commands & { Components: ColorControl.Commands.Components }; Features: ColorControl.Features }

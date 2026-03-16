@@ -1583,3 +1583,4 @@ export type ActionsCluster = Actions.Cluster;
 export const ActionsCluster = Actions.Cluster;
 ClusterRegistry.register(Actions.Complete);
 ClusterNamespace.define(Actions, ActionsModel);
+export interface Actions extends ClusterNamespace { Attributes: Actions.Attributes & { Components: Actions.Attributes.Components }; Commands: Actions.Commands & { Components: Actions.Commands.Components }; Events: Actions.Events & { Components: Actions.Events.Components } }

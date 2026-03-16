@@ -80,3 +80,4 @@ export type LowPowerCluster = LowPower.Cluster;
 export const LowPowerCluster = LowPower.Cluster;
 ClusterRegistry.register(LowPower.Complete);
 ClusterNamespace.define(LowPower, LowPowerModel);
+export interface LowPower extends ClusterNamespace { Commands: LowPower.Commands & { Components: LowPower.Commands.Components } }

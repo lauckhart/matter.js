@@ -10,9 +10,6 @@ import {
     RefrigeratorAndTemperatureControlledCabinetMode
 } from "@matter/types/clusters/refrigerator-and-temperature-controlled-cabinet-mode";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import {
-    RefrigeratorAndTemperatureControlledCabinetModeInterface
-} from "./RefrigeratorAndTemperatureControlledCabinetModeInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -20,7 +17,7 @@ import { Identity } from "@matter/general";
  * {@link RefrigeratorAndTemperatureControlledCabinetMode.Cluster}.
  */
 export const RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor = ClusterBehavior
-    .withInterface<RefrigeratorAndTemperatureControlledCabinetModeInterface>()
+    .withInterface<RefrigeratorAndTemperatureControlledCabinetMode>()
     .for(RefrigeratorAndTemperatureControlledCabinetMode.Cluster);
 
 export interface RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor extends Identity<typeof RefrigeratorAndTemperatureControlledCabinetModeBehaviorConstructor> {}

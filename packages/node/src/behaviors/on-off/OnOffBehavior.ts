@@ -8,7 +8,6 @@
 
 import { OnOff } from "@matter/types/clusters/on-off";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { OnOffInterface } from "./OnOffInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * OnOffBehavior.with.
  */
 export const OnOffBehaviorConstructor = ClusterBehavior
-    .withInterface<OnOffInterface>()
+    .withInterface<OnOff>()
     .for(OnOff.Cluster);
 
 export interface OnOffBehaviorConstructor extends Identity<typeof OnOffBehaviorConstructor> {}

@@ -331,3 +331,4 @@ export type TargetNavigatorCluster = TargetNavigator.Cluster;
 export const TargetNavigatorCluster = TargetNavigator.Cluster;
 ClusterRegistry.register(TargetNavigator.Complete);
 ClusterNamespace.define(TargetNavigator, TargetNavigatorModel);
+export interface TargetNavigator extends ClusterNamespace { Attributes: TargetNavigator.Attributes & { Components: TargetNavigator.Attributes.Components }; Commands: TargetNavigator.Commands & { Components: TargetNavigator.Commands.Components }; Events: TargetNavigator.Events & { Components: TargetNavigator.Events.Components } }

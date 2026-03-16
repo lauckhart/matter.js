@@ -8,7 +8,6 @@
 
 import { EnergyEvse } from "@matter/types/clusters/energy-evse";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { EnergyEvseInterface } from "./EnergyEvseInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * EnergyEvseBehavior.with.
  */
 export const EnergyEvseBehaviorConstructor = ClusterBehavior
-    .withInterface<EnergyEvseInterface>()
+    .withInterface<EnergyEvse>()
     .for(EnergyEvse.Cluster);
 
 export interface EnergyEvseBehaviorConstructor extends Identity<typeof EnergyEvseBehaviorConstructor> {}

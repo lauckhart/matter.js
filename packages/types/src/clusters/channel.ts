@@ -1797,3 +1797,4 @@ export type ChannelCluster = Channel.Cluster;
 export const ChannelCluster = Channel.Cluster;
 ClusterRegistry.register(Channel.Complete);
 ClusterNamespace.define(Channel, ChannelModel);
+export interface Channel extends ClusterNamespace { Attributes: Channel.Attributes & { Components: Channel.Attributes.Components }; Commands: Channel.Commands & { Components: Channel.Commands.Components }; Features: Channel.Features }

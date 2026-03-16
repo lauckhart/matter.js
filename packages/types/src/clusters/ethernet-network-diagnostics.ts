@@ -381,3 +381,4 @@ export type EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Clust
 export const EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 ClusterRegistry.register(EthernetNetworkDiagnostics.Complete);
 ClusterNamespace.define(EthernetNetworkDiagnostics, EthernetNetworkDiagnosticsModel);
+export interface EthernetNetworkDiagnostics extends ClusterNamespace { Attributes: EthernetNetworkDiagnostics.Attributes & { Components: EthernetNetworkDiagnostics.Attributes.Components }; Commands: EthernetNetworkDiagnostics.Commands & { Components: EthernetNetworkDiagnostics.Commands.Components }; Features: EthernetNetworkDiagnostics.Features }

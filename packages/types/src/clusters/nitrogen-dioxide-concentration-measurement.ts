@@ -91,3 +91,4 @@ export type NitrogenDioxideConcentrationMeasurementCluster = NitrogenDioxideConc
 export const NitrogenDioxideConcentrationMeasurementCluster = NitrogenDioxideConcentrationMeasurement.Cluster;
 ClusterRegistry.register(NitrogenDioxideConcentrationMeasurement.Complete);
 ClusterNamespace.define(NitrogenDioxideConcentrationMeasurement, NitrogenDioxideConcentrationMeasurementModel);
+export interface NitrogenDioxideConcentrationMeasurement extends ClusterNamespace { Attributes: NitrogenDioxideConcentrationMeasurement.Attributes & { Components: NitrogenDioxideConcentrationMeasurement.Attributes.Components }; Features: NitrogenDioxideConcentrationMeasurement.Features }

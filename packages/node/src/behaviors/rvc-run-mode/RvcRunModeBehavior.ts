@@ -8,14 +8,13 @@
 
 import { RvcRunMode } from "@matter/types/clusters/rvc-run-mode";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { RvcRunModeInterface } from "./RvcRunModeInterface.js";
 import { Identity } from "@matter/general";
 
 /**
  * RvcRunModeBehavior is the base class for objects that support interaction with {@link RvcRunMode.Cluster}.
  */
 export const RvcRunModeBehaviorConstructor = ClusterBehavior
-    .withInterface<RvcRunModeInterface>()
+    .withInterface<RvcRunMode>()
     .for(RvcRunMode.Cluster);
 
 export interface RvcRunModeBehaviorConstructor extends Identity<typeof RvcRunModeBehaviorConstructor> {}

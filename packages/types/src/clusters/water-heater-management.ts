@@ -601,3 +601,4 @@ export type WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 export const WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 ClusterRegistry.register(WaterHeaterManagement.Complete);
 ClusterNamespace.define(WaterHeaterManagement, WaterHeaterManagementModel);
+export interface WaterHeaterManagement extends ClusterNamespace { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }

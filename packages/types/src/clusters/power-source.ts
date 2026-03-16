@@ -1680,3 +1680,4 @@ export type PowerSourceCluster = PowerSource.Cluster;
 export const PowerSourceCluster = PowerSource.Cluster;
 ClusterRegistry.register(PowerSource.Complete);
 ClusterNamespace.define(PowerSource, PowerSourceModel);
+export interface PowerSource extends ClusterNamespace { Attributes: PowerSource.Attributes & { Components: PowerSource.Attributes.Components }; Events: PowerSource.Events & { Components: PowerSource.Events.Components }; Features: PowerSource.Features }

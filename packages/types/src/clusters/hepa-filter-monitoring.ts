@@ -94,3 +94,4 @@ export type HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 export const HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 ClusterRegistry.register(HepaFilterMonitoring.Complete);
 ClusterNamespace.define(HepaFilterMonitoring, HepaFilterMonitoringModel);
+export interface HepaFilterMonitoring extends ClusterNamespace { Attributes: HepaFilterMonitoring.Attributes & { Components: HepaFilterMonitoring.Attributes.Components }; Commands: HepaFilterMonitoring.Commands & { Components: HepaFilterMonitoring.Commands.Components }; Features: HepaFilterMonitoring.Features }

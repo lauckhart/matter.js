@@ -96,3 +96,4 @@ export type TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 export const TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 ClusterRegistry.register(TemperatureMeasurement.Complete);
 ClusterNamespace.define(TemperatureMeasurement, TemperatureMeasurementModel);
+export interface TemperatureMeasurement extends ClusterNamespace { Attributes: TemperatureMeasurement.Attributes & { Components: TemperatureMeasurement.Attributes.Components } }

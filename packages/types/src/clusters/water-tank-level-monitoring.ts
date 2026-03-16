@@ -94,3 +94,4 @@ export type WaterTankLevelMonitoringCluster = WaterTankLevelMonitoring.Cluster;
 export const WaterTankLevelMonitoringCluster = WaterTankLevelMonitoring.Cluster;
 ClusterRegistry.register(WaterTankLevelMonitoring.Complete);
 ClusterNamespace.define(WaterTankLevelMonitoring, WaterTankLevelMonitoringModel);
+export interface WaterTankLevelMonitoring extends ClusterNamespace { Attributes: WaterTankLevelMonitoring.Attributes & { Components: WaterTankLevelMonitoring.Attributes.Components }; Commands: WaterTankLevelMonitoring.Commands & { Components: WaterTankLevelMonitoring.Commands.Components }; Features: WaterTankLevelMonitoring.Features }

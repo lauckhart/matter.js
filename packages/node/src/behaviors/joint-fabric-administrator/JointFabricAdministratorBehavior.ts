@@ -8,7 +8,6 @@
 
 import { JointFabricAdministrator } from "@matter/types/clusters/joint-fabric-administrator";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { JointFabricAdministratorInterface } from "./JointFabricAdministratorInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link JointFabricAdministrator.Cluster}.
  */
 export const JointFabricAdministratorBehaviorConstructor = ClusterBehavior
-    .withInterface<JointFabricAdministratorInterface>()
+    .withInterface<JointFabricAdministrator>()
     .for(JointFabricAdministrator.Cluster);
 
 export interface JointFabricAdministratorBehaviorConstructor extends Identity<typeof JointFabricAdministratorBehaviorConstructor> {}

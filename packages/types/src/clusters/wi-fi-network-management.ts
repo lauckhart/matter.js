@@ -210,3 +210,4 @@ export type WiFiNetworkManagementCluster = WiFiNetworkManagement.Cluster;
 export const WiFiNetworkManagementCluster = WiFiNetworkManagement.Cluster;
 ClusterRegistry.register(WiFiNetworkManagement.Complete);
 ClusterNamespace.define(WiFiNetworkManagement, WiFiNetworkManagementModel);
+export interface WiFiNetworkManagement extends ClusterNamespace { Attributes: WiFiNetworkManagement.Attributes & { Components: WiFiNetworkManagement.Attributes.Components }; Commands: WiFiNetworkManagement.Commands & { Components: WiFiNetworkManagement.Commands.Components } }

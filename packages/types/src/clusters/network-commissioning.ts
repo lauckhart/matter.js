@@ -2333,3 +2333,4 @@ export type NetworkCommissioningCluster = NetworkCommissioning.Cluster;
 export const NetworkCommissioningCluster = NetworkCommissioning.Cluster;
 ClusterRegistry.register(NetworkCommissioning.Complete);
 ClusterNamespace.define(NetworkCommissioning, NetworkCommissioningModel);
+export interface NetworkCommissioning extends ClusterNamespace { Attributes: NetworkCommissioning.Attributes & { Components: NetworkCommissioning.Attributes.Components }; Commands: NetworkCommissioning.Commands & { Components: NetworkCommissioning.Commands.Components }; Features: NetworkCommissioning.Features }

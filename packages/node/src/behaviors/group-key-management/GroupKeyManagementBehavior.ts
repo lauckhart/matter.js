@@ -8,7 +8,6 @@
 
 import { GroupKeyManagement } from "@matter/types/clusters/group-key-management";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { GroupKeyManagementInterface } from "./GroupKeyManagementInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link GroupKeyManagement.Cluster}.
  */
 export const GroupKeyManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<GroupKeyManagementInterface>()
+    .withInterface<GroupKeyManagement>()
     .for(GroupKeyManagement.Cluster);
 
 export interface GroupKeyManagementBehaviorConstructor extends Identity<typeof GroupKeyManagementBehaviorConstructor> {}

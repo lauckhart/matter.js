@@ -819,3 +819,4 @@ export type OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Clust
 export const OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
 ClusterRegistry.register(OtaSoftwareUpdateRequestor.Complete);
 ClusterNamespace.define(OtaSoftwareUpdateRequestor, OtaSoftwareUpdateRequestorModel);
+export interface OtaSoftwareUpdateRequestor extends ClusterNamespace { Attributes: OtaSoftwareUpdateRequestor.Attributes & { Components: OtaSoftwareUpdateRequestor.Attributes.Components }; Commands: OtaSoftwareUpdateRequestor.Commands & { Components: OtaSoftwareUpdateRequestor.Commands.Components }; Events: OtaSoftwareUpdateRequestor.Events & { Components: OtaSoftwareUpdateRequestor.Events.Components } }

@@ -1414,3 +1414,4 @@ export type GeneralCommissioningCluster = GeneralCommissioning.Cluster;
 export const GeneralCommissioningCluster = GeneralCommissioning.Cluster;
 ClusterRegistry.register(GeneralCommissioning.Complete);
 ClusterNamespace.define(GeneralCommissioning, GeneralCommissioningModel);
+export interface GeneralCommissioning extends ClusterNamespace { Attributes: GeneralCommissioning.Attributes & { Components: GeneralCommissioning.Attributes.Components }; Commands: GeneralCommissioning.Commands & { Components: GeneralCommissioning.Commands.Components }; Features: GeneralCommissioning.Features }

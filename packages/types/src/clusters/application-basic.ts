@@ -221,3 +221,4 @@ export type ApplicationBasicCluster = ApplicationBasic.Cluster;
 export const ApplicationBasicCluster = ApplicationBasic.Cluster;
 ClusterRegistry.register(ApplicationBasic.Complete);
 ClusterNamespace.define(ApplicationBasic, ApplicationBasicModel);
+export interface ApplicationBasic extends ClusterNamespace { Attributes: ApplicationBasic.Attributes & { Components: ApplicationBasic.Attributes.Components } }

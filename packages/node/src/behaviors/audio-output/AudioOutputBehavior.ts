@@ -8,7 +8,6 @@
 
 import { AudioOutput } from "@matter/types/clusters/audio-output";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { AudioOutputInterface } from "./AudioOutputInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * AudioOutputBehavior.with.
  */
 export const AudioOutputBehaviorConstructor = ClusterBehavior
-    .withInterface<AudioOutputInterface>()
+    .withInterface<AudioOutput>()
     .for(AudioOutput.Cluster);
 
 export interface AudioOutputBehaviorConstructor extends Identity<typeof AudioOutputBehaviorConstructor> {}

@@ -173,3 +173,4 @@ export type BindingCluster = Binding.Cluster;
 export const BindingCluster = Binding.Cluster;
 ClusterRegistry.register(Binding.Complete);
 ClusterNamespace.define(Binding, BindingModel);
+export interface Binding extends ClusterNamespace { Attributes: Binding.Attributes & { Components: Binding.Attributes.Components } }

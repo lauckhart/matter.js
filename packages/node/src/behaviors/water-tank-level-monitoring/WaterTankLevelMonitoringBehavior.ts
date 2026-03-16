@@ -8,7 +8,7 @@
 
 import { WaterTankLevelMonitoring } from "@matter/types/clusters/water-tank-level-monitoring";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ResourceMonitoringInterface } from "../resource-monitoring/ResourceMonitoringInterface.js";
+import { ResourceMonitoring } from "@matter/types/clusters/resource-monitoring";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +19,7 @@ import { Identity } from "@matter/general";
  * features using WaterTankLevelMonitoringBehavior.with.
  */
 export const WaterTankLevelMonitoringBehaviorConstructor = ClusterBehavior
-    .withInterface<ResourceMonitoringInterface>()
+    .withInterface<ResourceMonitoring>()
     .for(WaterTankLevelMonitoring.Cluster);
 
 export interface WaterTankLevelMonitoringBehaviorConstructor extends Identity<typeof WaterTankLevelMonitoringBehaviorConstructor> {}

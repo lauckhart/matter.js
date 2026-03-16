@@ -8,7 +8,6 @@
 
 import { SmokeCoAlarm } from "@matter/types/clusters/smoke-co-alarm";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { SmokeCoAlarmInterface } from "./SmokeCoAlarmInterface.js";
 import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * {@link SmokeCoAlarmBehavior.with}.
  */
 export const SmokeCoAlarmBehaviorConstructor = ClusterBehavior
-    .withInterface<SmokeCoAlarmInterface>()
+    .withInterface<SmokeCoAlarm>()
     .for(ClusterType(SmokeCoAlarm.Base));
 
 export interface SmokeCoAlarmBehaviorConstructor extends Identity<typeof SmokeCoAlarmBehaviorConstructor> {}

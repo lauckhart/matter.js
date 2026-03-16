@@ -7370,3 +7370,4 @@ export type DoorLockCluster = DoorLock.Cluster;
 export const DoorLockCluster = DoorLock.Cluster;
 ClusterRegistry.register(DoorLock.Complete);
 ClusterNamespace.define(DoorLock, DoorLockModel);
+export interface DoorLock extends ClusterNamespace { Attributes: DoorLock.Attributes & { Components: DoorLock.Attributes.Components }; Commands: DoorLock.Commands & { Components: DoorLock.Commands.Components }; Events: DoorLock.Events & { Components: DoorLock.Events.Components }; Features: DoorLock.Features }

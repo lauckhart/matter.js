@@ -9,10 +9,36 @@ import { ClusterModel, GLOBAL_IDS } from "@matter/model";
 import type { AttributeId } from "../datatype/AttributeId.js";
 import type { CommandId } from "../datatype/CommandId.js";
 import type { EventId } from "../datatype/EventId.js";
+import type { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 import { TlvOfModel } from "../tlv/TlvOfModel.js";
 import { TlvSchema } from "../tlv/TlvSchema.js";
 
+/**
+ * Describes the shape of a generated cluster namespace for use as a type constraint.
+ *
+ * Generated cluster namespaces in `@matter/types` export a `Commands` sub-namespace with a `Components` tuple that
+ * maps feature flags to method interfaces.  This interface describes that shape so behavior infrastructure can extract
+ * the correct command methods for a given feature selection.
+ */
+export interface ClusterNamespace {
+    Attributes?: {};
+    Commands?: {};
+    Events?: {};
+    Features?: {};
+}
+
 export namespace ClusterNamespace {
+    export interface Component<F extends BitSchema = {}> {
+        flags: TypeFromPartialBitSchema<F>;
+        methods: {};
+    }
+
+    export interface ElementComponent<F extends BitSchema = {}> {
+        flags: TypeFromPartialBitSchema<F>;
+        mandatory?: string;
+        optional?: string;
+    }
+
     export interface Attribute<T = any> {
         id: AttributeId;
         name: string;
@@ -40,6 +66,47 @@ export namespace ClusterNamespace {
     export type Commands<C> = { [K in keyof C]: Command<C[K]> };
     export type Events<E> = { [K in keyof E]: Event<E[K]> };
     export type Features<F extends string> = { [K in F]: Feature };
+
+    /**
+     * Augment a namespace with attribute keys forced mandatory (e.g. via `enable()` or `alter()`).
+     */
+    export type WithEnabledAttributes<N extends ClusterNamespace, K extends string> = N & {
+        Attributes: { Enabled: K };
+    };
+
+    /**
+     * Extract attribute key names from ElementFlags (used by `enable()`).
+     */
+    export type EnabledAttributeKeysOf<F> = F extends { attributes: infer A } ? keyof A & string : never;
+
+    /**
+     * Extract attribute key names made mandatory by Alterations (used by `alter()`).
+     */
+    export type AlteredMandatoryAttributeKeysOf<A> = A extends { attributes: infer E }
+        ? { [K in keyof E & string]: E[K] extends { optional: false } ? K : never }[keyof E & string]
+        : never;
+
+    /**
+     * Augment a namespace with event keys forced mandatory (e.g. via `enable()`).
+     */
+    export type WithEnabledEvents<N extends ClusterNamespace, K extends string> =
+        N & { Events: { Enabled: K } };
+
+    /**
+     * Extract event key names from ElementFlags (used by `enable()`).
+     * Input shape: `{ events?: { eventName: true } }`
+     */
+    export type EnabledEventKeysOf<F> =
+        F extends { events: infer E } ? keyof E & string : never;
+
+    /**
+     * Extract event key names made mandatory by Alterations (used by `alter()`).
+     * Input shape: `{ events?: { eventName: { optional: false } } }`
+     */
+    export type AlteredMandatoryEventKeysOf<A> =
+        A extends { events: infer E }
+            ? { [K in keyof E & string]: E[K] extends { optional: false } ? K : never }[keyof E & string]
+            : never;
 
     /**
      * Install lazy getters on a cluster namespace object.  Each property is computed on first access via

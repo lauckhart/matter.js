@@ -8,7 +8,6 @@
 
 import { ContentLauncher } from "@matter/types/clusters/content-launcher";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ContentLauncherInterface } from "./ContentLauncherInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * using ContentLauncherBehavior.with.
  */
 export const ContentLauncherBehaviorConstructor = ClusterBehavior
-    .withInterface<ContentLauncherInterface>()
+    .withInterface<ContentLauncher>()
     .for(ContentLauncher.Cluster);
 
 export interface ContentLauncherBehaviorConstructor extends Identity<typeof ContentLauncherBehaviorConstructor> {}

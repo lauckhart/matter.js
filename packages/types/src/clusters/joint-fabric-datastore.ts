@@ -3401,3 +3401,4 @@ export type JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 export const JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 ClusterRegistry.register(JointFabricDatastore.Complete);
 ClusterNamespace.define(JointFabricDatastore, JointFabricDatastoreModel);
+export interface JointFabricDatastore extends ClusterNamespace { Attributes: JointFabricDatastore.Attributes & { Components: JointFabricDatastore.Attributes.Components }; Commands: JointFabricDatastore.Commands & { Components: JointFabricDatastore.Commands.Components } }

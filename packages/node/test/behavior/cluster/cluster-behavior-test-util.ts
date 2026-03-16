@@ -161,20 +161,22 @@ interface MyClusterAwesomeInterface {
     becomeAwesome(request: number): MaybePromise;
 }
 
-interface MyClusterInterface {
-    components: [
-        {
-            flags: {};
-            methods: MyClusterBaseInterface;
-        },
+interface MyClusterNamespace {
+    Commands: {
+        Components: [
+            {
+                flags: {};
+                methods: MyClusterBaseInterface;
+            },
 
-        {
-            flags: { awesome: true };
-            methods: MyClusterAwesomeInterface;
-        },
-    ];
+            {
+                flags: { awesome: true };
+                methods: MyClusterAwesomeInterface;
+            },
+        ];
+    };
 }
 
-export const BaseBehavior = ClusterBehavior.withInterface<MyClusterInterface>().for(MyCluster, MySchema);
+export const BaseBehavior = ClusterBehavior.withInterface<MyClusterNamespace>().for(MyCluster, MySchema);
 
 export class MyBehavior extends BaseBehavior {}

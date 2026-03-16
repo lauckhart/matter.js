@@ -91,3 +91,4 @@ export type CarbonDioxideConcentrationMeasurementCluster = CarbonDioxideConcentr
 export const CarbonDioxideConcentrationMeasurementCluster = CarbonDioxideConcentrationMeasurement.Cluster;
 ClusterRegistry.register(CarbonDioxideConcentrationMeasurement.Complete);
 ClusterNamespace.define(CarbonDioxideConcentrationMeasurement, CarbonDioxideConcentrationMeasurementModel);
+export interface CarbonDioxideConcentrationMeasurement extends ClusterNamespace { Attributes: CarbonDioxideConcentrationMeasurement.Attributes & { Components: CarbonDioxideConcentrationMeasurement.Attributes.Components }; Features: CarbonDioxideConcentrationMeasurement.Features }

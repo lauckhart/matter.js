@@ -8,7 +8,6 @@
 
 import { SoftwareDiagnostics } from "@matter/types/clusters/software-diagnostics";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { SoftwareDiagnosticsInterface } from "./SoftwareDiagnosticsInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * using SoftwareDiagnosticsBehavior.with.
  */
 export const SoftwareDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<SoftwareDiagnosticsInterface>()
+    .withInterface<SoftwareDiagnostics>()
     .for(SoftwareDiagnostics.Cluster);
 
 export interface SoftwareDiagnosticsBehaviorConstructor extends Identity<typeof SoftwareDiagnosticsBehaviorConstructor> {}

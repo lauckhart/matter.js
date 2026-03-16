@@ -236,3 +236,4 @@ export type PressureMeasurementCluster = PressureMeasurement.Cluster;
 export const PressureMeasurementCluster = PressureMeasurement.Cluster;
 ClusterRegistry.register(PressureMeasurement.Complete);
 ClusterNamespace.define(PressureMeasurement, PressureMeasurementModel);
+export interface PressureMeasurement extends ClusterNamespace { Attributes: PressureMeasurement.Attributes & { Components: PressureMeasurement.Attributes.Components }; Features: PressureMeasurement.Features }

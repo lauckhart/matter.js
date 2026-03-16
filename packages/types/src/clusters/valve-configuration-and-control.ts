@@ -670,3 +670,4 @@ export type ValveConfigurationAndControlCluster = ValveConfigurationAndControl.C
 export const ValveConfigurationAndControlCluster = ValveConfigurationAndControl.Cluster;
 ClusterRegistry.register(ValveConfigurationAndControl.Complete);
 ClusterNamespace.define(ValveConfigurationAndControl, ValveConfigurationAndControlModel);
+export interface ValveConfigurationAndControl extends ClusterNamespace { Attributes: ValveConfigurationAndControl.Attributes & { Components: ValveConfigurationAndControl.Attributes.Components }; Commands: ValveConfigurationAndControl.Commands & { Components: ValveConfigurationAndControl.Commands.Components }; Events: ValveConfigurationAndControl.Events & { Components: ValveConfigurationAndControl.Events.Components }; Features: ValveConfigurationAndControl.Features }

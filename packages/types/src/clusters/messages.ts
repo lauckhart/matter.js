@@ -953,3 +953,4 @@ export type MessagesCluster = Messages.Cluster;
 export const MessagesCluster = Messages.Cluster;
 ClusterRegistry.register(Messages.Complete);
 ClusterNamespace.define(Messages, MessagesModel);
+export interface Messages extends ClusterNamespace { Attributes: Messages.Attributes & { Components: Messages.Attributes.Components }; Commands: Messages.Commands & { Components: Messages.Commands.Components }; Events: Messages.Events & { Components: Messages.Events.Components }; Features: Messages.Features }

@@ -1939,3 +1939,4 @@ export type AccessControlCluster = AccessControl.Cluster;
 export const AccessControlCluster = AccessControl.Cluster;
 ClusterRegistry.register(AccessControl.Complete);
 ClusterNamespace.define(AccessControl, AccessControlModel);
+export interface AccessControl extends ClusterNamespace { Attributes: AccessControl.Attributes & { Components: AccessControl.Attributes.Components }; Commands: AccessControl.Commands & { Components: AccessControl.Commands.Components }; Events: AccessControl.Events & { Components: AccessControl.Events.Components }; Features: AccessControl.Features }

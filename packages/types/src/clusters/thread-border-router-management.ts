@@ -491,3 +491,4 @@ export type ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.C
 export const ThreadBorderRouterManagementCluster = ThreadBorderRouterManagement.Cluster;
 ClusterRegistry.register(ThreadBorderRouterManagement.Complete);
 ClusterNamespace.define(ThreadBorderRouterManagement, ThreadBorderRouterManagementModel);
+export interface ThreadBorderRouterManagement extends ClusterNamespace { Attributes: ThreadBorderRouterManagement.Attributes & { Components: ThreadBorderRouterManagement.Attributes.Components }; Commands: ThreadBorderRouterManagement.Commands & { Components: ThreadBorderRouterManagement.Commands.Components }; Features: ThreadBorderRouterManagement.Features }

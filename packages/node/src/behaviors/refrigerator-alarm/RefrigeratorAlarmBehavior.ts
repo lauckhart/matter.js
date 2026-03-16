@@ -8,7 +8,6 @@
 
 import { RefrigeratorAlarm } from "@matter/types/clusters/refrigerator-alarm";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { RefrigeratorAlarmInterface } from "./RefrigeratorAlarmInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * using RefrigeratorAlarmBehavior.with.
  */
 export const RefrigeratorAlarmBehaviorConstructor = ClusterBehavior
-    .withInterface<RefrigeratorAlarmInterface>()
+    .withInterface<RefrigeratorAlarm>()
     .for(RefrigeratorAlarm.Cluster);
 
 export interface RefrigeratorAlarmBehaviorConstructor extends Identity<typeof RefrigeratorAlarmBehaviorConstructor> {}

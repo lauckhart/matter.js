@@ -2087,3 +2087,4 @@ export type EnergyEvseCluster = EnergyEvse.Cluster;
 export const EnergyEvseCluster = EnergyEvse.Cluster;
 ClusterRegistry.register(EnergyEvse.Complete);
 ClusterNamespace.define(EnergyEvse, EnergyEvseModel);
+export interface EnergyEvse extends ClusterNamespace { Attributes: EnergyEvse.Attributes & { Components: EnergyEvse.Attributes.Components }; Commands: EnergyEvse.Commands & { Components: EnergyEvse.Commands.Components }; Events: EnergyEvse.Events & { Components: EnergyEvse.Events.Components }; Features: EnergyEvse.Features }

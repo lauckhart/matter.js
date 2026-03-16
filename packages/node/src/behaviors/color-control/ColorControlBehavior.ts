@@ -8,7 +8,6 @@
 
 import { ColorControl } from "@matter/types/clusters/color-control";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ColorControlInterface } from "./ColorControlInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * ColorControlBehavior.with.
  */
 export const ColorControlBehaviorConstructor = ClusterBehavior
-    .withInterface<ColorControlInterface>()
+    .withInterface<ColorControl>()
     .for(ColorControl.Cluster);
 
 export interface ColorControlBehaviorConstructor extends Identity<typeof ColorControlBehaviorConstructor> {}

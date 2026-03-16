@@ -674,3 +674,4 @@ export type ApplicationLauncherCluster = ApplicationLauncher.Cluster;
 export const ApplicationLauncherCluster = ApplicationLauncher.Cluster;
 ClusterRegistry.register(ApplicationLauncher.Complete);
 ClusterNamespace.define(ApplicationLauncher, ApplicationLauncherModel);
+export interface ApplicationLauncher extends ClusterNamespace { Attributes: ApplicationLauncher.Attributes & { Components: ApplicationLauncher.Attributes.Components }; Commands: ApplicationLauncher.Commands & { Components: ApplicationLauncher.Commands.Components }; Features: ApplicationLauncher.Features }

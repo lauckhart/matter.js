@@ -130,3 +130,4 @@ export type IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 export const IlluminanceMeasurementCluster = IlluminanceMeasurement.Cluster;
 ClusterRegistry.register(IlluminanceMeasurement.Complete);
 ClusterNamespace.define(IlluminanceMeasurement, IlluminanceMeasurementModel);
+export interface IlluminanceMeasurement extends ClusterNamespace { Attributes: IlluminanceMeasurement.Attributes & { Components: IlluminanceMeasurement.Attributes.Components } }

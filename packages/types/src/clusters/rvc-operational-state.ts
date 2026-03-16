@@ -607,3 +607,4 @@ export type RvcOperationalStateCluster = RvcOperationalState.Cluster;
 export const RvcOperationalStateCluster = RvcOperationalState.Cluster;
 ClusterRegistry.register(RvcOperationalState.Complete);
 ClusterNamespace.define(RvcOperationalState, RvcOperationalStateModel);
+export interface RvcOperationalState extends ClusterNamespace { Attributes: RvcOperationalState.Attributes & { Components: RvcOperationalState.Attributes.Components }; Commands: RvcOperationalState.Commands & { Components: RvcOperationalState.Commands.Components }; Events: RvcOperationalState.Events & { Components: RvcOperationalState.Events.Components } }

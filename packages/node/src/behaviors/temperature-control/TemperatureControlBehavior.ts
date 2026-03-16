@@ -8,7 +8,6 @@
 
 import { TemperatureControl } from "@matter/types/clusters/temperature-control";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { TemperatureControlInterface } from "./TemperatureControlInterface.js";
 import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
@@ -20,7 +19,7 @@ import { Identity } from "@matter/general";
  * {@link TemperatureControlBehavior.with}.
  */
 export const TemperatureControlBehaviorConstructor = ClusterBehavior
-    .withInterface<TemperatureControlInterface>()
+    .withInterface<TemperatureControl>()
     .for(ClusterType(TemperatureControl.Base));
 
 export interface TemperatureControlBehaviorConstructor extends Identity<typeof TemperatureControlBehaviorConstructor> {}

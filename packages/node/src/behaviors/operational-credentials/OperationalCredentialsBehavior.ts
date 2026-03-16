@@ -8,7 +8,6 @@
 
 import { OperationalCredentials } from "@matter/types/clusters/operational-credentials";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { OperationalCredentialsInterface } from "./OperationalCredentialsInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link OperationalCredentials.Cluster}.
  */
 export const OperationalCredentialsBehaviorConstructor = ClusterBehavior
-    .withInterface<OperationalCredentialsInterface>()
+    .withInterface<OperationalCredentials>()
     .for(OperationalCredentials.Cluster);
 
 export interface OperationalCredentialsBehaviorConstructor extends Identity<typeof OperationalCredentialsBehaviorConstructor> {}

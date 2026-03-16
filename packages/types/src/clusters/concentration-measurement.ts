@@ -440,3 +440,4 @@ export namespace ConcentrationMeasurement {
 }
 
 ClusterNamespace.define(ConcentrationMeasurement, ConcentrationMeasurementModel);
+export interface ConcentrationMeasurement extends ClusterNamespace { Attributes: ConcentrationMeasurement.Attributes & { Components: ConcentrationMeasurement.Attributes.Components }; Features: ConcentrationMeasurement.Features }

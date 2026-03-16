@@ -8,7 +8,6 @@
 
 import { Channel } from "@matter/types/clusters/channel";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ChannelInterface } from "./ChannelInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * ChannelBehavior.with.
  */
 export const ChannelBehaviorConstructor = ClusterBehavior
-    .withInterface<ChannelInterface>()
+    .withInterface<Channel>()
     .for(Channel.Cluster);
 
 export interface ChannelBehaviorConstructor extends Identity<typeof ChannelBehaviorConstructor> {}

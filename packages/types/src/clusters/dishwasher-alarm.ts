@@ -471,3 +471,4 @@ export type DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 export const DishwasherAlarmCluster = DishwasherAlarm.Cluster;
 ClusterRegistry.register(DishwasherAlarm.Complete);
 ClusterNamespace.define(DishwasherAlarm, DishwasherAlarmModel);
+export interface DishwasherAlarm extends ClusterNamespace { Attributes: DishwasherAlarm.Attributes & { Components: DishwasherAlarm.Attributes.Components }; Commands: DishwasherAlarm.Commands & { Components: DishwasherAlarm.Commands.Components }; Events: DishwasherAlarm.Events & { Components: DishwasherAlarm.Events.Components }; Features: DishwasherAlarm.Features }

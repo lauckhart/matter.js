@@ -344,3 +344,4 @@ export namespace ResourceMonitoring {
 }
 
 ClusterNamespace.define(ResourceMonitoring, ResourceMonitoringModel);
+export interface ResourceMonitoring extends ClusterNamespace { Attributes: ResourceMonitoring.Attributes & { Components: ResourceMonitoring.Attributes.Components }; Commands: ResourceMonitoring.Commands & { Components: ResourceMonitoring.Commands.Components }; Features: ResourceMonitoring.Features }

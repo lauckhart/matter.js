@@ -663,3 +663,4 @@ export type BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation
 export const BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation.Cluster;
 ClusterRegistry.register(BridgedDeviceBasicInformation.Complete);
 ClusterNamespace.define(BridgedDeviceBasicInformation, BridgedDeviceBasicInformationModel);
+export interface BridgedDeviceBasicInformation extends ClusterNamespace { Attributes: BridgedDeviceBasicInformation.Attributes & { Components: BridgedDeviceBasicInformation.Attributes.Components }; Commands: BridgedDeviceBasicInformation.Commands & { Components: BridgedDeviceBasicInformation.Commands.Components }; Events: BridgedDeviceBasicInformation.Events & { Components: BridgedDeviceBasicInformation.Events.Components }; Features: BridgedDeviceBasicInformation.Features }

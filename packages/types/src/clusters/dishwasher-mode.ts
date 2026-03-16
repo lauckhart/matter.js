@@ -404,3 +404,4 @@ export type DishwasherModeCluster = DishwasherMode.Cluster;
 export const DishwasherModeCluster = DishwasherMode.Cluster;
 ClusterRegistry.register(DishwasherMode.Complete);
 ClusterNamespace.define(DishwasherMode, DishwasherModeModel);
+export interface DishwasherMode extends ClusterNamespace { Attributes: DishwasherMode.Attributes & { Components: DishwasherMode.Attributes.Components }; Commands: DishwasherMode.Commands & { Components: DishwasherMode.Commands.Components }; Features: DishwasherMode.Features }

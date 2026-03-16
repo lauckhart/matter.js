@@ -8,7 +8,6 @@
 
 import { EthernetNetworkDiagnostics } from "@matter/types/clusters/ethernet-network-diagnostics";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { EthernetNetworkDiagnosticsInterface } from "./EthernetNetworkDiagnosticsInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * features using EthernetNetworkDiagnosticsBehavior.with.
  */
 export const EthernetNetworkDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<EthernetNetworkDiagnosticsInterface>()
+    .withInterface<EthernetNetworkDiagnostics>()
     .for(EthernetNetworkDiagnostics.Cluster);
 
 export interface EthernetNetworkDiagnosticsBehaviorConstructor extends Identity<typeof EthernetNetworkDiagnosticsBehaviorConstructor> {}

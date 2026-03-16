@@ -687,3 +687,4 @@ export type OccupancySensingCluster = OccupancySensing.Cluster;
 export const OccupancySensingCluster = OccupancySensing.Cluster;
 ClusterRegistry.register(OccupancySensing.Complete);
 ClusterNamespace.define(OccupancySensing, OccupancySensingModel);
+export interface OccupancySensing extends ClusterNamespace { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }

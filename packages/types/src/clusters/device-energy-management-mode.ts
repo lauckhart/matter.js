@@ -421,3 +421,4 @@ export type DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Clust
 export const DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Cluster;
 ClusterRegistry.register(DeviceEnergyManagementMode.Complete);
 ClusterNamespace.define(DeviceEnergyManagementMode, DeviceEnergyManagementModeModel);
+export interface DeviceEnergyManagementMode extends ClusterNamespace { Attributes: DeviceEnergyManagementMode.Attributes & { Components: DeviceEnergyManagementMode.Attributes.Components }; Commands: DeviceEnergyManagementMode.Commands & { Components: DeviceEnergyManagementMode.Commands.Components }; Features: DeviceEnergyManagementMode.Features }

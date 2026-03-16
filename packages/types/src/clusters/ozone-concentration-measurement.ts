@@ -86,3 +86,4 @@ export type OzoneConcentrationMeasurementCluster = OzoneConcentrationMeasurement
 export const OzoneConcentrationMeasurementCluster = OzoneConcentrationMeasurement.Cluster;
 ClusterRegistry.register(OzoneConcentrationMeasurement.Complete);
 ClusterNamespace.define(OzoneConcentrationMeasurement, OzoneConcentrationMeasurementModel);
+export interface OzoneConcentrationMeasurement extends ClusterNamespace { Attributes: OzoneConcentrationMeasurement.Attributes & { Components: OzoneConcentrationMeasurement.Attributes.Components }; Features: OzoneConcentrationMeasurement.Features }

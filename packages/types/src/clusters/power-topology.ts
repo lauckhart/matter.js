@@ -205,3 +205,4 @@ export type PowerTopologyCluster = PowerTopology.Cluster;
 export const PowerTopologyCluster = PowerTopology.Cluster;
 ClusterRegistry.register(PowerTopology.Complete);
 ClusterNamespace.define(PowerTopology, PowerTopologyModel);
+export interface PowerTopology extends ClusterNamespace { Attributes: PowerTopology.Attributes & { Components: PowerTopology.Attributes.Components }; Features: PowerTopology.Features }

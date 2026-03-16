@@ -8,7 +8,6 @@
 
 import { MediaPlayback } from "@matter/types/clusters/media-playback";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { MediaPlaybackInterface } from "./MediaPlaybackInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * MediaPlaybackBehavior.with.
  */
 export const MediaPlaybackBehaviorConstructor = ClusterBehavior
-    .withInterface<MediaPlaybackInterface>()
+    .withInterface<MediaPlayback>()
     .for(MediaPlayback.Cluster);
 
 export interface MediaPlaybackBehaviorConstructor extends Identity<typeof MediaPlaybackBehaviorConstructor> {}

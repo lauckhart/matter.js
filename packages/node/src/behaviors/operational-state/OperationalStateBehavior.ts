@@ -8,7 +8,6 @@
 
 import { OperationalState } from "@matter/types/clusters/operational-state";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { OperationalStateInterface } from "./OperationalStateInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link OperationalState.Cluster}.
  */
 export const OperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<OperationalStateInterface>()
+    .withInterface<OperationalState>()
     .for(OperationalState.Cluster);
 
 export interface OperationalStateBehaviorConstructor extends Identity<typeof OperationalStateBehaviorConstructor> {}

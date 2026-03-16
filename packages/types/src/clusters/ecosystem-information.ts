@@ -410,3 +410,4 @@ export type EcosystemInformationCluster = EcosystemInformation.Cluster;
 export const EcosystemInformationCluster = EcosystemInformation.Cluster;
 ClusterRegistry.register(EcosystemInformation.Complete);
 ClusterNamespace.define(EcosystemInformation, EcosystemInformationModel);
+export interface EcosystemInformation extends ClusterNamespace { Attributes: EcosystemInformation.Attributes & { Components: EcosystemInformation.Attributes.Components } }

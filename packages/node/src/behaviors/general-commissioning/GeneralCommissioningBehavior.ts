@@ -8,7 +8,6 @@
 
 import { GeneralCommissioning } from "@matter/types/clusters/general-commissioning";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { GeneralCommissioningInterface } from "./GeneralCommissioningInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * features using GeneralCommissioningBehavior.with.
  */
 export const GeneralCommissioningBehaviorConstructor = ClusterBehavior
-    .withInterface<GeneralCommissioningInterface>()
+    .withInterface<GeneralCommissioning>()
     .for(GeneralCommissioning.Cluster);
 
 export interface GeneralCommissioningBehaviorConstructor extends Identity<typeof GeneralCommissioningBehaviorConstructor> {}

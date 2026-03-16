@@ -411,3 +411,4 @@ export type LaundryWasherModeCluster = LaundryWasherMode.Cluster;
 export const LaundryWasherModeCluster = LaundryWasherMode.Cluster;
 ClusterRegistry.register(LaundryWasherMode.Complete);
 ClusterNamespace.define(LaundryWasherMode, LaundryWasherModeModel);
+export interface LaundryWasherMode extends ClusterNamespace { Attributes: LaundryWasherMode.Attributes & { Components: LaundryWasherMode.Attributes.Components }; Commands: LaundryWasherMode.Commands & { Components: LaundryWasherMode.Commands.Components }; Features: LaundryWasherMode.Features }

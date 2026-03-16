@@ -183,3 +183,4 @@ export type UnitLocalizationCluster = UnitLocalization.Cluster;
 export const UnitLocalizationCluster = UnitLocalization.Cluster;
 ClusterRegistry.register(UnitLocalization.Complete);
 ClusterNamespace.define(UnitLocalization, UnitLocalizationModel);
+export interface UnitLocalization extends ClusterNamespace { Attributes: UnitLocalization.Attributes & { Components: UnitLocalization.Attributes.Components }; Features: UnitLocalization.Features }

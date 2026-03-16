@@ -104,3 +104,4 @@ export type RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Clu
 export const RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;
 ClusterRegistry.register(RelativeHumidityMeasurement.Complete);
 ClusterNamespace.define(RelativeHumidityMeasurement, RelativeHumidityMeasurementModel);
+export interface RelativeHumidityMeasurement extends ClusterNamespace { Attributes: RelativeHumidityMeasurement.Attributes & { Components: RelativeHumidityMeasurement.Attributes.Components } }

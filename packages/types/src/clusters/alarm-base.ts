@@ -379,3 +379,4 @@ export namespace AlarmBase {
 }
 
 ClusterNamespace.define(AlarmBase, AlarmBaseModel);
+export interface AlarmBase extends ClusterNamespace { Attributes: AlarmBase.Attributes & { Components: AlarmBase.Attributes.Components }; Commands: AlarmBase.Commands & { Components: AlarmBase.Commands.Components }; Events: AlarmBase.Events & { Components: AlarmBase.Events.Components }; Features: AlarmBase.Features }

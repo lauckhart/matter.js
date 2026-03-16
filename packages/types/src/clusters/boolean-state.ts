@@ -108,3 +108,4 @@ export type BooleanStateCluster = BooleanState.Cluster;
 export const BooleanStateCluster = BooleanState.Cluster;
 ClusterRegistry.register(BooleanState.Complete);
 ClusterNamespace.define(BooleanState, BooleanStateModel);
+export interface BooleanState extends ClusterNamespace { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }

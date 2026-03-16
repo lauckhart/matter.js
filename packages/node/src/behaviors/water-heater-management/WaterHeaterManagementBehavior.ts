@@ -8,7 +8,6 @@
 
 import { WaterHeaterManagement } from "@matter/types/clusters/water-heater-management";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { WaterHeaterManagementInterface } from "./WaterHeaterManagementInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * features using WaterHeaterManagementBehavior.with.
  */
 export const WaterHeaterManagementBehaviorConstructor = ClusterBehavior
-    .withInterface<WaterHeaterManagementInterface>()
+    .withInterface<WaterHeaterManagement>()
     .for(WaterHeaterManagement.Cluster);
 
 export interface WaterHeaterManagementBehaviorConstructor extends Identity<typeof WaterHeaterManagementBehaviorConstructor> {}

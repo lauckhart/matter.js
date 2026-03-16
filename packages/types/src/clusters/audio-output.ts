@@ -338,3 +338,4 @@ export type AudioOutputCluster = AudioOutput.Cluster;
 export const AudioOutputCluster = AudioOutput.Cluster;
 ClusterRegistry.register(AudioOutput.Complete);
 ClusterNamespace.define(AudioOutput, AudioOutputModel);
+export interface AudioOutput extends ClusterNamespace { Attributes: AudioOutput.Attributes & { Components: AudioOutput.Attributes.Components }; Commands: AudioOutput.Commands & { Components: AudioOutput.Commands.Components }; Features: AudioOutput.Features }

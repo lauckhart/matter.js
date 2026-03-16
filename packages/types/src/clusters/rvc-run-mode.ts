@@ -492,3 +492,4 @@ export type RvcRunModeCluster = RvcRunMode.Cluster;
 export const RvcRunModeCluster = RvcRunMode.Cluster;
 ClusterRegistry.register(RvcRunMode.Complete);
 ClusterNamespace.define(RvcRunMode, RvcRunModeModel);
+export interface RvcRunMode extends ClusterNamespace { Attributes: RvcRunMode.Attributes & { Components: RvcRunMode.Attributes.Components }; Commands: RvcRunMode.Commands & { Components: RvcRunMode.Commands.Components }; Features: RvcRunMode.Features }

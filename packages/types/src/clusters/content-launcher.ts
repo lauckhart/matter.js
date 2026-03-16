@@ -1339,3 +1339,4 @@ export type ContentLauncherCluster = ContentLauncher.Cluster;
 export const ContentLauncherCluster = ContentLauncher.Cluster;
 ClusterRegistry.register(ContentLauncher.Complete);
 ClusterNamespace.define(ContentLauncher, ContentLauncherModel);
+export interface ContentLauncher extends ClusterNamespace { Attributes: ContentLauncher.Attributes & { Components: ContentLauncher.Attributes.Components }; Commands: ContentLauncher.Commands & { Components: ContentLauncher.Commands.Components }; Features: ContentLauncher.Features }

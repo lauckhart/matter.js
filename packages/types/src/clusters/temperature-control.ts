@@ -371,3 +371,4 @@ export type TemperatureControlCluster = TemperatureControl.Cluster;
 export const TemperatureControlCluster = TemperatureControl.Cluster;
 ClusterRegistry.register(TemperatureControl.Complete);
 ClusterNamespace.define(TemperatureControl, TemperatureControlModel);
+export interface TemperatureControl extends ClusterNamespace { Attributes: TemperatureControl.Attributes & { Components: TemperatureControl.Attributes.Components }; Commands: TemperatureControl.Commands & { Components: TemperatureControl.Commands.Components }; Features: TemperatureControl.Features }

@@ -8,7 +8,6 @@
 
 import { LevelControl } from "@matter/types/clusters/level-control";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { LevelControlInterface } from "./LevelControlInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * LevelControlBehavior.with.
  */
 export const LevelControlBehaviorConstructor = ClusterBehavior
-    .withInterface<LevelControlInterface>()
+    .withInterface<LevelControl>()
     .for(LevelControl.Cluster);
 
 export interface LevelControlBehaviorConstructor extends Identity<typeof LevelControlBehaviorConstructor> {}

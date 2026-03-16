@@ -2197,3 +2197,4 @@ export type ContentControlCluster = ContentControl.Cluster;
 export const ContentControlCluster = ContentControl.Cluster;
 ClusterRegistry.register(ContentControl.Complete);
 ClusterNamespace.define(ContentControl, ContentControlModel);
+export interface ContentControl extends ClusterNamespace { Attributes: ContentControl.Attributes & { Components: ContentControl.Attributes.Components }; Commands: ContentControl.Commands & { Components: ContentControl.Commands.Components }; Events: ContentControl.Events & { Components: ContentControl.Events.Components }; Features: ContentControl.Features }

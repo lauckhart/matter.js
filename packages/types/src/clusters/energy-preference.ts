@@ -364,3 +364,4 @@ export type EnergyPreferenceCluster = EnergyPreference.Cluster;
 export const EnergyPreferenceCluster = EnergyPreference.Cluster;
 ClusterRegistry.register(EnergyPreference.Complete);
 ClusterNamespace.define(EnergyPreference, EnergyPreferenceModel);
+export interface EnergyPreference extends ClusterNamespace { Attributes: EnergyPreference.Attributes & { Components: EnergyPreference.Attributes.Components }; Features: EnergyPreference.Features }

@@ -941,3 +941,4 @@ export type ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Clu
 export const ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 ClusterRegistry.register(ElectricalEnergyMeasurement.Complete);
 ClusterNamespace.define(ElectricalEnergyMeasurement, ElectricalEnergyMeasurementModel);
+export interface ElectricalEnergyMeasurement extends ClusterNamespace { Attributes: ElectricalEnergyMeasurement.Attributes & { Components: ElectricalEnergyMeasurement.Attributes.Components }; Events: ElectricalEnergyMeasurement.Events & { Components: ElectricalEnergyMeasurement.Events.Components }; Features: ElectricalEnergyMeasurement.Features }

@@ -442,3 +442,4 @@ export type RvcCleanModeCluster = RvcCleanMode.Cluster;
 export const RvcCleanModeCluster = RvcCleanMode.Cluster;
 ClusterRegistry.register(RvcCleanMode.Complete);
 ClusterNamespace.define(RvcCleanMode, RvcCleanModeModel);
+export interface RvcCleanMode extends ClusterNamespace { Attributes: RvcCleanMode.Attributes & { Components: RvcCleanMode.Attributes.Components }; Commands: RvcCleanMode.Commands & { Components: RvcCleanMode.Commands.Components }; Features: RvcCleanMode.Features }

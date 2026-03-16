@@ -1168,3 +1168,4 @@ export type ServiceAreaCluster = ServiceArea.Cluster;
 export const ServiceAreaCluster = ServiceArea.Cluster;
 ClusterRegistry.register(ServiceArea.Complete);
 ClusterNamespace.define(ServiceArea, ServiceAreaModel);
+export interface ServiceArea extends ClusterNamespace { Attributes: ServiceArea.Attributes & { Components: ServiceArea.Attributes.Components }; Commands: ServiceArea.Commands & { Components: ServiceArea.Commands.Components }; Features: ServiceArea.Features }

@@ -657,3 +657,4 @@ export type GroupsCluster = Groups.Cluster;
 export const GroupsCluster = Groups.Cluster;
 ClusterRegistry.register(Groups.Complete);
 ClusterNamespace.define(Groups, GroupsModel);
+export interface Groups extends ClusterNamespace { Attributes: Groups.Attributes & { Components: Groups.Attributes.Components }; Commands: Groups.Commands & { Components: Groups.Commands.Components }; Features: Groups.Features }

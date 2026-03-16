@@ -86,3 +86,4 @@ export type LocalizationConfigurationCluster = LocalizationConfiguration.Cluster
 export const LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;
 ClusterRegistry.register(LocalizationConfiguration.Complete);
 ClusterNamespace.define(LocalizationConfiguration, LocalizationConfigurationModel);
+export interface LocalizationConfiguration extends ClusterNamespace { Attributes: LocalizationConfiguration.Attributes & { Components: LocalizationConfiguration.Attributes.Components } }

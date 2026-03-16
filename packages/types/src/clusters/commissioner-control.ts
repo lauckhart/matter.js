@@ -420,3 +420,4 @@ export type CommissionerControlCluster = CommissionerControl.Cluster;
 export const CommissionerControlCluster = CommissionerControl.Cluster;
 ClusterRegistry.register(CommissionerControl.Complete);
 ClusterNamespace.define(CommissionerControl, CommissionerControlModel);
+export interface CommissionerControl extends ClusterNamespace { Attributes: CommissionerControl.Attributes & { Components: CommissionerControl.Attributes.Components }; Commands: CommissionerControl.Commands & { Components: CommissionerControl.Commands.Components }; Events: CommissionerControl.Events & { Components: CommissionerControl.Events.Components } }

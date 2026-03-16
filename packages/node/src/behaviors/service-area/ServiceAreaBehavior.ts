@@ -8,7 +8,6 @@
 
 import { ServiceArea } from "@matter/types/clusters/service-area";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ServiceAreaInterface } from "./ServiceAreaInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * ServiceAreaBehavior.with.
  */
 export const ServiceAreaBehaviorConstructor = ClusterBehavior
-    .withInterface<ServiceAreaInterface>()
+    .withInterface<ServiceArea>()
     .for(ServiceArea.Cluster);
 
 export interface ServiceAreaBehaviorConstructor extends Identity<typeof ServiceAreaBehaviorConstructor> {}

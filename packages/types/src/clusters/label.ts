@@ -98,3 +98,4 @@ export namespace Label {
 }
 
 ClusterNamespace.define(Label, LabelModel);
+export interface Label extends ClusterNamespace { Attributes: Label.Attributes & { Components: Label.Attributes.Components } }

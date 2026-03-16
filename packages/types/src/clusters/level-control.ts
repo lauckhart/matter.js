@@ -798,3 +798,4 @@ export type LevelControlCluster = LevelControl.Cluster;
 export const LevelControlCluster = LevelControl.Cluster;
 ClusterRegistry.register(LevelControl.Complete);
 ClusterNamespace.define(LevelControl, LevelControlModel);
+export interface LevelControl extends ClusterNamespace { Attributes: LevelControl.Attributes & { Components: LevelControl.Attributes.Components }; Commands: LevelControl.Commands & { Components: LevelControl.Commands.Components }; Features: LevelControl.Features }

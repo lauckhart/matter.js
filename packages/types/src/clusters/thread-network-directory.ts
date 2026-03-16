@@ -350,3 +350,4 @@ export type ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 export const ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;
 ClusterRegistry.register(ThreadNetworkDirectory.Complete);
 ClusterNamespace.define(ThreadNetworkDirectory, ThreadNetworkDirectoryModel);
+export interface ThreadNetworkDirectory extends ClusterNamespace { Attributes: ThreadNetworkDirectory.Attributes & { Components: ThreadNetworkDirectory.Attributes.Components }; Commands: ThreadNetworkDirectory.Commands & { Components: ThreadNetworkDirectory.Commands.Components } }

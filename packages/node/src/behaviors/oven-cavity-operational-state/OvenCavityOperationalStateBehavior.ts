@@ -8,7 +8,6 @@
 
 import { OvenCavityOperationalState } from "@matter/types/clusters/oven-cavity-operational-state";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { OvenCavityOperationalStateInterface } from "./OvenCavityOperationalStateInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link OvenCavityOperationalState.Cluster}.
  */
 export const OvenCavityOperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<OvenCavityOperationalStateInterface>()
+    .withInterface<OvenCavityOperationalState>()
     .for(OvenCavityOperationalState.Cluster);
 
 export interface OvenCavityOperationalStateBehaviorConstructor extends Identity<typeof OvenCavityOperationalStateBehaviorConstructor> {}

@@ -431,3 +431,4 @@ export type EnergyEvseModeCluster = EnergyEvseMode.Cluster;
 export const EnergyEvseModeCluster = EnergyEvseMode.Cluster;
 ClusterRegistry.register(EnergyEvseMode.Complete);
 ClusterNamespace.define(EnergyEvseMode, EnergyEvseModeModel);
+export interface EnergyEvseMode extends ClusterNamespace { Attributes: EnergyEvseMode.Attributes & { Components: EnergyEvseMode.Attributes.Components }; Commands: EnergyEvseMode.Commands & { Components: EnergyEvseMode.Commands.Components }; Features: EnergyEvseMode.Features }

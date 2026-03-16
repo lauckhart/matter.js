@@ -513,3 +513,4 @@ export type MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 export const MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 ClusterRegistry.register(MicrowaveOvenControl.Complete);
 ClusterNamespace.define(MicrowaveOvenControl, MicrowaveOvenControlModel);
+export interface MicrowaveOvenControl extends ClusterNamespace { Attributes: MicrowaveOvenControl.Attributes & { Components: MicrowaveOvenControl.Attributes.Components }; Commands: MicrowaveOvenControl.Commands & { Components: MicrowaveOvenControl.Commands.Components }; Features: MicrowaveOvenControl.Features }

@@ -8,14 +8,13 @@
 
 import { KeypadInput } from "@matter/types/clusters/keypad-input";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { KeypadInputInterface } from "./KeypadInputInterface.js";
 import { Identity } from "@matter/general";
 
 /**
  * KeypadInputBehavior is the base class for objects that support interaction with {@link KeypadInput.Cluster}.
  */
 export const KeypadInputBehaviorConstructor = ClusterBehavior
-    .withInterface<KeypadInputInterface>()
+    .withInterface<KeypadInput>()
     .for(KeypadInput.Cluster);
 
 export interface KeypadInputBehaviorConstructor extends Identity<typeof KeypadInputBehaviorConstructor> {}

@@ -91,3 +91,4 @@ export type FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrat
 export const FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrationMeasurement.Cluster;
 ClusterRegistry.register(FormaldehydeConcentrationMeasurement.Complete);
 ClusterNamespace.define(FormaldehydeConcentrationMeasurement, FormaldehydeConcentrationMeasurementModel);
+export interface FormaldehydeConcentrationMeasurement extends ClusterNamespace { Attributes: FormaldehydeConcentrationMeasurement.Attributes & { Components: FormaldehydeConcentrationMeasurement.Attributes.Components }; Features: FormaldehydeConcentrationMeasurement.Features }

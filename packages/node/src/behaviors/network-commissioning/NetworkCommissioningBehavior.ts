@@ -8,7 +8,6 @@
 
 import { NetworkCommissioning } from "@matter/types/clusters/network-commissioning";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { NetworkCommissioningInterface } from "./NetworkCommissioningInterface.js";
 import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
@@ -20,7 +19,7 @@ import { Identity } from "@matter/general";
  * {@link NetworkCommissioningBehavior.with}.
  */
 export const NetworkCommissioningBehaviorConstructor = ClusterBehavior
-    .withInterface<NetworkCommissioningInterface>()
+    .withInterface<NetworkCommissioning>()
     .for(ClusterType(NetworkCommissioning.Base));
 
 export interface NetworkCommissioningBehaviorConstructor extends Identity<typeof NetworkCommissioningBehaviorConstructor> {}

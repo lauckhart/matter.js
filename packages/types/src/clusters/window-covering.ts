@@ -1897,3 +1897,4 @@ export type WindowCoveringCluster = WindowCovering.Cluster;
 export const WindowCoveringCluster = WindowCovering.Cluster;
 ClusterRegistry.register(WindowCovering.Complete);
 ClusterNamespace.define(WindowCovering, WindowCoveringModel);
+export interface WindowCovering extends ClusterNamespace { Attributes: WindowCovering.Attributes & { Components: WindowCovering.Attributes.Components }; Commands: WindowCovering.Commands & { Components: WindowCovering.Commands.Components }; Features: WindowCovering.Features }

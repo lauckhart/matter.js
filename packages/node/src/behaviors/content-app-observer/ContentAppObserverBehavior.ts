@@ -8,7 +8,6 @@
 
 import { ContentAppObserver } from "@matter/types/clusters/content-app-observer";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ContentAppObserverInterface } from "./ContentAppObserverInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link ContentAppObserver.Cluster}.
  */
 export const ContentAppObserverBehaviorConstructor = ClusterBehavior
-    .withInterface<ContentAppObserverInterface>()
+    .withInterface<ContentAppObserver>()
     .for(ContentAppObserver.Cluster);
 
 export interface ContentAppObserverBehaviorConstructor extends Identity<typeof ContentAppObserverBehaviorConstructor> {}

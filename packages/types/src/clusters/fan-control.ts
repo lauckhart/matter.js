@@ -763,3 +763,4 @@ export type FanControlCluster = FanControl.Cluster;
 export const FanControlCluster = FanControl.Cluster;
 ClusterRegistry.register(FanControl.Complete);
 ClusterNamespace.define(FanControl, FanControlModel);
+export interface FanControl extends ClusterNamespace { Attributes: FanControl.Attributes & { Components: FanControl.Attributes.Components }; Commands: FanControl.Commands & { Components: FanControl.Commands.Components }; Features: FanControl.Features }

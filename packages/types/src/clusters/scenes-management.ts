@@ -1479,3 +1479,4 @@ export type ScenesManagementCluster = ScenesManagement.Cluster;
 export const ScenesManagementCluster = ScenesManagement.Cluster;
 ClusterRegistry.register(ScenesManagement.Complete);
 ClusterNamespace.define(ScenesManagement, ScenesManagementModel);
+export interface ScenesManagement extends ClusterNamespace { Attributes: ScenesManagement.Attributes & { Components: ScenesManagement.Attributes.Components }; Commands: ScenesManagement.Commands & { Components: ScenesManagement.Commands.Components }; Features: ScenesManagement.Features }

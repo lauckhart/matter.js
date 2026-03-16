@@ -8,7 +8,6 @@
 
 import { MediaInput } from "@matter/types/clusters/media-input";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { MediaInputInterface } from "./MediaInputInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * MediaInputBehavior.with.
  */
 export const MediaInputBehaviorConstructor = ClusterBehavior
-    .withInterface<MediaInputInterface>()
+    .withInterface<MediaInput>()
     .for(MediaInput.Cluster);
 
 export interface MediaInputBehaviorConstructor extends Identity<typeof MediaInputBehaviorConstructor> {}

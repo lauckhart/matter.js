@@ -1087,3 +1087,4 @@ export type OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster
 export const OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;
 ClusterRegistry.register(OtaSoftwareUpdateProvider.Complete);
 ClusterNamespace.define(OtaSoftwareUpdateProvider, OtaSoftwareUpdateProviderModel);
+export interface OtaSoftwareUpdateProvider extends ClusterNamespace { Commands: OtaSoftwareUpdateProvider.Commands & { Components: OtaSoftwareUpdateProvider.Commands.Components } }

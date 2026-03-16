@@ -797,3 +797,4 @@ export type OperationalStateCluster = OperationalState.Cluster;
 export const OperationalStateCluster = OperationalState.Cluster;
 ClusterRegistry.register(OperationalState.Complete);
 ClusterNamespace.define(OperationalState, OperationalStateModel);
+export interface OperationalState extends ClusterNamespace { Attributes: OperationalState.Attributes & { Components: OperationalState.Attributes.Components }; Commands: OperationalState.Commands & { Components: OperationalState.Commands.Components }; Events: OperationalState.Events & { Components: OperationalState.Events.Components } }

@@ -304,3 +304,4 @@ export type IdentifyCluster = Identify.Cluster;
 export const IdentifyCluster = Identify.Cluster;
 ClusterRegistry.register(Identify.Complete);
 ClusterNamespace.define(Identify, IdentifyModel);
+export interface Identify extends ClusterNamespace { Attributes: Identify.Attributes & { Components: Identify.Attributes.Components }; Commands: Identify.Commands & { Components: Identify.Commands.Components } }

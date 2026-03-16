@@ -8,7 +8,6 @@
 
 import { TimeSynchronization } from "@matter/types/clusters/time-synchronization";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { TimeSynchronizationInterface } from "./TimeSynchronizationInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * using TimeSynchronizationBehavior.with.
  */
 export const TimeSynchronizationBehaviorConstructor = ClusterBehavior
-    .withInterface<TimeSynchronizationInterface>()
+    .withInterface<TimeSynchronization>()
     .for(TimeSynchronization.Cluster);
 
 export interface TimeSynchronizationBehaviorConstructor extends Identity<typeof TimeSynchronizationBehaviorConstructor> {}

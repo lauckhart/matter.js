@@ -1415,3 +1415,4 @@ export type IcdManagementCluster = IcdManagement.Cluster;
 export const IcdManagementCluster = IcdManagement.Cluster;
 ClusterRegistry.register(IcdManagement.Complete);
 ClusterNamespace.define(IcdManagement, IcdManagementModel);
+export interface IcdManagement extends ClusterNamespace { Attributes: IcdManagement.Attributes & { Components: IcdManagement.Attributes.Components }; Commands: IcdManagement.Commands & { Components: IcdManagement.Commands.Components }; Features: IcdManagement.Features }

@@ -66,3 +66,4 @@ export type UserLabelCluster = UserLabel.Cluster;
 export const UserLabelCluster = UserLabel.Cluster;
 ClusterRegistry.register(UserLabel.Complete);
 ClusterNamespace.define(UserLabel, UserLabelModel);
+export interface UserLabel extends ClusterNamespace { Attributes: UserLabel.Attributes & { Components: UserLabel.Attributes.Components } }

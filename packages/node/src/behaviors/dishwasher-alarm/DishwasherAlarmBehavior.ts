@@ -8,7 +8,6 @@
 
 import { DishwasherAlarm } from "@matter/types/clusters/dishwasher-alarm";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { DishwasherAlarmInterface } from "./DishwasherAlarmInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * using DishwasherAlarmBehavior.with.
  */
 export const DishwasherAlarmBehaviorConstructor = ClusterBehavior
-    .withInterface<DishwasherAlarmInterface>()
+    .withInterface<DishwasherAlarm>()
     .for(DishwasherAlarm.Cluster);
 
 export interface DishwasherAlarmBehaviorConstructor extends Identity<typeof DishwasherAlarmBehaviorConstructor> {}

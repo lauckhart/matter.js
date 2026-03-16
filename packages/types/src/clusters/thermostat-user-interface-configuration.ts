@@ -156,3 +156,4 @@ export type ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfac
 export const ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfaceConfiguration.Cluster;
 ClusterRegistry.register(ThermostatUserInterfaceConfiguration.Complete);
 ClusterNamespace.define(ThermostatUserInterfaceConfiguration, ThermostatUserInterfaceConfigurationModel);
+export interface ThermostatUserInterfaceConfiguration extends ClusterNamespace { Attributes: ThermostatUserInterfaceConfiguration.Attributes & { Components: ThermostatUserInterfaceConfiguration.Attributes.Components } }

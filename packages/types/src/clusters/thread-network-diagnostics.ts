@@ -1838,3 +1838,4 @@ export type ThreadNetworkDiagnosticsCluster = ThreadNetworkDiagnostics.Cluster;
 export const ThreadNetworkDiagnosticsCluster = ThreadNetworkDiagnostics.Cluster;
 ClusterRegistry.register(ThreadNetworkDiagnostics.Complete);
 ClusterNamespace.define(ThreadNetworkDiagnostics, ThreadNetworkDiagnosticsModel);
+export interface ThreadNetworkDiagnostics extends ClusterNamespace { Attributes: ThreadNetworkDiagnostics.Attributes & { Components: ThreadNetworkDiagnostics.Attributes.Components }; Commands: ThreadNetworkDiagnostics.Commands & { Components: ThreadNetworkDiagnostics.Commands.Components }; Events: ThreadNetworkDiagnostics.Events & { Components: ThreadNetworkDiagnostics.Events.Components }; Features: ThreadNetworkDiagnostics.Features }

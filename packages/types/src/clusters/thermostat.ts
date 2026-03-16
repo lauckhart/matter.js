@@ -3729,3 +3729,4 @@ export type ThermostatCluster = Thermostat.Cluster;
 export const ThermostatCluster = Thermostat.Cluster;
 ClusterRegistry.register(Thermostat.Complete);
 ClusterNamespace.define(Thermostat, ThermostatModel);
+export interface Thermostat extends ClusterNamespace { Attributes: Thermostat.Attributes & { Components: Thermostat.Attributes.Components }; Commands: Thermostat.Commands & { Components: Thermostat.Commands.Components }; Features: Thermostat.Features }

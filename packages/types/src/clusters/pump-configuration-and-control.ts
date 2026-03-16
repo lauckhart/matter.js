@@ -1139,3 +1139,4 @@ export type PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Clu
 export const PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 ClusterRegistry.register(PumpConfigurationAndControl.Complete);
 ClusterNamespace.define(PumpConfigurationAndControl, PumpConfigurationAndControlModel);
+export interface PumpConfigurationAndControl extends ClusterNamespace { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }

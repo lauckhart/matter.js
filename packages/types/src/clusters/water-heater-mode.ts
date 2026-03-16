@@ -412,3 +412,4 @@ export type WaterHeaterModeCluster = WaterHeaterMode.Cluster;
 export const WaterHeaterModeCluster = WaterHeaterMode.Cluster;
 ClusterRegistry.register(WaterHeaterMode.Complete);
 ClusterNamespace.define(WaterHeaterMode, WaterHeaterModeModel);
+export interface WaterHeaterMode extends ClusterNamespace { Attributes: WaterHeaterMode.Attributes & { Components: WaterHeaterMode.Attributes.Components }; Commands: WaterHeaterMode.Commands & { Components: WaterHeaterMode.Commands.Components }; Features: WaterHeaterMode.Features }

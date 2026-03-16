@@ -409,3 +409,4 @@ export type SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 export const SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 ClusterRegistry.register(SoftwareDiagnostics.Complete);
 ClusterNamespace.define(SoftwareDiagnostics, SoftwareDiagnosticsModel);
+export interface SoftwareDiagnostics extends ClusterNamespace { Attributes: SoftwareDiagnostics.Attributes & { Components: SoftwareDiagnostics.Attributes.Components }; Commands: SoftwareDiagnostics.Commands & { Components: SoftwareDiagnostics.Commands.Components }; Events: SoftwareDiagnostics.Events & { Components: SoftwareDiagnostics.Events.Components }; Features: SoftwareDiagnostics.Features }

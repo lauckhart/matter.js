@@ -8,7 +8,6 @@
 
 import { Thermostat } from "@matter/types/clusters/thermostat";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ThermostatInterface } from "./ThermostatInterface.js";
 import { ClusterType } from "@matter/types";
 import { Identity } from "@matter/general";
 
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * {@link ThermostatBehavior.with}.
  */
 export const ThermostatBehaviorConstructor = ClusterBehavior
-    .withInterface<ThermostatInterface>()
+    .withInterface<Thermostat>()
     .for(ClusterType(Thermostat.Base));
 
 export interface ThermostatBehaviorConstructor extends Identity<typeof ThermostatBehaviorConstructor> {}

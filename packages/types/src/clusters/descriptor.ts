@@ -289,3 +289,4 @@ export type DescriptorCluster = Descriptor.Cluster;
 export const DescriptorCluster = Descriptor.Cluster;
 ClusterRegistry.register(Descriptor.Complete);
 ClusterNamespace.define(Descriptor, DescriptorModel);
+export interface Descriptor extends ClusterNamespace { Attributes: Descriptor.Attributes & { Components: Descriptor.Attributes.Components }; Features: Descriptor.Features }

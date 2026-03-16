@@ -423,3 +423,4 @@ export type ModeSelectCluster = ModeSelect.Cluster;
 export const ModeSelectCluster = ModeSelect.Cluster;
 ClusterRegistry.register(ModeSelect.Complete);
 ClusterNamespace.define(ModeSelect, ModeSelectModel);
+export interface ModeSelect extends ClusterNamespace { Attributes: ModeSelect.Attributes & { Components: ModeSelect.Attributes.Components }; Commands: ModeSelect.Commands & { Components: ModeSelect.Commands.Components }; Features: ModeSelect.Features }

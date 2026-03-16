@@ -8,7 +8,6 @@
 
 import { BooleanStateConfiguration } from "@matter/types/clusters/boolean-state-configuration";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { BooleanStateConfigurationInterface } from "./BooleanStateConfigurationInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * features using BooleanStateConfigurationBehavior.with.
  */
 export const BooleanStateConfigurationBehaviorConstructor = ClusterBehavior
-    .withInterface<BooleanStateConfigurationInterface>()
+    .withInterface<BooleanStateConfiguration>()
     .for(BooleanStateConfiguration.Cluster);
 
 export interface BooleanStateConfigurationBehaviorConstructor extends Identity<typeof BooleanStateConfigurationBehaviorConstructor> {}

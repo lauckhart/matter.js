@@ -587,4 +587,21 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
 
     // Install lazy getters after the namespace (computed on first access)
     file.atom(`ClusterNamespace.define(${name}, ${name}Model)`);
+
+    // Merge an interface with the namespace so it can be used as a type (e.g. in withInterface<OnOff>())
+    const members = [] as string[];
+    if (hasAttrs) {
+        members.push(`Attributes: ${name}.Attributes & { Components: ${name}.Attributes.Components }`);
+    }
+    if (hasCommands) {
+        members.push(`Commands: ${name}.Commands & { Components: ${name}.Commands.Components }`);
+    }
+    if (hasEvents) {
+        members.push(`Events: ${name}.Events & { Components: ${name}.Events.Components }`);
+    }
+    if (hasFeatures) {
+        members.push(`Features: ${name}.Features`);
+    }
+    const body = members.length ? ` ${members.join("; ")} ` : "";
+    file.atom(`export interface ${name} extends ClusterNamespace {${body}}`);
 }

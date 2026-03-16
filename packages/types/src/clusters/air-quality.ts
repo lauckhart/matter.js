@@ -177,3 +177,4 @@ export type AirQualityCluster = AirQuality.Cluster;
 export const AirQualityCluster = AirQuality.Cluster;
 ClusterRegistry.register(AirQuality.Complete);
 ClusterNamespace.define(AirQuality, AirQualityModel);
+export interface AirQuality extends ClusterNamespace { Attributes: AirQuality.Attributes & { Components: AirQuality.Attributes.Components }; Features: AirQuality.Features }

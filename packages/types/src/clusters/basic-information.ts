@@ -800,3 +800,4 @@ export type BasicInformationCluster = BasicInformation.Cluster;
 export const BasicInformationCluster = BasicInformation.Cluster;
 ClusterRegistry.register(BasicInformation.Complete);
 ClusterNamespace.define(BasicInformation, BasicInformationModel);
+export interface BasicInformation extends ClusterNamespace { Attributes: BasicInformation.Attributes & { Components: BasicInformation.Attributes.Components }; Events: BasicInformation.Events & { Components: BasicInformation.Events.Components } }

@@ -86,3 +86,4 @@ export type Pm25ConcentrationMeasurementCluster = Pm25ConcentrationMeasurement.C
 export const Pm25ConcentrationMeasurementCluster = Pm25ConcentrationMeasurement.Cluster;
 ClusterRegistry.register(Pm25ConcentrationMeasurement.Complete);
 ClusterNamespace.define(Pm25ConcentrationMeasurement, Pm25ConcentrationMeasurementModel);
+export interface Pm25ConcentrationMeasurement extends ClusterNamespace { Attributes: Pm25ConcentrationMeasurement.Attributes & { Components: Pm25ConcentrationMeasurement.Attributes.Components }; Features: Pm25ConcentrationMeasurement.Features }

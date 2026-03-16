@@ -272,3 +272,4 @@ export type TimeFormatLocalizationCluster = TimeFormatLocalization.Cluster;
 export const TimeFormatLocalizationCluster = TimeFormatLocalization.Cluster;
 ClusterRegistry.register(TimeFormatLocalization.Complete);
 ClusterNamespace.define(TimeFormatLocalization, TimeFormatLocalizationModel);
+export interface TimeFormatLocalization extends ClusterNamespace { Attributes: TimeFormatLocalization.Attributes & { Components: TimeFormatLocalization.Attributes.Components }; Features: TimeFormatLocalization.Features }

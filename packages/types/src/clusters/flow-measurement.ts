@@ -97,3 +97,4 @@ export type FlowMeasurementCluster = FlowMeasurement.Cluster;
 export const FlowMeasurementCluster = FlowMeasurement.Cluster;
 ClusterRegistry.register(FlowMeasurement.Complete);
 ClusterNamespace.define(FlowMeasurement, FlowMeasurementModel);
+export interface FlowMeasurement extends ClusterNamespace { Attributes: FlowMeasurement.Attributes & { Components: FlowMeasurement.Attributes.Components } }

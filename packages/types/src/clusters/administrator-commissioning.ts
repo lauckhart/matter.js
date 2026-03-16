@@ -705,3 +705,4 @@ export type AdministratorCommissioningCluster = AdministratorCommissioning.Clust
 export const AdministratorCommissioningCluster = AdministratorCommissioning.Cluster;
 ClusterRegistry.register(AdministratorCommissioning.Complete);
 ClusterNamespace.define(AdministratorCommissioning, AdministratorCommissioningModel);
+export interface AdministratorCommissioning extends ClusterNamespace { Attributes: AdministratorCommissioning.Attributes & { Components: AdministratorCommissioning.Attributes.Components }; Commands: AdministratorCommissioning.Commands & { Components: AdministratorCommissioning.Commands.Components }; Features: AdministratorCommissioning.Features }

@@ -373,3 +373,4 @@ export type MediaInputCluster = MediaInput.Cluster;
 export const MediaInputCluster = MediaInput.Cluster;
 ClusterRegistry.register(MediaInput.Complete);
 ClusterNamespace.define(MediaInput, MediaInputModel);
+export interface MediaInput extends ClusterNamespace { Attributes: MediaInput.Attributes & { Components: MediaInput.Attributes.Components }; Commands: MediaInput.Commands & { Components: MediaInput.Commands.Components }; Features: MediaInput.Features }

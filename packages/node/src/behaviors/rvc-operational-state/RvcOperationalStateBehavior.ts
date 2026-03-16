@@ -8,7 +8,6 @@
 
 import { RvcOperationalState } from "@matter/types/clusters/rvc-operational-state";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { RvcOperationalStateInterface } from "./RvcOperationalStateInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -16,7 +15,7 @@ import { Identity } from "@matter/general";
  * {@link RvcOperationalState.Cluster}.
  */
 export const RvcOperationalStateBehaviorConstructor = ClusterBehavior
-    .withInterface<RvcOperationalStateInterface>()
+    .withInterface<RvcOperationalState>()
     .for(RvcOperationalState.Cluster);
 
 export interface RvcOperationalStateBehaviorConstructor extends Identity<typeof RvcOperationalStateBehaviorConstructor> {}

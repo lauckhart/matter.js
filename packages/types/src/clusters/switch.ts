@@ -820,3 +820,4 @@ export type SwitchCluster = Switch.Cluster;
 export const SwitchCluster = Switch.Cluster;
 ClusterRegistry.register(Switch.Complete);
 ClusterNamespace.define(Switch, SwitchModel);
+export interface Switch extends ClusterNamespace { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }

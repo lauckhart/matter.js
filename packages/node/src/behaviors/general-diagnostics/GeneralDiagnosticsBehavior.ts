@@ -8,7 +8,6 @@
 
 import { GeneralDiagnostics } from "@matter/types/clusters/general-diagnostics";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { GeneralDiagnosticsInterface } from "./GeneralDiagnosticsInterface.js";
 import { Identity } from "@matter/general";
 
 /**
@@ -19,7 +18,7 @@ import { Identity } from "@matter/general";
  * using GeneralDiagnosticsBehavior.with.
  */
 export const GeneralDiagnosticsBehaviorConstructor = ClusterBehavior
-    .withInterface<GeneralDiagnosticsInterface>()
+    .withInterface<GeneralDiagnostics>()
     .for(GeneralDiagnostics.Cluster);
 
 export interface GeneralDiagnosticsBehaviorConstructor extends Identity<typeof GeneralDiagnosticsBehaviorConstructor> {}

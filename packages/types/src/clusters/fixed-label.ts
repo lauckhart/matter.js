@@ -74,3 +74,4 @@ export type FixedLabelCluster = FixedLabel.Cluster;
 export const FixedLabelCluster = FixedLabel.Cluster;
 ClusterRegistry.register(FixedLabel.Complete);
 ClusterNamespace.define(FixedLabel, FixedLabelModel);
+export interface FixedLabel extends ClusterNamespace { Attributes: FixedLabel.Attributes & { Components: FixedLabel.Attributes.Components } }

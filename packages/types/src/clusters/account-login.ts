@@ -585,3 +585,4 @@ export type AccountLoginCluster = AccountLogin.Cluster;
 export const AccountLoginCluster = AccountLogin.Cluster;
 ClusterRegistry.register(AccountLogin.Complete);
 ClusterNamespace.define(AccountLogin, AccountLoginModel);
+export interface AccountLogin extends ClusterNamespace { Commands: AccountLogin.Commands & { Components: AccountLogin.Commands.Components }; Events: AccountLogin.Events & { Components: AccountLogin.Events.Components } }

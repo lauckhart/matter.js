@@ -26,26 +26,28 @@ const FeaturedCluster = ClusterType({
 });
 
 type FeaturesInterface = {
-    components: [
-        {
-            flags: {};
-            methods: {
-                unconditionalMethod(value: string): boolean;
-            };
-        },
-        {
-            flags: { foo: true };
-            methods: {
-                fooMethod(value: number): number;
-            };
-        },
-        {
-            flags: { bar: true };
-            methods: {
-                barMethod(value: boolean): string;
-            };
-        },
-    ];
+    Commands: {
+        Components: [
+            {
+                flags: {};
+                methods: {
+                    unconditionalMethod(value: string): boolean;
+                };
+            },
+            {
+                flags: { foo: true };
+                methods: {
+                    fooMethod(value: number): number;
+                };
+            },
+            {
+                flags: { bar: true };
+                methods: {
+                    barMethod(value: boolean): string;
+                };
+            },
+        ];
+    };
 };
 
 describe("ClusterInterface", () => {

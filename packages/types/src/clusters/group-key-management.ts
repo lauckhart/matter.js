@@ -959,3 +959,4 @@ export type GroupKeyManagementCluster = GroupKeyManagement.Cluster;
 export const GroupKeyManagementCluster = GroupKeyManagement.Cluster;
 ClusterRegistry.register(GroupKeyManagement.Complete);
 ClusterNamespace.define(GroupKeyManagement, GroupKeyManagementModel);
+export interface GroupKeyManagement extends ClusterNamespace { Attributes: GroupKeyManagement.Attributes & { Components: GroupKeyManagement.Attributes.Components }; Commands: GroupKeyManagement.Commands & { Components: GroupKeyManagement.Commands.Components }; Features: GroupKeyManagement.Features }

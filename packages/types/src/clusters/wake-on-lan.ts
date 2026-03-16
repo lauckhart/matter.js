@@ -100,3 +100,4 @@ export type WakeOnLanCluster = WakeOnLan.Cluster;
 export const WakeOnLanCluster = WakeOnLan.Cluster;
 ClusterRegistry.register(WakeOnLan.Complete);
 ClusterNamespace.define(WakeOnLan, WakeOnLanModel);
+export interface WakeOnLan extends ClusterNamespace { Attributes: WakeOnLan.Attributes & { Components: WakeOnLan.Attributes.Components } }
