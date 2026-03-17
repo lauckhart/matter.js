@@ -35,7 +35,7 @@ export interface ClusterNamespaceTyping {
  * interface type via `NS["Typing"]`.
  */
 export interface ClusterNamespace {
-    readonly Typing?: ClusterNamespaceTyping;
+    readonly Typing: ClusterNamespaceTyping;
     readonly schema: ClusterModel;
     readonly id?: ClusterId;
     readonly name: string;
@@ -93,6 +93,7 @@ export namespace ClusterNamespace {
      * Default namespace used before a real cluster is assigned.
      */
     export const Unknown: Concrete = {
+        Typing: {} as ClusterNamespaceTyping,
         id: ClusterId(0),
         name: "Unknown",
         schema: new ClusterModel({ name: "Unknown" }),

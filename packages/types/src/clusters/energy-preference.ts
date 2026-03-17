@@ -360,7 +360,7 @@ export namespace EnergyPreference {
     export const schema = EnergyPreferenceModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: EnergyPreference | undefined;
+    export declare const Typing: EnergyPreference;
 }
 
 export type EnergyPreferenceCluster = EnergyPreference.Cluster;

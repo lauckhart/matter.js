@@ -589,7 +589,7 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
     }
 
     // Bridge the interface type onto the namespace value so typeof OnOff carries Typing
-    file.ns.atom(`export declare const Typing: ${name} | undefined`);
+    file.ns.atom(`export declare const Typing: ${name}`);
 
     // Install lazy getters after the namespace (computed on first access)
     file.atom(`ClusterNamespace.define(${name})`);

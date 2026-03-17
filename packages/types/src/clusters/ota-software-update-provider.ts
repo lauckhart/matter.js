@@ -1083,7 +1083,7 @@ export namespace OtaSoftwareUpdateProvider {
     export const revision = 1;
     export const schema = OtaSoftwareUpdateProviderModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: OtaSoftwareUpdateProvider | undefined;
+    export declare const Typing: OtaSoftwareUpdateProvider;
 }
 
 export type OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;

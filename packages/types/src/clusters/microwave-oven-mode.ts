@@ -365,7 +365,7 @@ export namespace MicrowaveOvenMode {
     export const schema = MicrowaveOvenModeModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: MicrowaveOvenMode | undefined;
+    export declare const Typing: MicrowaveOvenMode;
 }
 
 export type MicrowaveOvenModeCluster = MicrowaveOvenMode.Cluster;

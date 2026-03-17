@@ -1106,7 +1106,7 @@ export namespace ElectricalPowerMeasurement {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: ElectricalPowerMeasurement | undefined;
+    export declare const Typing: ElectricalPowerMeasurement;
 }
 
 export type ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;

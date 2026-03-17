@@ -96,7 +96,7 @@ export namespace WakeOnLan {
     export const revision = 1;
     export const schema = WakeOnLanModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: WakeOnLan | undefined;
+    export declare const Typing: WakeOnLan;
 }
 
 export type WakeOnLanCluster = WakeOnLan.Cluster;

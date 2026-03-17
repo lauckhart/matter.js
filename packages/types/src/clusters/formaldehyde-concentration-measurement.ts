@@ -87,7 +87,7 @@ export namespace FormaldehydeConcentrationMeasurement {
     export const schema = FormaldehydeConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: FormaldehydeConcentrationMeasurement | undefined;
+    export declare const Typing: FormaldehydeConcentrationMeasurement;
 }
 
 export type FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrationMeasurement.Cluster;

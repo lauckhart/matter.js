@@ -443,7 +443,7 @@ export namespace OvenMode {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: OvenMode | undefined;
+    export declare const Typing: OvenMode;
 }
 
 export type OvenModeCluster = OvenMode.Cluster;

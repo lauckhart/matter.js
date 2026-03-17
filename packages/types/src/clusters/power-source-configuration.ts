@@ -64,7 +64,7 @@ export namespace PowerSourceConfiguration {
     export const revision = 1;
     export const schema = PowerSourceConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: PowerSourceConfiguration | undefined;
+    export declare const Typing: PowerSourceConfiguration;
 }
 
 export type PowerSourceConfigurationCluster = PowerSourceConfiguration.Cluster;

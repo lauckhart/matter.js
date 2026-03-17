@@ -1579,7 +1579,7 @@ export namespace Actions {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: Actions | undefined;
+    export declare const Typing: Actions;
 }
 
 export type ActionsCluster = Actions.Cluster;

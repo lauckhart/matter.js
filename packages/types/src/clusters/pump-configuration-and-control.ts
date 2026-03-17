@@ -1135,7 +1135,7 @@ export namespace PumpConfigurationAndControl {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: PumpConfigurationAndControl | undefined;
+    export declare const Typing: PumpConfigurationAndControl;
 }
 
 export type PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;

@@ -93,7 +93,7 @@ export namespace FlowMeasurement {
     export const revision = 3;
     export const schema = FlowMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: FlowMeasurement | undefined;
+    export declare const Typing: FlowMeasurement;
 }
 
 export type FlowMeasurementCluster = FlowMeasurement.Cluster;

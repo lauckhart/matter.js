@@ -683,7 +683,7 @@ export namespace OccupancySensing {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: OccupancySensing | undefined;
+    export declare const Typing: OccupancySensing;
 }
 
 export type OccupancySensingCluster = OccupancySensing.Cluster;

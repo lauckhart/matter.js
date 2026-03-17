@@ -816,7 +816,7 @@ export namespace Switch {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: Switch | undefined;
+    export declare const Typing: Switch;
 }
 
 export type SwitchCluster = Switch.Cluster;

@@ -327,7 +327,7 @@ export namespace TargetNavigator {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: TargetNavigator | undefined;
+    export declare const Typing: TargetNavigator;
 }
 
 export type TargetNavigatorCluster = TargetNavigator.Cluster;

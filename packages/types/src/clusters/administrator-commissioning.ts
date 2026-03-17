@@ -701,7 +701,7 @@ export namespace AdministratorCommissioning {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: AdministratorCommissioning | undefined;
+    export declare const Typing: AdministratorCommissioning;
 }
 
 export type AdministratorCommissioningCluster = AdministratorCommissioning.Cluster;

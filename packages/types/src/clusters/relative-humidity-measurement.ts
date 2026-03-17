@@ -100,7 +100,7 @@ export namespace RelativeHumidityMeasurement {
     export const revision = 3;
     export const schema = RelativeHumidityMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: RelativeHumidityMeasurement | undefined;
+    export declare const Typing: RelativeHumidityMeasurement;
 }
 
 export type RelativeHumidityMeasurementCluster = RelativeHumidityMeasurement.Cluster;

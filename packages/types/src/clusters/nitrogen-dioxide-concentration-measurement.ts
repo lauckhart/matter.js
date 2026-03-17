@@ -87,7 +87,7 @@ export namespace NitrogenDioxideConcentrationMeasurement {
     export const schema = NitrogenDioxideConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: NitrogenDioxideConcentrationMeasurement | undefined;
+    export declare const Typing: NitrogenDioxideConcentrationMeasurement;
 }
 
 export type NitrogenDioxideConcentrationMeasurementCluster = NitrogenDioxideConcentrationMeasurement.Cluster;

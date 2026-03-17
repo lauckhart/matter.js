@@ -82,7 +82,7 @@ export namespace OzoneConcentrationMeasurement {
     export const schema = OzoneConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: OzoneConcentrationMeasurement | undefined;
+    export declare const Typing: OzoneConcentrationMeasurement;
 }
 
 export type OzoneConcentrationMeasurementCluster = OzoneConcentrationMeasurement.Cluster;

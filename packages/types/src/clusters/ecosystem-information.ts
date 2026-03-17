@@ -406,7 +406,7 @@ export namespace EcosystemInformation {
     export const revision = 1;
     export const schema = EcosystemInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: EcosystemInformation | undefined;
+    export declare const Typing: EcosystemInformation;
 }
 
 export type EcosystemInformationCluster = EcosystemInformation.Cluster;

@@ -243,7 +243,7 @@ export namespace ContentAppObserver {
     export const revision = 1;
     export const schema = ContentAppObserverModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: ContentAppObserver | undefined;
+    export declare const Typing: ContentAppObserver;
 }
 
 export type ContentAppObserverCluster = ContentAppObserver.Cluster;

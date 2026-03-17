@@ -581,7 +581,7 @@ export namespace AccountLogin {
     export const schema = AccountLoginModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: AccountLogin | undefined;
+    export declare const Typing: AccountLogin;
 }
 
 export type AccountLoginCluster = AccountLogin.Cluster;

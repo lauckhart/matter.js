@@ -300,7 +300,7 @@ export namespace Identify {
     export const schema = IdentifyModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: Identify | undefined;
+    export declare const Typing: Identify;
 }
 
 export type IdentifyCluster = Identify.Cluster;

@@ -104,7 +104,7 @@ export namespace BooleanState {
     export const schema = BooleanStateModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: BooleanState | undefined;
+    export declare const Typing: BooleanState;
 }
 
 export type BooleanStateCluster = BooleanState.Cluster;

@@ -105,7 +105,7 @@ export namespace LaundryDryerControls {
     export const revision = 1;
     export const schema = LaundryDryerControlsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: LaundryDryerControls | undefined;
+    export declare const Typing: LaundryDryerControls;
 }
 
 export type LaundryDryerControlsCluster = LaundryDryerControls.Cluster;

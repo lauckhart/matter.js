@@ -82,7 +82,7 @@ export namespace LocalizationConfiguration {
     export const revision = 1;
     export const schema = LocalizationConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: LocalizationConfiguration | undefined;
+    export declare const Typing: LocalizationConfiguration;
 }
 
 export type LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;

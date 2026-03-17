@@ -285,7 +285,7 @@ export namespace Descriptor {
     export const schema = DescriptorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: Descriptor | undefined;
+    export declare const Typing: Descriptor;
 }
 
 export type DescriptorCluster = Descriptor.Cluster;

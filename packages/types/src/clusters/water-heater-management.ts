@@ -597,7 +597,7 @@ export namespace WaterHeaterManagement {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: WaterHeaterManagement | undefined;
+    export declare const Typing: WaterHeaterManagement;
 }
 
 export type WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;

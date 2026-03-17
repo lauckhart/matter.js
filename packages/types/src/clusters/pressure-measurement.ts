@@ -232,7 +232,7 @@ export namespace PressureMeasurement {
     export const schema = PressureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: PressureMeasurement | undefined;
+    export declare const Typing: PressureMeasurement;
 }
 
 export type PressureMeasurementCluster = PressureMeasurement.Cluster;

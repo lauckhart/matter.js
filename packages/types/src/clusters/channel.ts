@@ -1793,7 +1793,7 @@ export namespace Channel {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: Channel | undefined;
+    export declare const Typing: Channel;
 }
 
 export type ChannelCluster = Channel.Cluster;

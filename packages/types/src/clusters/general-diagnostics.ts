@@ -1235,7 +1235,7 @@ export namespace GeneralDiagnostics {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: GeneralDiagnostics | undefined;
+    export declare const Typing: GeneralDiagnostics;
 }
 
 export type GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;

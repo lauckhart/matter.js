@@ -334,7 +334,7 @@ export namespace AudioOutput {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: AudioOutput | undefined;
+    export declare const Typing: AudioOutput;
 }
 
 export type AudioOutputCluster = AudioOutput.Cluster;

@@ -643,7 +643,7 @@ export namespace BooleanStateConfiguration {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: BooleanStateConfiguration | undefined;
+    export declare const Typing: BooleanStateConfiguration;
 }
 
 export type BooleanStateConfigurationCluster = BooleanStateConfiguration.Cluster;

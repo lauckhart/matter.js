@@ -1935,7 +1935,7 @@ export namespace AccessControl {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: AccessControl | undefined;
+    export declare const Typing: AccessControl;
 }
 
 export type AccessControlCluster = AccessControl.Cluster;

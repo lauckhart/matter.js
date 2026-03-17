@@ -252,7 +252,7 @@ export namespace OvenCavityOperationalState {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: OvenCavityOperationalState | undefined;
+    export declare const Typing: OvenCavityOperationalState;
 }
 
 export type OvenCavityOperationalStateCluster = OvenCavityOperationalState.Cluster;

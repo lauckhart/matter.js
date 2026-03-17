@@ -268,7 +268,7 @@ export namespace TimeFormatLocalization {
     export const schema = TimeFormatLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: TimeFormatLocalization | undefined;
+    export declare const Typing: TimeFormatLocalization;
 }
 
 export type TimeFormatLocalizationCluster = TimeFormatLocalization.Cluster;

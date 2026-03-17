@@ -206,7 +206,7 @@ export namespace WiFiNetworkManagement {
     export const schema = WiFiNetworkManagementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: WiFiNetworkManagement | undefined;
+    export declare const Typing: WiFiNetworkManagement;
 }
 
 export type WiFiNetworkManagementCluster = WiFiNetworkManagement.Cluster;

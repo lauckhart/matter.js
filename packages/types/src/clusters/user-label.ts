@@ -62,7 +62,7 @@ export namespace UserLabel {
     export const revision = 1;
     export const schema = UserLabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: UserLabel | undefined;
+    export declare const Typing: UserLabel;
 }
 
 export type UserLabelCluster = UserLabel.Cluster;

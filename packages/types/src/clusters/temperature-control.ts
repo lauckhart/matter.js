@@ -367,7 +367,7 @@ export namespace TemperatureControl {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: TemperatureControl | undefined;
+    export declare const Typing: TemperatureControl;
 }
 
 export type TemperatureControlCluster = TemperatureControl.Cluster;

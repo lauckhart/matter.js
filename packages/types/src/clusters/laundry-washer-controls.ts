@@ -246,7 +246,7 @@ export namespace LaundryWasherControls {
     export const schema = LaundryWasherControlsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: LaundryWasherControls | undefined;
+    export declare const Typing: LaundryWasherControls;
 }
 
 export type LaundryWasherControlsCluster = LaundryWasherControls.Cluster;

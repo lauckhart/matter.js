@@ -2793,7 +2793,7 @@ export namespace DeviceEnergyManagement {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: DeviceEnergyManagement | undefined;
+    export declare const Typing: DeviceEnergyManagement;
 }
 
 export type DeviceEnergyManagementCluster = DeviceEnergyManagement.Cluster;

@@ -1893,7 +1893,7 @@ export namespace WindowCovering {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: WindowCovering | undefined;
+    export declare const Typing: WindowCovering;
 }
 
 export type WindowCoveringCluster = WindowCovering.Cluster;

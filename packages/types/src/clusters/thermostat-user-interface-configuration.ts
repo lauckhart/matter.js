@@ -152,7 +152,7 @@ export namespace ThermostatUserInterfaceConfiguration {
     export const revision = 2;
     export const schema = ThermostatUserInterfaceConfigurationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: ThermostatUserInterfaceConfiguration | undefined;
+    export declare const Typing: ThermostatUserInterfaceConfiguration;
 }
 
 export type ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfaceConfiguration.Cluster;

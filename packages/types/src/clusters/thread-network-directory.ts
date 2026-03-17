@@ -346,7 +346,7 @@ export namespace ThreadNetworkDirectory {
     export const schema = ThreadNetworkDirectoryModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: ThreadNetworkDirectory | undefined;
+    export declare const Typing: ThreadNetworkDirectory;
 }
 
 export type ThreadNetworkDirectoryCluster = ThreadNetworkDirectory.Cluster;

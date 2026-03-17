@@ -873,7 +873,7 @@ export namespace SmokeCoAlarm {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: SmokeCoAlarm | undefined;
+    export declare const Typing: SmokeCoAlarm;
 }
 
 export type SmokeCoAlarmCluster = SmokeCoAlarm.Cluster;

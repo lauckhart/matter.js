@@ -92,7 +92,7 @@ export namespace TemperatureMeasurement {
     export const revision = 4;
     export const schema = TemperatureMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: TemperatureMeasurement | undefined;
+    export declare const Typing: TemperatureMeasurement;
 }
 
 export type TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;

@@ -369,7 +369,7 @@ export namespace MediaInput {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: MediaInput | undefined;
+    export declare const Typing: MediaInput;
 }
 
 export type MediaInputCluster = MediaInput.Cluster;

@@ -645,7 +645,7 @@ export namespace JointFabricAdministrator {
     export const schema = JointFabricAdministratorModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: JointFabricAdministrator | undefined;
+    export declare const Typing: JointFabricAdministrator;
 }
 
 export type JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;

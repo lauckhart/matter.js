@@ -378,7 +378,7 @@ export namespace AlarmBase {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: AlarmBase | undefined;
+    export declare const Typing: AlarmBase;
 }
 
 ClusterNamespace.define(AlarmBase);

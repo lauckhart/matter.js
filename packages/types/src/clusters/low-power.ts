@@ -76,7 +76,7 @@ export namespace LowPower {
     export const revision = 1;
     export const schema = LowPowerModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: LowPower | undefined;
+    export declare const Typing: LowPower;
 }
 
 export type LowPowerCluster = LowPower.Cluster;

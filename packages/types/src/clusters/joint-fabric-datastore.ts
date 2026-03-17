@@ -3397,7 +3397,7 @@ export namespace JointFabricDatastore {
     export const schema = JointFabricDatastoreModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: JointFabricDatastore | undefined;
+    export declare const Typing: JointFabricDatastore;
 }
 
 export type JointFabricDatastoreCluster = JointFabricDatastore.Cluster;

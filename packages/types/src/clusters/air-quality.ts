@@ -173,7 +173,7 @@ export namespace AirQuality {
     export const schema = AirQualityModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: AirQuality | undefined;
+    export declare const Typing: AirQuality;
 }
 
 export type AirQualityCluster = AirQuality.Cluster;

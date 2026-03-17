@@ -97,7 +97,7 @@ export namespace Label {
     export const revision = 1;
     export const schema = LabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: Label | undefined;
+    export declare const Typing: Label;
 }
 
 ClusterNamespace.define(Label);

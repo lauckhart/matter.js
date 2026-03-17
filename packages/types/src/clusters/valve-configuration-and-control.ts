@@ -666,7 +666,7 @@ export namespace ValveConfigurationAndControl {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: ValveConfigurationAndControl | undefined;
+    export declare const Typing: ValveConfigurationAndControl;
 }
 
 export type ValveConfigurationAndControlCluster = ValveConfigurationAndControl.Cluster;

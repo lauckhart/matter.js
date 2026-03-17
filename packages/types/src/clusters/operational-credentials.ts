@@ -2216,7 +2216,7 @@ export namespace OperationalCredentials {
     export const schema = OperationalCredentialsModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: OperationalCredentials | undefined;
+    export declare const Typing: OperationalCredentials;
 }
 
 export type OperationalCredentialsCluster = OperationalCredentials.Cluster;

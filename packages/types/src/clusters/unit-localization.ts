@@ -179,7 +179,7 @@ export namespace UnitLocalization {
     export const schema = UnitLocalizationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: UnitLocalization | undefined;
+    export declare const Typing: UnitLocalization;
 }
 
 export type UnitLocalizationCluster = UnitLocalization.Cluster;

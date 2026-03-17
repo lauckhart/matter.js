@@ -366,7 +366,7 @@ export namespace KeypadInput {
     export const schema = KeypadInputModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: KeypadInput | undefined;
+    export declare const Typing: KeypadInput;
 }
 
 export type KeypadInputCluster = KeypadInput.Cluster;

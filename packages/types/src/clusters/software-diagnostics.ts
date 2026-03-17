@@ -405,7 +405,7 @@ export namespace SoftwareDiagnostics {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: SoftwareDiagnostics | undefined;
+    export declare const Typing: SoftwareDiagnostics;
 }
 
 export type SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;

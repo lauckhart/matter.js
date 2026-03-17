@@ -1754,7 +1754,7 @@ export namespace MediaPlayback {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: MediaPlayback | undefined;
+    export declare const Typing: MediaPlayback;
 }
 
 export type MediaPlaybackCluster = MediaPlayback.Cluster;

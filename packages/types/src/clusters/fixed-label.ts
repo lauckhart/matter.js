@@ -70,7 +70,7 @@ export namespace FixedLabel {
     export const revision = 1;
     export const schema = FixedLabelModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: FixedLabel | undefined;
+    export declare const Typing: FixedLabel;
 }
 
 export type FixedLabelCluster = FixedLabel.Cluster;

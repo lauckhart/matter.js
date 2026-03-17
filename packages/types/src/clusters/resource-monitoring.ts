@@ -343,7 +343,7 @@ export namespace ResourceMonitoring {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: ResourceMonitoring | undefined;
+    export declare const Typing: ResourceMonitoring;
 }
 
 ClusterNamespace.define(ResourceMonitoring);

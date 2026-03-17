@@ -1676,7 +1676,7 @@ export namespace PowerSource {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: PowerSource | undefined;
+    export declare const Typing: PowerSource;
 }
 
 export type PowerSourceCluster = PowerSource.Cluster;

@@ -653,7 +653,7 @@ export namespace Groups {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: Groups | undefined;
+    export declare const Typing: Groups;
 }
 
 export type GroupsCluster = Groups.Cluster;

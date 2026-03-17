@@ -659,7 +659,7 @@ export namespace BridgedDeviceBasicInformation {
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const events: ClusterNamespace.Events<Events>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: BridgedDeviceBasicInformation | undefined;
+    export declare const Typing: BridgedDeviceBasicInformation;
 }
 
 export type BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation.Cluster;

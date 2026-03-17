@@ -169,7 +169,7 @@ export namespace Binding {
     export const revision = 1;
     export const schema = BindingModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const Typing: Binding | undefined;
+    export declare const Typing: Binding;
 }
 
 export type BindingCluster = Binding.Cluster;

@@ -1411,7 +1411,7 @@ export namespace IcdManagement {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: IcdManagement | undefined;
+    export declare const Typing: IcdManagement;
 }
 
 export type IcdManagementCluster = IcdManagement.Cluster;

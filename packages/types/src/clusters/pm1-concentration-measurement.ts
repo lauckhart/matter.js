@@ -82,7 +82,7 @@ export namespace Pm1ConcentrationMeasurement {
     export const schema = Pm1ConcentrationMeasurementModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: Pm1ConcentrationMeasurement | undefined;
+    export declare const Typing: Pm1ConcentrationMeasurement;
 }
 
 export type Pm1ConcentrationMeasurementCluster = Pm1ConcentrationMeasurement.Cluster;

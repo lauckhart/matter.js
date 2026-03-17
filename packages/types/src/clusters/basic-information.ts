@@ -796,7 +796,7 @@ export namespace BasicInformation {
     export const schema = BasicInformationModel;
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const events: ClusterNamespace.Events<Events>;
-    export declare const Typing: BasicInformation | undefined;
+    export declare const Typing: BasicInformation;
 }
 
 export type BasicInformationCluster = BasicInformation.Cluster;

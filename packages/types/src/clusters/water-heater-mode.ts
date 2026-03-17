@@ -408,7 +408,7 @@ export namespace WaterHeaterMode {
     export declare const attributes: ClusterNamespace.Attributes<Attributes>;
     export declare const commands: ClusterNamespace.Commands<Commands>;
     export declare const features: ClusterNamespace.Features<Features>;
-    export declare const Typing: WaterHeaterMode | undefined;
+    export declare const Typing: WaterHeaterMode;
 }
 
 export type WaterHeaterModeCluster = WaterHeaterMode.Cluster;

@@ -452,7 +452,7 @@ export namespace DiagnosticLogs {
     export const revision = 1;
     export const schema = DiagnosticLogsModel;
     export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const Typing: DiagnosticLogs | undefined;
+    export declare const Typing: DiagnosticLogs;
 }
 
 export type DiagnosticLogsCluster = DiagnosticLogs.Cluster;
