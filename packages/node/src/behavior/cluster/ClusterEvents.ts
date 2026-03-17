@@ -10,17 +10,21 @@ import type { AttributeModel, EventModel } from "@matter/model";
 import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
 import type { ActionContext } from "../context/ActionContext.js";
-import type { ClusterInterface } from "./ClusterInterface.js";
 
 /**
  * Event instance type for ClusterBehaviors.
+ *
+ * The Omit key uses `keyof Properties<N>` rather than `keyof Properties<InterfaceOf<BaseT>>` (which would
+ * mirror main's pattern of stripping OLD cluster events).  TypeScript can't resolve the latter through nested
+ * ClusterEvents types.  Using N is equivalent because old and new are always the same cluster (same
+ * attribute/event keys), just different feature selections.
  */
 export type ClusterEvents<
     BaseT extends Behavior.Type,
     N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
 > =
     // Keep observables *not* supplied by the old cluster
-    Omit<InstanceType<BaseT["Events"]>, ClusterEvents.EventPropertyKeysOf<ClusterInterface.InterfaceOf<BaseT>>> &
+    Omit<InstanceType<BaseT["Events"]>, keyof ClusterEvents.Properties<N>> &
         // Add observables supplied by the new cluster
         ClusterEvents.Properties<N>;
 

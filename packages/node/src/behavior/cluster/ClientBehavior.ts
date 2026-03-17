@@ -21,7 +21,7 @@ export function ClientBehavior<const NS extends ClusterNamespace>(ns: NS): Clust
     const schema = (ns as { schema?: { name?: string } }).schema;
     const behavior = ClusterBehavior.for(ns, undefined, `${schema?.name ?? "Unknown"}Client`);
 
-    markClientBehavior(behavior);
+    markClientBehavior(behavior as ClusterBehavior.Type);
 
     return behavior;
 }

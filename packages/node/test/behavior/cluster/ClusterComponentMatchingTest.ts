@@ -387,6 +387,37 @@ describe("ClusterComponentMatching", () => {
             ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
         });
 
+        it("OnOff with Lighting has onOff$Changed event", () => {
+            type N = ClusterNamespace.WithSupportedFeatures<
+                OnOff,
+                { lighting: true; deadFrontBehavior: false; offOnly: false }
+            >;
+            type E = ClusterEvents.Properties<N>;
+            ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
+        });
+
+        it("full ClusterEvents with OnOff has onOff$Changed", () => {
+            // This tests the Omit + re-add pattern in ClusterEvents<BaseT, N>
+            type OnOffBehaviorType = ClusterBehavior.Type<typeof ClusterBehavior, OnOff, typeof OnOff>;
+            type N = ClusterNamespace.WithSupportedFeatures<
+                OnOff,
+                { lighting: true; deadFrontBehavior: false; offOnly: false }
+            >;
+            type E = ClusterEvents<OnOffBehaviorType, N>;
+            ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
+        });
+
+        it("ClusterEvents with actual OnOffBehavior has onOff$Changed", () => {
+            // Use the real OnOffBehavior type as BaseT, matching how OnOffServer resolves
+            const OnOffBeh = ClusterBehavior.for(OnOff);
+            type N = ClusterNamespace.WithSupportedFeatures<
+                OnOff,
+                { lighting: true; deadFrontBehavior: false; offOnly: false }
+            >;
+            type E = ClusterEvents<typeof OnOffBeh, N>;
+            ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
+        });
+
         it("OnOff.Instance with Lighting includes Lighting methods", () => {
             // This is what ClusterBehavior.Instance<B, N> resolves to for the methods portion.
             // When N = WithSupportedFeatures<OnOff, {lighting:true, ...}>, MethodsOf should include
