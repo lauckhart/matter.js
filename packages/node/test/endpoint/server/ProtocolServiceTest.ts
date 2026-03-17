@@ -181,7 +181,9 @@ describe("ProtocolServiceTest", () => {
         expect(fabricsReport?.path).deep.equals(FABRICS_PATH);
         const decodedFabrics =
             fabricsReport?.data && TlvOfModel(OperationalCredentials.attributes.fabrics).decodeTlv(fabricsReport?.data);
-        expect(decodedFabrics?.map(({ fabricIndex }) => fabricIndex)).deep.equals([1, 2]);
+        expect((decodedFabrics as { fabricIndex: number }[])?.map(({ fabricIndex }) => fabricIndex)).deep.equals([
+            1, 2,
+        ]);
 
         const nocsReport = report.attributes[1]?.attributeData;
         expect(nocsReport?.path).deep.equals(NOCS_PATH);
