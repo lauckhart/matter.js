@@ -7,7 +7,7 @@
 import { camelize } from "@matter/general";
 import { ClusterModel, ClusterModifier, GLOBAL_IDS } from "@matter/model";
 import type { AttributeId } from "../datatype/AttributeId.js";
-import type { ClusterId } from "../datatype/ClusterId.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 import type { CommandId } from "../datatype/CommandId.js";
 import type { EventId } from "../datatype/EventId.js";
 import type { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
@@ -25,6 +25,7 @@ export interface ClusterNamespaceTyping {
     Commands?: {};
     Events?: {};
     Features?: {};
+    SupportedFeatures?: {};
     readonly schema?: ClusterModel;
 }
 
@@ -89,6 +90,15 @@ export namespace ClusterNamespace {
         readonly id: ClusterId;
     }
 
+    /**
+     * Default namespace used before a real cluster is assigned.
+     */
+    export const Unknown: Concrete = {
+        id: ClusterId(0),
+        name: "Unknown",
+        schema: new ClusterModel({ name: "Unknown" }),
+    };
+
     export type Attributes<A> = { [K in keyof A]: Attribute<A[K]> };
     export type Commands<C> = { [K in keyof C]: Command<C[K]> };
     export type Events<E> = { [K in keyof E]: Event<E[K]> };
@@ -107,7 +117,11 @@ export namespace ClusterNamespace {
     /**
      * Extract supported feature flags from a namespace, defaulting to {}.
      */
-    export type SupportedFeaturesOf<N> = N extends { SupportedFeatures: infer S } ? S : {};
+    export type SupportedFeaturesOf<N> = N extends { SupportedFeatures: infer S }
+        ? S
+        : N extends { Features: infer F extends string }
+          ? { [K in Uncapitalize<F>]: false }
+          : {};
 
     /**
      * Derive the feature flags object type from a namespace's Features string union.
@@ -176,6 +190,14 @@ export namespace ClusterNamespace {
         : never;
 
     /**
+     * Produce a typing with all feature flags set to true.  Used by `complete` to make all component attributes
+     * mandatory.
+     */
+    export type AllFeaturesAsFlags<N extends ClusterNamespaceTyping> = N extends { Features: infer F extends string }
+        ? { [K in Uncapitalize<F>]: true }
+        : {};
+
+    /**
      * Valid feature names for a namespace's feature selection.
      */
     export type FeatureSelection<N extends ClusterNamespaceTyping> = N extends { Features: infer F extends string }
@@ -183,9 +205,16 @@ export namespace ClusterNamespace {
         : readonly string[];
 
     /**
-     * Convert a feature name tuple to a feature flags object type.
+     * Convert a feature name tuple to a feature flags object with explicit true/false for all features.
+     *
+     * Like main's `ClusterComposer.FeaturesAsFlags`, unselected features are explicitly `false` (not absent),
+     * so that `S extends C["flags"]` matches components with `{ offOnly: false }` when offOnly is not selected.
      */
-    export type FeaturesAsFlags<F extends readonly string[]> = { [K in F[number] as Uncapitalize<K>]: true };
+    export type FeaturesAsFlags<N extends ClusterNamespaceTyping, F extends readonly string[]> = N extends {
+        Features: infer All extends string;
+    }
+        ? { [K in Uncapitalize<All>]: Capitalize<K> extends `${F[number]}` ? true : false }
+        : { [K in F[number] as Uncapitalize<K>]: true };
 
     /**
      * Constraint for `alter()` input based on namespace element keys.

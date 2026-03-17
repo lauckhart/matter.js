@@ -7,7 +7,6 @@
 import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
 import { AttributeId, BitSchema, CommandId, TypeFromPartialBitSchema } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
-import type { ClusterInterface } from "./ClusterInterface.js";
 
 /**
  * Instance type for complete (endpoint + fabric) state.
@@ -38,7 +37,7 @@ export namespace ClusterState {
      */
     export type Type<B extends Behavior.Type, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
         // Keep properties *not* from attributes of the old cluster
-        Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<ClusterInterface.InterfaceOf<B>>> &
+        Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<N>> &
             // Add properties from attributes of the new cluster
             NsAttributeProperties<N>;
 

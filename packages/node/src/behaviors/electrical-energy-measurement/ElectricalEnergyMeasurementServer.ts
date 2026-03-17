@@ -7,9 +7,7 @@
 import { ElectricalEnergyMeasurement } from "@matter/types/clusters/electrical-energy-measurement";
 import { ElectricalEnergyMeasurementBehavior } from "./ElectricalEnergyMeasurementBehavior.js";
 
-const ElectricalEnergyMeasurementBase = ElectricalEnergyMeasurementBehavior.for(
-    ElectricalEnergyMeasurement, true,
-).with(
+const ElectricalEnergyMeasurementBase = ElectricalEnergyMeasurementBehavior.with(
     ElectricalEnergyMeasurement.Feature.CumulativeEnergy,
     ElectricalEnergyMeasurement.Feature.PeriodicEnergy,
     ElectricalEnergyMeasurement.Feature.ImportedEnergy,

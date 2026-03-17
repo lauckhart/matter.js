@@ -16,7 +16,7 @@ const DEFAULT_LONG_PRESS_DELAY = Seconds(2);
 
 const logger = Logger.get("SwitchServer");
 
-const SwitchServerBase = SwitchBehavior.for(Switch, true).with(
+const SwitchServerBase = SwitchBehavior.with(
     Switch.Feature.LatchingSwitch,
     Switch.Feature.MomentarySwitch,
     Switch.Feature.MomentarySwitchRelease,
