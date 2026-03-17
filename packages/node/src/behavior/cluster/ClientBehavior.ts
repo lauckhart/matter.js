@@ -19,11 +19,11 @@ import { markClientBehavior } from "./cluster-behavior-utils.js";
  */
 export function ClientBehavior<const NS extends ClusterNamespace>(
     ns: NS,
-): ClusterBehavior.Type<typeof ClusterBehavior, NS["Typing"], NS> {
+): ClusterBehavior.Complete<typeof ClusterBehavior, NS> {
     const schema = (ns as { schema?: { name?: string } }).schema;
     const behavior = ClusterBehavior.for(ns, undefined, `${schema?.name ?? "Unknown"}Client`);
 
     markClientBehavior(behavior as ClusterBehavior.Type);
 
-    return behavior;
+    return behavior as any;
 }

@@ -484,6 +484,41 @@ export namespace ClusterBehavior {
             };
 
     /**
+     * A behavior type with all cluster elements exposed regardless of feature selection.
+     *
+     * Used by client behaviors to provide access to all commands, attributes, and events.
+     */
+    export interface Complete<
+        B extends Behavior.Type = Behavior.Type,
+        NS extends ClusterNamespace = ClusterNamespace.Concrete,
+    > extends Omit<Type<B, NS["Typing"], NS>, "new"> {
+        new (agent: Agent, backing: BehaviorBacking): CompleteInstance<B, NS["Typing"]>;
+    }
+
+    /**
+     * A fully-typed instance with all cluster elements present regardless of feature selection.
+     */
+    export type CompleteInstance<B extends Behavior.Type, N extends ClusterTyping> = ClusterBehavior &
+        Omit<
+            InstanceType<B>,
+            | "cluster"
+            | "state"
+            | "events"
+            | "initialize"
+            | typeof Symbol.asyncDispose
+            | keyof ClusterInterface.MethodsOf<ClusterInterface.InterfaceOf<B>>
+            | keyof ExtensionInterfaceOf<B>
+        > &
+        ClusterInterface.AllMethodsOf<N> &
+        ExtensionInterfaceOf<B> & {
+            cluster: ClusterNamespace.Concrete;
+            state: ClusterState.Complete<N, B>;
+            events: ClusterEvents.Complete<N, B>;
+            features: ClusterNamespace.FeaturesOf<N>;
+            [Symbol.asyncDispose](): MaybePromise<void>;
+        };
+
+    /**
      * This is an unfortunate kludge required to work around https://github.com/microsoft/TypeScript/issues/27965.  It
      * allows you to designate extension methods available on behavior instances.
      *

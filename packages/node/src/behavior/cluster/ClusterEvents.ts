@@ -228,4 +228,49 @@ export namespace ClusterEvents {
                   keyof E]?: NsEventObservable<E[K]>;
           }
         : {};
+
+    /**
+     * "Complete" event type — all events from all components, all mandatory.
+     */
+    export type Complete<N extends ClusterTyping = ClusterTyping, B extends Behavior.Type = Behavior.Type> = Omit<
+        InstanceType<B["Events"]>,
+        keyof Properties<N>
+    > &
+        CompleteProperties<N>;
+
+    /**
+     * Complete properties: all attribute change observables + all event observables, all mandatory.
+     */
+    type CompleteProperties<N extends ClusterTyping> = CompleteChangingObservables<N> &
+        CompleteChangedObservables<N> &
+        CompleteNsEventObservables<N>;
+
+    /**
+     * All changing observables from all components, all mandatory.
+     */
+    type CompleteChangingObservables<N extends ClusterTyping> = N extends { Attributes: infer A }
+        ? {
+              [K in AllAttrKeys<AttributesComponentsOf<N>> & keyof A as `${K & string}$Changing`]: ChangingObservable<
+                  A[K]
+              >;
+          }
+        : {};
+
+    /**
+     * All changed observables from all components, all mandatory.
+     */
+    type CompleteChangedObservables<N extends ClusterTyping> = N extends { Attributes: infer A }
+        ? {
+              [K in AllAttrKeys<AttributesComponentsOf<N>> & keyof A as `${K & string}$Changed`]: ChangedObservable<
+                  A[K]
+              >;
+          }
+        : {};
+
+    /**
+     * All event observables from all components, all mandatory.
+     */
+    type CompleteNsEventObservables<N extends ClusterTyping> = N extends { Events: infer E }
+        ? { [K in AllEventKeys<EventsComponentsOf<N>> & keyof E]: NsEventObservable<E[K]> }
+        : {};
 }

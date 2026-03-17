@@ -21,6 +21,13 @@ export namespace ClusterInterface {
 
     export type MethodsOf<I extends ClusterInterface> = InterfaceMethodsOf<I, ClusterNamespace.SupportedFeaturesOf<I>>;
 
+    /**
+     * All methods from all components, regardless of feature selection.
+     */
+    export type AllMethodsOf<I extends ClusterInterface> = ClusterInterface extends I
+        ? {}
+        : AppliedMethodsOf<ComponentsOf<I>>;
+
     export type ComponentsOf<I extends ClusterInterface> = I extends {
         Commands: { Components: infer C extends Component[] };
     }

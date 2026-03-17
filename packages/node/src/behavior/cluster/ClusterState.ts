@@ -106,4 +106,40 @@ export namespace ClusterState {
      * Extract keys marked as enabled on the namespace (e.g. via `enable()` or `alter()`).
      */
     type EnabledAttrKeys<N> = N extends { Attributes: { Enabled: infer K extends string } } ? K : never;
+
+    /**
+     * Instance type for "complete" state — all components included.
+     *
+     * Base-component (flags: {}) mandatory attrs stay mandatory; all others are optional.
+     */
+    export type Complete<N extends ClusterTyping = ClusterTyping, B extends Behavior.Type = Behavior.Type> = Omit<
+        InstanceType<B["State"]>,
+        ClusterNamespace.AttrKeysOf<N>
+    > &
+        CompleteNsAttributeProperties<N>;
+
+    /**
+     * Mandatory keys from base components (flags: {}) only.
+     */
+    type CompleteBaseMandatoryAttrKeys<CA extends ClusterNamespace.ElementComponent[]> = CA extends [
+        infer C extends ClusterNamespace.ElementComponent,
+        ...infer R extends ClusterNamespace.ElementComponent[],
+    ]
+        ?
+              | ({} extends C["flags"] ? (C extends { mandatory: infer M extends string } ? M : never) : never)
+              | CompleteBaseMandatoryAttrKeys<R>
+        : never;
+
+    /**
+     * Complete attribute properties: base-mandatory attrs are mandatory, everything else is optional.
+     */
+    type CompleteNsAttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
+        ? { [K in CompleteBaseMandatoryAttrKeys<AttributesComponentsOf<N>> & keyof A]: A[K] } & {
+              [K in Exclude<
+                  AllAttrKeys<AttributesComponentsOf<N>>,
+                  CompleteBaseMandatoryAttrKeys<AttributesComponentsOf<N>>
+              > &
+                  keyof A]?: A[K];
+          }
+        : {};
 }
