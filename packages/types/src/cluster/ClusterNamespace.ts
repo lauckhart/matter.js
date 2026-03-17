@@ -5,14 +5,13 @@
  */
 
 import { camelize } from "@matter/general";
+import type { AttributeModel, CommandModel, EventModel } from "@matter/model";
 import { ClusterModel, ClusterModifier, GLOBAL_IDS } from "@matter/model";
 import type { AttributeId } from "../datatype/AttributeId.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 import type { CommandId } from "../datatype/CommandId.js";
 import type { EventId } from "../datatype/EventId.js";
 import type { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
-import { TlvOfModel } from "../tlv/TlvOfModel.js";
-import { TlvSchema } from "../tlv/TlvSchema.js";
 
 /**
  * Describes the type-level shape of a generated cluster namespace interface.
@@ -59,22 +58,22 @@ export namespace ClusterNamespace {
         optional?: string;
     }
 
-    export interface Attribute<T = any> {
+    export interface Attribute {
         id: AttributeId;
         name: string;
-        tlv: TlvSchema<T>;
+        schema: AttributeModel;
     }
 
-    export interface Command<T = any> {
+    export interface Command {
         id: CommandId;
         name: string;
-        tlv: TlvSchema<T>;
+        schema: CommandModel;
     }
 
-    export interface Event<T = any> {
+    export interface Event {
         id: EventId;
         name: string;
-        tlv: TlvSchema<T>;
+        schema: EventModel;
     }
 
     export interface Feature {
@@ -99,9 +98,9 @@ export namespace ClusterNamespace {
         schema: new ClusterModel({ name: "Unknown" }),
     };
 
-    export type Attributes<A> = { [K in keyof A]: Attribute<A[K]> };
-    export type Commands<C> = { [K in keyof C]: Command<C[K]> };
-    export type Events<E> = { [K in keyof E]: Event<E[K]> };
+    export type Attributes<A> = { [K in keyof A]: Attribute };
+    export type Commands<C> = { [K in keyof C]: Command };
+    export type Events<E> = { [K in keyof E]: Event };
     export type Features<F extends string> = { [K in F]: Feature };
 
     /**
@@ -270,16 +269,16 @@ export namespace ClusterNamespace {
      * Create a typed map of cluster attributes from a {@link ClusterModel}.
      */
     export function attributes(model: ClusterModel) {
-        const result: Record<string, { id: number; name: string; tlv: TlvSchema<any> }> = {};
+        const result: Record<string, Attribute> = {};
         for (const attribute of model.attributes) {
             if (GLOBAL_IDS.has(attribute.id) || attribute.isDisallowed || attribute.effectiveMetatype === undefined) {
                 continue;
             }
             const key = camelize(attribute.name);
             result[key] = {
-                id: attribute.id,
+                id: attribute.id as AttributeId,
                 name: key,
-                tlv: TlvOfModel(attribute),
+                schema: attribute,
             };
         }
         return result;
@@ -289,16 +288,16 @@ export namespace ClusterNamespace {
      * Create a typed map of cluster commands from a {@link ClusterModel}.
      */
     export function commands(model: ClusterModel) {
-        const result: Record<string, { id: number; name: string; tlv: TlvSchema<any> }> = {};
+        const result: Record<string, Command> = {};
         for (const command of model.commands) {
             if (!command.isRequest || command.isDisallowed) {
                 continue;
             }
             const key = camelize(command.name);
             result[key] = {
-                id: command.id,
+                id: command.id as CommandId,
                 name: key,
-                tlv: TlvOfModel(command),
+                schema: command,
             };
         }
         return result;
@@ -308,16 +307,16 @@ export namespace ClusterNamespace {
      * Create a typed map of cluster events from a {@link ClusterModel}.
      */
     export function events(model: ClusterModel) {
-        const result: Record<string, { id: number; name: string; tlv: TlvSchema<any> }> = {};
+        const result: Record<string, Event> = {};
         for (const event of model.events) {
             if (event.isDisallowed) {
                 continue;
             }
             const key = camelize(event.name);
             result[key] = {
-                id: event.id,
+                id: event.id as EventId,
                 name: key,
-                tlv: TlvOfModel(event),
+                schema: event,
             };
         }
         return result;

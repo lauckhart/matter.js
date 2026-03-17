@@ -88,13 +88,20 @@ import { TlvByteString, TlvString } from "./TlvString.js";
 
 const cache = new WeakMap<ClusterModel | ValueModel, TlvSchema<unknown>>();
 
-export function TlvOfModel(model: ClusterModel | ValueModel) {
-    let tlv = cache.get(model);
-    if (tlv === undefined) {
-        tlv = generateTlv(model);
-        cache.set(model, tlv);
+/**
+ * Obtain the TLV schema for a model or namespace element.
+ *
+ * Accepts a {@link ClusterModel}, {@link ValueModel}, or an object with a `schema` property (e.g. a
+ * {@link ClusterNamespace.Attribute}).
+ */
+export function TlvOfModel(source: ClusterModel | ValueModel | { schema: ClusterModel | ValueModel }) {
+    const model = "schema" in source && !(source instanceof ValueModel) ? source.schema : source;
+    let result = cache.get(model);
+    if (result === undefined) {
+        result = generateTlv(model);
+        cache.set(model, result);
     }
-    return tlv;
+    return result;
 }
 
 const NumberMapping: Record<string, TlvSchema<unknown>> = {

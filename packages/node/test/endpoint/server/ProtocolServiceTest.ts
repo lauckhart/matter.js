@@ -21,6 +21,7 @@ import {
     TlvInvokeResponseData,
     TlvNullable,
     TlvObject,
+    TlvOfModel,
     TlvSubjectId,
     TypeFromSchema,
 } from "@matter/types";
@@ -179,8 +180,7 @@ describe("ProtocolServiceTest", () => {
         const fabricsReport = report.attributes[0]?.attributeData;
         expect(fabricsReport?.path).deep.equals(FABRICS_PATH);
         const decodedFabrics =
-            fabricsReport?.data &&
-            OperationalCredentials.attributes.fabrics.tlv.decodeTlv(fabricsReport?.data);
+            fabricsReport?.data && TlvOfModel(OperationalCredentials.attributes.fabrics).decodeTlv(fabricsReport?.data);
         expect(decodedFabrics?.map(({ fabricIndex }) => fabricIndex)).deep.equals([1, 2]);
 
         const nocsReport = report.attributes[1]?.attributeData;
@@ -191,9 +191,7 @@ describe("ProtocolServiceTest", () => {
 
         const commissionedFabricCount =
             commissionedFabricsReport?.data &&
-            OperationalCredentials.attributes.commissionedFabrics.tlv.decodeTlv(
-                commissionedFabricsReport.data,
-            );
+            TlvOfModel(OperationalCredentials.attributes.commissionedFabrics).decodeTlv(commissionedFabricsReport.data);
         expect(commissionedFabricCount).deep.equals(2);
 
         // Remove the second fabric so we can capture the leave event notification
@@ -206,11 +204,11 @@ describe("ProtocolServiceTest", () => {
         // Confirm we received leave event for second fabric
         const leaveReport = report.events[0]?.eventData;
         expect(leaveReport?.path).deep.equals(LEAVE_PATH);
-        expect(
-            leaveReport?.data && BasicInformation.events.leave.tlv.decodeTlv(leaveReport?.data),
-        ).deep.equals({
-            fabricIndex: 2,
-        });
+        expect(leaveReport?.data && TlvOfModel(BasicInformation.events.leave).decodeTlv(leaveReport?.data)).deep.equals(
+            {
+                fabricIndex: 2,
+            },
+        );
 
         await node.close();
     });
