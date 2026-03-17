@@ -193,7 +193,7 @@ describe("Client Event Notification", () => {
             };
 
             const behaviorType = PeerBehavior(shape);
-            expect(behaviorType.cluster.supportedFeatures).deep.equals({
+            expect(behaviorType.features).deep.equals({
                 momentarySwitch: true,
                 momentarySwitchRelease: true,
             });

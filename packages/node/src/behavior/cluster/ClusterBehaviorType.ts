@@ -123,7 +123,7 @@ export function ClusterBehaviorType({
                 enumerable: true,
             },
 
-            supportedFeatures: {
+            features: {
                 value: supportedFeatures,
                 enumerable: true,
             },

@@ -53,7 +53,7 @@ export class ClusterBehavior extends Behavior {
      * Supported features as a flag object.
      */
     get features() {
-        return (this.constructor as any).supportedFeatures ?? {};
+        return (this.constructor as ClusterBehavior.Type).features;
     }
 
     override get type() {
@@ -64,6 +64,11 @@ export class ClusterBehavior extends Behavior {
      * Every cluster behavior has an associated cluster namespace defined statically.
      */
     static readonly cluster: ClusterNamespace.Concrete = ClusterNamespace.Unknown;
+
+    /**
+     * Supported features as a flag object.
+     */
+    static readonly features: Record<string, boolean> = {};
 
     /**
      * Method definitions.
@@ -305,6 +310,11 @@ export namespace ClusterBehavior {
          * The cluster namespace for this behavior.
          */
         readonly cluster: NS;
+
+        /**
+         * Supported features as a flag object.
+         */
+        readonly features: Record<string, boolean>;
 
         readonly Events: ClusterEvents.Type<B, N>;
         readonly State: new () => ClusterState.Type<B, N>;
