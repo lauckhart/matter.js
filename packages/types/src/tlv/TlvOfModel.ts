@@ -230,6 +230,9 @@ function generateTlv(model: ClusterModel | ValueModel): TlvSchema<unknown> {
 }
 
 function generateStruct(model: ClusterModel | ValueModel) {
+    // TODO - opportunity to deduplicate struct schemas: when a model extends a defining model without changing
+    // conformant fields, we could reuse the TlvSchema from the defining model via definingModel lookup
+
     const fields = {} as Record<string, any>;
     for (const p of model.conformant.properties) {
         const schema = TlvOfModel(p);
