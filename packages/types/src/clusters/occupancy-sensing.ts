@@ -21,7 +21,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OccupancySensing {
@@ -690,4 +690,4 @@ export type OccupancySensingCluster = OccupancySensing.Cluster;
 export const OccupancySensingCluster = OccupancySensing.Cluster;
 ClusterRegistry.register(OccupancySensing.Complete);
 ClusterNamespace.define(OccupancySensing);
-export interface OccupancySensing extends ClusterNamespaceTyping { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }
+export interface OccupancySensing extends ClusterTyping { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }

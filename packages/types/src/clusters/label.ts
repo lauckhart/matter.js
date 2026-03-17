@@ -11,7 +11,7 @@ import { WritableAttribute } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { Label as LabelModel } from "@matter/model";
 
 export namespace Label {
@@ -101,4 +101,4 @@ export namespace Label {
 }
 
 ClusterNamespace.define(Label);
-export interface Label extends ClusterNamespaceTyping { Attributes: Label.Attributes & { Components: Label.Attributes.Components } }
+export interface Label extends ClusterTyping { Attributes: Label.Attributes & { Components: Label.Attributes.Components } }

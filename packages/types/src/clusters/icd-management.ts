@@ -27,7 +27,7 @@ import { TlvByteString, TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace IcdManagement {
@@ -1418,4 +1418,4 @@ export type IcdManagementCluster = IcdManagement.Cluster;
 export const IcdManagementCluster = IcdManagement.Cluster;
 ClusterRegistry.register(IcdManagement.Complete);
 ClusterNamespace.define(IcdManagement);
-export interface IcdManagement extends ClusterNamespaceTyping { Attributes: IcdManagement.Attributes & { Components: IcdManagement.Attributes.Components }; Commands: IcdManagement.Commands & { Components: IcdManagement.Commands.Components }; Features: IcdManagement.Features }
+export interface IcdManagement extends ClusterTyping { Attributes: IcdManagement.Attributes & { Components: IcdManagement.Attributes.Components }; Commands: IcdManagement.Commands & { Components: IcdManagement.Commands.Components }; Features: IcdManagement.Features }

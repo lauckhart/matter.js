@@ -15,7 +15,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status as GlobalStatus } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { DiagnosticLogs as DiagnosticLogsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -459,4 +459,4 @@ export type DiagnosticLogsCluster = DiagnosticLogs.Cluster;
 export const DiagnosticLogsCluster = DiagnosticLogs.Cluster;
 ClusterRegistry.register(DiagnosticLogs.Complete);
 ClusterNamespace.define(DiagnosticLogs);
-export interface DiagnosticLogs extends ClusterNamespaceTyping { Commands: DiagnosticLogs.Commands & { Components: DiagnosticLogs.Commands.Components } }
+export interface DiagnosticLogs extends ClusterTyping { Commands: DiagnosticLogs.Commands & { Components: DiagnosticLogs.Commands.Components } }

@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { DeviceEnergyManagementMode as DeviceEnergyManagementModeModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -424,4 +424,4 @@ export type DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Clust
 export const DeviceEnergyManagementModeCluster = DeviceEnergyManagementMode.Cluster;
 ClusterRegistry.register(DeviceEnergyManagementMode.Complete);
 ClusterNamespace.define(DeviceEnergyManagementMode);
-export interface DeviceEnergyManagementMode extends ClusterNamespaceTyping { Attributes: DeviceEnergyManagementMode.Attributes & { Components: DeviceEnergyManagementMode.Attributes.Components }; Commands: DeviceEnergyManagementMode.Commands & { Components: DeviceEnergyManagementMode.Commands.Components }; Features: DeviceEnergyManagementMode.Features }
+export interface DeviceEnergyManagementMode extends ClusterTyping { Attributes: DeviceEnergyManagementMode.Attributes & { Components: DeviceEnergyManagementMode.Attributes.Components }; Commands: DeviceEnergyManagementMode.Commands & { Components: DeviceEnergyManagementMode.Commands.Components }; Features: DeviceEnergyManagementMode.Features }

@@ -17,7 +17,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvLocationdesc, Locationdesc } from "../globals/Locationdesc.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ServiceArea as ServiceAreaModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1171,4 +1171,4 @@ export type ServiceAreaCluster = ServiceArea.Cluster;
 export const ServiceAreaCluster = ServiceArea.Cluster;
 ClusterRegistry.register(ServiceArea.Complete);
 ClusterNamespace.define(ServiceArea);
-export interface ServiceArea extends ClusterNamespaceTyping { Attributes: ServiceArea.Attributes & { Components: ServiceArea.Attributes.Components }; Commands: ServiceArea.Commands & { Components: ServiceArea.Commands.Components }; Features: ServiceArea.Features }
+export interface ServiceArea extends ClusterTyping { Attributes: ServiceArea.Attributes & { Components: ServiceArea.Attributes.Components }; Commands: ServiceArea.Commands & { Components: ServiceArea.Commands.Components }; Features: ServiceArea.Features }

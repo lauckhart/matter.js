@@ -21,7 +21,7 @@ import { ClusterEvents } from "#behavior/cluster/ClusterEvents.js";
 import { ClusterInterface } from "#behavior/cluster/ClusterInterface.js";
 import { ClusterState } from "#behavior/cluster/ClusterState.js";
 import { MaybePromise } from "@matter/general";
-import { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
+import { ClusterNamespace, ClusterTyping } from "@matter/types";
 import { OnOff } from "@matter/types/clusters/on-off";
 
 // ---------------------------------------------------------------------------
@@ -53,9 +53,9 @@ type TestCommandComponents = [
 ];
 
 /**
- * Full typing interface (like OnOff extends ClusterNamespaceTyping).
+ * Full typing interface (like OnOff extends ClusterTyping).
  */
-interface TestTyping extends ClusterNamespaceTyping {
+interface TestTyping extends ClusterTyping {
     Attributes: { attr1: string } & { Components: [{ flags: {}; mandatory: "attr1" }] };
     Commands: BaseMethods & FeatureAMethods & NotFeatureBMethods & { Components: TestCommandComponents };
     Features: "FeatureA" | "FeatureB";
@@ -81,7 +81,7 @@ describe("ClusterComponentMatching", () => {
         });
 
         it("defaults to {} when no Features union", () => {
-            type S = ClusterNamespace.SupportedFeaturesOf<ClusterNamespaceTyping>;
+            type S = ClusterNamespace.SupportedFeaturesOf<ClusterTyping>;
             ({}) as S satisfies {};
         });
     });
@@ -215,7 +215,7 @@ describe("ClusterComponentMatching", () => {
     });
 
     // ---------------------------------------------------------------------------
-    // 6. WithSupportedFeatures — type narrowing preserves ClusterNamespaceTyping
+    // 6. WithSupportedFeatures — type narrowing preserves ClusterTyping
     // ---------------------------------------------------------------------------
 
     describe("WithSupportedFeatures", () => {
@@ -226,9 +226,9 @@ describe("ClusterComponentMatching", () => {
             ({}) as WithA["Features"] satisfies "FeatureA" | "FeatureB";
         });
 
-        it("satisfies ClusterNamespaceTyping constraint", () => {
+        it("satisfies ClusterTyping constraint", () => {
             type WithA = ClusterNamespace.WithSupportedFeatures<TestTyping, { featureA: true; featureB: false }>;
-            ({}) as WithA satisfies ClusterNamespaceTyping;
+            ({}) as WithA satisfies ClusterTyping;
         });
     });
 
@@ -242,7 +242,7 @@ describe("ClusterComponentMatching", () => {
          * - Base: attr1 is mandatory (always)
          * - FeatureA: attr2 is mandatory when featureA is true
          */
-        interface StateTestTyping extends ClusterNamespaceTyping {
+        interface StateTestTyping extends ClusterTyping {
             Attributes: { attr1: string; attr2: number } & {
                 Components: [{ flags: {}; mandatory: "attr1" }, { flags: { featureA: true }; mandatory: "attr2" }];
             };
@@ -272,7 +272,7 @@ describe("ClusterComponentMatching", () => {
     // ---------------------------------------------------------------------------
 
     describe("ClusterEvents attribute change observables", () => {
-        interface EventTestTyping extends ClusterNamespaceTyping {
+        interface EventTestTyping extends ClusterTyping {
             Attributes: { attr1: string; attr2: number } & {
                 Components: [{ flags: {}; mandatory: "attr1" }, { flags: { featureA: true }; mandatory: "attr2" }];
             };
@@ -579,7 +579,7 @@ describe("ClusterComponentMatching", () => {
         /**
          * Namespace where ALL commands are feature-conditional (like ColorControl).
          */
-        interface AllConditionalTyping extends ClusterNamespaceTyping {
+        interface AllConditionalTyping extends ClusterTyping {
             Attributes: { baseAttr: string } & { Components: [{ flags: {}; mandatory: "baseAttr" }] };
             Commands: { cmdA(): void; cmdB(): void } & {
                 Components: [

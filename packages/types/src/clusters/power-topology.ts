@@ -13,7 +13,7 @@ import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { PowerTopology as PowerTopologyModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -208,4 +208,4 @@ export type PowerTopologyCluster = PowerTopology.Cluster;
 export const PowerTopologyCluster = PowerTopology.Cluster;
 ClusterRegistry.register(PowerTopology.Complete);
 ClusterNamespace.define(PowerTopology);
-export interface PowerTopology extends ClusterNamespaceTyping { Attributes: PowerTopology.Attributes & { Components: PowerTopology.Attributes.Components }; Features: PowerTopology.Features }
+export interface PowerTopology extends ClusterTyping { Attributes: PowerTopology.Attributes & { Components: PowerTopology.Attributes.Components }; Features: PowerTopology.Features }

@@ -13,7 +13,7 @@ import { TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { LaundryDryerControls as LaundryDryerControlsModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -112,4 +112,4 @@ export type LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 export const LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 ClusterRegistry.register(LaundryDryerControls.Complete);
 ClusterNamespace.define(LaundryDryerControls);
-export interface LaundryDryerControls extends ClusterNamespaceTyping { Attributes: LaundryDryerControls.Attributes & { Components: LaundryDryerControls.Attributes.Components } }
+export interface LaundryDryerControls extends ClusterTyping { Attributes: LaundryDryerControls.Attributes & { Components: LaundryDryerControls.Attributes.Components } }

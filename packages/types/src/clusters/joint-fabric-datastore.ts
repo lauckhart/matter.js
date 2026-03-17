@@ -24,7 +24,7 @@ import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { TlvDeviceTypeId, DeviceTypeId } from "../datatype/DeviceTypeId.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace JointFabricDatastore {
     /**
@@ -3404,4 +3404,4 @@ export type JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 export const JointFabricDatastoreCluster = JointFabricDatastore.Cluster;
 ClusterRegistry.register(JointFabricDatastore.Complete);
 ClusterNamespace.define(JointFabricDatastore);
-export interface JointFabricDatastore extends ClusterNamespaceTyping { Attributes: JointFabricDatastore.Attributes & { Components: JointFabricDatastore.Attributes.Components }; Commands: JointFabricDatastore.Commands & { Components: JointFabricDatastore.Commands.Components } }
+export interface JointFabricDatastore extends ClusterTyping { Attributes: JointFabricDatastore.Attributes & { Components: JointFabricDatastore.Attributes.Components }; Commands: JointFabricDatastore.Commands & { Components: JointFabricDatastore.Commands.Components } }

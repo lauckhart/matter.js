@@ -16,7 +16,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EthernetNetworkDiagnostics {
@@ -384,4 +384,4 @@ export type EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Clust
 export const EthernetNetworkDiagnosticsCluster = EthernetNetworkDiagnostics.Cluster;
 ClusterRegistry.register(EthernetNetworkDiagnostics.Complete);
 ClusterNamespace.define(EthernetNetworkDiagnostics);
-export interface EthernetNetworkDiagnostics extends ClusterNamespaceTyping { Attributes: EthernetNetworkDiagnostics.Attributes & { Components: EthernetNetworkDiagnostics.Attributes.Components }; Commands: EthernetNetworkDiagnostics.Commands & { Components: EthernetNetworkDiagnostics.Commands.Components }; Features: EthernetNetworkDiagnostics.Features }
+export interface EthernetNetworkDiagnostics extends ClusterTyping { Attributes: EthernetNetworkDiagnostics.Attributes & { Components: EthernetNetworkDiagnostics.Attributes.Components }; Commands: EthernetNetworkDiagnostics.Commands & { Components: EthernetNetworkDiagnostics.Commands.Components }; Features: EthernetNetworkDiagnostics.Features }

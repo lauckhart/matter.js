@@ -563,7 +563,7 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
     // Generate declare consts inside the namespace (type-only, no runtime code)
     const name = cluster.name;
     file.addImport("!types/cluster/ClusterNamespace.js", "ClusterNamespace");
-    file.addImport("!types/cluster/ClusterNamespace.js", "ClusterNamespaceTyping");
+    file.addImport("!types/cluster/ClusterNamespace.js", "ClusterTyping");
     file.addImport("@matter/model", `${name} as ${name}Model`);
 
     // Real constants for id and revision
@@ -609,5 +609,5 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
         members.push(`Features: ${name}.Features`);
     }
     const body = members.length ? ` ${members.join("; ")} ` : "";
-    file.atom(`export interface ${name} extends ClusterNamespaceTyping {${body}}`);
+    file.atom(`export interface ${name} extends ClusterTyping {${body}}`);
 }

@@ -26,7 +26,7 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WaterHeaterManagement {
@@ -604,4 +604,4 @@ export type WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 export const WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 ClusterRegistry.register(WaterHeaterManagement.Complete);
 ClusterNamespace.define(WaterHeaterManagement);
-export interface WaterHeaterManagement extends ClusterNamespaceTyping { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }
+export interface WaterHeaterManagement extends ClusterTyping { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }

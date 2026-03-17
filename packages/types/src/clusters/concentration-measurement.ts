@@ -12,7 +12,7 @@ import { TlvFloat, TlvEnum, TlvUInt32 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ConcentrationMeasurement as ConcentrationMeasurementModel } from "@matter/model";
 
 export namespace ConcentrationMeasurement {
@@ -443,4 +443,4 @@ export namespace ConcentrationMeasurement {
 }
 
 ClusterNamespace.define(ConcentrationMeasurement);
-export interface ConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: ConcentrationMeasurement.Attributes & { Components: ConcentrationMeasurement.Attributes.Components }; Features: ConcentrationMeasurement.Features }
+export interface ConcentrationMeasurement extends ClusterTyping { Attributes: ConcentrationMeasurement.Attributes & { Components: ConcentrationMeasurement.Attributes.Components }; Features: ConcentrationMeasurement.Features }

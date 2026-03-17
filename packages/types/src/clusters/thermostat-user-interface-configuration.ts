@@ -15,7 +15,7 @@ import {
 } from "@matter/model";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ThermostatUserInterfaceConfiguration {
@@ -159,4 +159,4 @@ export type ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfac
 export const ThermostatUserInterfaceConfigurationCluster = ThermostatUserInterfaceConfiguration.Cluster;
 ClusterRegistry.register(ThermostatUserInterfaceConfiguration.Complete);
 ClusterNamespace.define(ThermostatUserInterfaceConfiguration);
-export interface ThermostatUserInterfaceConfiguration extends ClusterNamespaceTyping { Attributes: ThermostatUserInterfaceConfiguration.Attributes & { Components: ThermostatUserInterfaceConfiguration.Attributes.Components } }
+export interface ThermostatUserInterfaceConfiguration extends ClusterTyping { Attributes: ThermostatUserInterfaceConfiguration.Attributes & { Components: ThermostatUserInterfaceConfiguration.Attributes.Components } }

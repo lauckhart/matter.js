@@ -24,7 +24,7 @@ import { Priority } from "../globals/Priority.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PumpConfigurationAndControl {
@@ -1142,4 +1142,4 @@ export type PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Clu
 export const PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 ClusterRegistry.register(PumpConfigurationAndControl.Complete);
 ClusterNamespace.define(PumpConfigurationAndControl);
-export interface PumpConfigurationAndControl extends ClusterNamespaceTyping { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }
+export interface PumpConfigurationAndControl extends ClusterTyping { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }

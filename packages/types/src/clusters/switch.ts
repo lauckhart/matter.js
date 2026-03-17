@@ -14,7 +14,7 @@ import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { Switch as SwitchModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -823,4 +823,4 @@ export type SwitchCluster = Switch.Cluster;
 export const SwitchCluster = Switch.Cluster;
 ClusterRegistry.register(Switch.Complete);
 ClusterNamespace.define(Switch);
-export interface Switch extends ClusterNamespaceTyping { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }
+export interface Switch extends ClusterTyping { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }

@@ -17,7 +17,7 @@ import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import {
     RefrigeratorAndTemperatureControlledCabinetMode as RefrigeratorAndTemperatureControlledCabinetModeModel
 } from "@matter/model";
@@ -402,4 +402,4 @@ export type RefrigeratorAndTemperatureControlledCabinetModeCluster = Refrigerato
 export const RefrigeratorAndTemperatureControlledCabinetModeCluster = RefrigeratorAndTemperatureControlledCabinetMode.Cluster;
 ClusterRegistry.register(RefrigeratorAndTemperatureControlledCabinetMode.Complete);
 ClusterNamespace.define(RefrigeratorAndTemperatureControlledCabinetMode);
-export interface RefrigeratorAndTemperatureControlledCabinetMode extends ClusterNamespaceTyping { Attributes: RefrigeratorAndTemperatureControlledCabinetMode.Attributes & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Attributes.Components }; Commands: RefrigeratorAndTemperatureControlledCabinetMode.Commands & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Commands.Components }; Features: RefrigeratorAndTemperatureControlledCabinetMode.Features }
+export interface RefrigeratorAndTemperatureControlledCabinetMode extends ClusterTyping { Attributes: RefrigeratorAndTemperatureControlledCabinetMode.Attributes & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Attributes.Components }; Commands: RefrigeratorAndTemperatureControlledCabinetMode.Commands & { Components: RefrigeratorAndTemperatureControlledCabinetMode.Commands.Components }; Features: RefrigeratorAndTemperatureControlledCabinetMode.Features }

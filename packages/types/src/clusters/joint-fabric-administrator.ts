@@ -20,7 +20,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace JointFabricAdministrator {
@@ -652,4 +652,4 @@ export type JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 export const JointFabricAdministratorCluster = JointFabricAdministrator.Cluster;
 ClusterRegistry.register(JointFabricAdministrator.Complete);
 ClusterNamespace.define(JointFabricAdministrator);
-export interface JointFabricAdministrator extends ClusterNamespaceTyping { Attributes: JointFabricAdministrator.Attributes & { Components: JointFabricAdministrator.Attributes.Components }; Commands: JointFabricAdministrator.Commands & { Components: JointFabricAdministrator.Commands.Components } }
+export interface JointFabricAdministrator extends ClusterTyping { Attributes: JointFabricAdministrator.Attributes & { Components: JointFabricAdministrator.Attributes.Components }; Commands: JointFabricAdministrator.Commands & { Components: JointFabricAdministrator.Commands.Components } }

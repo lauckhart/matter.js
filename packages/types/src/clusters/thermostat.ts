@@ -30,7 +30,7 @@ import { TlvAttributeId, AttributeId } from "../datatype/AttributeId.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Thermostat {
@@ -3732,4 +3732,4 @@ export type ThermostatCluster = Thermostat.Cluster;
 export const ThermostatCluster = Thermostat.Cluster;
 ClusterRegistry.register(Thermostat.Complete);
 ClusterNamespace.define(Thermostat);
-export interface Thermostat extends ClusterNamespaceTyping { Attributes: Thermostat.Attributes & { Components: Thermostat.Attributes.Components }; Commands: Thermostat.Commands & { Components: Thermostat.Commands.Components }; Features: Thermostat.Features }
+export interface Thermostat extends ClusterTyping { Attributes: Thermostat.Attributes & { Components: Thermostat.Attributes.Components }; Commands: Thermostat.Commands & { Components: Thermostat.Commands.Components }; Features: Thermostat.Features }

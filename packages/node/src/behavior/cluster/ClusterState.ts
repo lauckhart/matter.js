@@ -4,17 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClusterNamespace, ClusterNamespaceTyping } from "@matter/types";
+import type { ClusterNamespace, ClusterTyping } from "@matter/types";
 import { AttributeId, BitSchema, CommandId, TypeFromPartialBitSchema } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
 
 /**
  * Instance type for complete (endpoint + fabric) state.
  */
-export type ClusterState<
-    B extends Behavior.Type,
-    N extends ClusterNamespaceTyping = ClusterNamespaceTyping,
-> = ClusterState.Type<B, N>;
+export type ClusterState<B extends Behavior.Type, N extends ClusterTyping = ClusterTyping> = ClusterState.Type<B, N>;
 
 /**
  * State values for global attributes.
@@ -35,7 +32,7 @@ export namespace ClusterState {
     /**
      * Instance type for ClusterBehavior state.
      */
-    export type Type<B extends Behavior.Type, N extends ClusterNamespaceTyping = ClusterNamespaceTyping> =
+    export type Type<B extends Behavior.Type, N extends ClusterTyping = ClusterTyping> =
         // Keep properties *not* from attributes of the old cluster
         Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<N>> &
             // Add properties from attributes of the new cluster
@@ -44,7 +41,7 @@ export namespace ClusterState {
     /**
      * Extract Attributes.Components tuple from namespace.
      */
-    export type AttributesComponentsOf<N extends ClusterNamespaceTyping> = N extends {
+    export type AttributesComponentsOf<N extends ClusterTyping> = N extends {
         Attributes: { Components: infer C extends ClusterNamespace.ElementComponent[] };
     }
         ? C
@@ -53,7 +50,7 @@ export namespace ClusterState {
     /**
      * N-driven attribute properties: mandatory vs optional from Components + value types from Attributes.
      */
-    type NsAttributeProperties<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
+    type NsAttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>

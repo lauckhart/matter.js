@@ -15,7 +15,7 @@ import { TlvString } from "../tlv/TlvString.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { EnergyPreference as EnergyPreferenceModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -367,4 +367,4 @@ export type EnergyPreferenceCluster = EnergyPreference.Cluster;
 export const EnergyPreferenceCluster = EnergyPreference.Cluster;
 ClusterRegistry.register(EnergyPreference.Complete);
 ClusterNamespace.define(EnergyPreference);
-export interface EnergyPreference extends ClusterNamespaceTyping { Attributes: EnergyPreference.Attributes & { Components: EnergyPreference.Attributes.Components }; Features: EnergyPreference.Features }
+export interface EnergyPreference extends ClusterTyping { Attributes: EnergyPreference.Attributes & { Components: EnergyPreference.Attributes.Components }; Features: EnergyPreference.Features }

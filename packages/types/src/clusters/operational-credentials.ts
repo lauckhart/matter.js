@@ -22,7 +22,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvSubjectId, SubjectId } from "../datatype/SubjectId.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OperationalCredentials {
@@ -2223,4 +2223,4 @@ export type OperationalCredentialsCluster = OperationalCredentials.Cluster;
 export const OperationalCredentialsCluster = OperationalCredentials.Cluster;
 ClusterRegistry.register(OperationalCredentials.Complete);
 ClusterNamespace.define(OperationalCredentials);
-export interface OperationalCredentials extends ClusterNamespaceTyping { Attributes: OperationalCredentials.Attributes & { Components: OperationalCredentials.Attributes.Components }; Commands: OperationalCredentials.Commands & { Components: OperationalCredentials.Commands.Components } }
+export interface OperationalCredentials extends ClusterTyping { Attributes: OperationalCredentials.Attributes & { Components: OperationalCredentials.Attributes.Components }; Commands: OperationalCredentials.Commands & { Components: OperationalCredentials.Commands.Components } }

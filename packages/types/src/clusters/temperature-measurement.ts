@@ -12,7 +12,7 @@ import { TlvInt16, TlvUInt16 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { TemperatureMeasurement as TemperatureMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -99,4 +99,4 @@ export type TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 export const TemperatureMeasurementCluster = TemperatureMeasurement.Cluster;
 ClusterRegistry.register(TemperatureMeasurement.Complete);
 ClusterNamespace.define(TemperatureMeasurement);
-export interface TemperatureMeasurement extends ClusterNamespaceTyping { Attributes: TemperatureMeasurement.Attributes & { Components: TemperatureMeasurement.Attributes.Components } }
+export interface TemperatureMeasurement extends ClusterTyping { Attributes: TemperatureMeasurement.Attributes & { Components: TemperatureMeasurement.Attributes.Components } }

@@ -8,7 +8,7 @@ import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
 import { ClusterModifier, type Schema } from "@matter/model";
-import { ClusterNamespace, type ClusterNamespaceTyping, type ClusterType, type ClusterTypeBridge } from "@matter/types";
+import { ClusterNamespace, type ClusterType, type ClusterTypeBridge, type ClusterTyping } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
@@ -107,7 +107,7 @@ export class ClusterBehavior extends Behavior {
      *
      * @deprecated Use generated cluster namespaces with {@link ClusterBehavior.for} instead of manual interfaces.
      */
-    static withInterface<const I extends ClusterNamespaceTyping>() {
+    static withInterface<const I extends ClusterTyping>() {
         return this as unknown as ClusterBehavior.Type<typeof ClusterBehavior, I>;
     }
 
@@ -294,7 +294,7 @@ export namespace ClusterBehavior {
      */
     export interface Type<
         B extends Behavior.Type = Behavior.Type,
-        N extends ClusterNamespaceTyping = ClusterInterface.InterfaceOf<B>,
+        N extends ClusterTyping = ClusterInterface.InterfaceOf<B>,
         NS extends ClusterNamespace = ClusterNamespace.Concrete,
     > {
         new (agent: Agent, backing: BehaviorBacking): Instance<B, N>;
@@ -434,7 +434,7 @@ export namespace ClusterBehavior {
      * A fully-typed ClusterBehavior.  This type is derived by combining properties of the base type with properties
      * contributed by the cluster.
      */
-    export type Instance<B extends Behavior.Type, N extends ClusterNamespaceTyping> =
+    export type Instance<B extends Behavior.Type, N extends ClusterTyping> =
         // Base class
         ClusterBehavior &
             // Bring extensions of old class forward

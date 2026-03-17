@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ResourceMonitoring } from "./resource-monitoring.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { HepaFilterMonitoring as HepaFilterMonitoringModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -97,4 +97,4 @@ export type HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 export const HepaFilterMonitoringCluster = HepaFilterMonitoring.Cluster;
 ClusterRegistry.register(HepaFilterMonitoring.Complete);
 ClusterNamespace.define(HepaFilterMonitoring);
-export interface HepaFilterMonitoring extends ClusterNamespaceTyping { Attributes: HepaFilterMonitoring.Attributes & { Components: HepaFilterMonitoring.Attributes.Components }; Commands: HepaFilterMonitoring.Commands & { Components: HepaFilterMonitoring.Commands.Components }; Features: HepaFilterMonitoring.Features }
+export interface HepaFilterMonitoring extends ClusterTyping { Attributes: HepaFilterMonitoring.Attributes & { Components: HepaFilterMonitoring.Attributes.Components }; Commands: HepaFilterMonitoring.Commands & { Components: HepaFilterMonitoring.Commands.Components }; Features: HepaFilterMonitoring.Features }

@@ -30,7 +30,7 @@ import { BasicInformation } from "./basic-information.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace BridgedDeviceBasicInformation {
@@ -666,4 +666,4 @@ export type BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation
 export const BridgedDeviceBasicInformationCluster = BridgedDeviceBasicInformation.Cluster;
 ClusterRegistry.register(BridgedDeviceBasicInformation.Complete);
 ClusterNamespace.define(BridgedDeviceBasicInformation);
-export interface BridgedDeviceBasicInformation extends ClusterNamespaceTyping { Attributes: BridgedDeviceBasicInformation.Attributes & { Components: BridgedDeviceBasicInformation.Attributes.Components }; Commands: BridgedDeviceBasicInformation.Commands & { Components: BridgedDeviceBasicInformation.Commands.Components }; Events: BridgedDeviceBasicInformation.Events & { Components: BridgedDeviceBasicInformation.Events.Components }; Features: BridgedDeviceBasicInformation.Features }
+export interface BridgedDeviceBasicInformation extends ClusterTyping { Attributes: BridgedDeviceBasicInformation.Attributes & { Components: BridgedDeviceBasicInformation.Attributes.Components }; Commands: BridgedDeviceBasicInformation.Commands & { Components: BridgedDeviceBasicInformation.Commands.Components }; Events: BridgedDeviceBasicInformation.Events & { Components: BridgedDeviceBasicInformation.Events.Components }; Features: BridgedDeviceBasicInformation.Features }

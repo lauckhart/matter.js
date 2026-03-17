@@ -20,7 +20,7 @@ import { TlvFabricIndex, FabricIndex } from "../datatype/FabricIndex.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace CommissionerControl {
@@ -423,4 +423,4 @@ export type CommissionerControlCluster = CommissionerControl.Cluster;
 export const CommissionerControlCluster = CommissionerControl.Cluster;
 ClusterRegistry.register(CommissionerControl.Complete);
 ClusterNamespace.define(CommissionerControl);
-export interface CommissionerControl extends ClusterNamespaceTyping { Attributes: CommissionerControl.Attributes & { Components: CommissionerControl.Attributes.Components }; Commands: CommissionerControl.Commands & { Components: CommissionerControl.Commands.Components }; Events: CommissionerControl.Events & { Components: CommissionerControl.Events.Components } }
+export interface CommissionerControl extends ClusterTyping { Attributes: CommissionerControl.Attributes & { Components: CommissionerControl.Attributes.Components }; Commands: CommissionerControl.Commands & { Components: CommissionerControl.Commands.Components }; Events: CommissionerControl.Events & { Components: CommissionerControl.Events.Components } }

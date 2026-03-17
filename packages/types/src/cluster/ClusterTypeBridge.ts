@@ -5,15 +5,15 @@
  */
 
 import type { TlvSchema } from "../tlv/TlvSchema.js";
-import type { ClusterNamespaceTyping } from "./ClusterNamespace.js";
+import type { ClusterTyping } from "./ClusterNamespace.js";
 import type { ClusterType } from "./ClusterType.js";
 
 /**
- * Bridge type that maps a legacy {@link ClusterType} + {@link ClusterNamespaceTyping} into a
- * {@link ClusterNamespaceTyping}-compatible shape so that `ClusterBehavior.for()` can accept
+ * Bridge type that maps a legacy {@link ClusterType} + {@link ClusterTyping} into a
+ * {@link ClusterTyping}-compatible shape so that `ClusterBehavior.for()` can accept
  * either old-style `ClusterType` objects or new-style `ClusterNamespace` objects.
  */
-export type ClusterTypeBridge<C extends ClusterType, I extends ClusterNamespaceTyping> = I & {
+export type ClusterTypeBridge<C extends ClusterType, I extends ClusterTyping> = I & {
     Attributes: AttrValuesOf<C["attributes"]> & {
         Components: [
             {

@@ -22,7 +22,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ContentControl {
@@ -2200,4 +2200,4 @@ export type ContentControlCluster = ContentControl.Cluster;
 export const ContentControlCluster = ContentControl.Cluster;
 ClusterRegistry.register(ContentControl.Complete);
 ClusterNamespace.define(ContentControl);
-export interface ContentControl extends ClusterNamespaceTyping { Attributes: ContentControl.Attributes & { Components: ContentControl.Attributes.Components }; Commands: ContentControl.Commands & { Components: ContentControl.Commands.Components }; Events: ContentControl.Events & { Components: ContentControl.Events.Components }; Features: ContentControl.Features }
+export interface ContentControl extends ClusterTyping { Attributes: ContentControl.Attributes & { Components: ContentControl.Attributes.Components }; Commands: ContentControl.Commands & { Components: ContentControl.Commands.Components }; Events: ContentControl.Events & { Components: ContentControl.Events.Components }; Features: ContentControl.Features }

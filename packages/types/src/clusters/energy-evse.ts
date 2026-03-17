@@ -36,7 +36,7 @@ import { Priority } from "../globals/Priority.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace EnergyEvse {
@@ -2090,4 +2090,4 @@ export type EnergyEvseCluster = EnergyEvse.Cluster;
 export const EnergyEvseCluster = EnergyEvse.Cluster;
 ClusterRegistry.register(EnergyEvse.Complete);
 ClusterNamespace.define(EnergyEvse);
-export interface EnergyEvse extends ClusterNamespaceTyping { Attributes: EnergyEvse.Attributes & { Components: EnergyEvse.Attributes.Components }; Commands: EnergyEvse.Commands & { Components: EnergyEvse.Commands.Components }; Events: EnergyEvse.Events & { Components: EnergyEvse.Events.Components }; Features: EnergyEvse.Features }
+export interface EnergyEvse extends ClusterTyping { Attributes: EnergyEvse.Attributes & { Components: EnergyEvse.Attributes.Components }; Commands: EnergyEvse.Commands & { Components: EnergyEvse.Commands.Components }; Events: EnergyEvse.Events & { Components: EnergyEvse.Events.Components }; Features: EnergyEvse.Features }

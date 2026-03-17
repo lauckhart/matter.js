@@ -16,7 +16,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ElectricalEnergyMeasurement as ElectricalEnergyMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -944,4 +944,4 @@ export type ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Clu
 export const ElectricalEnergyMeasurementCluster = ElectricalEnergyMeasurement.Cluster;
 ClusterRegistry.register(ElectricalEnergyMeasurement.Complete);
 ClusterNamespace.define(ElectricalEnergyMeasurement);
-export interface ElectricalEnergyMeasurement extends ClusterNamespaceTyping { Attributes: ElectricalEnergyMeasurement.Attributes & { Components: ElectricalEnergyMeasurement.Attributes.Components }; Events: ElectricalEnergyMeasurement.Events & { Components: ElectricalEnergyMeasurement.Events.Components }; Features: ElectricalEnergyMeasurement.Features }
+export interface ElectricalEnergyMeasurement extends ClusterTyping { Attributes: ElectricalEnergyMeasurement.Attributes & { Components: ElectricalEnergyMeasurement.Attributes.Components }; Events: ElectricalEnergyMeasurement.Events & { Components: ElectricalEnergyMeasurement.Events.Components }; Features: ElectricalEnergyMeasurement.Features }

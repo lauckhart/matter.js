@@ -22,7 +22,7 @@ import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
 import { Identity, MaybePromise } from "@matter/general";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ModeBase as ModeBaseModel } from "@matter/model";
 
 export namespace ModeBase {
@@ -589,4 +589,4 @@ export namespace ModeBase {
 }
 
 ClusterNamespace.define(ModeBase);
-export interface ModeBase extends ClusterNamespaceTyping { Attributes: ModeBase.Attributes & { Components: ModeBase.Attributes.Components }; Commands: ModeBase.Commands & { Components: ModeBase.Commands.Components }; Features: ModeBase.Features }
+export interface ModeBase extends ClusterTyping { Attributes: ModeBase.Attributes & { Components: ModeBase.Attributes.Components }; Commands: ModeBase.Commands & { Components: ModeBase.Commands.Components }; Features: ModeBase.Features }

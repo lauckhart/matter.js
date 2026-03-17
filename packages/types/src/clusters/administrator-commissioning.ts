@@ -21,7 +21,7 @@ import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status } from "../globals/Status.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace AdministratorCommissioning {
@@ -708,4 +708,4 @@ export type AdministratorCommissioningCluster = AdministratorCommissioning.Clust
 export const AdministratorCommissioningCluster = AdministratorCommissioning.Cluster;
 ClusterRegistry.register(AdministratorCommissioning.Complete);
 ClusterNamespace.define(AdministratorCommissioning);
-export interface AdministratorCommissioning extends ClusterNamespaceTyping { Attributes: AdministratorCommissioning.Attributes & { Components: AdministratorCommissioning.Attributes.Components }; Commands: AdministratorCommissioning.Commands & { Components: AdministratorCommissioning.Commands.Components }; Features: AdministratorCommissioning.Features }
+export interface AdministratorCommissioning extends ClusterTyping { Attributes: AdministratorCommissioning.Attributes & { Components: AdministratorCommissioning.Attributes.Components }; Commands: AdministratorCommissioning.Commands & { Components: AdministratorCommissioning.Commands.Components }; Features: AdministratorCommissioning.Features }

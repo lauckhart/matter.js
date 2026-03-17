@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { FormaldehydeConcentrationMeasurement as FormaldehydeConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -94,4 +94,4 @@ export type FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrat
 export const FormaldehydeConcentrationMeasurementCluster = FormaldehydeConcentrationMeasurement.Cluster;
 ClusterRegistry.register(FormaldehydeConcentrationMeasurement.Complete);
 ClusterNamespace.define(FormaldehydeConcentrationMeasurement);
-export interface FormaldehydeConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: FormaldehydeConcentrationMeasurement.Attributes & { Components: FormaldehydeConcentrationMeasurement.Attributes.Components }; Features: FormaldehydeConcentrationMeasurement.Features }
+export interface FormaldehydeConcentrationMeasurement extends ClusterTyping { Attributes: FormaldehydeConcentrationMeasurement.Attributes & { Components: FormaldehydeConcentrationMeasurement.Attributes.Components }; Features: FormaldehydeConcentrationMeasurement.Features }

@@ -21,7 +21,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { MediaPlayback as MediaPlaybackModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1761,4 +1761,4 @@ export type MediaPlaybackCluster = MediaPlayback.Cluster;
 export const MediaPlaybackCluster = MediaPlayback.Cluster;
 ClusterRegistry.register(MediaPlayback.Complete);
 ClusterNamespace.define(MediaPlayback);
-export interface MediaPlayback extends ClusterNamespaceTyping { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }
+export interface MediaPlayback extends ClusterTyping { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }

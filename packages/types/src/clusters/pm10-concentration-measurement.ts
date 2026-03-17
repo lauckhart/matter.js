@@ -10,7 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { Pm10ConcentrationMeasurement as Pm10ConcentrationMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -89,4 +89,4 @@ export type Pm10ConcentrationMeasurementCluster = Pm10ConcentrationMeasurement.C
 export const Pm10ConcentrationMeasurementCluster = Pm10ConcentrationMeasurement.Cluster;
 ClusterRegistry.register(Pm10ConcentrationMeasurement.Complete);
 ClusterNamespace.define(Pm10ConcentrationMeasurement);
-export interface Pm10ConcentrationMeasurement extends ClusterNamespaceTyping { Attributes: Pm10ConcentrationMeasurement.Attributes & { Components: Pm10ConcentrationMeasurement.Attributes.Components }; Features: Pm10ConcentrationMeasurement.Features }
+export interface Pm10ConcentrationMeasurement extends ClusterTyping { Attributes: Pm10ConcentrationMeasurement.Attributes & { Components: Pm10ConcentrationMeasurement.Attributes.Components }; Features: Pm10ConcentrationMeasurement.Features }

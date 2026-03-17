@@ -22,7 +22,7 @@ import { TlvByteString } from "../tlv/TlvString.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OtaSoftwareUpdateRequestor {
@@ -822,4 +822,4 @@ export type OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Clust
 export const OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
 ClusterRegistry.register(OtaSoftwareUpdateRequestor.Complete);
 ClusterNamespace.define(OtaSoftwareUpdateRequestor);
-export interface OtaSoftwareUpdateRequestor extends ClusterNamespaceTyping { Attributes: OtaSoftwareUpdateRequestor.Attributes & { Components: OtaSoftwareUpdateRequestor.Attributes.Components }; Commands: OtaSoftwareUpdateRequestor.Commands & { Components: OtaSoftwareUpdateRequestor.Commands.Components }; Events: OtaSoftwareUpdateRequestor.Events & { Components: OtaSoftwareUpdateRequestor.Events.Components } }
+export interface OtaSoftwareUpdateRequestor extends ClusterTyping { Attributes: OtaSoftwareUpdateRequestor.Attributes & { Components: OtaSoftwareUpdateRequestor.Attributes.Components }; Commands: OtaSoftwareUpdateRequestor.Commands & { Components: OtaSoftwareUpdateRequestor.Commands.Components }; Events: OtaSoftwareUpdateRequestor.Events & { Components: OtaSoftwareUpdateRequestor.Events.Components } }

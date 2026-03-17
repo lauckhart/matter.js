@@ -27,7 +27,7 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace GroupKeyManagement {
@@ -962,4 +962,4 @@ export type GroupKeyManagementCluster = GroupKeyManagement.Cluster;
 export const GroupKeyManagementCluster = GroupKeyManagement.Cluster;
 ClusterRegistry.register(GroupKeyManagement.Complete);
 ClusterNamespace.define(GroupKeyManagement);
-export interface GroupKeyManagement extends ClusterNamespaceTyping { Attributes: GroupKeyManagement.Attributes & { Components: GroupKeyManagement.Attributes.Components }; Commands: GroupKeyManagement.Commands & { Components: GroupKeyManagement.Commands.Components }; Features: GroupKeyManagement.Features }
+export interface GroupKeyManagement extends ClusterTyping { Attributes: GroupKeyManagement.Attributes & { Components: GroupKeyManagement.Attributes.Components }; Commands: GroupKeyManagement.Commands & { Components: GroupKeyManagement.Commands.Components }; Features: GroupKeyManagement.Features }

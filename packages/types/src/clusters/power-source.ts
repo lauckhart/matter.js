@@ -25,7 +25,7 @@ import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { PowerSource as PowerSourceModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1683,4 +1683,4 @@ export type PowerSourceCluster = PowerSource.Cluster;
 export const PowerSourceCluster = PowerSource.Cluster;
 ClusterRegistry.register(PowerSource.Complete);
 ClusterNamespace.define(PowerSource);
-export interface PowerSource extends ClusterNamespaceTyping { Attributes: PowerSource.Attributes & { Components: PowerSource.Attributes.Components }; Events: PowerSource.Events & { Components: PowerSource.Events.Components }; Features: PowerSource.Features }
+export interface PowerSource extends ClusterTyping { Attributes: PowerSource.Attributes & { Components: PowerSource.Attributes.Components }; Events: PowerSource.Events & { Components: PowerSource.Events.Components }; Features: PowerSource.Features }

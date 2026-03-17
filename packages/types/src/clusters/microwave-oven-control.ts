@@ -22,7 +22,7 @@ import { TlvOptionalField, TlvObject, TlvField } from "../tlv/TlvObject.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { MicrowaveOvenControl as MicrowaveOvenControlModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -516,4 +516,4 @@ export type MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 export const MicrowaveOvenControlCluster = MicrowaveOvenControl.Cluster;
 ClusterRegistry.register(MicrowaveOvenControl.Complete);
 ClusterNamespace.define(MicrowaveOvenControl);
-export interface MicrowaveOvenControl extends ClusterNamespaceTyping { Attributes: MicrowaveOvenControl.Attributes & { Components: MicrowaveOvenControl.Attributes.Components }; Commands: MicrowaveOvenControl.Commands & { Components: MicrowaveOvenControl.Commands.Components }; Features: MicrowaveOvenControl.Features }
+export interface MicrowaveOvenControl extends ClusterTyping { Attributes: MicrowaveOvenControl.Attributes & { Components: MicrowaveOvenControl.Attributes.Components }; Commands: MicrowaveOvenControl.Commands & { Components: MicrowaveOvenControl.Commands.Components }; Features: MicrowaveOvenControl.Features }

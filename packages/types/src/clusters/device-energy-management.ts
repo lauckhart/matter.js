@@ -18,7 +18,7 @@ import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { DeviceEnergyManagement as DeviceEnergyManagementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -2800,4 +2800,4 @@ export type DeviceEnergyManagementCluster = DeviceEnergyManagement.Cluster;
 export const DeviceEnergyManagementCluster = DeviceEnergyManagement.Cluster;
 ClusterRegistry.register(DeviceEnergyManagement.Complete);
 ClusterNamespace.define(DeviceEnergyManagement);
-export interface DeviceEnergyManagement extends ClusterNamespaceTyping { Attributes: DeviceEnergyManagement.Attributes & { Components: DeviceEnergyManagement.Attributes.Components }; Commands: DeviceEnergyManagement.Commands & { Components: DeviceEnergyManagement.Commands.Components }; Events: DeviceEnergyManagement.Events & { Components: DeviceEnergyManagement.Events.Components }; Features: DeviceEnergyManagement.Features }
+export interface DeviceEnergyManagement extends ClusterTyping { Attributes: DeviceEnergyManagement.Attributes & { Components: DeviceEnergyManagement.Attributes.Components }; Commands: DeviceEnergyManagement.Commands & { Components: DeviceEnergyManagement.Commands.Components }; Events: DeviceEnergyManagement.Events & { Components: DeviceEnergyManagement.Events.Components }; Features: DeviceEnergyManagement.Features }

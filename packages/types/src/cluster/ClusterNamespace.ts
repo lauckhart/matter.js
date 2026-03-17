@@ -14,28 +14,16 @@ import type { EventId } from "../datatype/EventId.js";
 import type { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 
 /**
- * Describes the type-level shape of a generated cluster namespace interface.
+ * Describes the shape of generated namespace objects for standard Matter clusters (`typeof OnOff`).
  *
- * Each generated cluster has an `interface OnOff extends ClusterNamespaceTyping` that carries type-level information
- * (attribute types, command types, etc.) used by behavior infrastructure.
- */
-export interface ClusterNamespaceTyping {
-    Attributes?: {};
-    Commands?: {};
-    Events?: {};
-    Features?: {};
-    SupportedFeatures?: {};
-    readonly schema?: ClusterModel;
-}
-
-/**
- * Describes the shape of a generated cluster namespace object (`typeof OnOff`).
+ * For many standard clusters, API varies based on configuration such as cluster features.  Matter.js generates this
+ * API dynamically based on information stored in these namespaces.  The namespace also conveys compile-time type
+ * information.
  *
- * The `Typing` property bridges the namespace value to its companion interface, allowing `for()` to extract the
- * interface type via `NS["Typing"]`.
+ * For hand-crafted clusters, decorated classes may be preferable to replicating matter.js's code generation.
  */
 export interface ClusterNamespace {
-    readonly Typing: ClusterNamespaceTyping;
+    readonly Typing: ClusterTyping;
     readonly schema: ClusterModel;
     readonly id?: ClusterId;
     readonly name: string;
@@ -93,7 +81,7 @@ export namespace ClusterNamespace {
      * Default namespace used before a real cluster is assigned.
      */
     export const Unknown: Concrete = {
-        Typing: {} as ClusterNamespaceTyping,
+        Typing: {} as ClusterTyping,
         id: ClusterId(0),
         name: "Unknown",
         schema: new ClusterModel({ name: "Unknown" }),
@@ -110,7 +98,7 @@ export namespace ClusterNamespace {
      * Uses Omit+& (not bare &) so that chained `.with()` calls replace rather than intersect, matching the
      * runtime behavior of {@link ClusterComposer.WithFeatures}.
      */
-    export type WithSupportedFeatures<N extends ClusterNamespaceTyping, S> = Omit<N, "SupportedFeatures"> & {
+    export type WithSupportedFeatures<N extends ClusterTyping, S> = Omit<N, "SupportedFeatures"> & {
         SupportedFeatures: S;
     };
 
@@ -133,7 +121,7 @@ export namespace ClusterNamespace {
     /**
      * Augment a namespace with attribute keys forced mandatory (e.g. via `enable()` or `alter()`).
      */
-    export type WithEnabledAttributes<N extends ClusterNamespaceTyping, K extends string> = N & {
+    export type WithEnabledAttributes<N extends ClusterTyping, K extends string> = N & {
         Attributes: { Enabled: K };
     };
 
@@ -152,7 +140,7 @@ export namespace ClusterNamespace {
     /**
      * Augment a namespace with event keys forced mandatory (e.g. via `enable()`).
      */
-    export type WithEnabledEvents<N extends ClusterNamespaceTyping, K extends string> = N & { Events: { Enabled: K } };
+    export type WithEnabledEvents<N extends ClusterTyping, K extends string> = N & { Events: { Enabled: K } };
 
     /**
      * Extract event key names from ElementFlags (used by `enable()`).
@@ -171,21 +159,21 @@ export namespace ClusterNamespace {
     /**
      * Extract attribute key names from a namespace, excluding synthetic keys.
      */
-    export type AttrKeysOf<N extends ClusterNamespaceTyping> = N extends { Attributes: infer A }
+    export type AttrKeysOf<N extends ClusterTyping> = N extends { Attributes: infer A }
         ? Exclude<keyof A & string, "Components" | "Enabled">
         : never;
 
     /**
      * Extract command key names from a namespace, excluding synthetic keys.
      */
-    export type CommandKeysOf<N extends ClusterNamespaceTyping> = N extends { Commands: infer C }
+    export type CommandKeysOf<N extends ClusterTyping> = N extends { Commands: infer C }
         ? Exclude<keyof C & string, "Components">
         : never;
 
     /**
      * Extract event key names from a namespace, excluding synthetic keys.
      */
-    export type EventKeysOf<N extends ClusterNamespaceTyping> = N extends { Events: infer E }
+    export type EventKeysOf<N extends ClusterTyping> = N extends { Events: infer E }
         ? Exclude<keyof E & string, "Components" | "Enabled">
         : never;
 
@@ -193,14 +181,14 @@ export namespace ClusterNamespace {
      * Produce a typing with all feature flags set to true.  Used by `complete` to make all component attributes
      * mandatory.
      */
-    export type AllFeaturesAsFlags<N extends ClusterNamespaceTyping> = N extends { Features: infer F extends string }
+    export type AllFeaturesAsFlags<N extends ClusterTyping> = N extends { Features: infer F extends string }
         ? { [K in Uncapitalize<F>]: true }
         : {};
 
     /**
      * Valid feature names for a namespace's feature selection.
      */
-    export type FeatureSelection<N extends ClusterNamespaceTyping> = N extends { Features: infer F extends string }
+    export type FeatureSelection<N extends ClusterTyping> = N extends { Features: infer F extends string }
         ? readonly F[]
         : readonly string[];
 
@@ -210,7 +198,7 @@ export namespace ClusterNamespace {
      * Like main's `ClusterComposer.FeaturesAsFlags`, unselected features are explicitly `false` (not absent),
      * so that `S extends C["flags"]` matches components with `{ offOnly: false }` when offOnly is not selected.
      */
-    export type FeaturesAsFlags<N extends ClusterNamespaceTyping, F extends readonly string[]> = N extends {
+    export type FeaturesAsFlags<N extends ClusterTyping, F extends readonly string[]> = N extends {
         Features: infer All extends string;
     }
         ? { [K in Uncapitalize<All>]: Capitalize<K> extends `${F[number]}` ? true : false }
@@ -219,7 +207,7 @@ export namespace ClusterNamespace {
     /**
      * Constraint for `alter()` input based on namespace element keys.
      */
-    export type Alterations<N extends ClusterNamespaceTyping> = {
+    export type Alterations<N extends ClusterTyping> = {
         attributes?: { [K in AttrKeysOf<N>]?: ClusterModifier.RequirementModification };
         commands?: { [K in CommandKeysOf<N>]?: ClusterModifier.RequirementModification };
         events?: { [K in EventKeysOf<N>]?: ClusterModifier.RequirementModification };
@@ -228,7 +216,7 @@ export namespace ClusterNamespace {
     /**
      * Constraint for `enable()` input based on namespace element keys.
      */
-    export type ElementFlags<N extends ClusterNamespaceTyping> = {
+    export type ElementFlags<N extends ClusterTyping> = {
         attributes?: { [K in AttrKeysOf<N>]?: true };
         commands?: { [K in CommandKeysOf<N>]?: true };
         events?: { [K in EventKeysOf<N>]?: true };
@@ -339,4 +327,20 @@ export namespace ClusterNamespace {
         }
         return result;
     }
+}
+
+/**
+ * Describes the shape of types matter.js uses for compile-time generation of Matter cluster-related APIs.
+ *
+ * This does not represent an actual object.  It only exists to convey type information that is input to matter.js's
+ * type system.  For standard clusters this information has no other compile-time representation as matter.js generates
+ * related classes at runtime.
+ */
+export interface ClusterTyping {
+    Attributes?: {};
+    Commands?: {};
+    Events?: {};
+    Features?: {};
+    SupportedFeatures?: {};
+    readonly schema?: ClusterModel;
 }

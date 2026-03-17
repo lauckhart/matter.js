@@ -13,7 +13,7 @@ import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { BooleanState as BooleanStateModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -111,4 +111,4 @@ export type BooleanStateCluster = BooleanState.Cluster;
 export const BooleanStateCluster = BooleanState.Cluster;
 ClusterRegistry.register(BooleanState.Complete);
 ClusterNamespace.define(BooleanState);
-export interface BooleanState extends ClusterNamespaceTyping { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }
+export interface BooleanState extends ClusterTyping { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }

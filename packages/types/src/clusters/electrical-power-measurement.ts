@@ -17,7 +17,7 @@ import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/Measurem
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 import { ElectricalPowerMeasurement as ElectricalPowerMeasurementModel } from "@matter/model";
 import { ClusterId } from "../datatype/ClusterId.js";
 
@@ -1113,4 +1113,4 @@ export type ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Clust
 export const ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;
 ClusterRegistry.register(ElectricalPowerMeasurement.Complete);
 ClusterNamespace.define(ElectricalPowerMeasurement);
-export interface ElectricalPowerMeasurement extends ClusterNamespaceTyping { Attributes: ElectricalPowerMeasurement.Attributes & { Components: ElectricalPowerMeasurement.Attributes.Components }; Events: ElectricalPowerMeasurement.Events & { Components: ElectricalPowerMeasurement.Events.Components }; Features: ElectricalPowerMeasurement.Features }
+export interface ElectricalPowerMeasurement extends ClusterTyping { Attributes: ElectricalPowerMeasurement.Attributes & { Components: ElectricalPowerMeasurement.Attributes.Components }; Events: ElectricalPowerMeasurement.Events & { Components: ElectricalPowerMeasurement.Events.Components }; Features: ElectricalPowerMeasurement.Features }

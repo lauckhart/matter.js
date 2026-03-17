@@ -34,7 +34,7 @@ import { AccessLevel, ScenesManagement as ScenesManagementModel } from "@matter/
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
-import { ClusterNamespace, ClusterNamespaceTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
 
 export namespace ScenesManagement {
     /**
@@ -1482,4 +1482,4 @@ export type ScenesManagementCluster = ScenesManagement.Cluster;
 export const ScenesManagementCluster = ScenesManagement.Cluster;
 ClusterRegistry.register(ScenesManagement.Complete);
 ClusterNamespace.define(ScenesManagement);
-export interface ScenesManagement extends ClusterNamespaceTyping { Attributes: ScenesManagement.Attributes & { Components: ScenesManagement.Attributes.Components }; Commands: ScenesManagement.Commands & { Components: ScenesManagement.Commands.Components }; Features: ScenesManagement.Features }
+export interface ScenesManagement extends ClusterTyping { Attributes: ScenesManagement.Attributes & { Components: ScenesManagement.Attributes.Components }; Commands: ScenesManagement.Commands & { Components: ScenesManagement.Commands.Components }; Features: ScenesManagement.Features }
