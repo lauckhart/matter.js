@@ -18,11 +18,11 @@ import {
     serialize,
 } from "@matter/general";
 import {
-    AccessLevel,
     any,
     bool,
     fabricIdx,
     field,
+    FieldElement,
     groupId,
     int16,
     int32,
@@ -52,23 +52,14 @@ import { assertRemoteActor, Fabric, FabricManager, GroupSession, Val } from "@ma
 import {
     AttributeId,
     ClusterId,
-    Command,
     FabricIndex,
     GroupId,
     NullableSchema,
-    OptionalCommand,
     Status,
     StatusResponse,
-    TlvArray,
-    TlvBitmap,
-    TlvField,
-    TlvGroupId,
     TlvNumericSchema,
-    TlvObject,
+    TlvOfModel,
     TlvSchema,
-    TlvString,
-    TlvUInt32,
-    TlvUInt8,
     ValidationOutOfBoundsError,
 } from "@matter/types";
 import { ScenesManagement } from "@matter/types/clusters/scenes-management";
@@ -132,75 +123,74 @@ export const DataTypeToSceneAttributeDataMap: Record<string, AttributeValuePairD
 };
 
 /**
- * Monkey patching Tlv Structure of some commands to prevent data validation of the sceneId, groupId, sceneName and
- * transitionTime field to be handled as ConstraintError because we need to return errors as a special response.
- * We do this to leave the model in fact for other validations and only apply the change for our Schema-aware Tlv parsing.
+ * Extend the ScenesManagement model to relax constraints on command request fields.  This prevents the interaction
+ * layer from rejecting with ConstraintError so the behavior can validate and return proper Status responses.
  */
-ScenesManagement.Cluster.commands = {
-    ...ScenesManagement.Cluster.commands,
-    addScene: Command(
-        0x0,
-        TlvObject({
-            groupId: TlvField(0, TlvGroupId),
-            sceneId: TlvField(1, TlvUInt8),
-            transitionTime: TlvField(2, TlvUInt32),
-            sceneName: TlvField(3, TlvString),
-            extensionFieldSetStructs: TlvField(4, TlvArray(ScenesManagement.TlvExtensionFieldSet)),
-        }),
-        0x0,
-        ScenesManagement.TlvAddSceneResponse,
-        { invokeAcl: AccessLevel.Manage },
-    ),
-    viewScene: Command(
-        0x1,
-        TlvObject({
-            groupId: TlvField(0, TlvGroupId),
-            sceneId: TlvField(1, TlvUInt8),
-        }),
-        0x1,
-        ScenesManagement.TlvViewSceneResponse,
-    ),
-    removeScene: Command(
-        0x2,
-        TlvObject({
-            groupId: TlvField(0, TlvGroupId),
-            sceneId: TlvField(1, TlvUInt8),
-        }),
-        0x2,
-        ScenesManagement.TlvRemoveSceneResponse,
-        { invokeAcl: AccessLevel.Manage },
-    ),
-    storeScene: Command(
-        0x4,
-        TlvObject({
-            groupId: TlvField(0, TlvGroupId),
-            sceneId: TlvField(1, TlvUInt8),
-        }),
-        0x4,
-        ScenesManagement.TlvStoreSceneResponse,
-        {
-            invokeAcl: AccessLevel.Manage,
-        },
-    ),
-    copyScene: OptionalCommand(
-        0x40,
-        TlvObject({
-            mode: TlvField(0, TlvBitmap(TlvUInt8, ScenesManagement.CopyMode)),
-            groupIdentifierFrom: TlvField(1, TlvGroupId),
-            sceneIdentifierFrom: TlvField(2, TlvUInt8),
-            groupIdentifierTo: TlvField(3, TlvGroupId),
-            sceneIdentifierTo: TlvField(4, TlvUInt8),
-        }),
-        0x40,
-        ScenesManagement.TlvCopySceneResponse,
-        {
-            invokeAcl: AccessLevel.Manage,
-        },
-    ),
-};
+const ScenesManagementSchema = ScenesManagement.schema.extend(
+    undefined,
 
-// We enable group names by default
-const ScenesManagementBase = ScenesManagementBehavior.with(ScenesManagement.Feature.SceneNames);
+    ScenesManagement.schema.commands
+        .for("AddScene")!
+        .extend(
+            undefined,
+            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
+            FieldElement({
+                name: "TransitionTime",
+                id: 0x2,
+                type: "uint32",
+                conformance: "M",
+                constraint: "max 4294967295",
+            }),
+            FieldElement({ name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 1024" }),
+        ),
+
+    ScenesManagement.schema.commands
+        .for("ViewScene")!
+        .extend(
+            undefined,
+            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
+        ),
+
+    ScenesManagement.schema.commands
+        .for("RemoveScene")!
+        .extend(
+            undefined,
+            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
+        ),
+
+    ScenesManagement.schema.commands
+        .for("StoreScene")!
+        .extend(
+            undefined,
+            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
+        ),
+
+    ScenesManagement.schema.commands
+        .for("CopyScene")!
+        .extend(
+            undefined,
+            FieldElement({
+                name: "SceneIdentifierFrom",
+                id: 0x2,
+                type: "uint8",
+                conformance: "M",
+                constraint: "max 255",
+            }),
+            FieldElement({
+                name: "SceneIdentifierTo",
+                id: 0x4,
+                type: "uint8",
+                conformance: "M",
+                constraint: "max 255",
+            }),
+        ),
+);
+
+// We enable group names by default.  Pass the extended schema with relaxed command constraints.
+const ScenesManagementBase = ScenesManagementBehavior.with(ScenesManagement.Feature.SceneNames).for(
+    ScenesManagement,
+    ScenesManagementSchema,
+);
 
 /**
  * This is the default server implementation of {@link ScenesManagementBehavior}.
@@ -912,7 +902,7 @@ export class ScenesManagementServer extends ScenesManagementBase {
             sceneClusterDetails.attributes.add({
                 id: attributeId,
                 name: attributeName,
-                schema: type.cluster.attributes[attributeName].schema,
+                schema: TlvOfModel(attribute) as TlvSchema<any>,
                 type: attrType,
                 mappedType: DataTypeToSceneAttributeDataMap[attrType],
                 nullable: !!attribute.effectiveQuality.nullable,
