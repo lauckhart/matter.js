@@ -22,7 +22,7 @@ import {
     Subject,
     Val,
 } from "@matter/protocol";
-import { AttributeId, NodeId, Status, StatusResponse, StatusResponseError } from "@matter/types";
+import { AttributeId, type ClusterTyping, NodeId, Status, StatusResponse, StatusResponseError } from "@matter/types";
 import { Thermostat } from "@matter/types/clusters/thermostat";
 import { AtomicWriteState } from "./AtomicWriteState.js";
 
@@ -92,9 +92,7 @@ export class AtomicWriteHandler {
         const attributes = new Map<AttributeId, string>();
         for (const attr of attributeRequests) {
             const [attributeName, _] =
-                Object.entries(cluster.cluster.attributes ?? {}).find(
-                    ([_, { id }]) => id === attr,
-                ) ?? [];
+                Object.entries(cluster.cluster.attributes ?? {}).find(([_, { id }]) => id === attr) ?? [];
             if (attributeName === undefined || endpoint.stateOf(cluster.id)[attr] === undefined) {
                 throw new StatusResponse.InvalidCommandError(`Attribute ${attr} not supported by cluster`);
             }
@@ -247,7 +245,7 @@ export class AtomicWriteHandler {
         context: ActionContext,
         endpoint: Endpoint,
         cluster: B,
-        clusterState: ClusterState.Type<B>,
+        clusterState: ClusterState.Type<ClusterTyping, B>,
     ): Promise<Thermostat.AtomicResponse> {
         const state = this.#initializeState(request, context, endpoint, cluster);
 

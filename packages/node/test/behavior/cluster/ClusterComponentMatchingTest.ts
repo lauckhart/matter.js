@@ -250,19 +250,19 @@ describe("ClusterComponentMatching", () => {
         }
 
         it("makes base attributes mandatory without features", () => {
-            type S = ClusterState.Type<typeof ClusterBehavior, StateTestTyping>;
+            type S = ClusterState.Type<StateTestTyping>;
             ({}) as S satisfies { attr1: string };
         });
 
         it("makes feature attributes optional without features", () => {
-            type S = ClusterState.Type<typeof ClusterBehavior, StateTestTyping>;
+            type S = ClusterState.Type<StateTestTyping>;
             // attr2 should be optional (featureA not selected)
             undefined satisfies S["attr2"];
         });
 
         it("makes feature attributes mandatory when feature selected", () => {
             type WithA = ClusterNamespace.WithSupportedFeatures<StateTestTyping, { featureA: true; featureB: false }>;
-            type S = ClusterState.Type<typeof ClusterBehavior, WithA>;
+            type S = ClusterState.Type<WithA>;
             ({}) as S satisfies { attr1: string; attr2: number };
         });
     });
@@ -377,7 +377,7 @@ describe("ClusterComponentMatching", () => {
                 OnOff,
                 { lighting: true; deadFrontBehavior: false; offOnly: false }
             >;
-            type S = ClusterState.Type<typeof ClusterBehavior, WithLighting>;
+            type S = ClusterState.Type<WithLighting>;
             ({}) as S satisfies { onOff: boolean; globalSceneControl: boolean };
         });
 
@@ -397,13 +397,13 @@ describe("ClusterComponentMatching", () => {
         });
 
         it("full ClusterEvents with OnOff has onOff$Changed", () => {
-            // This tests the Omit + re-add pattern in ClusterEvents<BaseT, N>
+            // This tests the Omit + re-add pattern in ClusterEvents<N, BaseT>
             type OnOffBehaviorType = ClusterBehavior.Type<typeof ClusterBehavior, OnOff, typeof OnOff>;
             type N = ClusterNamespace.WithSupportedFeatures<
                 OnOff,
                 { lighting: true; deadFrontBehavior: false; offOnly: false }
             >;
-            type E = ClusterEvents<OnOffBehaviorType, N>;
+            type E = ClusterEvents<N, OnOffBehaviorType>;
             ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
         });
 
@@ -414,7 +414,7 @@ describe("ClusterComponentMatching", () => {
                 OnOff,
                 { lighting: true; deadFrontBehavior: false; offOnly: false }
             >;
-            type E = ClusterEvents<typeof OnOffBeh, N>;
+            type E = ClusterEvents<N, typeof OnOffBeh>;
             ({}) as E satisfies { onOff$Changed: ClusterEvents.ChangedObservable<boolean> };
         });
 
@@ -465,7 +465,7 @@ describe("ClusterComponentMatching", () => {
 
         it("for(OnOff) produces a Type", () => {
             // This is the pattern: const XxxBehavior = ClusterBehavior.for(Xxx);
-            type ForResult = ReturnType<typeof ClusterBehavior.for<typeof ClusterBehavior, typeof OnOff>>;
+            type ForResult = ClusterBehavior.Type<typeof ClusterBehavior, OnOff, typeof OnOff>;
             ({}) as ForResult satisfies ClusterBehavior.Type;
         });
 

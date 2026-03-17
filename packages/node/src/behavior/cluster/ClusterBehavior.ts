@@ -316,14 +316,14 @@ export namespace ClusterBehavior {
          */
         readonly features: Record<string, boolean>;
 
-        readonly Events: ClusterEvents.Type<B, N>;
-        readonly State: new () => ClusterState.Type<B, N>;
+        readonly Events: ClusterEvents.Type<N, B>;
+        readonly State: new () => ClusterState.Type<N, B>;
         readonly Internal: B["Internal"];
         readonly Interface: N;
 
         readonly schema: Schema.Cluster;
         readonly early: boolean;
-        readonly defaults: ClusterState.Type<B, N>;
+        readonly defaults: ClusterState.Type<N, B>;
         readonly supervisor: RootSupervisor;
         readonly dependencies?: Iterable<Behavior.Type>;
         supports: typeof ClusterBehavior.supports;
@@ -468,12 +468,12 @@ export namespace ClusterBehavior {
                 /**
                  * State values for the behavior.
                  */
-                state: ClusterState<B, N>;
+                state: ClusterState<N, B>;
 
                 /**
                  * Observables for cluster events and attribute changes.
                  */
-                events: ClusterEvents<B, N>;
+                events: ClusterEvents<N, B>;
 
                 /**
                  * Supported features as a flag object.

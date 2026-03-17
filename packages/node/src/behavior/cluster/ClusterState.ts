@@ -11,7 +11,10 @@ import type { Behavior } from "../Behavior.js";
 /**
  * Instance type for complete (endpoint + fabric) state.
  */
-export type ClusterState<B extends Behavior.Type, N extends ClusterTyping = ClusterTyping> = ClusterState.Type<B, N>;
+export type ClusterState<
+    N extends ClusterTyping = ClusterTyping,
+    B extends Behavior.Type = Behavior.Type,
+> = ClusterState.Type<N, B>;
 
 /**
  * State values for global attributes.
@@ -32,7 +35,7 @@ export namespace ClusterState {
     /**
      * Instance type for ClusterBehavior state.
      */
-    export type Type<B extends Behavior.Type, N extends ClusterTyping = ClusterTyping> =
+    export type Type<N extends ClusterTyping = ClusterTyping, B extends Behavior.Type = Behavior.Type> =
         // Keep properties *not* from attributes of the old cluster
         Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<N>> &
             // Add properties from attributes of the new cluster
