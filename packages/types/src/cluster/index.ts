@@ -9,5 +9,6 @@ export * from "./ClusterHelper.js";
 export * from "./ClusterNamespace.js";
 export * from "./ClusterRegistry.js";
 export * from "./ClusterType.js";
+export * from "./ClusterTypeBridge.js";
 export * from "./ClusterTypeOfModel.js";
 export * from "./mutation/index.js";

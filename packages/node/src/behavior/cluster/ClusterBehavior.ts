@@ -8,7 +8,7 @@ import { Events } from "#behavior/Events.js";
 import type { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, MaybePromise } from "@matter/general";
 import { ClusterModifier, type Schema } from "@matter/model";
-import { ClusterNamespace, type ClusterNamespaceTyping } from "@matter/types";
+import { ClusterNamespace, type ClusterNamespaceTyping, type ClusterType, type ClusterTypeBridge } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
 import type { RootSupervisor } from "../supervision/RootSupervisor.js";
@@ -95,6 +95,18 @@ export class ClusterBehavior extends Behavior {
     }
 
     /**
+     * Create a behavior type with a specific cluster interface.
+     *
+     * This is a type-only method that narrows the interface for subsequent `.for()` calls. At runtime it simply
+     * returns `this`.
+     *
+     * @deprecated Use generated cluster namespaces with {@link ClusterBehavior.for} instead of manual interfaces.
+     */
+    static withInterface<const I extends ClusterNamespaceTyping>() {
+        return this as unknown as ClusterBehavior.Type<typeof ClusterBehavior, I>;
+    }
+
+    /**
      * Create a new behavior for a specific cluster namespace.
      *
      * If you invoke directly on {@link ClusterBehavior} you will receive a new implementation that reports all commands
@@ -102,7 +114,18 @@ export class ClusterBehavior extends Behavior {
      *
      * If you invoke on an existing subclass, you will receive a new implementation with the cluster in the subclass
      * replaced.  You should generally only do this with a namespace with the same cluster ID.
+     *
+     * @deprecated Pass a `ClusterNamespace` instead of a `ClusterType`.
      */
+    static for<This extends ClusterBehavior.Type, const C extends ClusterType>(
+        this: This,
+        cluster: C,
+        schema?: Schema.Cluster,
+        name?: string,
+    ): ClusterBehavior.Type<This, ClusterTypeBridge<C, ClusterInterface.InterfaceOf<This>>> & {
+        readonly id: Uncapitalize<C["name"] & string>;
+    };
+
     static for<This extends ClusterBehavior.Type, const NS extends ClusterNamespace>(
         this: This,
         ns: NS,
@@ -112,7 +135,7 @@ export class ClusterBehavior extends Behavior {
         readonly id: Uncapitalize<NS["name"] & string>;
     };
 
-    static for(this: ClusterBehavior.Type, ns: ClusterNamespace, schema?: Schema.Cluster, name?: string) {
+    static for(this: ClusterBehavior.Type, ns: ClusterNamespace | ClusterType, schema?: Schema.Cluster, name?: string) {
         return ClusterBehaviorType({
             namespace: ns,
             base: this,
@@ -126,7 +149,7 @@ export class ClusterBehavior extends Behavior {
      */
     static withFeatures<
         This extends ClusterBehavior.Type,
-        const FeaturesT extends ClusterNamespace.FeatureSelection<This["cluster"]["Typing"]>,
+        const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
     >(this: This, ...features: FeaturesT) {
         return ClusterBehaviorType({
             namespace: this.cluster,
@@ -135,8 +158,8 @@ export class ClusterBehavior extends Behavior {
         }) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithSupportedFeatures<
-                This["cluster"]["Typing"],
-                ClusterNamespace.FeaturesAsFlags<This["cluster"]["Typing"], FeaturesT>
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.FeaturesAsFlags<ClusterInterface.InterfaceOf<This>, FeaturesT>
             >
         >;
     }
@@ -146,7 +169,7 @@ export class ClusterBehavior extends Behavior {
      */
     static with<
         This extends ClusterBehavior.Type,
-        const FeaturesT extends ClusterNamespace.FeatureSelection<This["cluster"]["Typing"]>,
+        const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
     >(this: This, ...features: FeaturesT) {
         return this.withFeatures<This, FeaturesT>(...features);
     }
@@ -156,14 +179,14 @@ export class ClusterBehavior extends Behavior {
      */
     static alter<
         This extends ClusterBehavior.Type,
-        const AlterationsT extends ClusterNamespace.Alterations<This["cluster"]["Typing"]>,
+        const AlterationsT extends ClusterNamespace.Alterations<ClusterInterface.InterfaceOf<This>>,
     >(this: This, alterations: AlterationsT) {
         const schema = ClusterModifier.applyRequirements(this.schema, alterations);
         return this.for(this.cluster, schema) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
-                    This["cluster"]["Typing"],
+                    ClusterInterface.InterfaceOf<This>,
                     ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
                 >,
                 ClusterNamespace.AlteredMandatoryAttributeKeysOf<AlterationsT>
@@ -178,14 +201,14 @@ export class ClusterBehavior extends Behavior {
      */
     static enable<
         This extends ClusterBehavior.Type,
-        const FlagsT extends ClusterNamespace.ElementFlags<This["cluster"]["Typing"]>,
+        const FlagsT extends ClusterNamespace.ElementFlags<ClusterInterface.InterfaceOf<This>>,
     >(this: This, flags: FlagsT) {
         const schema = ClusterModifier.applyPresence(this.schema, flags);
         return this.for(this.cluster, schema) as unknown as ClusterBehavior.Type<
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
-                    This["cluster"]["Typing"],
+                    ClusterInterface.InterfaceOf<This>,
                     ClusterNamespace.EnabledEventKeysOf<FlagsT>
                 >,
                 ClusterNamespace.EnabledAttributeKeysOf<FlagsT>
@@ -298,6 +321,20 @@ export namespace ClusterBehavior {
         readonly lockOnInvoke: boolean;
 
         /**
+         * Create a new behavior for a specific cluster.
+         *
+         * @deprecated Pass a `ClusterNamespace` instead of a `ClusterType`.
+         */
+        for<This extends ClusterBehavior.Type, const C extends ClusterType>(
+            this: This,
+            cluster: C,
+            schema?: Schema,
+            name?: string,
+        ): ClusterBehavior.Type<This, ClusterTypeBridge<C, ClusterInterface.InterfaceOf<This>>> & {
+            readonly id: Uncapitalize<C["name"] & string>;
+        };
+
+        /**
          * Create a new behavior for a specific cluster namespace.
          */
         for<This extends ClusterBehavior.Type, const NS extends ClusterNamespace>(
@@ -314,15 +351,15 @@ export namespace ClusterBehavior {
          */
         withFeatures<
             This extends ClusterBehavior.Type,
-            const FeaturesT extends ClusterNamespace.FeatureSelection<This["cluster"]["Typing"]>,
+            const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             ...features: FeaturesT
         ): ClusterBehavior.Type<
             This,
             ClusterNamespace.WithSupportedFeatures<
-                This["cluster"]["Typing"],
-                ClusterNamespace.FeaturesAsFlags<This["cluster"]["Typing"], FeaturesT>
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.FeaturesAsFlags<ClusterInterface.InterfaceOf<This>, FeaturesT>
             >
         >;
 
@@ -331,15 +368,15 @@ export namespace ClusterBehavior {
          */
         with<
             This extends ClusterBehavior.Type,
-            const FeaturesT extends ClusterNamespace.FeatureSelection<This["cluster"]["Typing"]>,
+            const FeaturesT extends ClusterNamespace.FeatureSelection<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             ...features: FeaturesT
         ): ClusterBehavior.Type<
             This,
             ClusterNamespace.WithSupportedFeatures<
-                This["cluster"]["Typing"],
-                ClusterNamespace.FeaturesAsFlags<This["cluster"]["Typing"], FeaturesT>
+                ClusterInterface.InterfaceOf<This>,
+                ClusterNamespace.FeaturesAsFlags<ClusterInterface.InterfaceOf<This>, FeaturesT>
             >
         >;
 
@@ -348,7 +385,7 @@ export namespace ClusterBehavior {
          */
         alter<
             This extends ClusterBehavior.Type,
-            const AlterationsT extends ClusterNamespace.Alterations<This["cluster"]["Typing"]>,
+            const AlterationsT extends ClusterNamespace.Alterations<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             alterations: AlterationsT,
@@ -356,7 +393,7 @@ export namespace ClusterBehavior {
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
-                    This["cluster"]["Typing"],
+                    ClusterInterface.InterfaceOf<This>,
                     ClusterNamespace.AlteredMandatoryEventKeysOf<AlterationsT>
                 >,
                 ClusterNamespace.AlteredMandatoryAttributeKeysOf<AlterationsT>
@@ -367,7 +404,7 @@ export namespace ClusterBehavior {
 
         enable<
             This extends ClusterBehavior.Type,
-            const FlagsT extends ClusterNamespace.ElementFlags<This["cluster"]["Typing"]>,
+            const FlagsT extends ClusterNamespace.ElementFlags<ClusterInterface.InterfaceOf<This>>,
         >(
             this: This,
             flags: FlagsT,
@@ -375,7 +412,7 @@ export namespace ClusterBehavior {
             This,
             ClusterNamespace.WithEnabledAttributes<
                 ClusterNamespace.WithEnabledEvents<
-                    This["cluster"]["Typing"],
+                    ClusterInterface.InterfaceOf<This>,
                     ClusterNamespace.EnabledEventKeysOf<FlagsT>
                 >,
                 ClusterNamespace.EnabledAttributeKeysOf<FlagsT>
