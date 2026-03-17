@@ -5,25 +5,8 @@
  */
 
 import { ClusterInterface } from "#behavior/cluster/ClusterInterface.js";
-import { ActionContext } from "#behavior/context/ActionContext.js";
 import { MaybePromise } from "@matter/general";
-import { BitFlag, ClusterType } from "@matter/types";
-import { MyCluster } from "./cluster-behavior-test-util.js";
-
-const FeaturedCluster = ClusterType({
-    name: "Features",
-    id: 12,
-    revision: 1,
-
-    features: {
-        foo: BitFlag(0),
-        bar: BitFlag(1),
-    },
-
-    supportedFeatures: {
-        foo: true,
-    },
-});
+import { MyClusterTyping } from "./cluster-behavior-test-util.js";
 
 type FeaturesInterface = {
     SupportedFeatures: { foo: true };
@@ -54,13 +37,13 @@ type FeaturesInterface = {
 describe("ClusterInterface", () => {
     describe("MethodsOf", () => {
         it("includes interface", () => {
-            type Mo = ClusterInterface.MethodsOf<FeaturesInterface, typeof FeaturedCluster>;
+            type Mo = ClusterInterface.MethodsOf<FeaturesInterface>;
             ({}) as keyof Mo satisfies "unconditionalMethod" | "fooMethod";
             ({}) as "unconditionalMethod" | "fooMethod" satisfies keyof Mo;
         });
 
-        it("falls back to mapped", () => {
-            type Mo = ClusterInterface.MethodsOf<ClusterInterface.Empty, MyCluster>;
+        it("resolves commands from namespace typing", () => {
+            type Mo = ClusterInterface.MethodsOf<MyClusterTyping>;
             ({}) as keyof Mo satisfies "optCmd" | "reqCmd";
             ({}) as "optCmd" | "reqCmd" satisfies keyof Mo;
         });
@@ -93,18 +76,18 @@ describe("ClusterInterface", () => {
         });
     });
 
-    describe("MappedMethodsOf", () => {
-        type Mmo = ClusterInterface.MappedMethodsOf<ClusterType.CommandsOf<MyCluster>>;
+    describe("AppliedMethodsOf", () => {
+        type Amo = ClusterInterface.AppliedMethodsOf<ClusterInterface.ComponentsOf<MyClusterTyping>>;
 
         it("supports mandatory", () => {
-            ({}) as Mmo satisfies {
-                reqCmd(request: string, state: any, context?: ActionContext): MaybePromise<string>;
+            ({}) as Amo satisfies {
+                reqCmd(request: string): MaybePromise<string>;
             };
         });
 
         it("supports optional", () => {
-            ({}) as Mmo satisfies {
-                optCmd(request: boolean, state: any, context?: ActionContext): MaybePromise<boolean>;
+            ({}) as Amo satisfies {
+                optCmd(request: boolean): MaybePromise<boolean>;
             };
         });
     });
