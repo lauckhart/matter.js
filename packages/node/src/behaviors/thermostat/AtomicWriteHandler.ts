@@ -221,7 +221,7 @@ export class AtomicWriteHandler {
     writeAttribute(
         context: ValueSupervisor.Session,
         endpoint: Endpoint,
-        cluster: Behavior.Type,
+        cluster: ClusterBehavior.Type,
         attribute: AttributeId,
         value: unknown,
     ) {
@@ -350,7 +350,7 @@ export class AtomicWriteHandler {
     pendingValueForAttributeAndPeer(
         context: ValueSupervisor.Session,
         endpoint: Endpoint,
-        cluster: Behavior.Type,
+        cluster: ClusterBehavior.Type,
         attribute: AttributeId,
     ) {
         const peerAddress = this.#derivePeerAddress(context);
@@ -377,7 +377,7 @@ export class AtomicWriteHandler {
     #assertPendingWriteForAttributeAndPeer(
         session: ValueSupervisor.Session,
         endpoint: Endpoint,
-        cluster: Behavior.Type,
+        cluster: ClusterBehavior.Type,
         attribute: AttributeId,
     ) {
         const attrWriteState = this.#pendingWriteStateForAttribute(endpoint, cluster, attribute);
