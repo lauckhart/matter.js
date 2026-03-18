@@ -524,6 +524,7 @@ function createNamespaceFromSchema(schema: Schema.Cluster): object {
     if (model.id !== undefined) {
         ns.id = model.id;
     }
+    ns.name = model.name;
     ns.revision = model.revision;
 
     ClusterNamespace.define(ns);

@@ -25,6 +25,7 @@ import {
     ClusterModel,
     commandId,
     devtypeId,
+    ElementTag,
     endpointNo,
     epochS,
     epochUs,
@@ -52,6 +53,7 @@ import {
     uint32,
     uint64,
     uint8,
+    Scope,
     ValueModel,
     vendorId,
 } from "@matter/model";
@@ -243,10 +245,12 @@ function generateStruct(model: ClusterModel | ValueModel) {
 }
 
 function generateBitmap(model: ValueModel) {
-    const { fields } = model.conformant;
+    // Use all fields without conformance filtering — bitmap entries represent physical bit positions that must always
+    // be present in the TLV schema regardless of conformance (which is a logical constraint, not a wire-format one)
+    const fields = Scope(model).membersOf(model, { tags: [ElementTag.Field] });
 
     const entries = fields.map(field => {
-        const name = camelize(field.name);
+        const name = camelize(field.title ?? field.name);
         const { constraint } = field;
 
         if (typeof constraint.value === "number") {
