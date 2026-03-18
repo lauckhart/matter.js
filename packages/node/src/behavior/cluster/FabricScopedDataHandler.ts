@@ -8,7 +8,16 @@ import type { Behavior } from "#behavior/Behavior.js";
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import type { ServerNode } from "#node/ServerNode.js";
-import { camelize, createPromise, deepCopy, isObject, Logger, MaybePromise, Seconds, withTimeout } from "@matter/general";
+import {
+    camelize,
+    createPromise,
+    deepCopy,
+    isObject,
+    Logger,
+    MaybePromise,
+    Seconds,
+    withTimeout,
+} from "@matter/general";
 import { Access, ClusterModel, Schema } from "@matter/model";
 import { OccurrenceManager, Val } from "@matter/protocol";
 import type { ClusterNamespace, FabricIndex } from "@matter/types";
@@ -113,7 +122,8 @@ export async function limitNodeDataToAllowedFabrics(node: ServerNode, allowedInd
                     // Build set of fabric-scoped event names from schema
                     const fabricScopedEvents = new Set<string>();
                     for (const event of clusterSchema.events) {
-                        if (event.effectiveAccess.fabric === Access.Fabric.Scoped) {
+                        const fabric = event.effectiveAccess.fabric;
+                        if (fabric === Access.Fabric.Scoped || fabric === Access.Fabric.Sensitive) {
                             fabricScopedEvents.add(camelize(event.name));
                         }
                     }
