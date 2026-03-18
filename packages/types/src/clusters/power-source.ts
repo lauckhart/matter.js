@@ -1673,8 +1673,10 @@ export namespace PowerSource {
     export const name = "PowerSource" as const;
     export const revision = 3;
     export const schema = PowerSourceModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const events: ClusterNamespace.Events<Events>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: PowerSource;
 }

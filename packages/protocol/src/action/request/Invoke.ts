@@ -8,13 +8,14 @@ import { ClientRequest } from "#action/client/ClientRequest.js";
 import { SessionParameters } from "#session/SessionParameters.js";
 import { Diagnostic, Duration, isObject } from "@matter/general";
 import {
-    ClusterType,
+    ClusterNamespace,
     CommandData,
     FabricIndex,
     InvokeRequest,
     ObjectSchema,
+    TlvOfModel,
     TlvSchema,
-    TypeFromSchema,
+    TlvVoid,
 } from "@matter/types";
 import { MalformedRequestError } from "./MalformedRequestError.js";
 import { resolvePathForSpecifier, Specifier } from "./Specifier.js";
@@ -177,12 +178,14 @@ export namespace Invoke {
         skipValidation?: boolean;
     }
 
-    export function Command<const C extends ClusterType>(
+    export function Command<const C extends Specifier.ClusterLike>(
         request: Invoke.CommandRequest<C>,
         skipValidation = false,
     ): InvokeCommandData {
         const command = Invoke.commandOf(request);
-        const { requestSchema, requestId, timed } = command;
+        const requestSchema = TlvOfModel(command.schema) ?? TlvVoid;
+        const requestId = command.id;
+        const timed = command.schema.effectiveAccess.timed === true;
         const { commandRef } = request;
 
         let fields: any = "fields" in request ? request.fields : undefined;
@@ -233,7 +236,7 @@ export namespace Invoke {
         CMD extends Specifier.Command<Specifier.ClusterFor<C>> = Specifier.Command<Specifier.ClusterFor<C>>,
     > = WildcardCommandRequest<C, CMD> & { endpoint: Specifier.Endpoint };
 
-    export function ConcreteCommandRequest<const C extends ClusterType>(
+    export function ConcreteCommandRequest<const C extends Specifier.ClusterLike>(
         data: Invoke.ConcreteCommandRequest<C>,
     ): Invoke.ConcreteCommandRequest<any> {
         if (data.endpoint === undefined) {
@@ -250,9 +253,9 @@ export namespace Invoke {
         command: CMD;
         commandName?: string;
         commandRef?: number;
-    } & Fields<Specifier.CommandFor<Specifier.ClusterFor<C>, CMD>["requestSchema"]>;
+    } & Fields<Specifier.CommandFor<Specifier.ClusterFor<C>, CMD>>;
 
-    export function WildcardCommandRequest<const C extends ClusterType>(
+    export function WildcardCommandRequest<const C extends Specifier.ClusterLike>(
         data: Invoke.WildcardCommandRequest<C>,
     ): Invoke.WildcardCommandRequest<any> {
         if ("endpoint" in data && data.endpoint !== undefined) {
@@ -261,22 +264,35 @@ export namespace Invoke {
         return data;
     }
 
-    export function commandOf<const R extends CommandRequest>(request: R): ClusterType.Command {
+    /**
+     * Extract the command element from a command request.
+     */
+    export function commandOf<const R extends CommandRequest>(request: R): ClusterNamespace.Command {
         if (typeof request.command === "string") {
             const cluster = Specifier.clusterFor(request.cluster);
-            const command = cluster.commands[request.command];
+            const command = cluster.commands?.[request.command];
             if (command === undefined) {
                 throw new MalformedRequestError(`Cluster ${cluster.name} does not define command ${request.command}`);
             }
-            return command as Specifier.CommandFor<Specifier.ClusterOf<R>, R["command"]>;
+            return command;
         }
-        return request.command as Specifier.CommandFor<Specifier.ClusterOf<R>, R["command"]>;
+        return request.command;
     }
 
-    export type Fields<S extends TlvSchema<any>> =
-        S extends TlvSchema<void>
+    /**
+     * Extract the request type from a command's function signature phantom type.
+     */
+    export type RequestOf<C extends ClusterNamespace.Command = ClusterNamespace.Command> =
+        C extends ClusterNamespace.Command<infer F>
+            ? F extends (request: infer R, ...args: unknown[]) => unknown
+                ? R
+                : void
+            : void;
+
+    export type Fields<C extends ClusterNamespace.Command> =
+        RequestOf<C> extends void
             ? {}
-            : S extends TlvSchema<null>
-              ? { fields?: TypeFromSchema<S> }
-              : { fields: TypeFromSchema<S> };
+            : undefined extends RequestOf<C>
+              ? { fields?: RequestOf<C> }
+              : { fields: RequestOf<C> };
 }

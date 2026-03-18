@@ -363,7 +363,8 @@ export namespace MicrowaveOvenMode {
     export const name = "MicrowaveOvenMode" as const;
     export const revision = 2;
     export const schema = MicrowaveOvenModeModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: MicrowaveOvenMode;
 }

@@ -364,7 +364,8 @@ export namespace KeypadInput {
     export const name = "KeypadInput" as const;
     export const revision = 1;
     export const schema = KeypadInputModel;
-    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: KeypadInput;
 }

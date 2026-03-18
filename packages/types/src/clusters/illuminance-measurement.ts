@@ -125,7 +125,8 @@ export namespace IlluminanceMeasurement {
     export const name = "IlluminanceMeasurement" as const;
     export const revision = 3;
     export const schema = IlluminanceMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: IlluminanceMeasurement;
 }
 

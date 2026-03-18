@@ -85,7 +85,8 @@ export namespace CarbonMonoxideConcentrationMeasurement {
     export const name = "CarbonMonoxideConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = CarbonMonoxideConcentrationMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: CarbonMonoxideConcentrationMeasurement;
 }

@@ -91,7 +91,8 @@ export namespace TemperatureMeasurement {
     export const name = "TemperatureMeasurement" as const;
     export const revision = 4;
     export const schema = TemperatureMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: TemperatureMeasurement;
 }
 

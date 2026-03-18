@@ -650,8 +650,10 @@ export namespace Groups {
     export const name = "Groups" as const;
     export const revision = 4;
     export const schema = GroupsModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: Groups;
 }

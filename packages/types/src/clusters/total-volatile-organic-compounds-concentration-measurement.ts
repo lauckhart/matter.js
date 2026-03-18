@@ -88,7 +88,8 @@ export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
     export const name = "TotalVolatileOrganicCompoundsConcentrationMeasurement" as const;
     export const revision = 1;
     export const schema = TotalVolatileOrganicCompoundsConcentrationMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: TotalVolatileOrganicCompoundsConcentrationMeasurement;
 }

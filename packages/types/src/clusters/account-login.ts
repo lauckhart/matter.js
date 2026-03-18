@@ -579,8 +579,10 @@ export namespace AccountLogin {
     export const name = "AccountLogin" as const;
     export const revision = 2;
     export const schema = AccountLoginModel;
-    export declare const commands: ClusterNamespace.Commands<Commands>;
-    export declare const events: ClusterNamespace.Events<Events>;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
     export declare const Typing: AccountLogin;
 }
 

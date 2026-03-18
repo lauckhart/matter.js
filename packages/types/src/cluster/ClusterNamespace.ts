@@ -46,22 +46,25 @@ export namespace ClusterNamespace {
         optional?: string;
     }
 
-    export interface Attribute {
+    export interface Attribute<T = unknown> {
         id: AttributeId;
         name: string;
         schema: AttributeModel;
+        readonly __phantom?: T;
     }
 
-    export interface Command {
+    export interface Command<T extends (...args: unknown[]) => unknown = (...args: unknown[]) => unknown> {
         id: CommandId;
         name: string;
         schema: CommandModel;
+        readonly __phantom?: T;
     }
 
-    export interface Event {
+    export interface Event<T = unknown> {
         id: EventId;
         name: string;
         schema: EventModel;
+        readonly __phantom?: T;
     }
 
     export interface Feature {
@@ -91,6 +94,12 @@ export namespace ClusterNamespace {
     export type Commands<C> = { [K in keyof C]: Command };
     export type Events<E> = { [K in keyof E]: Event };
     export type Features<F extends string> = { [K in F]: Feature };
+
+    export type AttributeObjects<A> = { [K in keyof A]: Attribute<A[K]> };
+    export type CommandObjects<C> = {
+        [K in keyof C]: C[K] extends (...args: unknown[]) => unknown ? Command<C[K]> : Command;
+    };
+    export type EventObjects<E> = { [K in keyof E]: Event<E[K]> };
 
     /**
      * Set supported feature flags on a namespace, replacing any previous selection.

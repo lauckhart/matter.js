@@ -576,13 +576,16 @@ function generateComponents(file: ClusterFile, tlvSkippedTypes?: Map<string, Val
     file.ns.atom(`export const schema = ${name}Model`);
 
     if (hasAttrs) {
-        file.ns.atom(`export declare const attributes: ClusterNamespace.Attributes<Attributes>`);
+        file.ns.atom(`export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}`);
+        file.ns.atom(`export declare const attributes: AttributeObjects`);
     }
     if (hasCommands) {
-        file.ns.atom(`export declare const commands: ClusterNamespace.Commands<Commands>`);
+        file.ns.atom(`export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}`);
+        file.ns.atom(`export declare const commands: CommandObjects`);
     }
     if (hasEvents) {
-        file.ns.atom(`export declare const events: ClusterNamespace.Events<Events>`);
+        file.ns.atom(`export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}`);
+        file.ns.atom(`export declare const events: EventObjects`);
     }
     if (hasFeatures) {
         file.ns.atom(`export declare const features: ClusterNamespace.Features<Features>`);

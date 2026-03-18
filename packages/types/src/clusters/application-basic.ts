@@ -216,7 +216,8 @@ export namespace ApplicationBasic {
     export const name = "ApplicationBasic" as const;
     export const revision = 1;
     export const schema = ApplicationBasicModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: ApplicationBasic;
 }
 

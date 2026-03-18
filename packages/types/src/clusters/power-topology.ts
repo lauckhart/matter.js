@@ -199,7 +199,8 @@ export namespace PowerTopology {
     export const name = "PowerTopology" as const;
     export const revision = 1;
     export const schema = PowerTopologyModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: PowerTopology;
 }

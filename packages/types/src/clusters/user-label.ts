@@ -61,7 +61,8 @@ export namespace UserLabel {
     export const name = "UserLabel" as const;
     export const revision = 1;
     export const schema = UserLabelModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: UserLabel;
 }
 

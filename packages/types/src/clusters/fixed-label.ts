@@ -69,7 +69,8 @@ export namespace FixedLabel {
     export const name = "FixedLabel" as const;
     export const revision = 1;
     export const schema = FixedLabelModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: FixedLabel;
 }
 

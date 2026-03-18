@@ -283,7 +283,8 @@ export namespace Descriptor {
     export const name = "Descriptor" as const;
     export const revision = 3;
     export const schema = DescriptorModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: Descriptor;
 }

@@ -794,8 +794,10 @@ export namespace BasicInformation {
     export const name = "BasicInformation" as const;
     export const revision = 5;
     export const schema = BasicInformationModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
-    export declare const events: ClusterNamespace.Events<Events>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
     export declare const Typing: BasicInformation;
 }
 

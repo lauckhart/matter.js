@@ -437,7 +437,8 @@ export namespace ConcentrationMeasurement {
     export const name = "ConcentrationMeasurement" as const;
     export const revision = 3;
     export const schema = ConcentrationMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const features: ClusterNamespace.Features<Features>;
     export declare const Typing: ConcentrationMeasurement;
 }

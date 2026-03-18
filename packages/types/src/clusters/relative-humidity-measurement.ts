@@ -99,7 +99,8 @@ export namespace RelativeHumidityMeasurement {
     export const name = "RelativeHumidityMeasurement" as const;
     export const revision = 3;
     export const schema = RelativeHumidityMeasurementModel;
-    export declare const attributes: ClusterNamespace.Attributes<Attributes>;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
     export declare const Typing: RelativeHumidityMeasurement;
 }
 

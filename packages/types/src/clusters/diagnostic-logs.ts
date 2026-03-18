@@ -451,7 +451,8 @@ export namespace DiagnosticLogs {
     export const name = "DiagnosticLogs" as const;
     export const revision = 1;
     export const schema = DiagnosticLogsModel;
-    export declare const commands: ClusterNamespace.Commands<Commands>;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
     export declare const Typing: DiagnosticLogs;
 }
 
