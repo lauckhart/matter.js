@@ -15,6 +15,7 @@ import {
     CommandId,
     EndpointNumber,
     Status,
+    TlvAny,
     TlvArray,
     TlvEnum,
     TlvField,
@@ -32,6 +33,7 @@ import { OnOff } from "@matter/types/clusters/on-off";
 import { OperationalCredentials } from "@matter/types/clusters/operational-credentials";
 import { MockServerNode } from "../../node/mock-server-node.js";
 import { interaction } from "../../node/node-helpers.js";
+import { readAllAttrs } from "../../node/read-helpers.js";
 
 const FABRICS_PATH = {
     endpointId: EndpointNumber(0),
@@ -313,5 +315,45 @@ describe("ProtocolServiceTest", () => {
 
         // Nice, three nested fields called "status"
         expect(sent?.status?.status.status).deep.equals(Status.Success);
+    });
+
+    it("all attribute TLV schemas can encode their values", async () => {
+        const node = await MockServerNode.createOnline(undefined, {
+            device: OnOffLightDevice.with(OnOffServer),
+        });
+
+        // Wildcard read of all attributes
+        const { data } = await readAllAttrs(node);
+
+        let encoded = 0;
+        for (const chunk of data) {
+            for (const report of chunk) {
+                if (report.kind !== "attr-value") {
+                    continue;
+                }
+
+                const { path, value, tlv } = report;
+                const desc = `${path.endpointId}/${path.clusterId}/${path.attributeId}`;
+
+                // Every attr-value report must have a TLV schema
+                expect(tlv, `${desc} missing tlv`).to.exist;
+
+                // The TLV schema must be able to encode the value into a TLV stream
+                expect(() => {
+                    tlv.encodeTlv(value);
+                }, `${desc} encodeTlv failed`).to.not.throw();
+
+                // The encoded TLV stream must be serializable to bytes (catches bad values
+                // in the stream like objects where primitives are expected)
+                const stream = tlv.encodeTlv(value);
+                expect(() => TlvAny.encode(stream), `${desc} encode failed`).to.not.throw();
+
+                encoded++;
+            }
+        }
+
+        expect(encoded).to.be.greaterThan(0);
+
+        await node.close();
     });
 });

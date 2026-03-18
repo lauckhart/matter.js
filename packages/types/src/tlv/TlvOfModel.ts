@@ -244,9 +244,6 @@ function generateStruct(model: ClusterModel | ValueModel) {
 
 function generateBitmap(model: ValueModel) {
     const { fields } = model.conformant;
-    if (!fields.length) {
-        return primitiveFallbackOf(model);
-    }
 
     const entries = fields.map(field => {
         const name = camelize(field.name);
@@ -311,18 +308,4 @@ function generateInteger(model: ValueModel): TlvSchema<unknown> {
     }
 
     return tlv;
-}
-
-/**
- * For bitmaps, if we have no fields defined, the element would be useless from matter.js if so constrained. So instead
- * revert to the primitive type.
- */
-function primitiveFallbackOf(model: ValueModel) {
-    const primitive = model.metabase?.primitiveBase;
-
-    if (primitive === undefined) {
-        throw new ImplementationError(`Could not determine primitive base for ${model.path}`);
-    }
-
-    return TlvOfModel(primitive);
 }
