@@ -77,8 +77,8 @@ function attrsFor(cluster: ClusterNamespace) {
     const nsAttrs = cluster.attributes as Record<string, ClusterNamespace.Attribute> | undefined;
     attrs = {};
     if (nsAttrs) {
-        for (const [name, attr] of Object.entries(nsAttrs)) {
-            attrs[name] = attr;
+        for (const attr of Object.values(nsAttrs)) {
+            attrs[attr.id] = attr;
         }
     }
     attrCache.set(cluster, attrs);

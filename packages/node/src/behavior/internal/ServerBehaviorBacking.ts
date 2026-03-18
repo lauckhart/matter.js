@@ -132,7 +132,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
             acceptedIds.push(model.id as CommandId);
 
             // Find the response command if any
-            const responseName = model.response;
+            const responseName = model.effectiveResponse;
             if (responseName && responseName !== "status") {
                 const responseModel = responseModels.get(responseName);
                 if (responseModel && responseModel.id !== (CommandId.NONE as number)) {

@@ -186,11 +186,11 @@ const ScenesManagementSchema = ScenesManagement.schema.extend(
         ),
 );
 
-// We enable group names by default.  Pass the extended schema with relaxed command constraints.
-const ScenesManagementBase = ScenesManagementBehavior.with(ScenesManagement.Feature.SceneNames).for(
+// Pass the extended schema with relaxed command constraints, then enable SceneNames.
+const ScenesManagementBase = ScenesManagementBehavior.for(
     ScenesManagement,
     ScenesManagementSchema,
-);
+).with(ScenesManagement.Feature.SceneNames);
 
 /**
  * This is the default server implementation of {@link ScenesManagementBehavior}.

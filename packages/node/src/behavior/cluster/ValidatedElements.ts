@@ -5,7 +5,7 @@
  */
 
 import { Diagnostic, ImplementationError, Logger, MatterAggregateError, Observable, camelize } from "@matter/general";
-import { ClusterModel, Conformance, ElementTag, Schema, Scope, ValueModel } from "@matter/model";
+import { ClusterModel, Conformance, Schema } from "@matter/model";
 import type { ClusterNamespace } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import { ClusterBehavior } from "./ClusterBehavior.js";
@@ -80,7 +80,7 @@ export class ValidatedElements {
     #type: Behavior.Type;
     #instance?: Behavior;
     #cluster: ClusterNamespace;
-    #scope: Scope;
+    #schema: ClusterModel;
 
     /**
      * Obtain validation information.
@@ -96,9 +96,7 @@ export class ValidatedElements {
         this.#instance = instance;
         this.#name = type.name;
         this.#cluster = type.cluster;
-
-        const schema = Schema(type) as ClusterModel;
-        this.#scope = Scope(schema);
+        this.#schema = Schema(type) as ClusterModel;
 
         if (typeof type !== "function") {
             this.error(undefined, "Is not a class", true);
@@ -168,16 +166,14 @@ export class ValidatedElements {
             }
         }
 
-        // Enumerate from scope members which includes global attributes
-        for (const member of this.#scope.membersOf(this.#scope.owner, { tags: [ElementTag.Attribute] })) {
+        for (const member of this.#schema.conformant.attributes) {
             if (member.id === undefined) {
                 continue;
             }
             const name = camelize(member.name);
 
             if ((state as Record<string, unknown>)[name] === undefined) {
-                // Check if the attribute is optional via schema conformance
-                if (!this.#isOptionalElement(name, ElementTag.Attribute)) {
+                if (member.effectiveConformance.applicabilityFor(this.#schema) === Conformance.Applicability.Mandatory) {
                     this.error(`State.${name}`, "Mandatory element unsupported", false);
                 }
                 continue;
@@ -189,14 +185,6 @@ export class ValidatedElements {
     }
 
     #validateCommands() {
-        const nsCommands = this.#cluster.commands as
-            | Record<string, ClusterNamespace.Command>
-            | undefined;
-        if (!nsCommands) {
-            // No commands in namespace — nothing to validate
-            return;
-        }
-
         let implementations;
 
         if (this.#instance) {
@@ -210,12 +198,18 @@ export class ValidatedElements {
             }
         }
 
-        for (const name in nsCommands) {
+        for (const member of this.#schema.conformant.commands) {
+            if (member.isResponse) {
+                continue;
+            }
+
+            const name = camelize(member.name);
+            const isMandatory =
+                member.effectiveConformance.applicabilityFor(this.#schema) === Conformance.Applicability.Mandatory;
             const implementation = (implementations as Record<string, unknown>)[name];
-            const isOptional = this.#isOptionalElement(name, ElementTag.Command);
 
             if (!(name in implementations) || implementation === undefined) {
-                if (!isOptional) {
+                if (isMandatory) {
                     this.error(name, `Implementation missing`, true);
                 }
                 continue;
@@ -227,7 +221,7 @@ export class ValidatedElements {
             }
 
             if (implementation === Behavior.unimplemented) {
-                if (!isOptional) {
+                if (isMandatory) {
                     // TODO - do not pollute the logs with these as Matter spec is in flux (should this include groups
                     //  or just scenes?)
                     if (this.#name.match(/^(?:Groups|Scenes|GroupKeyManagement)(?:Server|Behavior)/)) {
@@ -245,16 +239,15 @@ export class ValidatedElements {
     }
 
     #validateEvents() {
-        const nsEvents = this.#cluster.events as
-            | Record<string, ClusterNamespace.Event>
-            | undefined;
-        if (!nsEvents || Object.keys(nsEvents).length === 0) {
-            return;
-        }
-
         const constructor = this.#type.Events;
         if (!constructor) {
-            this.error("Events", "Implementation missing", true);
+            // No Events class — only an error if there are mandatory conformant events
+            for (const member of this.#schema.conformant.events) {
+                if (member.effectiveConformance.applicabilityFor(this.#schema) === Conformance.Applicability.Mandatory) {
+                    this.error("Events", "Implementation missing", true);
+                    return;
+                }
+            }
             return;
         }
 
@@ -271,9 +264,11 @@ export class ValidatedElements {
             }
         }
 
-        for (const name in nsEvents) {
+        for (const member of this.#schema.conformant.events) {
+            const name = camelize(member.name);
+
             if (!(name in emitters)) {
-                if (!this.#isOptionalElement(name, ElementTag.Event)) {
+                if (member.effectiveConformance.applicabilityFor(this.#schema) === Conformance.Applicability.Mandatory) {
                     this.error(`cluster.events.${name}`, "Implementation missing", true);
                 }
                 continue;
@@ -283,19 +278,6 @@ export class ValidatedElements {
         }
     }
 
-    /**
-     * Check if an element is optional by consulting the schema conformance.
-     */
-    #isOptionalElement(name: string, tag: ElementTag): boolean {
-        for (const member of this.#scope.membersOf(this.#scope.owner, { tags: [tag] })) {
-            if (camelize(member.name) === name) {
-                const applicability = (member as ValueModel).effectiveConformance.applicabilityFor(this.#scope);
-                return applicability !== Conformance.Applicability.Mandatory;
-            }
-        }
-        // Element not found in schema — treat as optional
-        return true;
-    }
 
     private error(element: string | undefined, message: string, fatal: boolean) {
         if (!this.errors) {
