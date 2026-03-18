@@ -194,8 +194,12 @@ describe("Client Event Notification", () => {
 
             const behaviorType = PeerBehavior(shape);
             expect(behaviorType.features).deep.equals({
+                latchingSwitch: false,
                 momentarySwitch: true,
                 momentarySwitchRelease: true,
+                momentarySwitchLongPress: false,
+                momentarySwitchMultiPress: false,
+                actionSwitch: false,
             });
             expect(behaviorType.cluster.events?.initialPress, "initialPress (MS)").not.undefined;
             expect(behaviorType.cluster.events?.multiPressComplete, "multiPressComplete (MSM)").not.undefined;
