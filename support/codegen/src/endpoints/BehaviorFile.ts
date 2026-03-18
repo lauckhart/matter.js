@@ -39,13 +39,7 @@ export class BehaviorFile extends TsFile {
         const builder = this.builder(`export const ${constructorName} = ClusterBehavior`);
 
         // Just pass the namespace — for() infers N from the namespace's Typing phantom
-        const definingCluster = this.#variance.cluster;
-        const nsName = definingCluster !== this.cluster ? definingCluster.name : this.cluster.name;
-
-        if (definingCluster !== this.cluster) {
-            // This is an alias so import the defining cluster namespace
-            this.addImport(`@matter/types/clusters/${decamelize(nsName)}`, nsName);
-        }
+        const nsName = this.cluster.name;
 
         // Inject the cluster namespace and appropriate documentation
         let extraDocs;

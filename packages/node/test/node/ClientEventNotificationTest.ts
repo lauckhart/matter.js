@@ -171,13 +171,13 @@ describe("Client Event Notification", () => {
             };
 
             const events = PeerBehavior(shape).cluster.events;
-            expect(events.switchLatched, "switchLatched (LS)").not.undefined;
-            expect(events.initialPress, "initialPress (MS)").not.undefined;
-            expect(events.longPress, "longPress (MSL)").not.undefined;
-            expect(events.shortRelease, "shortRelease (MSR)").not.undefined;
-            expect(events.longRelease, "longRelease (MSL)").not.undefined;
-            expect(events.multiPressOngoing, "multiPressOngoing (MSM)").not.undefined;
-            expect(events.multiPressComplete, "multiPressComplete (MSM)").not.undefined;
+            expect(events?.switchLatched, "switchLatched (LS)").not.undefined;
+            expect(events?.initialPress, "initialPress (MS)").not.undefined;
+            expect(events?.longPress, "longPress (MSL)").not.undefined;
+            expect(events?.shortRelease, "shortRelease (MSR)").not.undefined;
+            expect(events?.longRelease, "longRelease (MSL)").not.undefined;
+            expect(events?.multiPressOngoing, "multiPressOngoing (MSM)").not.undefined;
+            expect(events?.multiPressComplete, "multiPressComplete (MSM)").not.undefined;
         });
 
         it("preserves detected supportedFeatures after all-feature composition", () => {
@@ -197,8 +197,8 @@ describe("Client Event Notification", () => {
                 momentarySwitch: true,
                 momentarySwitchRelease: true,
             });
-            expect(behaviorType.cluster.events.initialPress, "initialPress (MS)").not.undefined;
-            expect(behaviorType.cluster.events.multiPressComplete, "multiPressComplete (MSM)").not.undefined;
+            expect(behaviorType.cluster.events?.initialPress, "initialPress (MS)").not.undefined;
+            expect(behaviorType.cluster.events?.multiPressComplete, "multiPressComplete (MSM)").not.undefined;
         });
     });
 });

@@ -8,7 +8,6 @@
 
 import { FormaldehydeConcentrationMeasurement } from "@matter/types/clusters/formaldehyde-concentration-measurement";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ConcentrationMeasurement } from "@matter/types/clusters/concentration-measurement";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,8 @@ import { Identity } from "@matter/general";
  * FormaldehydeConcentrationMeasurement.Cluster requires you to enable one or more optional features. You can do so
  * using {@link FormaldehydeConcentrationMeasurementBehavior.with}.
  */
-export const FormaldehydeConcentrationMeasurementBehaviorConstructor = ClusterBehavior.for(ConcentrationMeasurement);
+export const FormaldehydeConcentrationMeasurementBehaviorConstructor = ClusterBehavior
+    .for(FormaldehydeConcentrationMeasurement);
 
 export interface FormaldehydeConcentrationMeasurementBehaviorConstructor extends Identity<typeof FormaldehydeConcentrationMeasurementBehaviorConstructor> {}
 export const FormaldehydeConcentrationMeasurementBehavior: FormaldehydeConcentrationMeasurementBehaviorConstructor = FormaldehydeConcentrationMeasurementBehaviorConstructor;

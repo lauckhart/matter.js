@@ -39,7 +39,7 @@ export namespace ClusterState {
         // Keep properties *not* from attributes of the old cluster
         Omit<InstanceType<B["State"]>, ClusterNamespace.AttrKeysOf<N>> &
             // Add properties from attributes of the new cluster
-            NsAttributeProperties<N>;
+            AttributeProperties<N>;
 
     /**
      * Extract Attributes.Components tuple from namespace.
@@ -53,7 +53,7 @@ export namespace ClusterState {
     /**
      * N-driven attribute properties: mandatory vs optional from Components + value types from Attributes.
      */
-    type NsAttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
+    type AttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
         ? {
               [K in (
                   | MandatoryAttrKeys<AttributesComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
@@ -116,7 +116,7 @@ export namespace ClusterState {
         InstanceType<B["State"]>,
         ClusterNamespace.AttrKeysOf<N>
     > &
-        CompleteNsAttributeProperties<N>;
+        CompleteAttributeProperties<N>;
 
     /**
      * Mandatory keys from base components (flags: {}) only.
@@ -133,7 +133,7 @@ export namespace ClusterState {
     /**
      * Complete attribute properties: base-mandatory attrs are mandatory, everything else is optional.
      */
-    type CompleteNsAttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
+    type CompleteAttributeProperties<N extends ClusterTyping> = N extends { Attributes: infer A }
         ? { [K in CompleteBaseMandatoryAttrKeys<AttributesComponentsOf<N>> & keyof A]: A[K] } & {
               [K in Exclude<
                   AllAttrKeys<AttributesComponentsOf<N>>,

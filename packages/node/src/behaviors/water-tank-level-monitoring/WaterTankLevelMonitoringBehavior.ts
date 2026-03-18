@@ -8,7 +8,6 @@
 
 import { WaterTankLevelMonitoring } from "@matter/types/clusters/water-tank-level-monitoring";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { ResourceMonitoring } from "@matter/types/clusters/resource-monitoring";
 import { Identity } from "@matter/general";
 
 /**
@@ -18,7 +17,7 @@ import { Identity } from "@matter/general";
  * This class does not have optional features of WaterTankLevelMonitoring.Cluster enabled. You can enable additional
  * features using WaterTankLevelMonitoringBehavior.with.
  */
-export const WaterTankLevelMonitoringBehaviorConstructor = ClusterBehavior.for(ResourceMonitoring);
+export const WaterTankLevelMonitoringBehaviorConstructor = ClusterBehavior.for(WaterTankLevelMonitoring);
 
 export interface WaterTankLevelMonitoringBehaviorConstructor extends Identity<typeof WaterTankLevelMonitoringBehaviorConstructor> {}
 export const WaterTankLevelMonitoringBehavior: WaterTankLevelMonitoringBehaviorConstructor = WaterTankLevelMonitoringBehaviorConstructor;

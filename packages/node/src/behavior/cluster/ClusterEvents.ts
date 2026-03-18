@@ -50,7 +50,7 @@ export namespace ClusterEvents {
      */
     export type Properties<N extends ClusterTyping = ClusterTyping> = ChangingObservables<N> &
         ChangedObservables<N> &
-        NsEventObservables<N>;
+        EventObservables<N>;
 
     // --- Namespace-based attribute change observable types ---
 
@@ -202,7 +202,7 @@ export namespace ClusterEvents {
     /**
      * Wrap payload type as event observable.
      */
-    type NsEventObservable<T> = OnlineEvent<[payload: T, context: ActionContext], EventModel>;
+    type EventObservable<T> = OnlineEvent<[payload: T, context: ActionContext], EventModel>;
 
     /**
      * Extract keys marked as enabled on the namespace (e.g. via `enable()` or `alter()`).
@@ -213,19 +213,19 @@ export namespace ClusterEvents {
      * Produce event observables from namespace.  Events are mandatory if they match active feature flags in
      * Components OR if they were marked enabled on the namespace (e.g. via `enable()` or `alter()`).
      */
-    type NsEventObservables<N extends ClusterTyping> = N extends { Events: infer E }
+    type EventObservables<N extends ClusterTyping> = N extends { Events: infer E }
         ? {
               [K in (
                   | MandatoryEventKeys<EventsComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>
                   | EnabledKeys<N>
               ) &
-                  keyof E]: NsEventObservable<E[K]>;
+                  keyof E]: EventObservable<E[K]>;
           } & {
               [K in Exclude<
                   OptionalEventKeys<EventsComponentsOf<N>, ClusterNamespace.SupportedFeaturesOf<N>>,
                   EnabledKeys<N>
               > &
-                  keyof E]?: NsEventObservable<E[K]>;
+                  keyof E]?: EventObservable<E[K]>;
           }
         : {};
 
@@ -243,7 +243,7 @@ export namespace ClusterEvents {
      */
     type CompleteProperties<N extends ClusterTyping> = CompleteChangingObservables<N> &
         CompleteChangedObservables<N> &
-        CompleteNsEventObservables<N>;
+        CompleteEventObservables<N>;
 
     /**
      * All changing observables from all components, all mandatory.
@@ -270,7 +270,7 @@ export namespace ClusterEvents {
     /**
      * All event observables from all components, all mandatory.
      */
-    type CompleteNsEventObservables<N extends ClusterTyping> = N extends { Events: infer E }
-        ? { [K in AllEventKeys<EventsComponentsOf<N>> & keyof E]: NsEventObservable<E[K]> }
+    type CompleteEventObservables<N extends ClusterTyping> = N extends { Events: infer E }
+        ? { [K in AllEventKeys<EventsComponentsOf<N>> & keyof E]: EventObservable<E[K]> }
         : {};
 }
