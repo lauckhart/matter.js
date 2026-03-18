@@ -14,7 +14,7 @@ import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import { camelize, ImplementationError, MaybePromise, ObserverGroup } from "@matter/general";
 import { ClusterModel, CommandModel, FeatureSet, FieldValue, Schema } from "@matter/model";
 import { Val } from "@matter/protocol";
-import { ClusterNamespace, CommandId } from "@matter/types";
+import { AttributeId, CommandId } from "@matter/types";
 import { Behavior } from "../Behavior.js";
 import { Datasource } from "../state/managed/Datasource.js";
 import { BehaviorBacking } from "./BehaviorBacking.js";
@@ -101,15 +101,8 @@ export class ServerBehaviorBacking extends BehaviorBacking {
 
         const globals = behavior.state as GlobalAttributeState;
 
-        // Update attribute list using namespace attribute map
-        const nsAttributes = behavior.cluster.attributes as
-            | Record<string, ClusterNamespace.Attribute>
-            | undefined;
-        if (nsAttributes) {
-            globals.attributeList = [...validation.attributes]
-                .map(name => nsAttributes[name].id)
-                .sort((a, b) => a - b);
-        }
+        // Update attribute list from validated elements (includes global attributes via scope)
+        globals.attributeList = ([...validation.attributeIds.values()] as AttributeId[]).sort((a, b) => a - b);
 
         // Update accepted & generated command lists from the schema (ClusterModel)
         const schema = Schema(behavior.type) as ClusterModel;

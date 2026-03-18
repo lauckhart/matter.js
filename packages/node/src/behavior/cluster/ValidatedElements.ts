@@ -57,6 +57,11 @@ export class ValidatedElements {
     attributes = new Set<string>();
 
     /**
+     * Attribute name → ID mapping for all supported attributes (including globals).
+     */
+    attributeIds = new Map<string, number>();
+
+    /**
      * Supported commands.
      */
     commands = new Set<string>();
@@ -144,14 +149,6 @@ export class ValidatedElements {
     }
 
     #validateAttributes() {
-        const nsAttributes = this.#cluster.attributes as
-            | Record<string, ClusterNamespace.Attribute>
-            | undefined;
-        if (!nsAttributes) {
-            // No attributes in namespace — nothing to validate
-            return;
-        }
-
         let state;
 
         if (this.#instance) {
@@ -171,8 +168,13 @@ export class ValidatedElements {
             }
         }
 
-        // Use the namespace attribute map for enumeration
-        for (const name in nsAttributes) {
+        // Enumerate from scope members which includes global attributes
+        for (const member of this.#scope.membersOf(this.#scope.owner, { tags: [ElementTag.Attribute] })) {
+            if (member.id === undefined) {
+                continue;
+            }
+            const name = camelize(member.name);
+
             if ((state as Record<string, unknown>)[name] === undefined) {
                 // Check if the attribute is optional via schema conformance
                 if (!this.#isOptionalElement(name, ElementTag.Attribute)) {
@@ -182,6 +184,7 @@ export class ValidatedElements {
             }
 
             this.attributes.add(name);
+            this.attributeIds.set(name, member.id);
         }
     }
 
