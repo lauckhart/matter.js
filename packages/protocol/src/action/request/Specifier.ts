@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ClusterId } from "@matter/types";
-import { ClusterNamespace, EndpointNumber, Global } from "@matter/types";
+import type { ClusterId, CommandId } from "@matter/types";
+import { ClusterNamespace, EndpointNumber, Global, TlvSchema } from "@matter/types";
 import { MalformedRequestError } from "./MalformedRequestError.js";
 
 /**
@@ -51,6 +51,16 @@ export namespace Specifier {
     export type Command<C extends ClusterLike = ClusterLike> =
         | ClusterNamespace.Command
         | (string & keyof NonNullable<C["commands"]>);
+
+    /**
+     * @deprecated
+     * Legacy command specifier from ClusterType.  Use {@link ClusterNamespace.Command}.
+     */
+    export interface ClusterTypeCommand {
+        requestId: CommandId;
+        requestSchema: TlvSchema<any>;
+        timed: boolean;
+    }
 
     /**
      * An event specifier may be the name of a cluster event or an event object.
