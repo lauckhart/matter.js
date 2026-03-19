@@ -45,6 +45,7 @@ import {
     percent,
     percent100ths,
     posixMs,
+    Scope,
     subjectId,
     systimeMs,
     systimeUs,
@@ -53,7 +54,6 @@ import {
     uint32,
     uint64,
     uint8,
-    Scope,
     ValueModel,
     vendorId,
 } from "@matter/model";
@@ -162,21 +162,31 @@ const NumberMapping: Record<string, TlvSchema<unknown>> = {
 function generateTlv(model: ClusterModel | ValueModel): TlvSchema<unknown> {
     const metatype = model.effectiveMetatype;
 
-    // Handle structs first because then we can exclude ClusterModel as type
+    // Structs can be ClusterModel or ValueModel; handle separately since they don't require metabase
     if (metatype === Metatype.object) {
-        return generateStruct(model);
+        if (!(model instanceof ValueModel)) {
+            return generateStruct(model);
+        }
+
+        let tlv: TlvSchema<unknown> = generateStruct(model);
+
+        if (model.quality.nullable) {
+            tlv = TlvNullable(tlv);
+        }
+
+        return tlv;
     }
 
     if (!(model instanceof ValueModel)) {
         throw new InternalError(`Inappropriate use of ${model.tag} model as datatype`);
     }
 
-    let tlv: TlvSchema<unknown>;
-
     const metabase = model.metabase;
     if (metabase === undefined) {
         throw new InternalError(`No metabase for model ${model.name}`);
     }
+
+    let tlv: TlvSchema<unknown>;
 
     switch (metatype) {
         case Metatype.any:
