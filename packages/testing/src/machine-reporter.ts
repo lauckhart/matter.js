@@ -48,17 +48,19 @@ export class MachineReporter implements Reporter {
             file = this.#toSourcePath(file);
         }
 
-        // Print file header if file changed
-        if (file && file !== this.#currentFile) {
+        // Print file header when the top-level suite or file changes.  The top-level suite name appears first with the
+        // file path in parentheses.
+        const suitePath = name;
+        const topName = suitePath[0];
+        if (topName !== undefined && (file !== this.#currentFile || topName !== this.#currentSuite[0])) {
             this.#currentFile = file;
             this.#currentSuite = [];
-            process.stdout.write(`${file}\n`);
+            if (file) {
+                process.stdout.write(`${topName} (${file})\n`);
+            } else {
+                process.stdout.write(`${topName}\n`);
+            }
         }
-
-        // Determine which suite levels changed and print new ones
-        // name is the full title path from mocha, e.g. ["file suite", "nested suite"]
-        // Skip the first element which is the file-level suite
-        const suitePath = name.slice(1);
 
         // Find common prefix length
         let common = 0;
@@ -70,9 +72,9 @@ export class MachineReporter implements Reporter {
             common++;
         }
 
-        // Print new suite levels
-        for (let i = common; i < suitePath.length; i++) {
-            const indent = "  ".repeat(i + 1);
+        // Print new nested suite levels (skip the top-level suite which is part of the file header)
+        for (let i = Math.max(common, 1); i < suitePath.length; i++) {
+            const indent = "  ".repeat(i);
             process.stdout.write(`${indent}* ${suitePath[i]}\n`);
         }
 
@@ -90,7 +92,7 @@ export class MachineReporter implements Reporter {
     passTest(_name: string): void {
         this.#testNumber++;
         this.#passCount++;
-        const indent = "  ".repeat(this.#currentSuite.length + 1);
+        const indent = "  ".repeat(this.#currentSuite.length);
         process.stdout.write(`${indent}${this.#testNumber}. ${this.#currentTest} PASS\n`);
     }
 
@@ -108,7 +110,7 @@ export class MachineReporter implements Reporter {
         writeFileSync(failurePath, this.#formatFailureFile(name, detail, descriptor));
 
         // Print test line
-        const indent = "  ".repeat(this.#currentSuite.length + 1);
+        const indent = "  ".repeat(this.#currentSuite.length);
         const code = this.#stripAnsi(detail.id ? detail.id : detail.message.split("\n")[0]);
         process.stdout.write(`${indent}${this.#testNumber}. ${name} FAIL [${code}] (see ./${failurePath})\n`);
     }
