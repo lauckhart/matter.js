@@ -304,14 +304,20 @@ function generateString(base: typeof TlvByteString | typeof TlvString, model: Va
 }
 
 function generateInteger(model: ValueModel): TlvSchema<unknown> {
-    const base = model.metabase;
-    if (base === undefined) {
-        throw new InternalError(`No metabase for model ${model.path} type ${model.type}`);
+    // Walk the type chain checking each ancestor against NumberMapping.
+    // This finds specialized types like epoch-us before reaching the
+    // root primitive (uint64).  Mirrors the codegen approach in
+    // specializedNumberTypeFor() (NumberConstants.ts).
+    let tlv: TlvSchema<unknown> | undefined;
+    for (let base: ValueModel | undefined = model; base; base = base.base as ValueModel | undefined) {
+        tlv = NumberMapping[base.name];
+        if (tlv !== undefined) {
+            break;
+        }
     }
 
-    const tlv = NumberMapping[base.name];
     if (tlv === undefined) {
-        throw new InternalError(`No mapping for model ${model.path} metabase ${base.name}`);
+        throw new InternalError(`No numeric TLV mapping for model ${model.path} type ${model.type}`);
     }
 
     if ("bound" in tlv) {
