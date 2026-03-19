@@ -78,7 +78,7 @@ export function ClusterBehaviorType({
     const useCache = name === undefined;
 
     if (useCache) {
-        const cached = ClusterBehaviorCache.get(namespace, base, schema, forClient);
+        const cached = ClusterBehaviorCache.get(base, schema, forClient);
         if (cached) {
             return cached;
         }
@@ -144,7 +144,7 @@ export function ClusterBehaviorType({
     schema.finalize();
 
     if (useCache) {
-        ClusterBehaviorCache.set(namespace, base, schema, type);
+        ClusterBehaviorCache.set(base, schema, type);
     }
 
     return type as ClusterBehavior.Type;

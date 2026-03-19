@@ -8,24 +8,18 @@ import { Behavior } from "#behavior/Behavior.js";
 import { Schema } from "@matter/model";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 
-const behaviorCache = new WeakMap<
-    Behavior.Type,
-    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>
->();
+const behaviorCache = new WeakMap<Behavior.Type, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>();
 
-const clientCache = new WeakMap<
-    Behavior.Type,
-    WeakMap<object, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>
->();
+const clientCache = new WeakMap<Behavior.Type, WeakMap<Schema, WeakRef<ClusterBehavior.Type>>>();
 
 /**
  * To save memory we cache behavior implementations specialized for specific clusters.  This allows for efficient
  * configuration of behaviors with conditional runtime logic.
  *
- * We use the namespace and schema as cache keys so this relies on similar caching for those items.
+ * We use the schema as the cache key so this relies on similar caching for schemas.
  */
 export namespace ClusterBehaviorCache {
-    export function get(namespace: object, base: Behavior.Type, schema: Schema, forClient?: boolean) {
+    export function get(base: Behavior.Type, schema: Schema, forClient?: boolean) {
         const cache = forClient ? clientCache : behaviorCache;
 
         const baseCache = cache.get(base);
@@ -33,25 +27,15 @@ export namespace ClusterBehaviorCache {
             return;
         }
 
-        const nsCache = baseCache.get(namespace);
-        if (nsCache === undefined) {
-            return;
-        }
-
-        return nsCache.get(schema)?.deref();
+        return baseCache.get(schema)?.deref();
     }
 
-    export function set(namespace: object, base: Behavior.Type, schema: Schema, type: ClusterBehavior.Type) {
+    export function set(base: Behavior.Type, schema: Schema, type: ClusterBehavior.Type) {
         let baseCache = behaviorCache.get(base);
         if (baseCache === undefined) {
             behaviorCache.set(base, (baseCache = new WeakMap()));
         }
 
-        let nsCache = baseCache.get(namespace);
-        if (nsCache === undefined) {
-            baseCache.set(namespace, (nsCache = new WeakMap()));
-        }
-
-        nsCache.set(schema, new WeakRef(type));
+        baseCache.set(schema, new WeakRef(type));
     }
 }
