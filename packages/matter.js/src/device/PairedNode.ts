@@ -610,7 +610,7 @@ export class PairedNode {
                 }
 
                 const state = endpoint.stateOf(behavior);
-                const attributes = behavior.cluster.attributes;
+                const attributes = behavior.cluster.attributes ?? {};
                 for (const attribute of properties ?? Object.keys(attributes)) {
                     let attributeId = parseInt(attribute, 10);
                     if (isNaN(attributeId)) {
