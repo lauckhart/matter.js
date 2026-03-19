@@ -9,10 +9,21 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { OptionalFixedAttribute } from "../cluster/Cluster.js";
 import { TlvString, TlvByteString } from "../tlv/TlvString.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { WakeOnLan as WakeOnLanModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WakeOnLan {
+    export interface Attributes {
+        macAddress: string;
+        linkLocalAddress: Bytes;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, optional: "macAddress" | "linkLocalAddress" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -80,8 +91,17 @@ export namespace WakeOnLan {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x503);
+    export const name = "WakeOnLan" as const;
+    export const revision = 1;
+    export const schema = WakeOnLanModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const Typing: WakeOnLan;
 }
 
 export type WakeOnLanCluster = WakeOnLan.Cluster;
 export const WakeOnLanCluster = WakeOnLan.Cluster;
 ClusterRegistry.register(WakeOnLan.Complete);
+ClusterNamespace.define(WakeOnLan);
+export interface WakeOnLan extends ClusterTyping { Attributes: WakeOnLan.Attributes & { Components: WakeOnLan.Attributes.Components } }

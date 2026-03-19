@@ -9,12 +9,22 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, FixedAttribute } from "../cluster/Cluster.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, LocalizationConfiguration as LocalizationConfigurationModel } from "@matter/model";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LocalizationConfiguration {
+    export interface Attributes {
+        activeLocale: string;
+        supportedLocales: string[];
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "activeLocale" | "supportedLocales" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -67,8 +77,17 @@ export namespace LocalizationConfiguration {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x2b);
+    export const name = "LocalizationConfiguration" as const;
+    export const revision = 1;
+    export const schema = LocalizationConfigurationModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const Typing: LocalizationConfiguration;
 }
 
 export type LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;
 export const LocalizationConfigurationCluster = LocalizationConfiguration.Cluster;
 ClusterRegistry.register(LocalizationConfiguration.Complete);
+ClusterNamespace.define(LocalizationConfiguration);
+export interface LocalizationConfiguration extends ClusterTyping { Attributes: LocalizationConfiguration.Attributes & { Components: LocalizationConfiguration.Attributes.Components } }

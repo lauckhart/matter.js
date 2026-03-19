@@ -12,77 +12,27 @@ import { TlvInt64, TlvUInt8, TlvEnum, TlvEpochS, TlvSysTimeMS } from "../tlv/Tlv
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { TlvMeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
+import { TlvMeasurementAccuracy, MeasurementAccuracy } from "../globals/MeasurementAccuracy.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ElectricalPowerMeasurement as ElectricalPowerMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ElectricalPowerMeasurement {
     /**
-     * These are optional features supported by ElectricalPowerMeasurementCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.13.4
-     */
-    export enum Feature {
-        /**
-         * DirectCurrent (DIRC)
-         *
-         * This feature indicates the cluster can measure a direct current.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.1
-         */
-        DirectCurrent = "DirectCurrent",
-
-        /**
-         * AlternatingCurrent (ALTC)
-         *
-         * This feature indicates the cluster can measure an alternating current.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.2
-         */
-        AlternatingCurrent = "AlternatingCurrent",
-
-        /**
-         * PolyphasePower (POLY)
-         *
-         * This feature indicates the cluster represents the collective measurements for a Polyphase power supply.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.3
-         */
-        PolyphasePower = "PolyphasePower",
-
-        /**
-         * Harmonics (HARM)
-         *
-         * This feature indicates the cluster can measure the harmonics of an alternating current.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.4
-         */
-        Harmonics = "Harmonics",
-
-        /**
-         * PowerQuality (PWRQ)
-         *
-         * This feature indicates the cluster can measure the harmonic phases of an alternating current.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.5
-         */
-        PowerQuality = "PowerQuality"
-    }
-
-    /**
      * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4
      */
-    export const TlvHarmonicMeasurement = TlvObject({
+    export interface HarmonicMeasurement {
         /**
          * This field shall be the order of the harmonic being measured. Typically this is an odd number, but servers
          * may choose to report even harmonics.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4.1
          */
-        order: TlvField(0, TlvUInt8.bound({ min: 1 })),
+        order: number;
 
         /**
          * This field shall be the measured value for the given harmonic order.
@@ -99,13 +49,8 @@ export namespace ElectricalPowerMeasurement {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4.2
          */
-        measurement: TlvField(1, TlvNullable(TlvInt64))
-    });
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4
-     */
-    export interface HarmonicMeasurement extends TypeFromSchema<typeof TlvHarmonicMeasurement> {}
+        measurement: number | bigint | null;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.1
@@ -210,6 +155,273 @@ export namespace ElectricalPowerMeasurement {
          */
         ApparentEnergy = 16
     }
+
+    /**
+     * This struct shall indicate the maximum and minimum values of a given measurement type during a measurement
+     * period, along with the observation times of these values.
+     *
+     * A server which does not have the ability to determine the time in UTC, or has not yet done so, shall use the
+     * system time fields to specify the measurement period and observation times.
+     *
+     * A server which has determined the time in UTC shall use the timestamp fields to specify the measurement period
+     * and observation times. Such a server may also include the systime fields to indicate how many seconds had passed
+     * since boot for a given timestamp; this allows for client-side resolution of UTC time for previous reports that
+     * only included systime.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3
+     */
+    export interface MeasurementRange {
+        /**
+         * This field shall be the type of measurement for the range provided.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.1
+         */
+        measurementType: MeasurementType;
+
+        /**
+         * This field shall be the smallest measured value for the associated measurement over either the period between
+         * StartTimestamp and EndTimestamp, or the period between StartSystime and EndSystime, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.2
+         */
+        min: number | bigint;
+
+        /**
+         * This field shall be the largest measured value for the associated measurement over the period between either
+         * StartTimestamp and EndTimestamp or the period between StartSystime and EndSystime, or both.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.3
+         */
+        max: number | bigint;
+
+        /**
+         * This field shall be the timestamp in UTC of the beginning of the measurement period.
+         *
+         * If the server had not yet determined the time in UTC at or before the beginning of the measurement period, or
+         * does not have the capability of determining the time in UTC, this field shall be omitted.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.4
+         */
+        startTimestamp?: number;
+
+        /**
+         * This field shall be the timestamp in UTC of the end of the measurement period.
+         *
+         * If the server had not yet determined the time in UTC at or before the beginning of the measurement period, or
+         * does not have the capability of determining the time in UTC, this field shall be omitted.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.5
+         */
+        endTimestamp?: number;
+
+        /**
+         * This field shall be the most recent timestamp in UTC that the value in the Min field was measured.
+         *
+         * This field shall be greater than or equal to the value of the StartTimestamp field.
+         *
+         * This field shall be less than or equal to the value of the EndTimestamp field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.6
+         */
+        minTimestamp?: number;
+
+        /**
+         * This field shall be the most recent timestamp in UTC of the value in the Max field.
+         *
+         * This field shall be greater than or equal to the value of the StartTimestamp field.
+         *
+         * This field shall be less than or equal to the value of the EndTimestamp field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.7
+         */
+        maxTimestamp?: number;
+
+        /**
+         * This field shall be the time since boot of the beginning of the measurement period.
+         *
+         * If the server had determined the time in UTC at or before the start of the measurement period, this field may
+         * be omitted along with the EndSystime, MinSystime, and MaxSystime fields.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.8
+         */
+        startSystime?: number | bigint;
+
+        /**
+         * This field shall be the time since boot of the end of the measurement period.
+         *
+         * If the server had determined the time in UTC at the end of the measurement period, this field may be omitted
+         * along with the StartSystime field, MinSystime, and MaxSystime fields.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.9
+         */
+        endSystime?: number | bigint;
+
+        /**
+         * This field shall be the measurement time since boot of the value in the Min field was measured.
+         *
+         * This field shall be greater than or equal to the value of the StartSystime field.
+         *
+         * This field shall be less than or equal to the value of the EndSystime field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.10
+         */
+        minSystime?: number | bigint;
+
+        /**
+         * This field shall be the measurement time since boot of the value in the Max field.
+         *
+         * This field shall be greater than or equal to the value of the StartSystime field.
+         *
+         * This field shall be less than or equal to the value of the EndSystime field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3.11
+         */
+        maxSystime?: number | bigint;
+    }
+
+    /**
+     * If supported, this event shall be generated at the end of a measurement period. The start and end times for
+     * measurement periods shall be determined by the server, and may represent overlapping periods.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.13.7.1
+     */
+    export interface MeasurementPeriodRangesEvent {
+        /**
+         * This shall indicate the value of the Ranges attribute at the time of event generation.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.7.1.1
+         */
+        ranges: MeasurementRange[];
+    }
+
+    export interface Attributes {
+        powerMode: PowerMode;
+        numberOfMeasurementTypes: number;
+        accuracy: MeasurementAccuracy[];
+        activePower: number | bigint | null;
+        ranges: MeasurementRange[];
+        voltage: number | bigint | null;
+        activeCurrent: number | bigint | null;
+        reactiveCurrent: number | bigint | null;
+        apparentCurrent: number | bigint | null;
+        reactivePower: number | bigint | null;
+        apparentPower: number | bigint | null;
+        rmsVoltage: number | bigint | null;
+        rmsCurrent: number | bigint | null;
+        rmsPower: number | bigint | null;
+        frequency: number | bigint | null;
+        powerFactor: number | bigint | null;
+        harmonicCurrents: HarmonicMeasurement[] | null;
+        harmonicPhases: HarmonicMeasurement[] | null;
+        neutralCurrent: number | bigint | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "powerMode" | "numberOfMeasurementTypes" | "accuracy" | "activePower",
+                optional: "ranges" | "voltage" | "activeCurrent"
+            },
+            {
+                flags: { alternatingCurrent: true },
+                optional: "reactiveCurrent" | "apparentCurrent" | "reactivePower" | "apparentPower" | "rmsVoltage" | "rmsCurrent" | "rmsPower" | "frequency" | "powerFactor"
+            },
+            { flags: { harmonics: true }, mandatory: "harmonicCurrents" },
+            { flags: { powerQuality: true }, mandatory: "harmonicPhases" },
+            { flags: { polyphasePower: true }, optional: "neutralCurrent" }
+        ];
+    }
+
+    export interface Events {
+        measurementPeriodRanges: MeasurementPeriodRangesEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "measurementPeriodRanges" }];
+    }
+    export type Features = "DirectCurrent" | "AlternatingCurrent" | "PolyphasePower" | "Harmonics" | "PowerQuality";
+
+    /**
+     * These are optional features supported by ElectricalPowerMeasurementCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.13.4
+     */
+    export enum Feature {
+        /**
+         * DirectCurrent (DIRC)
+         *
+         * This feature indicates the cluster can measure a direct current.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.1
+         */
+        DirectCurrent = "DirectCurrent",
+
+        /**
+         * AlternatingCurrent (ALTC)
+         *
+         * This feature indicates the cluster can measure an alternating current.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.2
+         */
+        AlternatingCurrent = "AlternatingCurrent",
+
+        /**
+         * PolyphasePower (POLY)
+         *
+         * This feature indicates the cluster represents the collective measurements for a Polyphase power supply.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.3
+         */
+        PolyphasePower = "PolyphasePower",
+
+        /**
+         * Harmonics (HARM)
+         *
+         * This feature indicates the cluster can measure the harmonics of an alternating current.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.4
+         */
+        Harmonics = "Harmonics",
+
+        /**
+         * PowerQuality (PWRQ)
+         *
+         * This feature indicates the cluster can measure the harmonic phases of an alternating current.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.4.5
+         */
+        PowerQuality = "PowerQuality"
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4
+     */
+    export const TlvHarmonicMeasurement = TlvObject({
+        /**
+         * This field shall be the order of the harmonic being measured. Typically this is an odd number, but servers
+         * may choose to report even harmonics.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4.1
+         */
+        order: TlvField(0, TlvUInt8.bound({ min: 1 })),
+
+        /**
+         * This field shall be the measured value for the given harmonic order.
+         *
+         * For the Harmonic Currents attribute, this value is the most recently measured harmonic current reading in
+         * milliamps (mA). A positive value indicates that the measured harmonic current is positive, and a negative
+         * value indicates that the measured harmonic current is negative.
+         *
+         * For the Harmonic Phases attribute, this value is the most recent phase of the given harmonic order in
+         * millidegrees (mDeg). A positive value indicates that the measured phase is leading, and a negative value
+         * indicates that the measured phase is lagging.
+         *
+         * If this measurement is not currently available, a value of null shall be returned.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.4.2
+         */
+        measurement: TlvField(1, TlvNullable(TlvInt64))
+    });
 
     /**
      * This struct shall indicate the maximum and minimum values of a given measurement type during a measurement
@@ -335,22 +547,6 @@ export namespace ElectricalPowerMeasurement {
     });
 
     /**
-     * This struct shall indicate the maximum and minimum values of a given measurement type during a measurement
-     * period, along with the observation times of these values.
-     *
-     * A server which does not have the ability to determine the time in UTC, or has not yet done so, shall use the
-     * system time fields to specify the measurement period and observation times.
-     *
-     * A server which has determined the time in UTC shall use the timestamp fields to specify the measurement period
-     * and observation times. Such a server may also include the systime fields to indicate how many seconds had passed
-     * since boot for a given timestamp; this allows for client-side resolution of UTC time for previous reports that
-     * only included systime.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.13.5.3
-     */
-    export interface MeasurementRange extends TypeFromSchema<typeof TlvMeasurementRange> {}
-
-    /**
      * Body of the ElectricalPowerMeasurement measurementPeriodRanges event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.13.7.1
@@ -363,13 +559,6 @@ export namespace ElectricalPowerMeasurement {
          */
         ranges: TlvField(0, TlvArray(TlvMeasurementRange, { minLength: 1 }))
     });
-
-    /**
-     * Body of the ElectricalPowerMeasurement measurementPeriodRanges event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.13.7.1
-     */
-    export interface MeasurementPeriodRangesEvent extends TypeFromSchema<typeof TlvMeasurementPeriodRangesEvent> {}
 
     /**
      * A ElectricalPowerMeasurementCluster supports these elements if it supports feature AlternatingCurrent.
@@ -910,8 +1099,20 @@ export namespace ElectricalPowerMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x90);
+    export const name = "ElectricalPowerMeasurement" as const;
+    export const revision = 3;
+    export const schema = ElectricalPowerMeasurementModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ElectricalPowerMeasurement;
 }
 
 export type ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;
 export const ElectricalPowerMeasurementCluster = ElectricalPowerMeasurement.Cluster;
 ClusterRegistry.register(ElectricalPowerMeasurement.Complete);
+ClusterNamespace.define(ElectricalPowerMeasurement);
+export interface ElectricalPowerMeasurement extends ClusterTyping { Attributes: ElectricalPowerMeasurement.Attributes & { Components: ElectricalPowerMeasurement.Attributes.Components }; Events: ElectricalPowerMeasurement.Events & { Components: ElectricalPowerMeasurement.Events.Components }; Features: ElectricalPowerMeasurement.Features }

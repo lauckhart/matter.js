@@ -19,69 +19,15 @@ import {
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, PumpConfigurationAndControl as PumpConfigurationAndControlModel } from "@matter/model";
 import { Priority } from "../globals/Priority.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PumpConfigurationAndControl {
-    /**
-     * These are optional features supported by PumpConfigurationAndControlCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 4.2.4
-     */
-    export enum Feature {
-        /**
-         * ConstantPressure (PRSCONST)
-         *
-         * Supports operating in constant pressure mode
-         */
-        ConstantPressure = "ConstantPressure",
-
-        /**
-         * CompensatedPressure (PRSCOMP)
-         *
-         * Supports operating in compensated pressure mode
-         */
-        CompensatedPressure = "CompensatedPressure",
-
-        /**
-         * ConstantFlow (FLW)
-         *
-         * Supports operating in constant flow mode
-         */
-        ConstantFlow = "ConstantFlow",
-
-        /**
-         * ConstantSpeed (SPD)
-         *
-         * Supports operating in constant speed mode
-         */
-        ConstantSpeed = "ConstantSpeed",
-
-        /**
-         * ConstantTemperature (TEMP)
-         *
-         * Supports operating in constant temperature mode
-         */
-        ConstantTemperature = "ConstantTemperature",
-
-        /**
-         * Automatic (AUTO)
-         *
-         * Supports operating in automatic mode
-         */
-        Automatic = "Automatic",
-
-        /**
-         * LocalOperation (LOCAL)
-         *
-         * Supports operating using local settings
-         */
-        LocalOperation = "LocalOperation"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1
      */
@@ -160,6 +106,82 @@ export namespace PumpConfigurationAndControl {
          */
         remoteTemperature: BitFlag(8)
     };
+
+    export interface PumpStatus {
+        /**
+         * A fault related to the system or pump device is detected.
+         *
+         * If this bit is set, it may correspond to an event in the range 2-16, see Events.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.1
+         */
+        deviceFault?: boolean;
+
+        /**
+         * A fault related to the supply to the pump is detected.
+         *
+         * If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.2
+         */
+        supplyFault?: boolean;
+
+        /**
+         * Setpoint is too low to achieve.
+         */
+        speedLow?: boolean;
+
+        /**
+         * Setpoint is too high to achieve.
+         */
+        speedHigh?: boolean;
+
+        /**
+         * Device control is overridden by hardware, such as an external STOP button or via a local HMI.
+         *
+         * While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing OperationMode
+         * shall generate a FAILURE error status until LocalOverride is cleared on the physical device. When
+         * LocalOverride is cleared, the device shall return to the operation mode set in OperationMode.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.3
+         */
+        localOverride?: boolean;
+
+        /**
+         * Pump is currently running
+         */
+        running?: boolean;
+
+        /**
+         * A remote pressure sensor is used as the sensor for the regulation of the pump.
+         *
+         * If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is interpreted as
+         * a percentage of the range of the remote sensor ([MinMeasuredValue – MaxMeasuredValue]).
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.4
+         */
+        remotePressure?: boolean;
+
+        /**
+         * A remote flow sensor is used as the sensor for the regulation of the pump.
+         *
+         * If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is interpreted as a
+         * percentage of the range of the remote sensor ([MinMeasuredValue – MaxMeasuredValue]).
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.5
+         */
+        remoteFlow?: boolean;
+
+        /**
+         * A remote temperature sensor is used as the sensor for the regulation of the pump.
+         *
+         * If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is interpreted
+         * as a percentage of the range of the remote sensor ([MinMeasuredValue – MaxMeasuredValue])
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.1.6
+         */
+        remoteTemperature?: boolean;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.2
@@ -264,6 +286,137 @@ export namespace PumpConfigurationAndControl {
          * @see {@link MatterSpecification.v142.Cluster} § 4.2.6.3.6
          */
         Automatic = 7
+    }
+
+    export interface Attributes {
+        maxPressure: number | null;
+        maxSpeed: number | null;
+        maxFlow: number | null;
+        effectiveOperationMode: OperationMode;
+        effectiveControlMode: ControlMode;
+        capacity: number | null;
+        operationMode: OperationMode;
+        pumpStatus: PumpStatus;
+        speed: number | null;
+        lifetimeRunningHours: number | null;
+        power: number | null;
+        lifetimeEnergyConsumed: number | null;
+        controlMode: ControlMode;
+        alarmMask: number;
+        minConstPressure: number | null;
+        maxConstPressure: number | null;
+        minCompPressure: number | null;
+        maxCompPressure: number | null;
+        minConstSpeed: number | null;
+        maxConstSpeed: number | null;
+        minConstFlow: number | null;
+        maxConstFlow: number | null;
+        minConstTemp: number | null;
+        maxConstTemp: number | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "maxPressure" | "maxSpeed" | "maxFlow" | "effectiveOperationMode" | "effectiveControlMode" | "capacity" | "operationMode",
+                optional: "pumpStatus" | "speed" | "lifetimeRunningHours" | "power" | "lifetimeEnergyConsumed" | "controlMode" | "alarmMask"
+            },
+            { flags: { constantPressure: true }, mandatory: "minConstPressure" | "maxConstPressure" },
+            {
+                flags: { automatic: true },
+                optional: "minConstPressure" | "maxConstPressure" | "minCompPressure" | "maxCompPressure" | "minConstSpeed" | "maxConstSpeed" | "minConstFlow" | "maxConstFlow" | "minConstTemp" | "maxConstTemp"
+            },
+            { flags: { compensatedPressure: true }, mandatory: "minCompPressure" | "maxCompPressure" },
+            { flags: { constantSpeed: true }, mandatory: "minConstSpeed" | "maxConstSpeed" },
+            { flags: { constantFlow: true }, mandatory: "minConstFlow" | "maxConstFlow" },
+            { flags: { constantTemperature: true }, mandatory: "minConstTemp" | "maxConstTemp" }
+        ];
+    }
+
+    export interface Events {
+        supplyVoltageLow: void;
+        supplyVoltageHigh: void;
+        powerMissingPhase: void;
+        systemPressureLow: void;
+        systemPressureHigh: void;
+        dryRunning: void;
+        motorTemperatureHigh: void;
+        pumpMotorFatalFailure: void;
+        electronicTemperatureHigh: void;
+        pumpBlocked: void;
+        sensorFailure: void;
+        electronicNonFatalFailure: void;
+        electronicFatalFailure: void;
+        generalFault: void;
+        leakage: void;
+        airDetection: void;
+        turbineOperation: void;
+    }
+
+    export namespace Events {
+        export type Components = [{
+            flags: {},
+            optional: "supplyVoltageLow" | "supplyVoltageHigh" | "powerMissingPhase" | "systemPressureLow" | "systemPressureHigh" | "dryRunning" | "motorTemperatureHigh" | "pumpMotorFatalFailure" | "electronicTemperatureHigh" | "pumpBlocked" | "sensorFailure" | "electronicNonFatalFailure" | "electronicFatalFailure" | "generalFault" | "leakage" | "airDetection" | "turbineOperation"
+        }];
+    }
+
+    export type Features = "ConstantPressure" | "CompensatedPressure" | "ConstantFlow" | "ConstantSpeed" | "ConstantTemperature" | "Automatic" | "LocalOperation";
+
+    /**
+     * These are optional features supported by PumpConfigurationAndControlCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 4.2.4
+     */
+    export enum Feature {
+        /**
+         * ConstantPressure (PRSCONST)
+         *
+         * Supports operating in constant pressure mode
+         */
+        ConstantPressure = "ConstantPressure",
+
+        /**
+         * CompensatedPressure (PRSCOMP)
+         *
+         * Supports operating in compensated pressure mode
+         */
+        CompensatedPressure = "CompensatedPressure",
+
+        /**
+         * ConstantFlow (FLW)
+         *
+         * Supports operating in constant flow mode
+         */
+        ConstantFlow = "ConstantFlow",
+
+        /**
+         * ConstantSpeed (SPD)
+         *
+         * Supports operating in constant speed mode
+         */
+        ConstantSpeed = "ConstantSpeed",
+
+        /**
+         * ConstantTemperature (TEMP)
+         *
+         * Supports operating in constant temperature mode
+         */
+        ConstantTemperature = "ConstantTemperature",
+
+        /**
+         * Automatic (AUTO)
+         *
+         * Supports operating in automatic mode
+         */
+        Automatic = "Automatic",
+
+        /**
+         * LocalOperation (LOCAL)
+         *
+         * Supports operating using local settings
+         */
+        LocalOperation = "LocalOperation"
     }
 
     /**
@@ -975,8 +1128,20 @@ export namespace PumpConfigurationAndControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x200);
+    export const name = "PumpConfigurationAndControl" as const;
+    export const revision = 4;
+    export const schema = PumpConfigurationAndControlModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: PumpConfigurationAndControl;
 }
 
 export type PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 export const PumpConfigurationAndControlCluster = PumpConfigurationAndControl.Cluster;
 ClusterRegistry.register(PumpConfigurationAndControl.Complete);
+ClusterNamespace.define(PumpConfigurationAndControl);
+export interface PumpConfigurationAndControl extends ClusterTyping { Attributes: PumpConfigurationAndControl.Attributes & { Components: PumpConfigurationAndControl.Attributes.Components }; Events: PumpConfigurationAndControl.Events & { Components: PumpConfigurationAndControl.Events.Components }; Features: PumpConfigurationAndControl.Features }

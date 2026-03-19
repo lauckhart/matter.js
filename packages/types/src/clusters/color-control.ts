@@ -19,57 +19,16 @@ import {
 } from "../cluster/Cluster.js";
 import { TlvUInt8, TlvEnum, TlvUInt16, TlvBitmap, TlvInt16 } from "../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { BitFlag } from "../schema/BitmapSchema.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, ColorControl as ColorControlModel } from "@matter/model";
+import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvString } from "../tlv/TlvString.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ColorControl {
-    /**
-     * These are optional features supported by ColorControlCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.4
-     */
-    export enum Feature {
-        /**
-         * HueSaturation (HS)
-         *
-         * Supports color specification via hue/saturation.
-         */
-        HueSaturation = "HueSaturation",
-
-        /**
-         * EnhancedHue (EHUE)
-         *
-         * Enhanced hue is supported.
-         */
-        EnhancedHue = "EnhancedHue",
-
-        /**
-         * ColorLoop (CL)
-         *
-         * Color loop is supported.
-         */
-        ColorLoop = "ColorLoop",
-
-        /**
-         * Xy (XY)
-         *
-         * Supports color specification via XY.
-         */
-        Xy = "Xy",
-
-        /**
-         * ColorTemperature (CT)
-         *
-         * Supports specification of color temperature.
-         */
-        ColorTemperature = "ColorTemperature"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.7
      */
@@ -109,43 +68,45 @@ export namespace ColorControl {
         executeIfOff: BitFlag(0)
     };
 
+    export interface Options {
+        /**
+         * Dependency on On/Off cluster
+         *
+         * This bit shall indicate if this cluster server instance has a dependency with the On/Off cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.2.1
+         */
+        executeIfOff?: boolean;
+    }
+
     /**
-     * Input to the ColorControl moveToHue command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4
      */
-    export const TlvMoveToHueRequest = TlvObject({
+    export interface MoveToHueRequest {
         /**
          * This field shall indicate the hue to be moved to.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.1
          */
-        hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
+        hue: number;
 
         /**
          * This field shall indicate the movement direction.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.2
          */
-        direction: TlvField(1, TlvEnum<Direction>()),
+        direction: Direction;
 
         /**
          * This field shall indicate, in 1/10ths of a second, the time that shall be taken to move to the new hue.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.3
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl moveToHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4
-     */
-    export interface MoveToHueRequest extends TypeFromSchema<typeof TlvMoveToHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.8
@@ -168,17 +129,15 @@ export namespace ColorControl {
     }
 
     /**
-     * Input to the ColorControl moveHue command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5
      */
-    export const TlvMoveHueRequest = TlvObject({
+    export interface MoveHueRequest {
         /**
          * This field shall indicate the mode of movement.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5.1
          */
-        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+        moveMode: MoveMode;
 
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s hue of
@@ -186,18 +145,11 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5.2
          */
-        rate: TlvField(1, TlvUInt8),
+        rate: number;
 
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl moveHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5
-     */
-    export interface MoveHueRequest extends TypeFromSchema<typeof TlvMoveHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.9
@@ -215,17 +167,15 @@ export namespace ColorControl {
     }
 
     /**
-     * Input to the ColorControl stepHue command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6
      */
-    export const TlvStepHueRequest = TlvObject({
+    export interface StepHueRequest {
         /**
          * This field shall indicate the mode of the step to be performed.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.1
          */
-        stepMode: TlvField(0, TlvEnum<StepMode>()),
+        stepMode: StepMode;
 
         /**
          * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
@@ -233,7 +183,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.2
          */
-        stepSize: TlvField(1, TlvUInt8),
+        stepSize: number;
 
         /**
          * This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. A step
@@ -246,50 +196,32 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.3
          */
-        transitionTime: TlvField(2, TlvUInt8),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl stepHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6
-     */
-    export interface StepHueRequest extends TypeFromSchema<typeof TlvStepHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToSaturation command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.7
      */
-    export const TlvMoveToSaturationRequest = TlvObject({
-        saturation: TlvField(0, TlvUInt8.bound({ max: 254 })),
-        transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
+    export interface MoveToSaturationRequest {
+        saturation: number;
+        transitionTime: number;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToSaturation command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.7
-     */
-    export interface MoveToSaturationRequest extends TypeFromSchema<typeof TlvMoveToSaturationRequest> {}
-
-    /**
-     * Input to the ColorControl moveSaturation command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8
      */
-    export const TlvMoveSaturationRequest = TlvObject({
+    export interface MoveSaturationRequest {
         /**
          * This field shall indicate the mode of movement, as described in the MoveHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8.1
          */
-        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+        moveMode: MoveMode;
 
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
@@ -297,31 +229,22 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8.2
          */
-        rate: TlvField(1, TlvUInt8),
+        rate: number;
 
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl moveSaturation command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8
-     */
-    export interface MoveSaturationRequest extends TypeFromSchema<typeof TlvMoveSaturationRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl stepSaturation command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9
      */
-    export const TlvStepSaturationRequest = TlvObject({
+    export interface StepSaturationRequest {
         /**
          * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.1
          */
-        stepMode: TlvField(0, TlvEnum<StepMode>()),
+        stepMode: StepMode;
 
         /**
          * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
@@ -329,7 +252,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.2
          */
-        stepSize: TlvField(1, TlvUInt8),
+        stepSize: number;
 
         /**
          * This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. A step
@@ -342,72 +265,45 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.3
          */
-        transitionTime: TlvField(2, TlvUInt8),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl stepSaturation command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9
-     */
-    export interface StepSaturationRequest extends TypeFromSchema<typeof TlvStepSaturationRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToHueAndSaturation command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.10
      */
-    export const TlvMoveToHueAndSaturationRequest = TlvObject({
-        hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
-        saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
+    export interface MoveToHueAndSaturationRequest {
+        hue: number;
+        saturation: number;
+        transitionTime: number;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToHueAndSaturation command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.10
-     */
-    export interface MoveToHueAndSaturationRequest extends TypeFromSchema<typeof TlvMoveToHueAndSaturationRequest> {}
-
-    /**
-     * Input to the ColorControl moveToColor command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.11
      */
-    export const TlvMoveToColorRequest = TlvObject({
-        colorX: TlvField(0, TlvUInt16.bound({ max: 65279 })),
-        colorY: TlvField(1, TlvUInt16.bound({ max: 65279 })),
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
+    export interface MoveToColorRequest {
+        colorX: number;
+        colorY: number;
+        transitionTime: number;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToColor command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.11
-     */
-    export interface MoveToColorRequest extends TypeFromSchema<typeof TlvMoveToColorRequest> {}
-
-    /**
-     * Input to the ColorControl moveColor command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12
      */
-    export const TlvMoveColorRequest = TlvObject({
+    export interface MoveColorRequest {
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
          * CurrentX attribute of one unit.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12.1
          */
-        rateX: TlvField(0, TlvInt16),
+        rateX: number;
 
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
@@ -415,77 +311,52 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12.2
          */
-        rateY: TlvField(1, TlvInt16),
+        rateY: number;
 
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl moveColor command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12
-     */
-    export interface MoveColorRequest extends TypeFromSchema<typeof TlvMoveColorRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl stepColor command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13
      */
-    export const TlvStepColorRequest = TlvObject({
-        stepX: TlvField(0, TlvInt16),
-        stepY: TlvField(1, TlvInt16),
+    export interface StepColorRequest {
+        stepX: number;
+        stepY: number;
 
         /**
          * The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color change.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13.2
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl stepColor command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13
-     */
-    export interface StepColorRequest extends TypeFromSchema<typeof TlvStepColorRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToColorTemperature command
-     *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.14
      */
-    export const TlvMoveToColorTemperatureRequest = TlvObject({
-        colorTemperatureMireds: TlvField(0, TlvUInt16.bound({ max: 65279 })),
-        transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
+    export interface MoveToColorTemperatureRequest {
+        colorTemperatureMireds: number;
+        transitionTime: number;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl moveToColorTemperature command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.14
-     */
-    export interface MoveToColorTemperatureRequest extends TypeFromSchema<typeof TlvMoveToColorTemperatureRequest> {}
-
-    /**
-     * Input to the ColorControl moveColorTemperature command
+     * This command allows the color temperature of the light to be moved at a specified rate.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21
      */
-    export const TlvMoveColorTemperatureRequest = TlvObject({
+    export interface MoveColorTemperatureRequest {
         /**
          * This field shall indicate the mode of movement, as described in the MoveHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.1
          */
-        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+        moveMode: MoveMode;
 
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the color
@@ -493,7 +364,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.2
          */
-        rate: TlvField(1, TlvUInt16),
+        rate: number;
 
         /**
          * This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on the
@@ -507,7 +378,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.3
          */
-        colorTemperatureMinimumMireds: TlvField(2, TlvUInt16.bound({ max: 65279 })),
+        colorTemperatureMinimumMireds: number;
 
         /**
          * This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on the
@@ -521,31 +392,24 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.4
          */
-        colorTemperatureMaximumMireds: TlvField(3, TlvUInt16.bound({ max: 65279 })),
+        colorTemperatureMaximumMireds: number;
 
-        optionsMask: TlvField(4, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(5, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl moveColorTemperature command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21
-     */
-    export interface MoveColorTemperatureRequest extends TypeFromSchema<typeof TlvMoveColorTemperatureRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl stepColorTemperature command
+     * This command allows the color temperature of the light to be stepped with a specified step size.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22
      */
-    export const TlvStepColorTemperatureRequest = TlvObject({
+    export interface StepColorTemperatureRequest {
         /**
          * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.1
          */
-        stepMode: TlvField(0, TlvEnum<StepMode>()),
+        stepMode: StepMode;
 
         /**
          * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
@@ -553,7 +417,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.2
          */
-        stepSize: TlvField(1, TlvUInt16),
+        stepSize: number;
 
         /**
          * This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform the step.
@@ -561,7 +425,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.3
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
         /**
          * This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on the
@@ -575,7 +439,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.4
          */
-        colorTemperatureMinimumMireds: TlvField(3, TlvUInt16.bound({ max: 65279 })),
+        colorTemperatureMinimumMireds: number;
 
         /**
          * This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on the
@@ -589,69 +453,56 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.5
          */
-        colorTemperatureMaximumMireds: TlvField(4, TlvUInt16.bound({ max: 65279 })),
+        colorTemperatureMaximumMireds: number;
 
-        optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl stepColorTemperature command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22
-     */
-    export interface StepColorTemperatureRequest extends TypeFromSchema<typeof TlvStepColorTemperatureRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl enhancedMoveToHue command
+     * This command allows the light to be moved in a smooth continuous transition from their current hue to a target
+     * hue.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15
      */
-    export const TlvEnhancedMoveToHueRequest = TlvObject({
+    export interface EnhancedMoveToHueRequest {
         /**
          * This field shall indicate the target extended hue for the light.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.1
          */
-        enhancedHue: TlvField(0, TlvUInt16),
+        enhancedHue: number;
 
         /**
          * This field shall indicate the movement direction.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.2
          */
-        direction: TlvField(1, TlvEnum<Direction>()),
+        direction: Direction;
 
         /**
          * This field shall indicate the transition time, as described in the MoveToHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.3
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl enhancedMoveToHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15
-     */
-    export interface EnhancedMoveToHueRequest extends TypeFromSchema<typeof TlvEnhancedMoveToHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl enhancedMoveHue command
+     * This command allows the light to start a continuous transition starting from their current hue.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16
      */
-    export const TlvEnhancedMoveHueRequest = TlvObject({
+    export interface EnhancedMoveHueRequest {
         /**
          * This field shall indicate the mode of movement, as described in the MoveHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16.1
          */
-        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+        moveMode: MoveMode;
 
         /**
          * This field shall indicate the rate of movement in steps per second. A step is a change in the extended hue of
@@ -659,31 +510,25 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16.2
          */
-        rate: TlvField(1, TlvUInt16),
+        rate: number;
 
-        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl enhancedMoveHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16
-     */
-    export interface EnhancedMoveHueRequest extends TypeFromSchema<typeof TlvEnhancedMoveHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl enhancedStepHue command
+     * This command allows the light to be moved in a stepped transition from their current hue, resulting in a linear
+     * transition through XY space.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17
      */
-    export const TlvEnhancedStepHueRequest = TlvObject({
+    export interface EnhancedStepHueRequest {
         /**
          * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.1
          */
-        stepMode: TlvField(0, TlvEnum<StepMode>()),
+        stepMode: StepMode;
 
         /**
          * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
@@ -691,7 +536,7 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.2
          */
-        stepSize: TlvField(1, TlvUInt16),
+        stepSize: number;
 
         /**
          * The field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform the step.
@@ -704,59 +549,47 @@ export namespace ColorControl {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.3
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl enhancedStepHue command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17
-     */
-    export interface EnhancedStepHueRequest extends TypeFromSchema<typeof TlvEnhancedStepHueRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl enhancedMoveToHueAndSaturation command
+     * This command allows the light to be moved in a smooth continuous transition from their current hue to a target
+     * hue and from their current saturation to a target saturation.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18
      */
-    export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
+    export interface EnhancedMoveToHueAndSaturationRequest {
         /**
          * This field shall indicate the target extended hue for the light.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.1
          */
-        enhancedHue: TlvField(0, TlvUInt16),
+        enhancedHue: number;
 
         /**
          * This field shall indicate the saturation, as described in the MoveToHueAndSaturation command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.2
          */
-        saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
+        saturation: number;
 
         /**
          * This field shall indicate the transition time, as described in the MoveToHue command.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.3
          */
-        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        transitionTime: number;
 
-        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl enhancedMoveToHueAndSaturation command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18
-     */
-    export interface EnhancedMoveToHueAndSaturationRequest extends TypeFromSchema<typeof TlvEnhancedMoveToHueAndSaturationRequest> {}
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * The value of the ColorControl colorLoopActive attribute
+     * Indicates the current active status of the color loop. If this attribute has the value 0, the color loop shall
+     * NOT be active. If this attribute has the value 1, the color loop shall be active.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.7.14
      */
@@ -841,6 +674,62 @@ export namespace ColorControl {
         updateStartHue: BitFlag(3)
     };
 
+    export interface UpdateFlags {
+        /**
+         * Device adheres to the associated action field.
+         *
+         * This bit shall indicate whether the server adheres to the Action field in order to process the command.
+         *
+         *   - 0 = Device shall ignore the Action field.
+         *
+         *   - 1 = Device shall adhere to the Action field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.3.1
+         */
+        updateAction?: boolean;
+
+        /**
+         * Device updates the associated direction attribute.
+         *
+         * This bit shall indicate whether the device updates the ColorLoopDirection attribute with the Direction field.
+         *
+         *   - 0 = Device shall ignore the Direction field.
+         *
+         *   - 1 = Device shall update the ColorLoopDirection attribute with the value of the Direction field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.3.2
+         */
+        updateDirection?: boolean;
+
+        /**
+         * Device updates the associated time attribute.
+         *
+         * This bit shall indicate whether the device updates the ColorLoopTime attribute with the Time field.
+         *
+         *   - 0 = Device shall ignore the Time field.
+         *
+         *   - 1 = Device shall update the value of the ColorLoopTime attribute with the value of the Time field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.3.3
+         */
+        updateTime?: boolean;
+
+        /**
+         * Device updates the associated start hue attribute.
+         *
+         * This bit shall indicate whether the device updates the ColorLoopStartEnhancedHue attribute with the value of
+         * the StartHue field.
+         *
+         *   - 0 = Device shall ignore the StartHue field.
+         *
+         *   - 1 = Device shall update the value of the ColorLoopStartEnhancedHue attribute with the value of the
+         *     StartHue field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.3.4
+         */
+        updateStartHue?: boolean;
+    }
+
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.10
      */
@@ -862,68 +751,62 @@ export namespace ColorControl {
     }
 
     /**
-     * Input to the ColorControl colorLoopSet command
+     * This command allows a color loop to be activated such that the color light cycles through its range of hues.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19
      */
-    export const TlvColorLoopSetRequest = TlvObject({
+    export interface ColorLoopSetRequest {
         /**
          * This field shall indicate which color loop attributes to update (from the values supplied in the other
          * fields, see field descriptions below) before the color loop is started.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.1
          */
-        updateFlags: TlvField(0, TlvBitmap(TlvUInt8, UpdateFlags)),
+        updateFlags: UpdateFlags;
 
         /**
          * This field shall indicate the action to take for the color loop.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.2
          */
-        action: TlvField(1, TlvEnum<ColorLoopAction>()),
+        action: ColorLoopAction;
 
         /**
          * This field shall indicate the direction for the color loop.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.3
          */
-        direction: TlvField(2, TlvEnum<ColorLoopDirection>()),
+        direction: ColorLoopDirection;
 
         /**
          * This field shall indicate the number of seconds over which to perform a full color loop.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.4
          */
-        time: TlvField(3, TlvUInt16),
+        time: number;
 
-        startHue: TlvField(4, TlvUInt16),
-        optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
-    });
+        startHue: number;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
-     * Input to the ColorControl colorLoopSet command
+     * This command is provided to allow MoveTo and Step commands to be stopped.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19
-     */
-    export interface ColorLoopSetRequest extends TypeFromSchema<typeof TlvColorLoopSetRequest> {}
-
-    /**
-     * Input to the ColorControl stopMoveStep command
+     * > [!NOTE]
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.20
-     */
-    export const TlvStopMoveStepRequest = TlvObject({
-        optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
-        optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
-    });
-
-    /**
-     * Input to the ColorControl stopMoveStep command
+     * > This automatically provides symmetry to the Level Control cluster.
+     *
+     * > [!NOTE]
+     *
+     * > The StopMoveStep command has no effect on an active color loop.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.20
      */
-    export interface StopMoveStepRequest extends TypeFromSchema<typeof TlvStopMoveStepRequest> {}
+    export interface StopMoveStepRequest {
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.6.4
@@ -1001,7 +884,10 @@ export namespace ColorControl {
     }
 
     /**
-     * The value of the ColorControl colorCapabilities attribute
+     * Indicates the color control capabilities of the device.
+     *
+     * Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of the
+     * FeatureMap attribute. All other bits in ColorCapabilities shall be 0.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 3.2.7.19
      */
@@ -1031,6 +917,846 @@ export namespace ColorControl {
          */
         colorTemperature: BitFlag(4)
     };
+
+    export interface ColorCapabilities {
+        /**
+         * Supports color specification via hue/saturation.
+         */
+        hueSaturation?: boolean;
+
+        /**
+         * Enhanced hue is supported.
+         */
+        enhancedHue?: boolean;
+
+        /**
+         * Color loop is supported.
+         */
+        colorLoop?: boolean;
+
+        /**
+         * Supports color specification via XY.
+         */
+        xy?: boolean;
+
+        /**
+         * Supports color specification via color temperature.
+         */
+        colorTemperature?: boolean;
+    }
+
+    export interface Attributes {
+        colorMode: ColorMode;
+        options: Options;
+        numberOfPrimaries: number | null;
+        enhancedColorMode: EnhancedColorMode;
+        colorCapabilities: ColorCapabilities;
+        remainingTime: number;
+        driftCompensation: DriftCompensation;
+        compensationText: string;
+        primary1X: number;
+        primary1Y: number;
+        primary1Intensity: number | null;
+        primary2X: number;
+        primary2Y: number;
+        primary2Intensity: number | null;
+        primary3X: number;
+        primary3Y: number;
+        primary3Intensity: number | null;
+        primary4X: number;
+        primary4Y: number;
+        primary4Intensity: number | null;
+        primary5X: number;
+        primary5Y: number;
+        primary5Intensity: number | null;
+        primary6X: number;
+        primary6Y: number;
+        primary6Intensity: number | null;
+        whitePointX: number;
+        whitePointY: number;
+        colorPointRx: number;
+        colorPointRy: number;
+        colorPointRIntensity: number | null;
+        colorPointGx: number;
+        colorPointGy: number;
+        colorPointGIntensity: number | null;
+        colorPointBx: number;
+        colorPointBy: number;
+        colorPointBIntensity: number | null;
+        currentHue: number;
+        currentSaturation: number;
+        currentX: number;
+        currentY: number;
+        colorTemperatureMireds: number;
+        colorTempPhysicalMinMireds: number;
+        colorTempPhysicalMaxMireds: number;
+        coupleColorTempToLevelMinMireds: number;
+        startUpColorTemperatureMireds: number | null;
+        enhancedCurrentHue: number;
+        colorLoopActive: ColorLoopActive;
+        colorLoopDirection: ColorLoopDirection;
+        colorLoopTime: number;
+        colorLoopStartEnhancedHue: number;
+        colorLoopStoredEnhancedHue: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "colorMode" | "options" | "numberOfPrimaries" | "enhancedColorMode" | "colorCapabilities",
+                optional: "remainingTime" | "driftCompensation" | "compensationText" | "primary1X" | "primary1Y" | "primary1Intensity" | "primary2X" | "primary2Y" | "primary2Intensity" | "primary3X" | "primary3Y" | "primary3Intensity" | "primary4X" | "primary4Y" | "primary4Intensity" | "primary5X" | "primary5Y" | "primary5Intensity" | "primary6X" | "primary6Y" | "primary6Intensity" | "whitePointX" | "whitePointY" | "colorPointRx" | "colorPointRy" | "colorPointRIntensity" | "colorPointGx" | "colorPointGy" | "colorPointGIntensity" | "colorPointBx" | "colorPointBy" | "colorPointBIntensity"
+            },
+            { flags: { hueSaturation: true }, mandatory: "currentHue" | "currentSaturation" },
+            { flags: { xy: true }, mandatory: "currentX" | "currentY" },
+            {
+                flags: { colorTemperature: true },
+                mandatory: "colorTemperatureMireds" | "colorTempPhysicalMinMireds" | "colorTempPhysicalMaxMireds",
+                optional: "coupleColorTempToLevelMinMireds" | "startUpColorTemperatureMireds"
+            },
+            { flags: { enhancedHue: true }, mandatory: "enhancedCurrentHue" },
+            {
+                flags: { colorLoop: true },
+                mandatory: "colorLoopActive" | "colorLoopDirection" | "colorLoopTime" | "colorLoopStartEnhancedHue" | "colorLoopStoredEnhancedHue"
+            }
+        ];
+    }
+
+    export interface Commands extends Commands.HueSaturation, Commands.Xy, Commands.ColorTemperature, Commands.EnhancedHue, Commands.ColorLoop, Commands.HueSaturationOrXyOrColorTemperature {}
+
+    export namespace Commands {
+        export interface HueSaturation {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4
+             */
+            moveToHue(request: MoveToHueRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5
+             */
+            moveHue(request: MoveHueRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6
+             */
+            stepHue(request: StepHueRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.7
+             */
+            moveToSaturation(request: MoveToSaturationRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8
+             */
+            moveSaturation(request: MoveSaturationRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9
+             */
+            stepSaturation(request: StepSaturationRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.10
+             */
+            moveToHueAndSaturation(request: MoveToHueAndSaturationRequest): MaybePromise;
+        }
+
+        export interface Xy {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.11
+             */
+            moveToColor(request: MoveToColorRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12
+             */
+            moveColor(request: MoveColorRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13
+             */
+            stepColor(request: StepColorRequest): MaybePromise;
+        }
+
+        export interface ColorTemperature {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.14
+             */
+            moveToColorTemperature(request: MoveToColorTemperatureRequest): MaybePromise;
+
+            /**
+             * This command allows the color temperature of the light to be moved at a specified rate.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21
+             */
+            moveColorTemperature(request: MoveColorTemperatureRequest): MaybePromise;
+
+            /**
+             * This command allows the color temperature of the light to be stepped with a specified step size.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22
+             */
+            stepColorTemperature(request: StepColorTemperatureRequest): MaybePromise;
+        }
+
+        export interface EnhancedHue {
+            /**
+             * This command allows the light to be moved in a smooth continuous transition from their current hue to a
+             * target hue.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15
+             */
+            enhancedMoveToHue(request: EnhancedMoveToHueRequest): MaybePromise;
+
+            /**
+             * This command allows the light to start a continuous transition starting from their current hue.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16
+             */
+            enhancedMoveHue(request: EnhancedMoveHueRequest): MaybePromise;
+
+            /**
+             * This command allows the light to be moved in a stepped transition from their current hue, resulting in a
+             * linear transition through XY space.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17
+             */
+            enhancedStepHue(request: EnhancedStepHueRequest): MaybePromise;
+
+            /**
+             * This command allows the light to be moved in a smooth continuous transition from their current hue to a
+             * target hue and from their current saturation to a target saturation.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18
+             */
+            enhancedMoveToHueAndSaturation(request: EnhancedMoveToHueAndSaturationRequest): MaybePromise;
+        }
+
+        export interface ColorLoop {
+            /**
+             * This command allows a color loop to be activated such that the color light cycles through its range of
+             * hues.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19
+             */
+            colorLoopSet(request: ColorLoopSetRequest): MaybePromise;
+        }
+
+        export interface HueSaturationOrXyOrColorTemperature {
+            /**
+             * This command is provided to allow MoveTo and Step commands to be stopped.
+             *
+             * > [!NOTE]
+             *
+             * > This automatically provides symmetry to the Level Control cluster.
+             *
+             * > [!NOTE]
+             *
+             * > The StopMoveStep command has no effect on an active color loop.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.20
+             */
+            stopMoveStep(request: StopMoveStepRequest): MaybePromise;
+        }
+
+        export type Components = [
+            { flags: { hueSaturation: true }, methods: HueSaturation },
+            { flags: { xy: true }, methods: Xy },
+            { flags: { colorTemperature: true }, methods: ColorTemperature },
+            { flags: { enhancedHue: true }, methods: EnhancedHue },
+            { flags: { colorLoop: true }, methods: ColorLoop },
+            { flags: { hueSaturation: true }, methods: HueSaturationOrXyOrColorTemperature },
+            { flags: { xy: true }, methods: HueSaturationOrXyOrColorTemperature },
+            { flags: { colorTemperature: true }, methods: HueSaturationOrXyOrColorTemperature }
+        ];
+    }
+
+    export type Features = "HueSaturation" | "EnhancedHue" | "ColorLoop" | "Xy" | "ColorTemperature";
+
+    /**
+     * These are optional features supported by ColorControlCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.4
+     */
+    export enum Feature {
+        /**
+         * HueSaturation (HS)
+         *
+         * Supports color specification via hue/saturation.
+         */
+        HueSaturation = "HueSaturation",
+
+        /**
+         * EnhancedHue (EHUE)
+         *
+         * Enhanced hue is supported.
+         */
+        EnhancedHue = "EnhancedHue",
+
+        /**
+         * ColorLoop (CL)
+         *
+         * Color loop is supported.
+         */
+        ColorLoop = "ColorLoop",
+
+        /**
+         * Xy (XY)
+         *
+         * Supports color specification via XY.
+         */
+        Xy = "Xy",
+
+        /**
+         * ColorTemperature (CT)
+         *
+         * Supports specification of color temperature.
+         */
+        ColorTemperature = "ColorTemperature"
+    }
+
+    /**
+     * Input to the ColorControl moveToHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4
+     */
+    export const TlvMoveToHueRequest = TlvObject({
+        /**
+         * This field shall indicate the hue to be moved to.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.1
+         */
+        hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
+
+        /**
+         * This field shall indicate the movement direction.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.2
+         */
+        direction: TlvField(1, TlvEnum<Direction>()),
+
+        /**
+         * This field shall indicate, in 1/10ths of a second, the time that shall be taken to move to the new hue.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.4.3
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5
+     */
+    export const TlvMoveHueRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of movement.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5.1
+         */
+        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s hue of
+         * one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.5.2
+         */
+        rate: TlvField(1, TlvUInt8),
+
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl stepHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6
+     */
+    export const TlvStepHueRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of the step to be performed.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.1
+         */
+        stepMode: TlvField(0, TlvEnum<StepMode>()),
+
+        /**
+         * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
+         * hue.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.2
+         */
+        stepSize: TlvField(1, TlvUInt8),
+
+        /**
+         * This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. A step
+         * is a change in the device’s hue of Step size units.
+         *
+         * > [!NOTE]
+         *
+         * > Here the TransitionTime data field is of data type uint8, where uint16 is more common for TransitionTime
+         *   data fields in other clusters / commands.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.6.3
+         */
+        transitionTime: TlvField(2, TlvUInt8),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveToSaturation command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.7
+     */
+    export const TlvMoveToSaturationRequest = TlvObject({
+        saturation: TlvField(0, TlvUInt8.bound({ max: 254 })),
+        transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveSaturation command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8
+     */
+    export const TlvMoveSaturationRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of movement, as described in the MoveHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8.1
+         */
+        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
+         * saturation of one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.8.2
+         */
+        rate: TlvField(1, TlvUInt8),
+
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl stepSaturation command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9
+     */
+    export const TlvStepSaturationRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.1
+         */
+        stepMode: TlvField(0, TlvEnum<StepMode>()),
+
+        /**
+         * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
+         * saturation.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.2
+         */
+        stepSize: TlvField(1, TlvUInt8),
+
+        /**
+         * This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. A step
+         * is a change in the device’s saturation of Step size units.
+         *
+         * > [!NOTE]
+         *
+         * > Here the TransitionTime data field is of data type uint8, where uint16 is more common for TransitionTime
+         *   data fields in other clusters / commands.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.9.3
+         */
+        transitionTime: TlvField(2, TlvUInt8),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveToHueAndSaturation command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.10
+     */
+    export const TlvMoveToHueAndSaturationRequest = TlvObject({
+        hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
+        saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveToColor command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.11
+     */
+    export const TlvMoveToColorRequest = TlvObject({
+        colorX: TlvField(0, TlvUInt16.bound({ max: 65279 })),
+        colorY: TlvField(1, TlvUInt16.bound({ max: 65279 })),
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveColor command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12
+     */
+    export const TlvMoveColorRequest = TlvObject({
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
+         * CurrentX attribute of one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12.1
+         */
+        rateX: TlvField(0, TlvInt16),
+
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the device’s
+         * CurrentY attribute of one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.12.2
+         */
+        rateY: TlvField(1, TlvInt16),
+
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl stepColor command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13
+     */
+    export const TlvStepColorRequest = TlvObject({
+        stepX: TlvField(0, TlvInt16),
+        stepY: TlvField(1, TlvInt16),
+
+        /**
+         * The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color change.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.13.2
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveToColorTemperature command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.14
+     */
+    export const TlvMoveToColorTemperatureRequest = TlvObject({
+        colorTemperatureMireds: TlvField(0, TlvUInt16.bound({ max: 65279 })),
+        transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl moveColorTemperature command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21
+     */
+    export const TlvMoveColorTemperatureRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of movement, as described in the MoveHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.1
+         */
+        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the color
+         * temperature of a device by one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.2
+         */
+        rate: TlvField(1, TlvUInt16),
+
+        /**
+         * This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on the
+         * color temperature in kelvins) for the current move operation
+         *
+         * ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <= ColorTemperatureMireds As such if the
+         * move operation takes the ColorTemperatureMireds attribute towards the value of the
+         * ColorTemperatureMinimumMireds field it shall be clipped so that the above invariant is satisfied. If the
+         * ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the lower bound
+         * for the ColorTemperatureMireds attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.3
+         */
+        colorTemperatureMinimumMireds: TlvField(2, TlvUInt16.bound({ max: 65279 })),
+
+        /**
+         * This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on the
+         * color temperature in kelvins) for the current move operation
+         *
+         * ColorTemperatureMireds <= ColorTemperatureMaximumMireds field <= ColorTempPhysicalMaxMireds As such if the
+         * move operation takes the ColorTemperatureMireds attribute towards the value of the
+         * ColorTemperatureMaximumMireds field it shall be clipped so that the above invariant is satisfied. If the
+         * ColorTemperatureMaximumMireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the upper bound
+         * for the ColorTemperatureMireds attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.21.4
+         */
+        colorTemperatureMaximumMireds: TlvField(3, TlvUInt16.bound({ max: 65279 })),
+
+        optionsMask: TlvField(4, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(5, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl stepColorTemperature command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22
+     */
+    export const TlvStepColorTemperatureRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.1
+         */
+        stepMode: TlvField(0, TlvEnum<StepMode>()),
+
+        /**
+         * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
+         * color temperature.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.2
+         */
+        stepSize: TlvField(1, TlvUInt16),
+
+        /**
+         * This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform the step.
+         * A step is a change to the device’s color temperature of a magnitude corresponding to the StepSize field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.3
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        /**
+         * This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on the
+         * color temperature in kelvins) for the current step operation
+         *
+         * ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <= ColorTemperatureMireds As such if the
+         * step operation takes the ColorTemperatureMireds attribute towards the value of the
+         * ColorTemperatureMinimumMireds field it shall be clipped so that the above invariant is satisfied. If the
+         * ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the lower bound
+         * for the ColorTemperatureMireds attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.4
+         */
+        colorTemperatureMinimumMireds: TlvField(3, TlvUInt16.bound({ max: 65279 })),
+
+        /**
+         * This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on the
+         * color temperature in kelvins) for the current step operation
+         *
+         * ColorTemperatureMireds ≤ ColorTemperatureMaximumMireds field ≤ ColorTempPhysicalMaxMireds As such if the step
+         * operation takes the ColorTemperatureMireds attribute towards the value of the ColorTemperatureMaximumMireds
+         * field it shall be clipped so that the above invariant is satisfied. If the ColorTemperatureMaximumMireds
+         * field is set to 0, ColorTempPhysicalMaxMireds shall be used as the upper bound for the ColorTemperatureMireds
+         * attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.22.5
+         */
+        colorTemperatureMaximumMireds: TlvField(4, TlvUInt16.bound({ max: 65279 })),
+
+        optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl enhancedMoveToHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15
+     */
+    export const TlvEnhancedMoveToHueRequest = TlvObject({
+        /**
+         * This field shall indicate the target extended hue for the light.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.1
+         */
+        enhancedHue: TlvField(0, TlvUInt16),
+
+        /**
+         * This field shall indicate the movement direction.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.2
+         */
+        direction: TlvField(1, TlvEnum<Direction>()),
+
+        /**
+         * This field shall indicate the transition time, as described in the MoveToHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.15.3
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl enhancedMoveHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16
+     */
+    export const TlvEnhancedMoveHueRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of movement, as described in the MoveHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16.1
+         */
+        moveMode: TlvField(0, TlvEnum<MoveMode>()),
+
+        /**
+         * This field shall indicate the rate of movement in steps per second. A step is a change in the extended hue of
+         * a device by one unit.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.16.2
+         */
+        rate: TlvField(1, TlvUInt16),
+
+        optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl enhancedStepHue command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17
+     */
+    export const TlvEnhancedStepHueRequest = TlvObject({
+        /**
+         * This field shall indicate the mode of the step to be performed, as described in the StepHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.1
+         */
+        stepMode: TlvField(0, TlvEnum<StepMode>()),
+
+        /**
+         * This field shall indicate the change to be added to (or subtracted from) the current value of the device’s
+         * enhanced hue.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.2
+         */
+        stepSize: TlvField(1, TlvUInt16),
+
+        /**
+         * The field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform the step.
+         * A step is a change to the device’s enhanced hue of a magnitude corresponding to the StepSize field.
+         *
+         * > [!NOTE]
+         *
+         * > Here TransitionTime data field is of data type uint16, while the TransitionTime data field of the StepHue
+         *   command is of data type uint8.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.17.3
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl enhancedMoveToHueAndSaturation command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18
+     */
+    export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
+        /**
+         * This field shall indicate the target extended hue for the light.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.1
+         */
+        enhancedHue: TlvField(0, TlvUInt16),
+
+        /**
+         * This field shall indicate the saturation, as described in the MoveToHueAndSaturation command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.2
+         */
+        saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
+
+        /**
+         * This field shall indicate the transition time, as described in the MoveToHue command.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.18.3
+         */
+        transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
+
+        optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl colorLoopSet command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19
+     */
+    export const TlvColorLoopSetRequest = TlvObject({
+        /**
+         * This field shall indicate which color loop attributes to update (from the values supplied in the other
+         * fields, see field descriptions below) before the color loop is started.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.1
+         */
+        updateFlags: TlvField(0, TlvBitmap(TlvUInt8, UpdateFlags)),
+
+        /**
+         * This field shall indicate the action to take for the color loop.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.2
+         */
+        action: TlvField(1, TlvEnum<ColorLoopAction>()),
+
+        /**
+         * This field shall indicate the direction for the color loop.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.3
+         */
+        direction: TlvField(2, TlvEnum<ColorLoopDirection>()),
+
+        /**
+         * This field shall indicate the number of seconds over which to perform a full color loop.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.19.4
+         */
+        time: TlvField(3, TlvUInt16),
+
+        startHue: TlvField(4, TlvUInt16),
+        optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
+    });
+
+    /**
+     * Input to the ColorControl stopMoveStep command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 3.2.8.20
+     */
+    export const TlvStopMoveStepRequest = TlvObject({
+        optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
+        optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
+    });
 
     /**
      * A ColorControlCluster supports these elements if it supports feature HueSaturation.
@@ -1995,8 +2721,20 @@ export namespace ColorControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x300);
+    export const name = "ColorControl" as const;
+    export const revision = 7;
+    export const schema = ColorControlModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ColorControl;
 }
 
 export type ColorControlCluster = ColorControl.Cluster;
 export const ColorControlCluster = ColorControl.Cluster;
 ClusterRegistry.register(ColorControl.Complete);
+ClusterNamespace.define(ColorControl);
+export interface ColorControl extends ClusterTyping { Attributes: ColorControl.Attributes & { Components: ColorControl.Attributes.Components }; Commands: ColorControl.Commands & { Components: ColorControl.Commands.Components }; Features: ColorControl.Features }

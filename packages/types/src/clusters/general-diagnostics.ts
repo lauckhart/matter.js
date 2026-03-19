@@ -11,57 +11,45 @@ import { Command, Attribute, OptionalAttribute, TlvNoResponse, OptionalEvent, Ev
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../tlv/TlvString.js";
 import { TlvUInt8, TlvUInt16, TlvEnum, TlvUInt64, TlvUInt32, TlvSysTimeMS, TlvPosixMs } from "../tlv/TlvNumber.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, GeneralDiagnostics as GeneralDiagnosticsModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace GeneralDiagnostics {
     /**
-     * These are optional features supported by GeneralDiagnosticsCluster.
+     * This command provides a means for certification tests or manufacturer’s internal tests to validate particular
+     * command handling and encoding constraints by generating a response of a given size.
      *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.4
-     */
-    export enum Feature {
-        /**
-         * DataModelTest (DMTEST)
-         *
-         * This feature indicates support for extended Data Model testing commands, which are required in some
-         * situations.
-         *
-         * This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster has a
-         * value > 1.
-         *
-         * @see {@link MatterSpecification.v142.Core} § 11.12.4.1
-         */
-        DataModelTest = "DataModelTest"
-    }
-
-    /**
-     * Input to the GeneralDiagnostics payloadTestRequest command
+     * This command shall use the same EnableKey behavior as the TestEventTrigger command, whereby processing of the
+     * command is only enabled when the TestEventTriggersEnabled field is true, which shall NOT be true outside of
+     * certification testing or manufacturer’s internal tests.
+     *
+     * The fields for the PayloadTestRequest command are as follows:
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.7.4
      */
-    export const TlvPayloadTestRequest = TlvObject({
+    export interface PayloadTestRequest {
         /**
          * This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.1
          */
-        enableKey: TlvField(0, TlvByteString.bound({ length: 16 })),
+        enableKey: Bytes;
 
         /**
          * This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.2
          */
-        value: TlvField(1, TlvUInt8),
+        value: number;
 
         /**
          * This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s Payload field.
@@ -89,36 +77,22 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.3
          */
-        count: TlvField(2, TlvUInt16.bound({ max: 2048 }))
-    });
-
-    /**
-     * Input to the GeneralDiagnostics payloadTestRequest command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.7.4
-     */
-    export interface PayloadTestRequest extends TypeFromSchema<typeof TlvPayloadTestRequest> {}
+        count: number;
+    }
 
     /**
      * This command is sent by the server on receipt of the PayloadTestRequest command.
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.7.5
      */
-    export const TlvPayloadTestResponse = TlvObject({
+    export interface PayloadTestResponse {
         /**
          * This field shall contain the computed response of the PayloadTestRequest command.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.7.5.1
          */
-        payload: TlvField(0, TlvByteString.bound({ maxLength: 2048 }))
-    });
-
-    /**
-     * This command is sent by the server on receipt of the PayloadTestRequest command.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.7.5
-     */
-    export interface PayloadTestResponse extends TypeFromSchema<typeof TlvPayloadTestResponse> {}
+        payload: Bytes;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.12.5.4
@@ -156,14 +130,14 @@ export namespace GeneralDiagnostics {
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.5.6
      */
-    export const TlvNetworkInterface = TlvObject({
+    export interface NetworkInterface {
         /**
          * This field shall indicate a human-readable (displayable) name for the network interface, that is different
          * from all other interfaces.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.1
          */
-        name: TlvField(0, TlvString.bound({ maxLength: 32 })),
+        name: string;
 
         /**
          * This field shall indicate if the Node is currently advertising itself operationally on this network interface
@@ -171,7 +145,7 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.2
          */
-        isOperational: TlvField(1, TlvBoolean),
+        isOperational: boolean;
 
         /**
          * This field shall indicate whether the Node is currently able to reach off-premise services it uses by
@@ -180,7 +154,7 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.3
          */
-        offPremiseServicesReachableIPv4: TlvField(2, TlvNullable(TlvBoolean)),
+        offPremiseServicesReachableIPv4: boolean | null;
 
         /**
          * This field shall indicate whether the Node is currently able to reach off-premise services it uses by
@@ -189,7 +163,7 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.4
          */
-        offPremiseServicesReachableIPv6: TlvField(3, TlvNullable(TlvBoolean)),
+        offPremiseServicesReachableIPv6: boolean | null;
 
         /**
          * This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network interface and
@@ -198,14 +172,14 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.5
          */
-        hardwareAddress: TlvField(4, TlvByteString),
+        hardwareAddress: Bytes;
 
         /**
          * This field shall provide a list of the IPv4 addresses that are currently assigned to the network interface.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.6
          */
-        iPv4Addresses: TlvField(5, TlvArray(TlvByteString.bound({ length: 4 }), { maxLength: 4 })),
+        iPv4Addresses: Bytes[];
 
         /**
          * This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the network
@@ -214,23 +188,15 @@ export namespace GeneralDiagnostics {
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.7
          */
-        iPv6Addresses: TlvField(6, TlvArray(TlvByteString.bound({ length: 16 }), { maxLength: 8 })),
+        iPv6Addresses: Bytes[];
 
         /**
          * This field shall indicate the type of the interface using the InterfaceTypeEnum.
          *
          * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.8
          */
-        type: TlvField(7, TlvEnum<InterfaceType>())
-    });
-
-    /**
-     * This structure describes a network interface supported by the Node, as provided in the NetworkInterfaces
-     * attribute.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.5.6
-     */
-    export interface NetworkInterface extends TypeFromSchema<typeof TlvNetworkInterface> {}
+        type: InterfaceType;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Core} § 11.12.5.5
@@ -398,6 +364,422 @@ export namespace GeneralDiagnostics {
     }
 
     /**
+     * This command shall be supported to provide a means for certification tests to trigger some test-plan-specific
+     * events, necessary to assist in automation of device interactions for some certification test cases. This command
+     * shall NOT cause any changes to the state of the device that persist after the last fabric is removed.
+     *
+     * The fields for the TestEventTrigger command are as follows:
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.7.1
+     */
+    export interface TestEventTriggerRequest {
+        /**
+         * The EnableKey is a 128 bit value provided by the client in this command, which needs to match a value chosen
+         * by the manufacturer and configured on the server using manufacturer-specific means, such as pre-provisioning.
+         * The value of all zeroes is reserved to indicate that no EnableKey is set. Therefore, if the EnableKey field
+         * is received with all zeroes, this command shall FAIL with a response status of CONSTRAINT_ERROR.
+         *
+         * The EnableKey SHOULD be unique per exact set of devices going to a certification test.
+         *
+         * Devices not targeted towards going to a certification test event shall NOT have a non-zero EnableKey value
+         * configured, so that only devices in test environments are responsive to this command.
+         *
+         * In order to prevent unwittingly actuating a particular trigger, this command shall respond with a response
+         * status of CONSTRAINT_ERROR if the EnableKey field does not match the a-priori value configured on the device.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.1.1
+         */
+        enableKey: Bytes;
+
+        /**
+         * This field shall indicate the test or test mode which the client wants to trigger.
+         *
+         * The expected side-effects of EventTrigger values are out of scope of this specification and will be described
+         * within appropriate certification test literature provided to manufacturers by the Connectivity Standards
+         * Alliance, in conjunction with certification test cases documentation.
+         *
+         * Values of EventTrigger in the range 0xFFFF_FFFF_0000_0000 through 0xFFFF_FFFF_FFFF_FFFF are reserved for
+         * testing use by manufacturers and will not appear in the Connectivity Standards Alliance certification test
+         * literature.
+         *
+         * If the value of EventTrigger received is not supported by the receiving Node, this command shall fail with a
+         * status code of INVALID_COMMAND.
+         *
+         * Otherwise, if the EnableKey value matches the configured internal value for a particular Node, and the
+         * EventTrigger value matches a supported test event trigger value, the command shall succeed and execute the
+         * expected trigger action.
+         *
+         * If no specific test event triggers are required to be supported by certification test requirements for the
+         * features that a given product will be certified against, this command may always fail with the
+         * INVALID_COMMAND status, equivalent to the situation of receiving an unknown EventTrigger, for all possible
+         * EventTrigger values.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.1.2
+         */
+        eventTrigger: number | bigint;
+    }
+
+    /**
+     * This command shall be generated in response to a TimeSnapshot command.
+     *
+     * When generating this response, all fields shall be gathered as close together in time as possible, so that the
+     * time jitter between the values is minimized.
+     *
+     * If the Time Synchronization cluster is supported by the node, the PosixTimeMs field shall NOT be null unless the
+     * UTCTime attribute in the Time Synchronization cluster is also null.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.7.3
+     */
+    export interface TimeSnapshotResponse {
+        /**
+         * This shall indicate the current System Time in milliseconds (type systime-ms), with the value taken at the
+         * time of processing of the TimeSnapshot command that generated this response.
+         *
+         * The value shall be taken from the same clock which populates the Timestamp field in events when using System
+         * Time for the field.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.3.1
+         */
+        systemTimeMs: number | bigint;
+
+        /**
+         * This shall indicate the current time in POSIX Time in milliseconds, with the value taken from the same source
+         * that could populate the Timestamp field of events. This value shall only be null when any the following are
+         * true:
+         *
+         *   - The node doesn’t support the Time Synchronization cluster.
+         *
+         *   - The node’s Time Synchronization cluster instance’s UTCTime attribute is null.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.3.2
+         */
+        posixTimeMs: number | bigint | null;
+    }
+
+    /**
+     * The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently detected by the
+     * Node.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.8.1
+     */
+    export interface HardwareFaultChangeEvent {
+        /**
+         * This field shall represent the set of faults currently detected, as per HardwareFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.1.1
+         */
+        current: HardwareFault[];
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per HardwareFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.1.2
+         */
+        previous: HardwareFault[];
+    }
+
+    /**
+     * The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by the Node.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.8.2
+     */
+    export interface RadioFaultChangeEvent {
+        /**
+         * This field shall represent the set of faults currently detected, as per RadioFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.2.1
+         */
+        current: RadioFault[];
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per RadioFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.2.2
+         */
+        previous: RadioFault[];
+    }
+
+    /**
+     * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by the Node.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.8.3
+     */
+    export interface NetworkFaultChangeEvent {
+        /**
+         * This field shall represent the set of faults currently detected, as per NetworkFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.3.1
+         */
+        current: NetworkFault[];
+
+        /**
+         * This field shall represent the set of faults detected prior to this change event, as per NetworkFaultEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.3.2
+         */
+        previous: NetworkFault[];
+    }
+
+    /**
+     * The BootReason Event shall indicate the reason that caused the device to start-up.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.8.4
+     */
+    export interface BootReasonEvent {
+        /**
+         * This field shall contain the reason for this BootReason event.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.8.4.1
+         */
+        bootReason: BootReason;
+    }
+
+    export interface Attributes {
+        networkInterfaces: NetworkInterface[];
+        rebootCount: number;
+        upTime: number | bigint;
+        testEventTriggersEnabled: boolean;
+        totalOperationalHours: number;
+        bootReason: BootReason;
+        activeHardwareFaults: HardwareFault[];
+        activeRadioFaults: RadioFault[];
+        activeNetworkFaults: NetworkFault[];
+    }
+
+    export namespace Attributes {
+        export type Components = [{
+            flags: {},
+            mandatory: "networkInterfaces" | "rebootCount" | "upTime" | "testEventTriggersEnabled",
+            optional: "totalOperationalHours" | "bootReason" | "activeHardwareFaults" | "activeRadioFaults" | "activeNetworkFaults"
+        }];
+    }
+
+    export interface Commands extends Commands.Base, Commands.DataModelTest {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command shall be supported to provide a means for certification tests to trigger some
+             * test-plan-specific events, necessary to assist in automation of device interactions for some
+             * certification test cases. This command shall NOT cause any changes to the state of the device that
+             * persist after the last fabric is removed.
+             *
+             * The fields for the TestEventTrigger command are as follows:
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.12.7.1
+             */
+            testEventTrigger(request: TestEventTriggerRequest): MaybePromise;
+
+            /**
+             * This command may be used by a client to obtain a correlated view of both System Time, and, if currently
+             * synchronized and supported, "wall clock time" of the server. This can help clients establish time
+             * correlation between their concept of time and the server’s concept of time. This is especially useful
+             * when processing event histories where some events only contain System Time.
+             *
+             * Upon command invocation, the server shall respond with a TimeSnapshotResponse.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.12.7.2
+             */
+            timeSnapshot(): MaybePromise<TimeSnapshotResponse>;
+        }
+
+        export interface DataModelTest {
+            /**
+             * This command provides a means for certification tests or manufacturer’s internal tests to validate
+             * particular command handling and encoding constraints by generating a response of a given size.
+             *
+             * This command shall use the same EnableKey behavior as the TestEventTrigger command, whereby processing of
+             * the command is only enabled when the TestEventTriggersEnabled field is true, which shall NOT be true
+             * outside of certification testing or manufacturer’s internal tests.
+             *
+             * The fields for the PayloadTestRequest command are as follows:
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.12.7.4
+             */
+            payloadTestRequest(request: PayloadTestRequest): MaybePromise<PayloadTestResponse>;
+        }
+
+        export type Components = [
+            { flags: {}, methods: Base },
+            { flags: { dataModelTest: true }, methods: DataModelTest }
+        ];
+    }
+
+    export interface Events {
+        bootReason: BootReasonEvent;
+        hardwareFaultChange: HardwareFaultChangeEvent;
+        radioFaultChange: RadioFaultChangeEvent;
+        networkFaultChange: NetworkFaultChangeEvent;
+    }
+
+    export namespace Events {
+        export type Components = [{
+            flags: {},
+            mandatory: "bootReason",
+            optional: "hardwareFaultChange" | "radioFaultChange" | "networkFaultChange"
+        }];
+    }
+
+    export type Features = "DataModelTest";
+
+    /**
+     * These are optional features supported by GeneralDiagnosticsCluster.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.4
+     */
+    export enum Feature {
+        /**
+         * DataModelTest (DMTEST)
+         *
+         * This feature indicates support for extended Data Model testing commands, which are required in some
+         * situations.
+         *
+         * This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster has a
+         * value > 1.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.4.1
+         */
+        DataModelTest = "DataModelTest"
+    }
+
+    /**
+     * Input to the GeneralDiagnostics payloadTestRequest command
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.7.4
+     */
+    export const TlvPayloadTestRequest = TlvObject({
+        /**
+         * This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.1
+         */
+        enableKey: TlvField(0, TlvByteString.bound({ length: 16 })),
+
+        /**
+         * This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.2
+         */
+        value: TlvField(1, TlvUInt8),
+
+        /**
+         * This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s Payload field.
+         *
+         * ### Effect upon receipt
+         *
+         * This command shall respond with a response status of CONSTRAINT_ERROR if either:
+         *
+         *   - The EnableKey field does not match the a-priori value configured on the device.
+         *
+         *   - The TestEventTriggersEnabled field is currently false.
+         *
+         * Otherwise, the server shall respond with a PayloadTestResponse command with a Payload field value containing
+         * Count instances of the Value byte. If the response is too large to send, the server shall fail the command
+         * and respond with a response status of RESOURCE_EXHAUSTED.
+         *
+         * For example:
+         *
+         *   - If Value is 0x55 and the Count is zero, then the PayloadTestResponse would have the Payload field set to
+         *     an empty octet string.
+         *
+         *   - If Value is 0xA5 and the Count is 10, the PayloadTestResponse would have the Payload field set to a
+         *     content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 representation would
+         *     be paWlpaWlpaWlpQ==.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.4.3
+         */
+        count: TlvField(2, TlvUInt16.bound({ max: 2048 }))
+    });
+
+    /**
+     * This command is sent by the server on receipt of the PayloadTestRequest command.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.7.5
+     */
+    export const TlvPayloadTestResponse = TlvObject({
+        /**
+         * This field shall contain the computed response of the PayloadTestRequest command.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.7.5.1
+         */
+        payload: TlvField(0, TlvByteString.bound({ maxLength: 2048 }))
+    });
+
+    /**
+     * This structure describes a network interface supported by the Node, as provided in the NetworkInterfaces
+     * attribute.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.12.5.6
+     */
+    export const TlvNetworkInterface = TlvObject({
+        /**
+         * This field shall indicate a human-readable (displayable) name for the network interface, that is different
+         * from all other interfaces.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.1
+         */
+        name: TlvField(0, TlvString.bound({ maxLength: 32 })),
+
+        /**
+         * This field shall indicate if the Node is currently advertising itself operationally on this network interface
+         * and is capable of successfully receiving incoming traffic from other Nodes.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.2
+         */
+        isOperational: TlvField(1, TlvBoolean),
+
+        /**
+         * This field shall indicate whether the Node is currently able to reach off-premise services it uses by
+         * utilizing IPv4. The value shall be null if the Node does not use such services or does not know whether it
+         * can reach them.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.3
+         */
+        offPremiseServicesReachableIPv4: TlvField(2, TlvNullable(TlvBoolean)),
+
+        /**
+         * This field shall indicate whether the Node is currently able to reach off-premise services it uses by
+         * utilizing IPv6. The value shall be null if the Node does not use such services or does not know whether it
+         * can reach them.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.4
+         */
+        offPremiseServicesReachableIPv6: TlvField(3, TlvNullable(TlvBoolean)),
+
+        /**
+         * This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network interface and
+         * contain the current extended MAC address for a 802.15.4 interface. The byte order of the octstr shall be in
+         * wire byte order. For addresses values less than 64 bits, the first two bytes shall be zero.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.5
+         */
+        hardwareAddress: TlvField(4, TlvByteString),
+
+        /**
+         * This field shall provide a list of the IPv4 addresses that are currently assigned to the network interface.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.6
+         */
+        iPv4Addresses: TlvField(5, TlvArray(TlvByteString.bound({ length: 4 }), { maxLength: 4 })),
+
+        /**
+         * This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the network
+         * interface. This list shall include the Node’s link-local address and SHOULD include any assigned GUA and ULA
+         * addresses. This list shall NOT include any multicast group addresses to which the Node is subscribed.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.7
+         */
+        iPv6Addresses: TlvField(6, TlvArray(TlvByteString.bound({ length: 16 }), { maxLength: 8 })),
+
+        /**
+         * This field shall indicate the type of the interface using the InterfaceTypeEnum.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.12.5.6.8
+         */
+        type: TlvField(7, TlvEnum<InterfaceType>())
+    });
+
+    /**
      * Input to the GeneralDiagnostics testEventTrigger command
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.7.1
@@ -450,13 +832,6 @@ export namespace GeneralDiagnostics {
     });
 
     /**
-     * Input to the GeneralDiagnostics testEventTrigger command
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.7.1
-     */
-    export interface TestEventTriggerRequest extends TypeFromSchema<typeof TlvTestEventTriggerRequest> {}
-
-    /**
      * This command shall be generated in response to a TimeSnapshot command.
      *
      * When generating this response, all fields shall be gathered as close together in time as possible, so that the
@@ -494,19 +869,6 @@ export namespace GeneralDiagnostics {
     });
 
     /**
-     * This command shall be generated in response to a TimeSnapshot command.
-     *
-     * When generating this response, all fields shall be gathered as close together in time as possible, so that the
-     * time jitter between the values is minimized.
-     *
-     * If the Time Synchronization cluster is supported by the node, the PosixTimeMs field shall NOT be null unless the
-     * UTCTime attribute in the Time Synchronization cluster is also null.
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.7.3
-     */
-    export interface TimeSnapshotResponse extends TypeFromSchema<typeof TlvTimeSnapshotResponse> {}
-
-    /**
      * Body of the GeneralDiagnostics hardwareFaultChange event
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.8.1
@@ -526,13 +888,6 @@ export namespace GeneralDiagnostics {
          */
         previous: TlvField(1, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }))
     });
-
-    /**
-     * Body of the GeneralDiagnostics hardwareFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.8.1
-     */
-    export interface HardwareFaultChangeEvent extends TypeFromSchema<typeof TlvHardwareFaultChangeEvent> {}
 
     /**
      * Body of the GeneralDiagnostics radioFaultChange event
@@ -556,13 +911,6 @@ export namespace GeneralDiagnostics {
     });
 
     /**
-     * Body of the GeneralDiagnostics radioFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.8.2
-     */
-    export interface RadioFaultChangeEvent extends TypeFromSchema<typeof TlvRadioFaultChangeEvent> {}
-
-    /**
      * Body of the GeneralDiagnostics networkFaultChange event
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.8.3
@@ -584,13 +932,6 @@ export namespace GeneralDiagnostics {
     });
 
     /**
-     * Body of the GeneralDiagnostics networkFaultChange event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.8.3
-     */
-    export interface NetworkFaultChangeEvent extends TypeFromSchema<typeof TlvNetworkFaultChangeEvent> {}
-
-    /**
      * Body of the GeneralDiagnostics bootReason event
      *
      * @see {@link MatterSpecification.v142.Core} § 11.12.8.4
@@ -603,13 +944,6 @@ export namespace GeneralDiagnostics {
          */
         bootReason: TlvField(0, TlvEnum<BootReason>())
     });
-
-    /**
-     * Body of the GeneralDiagnostics bootReason event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.12.8.4
-     */
-    export interface BootReasonEvent extends TypeFromSchema<typeof TlvBootReasonEvent> {}
 
     /**
      * A GeneralDiagnosticsCluster supports these elements if it supports feature DataModelTest.
@@ -893,8 +1227,22 @@ export namespace GeneralDiagnostics {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x33);
+    export const name = "GeneralDiagnostics" as const;
+    export const revision = 2;
+    export const schema = GeneralDiagnosticsModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: GeneralDiagnostics;
 }
 
 export type GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
 export const GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
 ClusterRegistry.register(GeneralDiagnostics.Complete);
+ClusterNamespace.define(GeneralDiagnostics);
+export interface GeneralDiagnostics extends ClusterTyping { Attributes: GeneralDiagnostics.Attributes & { Components: GeneralDiagnostics.Attributes.Components }; Commands: GeneralDiagnostics.Commands & { Components: GeneralDiagnostics.Commands.Components }; Events: GeneralDiagnostics.Events & { Components: GeneralDiagnostics.Events.Components }; Features: GeneralDiagnostics.Features }

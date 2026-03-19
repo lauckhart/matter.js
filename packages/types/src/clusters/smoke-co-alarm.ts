@@ -18,38 +18,18 @@ import {
     TlvNoResponse
 } from "../cluster/Cluster.js";
 import { TlvEnum, TlvEpochS } from "../tlv/TlvNumber.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, SmokeCoAlarm as SmokeCoAlarmModel } from "@matter/model";
 import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace SmokeCoAlarm {
-    /**
-     * These are optional features supported by SmokeCoAlarmCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.4
-     */
-    export enum Feature {
-        /**
-         * SmokeAlarm (SMOKE)
-         *
-         * Supports Smoke alarm
-         */
-        SmokeAlarm = "SmokeAlarm",
-
-        /**
-         * CoAlarm (CO)
-         *
-         * Supports CO alarm
-         */
-        CoAlarm = "CoAlarm"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.5.1
      */
@@ -151,88 +131,62 @@ export namespace SmokeCoAlarm {
     }
 
     /**
-     * Body of the SmokeCoAlarm smokeAlarm event
+     * This event shall be generated when SmokeState attribute changes to either Warning or Critical state.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.1
      */
-    export const TlvSmokeAlarmEvent = TlvObject({
+    export interface SmokeAlarmEvent {
         /**
          * This field shall indicate the current value of the SmokeState attribute.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.1.1
          */
-        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
-    });
+        alarmSeverityLevel: AlarmState;
+    }
 
     /**
-     * Body of the SmokeCoAlarm smokeAlarm event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.1
-     */
-    export interface SmokeAlarmEvent extends TypeFromSchema<typeof TlvSmokeAlarmEvent> {}
-
-    /**
-     * Body of the SmokeCoAlarm interconnectSmokeAlarm event
+     * This event shall be generated when the device hosting the server receives a smoke alarm from an interconnected
+     * sensor.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.9
      */
-    export const TlvInterconnectSmokeAlarmEvent = TlvObject({
+    export interface InterconnectSmokeAlarmEvent {
         /**
          * This field shall indicate the current value of the InterconnectSmokeAlarm attribute.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.9.1
          */
-        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
-    });
+        alarmSeverityLevel: AlarmState;
+    }
 
     /**
-     * Body of the SmokeCoAlarm interconnectSmokeAlarm event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.9
-     */
-    export interface InterconnectSmokeAlarmEvent extends TypeFromSchema<typeof TlvInterconnectSmokeAlarmEvent> {}
-
-    /**
-     * Body of the SmokeCoAlarm coAlarm event
+     * This event shall be generated when COState attribute changes to either Warning or Critical state.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.2
      */
-    export const TlvCoAlarmEvent = TlvObject({
+    export interface CoAlarmEvent {
         /**
          * This field shall indicate the current value of the COState attribute.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.2.1
          */
-        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
-    });
+        alarmSeverityLevel: AlarmState;
+    }
 
     /**
-     * Body of the SmokeCoAlarm coAlarm event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.2
-     */
-    export interface CoAlarmEvent extends TypeFromSchema<typeof TlvCoAlarmEvent> {}
-
-    /**
-     * Body of the SmokeCoAlarm interconnectCoAlarm event
+     * This event shall be generated when the device hosting the server receives a CO alarm from an interconnected
+     * sensor.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.10
      */
-    export const TlvInterconnectCoAlarmEvent = TlvObject({
+    export interface InterconnectCoAlarmEvent {
         /**
          * This field shall indicate the current value of the InterconnectCOAlarm attribute.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.10.1
          */
-        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
-    });
-
-    /**
-     * Body of the SmokeCoAlarm interconnectCoAlarm event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.10
-     */
-    export interface InterconnectCoAlarmEvent extends TypeFromSchema<typeof TlvInterconnectCoAlarmEvent> {}
+        alarmSeverityLevel: AlarmState;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.5.3
@@ -382,6 +336,181 @@ export namespace SmokeCoAlarm {
     }
 
     /**
+     * This event shall be generated when BatteryAlert attribute changes to either Warning or Critical state.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.3
+     */
+    export interface LowBatteryEvent {
+        /**
+         * This field shall indicate the current value of the BatteryAlert attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.3.1
+         */
+        alarmSeverityLevel: AlarmState;
+    }
+
+    export interface Attributes {
+        expressedState: ExpressedState;
+        batteryAlert: AlarmState;
+        testInProgress: boolean;
+        hardwareFaultAlert: boolean;
+        endOfServiceAlert: EndOfService;
+        deviceMuted: MuteState;
+        interconnectSmokeAlarm: AlarmState;
+        interconnectCoAlarm: AlarmState;
+        expiryDate: number;
+        smokeState: AlarmState;
+        contaminationState: ContaminationState;
+        smokeSensitivityLevel: Sensitivity;
+        coState: AlarmState;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "expressedState" | "batteryAlert" | "testInProgress" | "hardwareFaultAlert" | "endOfServiceAlert",
+                optional: "deviceMuted" | "interconnectSmokeAlarm" | "interconnectCoAlarm" | "expiryDate"
+            },
+            {
+                flags: { smokeAlarm: true },
+                mandatory: "smokeState",
+                optional: "contaminationState" | "smokeSensitivityLevel"
+            },
+            { flags: { coAlarm: true }, mandatory: "coState" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command shall initiate a device self-test. The return status shall indicate whether the test was
+             * successfully initiated. Only one SelfTestRequest may be processed at a time. When the value of the
+             * ExpressedState attribute is any of SmokeAlarm, COAlarm, Testing, InterconnectSmoke, InterconnectCO, the
+             * device shall NOT execute the self-test, and shall return status code BUSY.
+             *
+             * Upon successful acceptance of SelfTestRequest, the TestInProgress attribute shall be set to True and
+             * ExpressedState attribute shall be set to Testing. Any faults identified during the test shall be
+             * reflected in the appropriate attributes and events. Upon completion of the self test procedure, the
+             * SelfTestComplete event shall be generated, the TestInProgress attribute shall be set to False and
+             * ExpressedState attribute shall be updated to reflect the current state of the server.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 2.11.7.1
+             */
+            selfTestRequest(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        lowBattery: LowBatteryEvent;
+        hardwareFault: void;
+        endOfService: void;
+        selfTestComplete: void;
+        allClear: void;
+        alarmMuted: void;
+        muteEnded: void;
+        smokeAlarm: SmokeAlarmEvent;
+        interconnectSmokeAlarm: InterconnectSmokeAlarmEvent;
+        coAlarm: CoAlarmEvent;
+        interconnectCoAlarm: InterconnectCoAlarmEvent;
+    }
+
+    export namespace Events {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "lowBattery" | "hardwareFault" | "endOfService" | "selfTestComplete" | "allClear",
+                optional: "alarmMuted" | "muteEnded"
+            },
+            { flags: { smokeAlarm: true }, mandatory: "smokeAlarm", optional: "interconnectSmokeAlarm" },
+            { flags: { coAlarm: true }, mandatory: "coAlarm", optional: "interconnectCoAlarm" }
+        ];
+    }
+
+    export type Features = "SmokeAlarm" | "CoAlarm";
+
+    /**
+     * These are optional features supported by SmokeCoAlarmCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.4
+     */
+    export enum Feature {
+        /**
+         * SmokeAlarm (SMOKE)
+         *
+         * Supports Smoke alarm
+         */
+        SmokeAlarm = "SmokeAlarm",
+
+        /**
+         * CoAlarm (CO)
+         *
+         * Supports CO alarm
+         */
+        CoAlarm = "CoAlarm"
+    }
+
+    /**
+     * Body of the SmokeCoAlarm smokeAlarm event
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.1
+     */
+    export const TlvSmokeAlarmEvent = TlvObject({
+        /**
+         * This field shall indicate the current value of the SmokeState attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.1.1
+         */
+        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
+    });
+
+    /**
+     * Body of the SmokeCoAlarm interconnectSmokeAlarm event
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.9
+     */
+    export const TlvInterconnectSmokeAlarmEvent = TlvObject({
+        /**
+         * This field shall indicate the current value of the InterconnectSmokeAlarm attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.9.1
+         */
+        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
+    });
+
+    /**
+     * Body of the SmokeCoAlarm coAlarm event
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.2
+     */
+    export const TlvCoAlarmEvent = TlvObject({
+        /**
+         * This field shall indicate the current value of the COState attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.2.1
+         */
+        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
+    });
+
+    /**
+     * Body of the SmokeCoAlarm interconnectCoAlarm event
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.10
+     */
+    export const TlvInterconnectCoAlarmEvent = TlvObject({
+        /**
+         * This field shall indicate the current value of the InterconnectCOAlarm attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.10.1
+         */
+        alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
+    });
+
+    /**
      * Body of the SmokeCoAlarm lowBattery event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.3
@@ -394,13 +523,6 @@ export namespace SmokeCoAlarm {
          */
         alarmSeverityLevel: TlvField(0, TlvEnum<AlarmState>())
     });
-
-    /**
-     * Body of the SmokeCoAlarm lowBattery event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.11.8.3
-     */
-    export interface LowBatteryEvent extends TypeFromSchema<typeof TlvLowBatteryEvent> {}
 
     /**
      * A SmokeCoAlarmCluster supports these elements if it supports feature SmokeAlarm.
@@ -743,8 +865,22 @@ export namespace SmokeCoAlarm {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x5c);
+    export const name = "SmokeCoAlarm" as const;
+    export const revision = 1;
+    export const schema = SmokeCoAlarmModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: SmokeCoAlarm;
 }
 
 export type SmokeCoAlarmCluster = SmokeCoAlarm.Cluster;
 export const SmokeCoAlarmCluster = SmokeCoAlarm.Cluster;
 ClusterRegistry.register(SmokeCoAlarm.Complete);
+ClusterNamespace.define(SmokeCoAlarm);
+export interface SmokeCoAlarm extends ClusterTyping { Attributes: SmokeCoAlarm.Attributes & { Components: SmokeCoAlarm.Attributes.Components }; Commands: SmokeCoAlarm.Commands & { Components: SmokeCoAlarm.Commands.Components }; Events: SmokeCoAlarm.Events & { Components: SmokeCoAlarm.Events.Components }; Features: SmokeCoAlarm.Features }

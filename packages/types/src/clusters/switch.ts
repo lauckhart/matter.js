@@ -11,12 +11,232 @@ import { FixedAttribute, Event, Attribute } from "../cluster/Cluster.js";
 import { TlvUInt8 } from "../tlv/TlvNumber.js";
 import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { Switch as SwitchModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace Switch {
+    /**
+     * This event shall be generated to indicate how many times the momentary switch has been pressed in a multi-press
+     * sequence, after it has been detected that the sequence has ended. See Section 1.13.8, “Sequence of events for
+     * MultiPress”.
+     *
+     * The PreviousPosition field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to
+     * release.
+     *
+     * The TotalNumberOfPressesCounted field shall contain:
+     *
+     *   - a value of 0 when there was an aborted multi-press sequence, where the number of presses goes beyond
+     *     MultiPressMax presses,
+     *
+     *   - a value of 1 when there was exactly one press in a multi-press sequence (and the sequence has ended), i.e.
+     *     there was no double press (or more),
+     *
+     *   - a value of 2 when there were exactly two presses in a multi-press sequence (and the sequence has ended),
+     *
+     *   - a value of 3 when there were exactly three presses in a multi-press sequence (and the sequence has ended),
+     *
+     *   - a value of N when there were exactly N presses in a multi-press sequence (and the sequence has ended).
+     *
+     *     > [!NOTE]
+     *
+     *     > The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of switches using
+     *       cluster revision 1 since such servers would not use this value of TotalNumberOfPressesCounted to indicate
+     *       an aborted sequence. Clients SHOULD always act using the TotalNumberOfPressesCounted field taken into
+     *       account since for values from 1 to MultiPressMax, the user action that led to the event was different
+     *       depending on the count.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.7
+     */
+    export interface MultiPressCompleteEvent {
+        previousPosition: number;
+        totalNumberOfPressesCounted: number;
+    }
+
+    /**
+     * This event shall be generated, when the latching switch is moved to a new position. It may have been delayed by
+     * debouncing within the switch.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.1
+     */
+    export interface SwitchLatchedEvent {
+        /**
+         * This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.1.1
+         */
+        newPosition: number;
+    }
+
+    /**
+     * This event shall be generated, when the momentary switch starts to be pressed (after debouncing).
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.2
+     */
+    export interface InitialPressEvent {
+        /**
+         * This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.2.1
+         */
+        newPosition: number;
+    }
+
+    /**
+     * This event shall be generated when the momentary switch has been pressed for a "long" time. The time interval
+     * constituting a "long" time is manufacturer-determined, since it depends on the switch physics.
+     *
+     *   - When the AS feature flag is set, this event:
+     *
+     *     - shall NOT be generated during a multi-press sequence (since a long press is a separate cycle from any
+     *       multi-press cycles);
+     *
+     *     - shall only be generated after the first InitialPress following a MultiPressComplete when a long press is
+     *       detected after the idle time.
+     *
+     *   - Else, when the MSM feature flag is set, this event:
+     *
+     *     - shall NOT be generated during a multi-press sequence (since a long press is a separate cycle from any
+     *       multi-press cycles);
+     *
+     *     - shall only be generated after the first InitialPress following a MultiPressComplete when a long press is
+     *       detected after the idle time;
+     *
+     *     - shall NOT be generated after a MultiPressOngoing event without an intervening MultiPressComplete event.
+     *
+     * The above constraints imply that for a given activity detection cycle of a switch having MSM and/or MSL feature
+     * flags set, the entire activity is either a single long press detection cycle of (InitialPress, LongPress,
+     * LongRelease), or a single multi-press detection cycle (ending in MultiPressComplete), where presses that would
+     * otherwise be reported as long presses are instead reported as a counted press in the MultiPressComplete event,
+     * and as InitialPress/ShortRelease pairs otherwise (where applicable).
+     *
+     * The rationale for this constraint is the ambiguity of interpretation of events when mixing long presses and
+     * multi-press events.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.3
+     */
+    export interface LongPressEvent {
+        /**
+         * This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.3.1
+         */
+        newPosition: number;
+    }
+
+    /**
+     * This event shall be generated, when the momentary switch has been released (after debouncing) and after having
+     * been pressed for a long time, i.e. this event shall be generated when the switch is released if a LongPress event
+     * has been generated since the previous InitialPress event. Also see Section 1.13.7, “Sequence of generated
+     * events”.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.5
+     */
+    export interface LongReleaseEvent {
+        /**
+         * This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to release.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.5.1
+         */
+        previousPosition: number;
+    }
+
+    /**
+     * If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all, since
+     * setting the Action Switch feature flag forbids the Momentary Switch ShortRelease (MSR) feature flag from being
+     * set. Otherwise, the following paragraphs describe the situations where this event is generated.
+     *
+     * This event shall be generated, when the momentary switch has been released (after debouncing).
+     *
+     *   - If the server has the Momentary Switch LongPress (MSL) feature flag set, then this event shall be generated
+     *     when the switch is released if no LongPress event had been generated since the previous InitialPress event.
+     *
+     *   - If the server does not have the Momentary Switch LongPress (MSL) feature flag set, this event shall be
+     *     generated when the switch is released - even when the switch was pressed for a long time.
+     *
+     *   - Also see Section 1.13.7, “Sequence of generated events”.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.4
+     */
+    export interface ShortReleaseEvent {
+        /**
+         * This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to release.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.4.1
+         */
+        previousPosition: number;
+    }
+
+    /**
+     * If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all. Otherwise,
+     * the following paragraphs describe the situations where this event is generated.
+     *
+     * This event shall be generated to indicate how many times the momentary switch has been pressed in a multi-press
+     * sequence, during that sequence. See Section 1.13.8, “Sequence of events for MultiPress”.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.6
+     */
+    export interface MultiPressOngoingEvent {
+        /**
+         * This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.6.1
+         */
+        newPosition: number;
+
+        /**
+         * This field shall contain:
+         *
+         *   - a value of 2 when the second press of a multi-press sequence has been detected,
+         *
+         *   - a value of 3 when the third press of a multi-press sequence has been detected,
+         *
+         *   - a value of N when the Nth press of a multi-press sequence has been detected.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.6.2
+         */
+        currentNumberOfPressesCounted: number;
+    }
+
+    export interface Attributes {
+        numberOfPositions: number;
+        currentPosition: number;
+        multiPressMax: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "numberOfPositions" | "currentPosition" },
+            { flags: { momentarySwitchMultiPress: true }, mandatory: "multiPressMax" }
+        ];
+    }
+
+    export interface Events {
+        multiPressComplete: MultiPressCompleteEvent;
+        switchLatched: SwitchLatchedEvent;
+        initialPress: InitialPressEvent;
+        longPress: LongPressEvent;
+        longRelease: LongReleaseEvent;
+        shortRelease: ShortReleaseEvent;
+        multiPressOngoing: MultiPressOngoingEvent;
+    }
+
+    export namespace Events {
+        export type Components = [
+            { flags: { momentarySwitchMultiPress: true }, mandatory: "multiPressComplete" },
+            { flags: { latchingSwitch: true }, mandatory: "switchLatched" },
+            { flags: { momentarySwitch: true }, mandatory: "initialPress" },
+            { flags: { momentarySwitchLongPress: true }, mandatory: "longPress" | "longRelease" },
+            { flags: { momentarySwitchRelease: true }, mandatory: "shortRelease" },
+            { flags: { momentarySwitchMultiPress: true, actionSwitch: false }, mandatory: "multiPressOngoing" }
+        ];
+    }
+
+    export type Features = "LatchingSwitch" | "MomentarySwitch" | "MomentarySwitchRelease" | "MomentarySwitchLongPress" | "MomentarySwitchMultiPress" | "ActionSwitch";
+
     /**
      * These are optional features supported by SwitchCluster.
      *
@@ -92,13 +312,6 @@ export namespace Switch {
     });
 
     /**
-     * Body of the Switch multiPressComplete event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.7
-     */
-    export interface MultiPressCompleteEvent extends TypeFromSchema<typeof TlvMultiPressCompleteEvent> {}
-
-    /**
      * Body of the Switch switchLatched event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.1
@@ -111,13 +324,6 @@ export namespace Switch {
          */
         newPosition: TlvField(0, TlvUInt8)
     });
-
-    /**
-     * Body of the Switch switchLatched event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.1
-     */
-    export interface SwitchLatchedEvent extends TypeFromSchema<typeof TlvSwitchLatchedEvent> {}
 
     /**
      * Body of the Switch initialPress event
@@ -134,13 +340,6 @@ export namespace Switch {
     });
 
     /**
-     * Body of the Switch initialPress event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.2
-     */
-    export interface InitialPressEvent extends TypeFromSchema<typeof TlvInitialPressEvent> {}
-
-    /**
      * Body of the Switch longPress event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.3
@@ -153,13 +352,6 @@ export namespace Switch {
          */
         newPosition: TlvField(0, TlvUInt8)
     });
-
-    /**
-     * Body of the Switch longPress event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.3
-     */
-    export interface LongPressEvent extends TypeFromSchema<typeof TlvLongPressEvent> {}
 
     /**
      * Body of the Switch longRelease event
@@ -176,13 +368,6 @@ export namespace Switch {
     });
 
     /**
-     * Body of the Switch longRelease event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.5
-     */
-    export interface LongReleaseEvent extends TypeFromSchema<typeof TlvLongReleaseEvent> {}
-
-    /**
      * Body of the Switch shortRelease event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.4
@@ -195,13 +380,6 @@ export namespace Switch {
          */
         previousPosition: TlvField(0, TlvUInt8)
     });
-
-    /**
-     * Body of the Switch shortRelease event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.4
-     */
-    export interface ShortReleaseEvent extends TypeFromSchema<typeof TlvShortReleaseEvent> {}
 
     /**
      * Body of the Switch multiPressOngoing event
@@ -229,13 +407,6 @@ export namespace Switch {
          */
         currentNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 2 }))
     });
-
-    /**
-     * Body of the Switch multiPressOngoing event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.13.6.6
-     */
-    export interface MultiPressOngoingEvent extends TypeFromSchema<typeof TlvMultiPressOngoingEvent> {}
 
     /**
      * A SwitchCluster supports these elements if it supports feature MomentarySwitchMultiPress.
@@ -638,8 +809,20 @@ export namespace Switch {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x3b);
+    export const name = "Switch" as const;
+    export const revision = 2;
+    export const schema = SwitchModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: Switch;
 }
 
 export type SwitchCluster = Switch.Cluster;
 export const SwitchCluster = Switch.Cluster;
 ClusterRegistry.register(Switch.Complete);
+ClusterNamespace.define(Switch);
+export interface Switch extends ClusterTyping { Attributes: Switch.Attributes & { Components: Switch.Attributes.Components }; Events: Switch.Events & { Components: Switch.Events.Components }; Features: Switch.Features }

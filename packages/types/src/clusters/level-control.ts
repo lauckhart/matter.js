@@ -17,15 +17,260 @@ import {
 } from "../cluster/Cluster.js";
 import { TlvUInt16, TlvUInt8, TlvBitmap, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, LevelControl as LevelControlModel } from "@matter/model";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { ClusterType } from "../cluster/ClusterType.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LevelControl {
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.5
+     */
+    export interface MoveToClosestFrequencyRequest {
+        frequency: number;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1
+     */
+    export const Options = {
+        /**
+         * Dependency on On/Off cluster
+         *
+         * This bit indicates if this cluster has a dependency with the On/Off cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.1
+         */
+        executeIfOff: BitFlag(0),
+
+        /**
+         * Dependency on Color Control cluster
+         *
+         * This bit indicates if this cluster has a dependency with the Color Control cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.2
+         */
+        coupleColorTempToLevel: BitFlag(1)
+    };
+
+    export interface Options {
+        /**
+         * Dependency on On/Off cluster
+         *
+         * This bit indicates if this cluster has a dependency with the On/Off cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.1
+         */
+        executeIfOff?: boolean;
+
+        /**
+         * Dependency on Color Control cluster
+         *
+         * This bit indicates if this cluster has a dependency with the Color Control cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.2
+         */
+        coupleColorTempToLevel?: boolean;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.1
+     */
+    export interface MoveToLevelRequest {
+        level: number;
+        transitionTime: number | null;
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.2
+     */
+    export enum MoveMode {
+        /**
+         * Increase the level
+         */
+        Up = 0,
+
+        /**
+         * Decrease the level
+         */
+        Down = 1
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.2
+     */
+    export interface MoveRequest {
+        /**
+         * This field shall be one of the non-reserved values in MoveModeEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.2.1
+         */
+        moveMode: MoveMode;
+
+        /**
+         * This field shall indicate the rate of movement in units per second. The actual rate of movement SHOULD be as
+         * close to this rate as the device is able. If the Rate field is null, then the value of the DefaultMoveRate
+         * attribute shall be used if that attribute is supported and its value is not null. If the Rate field is null
+         * and the DefaultMoveRate attribute is either not supported or set to null, then the device SHOULD move as fast
+         * as it is able. If the device is not able to move at a variable rate, this field may be disregarded.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.2.2
+         */
+        rate: number | null;
+
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.3
+     */
+    export enum StepMode {
+        /**
+         * Step upwards
+         */
+        Up = 0,
+
+        /**
+         * Step downwards
+         */
+        Down = 1
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3
+     */
+    export interface StepRequest {
+        /**
+         * This field shall be one of the non-reserved values in StepModeEnum.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3.1
+         */
+        stepMode: StepMode;
+
+        /**
+         * This field shall indicate the change to CurrentLevel.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3.2
+         */
+        stepSize: number;
+
+        /**
+         * This field shall indicate the time that shall be taken to perform the step, in tenths of a second. A step is
+         * a change in the CurrentLevel of StepSize units. The actual time taken SHOULD be as close to this as the
+         * device is able. If the TransitionTime field is equal to null, the device SHOULD move as fast as it is able.
+         *
+         * If the device is not able to move at a variable rate, the TransitionTime field may be disregarded.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3.3
+         */
+        transitionTime: number | null;
+
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.4
+     */
+    export interface StopRequest {
+        optionsMask: Options;
+        optionsOverride: Options;
+    }
+
+    export interface Attributes {
+        currentLevel: number | null;
+        onLevel: number | null;
+        options: Options;
+        minLevel: number;
+        maxLevel: number;
+        onOffTransitionTime: number;
+        onTransitionTime: number | null;
+        offTransitionTime: number | null;
+        defaultMoveRate: number | null;
+        remainingTime: number;
+        startUpCurrentLevel: number | null;
+        currentFrequency: number;
+        minFrequency: number;
+        maxFrequency: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "currentLevel" | "onLevel" | "options",
+                optional: "minLevel" | "maxLevel" | "onOffTransitionTime" | "onTransitionTime" | "offTransitionTime" | "defaultMoveRate"
+            },
+            { flags: { lighting: true }, mandatory: "remainingTime" | "startUpCurrentLevel" },
+            { flags: { lighting: false }, optional: "minLevel" },
+            { flags: { frequency: true }, mandatory: "currentFrequency" | "minFrequency" | "maxFrequency" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base, Commands.Frequency {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.1
+             */
+            moveToLevel(request: MoveToLevelRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.2
+             */
+            move(request: MoveRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3
+             */
+            step(request: StepRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.4
+             */
+            stop(request: StopRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7
+             */
+            moveToLevelWithOnOff(request: MoveToLevelRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7
+             */
+            moveWithOnOff(request: MoveRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7
+             */
+            stepWithOnOff(request: StepRequest): MaybePromise;
+
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7
+             */
+            stopWithOnOff(request: StopRequest): MaybePromise;
+        }
+
+        export interface Frequency {
+            /**
+             * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.5
+             */
+            moveToClosestFrequency(request: MoveToClosestFrequencyRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }, { flags: { frequency: true }, methods: Frequency }];
+    }
+
+    export type Features = "OnOff" | "Lighting" | "Frequency";
+
     /**
      * These are optional features supported by LevelControlCluster.
      *
@@ -80,36 +325,6 @@ export namespace LevelControl {
     export const TlvMoveToClosestFrequencyRequest = TlvObject({ frequency: TlvField(0, TlvUInt16) });
 
     /**
-     * Input to the LevelControl moveToClosestFrequency command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.5
-     */
-    export interface MoveToClosestFrequencyRequest extends TypeFromSchema<typeof TlvMoveToClosestFrequencyRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1
-     */
-    export const Options = {
-        /**
-         * Dependency on On/Off cluster
-         *
-         * This bit indicates if this cluster has a dependency with the On/Off cluster.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.1
-         */
-        executeIfOff: BitFlag(0),
-
-        /**
-         * Dependency on Color Control cluster
-         *
-         * This bit indicates if this cluster has a dependency with the Color Control cluster.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.1.2
-         */
-        coupleColorTempToLevel: BitFlag(1)
-    };
-
-    /**
      * Input to the LevelControl moveToLevel command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.1
@@ -120,28 +335,6 @@ export namespace LevelControl {
         optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
         optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
     });
-
-    /**
-     * Input to the LevelControl moveToLevel command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.1
-     */
-    export interface MoveToLevelRequest extends TypeFromSchema<typeof TlvMoveToLevelRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.2
-     */
-    export enum MoveMode {
-        /**
-         * Increase the level
-         */
-        Up = 0,
-
-        /**
-         * Decrease the level
-         */
-        Down = 1
-    }
 
     /**
      * Input to the LevelControl move command
@@ -170,28 +363,6 @@ export namespace LevelControl {
         optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
         optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
     });
-
-    /**
-     * Input to the LevelControl move command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.2
-     */
-    export interface MoveRequest extends TypeFromSchema<typeof TlvMoveRequest> {}
-
-    /**
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.5.3
-     */
-    export enum StepMode {
-        /**
-         * Step upwards
-         */
-        Up = 0,
-
-        /**
-         * Step downwards
-         */
-        Down = 1
-    }
 
     /**
      * Input to the LevelControl step command
@@ -229,13 +400,6 @@ export namespace LevelControl {
     });
 
     /**
-     * Input to the LevelControl step command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.3
-     */
-    export interface StepRequest extends TypeFromSchema<typeof TlvStepRequest> {}
-
-    /**
      * Input to the LevelControl stop command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.4
@@ -244,13 +408,6 @@ export namespace LevelControl {
         optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
         optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
     });
-
-    /**
-     * Input to the LevelControl stop command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.6.7.4
-     */
-    export interface StopRequest extends TypeFromSchema<typeof TlvStopRequest> {}
 
     /**
      * A LevelControlCluster supports these elements if it supports feature Lighting.
@@ -630,8 +787,20 @@ export namespace LevelControl {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x8);
+    export const name = "LevelControl" as const;
+    export const revision = 6;
+    export const schema = LevelControlModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: LevelControl;
 }
 
 export type LevelControlCluster = LevelControl.Cluster;
 export const LevelControlCluster = LevelControl.Cluster;
 ClusterRegistry.register(LevelControl.Complete);
+ClusterNamespace.define(LevelControl);
+export interface LevelControl extends ClusterTyping { Attributes: LevelControl.Attributes & { Components: LevelControl.Attributes.Components }; Commands: LevelControl.Commands & { Components: LevelControl.Commands.Components }; Features: LevelControl.Features }

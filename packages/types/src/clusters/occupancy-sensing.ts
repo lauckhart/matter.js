@@ -15,15 +15,207 @@ import {
     OptionalEvent
 } from "../cluster/Cluster.js";
 import { TlvUInt16, TlvUInt8, TlvBitmap, TlvEnum } from "../tlv/TlvNumber.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, OccupancySensing as OccupancySensingModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Priority } from "../globals/Priority.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace OccupancySensing {
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.1
+     */
+    export const Occupancy = {
+        /**
+         * Indicates the sensed occupancy state
+         *
+         * If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall indicate the
+         * unoccupied state.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.1.1
+         */
+        occupied: BitFlag(0)
+    };
+
+    export interface Occupancy {
+        /**
+         * Indicates the sensed occupancy state
+         *
+         * If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall indicate the
+         * unoccupied state.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.1.1
+         */
+        occupied?: boolean;
+    }
+
+    /**
+     * > [!NOTE]
+     *
+     * > This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature flags
+     *   provide the sensor modality (or modalities) for later cluster revisions. See Backward Compatibility section.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.3
+     */
+    export enum OccupancySensorType {
+        /**
+         * Indicates a passive infrared sensor.
+         */
+        Pir = 0,
+
+        /**
+         * Indicates a ultrasonic sensor.
+         */
+        Ultrasonic = 1,
+
+        /**
+         * Indicates a passive infrared and ultrasonic sensor.
+         */
+        PirAndUltrasonic = 2,
+
+        /**
+         * Indicates a physical contact sensor.
+         */
+        PhysicalContact = 3
+    }
+
+    /**
+     * > [!NOTE]
+     *
+     * > This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature flags
+     *   provide the sensor modality (or modalities) for later cluster revisions. See Backward Compatibility section.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.2
+     */
+    export const OccupancySensorTypeBitmap = {
+        /**
+         * Indicates a passive infrared sensor.
+         */
+        pir: BitFlag(0),
+
+        /**
+         * Indicates a ultrasonic sensor.
+         */
+        ultrasonic: BitFlag(1),
+
+        /**
+         * Indicates a physical contact sensor.
+         */
+        physicalContact: BitFlag(2)
+    };
+
+    export interface OccupancySensorTypeBitmap {
+        /**
+         * Indicates a passive infrared sensor.
+         */
+        pir?: boolean;
+
+        /**
+         * Indicates a ultrasonic sensor.
+         */
+        ultrasonic?: boolean;
+
+        /**
+         * Indicates a physical contact sensor.
+         */
+        physicalContact?: boolean;
+    }
+
+    /**
+     * This structure provides information on the server’s supported values for the HoldTime attribute.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4
+     */
+    export interface HoldTimeLimits {
+        /**
+         * This field shall specify the minimum value of the server’s supported value for the HoldTime attribute, in
+         * seconds.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4.1
+         */
+        holdTimeMin: number;
+
+        /**
+         * This field shall specify the maximum value of the server’s supported value for the HoldTime attribute, in
+         * seconds.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4.2
+         */
+        holdTimeMax: number;
+
+        /**
+         * This field shall specify the (manufacturer-determined) default value of the server’s HoldTime attribute, in
+         * seconds. This is the value that a client who wants to reset the settings to a valid default SHOULD use.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4.3
+         */
+        holdTimeDefault: number;
+    }
+
+    /**
+     * If this event is supported, it shall be generated when the Occupancy attribute changes.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.7.7.1
+     */
+    export interface OccupancyChangedEvent {
+        /**
+         * This field shall indicate the new value of the Occupancy attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 2.7.7.1.1
+         */
+        occupancy: Occupancy;
+    }
+
+    export interface Attributes {
+        occupancy: Occupancy;
+        occupancySensorType: OccupancySensorType;
+        occupancySensorTypeBitmap: OccupancySensorTypeBitmap;
+        holdTime: number;
+        holdTimeLimits: HoldTimeLimits;
+        pirOccupiedToUnoccupiedDelay: number;
+        pirUnoccupiedToOccupiedDelay: number;
+        pirUnoccupiedToOccupiedThreshold: number;
+        ultrasonicOccupiedToUnoccupiedDelay: number;
+        ultrasonicUnoccupiedToOccupiedDelay: number;
+        ultrasonicUnoccupiedToOccupiedThreshold: number;
+        physicalContactOccupiedToUnoccupiedDelay: number;
+        physicalContactUnoccupiedToOccupiedDelay: number;
+        physicalContactUnoccupiedToOccupiedThreshold: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "occupancy" | "occupancySensorType" | "occupancySensorTypeBitmap",
+                optional: "holdTime" | "holdTimeLimits"
+            },
+            {
+                flags: { passiveInfrared: true },
+                optional: "pirOccupiedToUnoccupiedDelay" | "pirUnoccupiedToOccupiedDelay" | "pirUnoccupiedToOccupiedThreshold"
+            },
+            {
+                flags: { ultrasonic: true },
+                optional: "ultrasonicOccupiedToUnoccupiedDelay" | "ultrasonicUnoccupiedToOccupiedDelay" | "ultrasonicUnoccupiedToOccupiedThreshold"
+            },
+            {
+                flags: { physicalContact: true },
+                optional: "physicalContactOccupiedToUnoccupiedDelay" | "physicalContactUnoccupiedToOccupiedDelay" | "physicalContactUnoccupiedToOccupiedThreshold"
+            }
+        ];
+    }
+
+    export interface Events {
+        occupancyChanged: OccupancyChangedEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "occupancyChanged" }];
+    }
+    export type Features = "Other" | "PassiveInfrared" | "Ultrasonic" | "PhysicalContact" | "ActiveInfrared" | "Radar" | "RfSensing" | "Vision";
+
     /**
      * These are optional features supported by OccupancySensingCluster.
      *
@@ -89,76 +281,6 @@ export namespace OccupancySensing {
     }
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.1
-     */
-    export const Occupancy = {
-        /**
-         * Indicates the sensed occupancy state
-         *
-         * If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall indicate the
-         * unoccupied state.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.1.1
-         */
-        occupied: BitFlag(0)
-    };
-
-    /**
-     * > [!NOTE]
-     *
-     * > This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature flags
-     *   provide the sensor modality (or modalities) for later cluster revisions. See Backward Compatibility section.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.3
-     */
-    export enum OccupancySensorType {
-        /**
-         * Indicates a passive infrared sensor.
-         */
-        Pir = 0,
-
-        /**
-         * Indicates a ultrasonic sensor.
-         */
-        Ultrasonic = 1,
-
-        /**
-         * Indicates a passive infrared and ultrasonic sensor.
-         */
-        PirAndUltrasonic = 2,
-
-        /**
-         * Indicates a physical contact sensor.
-         */
-        PhysicalContact = 3
-    }
-
-    /**
-     * > [!NOTE]
-     *
-     * > This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature flags
-     *   provide the sensor modality (or modalities) for later cluster revisions. See Backward Compatibility section.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.2
-     */
-    export const OccupancySensorTypeBitmap = {
-        /**
-         * Indicates a passive infrared sensor.
-         */
-        pir: BitFlag(0),
-
-        /**
-         * Indicates a ultrasonic sensor.
-         */
-        ultrasonic: BitFlag(1),
-
-        /**
-         * Indicates a physical contact sensor.
-         */
-        physicalContact: BitFlag(2)
-    };
-
-    /**
      * This structure provides information on the server’s supported values for the HoldTime attribute.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4
@@ -190,13 +312,6 @@ export namespace OccupancySensing {
     });
 
     /**
-     * This structure provides information on the server’s supported values for the HoldTime attribute.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.7.5.4
-     */
-    export interface HoldTimeLimits extends TypeFromSchema<typeof TlvHoldTimeLimits> {}
-
-    /**
      * Body of the OccupancySensing occupancyChanged event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 2.7.7.1
@@ -209,13 +324,6 @@ export namespace OccupancySensing {
          */
         occupancy: TlvField(0, TlvBitmap(TlvUInt8, Occupancy))
     });
-
-    /**
-     * Body of the OccupancySensing occupancyChanged event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.7.7.1
-     */
-    export interface OccupancyChangedEvent extends TypeFromSchema<typeof TlvOccupancyChangedEvent> {}
 
     /**
      * A OccupancySensingCluster supports these elements if it supports feature PassiveInfrared.
@@ -568,8 +676,20 @@ export namespace OccupancySensing {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x406);
+    export const name = "OccupancySensing" as const;
+    export const revision = 5;
+    export const schema = OccupancySensingModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: OccupancySensing;
 }
 
 export type OccupancySensingCluster = OccupancySensing.Cluster;
 export const OccupancySensingCluster = OccupancySensing.Cluster;
 ClusterRegistry.register(OccupancySensing.Complete);
+ClusterNamespace.define(OccupancySensing);
+export interface OccupancySensing extends ClusterTyping { Attributes: OccupancySensing.Attributes & { Components: OccupancySensing.Attributes.Components }; Events: OccupancySensing.Events & { Components: OccupancySensing.Events.Components }; Features: OccupancySensing.Features }

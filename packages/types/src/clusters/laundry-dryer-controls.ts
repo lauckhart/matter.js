@@ -13,6 +13,9 @@ import { TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { LaundryDryerControls as LaundryDryerControlsModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LaundryDryerControls {
     /**
@@ -43,6 +46,14 @@ export namespace LaundryDryerControls {
          * Provides the max dryness level for the selected mode
          */
         Max = 3
+    }
+
+    export interface Attributes {
+        supportedDrynessLevels: DrynessLevel[];
+        selectedDrynessLevel: DrynessLevel | null;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "supportedDrynessLevels" | "selectedDrynessLevel" }];
     }
 
     /**
@@ -89,8 +100,17 @@ export namespace LaundryDryerControls {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x4a);
+    export const name = "LaundryDryerControls" as const;
+    export const revision = 1;
+    export const schema = LaundryDryerControlsModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const Typing: LaundryDryerControls;
 }
 
 export type LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 export const LaundryDryerControlsCluster = LaundryDryerControls.Cluster;
 ClusterRegistry.register(LaundryDryerControls.Complete);
+ClusterNamespace.define(LaundryDryerControls);
+export interface LaundryDryerControls extends ClusterTyping { Attributes: LaundryDryerControls.Attributes & { Components: LaundryDryerControls.Attributes.Components } }

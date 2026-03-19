@@ -12,57 +12,10 @@ import { TlvFloat, TlvEnum, TlvUInt32 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ConcentrationMeasurement as ConcentrationMeasurementModel } from "@matter/model";
 
 export namespace ConcentrationMeasurement {
-    /**
-     * These are optional features supported by ConcentrationMeasurementCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 2.10.4
-     */
-    export enum Feature {
-        /**
-         * NumericMeasurement (MEA)
-         *
-         * Cluster supports numeric measurement of substance
-         */
-        NumericMeasurement = "NumericMeasurement",
-
-        /**
-         * LevelIndication (LEV)
-         *
-         * Cluster supports basic level indication for substance using the ConcentrationLevel enum
-         */
-        LevelIndication = "LevelIndication",
-
-        /**
-         * MediumLevel (MED)
-         *
-         * Cluster supports the Medium Concentration Level
-         */
-        MediumLevel = "MediumLevel",
-
-        /**
-         * CriticalLevel (CRI)
-         *
-         * Cluster supports the Critical Concentration Level
-         */
-        CriticalLevel = "CriticalLevel",
-
-        /**
-         * PeakMeasurement (PEA)
-         *
-         * Cluster supports peak numeric measurement of substance
-         */
-        PeakMeasurement = "PeakMeasurement",
-
-        /**
-         * AverageMeasurement (AVG)
-         *
-         * Cluster supports average numeric measurement of substance
-         */
-        AverageMeasurement = "AverageMeasurement"
-    }
-
     /**
      * Where mentioned, Billion refers to 10^9, Trillion refers to 10^12 (short scale).
      *
@@ -158,6 +111,85 @@ export namespace ConcentrationMeasurement {
          * The measurement is being made in Soil
          */
         Soil = 2
+    }
+
+    export interface Attributes {
+        measurementMedium: MeasurementMedium;
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        measurementUnit: MeasurementUnit;
+        uncertainty: number;
+        peakMeasuredValue: number | null;
+        peakMeasuredValueWindow: number;
+        averageMeasuredValue: number | null;
+        averageMeasuredValueWindow: number;
+        levelValue: LevelValue;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measurementMedium" },
+            {
+                flags: { numericMeasurement: true },
+                mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue" | "measurementUnit",
+                optional: "uncertainty"
+            },
+            { flags: { peakMeasurement: true }, mandatory: "peakMeasuredValue" | "peakMeasuredValueWindow" },
+            { flags: { averageMeasurement: true }, mandatory: "averageMeasuredValue" | "averageMeasuredValueWindow" },
+            { flags: { levelIndication: true }, mandatory: "levelValue" }
+        ];
+    }
+
+    export type Features = "NumericMeasurement" | "LevelIndication" | "MediumLevel" | "CriticalLevel" | "PeakMeasurement" | "AverageMeasurement";
+
+    /**
+     * These are optional features supported by ConcentrationMeasurementCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 2.10.4
+     */
+    export enum Feature {
+        /**
+         * NumericMeasurement (MEA)
+         *
+         * Cluster supports numeric measurement of substance
+         */
+        NumericMeasurement = "NumericMeasurement",
+
+        /**
+         * LevelIndication (LEV)
+         *
+         * Cluster supports basic level indication for substance using the ConcentrationLevel enum
+         */
+        LevelIndication = "LevelIndication",
+
+        /**
+         * MediumLevel (MED)
+         *
+         * Cluster supports the Medium Concentration Level
+         */
+        MediumLevel = "MediumLevel",
+
+        /**
+         * CriticalLevel (CRI)
+         *
+         * Cluster supports the Critical Concentration Level
+         */
+        CriticalLevel = "CriticalLevel",
+
+        /**
+         * PeakMeasurement (PEA)
+         *
+         * Cluster supports peak numeric measurement of substance
+         */
+        PeakMeasurement = "PeakMeasurement",
+
+        /**
+         * AverageMeasurement (AVG)
+         *
+         * Cluster supports average numeric measurement of substance
+         */
+        AverageMeasurement = "AverageMeasurement"
     }
 
     /**
@@ -402,4 +434,14 @@ export namespace ConcentrationMeasurement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const name = "ConcentrationMeasurement" as const;
+    export const revision = 3;
+    export const schema = ConcentrationMeasurementModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ConcentrationMeasurement;
 }
+
+ClusterNamespace.define(ConcentrationMeasurement);
+export interface ConcentrationMeasurement extends ClusterTyping { Attributes: ConcentrationMeasurement.Attributes & { Components: ConcentrationMeasurement.Attributes.Components }; Features: ConcentrationMeasurement.Features }

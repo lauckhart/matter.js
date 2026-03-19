@@ -10,8 +10,41 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ConcentrationMeasurement } from "./concentration-measurement.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { RadonConcentrationMeasurement as RadonConcentrationMeasurementModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace RadonConcentrationMeasurement {
+    export interface Attributes {
+        measurementMedium: ConcentrationMeasurement.MeasurementMedium;
+        measuredValue: number | null;
+        minMeasuredValue: number | null;
+        maxMeasuredValue: number | null;
+        measurementUnit: ConcentrationMeasurement.MeasurementUnit;
+        uncertainty: number;
+        peakMeasuredValue: number | null;
+        peakMeasuredValueWindow: number;
+        averageMeasuredValue: number | null;
+        averageMeasuredValueWindow: number;
+        levelValue: ConcentrationMeasurement.LevelValue;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "measurementMedium" },
+            {
+                flags: { numericMeasurement: true },
+                mandatory: "measuredValue" | "minMeasuredValue" | "maxMeasuredValue" | "measurementUnit",
+                optional: "uncertainty"
+            },
+            { flags: { peakMeasurement: true }, mandatory: "peakMeasuredValue" | "peakMeasuredValueWindow" },
+            { flags: { averageMeasurement: true }, mandatory: "averageMeasuredValue" | "averageMeasuredValueWindow" },
+            { flags: { levelIndication: true }, mandatory: "levelValue" }
+        ];
+    }
+
+    export type Features = "NumericMeasurement" | "LevelIndication" | "MediumLevel" | "CriticalLevel" | "PeakMeasurement" | "AverageMeasurement";
+
     export const Base = { ...ConcentrationMeasurement.Base, id: 0x42f, name: "RadonConcentrationMeasurement" } as const;
 
     /**
@@ -43,8 +76,18 @@ export namespace RadonConcentrationMeasurement {
 
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x42f);
+    export const name = "RadonConcentrationMeasurement" as const;
+    export const revision = 1;
+    export const schema = RadonConcentrationMeasurementModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: RadonConcentrationMeasurement;
 }
 
 export type RadonConcentrationMeasurementCluster = RadonConcentrationMeasurement.Cluster;
 export const RadonConcentrationMeasurementCluster = RadonConcentrationMeasurement.Cluster;
 ClusterRegistry.register(RadonConcentrationMeasurement.Complete);
+ClusterNamespace.define(RadonConcentrationMeasurement);
+export interface RadonConcentrationMeasurement extends ClusterTyping { Attributes: RadonConcentrationMeasurement.Attributes & { Components: RadonConcentrationMeasurement.Attributes.Components }; Features: RadonConcentrationMeasurement.Features }

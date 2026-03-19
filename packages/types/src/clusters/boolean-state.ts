@@ -11,11 +11,40 @@ import { Attribute, OptionalEvent } from "../cluster/Cluster.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { Priority } from "../globals/Priority.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { BooleanState as BooleanStateModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace BooleanState {
+    /**
+     * If this event is supported, it shall be generated when the StateValue attribute changes.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.7.5.1
+     */
+    export interface StateChangeEvent {
+        /**
+         * This field shall indicate the new value of the StateValue attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.7.5.1.1
+         */
+        stateValue: boolean;
+    }
+
+    export interface Attributes {
+        stateValue: boolean;
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "stateValue" }];
+    }
+    export interface Events {
+        stateChange: StateChangeEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "stateChange" }];
+    }
+
     /**
      * Body of the BooleanState stateChange event
      *
@@ -29,13 +58,6 @@ export namespace BooleanState {
          */
         stateValue: TlvField(0, TlvBoolean)
     });
-
-    /**
-     * Body of the BooleanState stateChange event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.7.5.1
-     */
-    export interface StateChangeEvent extends TypeFromSchema<typeof TlvStateChangeEvent> {}
 
     /**
      * @see {@link Cluster}
@@ -76,8 +98,19 @@ export namespace BooleanState {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x45);
+    export const name = "BooleanState" as const;
+    export const revision = 1;
+    export const schema = BooleanStateModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const Typing: BooleanState;
 }
 
 export type BooleanStateCluster = BooleanState.Cluster;
 export const BooleanStateCluster = BooleanState.Cluster;
 ClusterRegistry.register(BooleanState.Complete);
+ClusterNamespace.define(BooleanState);
+export interface BooleanState extends ClusterTyping { Attributes: BooleanState.Attributes & { Components: BooleanState.Attributes.Components }; Events: BooleanState.Events & { Components: BooleanState.Events.Components } }

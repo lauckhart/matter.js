@@ -10,17 +10,149 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { Attribute, Command, TlvNoResponse, OptionalAttribute, OptionalEvent } from "../cluster/Cluster.js";
 import { TlvUInt64, TlvUInt32 } from "../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, SoftwareDiagnostics as SoftwareDiagnosticsModel } from "@matter/model";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../tlv/TlvString.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace SoftwareDiagnostics {
+    /**
+     * @see {@link MatterSpecification.v142.Core} § 11.13.5.1
+     */
+    export interface ThreadMetrics {
+        /**
+         * The Id field shall be a server-assigned per-thread unique ID that is constant for the duration of the thread.
+         * Efforts SHOULD be made to avoid reusing ID values when possible.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.5.1.1
+         */
+        id: number | bigint;
+
+        /**
+         * The Name field shall be set to a vendor defined name or prefix of the software thread that is static for the
+         * duration of the thread.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.5.1.2
+         */
+        name?: string;
+
+        /**
+         * The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are not being
+         * utilized on the respective thread.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.5.1.3
+         */
+        stackFreeCurrent?: number;
+
+        /**
+         * The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has been
+         * available at any point between the current time and this attribute being reset or initialized on the
+         * respective thread. This value shall only be reset upon a Node reboot or upon receiving of the ResetWatermarks
+         * command.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.5.1.4
+         */
+        stackFreeMinimum?: number;
+
+        /**
+         * The StackSize field shall indicate the amount of stack memory, in bytes, that has been allocated for use by
+         * the respective thread.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.5.1.5
+         */
+        stackSize?: number;
+    }
+
+    /**
+     * This Event shall be generated when a software fault occurs on the Node.
+     *
+     * @see {@link MatterSpecification.v142.Core} § 11.13.8.1
+     */
+    export interface SoftwareFaultEvent {
+        /**
+         * This field shall be set to the ID of the software thread in which the last software fault occurred.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.8.1.1
+         */
+        id: number | bigint;
+
+        /**
+         * This field shall be set to a manufacturer-specified name or prefix of the software thread in which the last
+         * software fault occurred.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.8.1.2
+         */
+        name?: string;
+
+        /**
+         * This field shall be a manufacturer-specified payload intended to convey information to assist in further
+         * diagnosing or debugging a software fault. The FaultRecording field may be used to convey information such as,
+         * but not limited to, thread backtraces or register contents.
+         *
+         * @see {@link MatterSpecification.v142.Core} § 11.13.8.1.3
+         */
+        faultRecording?: Bytes;
+    }
+
+    export interface Attributes {
+        threadMetrics: ThreadMetrics[];
+        currentHeapFree: number | bigint;
+        currentHeapUsed: number | bigint;
+        currentHeapHighWatermark: number | bigint;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, optional: "threadMetrics" | "currentHeapFree" | "currentHeapUsed" },
+            { flags: { watermarks: true }, mandatory: "currentHeapHighWatermark" }
+        ];
+    }
+
+    export interface Commands extends Commands.Watermarks {}
+
+    export namespace Commands {
+        export interface Watermarks {
+            /**
+             * This command is used to reset the high watermarks for heap and stack memory.
+             *
+             * Receipt of this command shall reset the following values which track high and lower watermarks:
+             *
+             *   - The StackFreeMinimum field of the ThreadMetrics attribute
+             *
+             *   - The CurrentHeapHighWatermark attribute
+             *
+             * ### Effect on Receipt
+             *
+             * On receipt of this command, the Node shall make the following modifications to attributes it supports:
+             *
+             * If implemented, the server shall set the value of the CurrentHeapHighWatermark attribute to the value of
+             * the CurrentHeapUsed attribute.
+             *
+             * If implemented, the server shall set the value of the StackFreeMinimum field for every thread to the
+             * value of the corresponding thread’s StackFreeCurrent field.
+             *
+             * @see {@link MatterSpecification.v142.Core} § 11.13.7.1
+             */
+            resetWatermarks(): MaybePromise;
+        }
+
+        export type Components = [{ flags: { watermarks: true }, methods: Watermarks }];
+    }
+
+    export interface Events {
+        softwareFault: SoftwareFaultEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "softwareFault" }];
+    }
+    export type Features = "Watermarks";
+
     /**
      * These are optional features supported by SoftwareDiagnosticsCluster.
      *
@@ -83,11 +215,6 @@ export namespace SoftwareDiagnostics {
     });
 
     /**
-     * @see {@link MatterSpecification.v142.Core} § 11.13.5.1
-     */
-    export interface ThreadMetrics extends TypeFromSchema<typeof TlvThreadMetrics> {}
-
-    /**
      * Body of the SoftwareDiagnostics softwareFault event
      *
      * @see {@link MatterSpecification.v142.Core} § 11.13.8.1
@@ -117,13 +244,6 @@ export namespace SoftwareDiagnostics {
          */
         faultRecording: TlvOptionalField(2, TlvByteString.bound({ maxLength: 1024 }))
     });
-
-    /**
-     * Body of the SoftwareDiagnostics softwareFault event
-     *
-     * @see {@link MatterSpecification.v142.Core} § 11.13.8.1
-     */
-    export interface SoftwareFaultEvent extends TypeFromSchema<typeof TlvSoftwareFaultEvent> {}
 
     /**
      * A SoftwareDiagnosticsCluster supports these elements if it supports feature Watermarks.
@@ -277,8 +397,22 @@ export namespace SoftwareDiagnostics {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x34);
+    export const name = "SoftwareDiagnostics" as const;
+    export const revision = 1;
+    export const schema = SoftwareDiagnosticsModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: SoftwareDiagnostics;
 }
 
 export type SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 export const SoftwareDiagnosticsCluster = SoftwareDiagnostics.Cluster;
 ClusterRegistry.register(SoftwareDiagnostics.Complete);
+ClusterNamespace.define(SoftwareDiagnostics);
+export interface SoftwareDiagnostics extends ClusterTyping { Attributes: SoftwareDiagnostics.Attributes & { Components: SoftwareDiagnostics.Attributes.Components }; Commands: SoftwareDiagnostics.Commands & { Components: SoftwareDiagnostics.Commands.Components }; Events: SoftwareDiagnostics.Events & { Components: SoftwareDiagnostics.Events.Components }; Features: SoftwareDiagnostics.Features }

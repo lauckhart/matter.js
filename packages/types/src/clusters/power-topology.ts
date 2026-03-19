@@ -9,12 +9,29 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { FixedAttribute, Attribute } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
-import { TlvEndpointNumber } from "../datatype/EndpointNumber.js";
+import { TlvEndpointNumber, EndpointNumber } from "../datatype/EndpointNumber.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { PowerTopology as PowerTopologyModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace PowerTopology {
+    export interface Attributes {
+        availableEndpoints: EndpointNumber[];
+        activeEndpoints: EndpointNumber[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: { setTopology: true }, mandatory: "availableEndpoints" },
+            { flags: { dynamicPowerFlow: true }, mandatory: "activeEndpoints" }
+        ];
+    }
+
+    export type Features = "NodeTopology" | "TreeTopology" | "SetTopology" | "DynamicPowerFlow";
+
     /**
      * These are optional features supported by PowerTopologyCluster.
      *
@@ -178,8 +195,18 @@ export namespace PowerTopology {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x9c);
+    export const name = "PowerTopology" as const;
+    export const revision = 1;
+    export const schema = PowerTopologyModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: PowerTopology;
 }
 
 export type PowerTopologyCluster = PowerTopology.Cluster;
 export const PowerTopologyCluster = PowerTopology.Cluster;
 ClusterRegistry.register(PowerTopology.Complete);
+ClusterNamespace.define(PowerTopology);
+export interface PowerTopology extends ClusterTyping { Attributes: PowerTopology.Attributes & { Components: PowerTopology.Attributes.Components }; Features: PowerTopology.Features }

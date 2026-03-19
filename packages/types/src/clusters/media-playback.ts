@@ -11,7 +11,6 @@ import { Attribute, Command, TlvNoResponse, OptionalCommand, OptionalEvent } fro
 import { TlvEpochUs, TlvUInt64, TlvFloat, TlvEnum, TlvUInt8 } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../tlv/TlvObject.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { StatusResponseError } from "../common/StatusResponseError.js";
 import { Status as GlobalStatus } from "../globals/Status.js";
 import { TlvString, TlvByteString } from "../tlv/TlvString.js";
@@ -20,80 +19,25 @@ import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, Bytes, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { MediaPlayback as MediaPlaybackModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace MediaPlayback {
-    /**
-     * These are optional features supported by MediaPlaybackCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.4
-     */
-    export enum Feature {
-        /**
-         * AdvancedSeek (AS)
-         *
-         * This feature provides access to the time offset location within current playback media and allows for jumping
-         * to a specific location using time offsets. This enables clients to implement more advanced media seeking
-         * behavior in their user interface, for instance a "seek bar".
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.1
-         */
-        AdvancedSeek = "AdvancedSeek",
-
-        /**
-         * VariableSpeed (VS)
-         *
-         * This feature is for a device which supports variable speed playback on media that supports it.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.2
-         */
-        VariableSpeed = "VariableSpeed",
-
-        /**
-         * TextTracks (TT)
-         *
-         * This feature is for a device or app that supports Text Tracks.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.3
-         */
-        TextTracks = "TextTracks",
-
-        /**
-         * AudioTracks (AT)
-         *
-         * This feature is for a device or app that supports Audio Tracks.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.4
-         */
-        AudioTracks = "AudioTracks",
-
-        /**
-         * AudioAdvance (AA)
-         *
-         * This feature is for a device or app that supports playing audio during fast and slow advance and rewind
-         * (e.g., while playback speed is not 1). A device that supports this feature may only support playing audio
-         * during certain speeds.
-         *
-         * A cluster implementing AA shall implement AS.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.5
-         */
-        AudioAdvance = "AudioAdvance"
-    }
-
     /**
      * This structure defines a playback position within a media stream being played.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4
      */
-    export const TlvPlaybackPosition = TlvObject({
+    export interface PlaybackPosition {
         /**
          * This field shall indicate the time when the position was last updated.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4.1
          */
-        updatedAt: TlvField(0, TlvEpochUs),
+        updatedAt: number | bigint;
 
         /**
          * This field shall indicate the associated discrete position within the media stream, in milliseconds from the
@@ -106,22 +50,17 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4.2
          */
-        position: TlvField(1, TlvNullable(TlvUInt64))
-    });
+        position: number | bigint | null;
+    }
 
     /**
-     * This structure defines a playback position within a media stream being played.
+     * This command is used to seek to a specific position in the media.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4
-     */
-    export interface PlaybackPosition extends TypeFromSchema<typeof TlvPlaybackPosition> {}
-
-    /**
-     * Input to the MediaPlayback seek command
+     * Upon receipt, this shall change the playback position in the media to the given position.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11
      */
-    export const TlvSeekRequest = TlvObject({
+    export interface SeekRequest {
         /**
          * This field shall indicate the position (in milliseconds) in the media to seek to. In case the position falls
          * in the middle of a frame, the server shall set the position to the beginning of that frame and set the
@@ -132,15 +71,8 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11.1
          */
-        position: TlvField(0, TlvUInt64)
-    });
-
-    /**
-     * Input to the MediaPlayback seek command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11
-     */
-    export interface SeekRequest extends TypeFromSchema<typeof TlvSeekRequest> {}
+        position: number | bigint;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
@@ -180,111 +112,27 @@ export namespace MediaPlayback {
     }
 
     /**
-     * Thrown for cluster status code {@link Status.InvalidStateForCommand}.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
-     */
-    export class InvalidStateForCommandError extends StatusResponseError {
-        constructor(
-            message = "Requested playback command is invalid in the current playback state",
-            code = GlobalStatus.Failure,
-            clusterCode = Status.InvalidStateForCommand
-        ) {
-            super(message, code, clusterCode);
-        }
-    }
-
-    /**
-     * Thrown for cluster status code {@link Status.NotAllowed}.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
-     */
-    export class NotAllowedError extends StatusResponseError {
-        constructor(
-            message = "Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed",
-            code = GlobalStatus.Failure,
-            clusterCode = Status.NotAllowed
-        ) {
-            super(message, code, clusterCode);
-        }
-    }
-
-    /**
-     * Thrown for cluster status code {@link Status.NotActive}.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
-     */
-    export class NotActiveError extends StatusResponseError {
-        constructor(
-            message = "This endpoint is not active for playback",
-            code = GlobalStatus.Failure,
-            clusterCode = Status.NotActive
-        ) {
-            super(message, code, clusterCode);
-        }
-    }
-
-    /**
-     * Thrown for cluster status code {@link Status.SpeedOutOfRange}.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
-     */
-    export class SpeedOutOfRangeError extends StatusResponseError {
-        constructor(
-            message = "The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction",
-            code = GlobalStatus.Failure,
-            clusterCode = Status.SpeedOutOfRange
-        ) {
-            super(message, code, clusterCode);
-        }
-    }
-
-    /**
-     * Thrown for cluster status code {@link Status.SeekOutOfRange}.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
-     */
-    export class SeekOutOfRangeError extends StatusResponseError {
-        constructor(
-            message = "The Seek Command was issued with a value of position outside of the allowed seek range of the media",
-            code = GlobalStatus.Failure,
-            clusterCode = Status.SeekOutOfRange
-        ) {
-            super(message, code, clusterCode);
-        }
-    }
-
-    /**
      * This command is used to indicate the status of the command that was issued by the client.
      *
      * This command shall be generated in response to various Playback Commands.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12
      */
-    export const TlvPlaybackResponse = TlvObject({
+    export interface PlaybackResponse {
         /**
          * This field shall indicate the status of the command which resulted in this response.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12.1
          */
-        status: TlvField(0, TlvEnum<Status>()),
+        status: Status;
 
         /**
          * This field shall indicate Optional app-specific data.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12.2
          */
-        data: TlvOptionalField(1, TlvString)
-    });
-
-    /**
-     * This command is used to indicate the status of the command that was issued by the client.
-     *
-     * This command shall be generated in response to various Playback Commands.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12
-     */
-    export interface PlaybackResponse extends TypeFromSchema<typeof TlvPlaybackResponse> {}
+        data?: string;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.3
@@ -398,14 +246,14 @@ export namespace MediaPlayback {
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6
      */
-    export const TlvTrackAttributes = TlvObject({
+    export interface TrackAttributes {
         /**
          * The value is a String containing one of the standard Tags for Identifying Languages RFC 5646, which
          * identifies the primary language used in the Track.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.1
          */
-        languageCode: TlvField(0, TlvString.bound({ maxLength: 32 })),
+        languageCode: string;
 
         /**
          * This is a list of enumerated CharacteristicEnum values that indicate a purpose, trait or feature associated
@@ -413,7 +261,7 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.2
          */
-        characteristics: TlvOptionalField(1, TlvNullable(TlvArray(TlvEnum<Characteristic>()))),
+        characteristics?: Characteristic[] | null;
 
         /**
          * The value is a String containing a user displayable name for the Track. A value of null shall indicate that
@@ -421,57 +269,48 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.3
          */
-        displayName: TlvOptionalField(2, TlvNullable(TlvString.bound({ maxLength: 256 })))
-    });
-
-    /**
-     * This structure includes the attributes associated with a Text/Audio Track
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6
-     */
-    export interface TrackAttributes extends TypeFromSchema<typeof TlvTrackAttributes> {}
+        displayName?: string | null;
+    }
 
     /**
      * This structure defines a uniquely identifiable Text Track or Audio Track.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5
      */
-    export const TlvTrack = TlvObject({
+    export interface Track {
         /**
          * This field shall indicate the Identifier for the Track which is unique within the Track catalog. The Track
          * catalog contains all the Text/Audio tracks corresponding to the main media content.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5.1
          */
-        id: TlvField(0, TlvString.bound({ maxLength: 32 })),
+        id: string;
 
         /**
          * This field shall indicate the Attributes associated to the Track, like languageCode.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5.2
          */
-        trackAttributes: TlvField(1, TlvTrackAttributes)
-    });
+        trackAttributes: TrackAttributes;
+    }
 
     /**
-     * This structure defines a uniquely identifiable Text Track or Audio Track.
+     * This command is used to activate a specific Audio Track for the media being played.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5
-     */
-    export interface Track extends TypeFromSchema<typeof TlvTrack> {}
-
-    /**
-     * Input to the MediaPlayback activateAudioTrack command
+     * Upon receipt, the server shall set the active Audio Track to the one identified by the TrackID in the Track
+     * catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not correspond to
+     * the streaming media OR no media is being streamed at the time of receipt of this command, the server will return
+     * an error status of INVALID_ARGUMENT.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13
      */
-    export const TlvActivateAudioTrackRequest = TlvObject({
+    export interface ActivateAudioTrackRequest {
         /**
          * This field shall indicate the Audio Track to activate.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13.1
          */
-        trackId: TlvField(0, TlvString.bound({ maxLength: 32 })),
+        trackId: string;
 
         /**
          * This value is the index field of the OutputInfoStruct from the OutputList attribute (from the AudioOutput
@@ -481,43 +320,45 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13.2
          */
-        audioOutputIndex: TlvOptionalField(1, TlvNullable(TlvUInt8))
-    });
+        audioOutputIndex?: number | null;
+    }
 
     /**
-     * Input to the MediaPlayback activateAudioTrack command
+     * This command is used to activate a specific Text Track for the media being played.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13
-     */
-    export interface ActivateAudioTrackRequest extends TypeFromSchema<typeof TlvActivateAudioTrackRequest> {}
-
-    /**
-     * Input to the MediaPlayback activateTextTrack command
+     * Upon receipt, the server shall set the active Text Track to the one identified by the TrackID in the Track
+     * catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not correspond to
+     * the streaming media OR no media is being streamed at the time of receipt of this command, the server shall return
+     * an error status of INVALID_ARGUMENT.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14
      */
-    export const TlvActivateTextTrackRequest = TlvObject({
+    export interface ActivateTextTrackRequest {
         /**
          * This field shall indicate the Text Track to activate.
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14.1
          */
-        trackId: TlvField(0, TlvString.bound({ maxLength: 32 }))
-    });
+        trackId: string;
+    }
 
     /**
-     * Input to the MediaPlayback activateTextTrack command
+     * This command is used to rewind the media.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14
-     */
-    export interface ActivateTextTrackRequest extends TypeFromSchema<typeof TlvActivateTextTrackRequest> {}
-
-    /**
-     * Input to the MediaPlayback rewind command
+     * Upon receipt, this shall start playback of the media backward in case the media is currently playing in the
+     * forward direction or is not playing. If the playback is already happening in the backwards direction receipt of
+     * this command shall increase the speed of the media playback backwards.
+     *
+     * Different "rewind" speeds may be reflected on the media playback device based upon the number of sequential calls
+     * to this function and the capability of the device. This is to avoid needing to define every speed (multiple fast,
+     * slow motion, etc). If the PlaybackSpeed attribute is supported it shall be updated to reflect the new speed of
+     * playback. If the playback speed cannot be changed for the media being played(for example, in live streaming
+     * content not supporting seek), the status of NOT_ALLOWED shall be returned. If the playback speed has reached the
+     * maximum supported speed for media playing backwards, the status of SPEED_OUT_OF_RANGE shall be returned.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7
      */
-    export const TlvRewindRequest = TlvObject({
+    export interface RewindRequest {
         /**
          * This field shall indicate whether audio should be unmuted by the player during rewind.
          *
@@ -526,22 +367,26 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7.1
          */
-        audioAdvanceUnmuted: TlvOptionalField(0, TlvBoolean)
-    });
+        audioAdvanceUnmuted?: boolean;
+    }
 
     /**
-     * Input to the MediaPlayback rewind command
+     * This command is used to fast forward the media.
      *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7
-     */
-    export interface RewindRequest extends TypeFromSchema<typeof TlvRewindRequest> {}
-
-    /**
-     * Input to the MediaPlayback fastForward command
+     * Upon receipt, this shall start playback of the media in the forward direction in case the media is currently
+     * playing in the backward direction or is not playing. If the playback is already happening in the forward
+     * direction receipt of this command shall increase the speed of the media playback.
+     *
+     * Different "fast-forward" speeds may be reflected on the media playback device based upon the number of sequential
+     * calls to this function and the capability of the device. This is to avoid needing to define every speed (multiple
+     * fast, slow motion, etc). If the PlaybackSpeed attribute is supported it shall be updated to reflect the new speed
+     * of playback. If the playback speed cannot be changed for the media being played(for example, in live streaming
+     * content not supporting seek), the status of NOT_ALLOWED shall be returned. If the playback speed has reached the
+     * maximum supported speed for media playing forward, the status of SPEED_OUT_OF_RANGE shall be returned.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8
      */
-    export const TlvFastForwardRequest = TlvObject({
+    export interface FastForwardRequest {
         /**
          * This field shall indicate whether audio should be unmuted by the player during fast forward.
          *
@@ -550,15 +395,8 @@ export namespace MediaPlayback {
          *
          * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8.1
          */
-        audioAdvanceUnmuted: TlvOptionalField(0, TlvBoolean)
-    });
-
-    /**
-     * Input to the MediaPlayback fastForward command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8
-     */
-    export interface FastForwardRequest extends TypeFromSchema<typeof TlvFastForwardRequest> {}
+        audioAdvanceUnmuted?: boolean;
+    }
 
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.1
@@ -586,6 +424,683 @@ export namespace MediaPlayback {
     }
 
     /**
+     * This command is used to skip forward in the media.
+     *
+     * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.9
+     */
+    export interface SkipForwardRequest {
+        /**
+         * This field shall indicate the duration of the time span to skip forward in the media, in milliseconds. In
+         * case the resulting position falls in the middle of a frame, the server shall set the position to the
+         * beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If the resultant
+         * position falls beyond the furthest valid position in the media the client may seek forward to, the position
+         * should be set to that furthest valid position. If the SampledPosition attribute is supported it shall be
+         * updated on the cluster accordingly.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.9.1
+         */
+        deltaPositionMilliseconds: number | bigint;
+    }
+
+    /**
+     * This command is used to skip backward in the media.
+     *
+     * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.10
+     */
+    export interface SkipBackwardRequest {
+        /**
+         * This field shall indicate the duration of the time span to skip backward in the media, in milliseconds. In
+         * case the resulting position falls in the middle of a frame, the server shall set the position to the
+         * beginning of that frame and set the SampledPosition attribute on the cluster accordingly. If the resultant
+         * position falls before the earliest valid position to which a client may seek back to, the position should be
+         * set to that earliest valid position. If the SampledPosition attribute is supported it shall be updated on the
+         * cluster accordingly.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.10.1
+         */
+        deltaPositionMilliseconds: number | bigint;
+    }
+
+    /**
+     * If supported, this event shall be generated when there is a change in any of the supported attributes of the
+     * Media Playback cluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1
+     */
+    export interface StateChangedEvent {
+        /**
+         * This field shall indicate the updated playback state as defined by the CurrentState attribute, and has the
+         * same constraint as that attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.1
+         */
+        currentState: PlaybackState;
+
+        /**
+         * This field shall indicate the updated start time as defined by the StartTime attribute, and has the same
+         * constraint as that attribute.
+         *
+         * This field value shall be 0 when the value of the StartTime attribute is NULL.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.2
+         */
+        startTime?: number | bigint;
+
+        /**
+         * This field shall indicate the updated duration as defined by the Duration attribute, and has the same
+         * constraint as that attribute.
+         *
+         * This field value shall be 0 when the value of the Duration attribute is NULL.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.3
+         */
+        duration?: number | bigint;
+
+        /**
+         * This field shall indicate the updated position of playback as defined by the SampledPosition attribute, and
+         * has the same constraint as that attribute.
+         *
+         * The UpdatedAt field value of the PlaybackPositionStruct shall be 0, and the Position field value of the
+         * PlaybackPositionStruct shall be NULL, when the value of the SampledPosition attribute is NULL.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.4
+         */
+        sampledPosition?: PlaybackPosition;
+
+        /**
+         * This field shall indicate the updated speed at which the current media is being played as defined by the
+         * PlaybackSpeed attribute, and has the same constraint as that attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.5
+         */
+        playbackSpeed?: number;
+
+        /**
+         * This field shall indicate the updated start of the seek range end as defined by the SeekRangeEnd attribute,
+         * and has the same constraint as that attribute.
+         *
+         * This field value shall be 0 when the value of the SeekRangeEnd attribute is NULL.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.7
+         */
+        seekRangeEnd?: number | bigint;
+
+        /**
+         * This field shall indicate the updated start of the seek range start as defined by the SeekRangeStart
+         * attribute, and has the same constraint as that attribute.
+         *
+         * This field value shall be 0 when the value of the SeekRangeStart attribute is NULL.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.6
+         */
+        seekRangeStart?: number | bigint;
+
+        /**
+         * This field shall indicate Optional app-specific data.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.8
+         */
+        data?: Bytes;
+
+        /**
+         * This field shall indicate whether audio is unmuted by the player due to a FF or REW command. This field is
+         * only meaningful when the PlaybackSpeed is present and not equal to 0 (paused) or 1 (normal playback).
+         * Typically the value will be false (muted), however, some players will play audio during certain fast forward
+         * and rewind speeds, and in these cases, the value will be true (not muted).
+         *
+         * A value of true does not guarantee that audio can be heard by the user since the speaker may be muted, turned
+         * down to a low level and/or unplugged.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1.9
+         */
+        audioAdvanceUnmuted?: boolean;
+    }
+
+    export interface Attributes {
+        currentState: PlaybackState;
+        startTime: number | bigint | null;
+        duration: number | bigint | null;
+        sampledPosition: PlaybackPosition | null;
+        playbackSpeed: number;
+        seekRangeEnd: number | bigint | null;
+        seekRangeStart: number | bigint | null;
+        activeAudioTrack: Track | null;
+        availableAudioTracks: Track[] | null;
+        activeTextTrack: Track | null;
+        availableTextTracks: Track[] | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "currentState" },
+            {
+                flags: { advancedSeek: true },
+                mandatory: "startTime" | "duration" | "sampledPosition" | "playbackSpeed" | "seekRangeEnd" | "seekRangeStart"
+            },
+            { flags: { audioTracks: true }, mandatory: "activeAudioTrack" | "availableAudioTracks" },
+            { flags: { textTracks: true }, mandatory: "activeTextTrack" | "availableTextTracks" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base, Commands.AdvancedSeek, Commands.AudioTracks, Commands.TextTracks, Commands.VariableSpeed {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * This command is used to start playback of the media.
+             *
+             * Upon receipt, this shall play media. If content is currently in a FastForward or Rewind state. Play shall
+             * return media to normal playback speed.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.1
+             */
+            play(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to pause playback of the media.
+             *
+             * Upon receipt, this shall pause playback of the media.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.2
+             */
+            pause(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to stop playback of the media.
+             *
+             * Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This may
+             * navigate the user back to the location from where the media was originally launched.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.3
+             */
+            stop(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to start playback of the media from the beginning.
+             *
+             * Upon receipt, this shall Start Over with the current media playback item.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.4
+             */
+            startOver(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to go back to the previous media playback item.
+             *
+             * Upon receipt, this shall cause the handler to be invoked for "Previous". User experience is
+             * context-specific. This will often Go back to the previous media playback item.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.5
+             */
+            previous(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to go to the next media playback item.
+             *
+             * Upon receipt, this shall cause the handler to be invoked for "Next". User experience is context-specific.
+             * This will often Go forward to the next media playback item.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.6
+             */
+            next(): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to skip forward in the media.
+             *
+             * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.9
+             */
+            skipForward(request: SkipForwardRequest): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to skip backward in the media.
+             *
+             * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.10
+             */
+            skipBackward(request: SkipBackwardRequest): MaybePromise<PlaybackResponse>;
+        }
+
+        export interface AdvancedSeek {
+            /**
+             * This command is used to seek to a specific position in the media.
+             *
+             * Upon receipt, this shall change the playback position in the media to the given position.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11
+             */
+            seek(request: SeekRequest): MaybePromise<PlaybackResponse>;
+        }
+
+        export interface AudioTracks {
+            /**
+             * This command is used to activate a specific Audio Track for the media being played.
+             *
+             * Upon receipt, the server shall set the active Audio Track to the one identified by the TrackID in the
+             * Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not
+             * correspond to the streaming media OR no media is being streamed at the time of receipt of this command,
+             * the server will return an error status of INVALID_ARGUMENT.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13
+             */
+            activateAudioTrack(request: ActivateAudioTrackRequest): MaybePromise;
+        }
+
+        export interface TextTracks {
+            /**
+             * This command is used to activate a specific Text Track for the media being played.
+             *
+             * Upon receipt, the server shall set the active Text Track to the one identified by the TrackID in the
+             * Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not
+             * correspond to the streaming media OR no media is being streamed at the time of receipt of this command,
+             * the server shall return an error status of INVALID_ARGUMENT.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14
+             */
+            activateTextTrack(request: ActivateTextTrackRequest): MaybePromise;
+
+            /**
+             * This command is used to deactivate a specific Text Track for the media being played.
+             *
+             * If a Text Track is active (i.e. being displayed), upon receipt of this command, the server shall stop
+             * displaying it.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.15
+             */
+            deactivateTextTrack(): MaybePromise;
+        }
+
+        export interface VariableSpeed {
+            /**
+             * This command is used to rewind the media.
+             *
+             * Upon receipt, this shall start playback of the media backward in case the media is currently playing in
+             * the forward direction or is not playing. If the playback is already happening in the backwards direction
+             * receipt of this command shall increase the speed of the media playback backwards.
+             *
+             * Different "rewind" speeds may be reflected on the media playback device based upon the number of
+             * sequential calls to this function and the capability of the device. This is to avoid needing to define
+             * every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is supported it shall be
+             * updated to reflect the new speed of playback. If the playback speed cannot be changed for the media being
+             * played(for example, in live streaming content not supporting seek), the status of NOT_ALLOWED shall be
+             * returned. If the playback speed has reached the maximum supported speed for media playing backwards, the
+             * status of SPEED_OUT_OF_RANGE shall be returned.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7
+             */
+            rewind(request: RewindRequest): MaybePromise<PlaybackResponse>;
+
+            /**
+             * This command is used to fast forward the media.
+             *
+             * Upon receipt, this shall start playback of the media in the forward direction in case the media is
+             * currently playing in the backward direction or is not playing. If the playback is already happening in
+             * the forward direction receipt of this command shall increase the speed of the media playback.
+             *
+             * Different "fast-forward" speeds may be reflected on the media playback device based upon the number of
+             * sequential calls to this function and the capability of the device. This is to avoid needing to define
+             * every speed (multiple fast, slow motion, etc). If the PlaybackSpeed attribute is supported it shall be
+             * updated to reflect the new speed of playback. If the playback speed cannot be changed for the media being
+             * played(for example, in live streaming content not supporting seek), the status of NOT_ALLOWED shall be
+             * returned. If the playback speed has reached the maximum supported speed for media playing forward, the
+             * status of SPEED_OUT_OF_RANGE shall be returned.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8
+             */
+            fastForward(request: FastForwardRequest): MaybePromise<PlaybackResponse>;
+        }
+
+        export type Components = [
+            { flags: {}, methods: Base },
+            { flags: { advancedSeek: true }, methods: AdvancedSeek },
+            { flags: { audioTracks: true }, methods: AudioTracks },
+            { flags: { textTracks: true }, methods: TextTracks },
+            { flags: { variableSpeed: true }, methods: VariableSpeed }
+        ];
+    }
+
+    export interface Events {
+        stateChanged: StateChangedEvent;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, optional: "stateChanged" }];
+    }
+    export type Features = "AdvancedSeek" | "VariableSpeed" | "TextTracks" | "AudioTracks" | "AudioAdvance";
+
+    /**
+     * These are optional features supported by MediaPlaybackCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.4
+     */
+    export enum Feature {
+        /**
+         * AdvancedSeek (AS)
+         *
+         * This feature provides access to the time offset location within current playback media and allows for jumping
+         * to a specific location using time offsets. This enables clients to implement more advanced media seeking
+         * behavior in their user interface, for instance a "seek bar".
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.1
+         */
+        AdvancedSeek = "AdvancedSeek",
+
+        /**
+         * VariableSpeed (VS)
+         *
+         * This feature is for a device which supports variable speed playback on media that supports it.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.2
+         */
+        VariableSpeed = "VariableSpeed",
+
+        /**
+         * TextTracks (TT)
+         *
+         * This feature is for a device or app that supports Text Tracks.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.3
+         */
+        TextTracks = "TextTracks",
+
+        /**
+         * AudioTracks (AT)
+         *
+         * This feature is for a device or app that supports Audio Tracks.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.4
+         */
+        AudioTracks = "AudioTracks",
+
+        /**
+         * AudioAdvance (AA)
+         *
+         * This feature is for a device or app that supports playing audio during fast and slow advance and rewind
+         * (e.g., while playback speed is not 1). A device that supports this feature may only support playing audio
+         * during certain speeds.
+         *
+         * A cluster implementing AA shall implement AS.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.4.5
+         */
+        AudioAdvance = "AudioAdvance"
+    }
+
+    /**
+     * This structure defines a playback position within a media stream being played.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4
+     */
+    export const TlvPlaybackPosition = TlvObject({
+        /**
+         * This field shall indicate the time when the position was last updated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4.1
+         */
+        updatedAt: TlvField(0, TlvEpochUs),
+
+        /**
+         * This field shall indicate the associated discrete position within the media stream, in milliseconds from the
+         * beginning of the stream, being associated with the time indicated by the UpdatedAt field. The Position shall
+         * NOT be greater than the duration of the media if duration is specified. The Position shall NOT be greater
+         * than the time difference between current time and start time of the media when start time is specified.
+         *
+         * A value of null shall indicate that playback position is not applicable for the current state of the media
+         * playback (For example : Live media with no known duration and where seek is not supported).
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.4.2
+         */
+        position: TlvField(1, TlvNullable(TlvUInt64))
+    });
+
+    /**
+     * Input to the MediaPlayback seek command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11
+     */
+    export const TlvSeekRequest = TlvObject({
+        /**
+         * This field shall indicate the position (in milliseconds) in the media to seek to. In case the position falls
+         * in the middle of a frame, the server shall set the position to the beginning of that frame and set the
+         * SampledPosition attribute on the cluster accordingly. If the position falls before the earliest valid
+         * position or beyond the furthest valid position to which a client may seek back or forward to respectively,
+         * the status of SEEK_OUT_OF_RANGE shall be returned and no change shall be made to the position of the
+         * playback.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.11.1
+         */
+        position: TlvField(0, TlvUInt64)
+    });
+
+    /**
+     * Thrown for cluster status code {@link Status.InvalidStateForCommand}.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
+     */
+    export class InvalidStateForCommandError extends StatusResponseError {
+        constructor(
+            message = "Requested playback command is invalid in the current playback state",
+            code = GlobalStatus.Failure,
+            clusterCode = Status.InvalidStateForCommand
+        ) {
+            super(message, code, clusterCode);
+        }
+    }
+
+    /**
+     * Thrown for cluster status code {@link Status.NotAllowed}.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
+     */
+    export class NotAllowedError extends StatusResponseError {
+        constructor(
+            message = "Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed",
+            code = GlobalStatus.Failure,
+            clusterCode = Status.NotAllowed
+        ) {
+            super(message, code, clusterCode);
+        }
+    }
+
+    /**
+     * Thrown for cluster status code {@link Status.NotActive}.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
+     */
+    export class NotActiveError extends StatusResponseError {
+        constructor(
+            message = "This endpoint is not active for playback",
+            code = GlobalStatus.Failure,
+            clusterCode = Status.NotActive
+        ) {
+            super(message, code, clusterCode);
+        }
+    }
+
+    /**
+     * Thrown for cluster status code {@link Status.SpeedOutOfRange}.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
+     */
+    export class SpeedOutOfRangeError extends StatusResponseError {
+        constructor(
+            message = "The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction",
+            code = GlobalStatus.Failure,
+            clusterCode = Status.SpeedOutOfRange
+        ) {
+            super(message, code, clusterCode);
+        }
+    }
+
+    /**
+     * Thrown for cluster status code {@link Status.SeekOutOfRange}.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.2
+     */
+    export class SeekOutOfRangeError extends StatusResponseError {
+        constructor(
+            message = "The Seek Command was issued with a value of position outside of the allowed seek range of the media",
+            code = GlobalStatus.Failure,
+            clusterCode = Status.SeekOutOfRange
+        ) {
+            super(message, code, clusterCode);
+        }
+    }
+
+    /**
+     * This command is used to indicate the status of the command that was issued by the client.
+     *
+     * This command shall be generated in response to various Playback Commands.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12
+     */
+    export const TlvPlaybackResponse = TlvObject({
+        /**
+         * This field shall indicate the status of the command which resulted in this response.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12.1
+         */
+        status: TlvField(0, TlvEnum<Status>()),
+
+        /**
+         * This field shall indicate Optional app-specific data.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.12.2
+         */
+        data: TlvOptionalField(1, TlvString)
+    });
+
+    /**
+     * This structure includes the attributes associated with a Text/Audio Track
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6
+     */
+    export const TlvTrackAttributes = TlvObject({
+        /**
+         * The value is a String containing one of the standard Tags for Identifying Languages RFC 5646, which
+         * identifies the primary language used in the Track.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.1
+         */
+        languageCode: TlvField(0, TlvString.bound({ maxLength: 32 })),
+
+        /**
+         * This is a list of enumerated CharacteristicEnum values that indicate a purpose, trait or feature associated
+         * with the Track. A value of null shall indicate that there are no Characteristics corresponding to the Track.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.2
+         */
+        characteristics: TlvOptionalField(1, TlvNullable(TlvArray(TlvEnum<Characteristic>()))),
+
+        /**
+         * The value is a String containing a user displayable name for the Track. A value of null shall indicate that
+         * there is no DisplayName corresponding to the Track.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.6.3
+         */
+        displayName: TlvOptionalField(2, TlvNullable(TlvString.bound({ maxLength: 256 })))
+    });
+
+    /**
+     * This structure defines a uniquely identifiable Text Track or Audio Track.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5
+     */
+    export const TlvTrack = TlvObject({
+        /**
+         * This field shall indicate the Identifier for the Track which is unique within the Track catalog. The Track
+         * catalog contains all the Text/Audio tracks corresponding to the main media content.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5.1
+         */
+        id: TlvField(0, TlvString.bound({ maxLength: 32 })),
+
+        /**
+         * This field shall indicate the Attributes associated to the Track, like languageCode.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.5.5.2
+         */
+        trackAttributes: TlvField(1, TlvTrackAttributes)
+    });
+
+    /**
+     * Input to the MediaPlayback activateAudioTrack command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13
+     */
+    export const TlvActivateAudioTrackRequest = TlvObject({
+        /**
+         * This field shall indicate the Audio Track to activate.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13.1
+         */
+        trackId: TlvField(0, TlvString.bound({ maxLength: 32 })),
+
+        /**
+         * This value is the index field of the OutputInfoStruct from the OutputList attribute (from the AudioOutput
+         * cluster) and indicates which audio output the Audio Track should be played on. This field is absent for Text
+         * Tracks and only present for Audio Tracks. A value of null shall indicate that the server can choose the audio
+         * output(s) to play the Audio Track on.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.13.2
+         */
+        audioOutputIndex: TlvOptionalField(1, TlvNullable(TlvUInt8))
+    });
+
+    /**
+     * Input to the MediaPlayback activateTextTrack command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14
+     */
+    export const TlvActivateTextTrackRequest = TlvObject({
+        /**
+         * This field shall indicate the Text Track to activate.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.14.1
+         */
+        trackId: TlvField(0, TlvString.bound({ maxLength: 32 }))
+    });
+
+    /**
+     * Input to the MediaPlayback rewind command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7
+     */
+    export const TlvRewindRequest = TlvObject({
+        /**
+         * This field shall indicate whether audio should be unmuted by the player during rewind.
+         *
+         * A value of true does not guarantee that audio can be heard by the user since the speaker may be muted, turned
+         * down to a low level and/or unplugged.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.7.1
+         */
+        audioAdvanceUnmuted: TlvOptionalField(0, TlvBoolean)
+    });
+
+    /**
+     * Input to the MediaPlayback fastForward command
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8
+     */
+    export const TlvFastForwardRequest = TlvObject({
+        /**
+         * This field shall indicate whether audio should be unmuted by the player during fast forward.
+         *
+         * A value of true does not guarantee that audio can be heard by the user since the speaker may be muted, turned
+         * down to a low level and/or unplugged.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.8.1
+         */
+        audioAdvanceUnmuted: TlvOptionalField(0, TlvBoolean)
+    });
+
+    /**
      * Input to the MediaPlayback skipForward command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.9
@@ -605,13 +1120,6 @@ export namespace MediaPlayback {
     });
 
     /**
-     * Input to the MediaPlayback skipForward command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.9
-     */
-    export interface SkipForwardRequest extends TypeFromSchema<typeof TlvSkipForwardRequest> {}
-
-    /**
      * Input to the MediaPlayback skipBackward command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.10
@@ -629,13 +1137,6 @@ export namespace MediaPlayback {
          */
         deltaPositionMilliseconds: TlvField(0, TlvUInt64)
     });
-
-    /**
-     * Input to the MediaPlayback skipBackward command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.7.10
-     */
-    export interface SkipBackwardRequest extends TypeFromSchema<typeof TlvSkipBackwardRequest> {}
 
     /**
      * Body of the MediaPlayback stateChanged event
@@ -730,13 +1231,6 @@ export namespace MediaPlayback {
          */
         audioAdvanceUnmuted: TlvOptionalField(8, TlvBoolean)
     });
-
-    /**
-     * Body of the MediaPlayback stateChanged event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 6.10.8.1
-     */
-    export interface StateChangedEvent extends TypeFromSchema<typeof TlvStateChangedEvent> {}
 
     /**
      * A MediaPlaybackCluster supports these elements if it supports feature AdvancedSeek.
@@ -1252,8 +1746,22 @@ export namespace MediaPlayback {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x506);
+    export const name = "MediaPlayback" as const;
+    export const revision = 2;
+    export const schema = MediaPlaybackModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: MediaPlayback;
 }
 
 export type MediaPlaybackCluster = MediaPlayback.Cluster;
 export const MediaPlaybackCluster = MediaPlayback.Cluster;
 ClusterRegistry.register(MediaPlayback.Complete);
+ClusterNamespace.define(MediaPlayback);
+export interface MediaPlayback extends ClusterTyping { Attributes: MediaPlayback.Attributes & { Components: MediaPlayback.Attributes.Components }; Commands: MediaPlayback.Commands & { Components: MediaPlayback.Commands.Components }; Events: MediaPlayback.Events & { Components: MediaPlayback.Events.Components }; Features: MediaPlayback.Features }

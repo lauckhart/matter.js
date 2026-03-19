@@ -22,12 +22,131 @@ import { TlvString } from "../tlv/TlvString.js";
 import { Namespace } from "../globals/Namespace.js";
 import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvField, TlvObject } from "../tlv/TlvObject.js";
-import { TlvVendorId } from "../datatype/VendorId.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { Identity } from "@matter/general";
+import { TlvVendorId, VendorId } from "../datatype/VendorId.js";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ModeSelect as ModeSelectModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace ModeSelect {
+    /**
+     * A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.1
+     */
+    export interface SemanticTag {
+        /**
+         * This field shall indicate a manufacturer code (Vendor ID), and the Value field shall indicate a semantic tag
+         * defined by the manufacturer. Each manufacturer code supports a single namespace of values. The same
+         * manufacturer code and semantic tag value in separate cluster instances are part of the same namespace and
+         * have the same meaning. For example: a manufacturer tag meaning "pinch", has the same meaning in a cluster
+         * whose purpose is to choose the amount of sugar, or amount of salt.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.1.2
+         */
+        mfgCode: VendorId;
+
+        /**
+         * This field shall indicate the semantic tag within a semantic tag namespace which is either manufacturer
+         * specific or standard. For semantic tags in a standard namespace, see Standard Namespace.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.1.1
+         */
+        value: number;
+    }
+
+    /**
+     * This is a struct representing a possible mode of the server.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2
+     */
+    export interface ModeOption {
+        /**
+         * This field is readable text that describes the mode option that can be used by a client to indicate to the
+         * user what this option means. This field is meant to be readable and understandable by the user.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2.1
+         */
+        label: string;
+
+        /**
+         * The Mode field is used to identify the mode option. The value shall be unique for every item in the
+         * SupportedModes attribute.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2.2
+         */
+        mode: number;
+
+        /**
+         * This field is a list of semantic tags that map to the mode option. This may be used by clients to determine
+         * the meaning of the mode option as defined in a standard or manufacturer specific namespace. Semantic tags can
+         * help clients look for options that meet certain criteria. A semantic tag shall be either a standard tag or
+         * manufacturer specific tag as defined in each SemanticTagStruct list entry.
+         *
+         * A mode option may have more than one semantic tag. A mode option may be mapped to a mixture of standard and
+         * manufacturer specific semantic tags.
+         *
+         * All standard semantic tags are from a single namespace indicated by the StandardNamespace attribute.
+         *
+         * For example: A mode labeled "100%" can have both the HIGH (MS) and MAX (standard) semantic tag. Clients
+         * seeking the option for either HIGH or MAX will find the same option in this case.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2.3
+         */
+        semanticTags: SemanticTag[];
+    }
+
+    /**
+     * On receipt of this command, if the NewMode field indicates a valid mode transition within the supported list, the
+     * server shall set the CurrentMode attribute to the NewMode value, otherwise, the server shall respond with an
+     * INVALID_COMMAND status response.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 1.9.7.1
+     */
+    export interface ChangeToModeRequest {
+        newMode: number;
+    }
+
+    export interface Attributes {
+        description: string;
+        standardNamespace: Namespace | null;
+        supportedModes: ModeOption[];
+        currentMode: number;
+        startUpMode: number | null;
+        onMode: number | null;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            {
+                flags: {},
+                mandatory: "description" | "standardNamespace" | "supportedModes" | "currentMode",
+                optional: "startUpMode"
+            },
+            { flags: { onOff: true }, mandatory: "onMode" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * On receipt of this command, if the NewMode field indicates a valid mode transition within the supported
+             * list, the server shall set the CurrentMode attribute to the NewMode value, otherwise, the server shall
+             * respond with an INVALID_COMMAND status response.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 1.9.7.1
+             */
+            changeToMode(request: ChangeToModeRequest): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "OnOff";
+
     /**
      * These are optional features supported by ModeSelectCluster.
      *
@@ -72,13 +191,6 @@ export namespace ModeSelect {
     });
 
     /**
-     * A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.1
-     */
-    export interface SemanticTag extends TypeFromSchema<typeof TlvSemanticTag> {}
-
-    /**
      * This is a struct representing a possible mode of the server.
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2
@@ -120,25 +232,11 @@ export namespace ModeSelect {
     });
 
     /**
-     * This is a struct representing a possible mode of the server.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.9.5.2
-     */
-    export interface ModeOption extends TypeFromSchema<typeof TlvModeOption> {}
-
-    /**
      * Input to the ModeSelect changeToMode command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 1.9.7.1
      */
     export const TlvChangeToModeRequest = TlvObject({ newMode: TlvField(0, TlvUInt8) });
-
-    /**
-     * Input to the ModeSelect changeToMode command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 1.9.7.1
-     */
-    export interface ChangeToModeRequest extends TypeFromSchema<typeof TlvChangeToModeRequest> {}
 
     /**
      * A ModeSelectCluster supports these elements if it supports feature OnOff.
@@ -314,8 +412,20 @@ export namespace ModeSelect {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x50);
+    export const name = "ModeSelect" as const;
+    export const revision = 2;
+    export const schema = ModeSelectModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: ModeSelect;
 }
 
 export type ModeSelectCluster = ModeSelect.Cluster;
 export const ModeSelectCluster = ModeSelect.Cluster;
 ClusterRegistry.register(ModeSelect.Complete);
+ClusterNamespace.define(ModeSelect);
+export interface ModeSelect extends ClusterTyping { Attributes: ModeSelect.Attributes & { Components: ModeSelect.Attributes.Components }; Commands: ModeSelect.Commands & { Components: ModeSelect.Commands.Components }; Features: ModeSelect.Features }

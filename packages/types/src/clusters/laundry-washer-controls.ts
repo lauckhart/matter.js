@@ -15,35 +15,11 @@ import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { LaundryWasherControls as LaundryWasherControlsModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace LaundryWasherControls {
-    /**
-     * These are optional features supported by LaundryWasherControlsCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 8.6.4
-     */
-    export enum Feature {
-        /**
-         * Spin (SPIN)
-         *
-         * This feature indicates multiple spin speeds are supported in at least one supported mode. Note that some
-         * modes may not support multiple spin speeds even if this feature is supported.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 8.6.4.1
-         */
-        Spin = "Spin",
-
-        /**
-         * Rinse (RINSE)
-         *
-         * This feature indicates multiple rinse cycles are supported in at least one supported mode. Note that some
-         * modes may not support selection of the number of rinse cycles even if this feature is supported.
-         *
-         * @see {@link MatterSpecification.v142.Cluster} § 8.6.4.2
-         */
-        Rinse = "Rinse"
-    }
-
     /**
      * The NumberOfRinsesEnum provides a representation of the number of rinses that will be performed for a selected
      * mode. NumberOfRinsesEnum is derived from enum8. It is up to the device manufacturer to determine the mapping
@@ -71,6 +47,49 @@ export namespace LaundryWasherControls {
          * This laundry washer mode performs the maximum number of rinse cycles determined by the manufacturer
          */
         Max = 3
+    }
+
+    export interface Attributes {
+        spinSpeeds: string[];
+        spinSpeedCurrent: number | null;
+        numberOfRinses: NumberOfRinses;
+        supportedRinses: NumberOfRinses[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: { spin: true }, mandatory: "spinSpeeds" | "spinSpeedCurrent" },
+            { flags: { rinse: true }, mandatory: "numberOfRinses" | "supportedRinses" }
+        ];
+    }
+
+    export type Features = "Spin" | "Rinse";
+
+    /**
+     * These are optional features supported by LaundryWasherControlsCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 8.6.4
+     */
+    export enum Feature {
+        /**
+         * Spin (SPIN)
+         *
+         * This feature indicates multiple spin speeds are supported in at least one supported mode. Note that some
+         * modes may not support multiple spin speeds even if this feature is supported.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.6.4.1
+         */
+        Spin = "Spin",
+
+        /**
+         * Rinse (RINSE)
+         *
+         * This feature indicates multiple rinse cycles are supported in at least one supported mode. Note that some
+         * modes may not support selection of the number of rinse cycles even if this feature is supported.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 8.6.4.2
+         */
+        Rinse = "Rinse"
     }
 
     /**
@@ -221,8 +240,18 @@ export namespace LaundryWasherControls {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x53);
+    export const name = "LaundryWasherControls" as const;
+    export const revision = 2;
+    export const schema = LaundryWasherControlsModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: LaundryWasherControls;
 }
 
 export type LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 export const LaundryWasherControlsCluster = LaundryWasherControls.Cluster;
 ClusterRegistry.register(LaundryWasherControls.Complete);
+ClusterNamespace.define(LaundryWasherControls);
+export interface LaundryWasherControls extends ClusterTyping { Attributes: LaundryWasherControls.Attributes & { Components: LaundryWasherControls.Attributes.Components }; Features: LaundryWasherControls.Features }

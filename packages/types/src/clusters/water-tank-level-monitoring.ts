@@ -8,10 +8,50 @@
 
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { ResourceMonitoring } from "./resource-monitoring.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { WaterTankLevelMonitoring as WaterTankLevelMonitoringModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WaterTankLevelMonitoring {
+    export interface Attributes {
+        changeIndication: ResourceMonitoring.ChangeIndication;
+        inPlaceIndicator: boolean;
+        lastChangedTime: number | null;
+        condition: number;
+        degradationDirection: ResourceMonitoring.DegradationDirection;
+        replacementProductList: ResourceMonitoring.ReplacementProduct[];
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "changeIndication", optional: "inPlaceIndicator" | "lastChangedTime" },
+            { flags: { condition: true }, mandatory: "condition" | "degradationDirection" },
+            { flags: { replacementProductList: true }, mandatory: "replacementProductList" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * Upon receipt, the device shall reset the Condition and ChangeIndicator attributes, indicating full
+             * resource availability and readiness for use, as initially configured. Invocation of this command may
+             * cause the LastChangedTime to be updated automatically based on the clock of the server, if the server
+             * supports setting the attribute.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 2.8.7.1
+             */
+            resetCondition(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export type Features = "Condition" | "Warning" | "ReplacementProductList";
+
     export const Base = { ...ResourceMonitoring.Base, id: 0x79, name: "WaterTankLevelMonitoring" } as const;
 
     /**
@@ -43,8 +83,20 @@ export namespace WaterTankLevelMonitoring {
 
     export interface Complete extends Identity<typeof CompleteInstance> {}
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x79);
+    export const name = "WaterTankLevelMonitoring" as const;
+    export const revision = 1;
+    export const schema = WaterTankLevelMonitoringModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WaterTankLevelMonitoring;
 }
 
 export type WaterTankLevelMonitoringCluster = WaterTankLevelMonitoring.Cluster;
 export const WaterTankLevelMonitoringCluster = WaterTankLevelMonitoring.Cluster;
 ClusterRegistry.register(WaterTankLevelMonitoring.Complete);
+ClusterNamespace.define(WaterTankLevelMonitoring);
+export interface WaterTankLevelMonitoring extends ClusterTyping { Attributes: WaterTankLevelMonitoring.Attributes & { Components: WaterTankLevelMonitoring.Attributes.Components }; Commands: WaterTankLevelMonitoring.Commands & { Components: WaterTankLevelMonitoring.Commands.Components }; Features: WaterTankLevelMonitoring.Features }

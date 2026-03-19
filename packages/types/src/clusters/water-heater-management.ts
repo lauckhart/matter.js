@@ -21,35 +21,15 @@ import {
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
-import { AccessLevel } from "@matter/model";
+import { AccessLevel, WaterHeaterManagement as WaterHeaterManagementModel } from "@matter/model";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Priority } from "../globals/Priority.js";
-import { Identity } from "@matter/general";
+import { Identity, MaybePromise } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace WaterHeaterManagement {
-    /**
-     * These are optional features supported by WaterHeaterManagementCluster.
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 9.5.4
-     */
-    export enum Feature {
-        /**
-         * EnergyManagement (EM)
-         *
-         * Allows energy management control of the tank
-         */
-        EnergyManagement = "EnergyManagement",
-
-        /**
-         * TankPercent (TP)
-         *
-         * Supports monitoring the percentage of hot water in the tank
-         */
-        TankPercent = "TankPercent"
-    }
-
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.1
      */
@@ -80,6 +60,33 @@ export namespace WaterHeaterManagement {
         other: BitFlag(4)
     };
 
+    export interface WaterHeaterHeatSource {
+        /**
+         * Immersion Heating Element 1
+         */
+        immersionElement1?: boolean;
+
+        /**
+         * Immersion Heating Element 2
+         */
+        immersionElement2?: boolean;
+
+        /**
+         * Heat pump Heating
+         */
+        heatPump?: boolean;
+
+        /**
+         * Boiler Heating (e.g. Gas or Oil)
+         */
+        boiler?: boolean;
+
+        /**
+         * Other Heating
+         */
+        other?: boolean;
+    }
+
     /**
      * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.2
      */
@@ -93,6 +100,169 @@ export namespace WaterHeaterManagement {
          * Boost is currently active
          */
         Active = 1
+    }
+
+    /**
+     * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3
+     */
+    export interface WaterHeaterBoostInfo {
+        /**
+         * This field shall indicate the time period, in seconds, for which the boost state is activated.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.1
+         */
+        duration: number;
+
+        /**
+         * This field shall indicate whether the boost state shall be automatically canceled once the hot water has
+         * reached either:
+         *
+         *   - the set point temperature (from the thermostat cluster)
+         *
+         *   - the TemporarySetpoint temperature (if specified)
+         *
+         *   - the TargetPercentage (if specified).
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.2
+         */
+        oneShot?: boolean;
+
+        /**
+         * This field shall indicate that the consumer wants the water to be heated quickly. This may cause multiple
+         * heat sources to be activated (e.g. a heat pump and direct electric immersion heating element).
+         *
+         * The choice of which heat sources are activated is manufacturer specific.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.3
+         */
+        emergencyBoost?: boolean;
+
+        /**
+         * This field shall indicate the target temperature to which the water will be heated.
+         *
+         * If included, it shall be used instead of the thermostat cluster set point temperature whilst the boost state
+         * is activated.
+         *
+         * The value of this field shall be within the constraints of the MinHeatSetpointLimit and MaxHeatSetpointLimit
+         * attributes (inclusive), of the thermostat cluster.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.4
+         */
+        temporarySetpoint?: number;
+
+        /**
+         * This field shall indicate the target percentage of hot water in the tank that the TankPercentage attribute
+         * must reach before the heating is switched off.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.5
+         */
+        targetPercentage?: number;
+
+        /**
+         * This field shall indicate the percentage to which the hot water in the tank shall be allowed to fall before
+         * again beginning to reheat it.
+         *
+         * For example if the TargetPercentage was 80%, and the TargetReheat was 40%, then after initial heating to 80%
+         * hot water, the tank may have hot water drawn off until only 40% hot water remains. At this point the heater
+         * will begin to heat back up to 80% of hot water. If this field and the OneShot field were both omitted,
+         * heating would begin again after any water draw which reduced the TankPercentage below 80%.
+         *
+         * This field shall be less than or equal to the TargetPercentage field.
+         *
+         * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3.6
+         */
+        targetReheat?: number;
+    }
+
+    /**
+     * Allows a client to request that the water heater is put into a Boost state.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 9.5.8.1
+     */
+    export interface BoostRequest {
+        boostInfo: WaterHeaterBoostInfo;
+    }
+
+    /**
+     * This event shall be generated whenever a Boost command is accepted.
+     *
+     * The corresponding structure fields within the WaterHeaterBoostInfoStruct are copied from the Boost command.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 9.5.9.1
+     */
+    export interface BoostStartedEvent {
+        boostInfo: WaterHeaterBoostInfo;
+    }
+
+    export interface Attributes {
+        heaterTypes: WaterHeaterHeatSource;
+        heatDemand: WaterHeaterHeatSource;
+        boostState: BoostState;
+        tankVolume: number;
+        estimatedHeatRequired: number | bigint;
+        tankPercentage: number;
+    }
+
+    export namespace Attributes {
+        export type Components = [
+            { flags: {}, mandatory: "heaterTypes" | "heatDemand" | "boostState" },
+            { flags: { energyManagement: true }, mandatory: "tankVolume" | "estimatedHeatRequired" },
+            { flags: { tankPercent: true }, mandatory: "tankPercentage" }
+        ];
+    }
+
+    export interface Commands extends Commands.Base {}
+
+    export namespace Commands {
+        export interface Base {
+            /**
+             * Allows a client to request that the water heater is put into a Boost state.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 9.5.8.1
+             */
+            boost(request: BoostRequest): MaybePromise;
+
+            /**
+             * Allows a client to cancel an ongoing Boost operation.
+             *
+             * This command has no payload.
+             *
+             * @see {@link MatterSpecification.v142.Cluster} § 9.5.8.2
+             */
+            cancelBoost(): MaybePromise;
+        }
+
+        export type Components = [{ flags: {}, methods: Base }];
+    }
+
+    export interface Events {
+        boostStarted: BoostStartedEvent;
+        boostEnded: void;
+    }
+    export namespace Events {
+        export type Components = [{ flags: {}, mandatory: "boostStarted" | "boostEnded" }];
+    }
+    export type Features = "EnergyManagement" | "TankPercent";
+
+    /**
+     * These are optional features supported by WaterHeaterManagementCluster.
+     *
+     * @see {@link MatterSpecification.v142.Cluster} § 9.5.4
+     */
+    export enum Feature {
+        /**
+         * EnergyManagement (EM)
+         *
+         * Allows energy management control of the tank
+         */
+        EnergyManagement = "EnergyManagement",
+
+        /**
+         * TankPercent (TP)
+         *
+         * Supports monitoring the percentage of hot water in the tank
+         */
+        TankPercent = "TankPercent"
     }
 
     /**
@@ -168,11 +338,6 @@ export namespace WaterHeaterManagement {
     });
 
     /**
-     * @see {@link MatterSpecification.v142.Cluster} § 9.5.6.3
-     */
-    export interface WaterHeaterBoostInfo extends TypeFromSchema<typeof TlvWaterHeaterBoostInfo> {}
-
-    /**
      * Input to the WaterHeaterManagement boost command
      *
      * @see {@link MatterSpecification.v142.Cluster} § 9.5.8.1
@@ -180,25 +345,11 @@ export namespace WaterHeaterManagement {
     export const TlvBoostRequest = TlvObject({ boostInfo: TlvField(0, TlvWaterHeaterBoostInfo) });
 
     /**
-     * Input to the WaterHeaterManagement boost command
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 9.5.8.1
-     */
-    export interface BoostRequest extends TypeFromSchema<typeof TlvBoostRequest> {}
-
-    /**
      * Body of the WaterHeaterManagement boostStarted event
      *
      * @see {@link MatterSpecification.v142.Cluster} § 9.5.9.1
      */
     export const TlvBoostStartedEvent = TlvObject({ boostInfo: TlvField(0, TlvWaterHeaterBoostInfo) });
-
-    /**
-     * Body of the WaterHeaterManagement boostStarted event
-     *
-     * @see {@link MatterSpecification.v142.Cluster} § 9.5.9.1
-     */
-    export interface BoostStartedEvent extends TypeFromSchema<typeof TlvBoostStartedEvent> {}
 
     /**
      * A WaterHeaterManagementCluster supports these elements if it supports feature EnergyManagement.
@@ -438,8 +589,22 @@ export namespace WaterHeaterManagement {
     export interface Complete extends Identity<typeof CompleteInstance> {}
 
     export const Complete: Complete = CompleteInstance;
+    export const id = ClusterId(0x94);
+    export const name = "WaterHeaterManagement" as const;
+    export const revision = 2;
+    export const schema = WaterHeaterManagementModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export interface CommandObjects extends ClusterNamespace.CommandObjects<Commands> {}
+    export declare const commands: CommandObjects;
+    export interface EventObjects extends ClusterNamespace.EventObjects<Events> {}
+    export declare const events: EventObjects;
+    export declare const features: ClusterNamespace.Features<Features>;
+    export declare const Typing: WaterHeaterManagement;
 }
 
 export type WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 export const WaterHeaterManagementCluster = WaterHeaterManagement.Cluster;
 ClusterRegistry.register(WaterHeaterManagement.Complete);
+ClusterNamespace.define(WaterHeaterManagement);
+export interface WaterHeaterManagement extends ClusterTyping { Attributes: WaterHeaterManagement.Attributes & { Components: WaterHeaterManagement.Attributes.Components }; Commands: WaterHeaterManagement.Commands & { Components: WaterHeaterManagement.Commands.Components }; Events: WaterHeaterManagement.Events & { Components: WaterHeaterManagement.Events.Components }; Features: WaterHeaterManagement.Features }

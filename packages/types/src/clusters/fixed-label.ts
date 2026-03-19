@@ -12,8 +12,18 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { Label } from "./label.js";
 import { Identity } from "@matter/general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
+import { ClusterNamespace, ClusterTyping } from "../cluster/ClusterNamespace.js";
+import { FixedLabel as FixedLabelModel } from "@matter/model";
+import { ClusterId } from "../datatype/ClusterId.js";
 
 export namespace FixedLabel {
+    export interface Attributes {
+        labelList: Label.LabelStruct[];
+    }
+    export namespace Attributes {
+        export type Components = [{ flags: {}, mandatory: "labelList" }];
+    }
+
     /**
      * @see {@link Cluster}
      */
@@ -55,8 +65,17 @@ export namespace FixedLabel {
 
     export const Cluster: Cluster = ClusterInstance;
     export const Complete = Cluster;
+    export const id = ClusterId(0x40);
+    export const name = "FixedLabel" as const;
+    export const revision = 1;
+    export const schema = FixedLabelModel;
+    export interface AttributeObjects extends ClusterNamespace.AttributeObjects<Attributes> {}
+    export declare const attributes: AttributeObjects;
+    export declare const Typing: FixedLabel;
 }
 
 export type FixedLabelCluster = FixedLabel.Cluster;
 export const FixedLabelCluster = FixedLabel.Cluster;
 ClusterRegistry.register(FixedLabel.Complete);
+ClusterNamespace.define(FixedLabel);
+export interface FixedLabel extends ClusterTyping { Attributes: FixedLabel.Attributes & { Components: FixedLabel.Attributes.Components } }
