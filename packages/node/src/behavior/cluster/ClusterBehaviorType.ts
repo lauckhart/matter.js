@@ -43,13 +43,14 @@ export function ClusterBehaviorType({
     forClient,
     commandFactory,
 }: ClusterBehaviorType.Configuration) {
-    // Resolve schema: from param, from namespace, from base, or from Matter model
+    // Resolve schema: from param, from base, from namespace, or from Matter model.  Base takes priority over
+    // namespace because it may have extended the schema (e.g. to relax constraints for custom validation).
     if (schema === undefined) {
-        if (namespace) {
-            schema = (namespace as ClusterNamespace).schema;
-        }
-        if (!schema && base.schema?.tag === ElementTag.Cluster) {
+        if (base.schema?.tag === ElementTag.Cluster) {
             schema = base.schema;
+        }
+        if (!schema && namespace) {
+            schema = (namespace as ClusterNamespace).schema;
         }
         if (!schema && namespace) {
             const nsId = (namespace as { id?: number }).id;

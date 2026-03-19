@@ -22,7 +22,6 @@ import {
     bool,
     fabricIdx,
     field,
-    FieldElement,
     groupId,
     int16,
     int32,
@@ -126,71 +125,39 @@ export const DataTypeToSceneAttributeDataMap: Record<string, AttributeValuePairD
  * Extend the ScenesManagement model to relax constraints on command request fields.  This prevents the interaction
  * layer from rejecting with ConstraintError so the behavior can validate and return proper Status responses.
  */
+const { commands } = ScenesManagement.schema;
+
+const addScene = commands.require("AddScene");
+const viewScene = commands.require("ViewScene");
+const removeScene = commands.require("RemoveScene");
+const storeScene = commands.require("StoreScene");
+const copyScene = commands.require("CopyScene");
+
 const ScenesManagementSchema = ScenesManagement.schema.extend(
     undefined,
 
-    ScenesManagement.schema.commands
-        .for("AddScene")!
-        .extend(
-            undefined,
-            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
-            FieldElement({
-                name: "TransitionTime",
-                id: 0x2,
-                type: "uint32",
-                conformance: "M",
-                constraint: "max 4294967295",
-            }),
-            FieldElement({ name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 1024" }),
-        ),
+    addScene.extend(
+        undefined,
+        addScene.fields.extend("SceneId", { constraint: "none" }),
+        addScene.fields.extend("TransitionTime", { constraint: "none" }),
+        addScene.fields.extend("SceneName", { constraint: "none" }),
+    ),
 
-    ScenesManagement.schema.commands
-        .for("ViewScene")!
-        .extend(
-            undefined,
-            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
-        ),
+    viewScene.extend(undefined, viewScene.fields.extend("SceneId", { constraint: "none" })),
+    removeScene.extend(undefined, removeScene.fields.extend("SceneId", { constraint: "none" })),
+    storeScene.extend(undefined, storeScene.fields.extend("SceneId", { constraint: "none" })),
 
-    ScenesManagement.schema.commands
-        .for("RemoveScene")!
-        .extend(
-            undefined,
-            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
-        ),
-
-    ScenesManagement.schema.commands
-        .for("StoreScene")!
-        .extend(
-            undefined,
-            FieldElement({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M", constraint: "max 255" }),
-        ),
-
-    ScenesManagement.schema.commands
-        .for("CopyScene")!
-        .extend(
-            undefined,
-            FieldElement({
-                name: "SceneIdentifierFrom",
-                id: 0x2,
-                type: "uint8",
-                conformance: "M",
-                constraint: "max 255",
-            }),
-            FieldElement({
-                name: "SceneIdentifierTo",
-                id: 0x4,
-                type: "uint8",
-                conformance: "M",
-                constraint: "max 255",
-            }),
-        ),
+    copyScene.extend(
+        undefined,
+        copyScene.fields.extend("SceneIdentifierFrom", { constraint: "none" }),
+        copyScene.fields.extend("SceneIdentifierTo", { constraint: "none" }),
+    ),
 );
 
 // Pass the extended schema with relaxed command constraints, then enable SceneNames.
-const ScenesManagementBase = ScenesManagementBehavior.for(
-    ScenesManagement,
-    ScenesManagementSchema,
-).with(ScenesManagement.Feature.SceneNames);
+const ScenesManagementBase = ScenesManagementBehavior.for(ScenesManagement, ScenesManagementSchema).with(
+    ScenesManagement.Feature.SceneNames,
+);
 
 /**
  * This is the default server implementation of {@link ScenesManagementBehavior}.
