@@ -6,7 +6,7 @@
 import { ImplementationError } from "@matter/general";
 import { AggregatorDt, BridgedNodeDt } from "@matter/model";
 import { Endpoint as NodeEndpoint } from "@matter/node";
-import { BridgedDeviceBasicInformationCluster } from "@matter/types/clusters";
+import { BridgedDeviceBasicInformationCluster } from "@matter/types/clusters/bridged-device-basic-information";
 import { ClusterServer } from "../cluster/server/ClusterServer.js";
 import { AttributeInitialValues } from "../cluster/server/ClusterServerTypes.js";
 import { ComposedDevice } from "./ComposedDevice.js";

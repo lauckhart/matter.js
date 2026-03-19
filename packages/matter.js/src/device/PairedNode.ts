@@ -65,7 +65,9 @@ import {
     StatusCode,
     StatusResponseError,
 } from "@matter/types";
-import { AdministratorCommissioning, BasicInformation, Descriptor } from "@matter/types/clusters";
+import { AdministratorCommissioning } from "@matter/types/clusters/administrator-commissioning";
+import { BasicInformation } from "@matter/types/clusters/basic-information";
+import { Descriptor } from "@matter/types/clusters/descriptor";
 import { ClusterServer } from "../cluster/server/ClusterServer.js";
 import { AttributeInitialValues, ClusterServerObj, isClusterServer } from "../cluster/server/ClusterServerTypes.js";
 import { CommissioningController } from "../CommissioningController.js";
