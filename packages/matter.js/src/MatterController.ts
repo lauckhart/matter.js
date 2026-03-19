@@ -50,7 +50,6 @@ import {
 import {
     ClientNode,
     ClientNodePhysicalProperties,
-    ClusterState,
     CommissioningClient,
     ControllerBehavior,
     Endpoint,
@@ -93,6 +92,7 @@ import {
     VendorId,
 } from "@matter/types";
 import { BasicInformation, GeneralCommissioning } from "@matter/types/clusters";
+import type { ClusterStatePropertiesOf } from "./util/ClusterTypeHelpers.js";
 
 export type CommissionedNodeDetails = {
     operationalServerAddress?: ServerAddressUdp;
@@ -139,7 +139,7 @@ export class MatterController {
         localPort?: number;
         environment: Environment;
         enableOtaProvider?: boolean;
-        basicInformation?: Partial<Omit<ClusterState.PropertiesOf<typeof BasicInformation.Complete>, "vendorId">>;
+        basicInformation?: Partial<Omit<ClusterStatePropertiesOf<typeof BasicInformation.Complete>, "vendorId">>;
     }): Promise<MatterController> {
         const {
             rootFabric,
@@ -299,7 +299,7 @@ export class MatterController {
         localPort?: number;
         environment: Environment;
         enableOtaProvider?: boolean;
-        basicInformation?: Partial<Omit<ClusterState.PropertiesOf<typeof BasicInformation.Complete>, "vendorId">>;
+        basicInformation?: Partial<Omit<ClusterStatePropertiesOf<typeof BasicInformation.Complete>, "vendorId">>;
     }) {
         const crypto = options.environment.get(Crypto);
         const {
