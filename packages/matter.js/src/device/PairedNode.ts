@@ -24,7 +24,7 @@ import {
     Seconds,
     Time,
 } from "@matter/general";
-import { AcceptedCommandList, AttributeList, ClusterRevision, FeatureMap } from "@matter/model";
+import { AcceptedCommandList, AggregatorDt, AttributeList, ClusterRevision, FeatureMap } from "@matter/model";
 import {
     Behavior,
     ChangeNotificationService,
@@ -73,12 +73,7 @@ import { Aggregator } from "./Aggregator.js";
 import { ComposedDevice } from "./ComposedDevice.js";
 import { PairedDevice, RootEndpoint } from "./Device.js";
 import { DeviceInformation, DeviceInformationData } from "./DeviceInformation.js";
-import {
-    DeviceTypeDefinition,
-    DeviceTypes,
-    getDeviceTypeDefinitionFromModelByCode,
-    UnknownDeviceType,
-} from "./DeviceTypes.js";
+import { DeviceTypeDefinition, getDeviceTypeDefinitionFromModelByCode, UnknownDeviceType } from "./DeviceTypes.js";
 import { Endpoint } from "./Endpoint.js";
 import { asClusterClientInternal, isClusterClient } from "./TypeHelpers.js";
 
@@ -1224,7 +1219,7 @@ export class PairedNode {
                 }
             });
             return rootEndpoint;
-        } else if (deviceTypes.find(deviceType => deviceType.code === DeviceTypes.AGGREGATOR.code) !== undefined) {
+        } else if (deviceTypes.find(deviceType => deviceType.code === AggregatorDt.id) !== undefined) {
             // When AGGREGATOR is in the device type list, this is an aggregator
             const aggregator = new Aggregator(endpoint, [], { endpointId });
             aggregator.setDeviceTypes(deviceTypes as AtLeastOne<DeviceTypeDefinition>);

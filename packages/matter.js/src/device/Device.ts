@@ -5,13 +5,14 @@
  */
 
 import { AtLeastOne, HandlerFunction, ImplementationError, NamedHandler, NotImplementedError } from "@matter/general";
+import { RootNodeDt } from "@matter/model";
 import { Endpoint as NodeEndpoint } from "@matter/node";
 import { ClusterClientObj } from "@matter/protocol";
 import { Cluster, ClusterType, EndpointNumber } from "@matter/types";
 import { Binding, BridgedDeviceBasicInformationCluster } from "@matter/types/clusters";
 import { ClusterServer } from "../cluster/server/ClusterServer.js";
 import { ClusterServerHandlers, ClusterServerObj, isClusterServer } from "../cluster/server/ClusterServerTypes.js";
-import { DeviceClasses, DeviceTypeDefinition, DeviceTypes } from "./DeviceTypes.js";
+import { DeviceClasses, DeviceTypeDefinition, getDeviceTypeDefinitionFromModelByCode } from "./DeviceTypes.js";
 import { Endpoint, EndpointOptions } from "./Endpoint.js";
 import { isClusterClient } from "./TypeHelpers.js";
 
@@ -114,7 +115,7 @@ export class RootEndpoint extends Endpoint {
      * Create a new RootEndpoint instance. This is automatically instanced by the CommissioningServer class.
      */
     constructor(endpoint: NodeEndpoint) {
-        super(endpoint, [DeviceTypes.ROOT], { endpointId: EndpointNumber(0) });
+        super(endpoint, [getDeviceTypeDefinitionFromModelByCode(RootNodeDt.id)!], { endpointId: EndpointNumber(0) });
     }
 
     /**
