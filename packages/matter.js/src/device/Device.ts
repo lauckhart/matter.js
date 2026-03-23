@@ -11,7 +11,6 @@ import { ClusterClientObj, TypedClusterClientObj } from "@matter/protocol";
 import { Cluster, ClusterNamespace, ClusterType, EndpointNumber } from "@matter/types";
 import { ClusterTypeOfModel } from "../cluster/ClusterTypeOfModel.js";
 import { Binding } from "@matter/types/clusters/binding";
-import { BridgedDeviceBasicInformationCluster } from "@matter/types/clusters/bridged-device-basic-information";
 import { ClusterServer } from "../cluster/server/ClusterServer.js";
 import {
     ClusterServerHandlers,
@@ -287,19 +286,4 @@ export class Device extends Endpoint {
         }
     }
 
-    /**
-     * Set the reachability of the device exposed via the bridge. If this is a device inside  a composed device the
-     * reachability needs to be set there.
-     *
-     * @param reachable true if reachable, false otherwise
-     */
-    setBridgedDeviceReachability(reachable: boolean) {
-        const bridgedBasicInformationCluster = this.getClusterServer(BridgedDeviceBasicInformationCluster);
-        if (bridgedBasicInformationCluster === undefined) {
-            throw new ImplementationError(
-                "The reachability flag can only be set for bridged devices this way. To set the reachability flag for a non-bridged device or for the bridget itself please set it on the CommissioningServer!",
-            );
-        }
-        bridgedBasicInformationCluster.setReachableAttribute(reachable);
-    }
 }
