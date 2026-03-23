@@ -729,15 +729,15 @@ export class InteractionServerMessenger extends InteractionMessenger {
     static convertServerInteractionReport(report: ReadResult.Report) {
         switch (report.kind) {
             case "attr-value": {
-                const { path, value: payload, version: dataVersion, tlv: schema } = report;
-                if (schema === undefined) {
+                const { path, value: payload, version: dataVersion, tlv } = report;
+                if (tlv === undefined) {
                     throw new InternalError(`Attribute ${path.clusterId}/${path.attributeId} not found`);
                 }
                 const data: AttributeReportPayload = {
                     attributeData: {
                         path,
                         payload,
-                        schema,
+                        tlv,
                         dataVersion,
                     },
                     hasFabricSensitiveData: true, // With this we disable the validation for missing data in encoding, we trust behavior logic
@@ -765,7 +765,7 @@ export class InteractionServerMessenger extends InteractionMessenger {
                     number: eventNumber,
                     priority,
                     timestamp: epochTimestamp,
-                    tlv: schema,
+                    tlv,
                 } = report;
                 const data: EventReportPayload = {
                     eventData: {
@@ -774,7 +774,7 @@ export class InteractionServerMessenger extends InteractionMessenger {
                         priority,
                         epochTimestamp,
                         payload,
-                        schema,
+                        tlv,
                     },
                     hasFabricSensitiveData: true, // There are no Fabric sensitive events as of now. If ever added sanitizing needs to be added
                 };

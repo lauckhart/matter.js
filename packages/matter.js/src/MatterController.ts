@@ -93,6 +93,7 @@ import {
 } from "@matter/types";
 import { BasicInformation } from "@matter/types/clusters/basic-information";
 import { GeneralCommissioning } from "@matter/types/clusters/general-commissioning";
+import { ClusterTypeOfModel } from "#cluster/ClusterTypeOfModel.js";
 
 export type CommissionedNodeDetails = {
     operationalServerAddress?: ServerAddressUdp;
@@ -635,7 +636,7 @@ export class MatterController {
             allowUnknownPeer: true,
         }); // Wait maximum 120s to find the operational device for a commissioning process
         const generalCommissioningClusterClient = ClusterClient(
-            GeneralCommissioning.Cluster,
+            ClusterTypeOfModel(GeneralCommissioning.schema),
             EndpointNumber(0),
             interactionClient,
         );
