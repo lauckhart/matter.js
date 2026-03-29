@@ -1,8 +1,0 @@
-{
-    "recommended": [
-        "rioj7.command-variable",
-        "esbenp.prettier-vscode",
-        "oxc.oxc-vscode",
-        "cameron.rerun-last-command"
-    ]
-}

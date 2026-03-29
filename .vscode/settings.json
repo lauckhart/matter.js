@@ -1,5 +1,0 @@
-{
-    "oxc.enable.oxlint": true,
-    "oxc.enable.oxfmt": false,
-    "oxc.typeAware": true,
-}
