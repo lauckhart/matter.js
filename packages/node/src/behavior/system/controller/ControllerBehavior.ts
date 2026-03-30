@@ -7,6 +7,7 @@
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
 import { Node } from "#node/Node.js";
+import type { ServerNode } from "#node/ServerNode.js";
 import { IdentityService } from "#node/server/IdentityService.js";
 import {
     ConnectionlessTransportSet,
@@ -14,11 +15,14 @@ import {
     DnsRecordType,
     ImplementationError,
     Logger,
+    Seconds,
     SharedEnvironmentServices,
 } from "@matter/general";
+import { method, response, string } from "@matter/model";
 import {
     Ble,
     ClientSubscriptions,
+    CommissionableDeviceIdentifiers,
     Fabric,
     FabricAuthority,
     FabricAuthorityConfiguration,
@@ -32,10 +36,13 @@ import {
     ScannerSet,
     getFabricQname,
 } from "@matter/protocol";
-import { CaseAuthenticatedTag, FabricId, FabricIndex, NodeId } from "@matter/types";
+import { CaseAuthenticatedTag, FabricId, FabricIndex, NodeId, VendorId } from "@matter/types";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
 import { NetworkServer } from "../network/NetworkServer.js";
+import { ControllerCommands } from "./ControllerCommands.js";
 import { ActiveDiscoveries } from "./discovery/ActiveDiscoveries.js";
+import { CommissioningDiscovery } from "./discovery/CommissioningDiscovery.js";
+import { ContinuousDiscovery } from "./discovery/ContinuousDiscovery.js";
 import type { Discovery } from "./discovery/Discovery.js";
 
 const logger = Logger.get("ControllerBehavior");
@@ -110,6 +117,136 @@ export class ControllerBehavior extends Behavior {
     }
 
     /**
+     * Discover and commission a device in one shot.
+     *
+     * Returns the local node ID (e.g. "node0") of the newly commissioned node.
+     */
+    @method(ControllerCommands.CommissionRequest)
+    @response(string)
+    async commission(request: ControllerCommands.CommissionRequest): Promise<string> {
+        if (request.passcode === undefined && request.pairingCode === undefined) {
+            throw new ImplementationError("Either passcode or pairingCode is required");
+        }
+
+        const node = Node.forEndpoint(this.endpoint) as ServerNode;
+
+        const options: CommissioningDiscovery.Options = {
+            ...(request.passcode !== undefined
+                ? { passcode: request.passcode }
+                : { pairingCode: request.pairingCode! }),
+            ...(request.discriminator !== undefined && { discriminator: request.discriminator }),
+            ...(request.timeout !== undefined && { timeout: Seconds(request.timeout) }),
+            ...(request.id !== undefined && { id: request.id }),
+            abort: this.context.abort,
+        };
+
+        const clientNode = await new CommissioningDiscovery(node, options);
+        return clientNode.id;
+    }
+
+    /**
+     * Remove a commissioned node from the fabric, communicating with the device.
+     */
+    @method(ControllerCommands.NodeRequest)
+    async decommission(request: ControllerCommands.NodeRequest): Promise<void> {
+        const node = Node.forEndpoint(this.endpoint) as ServerNode;
+        const clientNode = node.peers.get(request.id);
+        if (clientNode === undefined) {
+            throw new ImplementationError(`Node "${request.id}" not found`);
+        }
+        await clientNode.decommission();
+    }
+
+    /**
+     * Force-remove a node locally without talking to the device.
+     */
+    @method(ControllerCommands.NodeRequest)
+    async delete(request: ControllerCommands.NodeRequest): Promise<void> {
+        const node = Node.forEndpoint(this.endpoint) as ServerNode;
+        const clientNode = node.peers.get(request.id);
+        if (clientNode === undefined) {
+            throw new ImplementationError(`Node "${request.id}" not found`);
+        }
+        await clientNode.delete();
+    }
+
+    /**
+     * Start indefinite discovery; clients detect results by watching peers.
+     *
+     * Calling again replaces previous discovery (stops old, starts new).
+     */
+    @method(ControllerCommands.DiscoverRequest)
+    async discover(request?: ControllerCommands.DiscoverRequest): Promise<void> {
+        const node = Node.forEndpoint(this.endpoint) as ServerNode;
+
+        // Stop any existing discovery
+        this.internal.activeDiscovery?.stop();
+        this.internal.activeDiscovery = undefined;
+
+        // Build the filter identifier
+        let identifier: CommissionableDeviceIdentifiers = {};
+        if (request) {
+            if (request.instanceId !== undefined) {
+                identifier = { instanceId: request.instanceId };
+            } else if (request.longDiscriminator !== undefined) {
+                identifier = { longDiscriminator: request.longDiscriminator };
+            } else if (request.shortDiscriminator !== undefined) {
+                identifier = { shortDiscriminator: request.shortDiscriminator };
+            } else if (request.vendorId !== undefined) {
+                identifier = {
+                    vendorId: VendorId(request.vendorId),
+                    ...(request.productId !== undefined && { productId: request.productId }),
+                };
+            } else if (request.deviceType !== undefined) {
+                identifier = { deviceType: request.deviceType };
+            } else if (request.productId !== undefined) {
+                identifier = { productId: request.productId };
+            }
+        }
+
+        const options: Discovery.Options = {
+            ...identifier,
+            ...(request?.timeout !== undefined && { timeout: Seconds(request.timeout) }),
+        };
+
+        const discovery = new ContinuousDiscovery(node, options);
+        this.internal.activeDiscovery = discovery;
+
+        // Clean up the reference when discovery settles
+        discovery.then(
+            () => {
+                if (this.internal.activeDiscovery === discovery) {
+                    this.internal.activeDiscovery = undefined;
+                }
+            },
+            () => {
+                if (this.internal.activeDiscovery === discovery) {
+                    this.internal.activeDiscovery = undefined;
+                }
+            },
+        );
+
+        // If we have an abort signal, wire it to stop discovery
+        const abort = this.context.abort;
+        if (abort) {
+            if (abort.aborted) {
+                discovery.stop();
+            } else {
+                abort.addEventListener("abort", () => discovery.stop(), { once: true });
+            }
+        }
+    }
+
+    /**
+     * Stop active discovery.
+     */
+    @method()
+    async stopDiscovery(): Promise<void> {
+        this.internal.activeDiscovery?.stop();
+        this.internal.activeDiscovery = undefined;
+    }
+
+    /**
      * Allocate a new node address in the given fabric.
      */
     async allocatePeerAddress(fabricIndex: FabricIndex, nodeId?: NodeId) {
@@ -162,6 +299,8 @@ export class ControllerBehavior extends Behavior {
     }
 
     override async [Symbol.asyncDispose]() {
+        this.internal.activeDiscovery?.stop();
+        this.internal.activeDiscovery = undefined;
         await this.env.close(ActiveDiscoveries);
         this.env.delete(FabricAuthority);
         this.env.delete(ScannerSet);
@@ -249,6 +388,8 @@ export namespace ControllerBehavior {
         };
 
         services?: SharedEnvironmentServices;
+
+        activeDiscovery?: ContinuousDiscovery;
     }
 
     export class State {

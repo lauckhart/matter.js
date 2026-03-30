@@ -100,63 +100,68 @@ export namespace Api {
 
         logRequest(facility, id, method, target);
 
+        const abortSignal = "signal" in signal ? signal.signal : signal;
+
         try {
-            const message = await node.act("remote", async (agent): Promise<LocalResponse> => {
-                const item = await resourceFor(agent, new ApiPath(target));
-                if (item === undefined) {
-                    throw new StatusResponse.NotFoundError(`Target "${target}" not found`);
-                }
+            const message = await node.act(
+                async (agent): Promise<LocalResponse> => {
+                    const item = await resourceFor(agent, new ApiPath(target));
+                    if (item === undefined) {
+                        throw new StatusResponse.NotFoundError(`Target "${target}" not found`);
+                    }
 
-                switch (method) {
-                    case "read":
-                        const value = item.read();
-                        if (value === undefined) {
-                            throw new StatusResponse.UnsupportedReadError(`Target "${target}" is not readable`);
-                        }
-                        value.convertToJson();
+                    switch (method) {
+                        case "read":
+                            const value = item.read();
+                            if (value === undefined) {
+                                throw new StatusResponse.UnsupportedReadError(`Target "${target}" is not readable`);
+                            }
+                            value.convertToJson();
 
-                        return {
-                            kind: "value",
-                            id,
+                            return {
+                                kind: "value",
+                                id,
 
-                            // TODO - consider handling serialization here (in agent context) so copy is unnecessary
-                            value,
-                        };
+                                // TODO - consider handling serialization here (in agent context) so copy is unnecessary
+                                value,
+                            };
 
-                    case "write":
-                        item.write({ js: request.value });
-                        return { kind: "ok", id };
-
-                    case "add":
-                        item.add({ js: item.value });
-                        return { kind: "ok", id };
-
-                    case "delete":
-                        item.delete();
-                        return { kind: "ok", id };
-
-                    case "invoke": {
-                        const value = await item.invoke({ js: request.parameters });
-                        if (value?.js === undefined || value?.js === null) {
+                        case "write":
+                            item.write({ js: request.value });
                             return { kind: "ok", id };
-                        }
-                        value.convertToJson();
-                        return { id, kind: "value", value };
-                    }
 
-                    case "subscribe": {
-                        const options = { ...request } as Record<string, unknown>;
-                        for (const field of ["target", "id", "method"]) {
-                            delete options[field];
+                        case "add":
+                            item.add({ js: item.value });
+                            return { kind: "ok", id };
+
+                        case "delete":
+                            item.delete();
+                            return { kind: "ok", id };
+
+                        case "invoke": {
+                            const value = await item.invoke({ js: request.parameters });
+                            if (value?.js === undefined || value?.js === null) {
+                                return { kind: "ok", id };
+                            }
+                            value.convertToJson();
+                            return { id, kind: "value", value };
                         }
-                        const stream = item.subscribe(signal, {
-                            id,
-                            js: options,
-                        });
-                        return { kind: "subscription", id, stream };
+
+                        case "subscribe": {
+                            const options = { ...request } as Record<string, unknown>;
+                            for (const field of ["target", "id", "method"]) {
+                                delete options[field];
+                            }
+                            const stream = item.subscribe(signal, {
+                                id,
+                                js: options,
+                            });
+                            return { kind: "subscription", id, stream };
+                        }
                     }
-                }
-            });
+                },
+                { purpose: "remote", abort: abortSignal },
+            );
 
             return message;
         } catch (error) {

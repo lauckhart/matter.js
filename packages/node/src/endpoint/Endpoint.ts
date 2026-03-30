@@ -687,20 +687,25 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     act<R>(purpose: string, actor: (agent: Agent.Instance<T>) => MaybePromise<R>): MaybePromise<R>;
 
     /**
-     * Version of {@link act} without explicit diagnostic purpose.
+     * Version of {@link act} with optional settings.
      */
-    act<R>(actor: (agent: Agent.Instance<T>) => MaybePromise<R>): MaybePromise<R>;
+    act<R>(actor: (agent: Agent.Instance<T>) => MaybePromise<R>, options?: Endpoint.ActOptions): MaybePromise<R>;
 
     act<R>(
         actorOrPurpose: string | ((agent: Agent.Instance<T>) => MaybePromise<R>),
-        actor?: (agent: Agent.Instance<T>) => MaybePromise<R>,
+        actorOrOptions?: ((agent: Agent.Instance<T>) => MaybePromise<R>) | Endpoint.ActOptions,
     ): MaybePromise<R> {
-        let purpose;
+        let purpose: string;
+        let actor: ((agent: Agent.Instance<T>) => MaybePromise<R>) | undefined;
+        let options: Endpoint.ActOptions | undefined;
+
         if (typeof actorOrPurpose === "string") {
             purpose = actorOrPurpose;
+            actor = actorOrOptions as (agent: Agent.Instance<T>) => MaybePromise<R>;
         } else {
             actor = actorOrPurpose;
-            purpose = "offline";
+            options = actorOrOptions as Endpoint.ActOptions | undefined;
+            purpose = options?.purpose ?? "offline";
         }
 
         if (typeof actor !== "function") {
@@ -718,7 +723,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             context => {
                 return actor(this.agentFor(context));
             },
-            { activity: this.#activity, lifetime: this.construction },
+            { activity: this.#activity, lifetime: this.construction, abort: options?.abort },
         );
     }
 
@@ -964,6 +969,21 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 }
 
 export namespace Endpoint {
+    /**
+     * Options for {@link Endpoint.act}.
+     */
+    export interface ActOptions {
+        /**
+         * Diagnostic purpose.
+         */
+        purpose?: string;
+
+        /**
+         * Cancels the action when aborted.
+         */
+        abort?: AbortSignal;
+    }
+
     export type BehaviorOptions<
         T extends EndpointType = EndpointType.Empty,
         O extends EndpointOptions = EndpointOptions,

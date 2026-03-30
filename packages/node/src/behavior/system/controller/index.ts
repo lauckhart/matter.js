@@ -5,4 +5,5 @@
  */
 
 export * from "./ControllerBehavior.js";
+export * from "./ControllerCommands.js";
 export * from "./discovery/index.js";
