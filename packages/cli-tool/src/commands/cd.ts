@@ -5,6 +5,7 @@
  */
 
 import { NotADirectoryError } from "#errors.js";
+import type { ActionContext } from "@matter/node";
 import { Command } from "./command.js";
 
 Command({
@@ -13,14 +14,14 @@ Command({
     maxArgs: 1,
     positionalArgs: [{ name: "path", description: "directory to enter", type: "string" }],
 
-    invoke: async function cd({ path }) {
+    invoke: async function cd(context: ActionContext, { path }) {
         if (path === undefined) {
             path = this.env.vars.get("home", "/");
         } else {
             path = `${path}`;
         }
 
-        const location = await this.location.at(`${path}`);
+        const location = await this.location.at(`${path}`, undefined, context);
 
         if (location.kind !== "directory") {
             throw new NotADirectoryError(path);

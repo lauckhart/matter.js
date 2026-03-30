@@ -6,9 +6,10 @@
 
 import type { Domain } from "#domain.js";
 import { Matter as matter } from "@matter/model";
+import type { ActionContext } from "@matter/node";
 
 export interface DomainCommand {
-    (...args: unknown[]): unknown;
+    (context: ActionContext, ...args: unknown[]): unknown;
     help(domain: Domain): void;
 }
 

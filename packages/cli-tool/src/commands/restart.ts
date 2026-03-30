@@ -11,7 +11,7 @@ Command({
     description: "Restart a running node (stop then start).",
     positionalArgs: [{ name: "node", type: "string", description: "Node ID to restart" }],
 
-    invoke: async function restart(args) {
+    invoke: async function restart(_context, args) {
         const nodeId = args.node;
         if (!nodeId) {
             this.err("Node ID is required\n");

@@ -8,6 +8,7 @@ import { Domain } from "#domain.js";
 import { bin } from "#globals.js";
 import { decamelize, FormattedText, ImplementationError, MaybePromise } from "@matter/general";
 import { FieldValue, Metatype } from "@matter/model";
+import type { ActionContext } from "@matter/node";
 import colors from "ansi-colors";
 
 export interface CommandDefinition<
@@ -15,7 +16,7 @@ export interface CommandDefinition<
     P extends CommandDefinition.ArgDescriptor[],
     R extends CommandDefinition.ArgDescriptor,
 > {
-    invoke: (this: Domain, args: CommandDefinition.ArgValues<N, P, R>) => MaybePromise<unknown>;
+    invoke: (this: Domain, context: ActionContext, args: CommandDefinition.ArgValues<N, P, R>) => MaybePromise<unknown>;
     usage?: string | string[];
     description: string;
     namedArgs?: N;
@@ -140,7 +141,7 @@ export function Command<
     }
 
     const name = decamelize(doInvoke.name);
-    const command = function invoke(this: { domain: Domain }, ...argv: unknown[]) {
+    const command = function invoke(this: { domain: Domain }, context: ActionContext, ...argv: unknown[]) {
         const domain = this.domain;
         if (!domain?.isDomain) {
             throw new ImplementationError(`Domain command ${name} invoked without bin scope`);
@@ -237,7 +238,7 @@ export function Command<
             inputs._ = positionalArgs.map(arg => Metatype.cast(restArgDescriptor.type, arg));
         }
 
-        return doInvoke.call(domain, inputs as CommandDefinition.ArgValues<N, P, R>);
+        return doInvoke.call(domain, context, inputs as CommandDefinition.ArgValues<N, P, R>);
     };
 
     command.help = help;

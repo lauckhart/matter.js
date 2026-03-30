@@ -7,6 +7,7 @@
 import { Domain } from "#domain.js";
 import { Location } from "#location.js";
 import { MaybePromise } from "@matter/general";
+import type { ActionContext } from "@matter/node";
 import colors from "ansi-colors";
 import { Command } from "./command.js";
 
@@ -20,11 +21,11 @@ Command({
     ],
     restArgs: { name: "file", description: "filename to list", type: "string" },
 
-    invoke: async function ls(args) {
+    invoke: async function ls(context: ActionContext, args) {
         const locations = Array<DisplayLocation>();
         for (const str of args._) {
             const input = `${str}`;
-            locations.push(DisplayLocation(await this.location.at(input), !!args.a, input));
+            locations.push(DisplayLocation(await this.location.at(input, undefined, context), !!args.a, input));
         }
 
         const files = Array<DisplayLocation>();
@@ -40,7 +41,7 @@ Command({
             }
         } else {
             for (const basename of await DisplayLocation(this.location, !!args.a).paths) {
-                files.push(DisplayLocation(await this.location.at(basename), !!args.a));
+                files.push(DisplayLocation(await this.location.at(basename, undefined, context), !!args.a));
             }
         }
 
@@ -65,7 +66,7 @@ Command({
             display(
                 this,
                 args.l,
-                (await Promise.all((await dir.paths).map(path => dir.at(path)))).map(location =>
+                (await Promise.all((await dir.paths).map(path => dir.at(path, undefined, context)))).map(location =>
                     DisplayLocation(location, !!args.a),
                 ),
                 linePrefix,

@@ -6,6 +6,7 @@
 
 import { undefinedValue } from "#location.js";
 import { Bytes, MaybePromise } from "@matter/general";
+import type { ActionContext } from "@matter/node";
 
 /**
  * An object that does not contain subobjects in our virtual filesystem.
@@ -20,7 +21,7 @@ export interface File extends Stat.Base {
 export interface Directory extends Stat.Base {
     kind: "directory";
     paths: MaybePromise<string[]>;
-    definitionAt(path: string): MaybePromise<unknown>;
+    definitionAt(path: string, context: ActionContext): MaybePromise<unknown>;
 }
 
 export function Directory(options: {
@@ -29,7 +30,7 @@ export function Directory(options: {
     name?: string;
     summary?: string;
     paths: () => MaybePromise<string[]>;
-    definitionAt: (path: string) => MaybePromise<unknown>;
+    definitionAt: (path: string, context: ActionContext) => MaybePromise<unknown>;
 }): Directory {
     const { name, summary, id, tag, paths, definitionAt } = options;
     return {
@@ -43,8 +44,8 @@ export function Directory(options: {
             return paths();
         },
 
-        definitionAt(path: string) {
-            return definitionAt(path);
+        definitionAt(path: string, context: ActionContext) {
+            return definitionAt(path, context);
         },
     };
 }
@@ -55,7 +56,7 @@ export type Stat = File | Directory;
  * Augments information about "filesystem" locations.
  */
 export interface StatProvider {
-    (definition: unknown): undefined | Stat;
+    (definition: unknown, context: ActionContext): undefined | Stat;
 }
 
 const providers = Array<StatProvider>();
@@ -71,9 +72,9 @@ export namespace Stat {
     /**
      * Obtain a Stat for an arbitrary JS value.
      */
-    export function of(definition: unknown): Stat {
+    export function of(definition: unknown, context: ActionContext): Stat {
         for (const provider of providers) {
-            const stat = provider(definition);
+            const stat = provider(definition, context);
             if (stat) {
                 return stat;
             }

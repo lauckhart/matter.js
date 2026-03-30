@@ -33,7 +33,7 @@ Command({
     ],
     maxArgs: 2,
 
-    invoke: async function diffSpec({ d: depth, from, to }) {
+    invoke: async function diffSpec(_context, { d: depth, from, to }) {
         if (to === undefined) {
             to = Specification.REVISION;
         }

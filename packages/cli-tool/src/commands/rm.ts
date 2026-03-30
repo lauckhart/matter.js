@@ -5,6 +5,7 @@
  */
 
 import { Location } from "#location.js";
+import type { ActionContext } from "@matter/node";
 import { Command } from "./command.js";
 
 Command({
@@ -12,11 +13,11 @@ Command({
     description: "Deletes the properties at the paths you specify.",
     restArgs: { name: "path", description: "path to remove", type: "string" },
 
-    invoke: async function rm(args) {
+    invoke: async function rm(context: ActionContext, args) {
         const toDelete = Array<Location>();
 
         for (const path of args._) {
-            const location = await this.location.at(`${path}`);
+            const location = await this.location.at(`${path}`, undefined, context);
             if (!location.parent) {
                 this.err(`Invalid argument: Can't delete ${location.path}`);
                 return;

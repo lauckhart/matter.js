@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { VariableService } from "@matter/general";
 import { Domain } from "#domain.js";
 import { LazyNode } from "#lazy-node.js";
 import { NodeRegistry } from "#node-registry.js";
+import { VariableService } from "@matter/general";
 import { access } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Command } from "./command.js";
@@ -24,7 +24,7 @@ Command({
     positionalArgs: [{ name: "subcommand", type: "string", description: "One of: remote, controller, device" }],
     restArgs: { name: "args", type: "any", description: "Subcommand arguments" },
 
-    invoke: async function register(args) {
+    invoke: async function register(_context, args) {
         switch (args.subcommand) {
             case "remote":
                 return registerRemote(this, args._);

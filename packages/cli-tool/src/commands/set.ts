@@ -14,7 +14,7 @@ Command({
     maxArgs: 2,
     restArgs: { name: "KV", description: "key and/or value", type: "string" },
 
-    invoke: async function set(args) {
+    invoke: async function set(_context, args) {
         switch (args._.length) {
             case 0:
                 return this.env.vars.vars;

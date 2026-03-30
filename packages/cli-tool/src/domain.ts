@@ -11,7 +11,6 @@ import { Location, undefinedValue } from "#location.js";
 import { NodeRegistry } from "#node-registry.js";
 import { Input, parseInput } from "#parser.js";
 import { Directory } from "#stat.js";
-import { Node, RemoteNode } from "@matter/node";
 import {
     CancelablePromise,
     Diagnostic,
@@ -25,6 +24,7 @@ import {
     StorageService,
     VariableService,
 } from "@matter/general";
+import { type ActionContext, LocalActorContext, Node, RemoteNode } from "@matter/node";
 import colors from "ansi-colors";
 import { inspect } from "node:util";
 import { createContext, runInContext, RunningCodeOptions } from "node:vm";
@@ -65,7 +65,7 @@ export interface Domain extends DomainContext {
     location: Location;
     exitHandler?: () => MaybePromise;
     execute(input: string | Input): Promise<unknown>;
-    searchPathFor(name: string): Promise<Location>;
+    searchPathFor(name: string, context: ActionContext): Promise<Location>;
     inspect(what: unknown): string;
     displayError(cause: unknown, prefix?: string): void;
     displayHint(message: string): void;
@@ -150,15 +150,15 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
         execute,
 
-        async searchPathFor(name: string) {
+        async searchPathFor(name: string, context: ActionContext) {
             let location;
             try {
-                location = await this.location.at(name);
+                location = await this.location.at(name, undefined, context);
             } catch (e) {
                 if ((e instanceof NotFoundError || e instanceof NotADirectoryError) && name.indexOf("/") === -1) {
                     // "path" search
                     try {
-                        location = await this.location.at(Location.join("/bin", name));
+                        location = await this.location.at(Location.join("/bin", name), undefined, context);
                     } catch (e2) {
                         if (e instanceof NotFoundError || e instanceof NotADirectoryError) {
                             // Throw original error
@@ -364,7 +364,9 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
     const cwd = domain.env.vars.string("cwd") ?? "/";
     try {
-        domain.location = await domain.location.at(cwd);
+        const cwdContext = LocalActorContext.open("cli-init");
+        domain.location = await domain.location.at(cwd, undefined, cwdContext);
+        cwdContext.resolve(undefined);
     } catch (e) {
         if (!(e instanceof NotFoundError) && !(e instanceof NotADirectoryError)) {
             throw e;
@@ -408,32 +410,38 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
         const { name, args } = input;
 
-        const location = await interruptablePromiseOf(domain.searchPathFor(name));
+        const context = LocalActorContext.open("cli");
 
-        const fn = location?.definition;
+        try {
+            const location = await interruptablePromiseOf(domain.searchPathFor(name, context));
 
-        if (location === undefined || fn === undefined) {
-            throw new NotACommandError(name);
-        }
+            const fn = location?.definition;
 
-        if (typeof fn !== "function") {
-            if (args.length) {
-                // If there are arguments it must be a call; otherwise it's just inspection
-                throw new BadCommandError(name);
+            if (location === undefined || fn === undefined) {
+                throw new NotACommandError(name);
             }
-            return fn;
-        }
 
-        const argvals = args.map(arg => {
-            return evaluate(arg.js, {
-                lineOffset: arg.line - 1,
-                columnOffset: arg.column,
+            if (typeof fn !== "function") {
+                if (args.length) {
+                    // If there are arguments it must be a call; otherwise it's just inspection
+                    throw new BadCommandError(name);
+                }
+                return context.resolve(fn);
+            }
+
+            const argvals = args.map(arg => {
+                return evaluate(arg.js, {
+                    lineOffset: arg.line - 1,
+                    columnOffset: arg.column,
+                });
             });
-        });
 
-        const scope = location.parent?.definition ?? globals;
+            const scope = location.parent?.definition ?? globals;
 
-        return await interruptablePromiseOf(fn.apply(scope, argvals));
+            return await interruptablePromiseOf(context.resolve(fn.apply(scope, [context, ...argvals])));
+        } catch (e) {
+            return context.reject(e);
+        }
 
         async function interruptablePromiseOf<T>(result: MaybePromise<T>) {
             if (!MaybePromise.is(result)) {

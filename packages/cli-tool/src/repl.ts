@@ -8,6 +8,7 @@ import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
 import { isCommand } from "#parser.js";
 import { Environment, Filesystem, InternalError, Millis, Observable, RuntimeService, Time } from "@matter/general";
+import { LocalActorContext } from "@matter/node";
 import colors from "ansi-colors";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -417,13 +418,18 @@ function addCompletionSupport(repl: AugmentedRepl) {
 
         const completions = Array<string>();
 
-        for (const path of pathsToSearch) {
-            const location = await repl.mdomain.location.maybeAt(path);
-            if (location?.kind !== "directory") {
-                continue;
-            }
+        const context = LocalActorContext.open("tab-completion");
+        try {
+            for (const path of pathsToSearch) {
+                const location = await repl.mdomain.location.maybeAt(path, undefined, context);
+                if (location?.kind !== "directory") {
+                    continue;
+                }
 
-            completions.push(...(await location.paths).filter(path => path.startsWith(partial)));
+                completions.push(...(await location.paths).filter(path => path.startsWith(partial)));
+            }
+        } finally {
+            context.resolve(undefined);
         }
 
         return [completions.sort(), partial];

@@ -7,6 +7,7 @@
 import { NodeRegistry } from "#node-registry.js";
 import { Directory, Stat } from "#stat.js";
 import { Environment } from "@matter/general";
+import type { ActionContext } from "@matter/node";
 import { RemoteNode } from "@matter/node";
 import colors from "ansi-colors";
 
@@ -121,7 +122,7 @@ export class LazyNode {
  *
  * On path access, the lazy node connects and delegates to the underlying RemoteNode's Stat provider.
  */
-Stat.provide(definition => {
+Stat.provide((definition, context) => {
     if (!(definition instanceof LazyNode)) {
         return;
     }
@@ -139,22 +140,22 @@ Stat.provide(definition => {
                 return ["status"];
             }
 
-            const stat = Stat.of(remote);
+            const stat = Stat.of(remote, context);
             if (stat.kind === "directory") {
                 return await stat.paths;
             }
             return [];
         },
 
-        async definitionAt(path: string) {
+        async definitionAt(path: string, context: ActionContext) {
             if (path === "status") {
                 return definition.toString();
             }
 
             const remote = await definition.connect();
-            const stat = Stat.of(remote);
+            const stat = Stat.of(remote, context);
             if (stat.kind === "directory") {
-                return await stat.definitionAt(path);
+                return await stat.definitionAt(path, context);
             }
         },
     });

@@ -7,6 +7,7 @@
 import { NotADirectoryError, NotFoundError } from "#errors.js";
 import { Stat } from "#stat.js";
 import { Bytes, decamelize, MaybePromise } from "@matter/general";
+import type { ActionContext } from "@matter/node";
 
 /**
  * Returned during location search to indicate "yes this exists but value is undefined".
@@ -29,8 +30,12 @@ export interface Location {
     parent?: Location;
     definition: unknown;
     paths: MaybePromise<string[]>;
-    at(path: string | number, searchedAs?: string): MaybePromise<Location>;
-    maybeAt(path: string | number, searchedAs?: string): MaybePromise<Location | undefined>;
+    at(path: string | number, searchedAs: string | undefined, context: ActionContext): MaybePromise<Location>;
+    maybeAt(
+        path: string | number,
+        searchedAs: string | undefined,
+        context: ActionContext,
+    ): MaybePromise<Location | undefined>;
 }
 
 /**
@@ -107,8 +112,8 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
             return stat.paths;
         },
 
-        at(path, searchedAs): MaybePromise<Location> {
-            const location = this.maybeAt(path);
+        at(path, searchedAs, context): MaybePromise<Location> {
+            const location = this.maybeAt(path, searchedAs, context);
 
             if (MaybePromise.is(location)) {
                 return location.then(accept);
@@ -125,7 +130,7 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
             }
         },
 
-        maybeAt(path, searchedAs): MaybePromise<Location | undefined> {
+        maybeAt(path, searchedAs, context): MaybePromise<Location | undefined> {
             if (stat.kind !== "directory") {
                 throw new NotADirectoryError(searchedAs ?? path);
             }
@@ -142,7 +147,7 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
                 while (location.parent) {
                     location = location.parent;
                 }
-                return location.maybeAt(segments.slice(1).join("/"), "/");
+                return location.maybeAt(segments.slice(1).join("/"), "/", context);
             }
 
             while (segments[0] === "" || segments[0] === ".") {
@@ -153,6 +158,7 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
                 return (this.parent ?? this).maybeAt(
                     segments.slice(1).join("/"),
                     searchedAs ? Location.join(searchedAs, "..") : "..",
+                    context,
                 );
             }
 
@@ -162,7 +168,7 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
 
             const subsearchedAs = searchedAs ? Location.join(searchedAs, segments[0]) : segments[0];
             const name = decodeURIComponent(segments[0]);
-            let definition = stat.definitionAt(decodeURIComponent(name));
+            let definition = stat.definitionAt(decodeURIComponent(name), context);
 
             if (definition === undefined && typeof this.definition === "object" && this.definition !== null) {
                 definition = (this.definition as Record<string, unknown>)[name];
@@ -179,12 +185,12 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
                     return;
                 }
 
-                const sublocation = Location(segments[0], definition, Stat.of(definition), this);
+                const sublocation = Location(segments[0], definition, Stat.of(definition, context), this);
                 if (segments.length === 1) {
                     return sublocation;
                 }
 
-                return sublocation.at(segments.slice(1).join("/"), subsearchedAs);
+                return sublocation.at(segments.slice(1).join("/"), subsearchedAs, context);
             };
 
             if (!MaybePromise.is(definition)) {

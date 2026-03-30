@@ -37,7 +37,7 @@ Command({
         { name: "file", description: "Force file-based access (skip remote)" },
     ],
 
-    invoke: async function logs(args) {
+    invoke: async function logs(_context, args) {
         const nodeId = args.node;
         if (!nodeId) {
             this.err("Node ID is required\n");

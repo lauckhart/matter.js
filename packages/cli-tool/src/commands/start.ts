@@ -32,7 +32,7 @@ Command({
         { name: "f", description: "Short for --foreground" },
     ],
 
-    invoke: async function start(args) {
+    invoke: async function start(_context, args) {
         const nodeId = args.node;
         if (!nodeId) {
             this.err("Node ID is required\n");

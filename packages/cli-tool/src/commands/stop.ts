@@ -19,7 +19,7 @@ Command({
         { name: "timeout", type: "integer", default: 10, description: "Seconds to wait for graceful shutdown" },
     ],
 
-    invoke: async function stop(args) {
+    invoke: async function stop(_context, args) {
         const nodeId = args.node;
         if (!nodeId) {
             this.err("Node ID is required\n");

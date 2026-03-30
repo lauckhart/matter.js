@@ -6,6 +6,7 @@
 
 import { bin, DomainCommand } from "#globals.js";
 import { FormattedText } from "@matter/general";
+import type { ActionContext } from "@matter/node";
 import { parse } from "acorn";
 import colors from "ansi-colors";
 import { generate } from "escodegen";
@@ -16,7 +17,7 @@ Command({
     description: "Display help",
     maxArgs: 1,
 
-    invoke: async function help({ path }) {
+    invoke: async function help(context: ActionContext, { path }) {
         const quote = (text: string) => {
             if (this.colorize) {
                 return colors.blue(text);
@@ -41,7 +42,7 @@ You can change the current path using ${quote("cd <path>")}.  Paths work like yo
         }
 
         const pathStr = `${path}`;
-        const what = await this.searchPathFor(pathStr);
+        const what = await this.searchPathFor(pathStr, context);
 
         if (what.kind !== "command") {
             this.out(`${path} is a ${what} but we can't tell you much more about it.\n\n`);
