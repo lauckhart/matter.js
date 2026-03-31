@@ -7,7 +7,7 @@
 import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
 import { isCommand } from "#parser.js";
-import { Environment, Filesystem, InternalError, Millis, Observable, RuntimeService, Time } from "@matter/general";
+import { Environment, Filesystem, Millis, Observable, RuntimeService, Time } from "@matter/general";
 import { LocalActorContext } from "@matter/node";
 import colors from "ansi-colors";
 import { readFile } from "node:fs/promises";
@@ -168,26 +168,31 @@ function createNodeRepl(domain: Domain) {
     repl.inMultilineCommand = repl.updatingPrompt = false;
 
     const onkeypress = repl.input.listeners("keypress").find(listener => listener.name === "onkeypress");
-    if (!onkeypress) {
-        throw new InternalError("Could not identify REPL keypress listener");
+
+    if (onkeypress) {
+        repl.input.off("keypress", onkeypress as any);
+
+        repl.deliverKeypress = (event: KeypressEvent) => {
+            repl.keypressDelivering.emit(event);
+            onkeypress(event.str, event.key);
+            repl.keypressDelivered.emit(event);
+        };
+
+        repl.input.on("keypress", (str: string, key: Key) => {
+            const event = { str, key };
+
+            if (repl.keypressReceived.emit(event) === false) {
+                return;
+            }
+
+            repl.deliverKeypress(event);
+        });
+    } else {
+        repl.deliverKeypress = (event: KeypressEvent) => {
+            repl.keypressDelivering.emit(event);
+            repl.keypressDelivered.emit(event);
+        };
     }
-    repl.input.off("keypress", onkeypress as any);
-
-    repl.deliverKeypress = (event: KeypressEvent) => {
-        repl.keypressDelivering.emit(event);
-        onkeypress(event.str, event.key);
-        repl.keypressDelivered.emit(event);
-    };
-
-    repl.input.on("keypress", (str: string, key: Key) => {
-        const event = { str, key };
-
-        if (repl.keypressReceived.emit(event) === false) {
-            return;
-        }
-
-        repl.deliverKeypress(event);
-    });
 
     return repl;
 }
