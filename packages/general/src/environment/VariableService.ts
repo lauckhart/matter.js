@@ -6,6 +6,7 @@
 
 import { ImplementationError } from "../MatterError.js";
 import { Diagnostic } from "../log/Diagnostic.js";
+import { Boot } from "../util/Boot.js";
 import { isObject } from "../util/Type.js";
 import type { Environment } from "./Environment.js";
 import { Environmental } from "./Environmental.js";
@@ -15,6 +16,7 @@ import { Environmental } from "./Environmental.js";
  */
 export class VariableService {
     #vars = {} as VariableService.Map;
+    #bootstrapVars?: VariableService.Map;
     #usageCollectors = Array<Set<string>>();
     #usages = new Set<VariableService.Usage>();
 
@@ -32,6 +34,20 @@ export class VariableService {
 
     get vars() {
         return this.#vars;
+    }
+
+    /**
+     * Snapshot current vars as the bootstrap state.
+     *
+     * Once set, Boot will restore vars to this snapshot and clear reactive listeners on state reset.
+     */
+    set bootstrapped(_value: true) {
+        this.#bootstrapVars = structuredClone(this.#vars);
+        Boot.init(() => {
+            this.#vars = structuredClone(this.#bootstrapVars!);
+            this.#usages.clear();
+            this.#usageCollectors.length = 0;
+        }, "state");
     }
 
     /**

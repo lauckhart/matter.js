@@ -5,7 +5,7 @@
  */
 
 import { NodeRegistry } from "#node-registry.js";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createTestDomain, TestDomain } from "./test-domain.js";
@@ -18,7 +18,7 @@ describe("Logs Command", () => {
     let td: TestDomain;
     let savedPathRoot: string | undefined;
 
-    beforeEach(async () => {
+    before(async () => {
         tmpDir = await mkdtemp(join(tmpdir(), "matter-test-"));
         savedPathRoot = process.env.MATTER_PATH_ROOT;
         process.env.MATTER_PATH_ROOT = tmpDir;
@@ -29,6 +29,13 @@ describe("Logs Command", () => {
         // Verify no unexpected errors were emitted
         expect(td.errors, `Unexpected errors: ${td.errors.join("")}`).to.be.empty;
 
+        // Clean tmpDir contents and reset captured output
+        const entries = await readdir(tmpDir);
+        await Promise.all(entries.map(e => rm(join(tmpDir, e), { recursive: true, force: true })));
+        td.reset();
+    });
+
+    after(async () => {
         // Restore env
         if (savedPathRoot === undefined) {
             delete process.env.MATTER_PATH_ROOT;

@@ -5,7 +5,7 @@
  */
 
 import { NodeRegistry } from "#node-registry.js";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createTestDomain, TestDomain } from "./test-domain.js";
@@ -18,7 +18,7 @@ describe("Node Lifecycle", function () {
     let td: TestDomain;
     let savedPathRoot: string | undefined;
 
-    beforeEach(async () => {
+    before(async () => {
         tmpDir = await mkdtemp(join(tmpdir(), "matter-test-"));
         savedPathRoot = process.env.MATTER_PATH_ROOT;
         process.env.MATTER_PATH_ROOT = tmpDir;
@@ -26,13 +26,6 @@ describe("Node Lifecycle", function () {
     });
 
     afterEach(async function () {
-        // Restore env
-        if (savedPathRoot === undefined) {
-            delete process.env.MATTER_PATH_ROOT;
-        } else {
-            process.env.MATTER_PATH_ROOT = savedPathRoot;
-        }
-
         // Kill any surviving child processes
         try {
             const registry = td.domain.env.get(NodeRegistry);
@@ -49,6 +42,20 @@ describe("Node Lifecycle", function () {
             }
         } catch {
             // registry not available
+        }
+
+        // Clean tmpDir contents and reset captured output
+        const entries = await readdir(tmpDir);
+        await Promise.all(entries.map(e => rm(join(tmpDir, e), { recursive: true, force: true })));
+        td.reset();
+    });
+
+    after(async () => {
+        // Restore env
+        if (savedPathRoot === undefined) {
+            delete process.env.MATTER_PATH_ROOT;
+        } else {
+            process.env.MATTER_PATH_ROOT = savedPathRoot;
         }
 
         // Clean up temp dir

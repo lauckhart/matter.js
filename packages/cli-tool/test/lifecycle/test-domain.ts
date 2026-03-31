@@ -13,6 +13,7 @@ export interface TestDomain {
     domain: Domain;
     output: string[];
     errors: string[];
+    reset(): void;
 }
 
 /**
@@ -52,5 +53,15 @@ export async function createTestDomain(tmpDir: string): Promise<TestDomain> {
 
     const domain = await Domain(cx);
 
-    return { domain, output, errors };
+    env.vars.bootstrapped = true;
+
+    return {
+        domain,
+        output,
+        errors,
+        reset() {
+            output.length = 0;
+            errors.length = 0;
+        },
+    };
 }

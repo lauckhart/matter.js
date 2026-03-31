@@ -24,11 +24,7 @@ export namespace Boot {
      */
     export function reboot(kind?: Boot.Kind) {
         for (const initializer of initializers) {
-            if (initializer.kind === "platform" && kind === "state") {
-                continue;
-            }
-
-            if (kind === "state") {
+            if (kind === "state" && initializer.kind !== "state") {
                 continue;
             }
 

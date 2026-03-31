@@ -87,6 +87,7 @@ export function NodeJsEnvironment() {
     const env = new Environment("default");
 
     loadVariables(env);
+    env.vars.bootstrapped = true;
     configureCrypto(env);
     configureRuntime(env);
     configureStorage(env);
