@@ -7,9 +7,10 @@
 import { CliCommand } from "#cli-command.js";
 import { DomainCommand } from "#globals.js";
 import { Directory, Stat } from "#stat.js";
-import { CommandModel, ElementTag, Scope } from "@matter/model";
-import type { Peers, ServerNode } from "@matter/node";
+import { CommandModel, ElementTag, Schema, Scope } from "@matter/model";
+import type { ActionContext, Peers, ServerNode } from "@matter/node";
 import { Behavior, Endpoint } from "@matter/node";
+import type { Val } from "@matter/protocol";
 
 const STATIC = new Set(["act", "start", "factoryReset", "run", "set", "visit", "nodes", "parts", "behaviors"]);
 
@@ -111,34 +112,31 @@ Stat.provide(behavior => {
             if (path === "events") {
                 return behavior.events;
             }
+            if (path === "get") {
+                return cachedCommand(behavior, "get", () => createGetCommand(behavior));
+            }
+            if (path === "set") {
+                return cachedCommand(behavior, "set", () => createSetCommand(behavior));
+            }
 
             const member = (behavior as unknown as Record<string, unknown>)[path];
-            if (typeof member !== "function") {
+            if (typeof member === "function") {
+                const commandModel = findCommandModel(behavior, path);
+                if (commandModel) {
+                    return cachedCommand(behavior, path, () =>
+                        CliCommand.forBehavior({
+                            method: member,
+                            behavior,
+                            schema: commandModel,
+                            name: path,
+                        }),
+                    );
+                }
                 return member;
             }
 
-            const commandModel = findCommandModel(behavior, path);
-            if (commandModel) {
-                let cache = commandCache.get(behavior);
-                if (!cache) {
-                    cache = new Map();
-                    commandCache.set(behavior, cache);
-                }
-
-                let wrapped = cache.get(path);
-                if (!wrapped) {
-                    wrapped = CliCommand.forBehavior({
-                        method: member,
-                        behavior,
-                        schema: commandModel,
-                        name: path,
-                    });
-                    cache.set(path, wrapped);
-                }
-                return wrapped;
-            }
-
-            return member;
+            // Attribute-level state access
+            return (behavior.state as Val.Struct)[path];
         },
     });
 });
@@ -168,10 +166,19 @@ function behaviorPaths(behavior: Behavior): string[] {
         })) {
             paths.push(event.propertyName);
         }
+
+        for (const attr of scope.membersOf(schema, {
+            tags: [ElementTag.Attribute],
+            conformance: "conformant",
+        })) {
+            paths.push(attr.propertyName);
+        }
     }
 
     paths.push("state");
     paths.push("events");
+    paths.push("get");
+    paths.push("set");
 
     return paths;
 }
@@ -195,6 +202,79 @@ function findCommandModel(behavior: Behavior, name: string): CommandModel | unde
     if (command?.isRequest) {
         return command;
     }
+}
+
+function cachedCommand(behavior: Behavior, name: string, create: () => DomainCommand): DomainCommand {
+    let cache = commandCache.get(behavior);
+    if (!cache) {
+        cache = new Map();
+        commandCache.set(behavior, cache);
+    }
+
+    let wrapped = cache.get(name);
+    if (!wrapped) {
+        wrapped = create();
+        cache.set(name, wrapped);
+    }
+    return wrapped;
+}
+
+function behaviorSchema(behavior: Behavior): Schema | undefined {
+    return (behavior.constructor as Behavior.Type).supervisor?.schema;
+}
+
+function createGetCommand(behavior: Behavior): DomainCommand {
+    const schema = behaviorSchema(behavior);
+
+    const command: DomainCommand = function get(_context: ActionContext, ...argv: unknown[]) {
+        if (argv.length === 0) {
+            return behavior.state;
+        }
+        return (behavior.state as Val.Struct)[argv[0] as string];
+    };
+
+    command.help = domain => {
+        const lines = [
+            "\nUsage: get [ATTRIBUTE]",
+            "",
+            "Read behavior state.  Without arguments, returns all attributes.",
+            "",
+        ];
+        if (schema) {
+            lines.push("Attributes:");
+            for (const attr of schema.conformant.properties) {
+                const desc = attr.description ?? "";
+                lines.push(`  ${attr.propertyName}${desc ? ` — ${desc}` : ""}`);
+            }
+        }
+        domain.out(lines.join("\n"), "\n\n");
+    };
+
+    return command;
+}
+
+function createSetCommand(behavior: Behavior): DomainCommand {
+    const schema = behaviorSchema(behavior);
+
+    if (!schema) {
+        const command: DomainCommand = function set() {
+            throw new Error("No schema available for this behavior");
+        };
+        command.help = domain => {
+            domain.out("\nNo schema available for this behavior.\n\n");
+        };
+        return command;
+    }
+
+    return CliCommand.create({
+        name: "set",
+        description: schema.description ? `Set attributes: ${schema.description}` : "Set behavior attributes.",
+        schema,
+        invoke: (_context: ActionContext, args: never) => {
+            const { _, ...values } = args as Val.Struct;
+            Object.assign(behavior.state, values);
+        },
+    });
 }
 
 function listPaths(endpoint: Endpoint) {
