@@ -7,7 +7,7 @@
 import { Domain } from "#domain.js";
 import { bin, DomainCommand } from "#globals.js";
 import { decamelize, FormattedText, ImplementationError, MatterError, MaybePromise } from "@matter/general";
-import { DatatypeModel, FieldModel, Metatype, Schema, ValueModel } from "@matter/model";
+import { DataModelPath, DatatypeModel, Metatype, Schema, ValueModel } from "@matter/model";
 import type { ActionContext, Behavior } from "@matter/node";
 import type { Val } from "@matter/protocol";
 import colors from "ansi-colors";
@@ -30,7 +30,7 @@ export class UsageError extends MatterError {}
  */
 export class CliCommand {
     readonly name: string;
-    readonly schema: ValueModel;
+    readonly schema: Schema;
     readonly aliases?: string[];
     readonly #invoke: CliCommand.Options["invoke"];
     readonly #description: string;
@@ -76,18 +76,33 @@ export class CliCommand {
     }): DomainCommand {
         const { method, behavior, schema, name } = options;
 
+        const supervisor = (behavior.constructor as Behavior.Type).supervisor;
+        const valueSupervisor = supervisor.get(schema);
+
         const command = new CliCommand(
             {
                 name,
                 description: schema.description ?? "",
                 schema,
                 invoke: (_context: ActionContext, args: never) => {
+                    args = valueSupervisor.cast(args) as never;
+                    valueSupervisor.validate?.(args, _context, {
+                        path: new DataModelPath(schema.path),
+                    });
                     return method.call(behavior, args);
                 },
             },
             false,
         );
 
+        return command.#createWrapper(false);
+    }
+
+    /**
+     * Create a {@link DomainCommand} from options without global registration.
+     */
+    static create(options: CliCommand.Options): DomainCommand {
+        const command = new CliCommand(options, false);
         return command.#createWrapper(false);
     }
 
@@ -121,12 +136,12 @@ export class CliCommand {
     }
 
     #parseArgs(argv: unknown[]): Val.Struct {
-        const fields = this.schema === Schema.empty ? [] : [...this.schema.fields];
+        const fields = [...this.schema.conformant.properties];
 
         // Categorize fields
-        const namedFields = new Map<string, FieldModel>();
+        const namedFields = new Map<string, ValueModel>();
         let positionalModel: DatatypeModel | undefined;
-        let restField: FieldModel | undefined;
+        let restField: ValueModel | undefined;
 
         for (const f of fields) {
             if (f.name === "positionalArgs") {
@@ -144,7 +159,7 @@ export class CliCommand {
         const positionalFields = positionalModel ? [...positionalModel.fields] : [];
 
         // Build flag lookup: --kebab-name or -x
-        const flagLookup = new Map<string, FieldModel>();
+        const flagLookup = new Map<string, ValueModel>();
         for (const [name, f] of namedFields) {
             if (name.length > 1) {
                 flagLookup.set(`--${decamelize(name)}`, f);
@@ -175,7 +190,7 @@ export class CliCommand {
                 arg = arg.slice(0, splitAt);
             }
 
-            let fieldModel: FieldModel | undefined;
+            let fieldModel: ValueModel | undefined;
             let fieldName: string;
 
             if (arg[1] === "-") {
@@ -226,6 +241,21 @@ export class CliCommand {
             inputs[fieldName!] = castValue(fieldModel, param);
         }
 
+        // If first positional arg is an object, merge as input fields (flags override)
+        if (
+            positionalArgs.length &&
+            typeof positionalArgs[0] === "object" &&
+            positionalArgs[0] !== null &&
+            !Array.isArray(positionalArgs[0])
+        ) {
+            const obj = positionalArgs.shift() as Val.Struct;
+            for (const [key, value] of Object.entries(obj)) {
+                if (!(key in inputs)) {
+                    inputs[key] = value;
+                }
+            }
+        }
+
         // Assign positional args
         for (const pf of positionalFields) {
             if (!positionalArgs.length) {
@@ -255,11 +285,11 @@ export class CliCommand {
     }
 
     #help(domain: Domain) {
-        const fields = this.schema === Schema.empty ? [] : [...this.schema.fields];
+        const fields = [...this.schema.conformant.properties];
 
-        const namedFields = Array<FieldModel>();
+        const namedFields = Array<ValueModel>();
         let positionalModel: DatatypeModel | undefined;
-        let restField: FieldModel | undefined;
+        let restField: ValueModel | undefined;
 
         for (const f of fields) {
             if (f.name === "positionalArgs") {
@@ -357,7 +387,7 @@ export namespace CliCommand {
         invoke(this: Domain, context: ActionContext, args: never): MaybePromise<unknown>;
 
         input?: NewableFunction;
-        schema?: ValueModel;
+        schema?: Schema;
         aliases?: string[];
         usage?: string | string[];
     }
@@ -366,7 +396,7 @@ export namespace CliCommand {
 /**
  * Cast a value according to a field's effective metatype.
  */
-function castValue(field: FieldModel, value: unknown): unknown {
+function castValue(field: ValueModel, value: unknown): unknown {
     const metatype = field.effectiveMetatype;
     if (metatype === undefined || metatype === Metatype.any) {
         return value;
@@ -380,7 +410,7 @@ function castValue(field: FieldModel, value: unknown): unknown {
 /**
  * Resolve a field to its struct schema (for positionalArgs).
  */
-function resolveStruct(field: FieldModel): DatatypeModel | undefined {
+function resolveStruct(field: ValueModel): DatatypeModel | undefined {
     // If the field's type points to a class, resolve via Schema; otherwise look for a struct base
     const base = field.operationalBase ?? field.base;
     if (base instanceof DatatypeModel && base.effectiveMetatype === Metatype.object) {
@@ -392,7 +422,7 @@ function resolveStruct(field: FieldModel): DatatypeModel | undefined {
 /**
  * Get the metatype of a rest args list's entry type.
  */
-function restEntryMetatype(field: FieldModel): `${Metatype}` | undefined {
+function restEntryMetatype(field: ValueModel): `${Metatype}` | undefined {
     const entry = field.listEntry;
     if (entry) {
         return entry.effectiveMetatype;

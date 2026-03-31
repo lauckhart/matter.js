@@ -47,8 +47,8 @@ export async function main(argv: string[]) {
         name: args[0],
         args: args.slice(1).map(arg => {
             let js;
-            if (arg.startsWith("(")) {
-                js = arg;
+            if (arg.startsWith("(") || arg.startsWith("{")) {
+                js = arg.startsWith("{") ? `(${arg})` : arg;
             } else {
                 js = JSON.stringify(arg);
             }
