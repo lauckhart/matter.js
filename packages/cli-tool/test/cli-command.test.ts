@@ -104,6 +104,16 @@ describe("CliCommand", () => {
             expect(result.dryRun).equals(true);
         });
 
+        it("parses camelCase flags", () => {
+            const result = parse(booleanSchema, "--dryRun");
+            expect(result.dryRun).equals(true);
+        });
+
+        it("parses PascalCase flags", () => {
+            const result = parse(booleanSchema, "--DryRun");
+            expect(result.dryRun).equals(true);
+        });
+
         it("rejects unknown flags", () => {
             parseError(UsageError, booleanSchema, "--unknown");
         });
@@ -178,6 +188,11 @@ describe("CliCommand", () => {
             expect(result.dryRun).equals(true);
         });
 
+        it("accepts camelCase name", () => {
+            const result = parse(booleanSchema, "+dryRun");
+            expect(result.dryRun).equals(true);
+        });
+
         it("rejects unknown flag names", () => {
             parseError(UsageError, booleanSchema, "+unknown");
         });
@@ -190,6 +205,95 @@ describe("CliCommand", () => {
             const result = parse(mixedSchema, "+enabled", "--on-time", "30");
             expect(result.enabled).equals(true);
             expect(result.onTime).equals(30);
+        });
+    });
+
+    describe("name=value shorthand", () => {
+        it("parses known flag", () => {
+            const result = parse(mixedSchema, "on-time=30");
+            expect(result.onTime).equals(30);
+        });
+
+        it("casts boolean value", () => {
+            const result = parse(mixedSchema, "enabled=true");
+            expect(result.enabled).equals(true);
+        });
+
+        it("falls through to positional for unknown name", () => {
+            const restSchema = schema(
+                "Rest",
+                new FieldModel({ name: "OnTime", type: "uint16" }),
+                new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }),
+            );
+            const result = parse(restSchema, "unknown=foo");
+            expect(result._).deep.equals(["unknown=foo"]);
+        });
+
+        it("mixes with regular flags", () => {
+            const result = parse(mixedSchema, "on-time=30", "--off-wait-time=60");
+            expect(result.onTime).equals(30);
+            expect(result.offWaitTime).equals(60);
+        });
+
+        it("handles empty value", () => {
+            const result = parse(stringSchema, "name=");
+            expect(result.name).equals("");
+        });
+
+        it("accepts camelCase name", () => {
+            const result = parse(mixedSchema, "onTime=30");
+            expect(result.onTime).equals(30);
+        });
+
+        it("accepts PascalCase name", () => {
+            const result = parse(mixedSchema, "OnTime=30");
+            expect(result.onTime).equals(30);
+        });
+    });
+
+    describe("-- sentinel", () => {
+        it("forces remaining args to positional", () => {
+            const restSchema = schema(
+                "Rest",
+                new FieldModel({ name: "Verbose", type: "bool" }),
+                new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }),
+            );
+            const result = parse(restSchema, "--", "--verbose");
+            expect(result.verbose).equals(undefined);
+            expect(result._).deep.equals(["--verbose"]);
+        });
+
+        it("flags before sentinel still work", () => {
+            const restSchema = schema(
+                "Rest",
+                new FieldModel({ name: "Verbose", type: "bool" }),
+                new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }),
+            );
+            const result = parse(restSchema, "--verbose", "--", "--force");
+            expect(result.verbose).equals(true);
+            expect(result._).deep.equals(["--force"]);
+        });
+
+        it("disables +flag shorthand", () => {
+            const restSchema = schema(
+                "Rest",
+                new FieldModel({ name: "Foo", type: "bool" }),
+                new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }),
+            );
+            const result = parse(restSchema, "--", "+foo");
+            expect(result.foo).equals(undefined);
+            expect(result._).deep.equals(["+foo"]);
+        });
+
+        it("disables name=value shorthand", () => {
+            const restSchema = schema(
+                "Rest",
+                new FieldModel({ name: "OnTime", type: "uint16" }),
+                new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }),
+            );
+            const result = parse(restSchema, "--", "on-time=30");
+            expect(result.onTime).equals(undefined);
+            expect(result._).deep.equals(["on-time=30"]);
         });
     });
 

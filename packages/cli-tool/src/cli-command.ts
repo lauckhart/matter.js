@@ -205,13 +205,20 @@ export class CliCommand {
         const positionalArgs = Array<unknown>();
 
         for (let i = 0; i < argv.length; i++) {
+            if (argv[i] === "--") {
+                for (let j = i + 1; j < argv.length; j++) {
+                    positionalArgs.push(argv[j]);
+                }
+                break;
+            }
+
             let arg = argv[i] as string;
             if (typeof arg !== "string" || !arg.startsWith("-")) {
                 // +flag,flag shorthand: expand to boolean true for each named field
                 if (typeof arg === "string" && arg.startsWith("+")) {
                     const names = arg.slice(1).split(",");
                     for (const raw of names) {
-                        const flagKey = `--${raw}`;
+                        const flagKey = `--${decamelize(raw)}`;
                         const field = flagLookup.get(flagKey);
                         if (!field) {
                             throw new UsageError(`Invalid argument: +${raw}`);
@@ -223,6 +230,17 @@ export class CliCommand {
                     }
                     continue;
                 }
+
+                const eqIdx = typeof arg === "string" ? arg.indexOf("=") : -1;
+                if (eqIdx > 0) {
+                    const flagKey = `--${decamelize(arg.slice(0, eqIdx))}`;
+                    const field = flagLookup.get(flagKey);
+                    if (field) {
+                        inputs[field.propertyName] = castValue(field, arg.slice(eqIdx + 1));
+                        continue;
+                    }
+                }
+
                 positionalArgs.push(arg);
                 continue;
             }
@@ -244,7 +262,7 @@ export class CliCommand {
 
             if (arg[1] === "-") {
                 // Long flag
-                fieldModel = flagLookup.get(arg);
+                fieldModel = flagLookup.get(`--${decamelize(arg.slice(2))}`);
                 if (!fieldModel) {
                     throw new UsageError(`Invalid argument: ${arg}`);
                 }
