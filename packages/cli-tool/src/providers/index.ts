@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import "#cluster-command.js";
+
 export * from "./endpoint.js";
 export * from "./model.js";
 export * from "./module.js";

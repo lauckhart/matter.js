@@ -106,6 +106,39 @@ export class CliCommand {
         return command.#createWrapper(false);
     }
 
+    /**
+     * Create a {@link DomainCommand} that uses a model schema for arg parsing and help but defers behavior resolution
+     * to invocation time.
+     */
+    static forModel(options: {
+        schema: ValueModel;
+        name: string;
+        description?: string;
+        resolveTarget: (domain: Domain, context: ActionContext) => MaybePromise<Behavior>;
+    }): DomainCommand {
+        const { schema, name, resolveTarget } = options;
+
+        return CliCommand.create({
+            name,
+            description: options.description ?? schema.description ?? "",
+            schema,
+
+            invoke(this: Domain, context: ActionContext, args: never) {
+                const behavior = resolveTarget(this, context);
+
+                return MaybePromise.then(behavior, resolved => {
+                    const supervisor = (resolved.constructor as Behavior.Type).supervisor;
+                    const valueSupervisor = supervisor.get(schema);
+                    args = valueSupervisor.cast(args) as never;
+                    valueSupervisor.validate?.(args, context, {
+                        path: new DataModelPath(schema.path),
+                    });
+                    return (resolved as unknown as Record<string, Function>)[schema.propertyName](args);
+                });
+            },
+        });
+    }
+
     #register() {
         const command = this.#createWrapper();
         bin[this.name] = command;

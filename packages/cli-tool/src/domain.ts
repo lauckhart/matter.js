@@ -5,13 +5,14 @@
  */
 
 import { HelpRequest, UsageError } from "#cli-command.js";
+import { clusterCommandFor } from "#cluster-command.js";
 import { BadCommandError, IncompleteError, NotACommandError, NotADirectoryError, NotFoundError } from "#errors.js";
 import { bin, globals as defaultGlobals, DomainCommand } from "#globals.js";
 import { LazyNode, populateNodes } from "#lazy-node.js";
 import { Location, undefinedValue } from "#location.js";
 import { NodeRegistry } from "#node-registry.js";
 import { Input, parseInput } from "#parser.js";
-import { Directory } from "#stat.js";
+import { Directory, Stat } from "#stat.js";
 import {
     CancelablePromise,
     Diagnostic,
@@ -161,7 +162,13 @@ export async function Domain(context: DomainContext): Promise<Domain> {
                     try {
                         location = await this.location.at(Location.join("/bin", name), undefined, context);
                     } catch (e2) {
-                        if (e instanceof NotFoundError || e instanceof NotADirectoryError) {
+                        if (e2 instanceof NotFoundError || e2 instanceof NotADirectoryError) {
+                            // Third tier: cluster commands from the standard model
+                            const clusterCmd = clusterCommandFor(name);
+                            if (clusterCmd) {
+                                return Location(name, clusterCmd, Stat.of(clusterCmd, context), this.location);
+                            }
+
                             // Throw original error
                             throw e;
                         }
