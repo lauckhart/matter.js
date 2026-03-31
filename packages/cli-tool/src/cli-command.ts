@@ -207,6 +207,22 @@ export class CliCommand {
         for (let i = 0; i < argv.length; i++) {
             let arg = argv[i] as string;
             if (typeof arg !== "string" || !arg.startsWith("-")) {
+                // +flag,flag shorthand: expand to boolean true for each named field
+                if (typeof arg === "string" && arg.startsWith("+")) {
+                    const names = arg.slice(1).split(",");
+                    for (const raw of names) {
+                        const flagKey = `--${raw}`;
+                        const field = flagLookup.get(flagKey);
+                        if (!field) {
+                            throw new UsageError(`Invalid argument: +${raw}`);
+                        }
+                        if (field.effectiveMetatype !== Metatype.boolean && field.effectiveMetatype !== undefined) {
+                            throw new UsageError(`Argument "+${raw}" is not boolean`);
+                        }
+                        inputs[field.propertyName] = true;
+                    }
+                    continue;
+                }
                 positionalArgs.push(arg);
                 continue;
             }

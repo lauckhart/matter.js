@@ -11,10 +11,19 @@ import { LazyNode } from "#lazy-node.js";
 import { Location } from "#location.js";
 import { Directory, Stat } from "#stat.js";
 import { camelize, decamelize, FormattedText, MaybePromise } from "@matter/general";
-import { ClusterModel, CommandModel, DataModelPath, ElementTag, Matter, Scope } from "@matter/model";
+import {
+    ClusterModel,
+    CommandModel,
+    DataModelPath,
+    DatatypeModel,
+    ElementTag,
+    FieldModel,
+    Matter,
+    Scope,
+} from "@matter/model";
 import type { ActionContext } from "@matter/node";
 import { Behavior, Endpoint, Node, NodeSet } from "@matter/node";
-import { EndpointSelector } from "@matter/protocol";
+import { EndpointSelector, Val } from "@matter/protocol";
 import colors from "ansi-colors";
 
 /**
@@ -69,6 +78,17 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
         const subcommandName = argv[subIdx] as string;
         const afterSub = [...argv.slice(0, subIdx), ...argv.slice(subIdx + 1)];
 
+        // Virtual subcommands: get/set
+        if (subcommandName === "get" || subcommandName === "set") {
+            return dispatchVirtual(
+                domain,
+                cluster,
+                afterSub,
+                context,
+                subcommandName === "get" ? createClusterGet : createClusterSet,
+            );
+        }
+
         // Second non-flag arg is the target
         const targetIdx = afterSub.findIndex(a => typeof a === "string" && !a.startsWith("-"));
         let target: string | undefined;
@@ -83,9 +103,9 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
         // Find the command model
         const cmdModel = findRequestCommand(cluster, subcommandName);
         if (!cmdModel) {
-            const available = requestCommands(cluster)
-                .map(c => decamelize(c.propertyName))
-                .join(", ");
+            const available = ["get", "set", ...requestCommands(cluster).map(c => decamelize(c.propertyName))].join(
+                ", ",
+            );
             throw new UsageError(`Unknown command "${subcommandName}". Available: ${available}`);
         }
 
@@ -116,10 +136,12 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
         const cmds = requestCommands(cluster);
         const description = cluster.description ?? "";
 
-        const cmdDetails = cmds.map(cmd => {
-            const desc = cmd.description ?? "";
-            return [decamelize(cmd.propertyName), desc] as [string, string];
-        });
+        const cmdDetails = Array<[string, string]>();
+        cmdDetails.push(["get", "Read attribute values"]);
+        cmdDetails.push(["set", "Write attribute values"]);
+        for (const cmd of cmds) {
+            cmdDetails.push([decamelize(cmd.propertyName), cmd.description ?? ""]);
+        }
 
         const maxWidth = cmdDetails.length ? Math.max(...cmdDetails.map(([n]) => n.length)) : 0;
         const detailWidth = domain.terminalWidth - maxWidth - 4;
@@ -407,6 +429,195 @@ function findRequestCommand(cluster: ClusterModel, name: string): CommandModel |
 }
 
 /**
+ * Dispatch a virtual subcommand (`get` or `set`) with target/selector resolution.
+ *
+ * Handles the same three-way branching as regular subcommands: no target (resolve from context), path target, or
+ * selector target (NodeSet-based multi-endpoint dispatch).
+ */
+function dispatchVirtual(
+    domain: Domain,
+    cluster: ClusterModel,
+    afterSub: unknown[],
+    context: ActionContext,
+    createWrapper: (cluster: ClusterModel, resolveBehavior?: VirtualResolver) => DomainCommand,
+): MaybePromise<unknown> {
+    // Find the target (first non-flag, non-+shorthand positional)
+    const targetIdx = afterSub.findIndex(a => typeof a === "string" && !a.startsWith("-") && !a.startsWith("+"));
+    let target: string | undefined;
+    let subArgv: unknown[];
+    if (targetIdx !== -1) {
+        target = afterSub[targetIdx] as string;
+        subArgv = [...afterSub.slice(0, targetIdx), ...afterSub.slice(targetIdx + 1)];
+    } else {
+        subArgv = afterSub;
+    }
+
+    // Selector-based dispatch: invoke on each matching endpoint
+    if (target !== undefined) {
+        const selector = EndpointSelector(target);
+        if (!selector.isPath) {
+            // Create a wrapper for help/schema purposes only
+            const helpWrapper = createWrapper(cluster);
+
+            // Build a command that resolves endpoints via NodeSet and invokes per-endpoint
+            const selectorCommand: DomainCommand = function (
+                this: { domain?: Domain },
+                context: ActionContext,
+                ...argv: unknown[]
+            ) {
+                const nodeSet = buildNodeSet(domain);
+
+                return MaybePromise.then(
+                    () => nodeSet.select(selector, { behavior: cluster.propertyName }),
+                    endpoints => {
+                        if (endpoints.length === 0) {
+                            throw new UsageError(
+                                `No endpoints matching "${selector}" support ${decamelize(cluster.propertyName)}`,
+                            );
+                        }
+
+                        const results = Array<unknown>();
+                        const iter = endpoints[Symbol.iterator]();
+
+                        const invokeNext = (): MaybePromise<unknown> => {
+                            const { value: endpoint, done } = iter.next();
+                            if (done) {
+                                return results.length === 1 ? results[0] : results;
+                            }
+
+                            const behaviorType = endpoint.behaviors.supported[cluster.propertyName];
+                            if (!behaviorType) {
+                                return invokeNext();
+                            }
+
+                            const behavior = endpoint.agentFor(context).get(behaviorType);
+                            const perEndpoint = createWrapper(cluster, () => behavior);
+                            return MaybePromise.then(
+                                () => perEndpoint.call({ domain } as Record<string, unknown>, context, ...argv),
+                                result => {
+                                    results.push(result);
+                                    return invokeNext();
+                                },
+                            );
+                        };
+
+                        return invokeNext();
+                    },
+                );
+            };
+            selectorCommand.help = helpWrapper.help;
+
+            try {
+                return selectorCommand.call({ domain }, context, ...subArgv);
+            } catch (e) {
+                if (e instanceof HelpRequest) {
+                    selectorCommand.help(domain);
+                    return;
+                }
+                throw e;
+            }
+        }
+    }
+
+    const resolver: VirtualResolver = (domain, context) => resolveTarget(domain, cluster.propertyName, context, target);
+    const wrapper = createWrapper(cluster, resolver);
+    try {
+        return wrapper.call({ domain }, context, ...subArgv);
+    } catch (e) {
+        if (e instanceof HelpRequest) {
+            wrapper.help(domain);
+            return;
+        }
+        throw e;
+    }
+}
+
+type VirtualResolver = (domain: Domain, context: ActionContext) => MaybePromise<Behavior>;
+
+/**
+ * Build a synthetic boolean schema with one boolean field per cluster attribute.
+ */
+function buildBooleanSchema(cluster: ClusterModel, name: string): DatatypeModel {
+    const scope = Scope(cluster);
+    const attrs = scope.membersOf(cluster, {
+        tags: [ElementTag.Attribute],
+        conformance: "deconflicted",
+    });
+
+    const children = Array<FieldModel>();
+    for (const attr of attrs) {
+        children.push(new FieldModel({ name: attr.name, type: "bool" }));
+    }
+
+    const schema = new DatatypeModel({ name, type: "struct" }, ...children);
+    schema.finalize();
+    return schema;
+}
+
+/**
+ * Create a `get` wrapper for a cluster that reads attribute values.
+ */
+function createClusterGet(cluster: ClusterModel, resolveBehavior?: VirtualResolver): DomainCommand {
+    const schema = buildBooleanSchema(cluster, "get");
+    const resolve =
+        resolveBehavior ??
+        ((domain: Domain, context: ActionContext) => resolveTarget(domain, cluster.propertyName, context));
+
+    return CliCommand.create({
+        name: "get",
+        description: `Read ${cluster.name} attribute values. Use flags to select specific attributes.`,
+        schema,
+        usage: ["[TARGET] [--ATTR]...", "[TARGET] +attr,attr,..."],
+
+        invoke(this: Domain, context: ActionContext, args: never) {
+            const { _, ...flags } = args as Val.Struct;
+
+            const behavior = resolve(this, context);
+
+            return MaybePromise.then(behavior, resolved => {
+                const state = resolved.state as Val.Struct;
+                const selected = Object.keys(flags).filter(k => flags[k] === true);
+
+                if (selected.length === 0) {
+                    return state;
+                }
+
+                const result: Val.Struct = {};
+                for (const key of selected) {
+                    result[key] = state[key];
+                }
+                return result;
+            });
+        },
+    });
+}
+
+/**
+ * Create a `set` wrapper for a cluster that writes attribute values.
+ */
+function createClusterSet(cluster: ClusterModel, resolveBehavior?: VirtualResolver): DomainCommand {
+    const resolve =
+        resolveBehavior ??
+        ((domain: Domain, context: ActionContext) => resolveTarget(domain, cluster.propertyName, context));
+
+    return CliCommand.create({
+        name: "set",
+        description: `Write ${cluster.name} attribute values.`,
+        schema: cluster,
+
+        invoke(this: Domain, context: ActionContext, args: never) {
+            const { _, ...values } = args as Val.Struct;
+
+            const behavior = resolve(this, context);
+
+            return MaybePromise.then(behavior, resolved => {
+                Object.assign(resolved.state, values);
+            });
+        },
+    });
+}
+
+/**
  * Stat provider for cluster command functions.
  *
  * Makes cluster commands navigable as directories — `ls onOff` lists subcommands, `cd onOff; toggle` works.
@@ -418,7 +629,7 @@ Stat.provide(definition => {
 
     const cluster = (definition as ClusterCommandFn)[clusterModelSymbol];
     const cmds = requestCommands(cluster);
-    const names = cmds.map(c => decamelize(c.propertyName));
+    const names = ["get", "set", ...cmds.map(c => decamelize(c.propertyName))];
 
     return Directory({
         tag: "cluster",
@@ -430,6 +641,12 @@ Stat.provide(definition => {
         },
 
         definitionAt(path: string, _context: ActionContext) {
+            if (path === "get") {
+                return createClusterGet(cluster);
+            }
+            if (path === "set") {
+                return createClusterSet(cluster);
+            }
             const cmdModel = findRequestCommand(cluster, path);
             if (!cmdModel) {
                 return;

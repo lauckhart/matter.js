@@ -7,7 +7,7 @@
 import { CliCommand } from "#cli-command.js";
 import { DomainCommand } from "#globals.js";
 import { Directory, Stat } from "#stat.js";
-import { CommandModel, ElementTag, Schema, Scope } from "@matter/model";
+import { CommandModel, DatatypeModel, ElementTag, FieldModel, Schema, Scope } from "@matter/model";
 import type { ActionContext, Peers, ServerNode } from "@matter/node";
 import { Behavior, Endpoint } from "@matter/node";
 import type { Val } from "@matter/protocol";
@@ -225,32 +225,45 @@ function behaviorSchema(behavior: Behavior): Schema | undefined {
 
 function createGetCommand(behavior: Behavior): DomainCommand {
     const schema = behaviorSchema(behavior);
+    const boolSchema = buildBehaviorBooleanSchema(schema, "get");
 
-    const command: DomainCommand = function get(_context: ActionContext, ...argv: unknown[]) {
-        if (argv.length === 0) {
-            return behavior.state;
-        }
-        return (behavior.state as Val.Struct)[argv[0] as string];
-    };
+    return CliCommand.create({
+        name: "get",
+        description: "Read behavior state. Without arguments, returns all attributes.",
+        schema: boolSchema,
+        usage: ["[ATTRIBUTE]", "[--ATTR]...", "+attr,attr,..."],
 
-    command.help = domain => {
-        const lines = [
-            "\nUsage: get [ATTRIBUTE]",
-            "",
-            "Read behavior state.  Without arguments, returns all attributes.",
-            "",
-        ];
-        if (schema) {
-            lines.push("Attributes:");
-            for (const attr of schema.conformant.properties) {
-                const desc = attr.description ?? "";
-                lines.push(`  ${attr.propertyName}${desc ? ` — ${desc}` : ""}`);
+        invoke(_context: ActionContext, args: never) {
+            const { _, ...flags } = args as Val.Struct;
+            const positionals = _ as unknown[];
+
+            // Collect selected attributes from flags and positionals
+            const selected = Array<string>();
+            for (const [key, value] of Object.entries(flags)) {
+                if (value === true) {
+                    selected.push(key);
+                }
             }
-        }
-        domain.out(lines.join("\n"), "\n\n");
-    };
+            for (const arg of positionals) {
+                if (typeof arg === "string") {
+                    selected.push(arg);
+                }
+            }
 
-    return command;
+            if (selected.length === 0) {
+                return behavior.state;
+            }
+            if (selected.length === 1) {
+                return (behavior.state as Val.Struct)[selected[0]];
+            }
+
+            const result: Val.Struct = {};
+            for (const key of selected) {
+                result[key] = (behavior.state as Val.Struct)[key];
+            }
+            return result;
+        },
+    });
 }
 
 function createSetCommand(behavior: Behavior): DomainCommand {
@@ -313,4 +326,25 @@ function listPaths(endpoint: Endpoint) {
     }
 
     return [...paths];
+}
+
+/**
+ * Build a synthetic boolean schema with one boolean field per conformant attribute/property, plus a rest collector
+ * for positional attribute names.
+ */
+function buildBehaviorBooleanSchema(schema: Schema | undefined, name: string): DatatypeModel {
+    const children = Array<FieldModel>();
+
+    if (schema) {
+        for (const prop of schema.conformant.properties) {
+            children.push(new FieldModel({ name: prop.name, type: "bool" }));
+        }
+    }
+
+    // Add a rest collector so positional attribute names are accepted
+    children.push(new FieldModel({ name: "restArgs", type: "list", constraint: "max 100" }));
+
+    const result = new DatatypeModel({ name, type: "struct" }, ...children);
+    result.finalize();
+    return result;
 }
