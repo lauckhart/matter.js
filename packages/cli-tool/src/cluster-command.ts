@@ -7,12 +7,14 @@
 import { CliCommand, HelpRequest, UsageError } from "#cli-command.js";
 import type { Domain } from "#domain.js";
 import { DomainCommand } from "#globals.js";
+import { LazyNode } from "#lazy-node.js";
 import { Location } from "#location.js";
 import { Directory, Stat } from "#stat.js";
 import { camelize, decamelize, FormattedText, MaybePromise } from "@matter/general";
-import { ClusterModel, CommandModel, ElementTag, Matter, Scope } from "@matter/model";
+import { ClusterModel, CommandModel, DataModelPath, ElementTag, Matter, Scope } from "@matter/model";
 import type { ActionContext } from "@matter/node";
-import { Behavior, Endpoint } from "@matter/node";
+import { Behavior, Endpoint, Node, NodeSet } from "@matter/node";
+import { EndpointSelector } from "@matter/protocol";
 import colors from "ansi-colors";
 
 /**
@@ -87,6 +89,14 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
             throw new UsageError(`Unknown command "${subcommandName}". Available: ${available}`);
         }
 
+        // Selector-based dispatch: if target is a non-path selector, use NodeSet
+        if (target !== undefined) {
+            const selector = EndpointSelector(target);
+            if (!selector.isPath) {
+                return invokeOnSelector(domain, cluster, cmdModel, selector, context, subArgv);
+            }
+        }
+
         // Create a wrapper and invoke it; catch HelpRequest so domain.ts doesn't show cluster-level help
         const wrapper = createSubcommandWrapper(cluster, cmdModel, target);
         try {
@@ -129,6 +139,8 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
                 `\n${colors.bold("Usage:")} ${clusterName} COMMAND [TARGET] [OPTION]...`,
                 "",
                 ...FormattedText(description, domain.terminalWidth),
+                "",
+                `${colors.bold("Target:")} a path (node0/1/onOff), node name, or selector (*:@light, node0,node1:@OnOffLight)`,
                 "",
                 colors.bold("Commands:"),
                 ...cmdHelp,
@@ -226,6 +238,137 @@ function resolveFromPath(
 
         throw new UsageError(`"${targetPath}" is not an endpoint or behavior`);
     });
+}
+
+/**
+ * Build a {@link NodeSet} from the domain's globals and current location context.
+ */
+function buildNodeSet(domain: Domain): NodeSet {
+    return new NodeSet({
+        get(id) {
+            return domain.node(id);
+        },
+
+        ids() {
+            const result = Array<string>();
+            for (const [key, value] of Object.entries(domain.globals)) {
+                if (value instanceof Node || value instanceof LazyNode) {
+                    result.push(key);
+                }
+            }
+            return result;
+        },
+
+        context: findContextNode(domain),
+    });
+}
+
+/**
+ * Walk up the domain location to find the nearest {@link Node}.
+ */
+function findContextNode(domain: Domain): Node | undefined {
+    let location: Location | undefined = domain.location;
+    while (location) {
+        if (location.definition instanceof Node) {
+            return location.definition;
+        }
+        if (location.definition instanceof Endpoint) {
+            const owner = location.definition.owner;
+            if (owner instanceof Node) {
+                return owner;
+            }
+        }
+        location = location.parent;
+    }
+}
+
+/**
+ * Invoke a cluster command on all endpoints matching a selector.
+ */
+function invokeOnSelector(
+    domain: Domain,
+    cluster: ClusterModel,
+    cmdModel: CommandModel,
+    selector: EndpointSelector,
+    context: ActionContext,
+    subArgv: unknown[],
+): MaybePromise<unknown> {
+    const wrapper = CliCommand.create({
+        name: decamelize(cmdModel.propertyName),
+        description: cmdModel.description ?? "",
+        schema: cmdModel,
+
+        invoke(this: Domain, context: ActionContext, args: never) {
+            const nodeSet = buildNodeSet(domain);
+
+            return MaybePromise.then(
+                () => nodeSet.select(selector, { behavior: cluster.propertyName }),
+                endpoints => {
+                    if (endpoints.length === 0) {
+                        throw new UsageError(
+                            `No endpoints matching "${selector}" support ${decamelize(cluster.propertyName)}`,
+                        );
+                    }
+
+                    return invokeOnEndpoints(endpoints, cluster, cmdModel, context, args);
+                },
+            );
+        },
+    });
+
+    try {
+        return wrapper.call({ domain } as Record<string, unknown>, context, ...subArgv);
+    } catch (e) {
+        if (e instanceof HelpRequest) {
+            wrapper.help(domain);
+            return;
+        }
+        throw e;
+    }
+}
+
+/**
+ * Sequentially invoke a command on each endpoint, collecting results.
+ */
+function invokeOnEndpoints(
+    endpoints: Endpoint[],
+    cluster: ClusterModel,
+    cmdModel: CommandModel,
+    context: ActionContext,
+    args: never,
+): MaybePromise<unknown> {
+    const results = Array<unknown>();
+    const iter = endpoints[Symbol.iterator]();
+
+    const invokeNext = (): MaybePromise<unknown> => {
+        const { value: endpoint, done } = iter.next();
+        if (done) {
+            return results.length === 1 ? results[0] : results;
+        }
+
+        const behaviorType = endpoint.behaviors.supported[cluster.propertyName];
+        if (!behaviorType) {
+            return invokeNext();
+        }
+
+        const behavior = endpoint.agentFor(context).get(behaviorType);
+        const supervisor = (behaviorType as Behavior.Type).supervisor;
+        const valueSupervisor = supervisor.get(cmdModel);
+        const castArgs = valueSupervisor.cast(args) as never;
+        valueSupervisor.validate?.(castArgs, context, {
+            path: new DataModelPath(cmdModel.path),
+        });
+
+        return MaybePromise.then(
+            () => (behavior as unknown as Record<string, Function>)[cmdModel.propertyName](castArgs),
+            result => {
+                results.push(result);
+                return invokeNext();
+            },
+        );
+    };
+
+    return invokeNext();
 }
 
 /**
