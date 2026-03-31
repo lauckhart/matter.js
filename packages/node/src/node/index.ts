@@ -9,6 +9,7 @@ export * from "./ClientNode.js";
 export * from "./integration/index.js";
 export * from "./Node.js";
 export * from "./NodeLifecycle.js";
+export * from "./NodeSet.js";
 export * from "./Plugins.js";
 export * from "./NodePhysicalProperties.js";
 export * from "./Plugins.js";
