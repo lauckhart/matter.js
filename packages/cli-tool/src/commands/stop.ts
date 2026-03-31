@@ -4,23 +4,42 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { NodeRegistry } from "#node-registry.js";
+import { bool, description, field, string, uint16 } from "@matter/model";
 import { LifecycleServer, RemoteNode } from "@matter/node";
-import { Command } from "./command.js";
 
-Command({
+class StopPositional {
+    @description("Node ID to stop")
+    @field(string)
+    node?: string;
+}
+
+class StopArgs {
+    @description("Kill immediately without graceful shutdown")
+    @field(bool)
+    force?: boolean;
+
+    @description("Seconds to wait for graceful shutdown")
+    @field(uint16)
+    timeout = 10;
+
+    @field(StopPositional)
+    positionalArgs?: StopPositional;
+}
+
+new CliCommand({
+    name: "stop",
     usage: "<node> [options]",
     description:
         "Stop a running node.\n\n" +
         "Attempts graceful shutdown via the WebSocket management API, then falls back to signals if needed.",
-    positionalArgs: [{ name: "node", type: "string", description: "Node ID to stop" }],
-    namedArgs: [
-        { name: "force", description: "Kill immediately without graceful shutdown" },
-        { name: "timeout", type: "integer", default: 10, description: "Seconds to wait for graceful shutdown" },
-    ],
+    input: StopArgs,
 
-    invoke: async function stop(_context, args) {
-        const nodeId = args.node;
+    invoke: async function stop(
+        _context,
+        { node: nodeId, force, timeout }: { node?: string; force?: boolean; timeout?: number },
+    ) {
         if (!nodeId) {
             this.err("Node ID is required\n");
             return;
@@ -37,14 +56,14 @@ Command({
             return;
         }
 
-        if (args.force) {
+        if (force) {
             process.kill(pid, "SIGKILL");
             await registry.removePid(nodeId);
             this.out(`Killed node "${nodeId}" (pid ${pid})\n`);
             return;
         }
 
-        const timeoutMs = (args.timeout ?? 10) * 1000;
+        const timeoutMs = (timeout ?? 10) * 1000;
 
         // Try graceful shutdown via RemoteNode, fall back to SIGTERM
         try {

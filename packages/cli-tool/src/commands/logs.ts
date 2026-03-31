@@ -4,14 +4,71 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { NodeRegistry } from "#node-registry.js";
 import { type File, Filesystem, LogFile } from "@matter/general";
+import { bool, description, field, string, uint32 } from "@matter/model";
 import { LogsServer } from "@matter/node/behaviors/system/logs";
 import { open, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { Command } from "./command.js";
 
-Command({
+class LogsPositional {
+    @description("Node ID")
+    @field(string)
+    node?: string;
+}
+
+class LogsArgs {
+    @description("Stream new log lines as they are written")
+    @field(bool)
+    follow?: boolean;
+
+    @description("Short for --follow")
+    @field(bool)
+    f?: boolean;
+
+    @description("Show only the last N lines")
+    @field(uint32)
+    tail?: number;
+
+    @description("Short for --tail")
+    @field(uint32)
+    n?: number;
+
+    @description("Show logs since timestamp or relative duration (e.g. 10m, 2h, 1d)")
+    @field(string)
+    since?: string;
+
+    @description("Show logs until timestamp or relative duration")
+    @field(string)
+    until?: string;
+
+    @description("Truncate the log file")
+    @field(bool)
+    clear?: boolean;
+
+    @description("Force file-based access (skip remote)")
+    @field(bool)
+    file?: boolean;
+
+    @field(LogsPositional)
+    positionalArgs?: LogsPositional;
+}
+
+interface LogsArgValues {
+    node?: string;
+    follow?: boolean;
+    f?: boolean;
+    tail?: number;
+    n?: number;
+    since?: string;
+    until?: string;
+    clear?: boolean;
+    file?: boolean;
+}
+
+new CliCommand({
+    name: "logs",
     usage: ["<node>", "<node> --follow", "<node> --tail 100", "<node> --since 10m", "<node> --clear"],
     description:
         "Show logs for a node.\n\n" +
@@ -21,23 +78,9 @@ Command({
         "lines.  Use --since/--until to filter by time (accepts ISO timestamps like 2025-01-15T14:30:00 or relative " +
         'durations like "10m", "2h", "1d").  Use --clear to truncate the log file.  Use --file to force file-based ' +
         "access.",
-    positionalArgs: [{ name: "node", type: "string", description: "Node ID" }],
-    namedArgs: [
-        { name: "follow", description: "Stream new log lines as they are written" },
-        { name: "f", description: "Short for --follow" },
-        { name: "tail", type: "integer", description: "Show only the last N lines" },
-        { name: "n", type: "integer", description: "Short for --tail" },
-        {
-            name: "since",
-            type: "string",
-            description: "Show logs since timestamp or relative duration (e.g. 10m, 2h, 1d)",
-        },
-        { name: "until", type: "string", description: "Show logs until timestamp or relative duration" },
-        { name: "clear", description: "Truncate the log file" },
-        { name: "file", description: "Force file-based access (skip remote)" },
-    ],
+    input: LogsArgs,
 
-    invoke: async function logs(_context, args) {
+    invoke: async function logs(_context, args: LogsArgValues) {
         const nodeId = args.node;
         if (!nodeId) {
             this.err("Node ID is required\n");

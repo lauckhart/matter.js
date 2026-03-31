@@ -4,20 +4,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { bin, DomainCommand } from "#globals.js";
+import { CliCommand } from "#cli-command.js";
+import { DomainCommand } from "#globals.js";
 import { FormattedText } from "@matter/general";
+import { any, field } from "@matter/model";
 import type { ActionContext } from "@matter/node";
 import { parse } from "acorn";
 import colors from "ansi-colors";
 import { generate } from "escodegen";
-import { Command } from "./command.js";
 
-Command({
+class HelpPositional {
+    @field(any)
+    path?: unknown;
+}
+
+class HelpArgs {
+    @field(HelpPositional)
+    positionalArgs?: HelpPositional;
+}
+
+new CliCommand({
+    name: "help",
     usage: "[PATH]",
     description: "Display help",
-    maxArgs: 1,
+    aliases: ["man"],
+    input: HelpArgs,
 
-    invoke: async function help(context: ActionContext, { path }) {
+    invoke: async function help(context: ActionContext, { path }: { path?: unknown }) {
         const quote = (text: string) => {
             if (this.colorize) {
                 return colors.blue(text);
@@ -87,5 +100,3 @@ You can change the current path using ${quote("cd <path>")}.  Paths work like yo
         );
     },
 });
-
-bin.man = bin.help;

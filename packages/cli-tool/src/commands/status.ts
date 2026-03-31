@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { LazyNode } from "#lazy-node.js";
 import { NodeRegistry } from "#node-registry.js";
 import colors from "ansi-colors";
-import { Command } from "./command.js";
 
-Command({
+new CliCommand({
+    name: "status",
     description:
         "Show all known Matter nodes and their connection state.  Lists nodes discovered from the storage root along with their current status (idle, connected, or error).",
 

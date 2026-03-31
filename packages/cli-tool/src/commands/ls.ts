@@ -4,24 +4,38 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { Domain } from "#domain.js";
 import { Location } from "#location.js";
 import { MaybePromise } from "@matter/general";
+import { bool, description, field, listOf, string } from "@matter/model";
 import type { ActionContext } from "@matter/node";
 import colors from "ansi-colors";
-import { Command } from "./command.js";
 
-Command({
+class LsArgs {
+    @description("show hidden properties")
+    @field(bool)
+    a?: boolean;
+
+    @description("use a long listing format")
+    @field(bool)
+    l?: boolean;
+
+    @description("list directories themselves, not their contents")
+    @field(bool)
+    d?: boolean;
+
+    @field(listOf(string))
+    restArgs?: string[];
+}
+
+new CliCommand({
+    name: "ls",
     usage: "[OPTION]... [PATH]...",
     description: "List properties of the current path or other paths you specify.",
-    namedArgs: [
-        { name: "a", description: "show hidden properties" },
-        { name: "l", description: "use a long listing format" },
-        { name: "d", description: "list directories themselves, not their contents" },
-    ],
-    restArgs: { name: "file", description: "filename to list", type: "string" },
+    input: LsArgs,
 
-    invoke: async function ls(context: ActionContext, args) {
+    invoke: async function ls(context: ActionContext, args: { a?: boolean; l?: boolean; d?: boolean; _: string[] }) {
         const locations = Array<DisplayLocation>();
         for (const str of args._) {
             const input = `${str}`;
@@ -75,7 +89,7 @@ Command({
     },
 });
 
-function display(domain: Domain, long: boolean, files: DisplayLocation[], linePrefix: string) {
+function display(domain: Domain, long: boolean | undefined, files: DisplayLocation[], linePrefix: string) {
     if (long) {
         displayList(domain, files, linePrefix);
     } else {

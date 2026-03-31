@@ -4,15 +4,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { Domain } from "#domain.js";
 import { LazyNode } from "#lazy-node.js";
 import { NodeRegistry } from "#node-registry.js";
 import { VariableService } from "@matter/general";
+import { any, description, field, listOf, string } from "@matter/model";
 import { access } from "node:fs/promises";
 import { resolve } from "node:path";
-import { Command } from "./command.js";
 
-Command({
+class RegisterPositional {
+    @description("One of: remote, controller, device")
+    @field(string)
+    subcommand?: string;
+}
+
+class RegisterArgs {
+    @field(RegisterPositional)
+    positionalArgs?: RegisterPositional;
+
+    @field(listOf(any))
+    restArgs?: unknown[];
+}
+
+new CliCommand({
+    name: "register",
     usage: ["remote <name> <url>", "controller [options]", "device <script> [options]"],
     description:
         "Register a Matter node.  Subcommands:\n\n" +
@@ -21,23 +37,22 @@ Command({
         "  device <script> [options] Register a node backed by a user script.\n\n" +
         'Options may include { name: "myname" } to override auto-generated names.  Controller names default to' +
         ' "controller"; device names default to "device".  Numeric suffixes are appended on conflict.',
-    positionalArgs: [{ name: "subcommand", type: "string", description: "One of: remote, controller, device" }],
-    restArgs: { name: "args", type: "any", description: "Subcommand arguments" },
+    input: RegisterArgs,
 
-    invoke: async function register(_context, args) {
-        switch (args.subcommand) {
+    invoke: async function register(_context, { subcommand, _ }: { subcommand?: string; _: unknown[] }) {
+        switch (subcommand) {
             case "remote":
-                return registerRemote(this, args._);
+                return registerRemote(this, _);
 
             case "controller":
-                return registerController(this, args._);
+                return registerController(this, _);
 
             case "device":
-                return registerDevice(this, args._);
+                return registerDevice(this, _);
 
             default:
-                if (args.subcommand) {
-                    this.err(`Unknown subcommand: ${args.subcommand}\n`);
+                if (subcommand) {
+                    this.err(`Unknown subcommand: ${subcommand}\n`);
                 } else {
                     this.err("Subcommand required (remote, controller, or device)\n");
                 }

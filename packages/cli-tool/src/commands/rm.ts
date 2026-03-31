@@ -4,19 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { Location } from "#location.js";
+import { field, listOf, string } from "@matter/model";
 import type { ActionContext } from "@matter/node";
-import { Command } from "./command.js";
 
-Command({
+class RmArgs {
+    @field(listOf(string))
+    restArgs?: string[];
+}
+
+new CliCommand({
+    name: "rm",
     usage: "[PATH]...",
     description: "Deletes the properties at the paths you specify.",
-    restArgs: { name: "path", description: "path to remove", type: "string" },
+    input: RmArgs,
 
-    invoke: async function rm(context: ActionContext, args) {
+    invoke: async function rm(context: ActionContext, { _ }: { _: string[] }) {
         const toDelete = Array<Location>();
 
-        for (const path of args._) {
+        for (const path of _) {
             const location = await this.location.at(`${path}`, undefined, context);
             if (!location.parent) {
                 this.err(`Invalid argument: Can't delete ${location.path}`);

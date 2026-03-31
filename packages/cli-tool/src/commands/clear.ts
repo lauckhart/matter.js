@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Command } from "./command.js";
+import { CliCommand } from "#cli-command.js";
 
-Command({
+new CliCommand({
+    name: "clear",
     description: "Clear the terminal screen",
 
     invoke: function clear() {

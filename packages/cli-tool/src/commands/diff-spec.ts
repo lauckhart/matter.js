@@ -4,36 +4,36 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { LogFormat, MatterError } from "@matter/general";
-import { AnyElement, ElementTag, Model, ModelDiff, Specification } from "@matter/model";
-import { Command } from "./command.js";
+import { any, AnyElement, description, ElementTag, field, Model, ModelDiff, Specification, uint8 } from "@matter/model";
 
-Command({
+class DiffSpecPositional {
+    @description("the baseline model")
+    @field(any)
+    from?: unknown;
+
+    @description("the target model")
+    @field(any)
+    to?: unknown;
+}
+
+class DiffSpecArgs {
+    @description("maximum depth for details")
+    @field(uint8)
+    d = 2;
+
+    @field(DiffSpecPositional)
+    positionalArgs?: DiffSpecPositional;
+}
+
+new CliCommand({
+    name: "diff-spec",
     usage: "[FROM] [TO]",
     description: "Show differences between Matter versions.",
-    namedArgs: [
-        {
-            name: "d",
-            description: "maximum depth for details",
-            default: 2,
-            type: "integer",
-        },
-    ],
-    positionalArgs: [
-        {
-            name: "from",
-            description: "the baseline model",
-            type: "any",
-        },
-        {
-            name: "to",
-            description: "the target model",
-            type: "any",
-        },
-    ],
-    maxArgs: 2,
+    input: DiffSpecArgs,
 
-    invoke: async function diffSpec(_context, { d: depth, from, to }) {
+    invoke: async function diffSpec(_context, { d: depth, from, to }: { d?: number; from?: unknown; to?: unknown }) {
         if (to === undefined) {
             to = Specification.REVISION;
         }

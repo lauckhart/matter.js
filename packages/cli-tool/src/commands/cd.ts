@@ -4,17 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { NotADirectoryError } from "#errors.js";
+import { description, field, string } from "@matter/model";
 import type { ActionContext } from "@matter/node";
-import { Command } from "./command.js";
 
-Command({
+class CdPositional {
+    @description("directory to enter")
+    @field(string)
+    path?: string;
+}
+
+class CdArgs {
+    @field(CdPositional)
+    positionalArgs?: CdPositional;
+}
+
+new CliCommand({
+    name: "cd",
     usage: "[PATH]",
     description: "Change current working directory.  If you omit PATH changes to the last node entered.",
-    maxArgs: 1,
-    positionalArgs: [{ name: "path", description: "directory to enter", type: "string" }],
+    input: CdArgs,
 
-    invoke: async function cd(context: ActionContext, { path }) {
+    invoke: async function cd(context: ActionContext, { path }: { path?: string }) {
         if (path === undefined) {
             path = this.env.vars.get("home", "/");
         } else {

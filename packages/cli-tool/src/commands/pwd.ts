@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Command } from "./command.js";
+import { CliCommand } from "#cli-command.js";
 
-Command({
+new CliCommand({
+    name: "pwd",
     description: "Display current working directory.",
-    maxArgs: 0,
 
     invoke: function pwd() {
         this.out(this.location.path, "\n");

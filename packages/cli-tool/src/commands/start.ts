@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CliCommand } from "#cli-command.js";
 import { LazyNode } from "#lazy-node.js";
 import { NodeRegistry } from "#node-registry.js";
+import { bool, description, field, string } from "@matter/model";
 import { fork } from "node:child_process";
 import { closeSync, mkdirSync, openSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Command } from "./command.js";
 
 /**
  * Resolve the default node entrypoint script path.
@@ -19,21 +20,39 @@ function defaultEntrypoint() {
     return join(dirname(fileURLToPath(import.meta.url)), "..", "node-entrypoint.js");
 }
 
-Command({
+class StartPositional {
+    @description("Node ID to start")
+    @field(string)
+    node?: string;
+}
+
+class StartArgs {
+    @description("Run in the current terminal instead of daemonizing")
+    @field(bool)
+    foreground?: boolean;
+
+    @description("Short for --foreground")
+    @field(bool)
+    f?: boolean;
+
+    @field(StartPositional)
+    positionalArgs?: StartPositional;
+}
+
+new CliCommand({
+    name: "start",
     usage: "<node> [options]",
     description:
         "Start a registered node.\n\n" +
         'If the node name is "controller" or "device" and is not yet registered, it is auto-registered with ' +
         "defaults.\n\n" +
         "By default the node runs as a detached background process.  Use --foreground to run in the current terminal.",
-    positionalArgs: [{ name: "node", type: "string", description: "Node ID to start" }],
-    namedArgs: [
-        { name: "foreground", description: "Run in the current terminal instead of daemonizing" },
-        { name: "f", description: "Short for --foreground" },
-    ],
+    input: StartArgs,
 
-    invoke: async function start(_context, args) {
-        const nodeId = args.node;
+    invoke: async function start(
+        _context,
+        { node: nodeId, foreground, f }: { node?: string; foreground?: boolean; f?: boolean },
+    ) {
         if (!nodeId) {
             this.err("Node ID is required\n");
             return;
@@ -73,9 +92,9 @@ Command({
         // Resolve the entry point — custom entrypoint or the default runner
         const entrypoint = registry.get(nodeId, "entrypoint") ?? defaultEntrypoint();
 
-        const foreground = args.foreground || args.f;
+        const isForeground = foreground || f;
 
-        if (foreground) {
+        if (isForeground) {
             // Foreground mode — inherit stdio, wait for exit
             const child = fork(entrypoint, [], {
                 env: childEnv,
