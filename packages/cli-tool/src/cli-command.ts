@@ -5,12 +5,22 @@
  */
 
 import { Domain } from "#domain.js";
-import { bin } from "#globals.js";
-import { FormattedText, ImplementationError, MaybePromise } from "@matter/general";
-import { DatatypeModel, FieldModel, Metatype, Schema } from "@matter/model";
-import type { ActionContext } from "@matter/node";
+import { bin, DomainCommand } from "#globals.js";
+import { decamelize, FormattedText, ImplementationError, MatterError, MaybePromise } from "@matter/general";
+import { DatatypeModel, FieldModel, Metatype, Schema, ValueModel } from "@matter/model";
+import type { ActionContext, Behavior } from "@matter/node";
 import type { Val } from "@matter/protocol";
 import colors from "ansi-colors";
+
+/**
+ * Thrown when `--help` is encountered during arg parsing.
+ */
+export class HelpRequest extends MatterError {}
+
+/**
+ * Thrown on invalid arguments during arg parsing.
+ */
+export class UsageError extends MatterError {}
 
 /**
  * A CLI command with schema-driven arg parsing and help.
@@ -20,7 +30,7 @@ import colors from "ansi-colors";
  */
 export class CliCommand {
     readonly name: string;
-    readonly schema: DatatypeModel;
+    readonly schema: ValueModel;
     readonly aliases?: string[];
     readonly #invoke: CliCommand.Options["invoke"];
     readonly #description: string;
@@ -28,7 +38,7 @@ export class CliCommand {
 
     readonly #defaults: Val.Struct;
 
-    constructor(options: CliCommand.Options) {
+    constructor(options: CliCommand.Options, register = true) {
         this.name = options.name;
         this.aliases = options.aliases;
         this.#invoke = options.invoke;
@@ -50,7 +60,35 @@ export class CliCommand {
             this.#defaults = {};
         }
 
-        this.#register();
+        if (register) {
+            this.#register();
+        }
+    }
+
+    /**
+     * Create a {@link DomainCommand} wrapping a behavior method with schema-driven arg parsing.
+     */
+    static forBehavior(options: {
+        method: Function;
+        behavior: Behavior;
+        schema: ValueModel;
+        name: string;
+    }): DomainCommand {
+        const { method, behavior, schema, name } = options;
+
+        const command = new CliCommand(
+            {
+                name,
+                description: schema.description ?? "",
+                schema,
+                invoke: (_context: ActionContext, args: never) => {
+                    return method.call(behavior, args);
+                },
+            },
+            false,
+        );
+
+        return command.#createWrapper(false);
     }
 
     #register() {
@@ -63,29 +101,26 @@ export class CliCommand {
         }
     }
 
-    #createWrapper() {
+    #createWrapper(requireDomain = true): DomainCommand {
         const self = this;
 
-        const command = function invoke(this: { domain: Domain }, context: ActionContext, ...argv: unknown[]) {
-            const domain = this.domain;
-            if (!domain?.isDomain) {
+        const command = function invoke(this: { domain?: Domain }, context: ActionContext, ...argv: unknown[]) {
+            const domain = this?.domain;
+            if (requireDomain && !domain?.isDomain) {
                 throw new ImplementationError(`Domain command ${self.name} invoked without bin scope`);
             }
 
-            const result = self.#parseArgs(domain, argv);
-            if (result === undefined) {
-                return;
-            }
+            const result = self.#parseArgs(argv);
 
-            return self.#invoke.call(domain, context, result as never);
+            return self.#invoke.call(domain as Domain, context, result as never);
         };
 
         command.help = (domain: Domain) => this.#help(domain);
 
-        return command;
+        return command as DomainCommand;
     }
 
-    #parseArgs(domain: Domain, argv: unknown[]): Val.Struct | undefined {
+    #parseArgs(argv: unknown[]): Val.Struct {
         const fields = this.schema === Schema.empty ? [] : [...this.schema.fields];
 
         // Categorize fields
@@ -108,11 +143,11 @@ export class CliCommand {
 
         const positionalFields = positionalModel ? [...positionalModel.fields] : [];
 
-        // Build flag lookup: --name or -x
+        // Build flag lookup: --kebab-name or -x
         const flagLookup = new Map<string, FieldModel>();
         for (const [name, f] of namedFields) {
             if (name.length > 1) {
-                flagLookup.set(`--${name}`, f);
+                flagLookup.set(`--${decamelize(name)}`, f);
             } else {
                 flagLookup.set(`-${name}`, f);
             }
@@ -130,8 +165,7 @@ export class CliCommand {
 
             // --help is always available
             if (arg === "--help") {
-                this.#help(domain);
-                return;
+                throw new HelpRequest();
             }
 
             const splitAt = arg.indexOf("=");
@@ -148,32 +182,29 @@ export class CliCommand {
                 // Long flag
                 fieldModel = flagLookup.get(arg);
                 if (!fieldModel) {
-                    domain.err(`Invalid argument: ${arg}\n`);
-                    return;
+                    throw new UsageError(`Invalid argument: ${arg}`);
                 }
-                fieldName = fieldModel.name;
+                fieldName = fieldModel.propertyName;
             } else {
                 // Short flags — may be combined (e.g. -ald)
                 for (let j = 1; j < arg.length; j++) {
                     const subarg = `-${arg[j]}`;
                     const subField = flagLookup.get(subarg);
                     if (!subField) {
-                        domain.err(`Invalid argument: ${subarg}\n`);
-                        return;
+                        throw new UsageError(`Invalid argument: ${subarg}`);
                     }
 
                     if (j < arg.length - 1) {
                         // Combined short flags — all must be boolean
                         if (subField.effectiveMetatype !== Metatype.boolean) {
-                            domain.err(`Argument "${subarg}" requires a parameter\n`);
-                            return;
+                            throw new UsageError(`Argument "${subarg}" requires a parameter`);
                         }
-                        inputs[subField.name] = true;
+                        inputs[subField.propertyName] = true;
                         continue;
                     }
 
                     fieldModel = subField;
-                    fieldName = subField.name;
+                    fieldName = subField.propertyName;
                 }
 
                 if (!fieldModel) {
@@ -186,8 +217,7 @@ export class CliCommand {
                     param = true;
                 } else {
                     if (i === argv.length - 1) {
-                        domain.err(`Argument "${arg}" requires a parameter\n`);
-                        return;
+                        throw new UsageError(`Argument "${arg}" requires a parameter`);
                     }
                     param = argv[++i];
                 }
@@ -201,13 +231,12 @@ export class CliCommand {
             if (!positionalArgs.length) {
                 break;
             }
-            inputs[pf.name] = castValue(pf, positionalArgs.shift());
+            inputs[pf.propertyName] = castValue(pf, positionalArgs.shift());
         }
 
         // Enforce max positional args when there is no rest collector
         if (!restField && positionalArgs.length) {
-            domain.err(`Too many arguments\n`);
-            return;
+            throw new UsageError("Too many arguments");
         }
 
         // Rest args
@@ -254,9 +283,9 @@ export class CliCommand {
         argDetails.push(["--help", "Show this help"]);
 
         for (const f of namedFields) {
-            const flag = f.name.length > 1 ? `--${f.name}` : `-${f.name}`;
+            const flag = f.name.length > 1 ? `--${decamelize(f.name)}` : `-${f.name}`;
             let desc = f.description ?? "";
-            const defaultValue = this.#defaults[f.name];
+            const defaultValue = this.#defaults[f.propertyName];
             if (defaultValue !== undefined) {
                 desc = `${desc} (default ${defaultValue})`;
             }
@@ -328,7 +357,7 @@ export namespace CliCommand {
         invoke(this: Domain, context: ActionContext, args: never): MaybePromise<unknown>;
 
         input?: NewableFunction;
-        schema?: DatatypeModel;
+        schema?: ValueModel;
         aliases?: string[];
         usage?: string | string[];
     }

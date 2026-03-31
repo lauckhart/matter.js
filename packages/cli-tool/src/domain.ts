@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { HelpRequest, UsageError } from "#cli-command.js";
 import { BadCommandError, IncompleteError, NotACommandError, NotADirectoryError, NotFoundError } from "#errors.js";
-import { bin, globals as defaultGlobals } from "#globals.js";
+import { bin, globals as defaultGlobals, DomainCommand } from "#globals.js";
 import { LazyNode, populateNodes } from "#lazy-node.js";
 import { Location, undefinedValue } from "#location.js";
 import { NodeRegistry } from "#node-registry.js";
@@ -412,10 +413,12 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
         const context = LocalActorContext.open("cli");
 
+        let fn: unknown;
+
         try {
             const location = await interruptablePromiseOf(domain.searchPathFor(name, context));
 
-            const fn = location?.definition;
+            fn = location?.definition;
 
             if (location === undefined || fn === undefined) {
                 throw new NotACommandError(name);
@@ -440,6 +443,17 @@ export async function Domain(context: DomainContext): Promise<Domain> {
 
             return await interruptablePromiseOf(context.resolve(fn.apply(scope, [context, ...argvals])));
         } catch (e) {
+            if (e instanceof HelpRequest) {
+                const help = (fn as DomainCommand).help;
+                if (typeof help === "function") {
+                    help(domain);
+                }
+                return context.resolve(undefined);
+            }
+            if (e instanceof UsageError) {
+                domain.err(`${e.message}\n`);
+                return context.resolve(undefined);
+            }
             return context.reject(e);
         }
 
