@@ -25,6 +25,7 @@ import {
     SafePromise,
     StorageService,
     VariableService,
+    Worker,
 } from "@matter/general";
 import { type ActionContext, LocalActorContext, Node, RemoteNode } from "@matter/node";
 import colors from "ansi-colors";
@@ -60,6 +61,12 @@ export interface DomainContext {
     err: TextWriter;
     terminalWidth: number;
     colorize: boolean;
+
+    /**
+     * When true, register a keep-alive worker with {@link RuntimeService} to prevent premature shutdown while
+     * ephemeral connections come and go.  Defaults to true.
+     */
+    keepAlive?: boolean;
 }
 
 export interface Domain extends DomainContext {
@@ -82,6 +89,12 @@ export interface Domain extends DomainContext {
      * Handles {@link LazyNode} (triggers connection), {@link RemoteNode}, and local {@link Node} instances.
      */
     node(nodeId: string): Promise<Node>;
+
+    /**
+     * Remove the domain from {@link RuntimeService} workers, allowing the process to exit cleanly for one-shot
+     * commands.
+     */
+    close(): void;
 }
 
 /**
@@ -281,6 +294,13 @@ export async function Domain(context: DomainContext): Promise<Domain> {
             }
             throw new NotFoundError(nodeId);
         },
+
+        close() {
+            if (resolveWorker) {
+                resolveWorker();
+                resolveWorker = undefined;
+            }
+        },
     };
 
     domain.globalsLoaded = loadGlobals(domain);
@@ -386,9 +406,13 @@ export async function Domain(context: DomainContext): Promise<Domain> {
         return true;
     };
 
-    // Register the domain as a worker so RuntimeService stays alive for the CLI's lifetime.  Without this, closing
+    // Register a keep-alive worker so RuntimeService stays alive for the CLI's lifetime.  Without this, closing
     // ephemeral RemoteNode connections can trigger RuntimeService.cancel()
-    domain.env.get(RuntimeService).add(domain as RuntimeService.NewWorker);
+    let resolveWorker: (() => void) | undefined;
+    if (context.keepAlive !== false) {
+        const worker = Worker({ name: "cli-domain", done: new Promise<void>(resolve => (resolveWorker = resolve)) });
+        domain.env.get(RuntimeService).add(worker);
+    }
 
     return domain;
 

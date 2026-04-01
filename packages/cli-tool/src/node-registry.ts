@@ -51,7 +51,7 @@ export class NodeRegistry {
             throw e;
         }
 
-        return entries.filter(entry => entry.isDirectory()).map(entry => entry.name);
+        return entries.filter(entry => entry.isDirectory() && !entry.name.startsWith(".")).map(entry => entry.name);
     }
 
     /**

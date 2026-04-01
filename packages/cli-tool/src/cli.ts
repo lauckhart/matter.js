@@ -92,9 +92,6 @@ export async function main(argv: string[]) {
     } catch (e) {
         domain.err(LogFormat.formats.ansi(e), "\n");
         process.exitCode = 1;
-    } finally {
-        // Force clean exit — one-shot commands shouldn't leave lingering event loops
-        process.exit(process.exitCode ?? 0);
     }
 }
 
