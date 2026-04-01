@@ -17,8 +17,6 @@ import type { RequirementModel } from "./RequirementModel.js";
  *
  * Model resources are a parallel data model that is not required for operational purposes.  If loaded, the model
  * provides additional metadata about elements.
- *
- * You can load resources for the standard data model using `import "@matter/model/resources"`.
  */
 export class Resource {
     errors?: DefinitionError[];

@@ -606,7 +606,8 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
                 "errors" in definition ||
                 "asOf" in definition ||
                 "until" in definition ||
-                "matchTo" in definition
+                "matchTo" in definition ||
+                "pics" in definition // ClusterModel only but here for convenience
             ) {
                 this.resource = new Resource(definition);
             }

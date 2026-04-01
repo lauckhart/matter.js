@@ -192,9 +192,6 @@ export class ClusterModel
 
         this.#quality = Quality.create(definition.quality);
         this.classification = definition.classification as ClusterElement.Classification;
-        if (!(definition instanceof Model)) {
-            this.pics = definition.pics;
-        }
     }
 
     override toElement(omitResources = false, extra?: Record<string, unknown>) {
