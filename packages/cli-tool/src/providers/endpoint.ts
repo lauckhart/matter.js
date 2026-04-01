@@ -273,6 +273,7 @@ function createSetCommand(behavior: Behavior): DomainCommand {
         const command: DomainCommand = function set() {
             throw new Error("No schema available for this behavior");
         };
+        command.description = "No schema available for this behavior";
         command.help = domain => {
             domain.out("\nNo schema available for this behavior.\n\n");
         };

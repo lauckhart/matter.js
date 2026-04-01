@@ -7,10 +7,12 @@
 import { clusterCommandFor } from "#cluster-command.js";
 import { Domain, DomainContext } from "#domain.js";
 import { bin } from "#globals.js";
+import { topics } from "#help/topics.js";
 import { CommandInput } from "#parser.js";
-import { Environment, FormattedText, LogFormat, MatterError } from "@matter/general";
+import { Environment, LogFormat, MatterError } from "@matter/general";
 import "@matter/nodejs";
 import "@matter/nodejs-ws";
+import { DefinitionList, Markdown, Printer, TextWriter, Wrapper } from "@matter/tools/ansi-text";
 import colors from "ansi-colors";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -104,16 +106,9 @@ export async function main(argv: string[]) {
  * Returns true if help was displayed (caller should return), false if the invocation needs full Domain processing.
  */
 function handleHelpOnly(args: string[]): boolean {
-    const terminalWidth = process.stdout.columns;
-    const colorize = !!stdout.isTTY;
-
-    function out(...text: string[]) {
-        stdout.write(text.join(""));
-    }
-
     // `matter` (no args) or `matter help` (no topic)
     if (!args.length || (args[0] === "help" && args.length === 1)) {
-        showWelcome(out, terminalWidth, colorize);
+        showWelcome();
         return true;
     }
 
@@ -122,7 +117,7 @@ function handleHelpOnly(args: string[]): boolean {
         const topic = args[1];
         const help = helpFor(topic);
         if (help) {
-            help({ out, terminalWidth, colorize });
+            help();
             return true;
         }
         // Unknown topic — fall through to Domain for richer error handling
@@ -134,7 +129,7 @@ function handleHelpOnly(args: string[]): boolean {
         const cmd = args[0];
         const help = helpFor(cmd);
         if (help) {
-            help({ out, terminalWidth, colorize });
+            help();
             return true;
         }
         // Unknown command — fall through to Domain
@@ -144,29 +139,68 @@ function handleHelpOnly(args: string[]): boolean {
     return false;
 }
 
-function showWelcome(out: (...text: string[]) => void, terminalWidth: number, _colorize: boolean) {
-    const text = `This tool allows you to interact with matter.js and your local Matter environment.
-This tool understands both JavaScript and a shell-like syntax that maps "commands" to functions. Use "ls /bin" to see commands you can always use. Use "help <name>" for help with a specific command.
-The current path appears in the prompt. This points to the object this tool uses to find commands. It is also the "global" object for any JavaScript statements you enter.
-You can change the current path using "cd <path>". Paths work like you would expect, including "/", "." and "..".
-Run "matter shell" to enter interactive mode.\n`;
-
-    out("\nWelcome to matter.js.\n\n", FormattedText(text, terminalWidth).join("\n"), "\n\n");
+function createHelpPrinter(): Printer {
+    const terminalWidth = process.stdout.columns;
+    const styleEnabled = !!stdout.isTTY;
+    const writer = new TextWriter(text => stdout.write(text), { terminalWidth });
+    writer.state.styleEnabled = styleEnabled;
+    const wrapper = new Wrapper(writer, { wrapPrefix: "  ", preserveSpace: false });
+    return Printer(wrapper);
 }
 
-interface HelpContext {
-    out: (...text: string[]) => void;
-    terminalWidth: number;
-    colorize: boolean;
+function showWelcome() {
+    const printer = createHelpPrinter();
+
+    printer.write(
+        "\n",
+        Markdown(
+            `# matter.js
+
+A CLI for interacting with Matter devices and your local Matter environment.
+
+Run \`matter help <topic>\` for details on any topic below, or \`matter <command>\` to run a
+command directly.
+
+## Topics`,
+        ),
+        "\n",
+    );
+
+    const entries = Object.entries(topics).map(([key, topic]) => ({
+        name: key,
+        description: topic.summary,
+    }));
+    printer.write(DefinitionList(entries), "\n");
+
+    printer.close();
 }
 
-function helpFor(name: string): ((cx: HelpContext) => void) | undefined {
+function helpFor(name: string): (() => void) | undefined {
+    const topic = topics[name];
+    if (topic) {
+        return () => {
+            const printer = createHelpPrinter();
+            printer.write("\n");
+            topic.render(printer);
+        };
+    }
+
     const command = bin[name] ?? clusterCommandFor(name);
     if (!command?.help) {
         return;
     }
 
-    return (cx: HelpContext) => command.help(cx as never);
+    // help() currently expects a Domain-like context; pass a minimal shim
+    return () => {
+        const cx = {
+            out(...text: string[]) {
+                stdout.write(text.join(""));
+            },
+            terminalWidth: process.stdout.columns,
+            colorize: !!stdout.isTTY,
+        };
+        command.help(cx as never);
+    };
 }
 
 function readVersion(): string {

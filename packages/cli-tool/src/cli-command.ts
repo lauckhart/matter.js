@@ -163,6 +163,7 @@ export class CliCommand {
             return self.#invoke.call(domain as Domain, context, result as never);
         };
 
+        command.description = this.#description;
         command.help = (domain: Domain) => this.#help(domain);
 
         return command as DomainCommand;

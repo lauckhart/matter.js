@@ -131,6 +131,7 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
     } as ClusterCommandFn;
 
     command[clusterModelSymbol] = cluster;
+    command.description = cluster.description ?? "";
 
     command.help = (domain: Domain) => {
         const cmds = requestCommands(cluster);
@@ -505,6 +506,7 @@ function dispatchVirtual(
                     },
                 );
             };
+            selectorCommand.description = helpWrapper.description;
             selectorCommand.help = helpWrapper.help;
 
             try {

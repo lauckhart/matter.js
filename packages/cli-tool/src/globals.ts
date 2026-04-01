@@ -10,6 +10,7 @@ import type { ActionContext } from "@matter/node";
 
 export interface DomainCommand {
     (context: ActionContext, ...args: unknown[]): unknown;
+    description: string;
     help(domain: Domain): void;
 }
 
