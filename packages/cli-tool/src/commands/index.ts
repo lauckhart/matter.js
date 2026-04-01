@@ -17,6 +17,7 @@ import "./register.js";
 import "./restart.js";
 import "./rm.js";
 import "./set.js";
+import "./shell.js";
 import "./start.js";
 import "./status.js";
 import "./stop.js";

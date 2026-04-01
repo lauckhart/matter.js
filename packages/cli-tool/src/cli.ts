@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { clusterCommandFor } from "#cluster-command.js";
 import { Domain, DomainContext } from "#domain.js";
+import { bin } from "#globals.js";
 import { CommandInput } from "#parser.js";
-import { repl } from "#repl.js";
-import { Environment, LogFormat, MatterError } from "@matter/general";
+import { Environment, FormattedText, LogFormat, MatterError } from "@matter/general";
 import "@matter/nodejs";
 import "@matter/nodejs-ws";
 import colors from "ansi-colors";
@@ -22,10 +23,6 @@ export async function main(argv: string[]) {
     colors.enabled = stdout.isTTY;
 
     let args = argv.slice(2);
-    if (!args.length) {
-        await repl();
-        return;
-    }
 
     for (const arg of args) {
         if (arg.startsWith("-")) {
@@ -40,6 +37,11 @@ export async function main(argv: string[]) {
         } else {
             break;
         }
+    }
+
+    // Help-only invocations bypass Domain entirely — no environment, no logs, no cleanup needed
+    if (handleHelpOnly(args)) {
+        return;
     }
 
     const command: CommandInput = {
@@ -80,7 +82,8 @@ export async function main(argv: string[]) {
             return process.stdout.columns;
         },
 
-        colorize: true,
+        colorize: !!stdout.isTTY,
+        keepAlive: false,
     };
 
     const domain = await Domain(cx);
@@ -93,6 +96,77 @@ export async function main(argv: string[]) {
         domain.err(LogFormat.formats.ansi(e), "\n");
         process.exitCode = 1;
     }
+}
+
+/**
+ * Handle help-only invocations without creating a Domain.
+ *
+ * Returns true if help was displayed (caller should return), false if the invocation needs full Domain processing.
+ */
+function handleHelpOnly(args: string[]): boolean {
+    const terminalWidth = process.stdout.columns;
+    const colorize = !!stdout.isTTY;
+
+    function out(...text: string[]) {
+        stdout.write(text.join(""));
+    }
+
+    // `matter` (no args) or `matter help` (no topic)
+    if (!args.length || (args[0] === "help" && args.length === 1)) {
+        showWelcome(out, terminalWidth, colorize);
+        return true;
+    }
+
+    // `matter help <topic>` — look up topic's help
+    if (args[0] === "help" && args.length === 2) {
+        const topic = args[1];
+        const help = helpFor(topic);
+        if (help) {
+            help({ out, terminalWidth, colorize });
+            return true;
+        }
+        // Unknown topic — fall through to Domain for richer error handling
+        return false;
+    }
+
+    // `matter <cmd> --help` — look up cmd's help
+    if (args.length >= 1 && args.includes("--help")) {
+        const cmd = args[0];
+        const help = helpFor(cmd);
+        if (help) {
+            help({ out, terminalWidth, colorize });
+            return true;
+        }
+        // Unknown command — fall through to Domain
+        return false;
+    }
+
+    return false;
+}
+
+function showWelcome(out: (...text: string[]) => void, terminalWidth: number, _colorize: boolean) {
+    const text = `This tool allows you to interact with matter.js and your local Matter environment.
+This tool understands both JavaScript and a shell-like syntax that maps "commands" to functions. Use "ls /bin" to see commands you can always use. Use "help <name>" for help with a specific command.
+The current path appears in the prompt. This points to the object this tool uses to find commands. It is also the "global" object for any JavaScript statements you enter.
+You can change the current path using "cd <path>". Paths work like you would expect, including "/", "." and "..".
+Run "matter shell" to enter interactive mode.\n`;
+
+    out("\nWelcome to matter.js.\n\n", FormattedText(text, terminalWidth).join("\n"), "\n\n");
+}
+
+interface HelpContext {
+    out: (...text: string[]) => void;
+    terminalWidth: number;
+    colorize: boolean;
+}
+
+function helpFor(name: string): ((cx: HelpContext) => void) | undefined {
+    const command = bin[name] ?? clusterCommandFor(name);
+    if (!command?.help) {
+        return;
+    }
+
+    return (cx: HelpContext) => command.help(cx as never);
 }
 
 function readVersion(): string {
