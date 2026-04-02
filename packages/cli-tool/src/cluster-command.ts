@@ -7,10 +7,11 @@
 import { CliCommand, HelpRequest, UsageError } from "#cli-command.js";
 import type { Domain } from "#domain.js";
 import { DomainCommand } from "#globals.js";
+import { ClusterOverview } from "#help/cluster-overview.js";
 import { LazyNode } from "#lazy-node.js";
 import { Location } from "#location.js";
 import { Directory, Stat } from "#stat.js";
-import { camelize, decamelize, FormattedText, MaybePromise } from "@matter/general";
+import { camelize, decamelize, MaybePromise } from "@matter/general";
 import {
     ClusterModel,
     CommandModel,
@@ -24,7 +25,6 @@ import {
 import type { ActionContext } from "@matter/node";
 import { Behavior, Endpoint, Node, NodeSet } from "@matter/node";
 import { EndpointSelector, Val } from "@matter/protocol";
-import colors from "ansi-colors";
 
 /**
  * Symbol used to tag cluster command functions with their {@link ClusterModel}.
@@ -134,42 +134,7 @@ function createClusterCommand(cluster: ClusterModel): DomainCommand {
     command.description = cluster.description ?? "";
 
     command.help = (domain: Domain) => {
-        const cmds = requestCommands(cluster);
-        const description = cluster.description ?? "";
-
-        const cmdDetails = Array<[string, string]>();
-        cmdDetails.push(["get", "Read attribute values"]);
-        cmdDetails.push(["set", "Write attribute values"]);
-        for (const cmd of cmds) {
-            cmdDetails.push([decamelize(cmd.propertyName), cmd.description ?? ""]);
-        }
-
-        const maxWidth = cmdDetails.length ? Math.max(...cmdDetails.map(([n]) => n.length)) : 0;
-        const detailWidth = domain.terminalWidth - maxWidth - 4;
-
-        const cmdHelp = cmdDetails.map(([name, desc]) => {
-            name = colors.blue(name.padEnd(maxWidth));
-            desc = FormattedText(desc, detailWidth)
-                .join("\n")
-                .replace(/\n/g, "".padEnd(maxWidth + 4));
-            return `  ${name}  ${desc}`;
-        });
-
-        const clusterName = colors.blue(decamelize(cluster.propertyName));
-
-        domain.out(
-            [
-                `\n${colors.bold("Usage:")} ${clusterName} COMMAND [TARGET] [OPTION]...`,
-                "",
-                ...FormattedText(description, domain.terminalWidth),
-                "",
-                `${colors.bold("Target:")} a path (node0/1/onOff), node name, or selector (*:@light, node0,node1:@OnOffLight)`,
-                "",
-                colors.bold("Commands:"),
-                ...cmdHelp,
-            ].join("\n"),
-            "\n\n",
-        );
+        domain.out("\n", ClusterOverview(cluster), "\n");
     };
 
     return command;

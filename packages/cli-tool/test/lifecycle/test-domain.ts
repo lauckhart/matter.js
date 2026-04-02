@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Domain, DomainContext, TextWriter } from "#domain.js";
+import { Domain, DomainContext } from "#domain.js";
 import { Crypto, Entropy, Environment, Filesystem, WebSocketClient } from "@matter/general";
 import { NodeJsFilesystem } from "@matter/nodejs";
 import "@matter/nodejs-ws";
+import { Printer } from "@matter/tools/ansi-text";
 
 export interface TestDomain {
     domain: Domain;
@@ -34,19 +35,11 @@ export async function createTestDomain(tmpDir: string): Promise<TestDomain> {
     const output = Array<string>();
     const errors = Array<string>();
 
-    const out: TextWriter = (...text: string[]) => {
-        output.push(text.join(""));
-    };
-
-    const err: TextWriter = (...text: string[]) => {
-        errors.push(text.join(""));
-    };
-
     const cx: DomainContext = {
         description: "test",
         env,
-        out,
-        err,
+        out: Printer(text => output.push(text), { terminalWidth: 120, styleEnabled: false }),
+        err: Printer(text => errors.push(text), { terminalWidth: 120, styleEnabled: false }),
         terminalWidth: 120,
         colorize: false,
     };

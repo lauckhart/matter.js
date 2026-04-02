@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { DomainContext } from "#domain-context.js";
 import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
 import { isCommand } from "#parser.js";
-import { Environment, Filesystem, Millis, Observable, RuntimeService, Time } from "@matter/general";
+import { Filesystem, Millis, Observable, RuntimeService, Time } from "@matter/general";
 import { LocalActorContext } from "@matter/node";
 import colors from "ansi-colors";
 import { readFile } from "node:fs/promises";
@@ -54,33 +55,11 @@ const LINE_PROTECTOR_CHAR = "\u0001";
 async function createDomain() {
     const description = `${colors.bold("matter.js")} ${await readPackageVersion()}`;
 
-    const domain = await Domain({
-        description,
-
-        out(...text) {
-            stdout.write(text.join(""));
-        },
-
-        err(...text) {
-            let str = text.join("");
-            if (str.indexOf("\x1b") === -1) {
-                str = colors.red(str);
-            }
-            stdout.write(str);
-        },
-
-        get terminalWidth() {
-            return stdout.columns;
-        },
-
-        get colorize() {
-            return stdout.isTTY;
-        },
-
-        get env() {
-            return Environment.default;
-        },
-    });
+    const domain = await Domain(
+        DomainContext({
+            description,
+        }),
+    );
 
     domain.exitHandler = () => {
         exit(0);

@@ -37,7 +37,6 @@ Check on your nodes at any time with \`matter status\`.`,
                 ),
                 "\n",
             );
-            printer.close();
         },
     },
 
@@ -62,7 +61,6 @@ Use \`register\`, \`start\`, \`stop\`, and \`status\` to manage node lifecycle.`
                 ),
                 "\n",
             );
-            printer.close();
         },
     },
 
@@ -86,7 +84,6 @@ Use \`help <cluster-name>\` for details on a specific cluster.`,
                 ),
                 "\n",
             );
-            printer.close();
         },
     },
 
@@ -121,7 +118,6 @@ The current path appears in the prompt and determines the context for commands. 
             }
 
             printer.write(DefinitionList(entries), "\n");
-            printer.close();
         },
     },
 };

@@ -9,11 +9,11 @@ import { Domain, DomainContext } from "#domain.js";
 import { bin } from "#globals.js";
 import { topics } from "#help/topics.js";
 import { CommandInput } from "#parser.js";
-import { Environment, LogFormat, MatterError } from "@matter/general";
+import { LogFormat, MatterError } from "@matter/general";
+import "@matter/model/resources";
 import "@matter/nodejs";
 import "@matter/nodejs-ws";
-import { DefinitionList, Markdown, Printer, TextWriter, Wrapper } from "@matter/tools/ansi-text";
-import colors from "ansi-colors";
+import { DefinitionList, Markdown } from "@matter/tools/ansi-text";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { stdout } from "node:process";
@@ -22,8 +22,6 @@ import "./commands/index.js";
 import "./providers/index.js";
 
 export async function main(argv: string[]) {
-    colors.enabled = stdout.isTTY;
-
     let args = argv.slice(2);
 
     for (const arg of args) {
@@ -41,8 +39,10 @@ export async function main(argv: string[]) {
         }
     }
 
+    const cx = DomainContext();
+
     // Help-only invocations bypass Domain entirely — no environment, no logs, no cleanup needed
-    if (handleHelpOnly(args)) {
+    if (handleHelpOnly(cx, args)) {
         return;
     }
 
@@ -64,30 +64,6 @@ export async function main(argv: string[]) {
         }),
     };
 
-    const cx: DomainContext = {
-        description: "matter.js",
-        env: Environment.default,
-
-        out(...text) {
-            stdout.write(text.join(""));
-        },
-
-        err(...text) {
-            let str = text.join("");
-            if (str.indexOf("\x1b") === -1) {
-                str = colors.red(str);
-            }
-            stdout.write(str);
-        },
-
-        get terminalWidth() {
-            return process.stdout.columns;
-        },
-
-        colorize: !!stdout.isTTY,
-        keepAlive: false,
-    };
-
     const domain = await Domain(cx);
     try {
         const result = await domain.execute(command);
@@ -105,19 +81,17 @@ export async function main(argv: string[]) {
  *
  * Returns true if help was displayed (caller should return), false if the invocation needs full Domain processing.
  */
-function handleHelpOnly(args: string[]): boolean {
+function handleHelpOnly(cx: DomainContext, args: string[]): boolean {
     // `matter` (no args) or `matter help` (no topic)
     if (!args.length || (args[0] === "help" && args.length === 1)) {
-        showWelcome();
+        showWelcome(cx);
         return true;
     }
 
     // `matter help <topic>` — look up topic's help
     if (args[0] === "help" && args.length === 2) {
         const topic = args[1];
-        const help = helpFor(topic);
-        if (help) {
-            help();
+        if (helpFor(cx, topic)) {
             return true;
         }
         // Unknown topic — fall through to Domain for richer error handling
@@ -127,9 +101,7 @@ function handleHelpOnly(args: string[]): boolean {
     // `matter <cmd> --help` — look up cmd's help
     if (args.length >= 1 && args.includes("--help")) {
         const cmd = args[0];
-        const help = helpFor(cmd);
-        if (help) {
-            help();
+        if (helpFor(cx, cmd)) {
             return true;
         }
         // Unknown command — fall through to Domain
@@ -139,19 +111,8 @@ function handleHelpOnly(args: string[]): boolean {
     return false;
 }
 
-function createHelpPrinter(): Printer {
-    const terminalWidth = process.stdout.columns;
-    const styleEnabled = !!stdout.isTTY;
-    const writer = new TextWriter(text => stdout.write(text), { terminalWidth });
-    writer.state.styleEnabled = styleEnabled;
-    const wrapper = new Wrapper(writer, { wrapPrefix: "  ", preserveSpace: false });
-    return Printer(wrapper);
-}
-
-function showWelcome() {
-    const printer = createHelpPrinter();
-
-    printer.write(
+function showWelcome(cx: DomainContext) {
+    cx.out(
         "\n",
         Markdown(
             `# matter.js
@@ -170,37 +131,26 @@ command directly.
         name: key,
         description: topic.summary,
     }));
-    printer.write(DefinitionList(entries), "\n");
+    cx.out(DefinitionList(entries), "\n");
 
-    printer.close();
+    cx.out.close();
 }
 
-function helpFor(name: string): (() => void) | undefined {
+function helpFor(cx: DomainContext, name: string): boolean {
     const topic = topics[name];
     if (topic) {
-        return () => {
-            const printer = createHelpPrinter();
-            printer.write("\n");
-            topic.render(printer);
-        };
+        cx.out("\n");
+        topic.render(cx.out);
+        return true;
     }
 
     const command = bin[name] ?? clusterCommandFor(name);
     if (!command?.help) {
-        return;
+        return false;
     }
 
-    // help() currently expects a Domain-like context; pass a minimal shim
-    return () => {
-        const cx = {
-            out(...text: string[]) {
-                stdout.write(text.join(""));
-            },
-            terminalWidth: process.stdout.columns,
-            colorize: !!stdout.isTTY,
-        };
-        command.help(cx as never);
-    };
+    command.help(cx as never);
+    return true;
 }
 
 function readVersion(): string {

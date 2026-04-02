@@ -10,7 +10,6 @@ import { topics } from "#help/topics.js";
 import { FormattedText } from "@matter/general";
 import { any, field } from "@matter/model";
 import type { ActionContext } from "@matter/node";
-import { Printer, TextWriter, Wrapper } from "@matter/tools/ansi-text";
 import { parse } from "acorn";
 import colors from "ansi-colors";
 import { generate } from "escodegen";
@@ -60,12 +59,8 @@ You can change the current path using ${quote("cd <path>")}.  Paths work like yo
 
         const topic = topics[pathStr];
         if (topic) {
-            const writer = new TextWriter(text => this.out(text), { terminalWidth: this.terminalWidth });
-            writer.state.styleEnabled = this.colorize;
-            const wrapper = new Wrapper(writer, { wrapPrefix: "  ", preserveSpace: false });
-            const printer = Printer(wrapper);
-            printer.write("\n");
-            topic.render(printer);
+            this.out("\n");
+            topic.render(this.out);
             return;
         }
 

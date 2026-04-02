@@ -6,6 +6,7 @@
 
 import { HelpRequest, UsageError } from "#cli-command.js";
 import { clusterCommandFor } from "#cluster-command.js";
+import { DomainContext } from "#domain-context.js";
 import { BadCommandError, IncompleteError, NotACommandError, NotADirectoryError, NotFoundError } from "#errors.js";
 import { bin, globals as defaultGlobals, DomainCommand } from "#globals.js";
 import { LazyNode, populateNodes } from "#lazy-node.js";
@@ -16,7 +17,6 @@ import { Directory, Stat } from "#stat.js";
 import {
     CancelablePromise,
     Diagnostic,
-    Environment,
     InternalError,
     LogFormat,
     MaybePromise,
@@ -32,9 +32,7 @@ import colors from "ansi-colors";
 import { inspect } from "node:util";
 import { createContext, runInContext, RunningCodeOptions } from "node:vm";
 
-export interface TextWriter {
-    (...text: string[]): void;
-}
+export { DomainContext } from "#domain-context.js";
 
 const GLOBALS: Record<string, string> = {
     general: "@matter/general",
@@ -48,26 +46,6 @@ const GLOBALS: Record<string, string> = {
     endpoints: "@matter/node/endpoints",
     devices: "@matter/node/devices",
 };
-
-/**
- * Interfaces {@link Domain} with other components.
- *
- * Note that this is not destructured internally so fields may be dynamic.
- */
-export interface DomainContext {
-    description: string;
-    env: Environment;
-    out: TextWriter;
-    err: TextWriter;
-    terminalWidth: number;
-    colorize: boolean;
-
-    /**
-     * When true, register a keep-alive worker with {@link RuntimeService} to prevent premature shutdown while
-     * ephemeral connections come and go.  Defaults to true.
-     */
-    keepAlive?: boolean;
-}
 
 export interface Domain extends DomainContext {
     isDomain: true;
