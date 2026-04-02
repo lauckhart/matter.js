@@ -13,8 +13,9 @@ import {
     type ValueModel,
     type VarianceCondition,
 } from "@matter/model";
-import { DefinitionList, Markdown, Printer } from "@matter/tools/ansi-text";
+import { DefinitionList, Markdown, Printer, type TextBuilder } from "@matter/tools/ansi-text";
 import { editorialSummary } from "./editorial.js";
+import { MatterStyles } from "./matter-styles.js";
 
 /**
  * Render a cluster overview help page.
@@ -48,27 +49,22 @@ export function ClusterOverview(cluster: ClusterModel): Printer.Renderable {
 
             // Commands section — always show, prepend get/set
             const cmdEntries = Array<DefinitionList.Entry>();
-            cmdEntries.push({ name: "get", description: "Read attribute values" });
-            cmdEntries.push({ name: "set", description: "Write attribute values" });
-            for (const cmd of base.commands) {
-                cmdEntries.push({
-                    name: decamelize(cmd.propertyName),
-                    description: editorialSummary(cmd.details),
-                });
-            }
+            cmdEntries.push({ name: MatterStyles.command("get").toString(), description: "Read attribute values" });
+            cmdEntries.push({ name: MatterStyles.command("set").toString(), description: "Write attribute values" });
+            cmdEntries.push(...commandEntries(base.commands));
             printer.write("\n", Markdown("## Commands"), "\n");
             printer.write(DefinitionList(cmdEntries), "\n");
 
             // Base attributes
             if (base.attributes.length) {
                 printer.write(Markdown("## Attributes"), "\n");
-                printer.write(DefinitionList(aceEntries(base.attributes)), "\n");
+                printer.write(DefinitionList(aceEntries(base.attributes, MatterStyles.attribute)), "\n");
             }
 
             // Base events
             if (base.events.length) {
                 printer.write(Markdown("## Events"), "\n");
-                printer.write(DefinitionList(aceEntries(base.events)), "\n");
+                printer.write(DefinitionList(aceEntries(base.events, MatterStyles.event)), "\n");
             }
 
             // Feature title lookup: abbreviation → human-readable title
@@ -101,14 +97,14 @@ export function ClusterOverview(cluster: ClusterModel): Printer.Renderable {
                     if (sectionCount > 1) {
                         printer.write(Markdown("## Attributes"), "\n");
                     }
-                    printer.write(DefinitionList(aceEntries(ace.attributes)), "\n");
+                    printer.write(DefinitionList(aceEntries(ace.attributes, MatterStyles.attribute)), "\n");
                 }
 
                 if (ace.events.length) {
                     if (sectionCount > 1) {
                         printer.write(Markdown("## Events"), "\n");
                     }
-                    printer.write(DefinitionList(aceEntries(ace.events)), "\n");
+                    printer.write(DefinitionList(aceEntries(ace.events, MatterStyles.event)), "\n");
                 }
             }
         },
@@ -145,16 +141,16 @@ function partitionACE(elements: ValueModel[]): PartitionedACE {
     return { commands, attributes, events };
 }
 
-function aceEntries(elements: ValueModel[]): DefinitionList.Entry[] {
+function aceEntries(elements: ValueModel[], style: TextBuilder): DefinitionList.Entry[] {
     return elements.map(el => ({
-        name: decamelize(el.propertyName),
+        name: style(decamelize(el.propertyName)).toString(),
         description: editorialSummary(el.details),
     }));
 }
 
 function commandEntries(commands: CommandModel[]): DefinitionList.Entry[] {
     return commands.map(cmd => ({
-        name: decamelize(cmd.propertyName),
+        name: MatterStyles.command(decamelize(cmd.propertyName)).toString(),
         description: editorialSummary(cmd.details),
     }));
 }
