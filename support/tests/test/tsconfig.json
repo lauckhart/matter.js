@@ -4,7 +4,6 @@
         "types": [
             "mocha",
             "node",
-            "@matter/tools",
             "@matter/testing"
         ]
     },

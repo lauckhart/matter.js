@@ -60,6 +60,9 @@
             }
         },
         "./clusters/*": {
+            "dev-types": {
+                "types": "./src/clusters/*.d.ts"
+            },
             "import": {
                 "types": "./dist/esm/clusters/*.d.ts",
                 "default": "./dist/esm/clusters/*.js"
@@ -70,6 +73,9 @@
             }
         },
         "./*": {
+            "dev-types": {
+                "types": "./src/*/index.ts"
+            },
             "import": {
                 "types": "./dist/esm/*/index.d.ts",
                 "default": "./dist/esm/*/index.js"

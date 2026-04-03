@@ -72,6 +72,9 @@
         },
         "./package.json": "./package.json",
         "./*": {
+            "dev-types": {
+                "types": "./src/*/index.ts"
+            },
             "import": {
                 "types": "./dist/esm/*/index.d.ts",
                 "default": "./dist/esm/*/index.js"

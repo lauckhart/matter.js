@@ -57,6 +57,9 @@
             }
         },
         "./resources": {
+            "dev-types": {
+                "types": "./src/standard/resources/index.ts"
+            },
             "import": {
                 "types": "./dist/esm/standard/resources/index.d.ts",
                 "default": "./dist/esm/standard/resources/index.js"
